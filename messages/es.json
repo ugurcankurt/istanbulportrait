@@ -1,0 +1,350 @@
+{
+  "nav": {
+    "home": "Inicio",
+    "packages": "Paquetes",
+    "about": "Acerca",
+    "contact": "Contacto"
+  },
+  "hero": {
+    "title": "Fotógrafo de Estambul",
+    "subtitle": "Sesiones profesionales de retratos y lifestyle en el corazón de Estambul",
+    "description": "Captura tus recuerdos con vistas impresionantes desde azoteas, monumentos históricos y la belleza única de Estambul. Fotógrafo profesional especializado en retratos, parejas y fotografía de lifestyle.",
+    "cta": "Reserva tu Sesión",
+    "learnMore": "Saber Más"
+  },
+  "features": {
+    "rooftop": {
+      "title": "Sesiones en Azoteas",
+      "description": "Vistas impresionantes del Bósforo y el horizonte de Estambul"
+    },
+    "historic": {
+      "title": "Lugares Históricos",
+      "description": "Santa Sofía, Mezquita Azul y monumentos icónicos"
+    },
+    "professional": {
+      "title": "Calidad Profesional",
+      "description": "Equipos de alta gama y postprocesado experto"
+    }
+  },
+  "gallery": {
+    "title": "Nuestra Galería Fotográfica",
+    "subtitle": "Descubre la belleza de Estambul a través de nuestro lente. Navega por nuestra colección de sesiones de retratos, parejas y lifestyle."
+  },
+  "packages": {
+    "title": "Paquetes de Fotografía",
+    "subtitle": "Elige el paquete perfecto para tu sesión fotográfica en Estambul",
+    "essential": {
+      "title": "Esencial",
+      "price": "€150",
+      "duration": "30 Minutos",
+      "photos": "15 Fotos Editadas",
+      "locations": "1 Ubicación",
+      "features": [
+        "Fotógrafo profesional",
+        "Sesión fotográfica de 30 minutos",
+        "15 fotos editadas de alta resolución",
+        "Entrega en galería online",
+        "Retoque básico incluido"
+      ]
+    },
+    "premium": {
+      "title": "Premium",
+      "price": "€280",
+      "duration": "1.5 Horas",
+      "photos": "40 Fotos Editadas",
+      "locations": "2 Ubicaciones",
+      "popular": true,
+      "features": [
+        "Fotógrafo profesional",
+        "Sesión fotográfica de 1.5 horas",
+        "40 fotos editadas de alta resolución",
+        "2 ubicaciones diferentes",
+        "Retoque avanzado",
+        "Vista previa el mismo día"
+      ]
+    },
+    "luxury": {
+      "title": "Lujo",
+      "price": "€450",
+      "duration": "2.5 Horas",
+      "photos": "80 Fotos Editadas",
+      "locations": "3 Ubicaciones",
+      "features": [
+        "Fotógrafo profesional",
+        "Sesión fotográfica de 2.5 horas",
+        "80 fotos editadas de alta resolución",
+        "3 ubicaciones premium",
+        "Retoque profesional",
+        "Vista previa el mismo día",
+        "Consultoría de estilo"
+      ]
+    },
+    "rooftop": {
+      "title": "Sesión en Azotea",
+      "price": "€150",
+      "duration": "Por Persona",
+      "photos": "20 Fotos Editadas",
+      "locations": "Estudio en Azotea",
+      "features": [
+        "Fotógrafo profesional",
+        "20 fotos editadas de alta resolución",
+        "1 vestido largo moderno o vestido tradicional",
+        "2 videos cortos para móvil",
+        "Tarifa del estudio en azotea incluida",
+        "Retoque profesional"
+      ]
+    },
+    "custom": {
+      "title": "¿Necesitas un Paquete Personalizado?",
+      "description": "Cada sesión fotográfica es única. Hablemos sobre tus necesidades específicas y creemos un paquete personalizado que se ajuste perfectamente a tu visión y presupuesto.",
+      "button": "Obtener Cotización Personalizada"
+    }
+  },
+  "about": {
+    "title": "Acerca de Mí",
+    "subtitle": "Fotógrafo profesional capturando la belleza de Estambul",
+    "description": "Con más de 8 años de experiencia en fotografía de retratos, me especializo en capturar la conexión única entre las personas y el magnífico telón de fondo de Estambul. Mi pasión radica en crear recuerdos atemporales que reflejen tanto la belleza de mis sujetos como el encanto histórico de esta ciudad increíble.",
+    "experience": "Más de 8 años de experiencia",
+    "sessions": "Más de 500 sesiones completadas",
+    "clients": "Clientes felices en todo el mundo"
+  },
+  "contact": {
+    "title": "Ponte en Contacto",
+    "subtitle": "¿Listo para reservar tu sesión fotográfica en Estambul?",
+    "cta_description": "¿Listo para capturar tus recuerdos en Estambul? Navega nuestros paquetes y reserva tu sesión directamente online.",
+    "experience_description": "Más de 8 años de experiencia capturando la belleza de Estambul",
+    "premium_locations": "Ubicaciones Premium",
+    "locations_description": "Azoteas, monumentos históricos y gemas ocultas",
+    "professional_quality": "Calidad Profesional",
+    "quality_description": "Fotos editadas de alta resolución entregadas digitalmente",
+    "form": {
+      "name": "Nombre Completo",
+      "email": "Dirección de Email",
+      "phone": "Número de Teléfono",
+      "date": "Fecha Preferida",
+      "package": "Seleccionar Paquete",
+      "message": "Mensaje",
+      "submit": "Enviar Mensaje",
+      "success": "¡Gracias! Te contactaremos pronto.",
+      "error": "Algo salió mal. Por favor intenta de nuevo."
+    },
+    "info": {
+      "location": "Estambul, Turquía",
+      "email": "info@istanbulportrait.com",
+      "phone": "+90 536 709 37 24",
+      "hours": "Disponible 7 días a la semana"
+    }
+  },
+  "checkout": {
+    "title": "Reserva tu Sesión",
+    "description": "Completa tu reserva para la experiencia perfecta de fotografía en Estambul",
+    "steps": {
+      "package": "Paquete",
+      "details": "Detalles", 
+      "payment": "Pago",
+      "confirmation": "Confirmación"
+    },
+    "package_summary": "Resumen del Paquete",
+    "customer_details": "Datos del Cliente",
+    "payment_details": "Detalles del Pago",
+    "booking_details": "Detalles de la Reserva",
+    "form": {
+      "name": "Nombre Completo",
+      "email": "Dirección de Correo",
+      "phone": "Número de Teléfono",
+      "date": "Seleccionar Fecha",
+      "time": "Seleccionar Hora",
+      "notes": "Solicitudes Especiales (Opcional)",
+      "card_holder": "Nombre del Titular",
+      "card_number": "Número de Tarjeta",
+      "expire_month": "MM",
+      "expire_year": "AA",
+      "cvc": "CVC",
+      "terms": "Acepto los términos y condiciones"
+    },
+    "buttons": {
+      "continue": "Continuar",
+      "back": "Atrás",
+      "complete_booking": "Completar Reserva",
+      "processing": "Procesando...",
+      "book_another": "Reservar Otra Sesión"
+    },
+    "success": {
+      "title": "¡Reserva Confirmada!",
+      "message": "Gracias por reservar con Istanbul Portrait. La confirmación de tu reserva ha sido enviada a tu correo electrónico.",
+      "booking_id": "ID de Reserva",
+      "payment_successful": "¡Pago exitoso! Correo de confirmación enviado."
+    },
+    "error": {
+      "generic": "Algo salió mal. Por favor, inténtalo de nuevo.",
+      "payment_failed": "El pago falló. Por favor, verifica los datos de tu tarjeta e inténtalo de nuevo.",
+      "booking_failed": "Error al crear la reserva. Por favor, inténtalo de nuevo.",
+      "payment_init_failed": "Error al inicializar el pago"
+    }
+  },
+  "validation": {
+    "package_required": "La selección del paquete es obligatoria",
+    "email_invalid": "Por favor, introduce una dirección de correo válida",
+    "phone_invalid": "Por favor, introduce un número de teléfono válido",
+    "date_required": "Por favor, selecciona una fecha",
+    "time_required": "Por favor, selecciona una hora",
+    "amount_positive": "El importe total debe ser positivo",
+    "cardholder_required": "El nombre del titular de la tarjeta es obligatorio",
+    "month_required": "El mes es obligatorio",
+    "year_required": "El año es obligatorio",
+    "cvc_required": "El CVC debe tener 3 dígitos",
+    "name_min": "El nombre debe tener al menos 2 caracteres",
+    "phone_min": "El número de teléfono debe tener al menos 10 dígitos",
+    "message_min": "El mensaje debe tener al menos 10 caracteres",
+    "card_number_invalid": "El número de tarjeta debe tener 16 dígitos",
+    "preferred_date_required": "Por favor, selecciona una fecha preferida",
+    "package_selection_required": "Por favor, selecciona un paquete"
+  },
+  "placeholders": {
+    "full_name": "Juan Pérez",
+    "email": "juan@example.com",
+    "phone": "+90 XXX XXX XX XX",
+    "select_package": "Selecciona un paquete",
+    "tell_us_vision": "Cuéntanos sobre tu visión para la sesión fotográfica...",
+    "test_card": "5528790000000008 (Usa esta tarjeta de prueba para pago demo exitoso)",
+    "enter_full_name": "Ingresa tu nombre completo",
+    "enter_email": "Ingresa tu email",
+    "phone_number": "+90 555 123 45 67",
+    "pick_date": "Selecciona una fecha",
+    "select_time": "Selecciona hora",
+    "special_requests": "Cualquier solicitud especial o notas sobre tu sesión fotográfica...",
+    "card_holder": "JUAN PÉREZ",
+    "card_number": "1234 5678 9012 3456",
+    "expire_mm": "MM",
+    "expire_yy": "AA",
+    "cvc_placeholder": "123"
+  },
+  "ui": {
+    "custom_package": "Paquete Personalizado",
+    "language": "Idioma",
+    "send_message": "Envíanos un mensaje",
+    "contact_information": "Información de Contacto",
+    "location": "Ubicación",
+    "email": "Correo Electrónico",
+    "phone": "Teléfono",
+    "availability": "Disponibilidad",
+    "what_to_expect": "Qué Esperar",
+    "response_time": "Tiempo de Respuesta",
+    "booking_process": "Proceso de Reserva",
+    "payment": "Pago",
+    "response_time_desc": "Normalmente respondemos a las consultas en 24 horas.",
+    "booking_process_desc": "Después de tu consulta, programaremos una consulta para discutir tu visión y finalizar detalles.",
+    "payment_desc": "Se requiere un depósito del 50% para asegurar tu fecha, el resto vence el día de la sesión.",
+    "professional_photographer": "Fotógrafo profesional",
+    "portrait_photography": "Fotografía de Retratos",
+    "couple_sessions": "Sesiones de Parejas",
+    "lifestyle": "Estilo de Vida",
+    "rooftop_shoots": "Sesiones en Azoteas",
+    "view_my_work": "Ver mi Trabajo",
+    "book_your_session": "Reserva tu Sesión",
+    "view_packages": "Ver Paquetes",
+    "packages_button": "Paquetes",
+    "book_package": "Reservar Este Paquete",
+    "back_to_home": "Volver al Inicio",
+    "selected": "Seleccionado",
+    "select_package": "Seleccionar Paquete",
+    "total": "Total",
+    "contact": "Contacto",
+    "most_popular": "Más Popular"
+  },
+  "about_highlights": {
+    "title": "¿Por qué elegir Istanbul Portrait?",
+    "professional": {
+      "title": "Excelencia Profesional",
+      "description": "Entrenado en técnicas avanzadas de fotografía con años de experiencia en fotografía de retratos."
+    },
+    "local": {
+      "title": "Experiencia Local",
+      "description": "Conocimiento íntimo de los lugares más fotogénicos de Estambul, desde azoteas ocultas hasta lugares emblemáticos."
+    },
+    "personal": {
+      "title": "Enfoque Personal",
+      "description": "Cada sesión está adaptada a tu estilo y visión únicos, asegurando resultados auténticos y memorables."
+    }
+  },
+  "about_cta": {
+    "title": "¿Listo para crear algo hermoso?",
+    "description": "Capturemos tu historia contra el impresionante telón de fondo de Estambul."
+  },
+  "package_selection": {
+    "choose_package": "Elige Tu Paquete",
+    "select_description": "Selecciona el paquete de fotografía que mejor se adapte a tus necesidades",
+    "you_selected": "Seleccionaste:"
+  },
+  "payment": {
+    "secure_powered": "Pago seguro impulsado por Iyzico",
+    "security_description": "Tu información de pago es segura y está encriptada. Utilizamos encriptación SSL estándar de la industria para proteger tus datos.",
+    "order_summary": "Resumen del Pedido",
+    "booking_summary": "Resumen de Reserva",
+    "includes_fees": "Incluye todos los impuestos y tarifas",
+    "secure_payment": "Pago Seguro",
+    "iyzico_description": "Tu pago se procesa de forma segura a través de Iyzico, el proveedor de pagos líder de Turquía.",
+    "name_label": "Nombre:",
+    "email_label": "Email:",
+    "date_label": "Fecha:",
+    "time_label": "Hora:"
+  },
+  "success": {
+    "booking_details": "Detalles de la Reserva",
+    "package_label": "Paquete",
+    "amount_paid": "Monto Pagado",
+    "whats_next": "¿Qué sigue?",
+    "confirmation_email": "Email de Confirmación Enviado",
+    "email_description": "Revisa tu bandeja de entrada para información detallada de la reserva",
+    "pre_session_contact": "Contacto Pre-Sesión",
+    "contact_description": "Te contactaremos 24 horas antes de tu sesión para confirmar detalles",
+    "photo_delivery": "Entrega de Fotos",
+    "delivery_description": "Tus fotos editadas serán entregadas dentro de 5-7 días hábiles",
+    "have_questions": "¿Tienes Preguntas?",
+    "bullet_professional": "• Fotógrafo profesional incluido",
+    "bullet_photos": "• Fotos editadas de alta resolución",
+    "bullet_gallery": "• Entrega de galería en línea",
+    "bullet_retouching": "• Retoque profesional",
+    "need_help": "¿Necesitas Ayuda?",
+    "help_description": "¿Preguntas sobre tu reserva? Contáctanos en cualquier momento."
+  },
+  "success_messages": {
+    "payment_successful": "¡Pago exitoso! Correo de confirmación enviado.",
+    "booking_created": "¡Reserva creada exitosamente!"
+  },
+  "error_messages": {
+    "payment_failed": "Pago fallido",
+    "booking_failed": "Error al crear la reserva",
+    "payment_init_failed": "Error al inicializar el pago"
+  },
+  "footer": {
+    "description": "Fotografía profesional de retratos en Estambul. Capturando tus momentos especiales con los telones de fondo más icónicos de la ciudad.",
+    "quickLinks": "Enlaces Rápidos",
+    "services": "Servicios",
+    "followUs": "Síguenos",
+    "copyright": "© 2025 istanbulportrait.com | Todos los derechos reservados.",
+    "service_items": {
+      "historic_shoots": "Sesiones en Lugares Históricos"
+    },
+    "privacy_policy": "Política de Privacidad",
+    "terms_of_service": "Términos de Servicio"
+  },
+  "seo": {
+    "home": {
+      "title": "Fotógrafo de Retratos en Estambul | Servicios Profesionales de Fotografía",
+      "description": "Fotógrafo profesional de retratos en Estambul. Especializado en sesiones en azoteas, sesiones de parejas y fotografía de lifestyle con vistas icónicas de la ciudad. ¡Reserva tu sesión hoy!"
+    },
+    "packages": {
+      "title": "Paquetes de Fotografía | Sesiones de Retratos en Estambul",
+      "description": "Elige entre nuestros paquetes profesionales de fotografía en Estambul. Sesiones en azoteas, lugares históricos y edición de calidad premium."
+    },
+    "about": {
+      "title": "Acerca | Fotógrafo Profesional de Estambul",
+      "description": "Conoce a tu fotógrafo profesional de Estambul con más de 8 años de experiencia. Especializado en fotografía de retratos, parejas y lifestyle por toda la ciudad."
+    },
+    "contact": {
+      "title": "Contacto | Reserva tu Sesión Fotográfica en Estambul",
+      "description": "¿Listo para reservar tu sesión fotográfica en Estambul? Contáctanos para sesiones profesionales de fotografía de retratos. Disponible 7 días a la semana."
+    }
+  }
+}

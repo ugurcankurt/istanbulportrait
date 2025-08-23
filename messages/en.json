@@ -1,0 +1,390 @@
+{
+  "nav": {
+    "home": "Home",
+    "packages": "Packages",
+    "about": "About",
+    "contact": "Contact"
+  },
+  "hero": {
+    "title": "Istanbul Photographer",
+    "subtitle": "Professional portrait and lifestyle photography sessions in the heart of Istanbul",
+    "description": "Capture your memories with stunning rooftop views, historic landmarks, and the unique beauty of Istanbul. Professional photographer specializing in portraits, couples, and lifestyle photography.",
+    "cta": "Book Your Session",
+    "learnMore": "Learn More"
+  },
+  "features": {
+    "rooftop": {
+      "title": "Rooftop Sessions",
+      "description": "Stunning views of Bosphorus and Istanbul skyline"
+    },
+    "historic": {
+      "title": "Historic Locations",
+      "description": "Hagia Sophia, Blue Mosque, and iconic landmarks"
+    },
+    "professional": {
+      "title": "Professional Quality",
+      "description": "High-end equipment and expert post-processing"
+    }
+  },
+  "gallery": {
+    "title": "Our Photography Gallery",
+    "subtitle": "Discover the beauty of Istanbul through our lens. Browse through our collection of portrait, couple, and lifestyle photography sessions."
+  },
+  "packages": {
+    "title": "Photography Packages",
+    "subtitle": "Choose the perfect package for your Istanbul photoshoot",
+    "essential": {
+      "title": "Essential",
+      "price": "€150",
+      "duration": "30 Minutes",
+      "photos": "15 Edited Photos",
+      "locations": "1 Location",
+      "features": [
+        "Professional photographer",
+        "30 minute photoshoot",
+        "15 high-resolution edited photos",
+        "Online gallery delivery",
+        "Basic retouching included"
+      ]
+    },
+    "premium": {
+      "title": "Premium",
+      "price": "€280",
+      "duration": "1.5 Hours",
+      "photos": "40 Edited Photos",
+      "locations": "2 Locations",
+      "popular": true,
+      "features": [
+        "Professional photographer",
+        "1.5 hour photoshoot",
+        "40 high-resolution edited photos",
+        "2 different locations",
+        "Advanced retouching",
+        "Same day preview"
+      ]
+    },
+    "luxury": {
+      "title": "Luxury",
+      "price": "€450",
+      "duration": "2.5 Hours",
+      "photos": "80 Edited Photos",
+      "locations": "3 Locations",
+      "features": [
+        "Professional photographer",
+        "2.5 hour photoshoot",
+        "80 high-resolution edited photos",
+        "3 premium locations",
+        "Professional retouching",
+        "Same day preview",
+        "Styling consultation"
+      ]
+    },
+    "rooftop": {
+      "title": "Rooftop Photoshoot",
+      "price": "€150",
+      "duration": "Per Person",
+      "photos": "20 Edited Photos",
+      "locations": "Rooftop Studio",
+      "features": [
+        "Professional photographer",
+        "20 high-resolution edited photos",
+        "1 modern long tail dress or traditional dress",
+        "2 mobile reels video",
+        "Rooftop studio fee includes",
+        "Professional retouching"
+      ]
+    },
+    "custom": {
+      "title": "Need a Custom Package?",
+      "description": "Every photoshoot is unique. Let's discuss your specific needs and create a custom package that perfectly fits your vision and budget.",
+      "button": "Get Custom Quote"
+    }
+  },
+  "about": {
+    "title": "About Me",
+    "subtitle": "Professional photographer capturing Istanbul's beauty",
+    "description": "With over 8 years of experience in portrait photography, I specialize in capturing the unique connection between people and Istanbul's magnificent backdrop. My passion lies in creating timeless memories that reflect both the beauty of my subjects and the historic charm of this incredible city.",
+    "experience": "8+ Years Experience",
+    "sessions": "500+ Sessions Completed",
+    "clients": "Happy Clients Worldwide"
+  },
+  "contact": {
+    "title": "Get In Touch",
+    "subtitle": "Ready to book your Istanbul photoshoot?",
+    "cta_description": "Ready to capture your memories in Istanbul? Browse our packages and book your session directly online.",
+    "experience_description": "8+ years of experience capturing Istanbul's beauty",
+    "premium_locations": "Premium Locations",
+    "locations_description": "Rooftops, historic landmarks, and hidden gems",
+    "professional_quality": "Professional Quality",
+    "quality_description": "High-resolution edited photos delivered digitally",
+    "form": {
+      "name": "Full Name",
+      "email": "Email Address",
+      "phone": "Phone Number",
+      "date": "Preferred Date",
+      "package": "Select Package",
+      "message": "Message",
+      "submit": "Send Message",
+      "success": "Thank you! We'll get back to you soon.",
+      "error": "Something went wrong. Please try again."
+    },
+    "info": {
+      "location": "Istanbul, Turkey",
+      "email": "info@istanbulportrait.com",
+      "phone": "+90 536 709 37 24",
+      "hours": "Available 7 days a week"
+    }
+  },
+  "checkout": {
+    "title": "Book Your Session",
+    "description": "Complete your booking for the perfect Istanbul photoshoot experience",
+    "steps": {
+      "package": "Package",
+      "details": "Details", 
+      "payment": "Payment",
+      "confirmation": "Confirmation"
+    },
+    "package_summary": "Package Summary",
+    "customer_details": "Customer Details",
+    "payment_details": "Payment Details",
+    "booking_details": "Booking Details",
+    "form": {
+      "name": "Full Name",
+      "email": "Email Address",
+      "phone": "Phone Number",
+      "date": "Select Date",
+      "time": "Select Time",
+      "notes": "Special Requests (Optional)",
+      "card_holder": "Cardholder Name",
+      "card_number": "Card Number",
+      "expire_month": "MM",
+      "expire_year": "YY",
+      "cvc": "CVC",
+      "terms": "I agree to the terms and conditions"
+    },
+    "buttons": {
+      "continue": "Continue",
+      "back": "Back",
+      "complete_booking": "Complete Booking",
+      "processing": "Processing...",
+      "book_another": "Book Another Session"
+    },
+    "success": {
+      "title": "Booking Confirmed!",
+      "message": "Thank you for booking with Istanbul Portrait. Your booking confirmation has been sent to your email.",
+      "booking_id": "Booking ID",
+      "payment_successful": "Payment successful! Confirmation email sent."
+    },
+    "error": {
+      "generic": "Something went wrong. Please try again.",
+      "payment_failed": "Payment failed. Please check your card details and try again.",
+      "booking_failed": "Failed to create booking. Please try again."
+    }
+  },
+  "footer": {
+    "description": "Professional portrait photography in Istanbul. Capturing your special moments with the city's most iconic backdrops.",
+    "quickLinks": "Quick Links",
+    "services": "Services",
+    "followUs": "Follow Us",
+    "copyright": "© 2025 istanbulportrait.com | All rights reserved.",
+    "service_items": {
+      "portrait": "Portrait Photography",
+      "couples": "Couple Sessions",
+      "rooftop": "Rooftop Photoshoots",
+      "historic": "Historic Location Shoots",
+      "lifestyle": "Lifestyle Photography",
+      "historic_shoots": "Historic Location Shoots"
+    },
+    "privacy_policy": "Privacy Policy",
+    "terms_of_service": "Terms of Service"
+  },
+  "validation": {
+    "package_required": "Package selection is required",
+    "email_invalid": "Please enter a valid email address",
+    "phone_invalid": "Please enter a valid phone number",
+    "date_required": "Please select a date",
+    "time_required": "Please select a time",
+    "amount_positive": "Total amount must be positive",
+    "cardholder_required": "Cardholder name is required",
+    "month_required": "Month is required",
+    "year_required": "Year is required",
+    "cvc_required": "CVC must be 3 digits",
+    "name_min": "Name must be at least 2 characters",
+    "phone_min": "Phone number must be at least 10 digits",
+    "message_min": "Message must be at least 10 characters",
+    "card_number_invalid": "Card number must be 16 digits",
+    "preferred_date_required": "Please select a preferred date",
+    "package_selection_required": "Please select a package"
+  },
+  "placeholders": {
+    "full_name": "John Doe",
+    "email": "john@example.com",
+    "phone": "+90 XXX XXX XX XX",
+    "select_package": "Select a package",
+    "tell_us_vision": "Tell us about your vision for the photoshoot...",
+    "test_card": "5528790000000008 (Use this test card for successful demo payment)",
+    "enter_full_name": "Enter your full name",
+    "enter_email": "Enter your email",
+    "phone_number": "+90 555 123 45 67",
+    "pick_date": "Pick a date",
+    "select_time": "Select time",
+    "special_requests": "Any special requests or notes about your photoshoot...",
+    "card_holder": "JOHN DOE",
+    "card_number": "1234 5678 9012 3456",
+    "expire_mm": "MM",
+    "expire_yy": "YY",
+    "cvc_placeholder": "123"
+  },
+  "ui": {
+    "custom_package": "Custom Package",
+    "language": "Language",
+    "send_message": "Send us a message",
+    "contact_information": "Contact Information",
+    "location": "Location",
+    "email": "Email", 
+    "phone": "Phone",
+    "availability": "Availability",
+    "what_to_expect": "What to Expect",
+    "response_time": "Response Time",
+    "booking_process": "Booking Process",
+    "payment": "Payment",
+    "response_time_desc": "We typically respond to inquiries within 24 hours.",
+    "booking_process_desc": "After your inquiry, we'll schedule a consultation to discuss your vision and finalize details.",
+    "payment_desc": "50% deposit required to secure your date, remainder due on the day of the shoot.",
+    "professional_photographer": "Professional photographer",
+    "portrait_photography": "Portrait Photography",
+    "couple_sessions": "Couple Sessions", 
+    "lifestyle": "Lifestyle",
+    "rooftop_shoots": "Rooftop Shoots",
+    "view_my_work": "View My Work",
+    "book_your_session": "Book Your Session",
+    "view_packages": "View Packages",
+    "packages_button": "Packages",
+    "book_package": "Book This Package",
+    "back_to_home": "Back to Home",
+    "selected": "Selected",
+    "select_package": "Select Package",
+    "total": "Total",
+    "contact": "Contact",
+    "most_popular": "Most Popular"
+  },
+  "about_highlights": {
+    "title": "Why Choose Istanbul Portrait?",
+    "professional": {
+      "title": "Professional Excellence",
+      "description": "Trained in advanced photography techniques with years of experience in portrait photography."
+    },
+    "local": {
+      "title": "Local Expertise", 
+      "description": "Intimate knowledge of Istanbul's most photogenic locations, from hidden rooftops to iconic landmarks."
+    },
+    "personal": {
+      "title": "Personal Approach",
+      "description": "Every session is tailored to your unique style and vision, ensuring authentic and memorable results."
+    }
+  },
+  "about_cta": {
+    "title": "Ready to Create Something Beautiful?",
+    "description": "Let's capture your story against the stunning backdrop of Istanbul."
+  },
+  "api_errors": {
+    "rate_limit": "Too many requests. Please try again later.",
+    "payment_rate_limit": "Too many payment attempts. Please try again later.",
+    "invalid_data": "Invalid request data",
+    "missing_payment_data": "Missing required payment data",
+    "invalid_amount": "Invalid payment amount",
+    "booking_not_found": "Booking not found. Please create a booking first.",
+    "invalid_package_price": "Invalid package price",
+    "duplicate_booking": "A similar booking was recently created. Please check your email or wait a few minutes.",
+    "booking_config_error": "Unable to process booking. Please check your Supabase configuration.",
+    "internal_error": "Internal server error",
+    "payment_processing_failed": "Payment processing failed. Please try again later.",
+    "unknown_error": "Unknown error"
+  },
+  "structured_data": {
+    "website_name": "Istanbul Portrait",
+    "service_type": "Photography Services",
+    "address_locality": "Istanbul",
+    "address_country": "TR",
+    "city_name": "Istanbul",
+    "offer_catalog_name": "Photography Services",
+    "portrait_photography": "Portrait Photography",
+    "portrait_photography_desc": "Professional portrait photography sessions",
+    "rooftop_photoshoot": "Rooftop Photoshoot", 
+    "rooftop_photoshoot_desc": "Rooftop photography sessions with Istanbul views",
+    "couple_photography": "Couple Photography",
+    "couple_photography_desc": "Romantic couple photography sessions",
+    "service_name": "Professional Photography Services in Istanbul",
+    "service_description": "Professional portrait and lifestyle photography sessions in Istanbul featuring rooftop views and historic landmarks",
+    "languages": {
+      "english": "English",
+      "arabic": "Arabic", 
+      "russian": "Russian",
+      "spanish": "Spanish"
+    }
+  },
+  "success": {
+    "booking_details": "Booking Details",
+    "package_label": "Package",
+    "amount_paid": "Amount Paid",
+    "whats_next": "What's Next?",
+    "confirmation_email": "Confirmation Email Sent",
+    "email_description": "Check your inbox for detailed booking information",
+    "pre_session_contact": "Pre-Session Contact",
+    "contact_description": "We'll contact you 24 hours before your session to confirm details",
+    "photo_delivery": "Photo Delivery",
+    "delivery_description": "Your edited photos will be delivered within 5-7 business days",
+    "have_questions": "Have Questions?",
+    "bullet_professional": "• Professional photographer included",
+    "bullet_photos": "• High-resolution edited photos",
+    "bullet_gallery": "• Online gallery delivery",
+    "bullet_retouching": "• Professional retouching",
+    "need_help": "Need Help?",
+    "help_description": "Questions about your booking? Contact us anytime."
+  },
+  "package_selection": {
+    "choose_package": "Choose Your Package",
+    "select_description": "Select the photography package that best fits your needs",
+    "you_selected": "You selected:"
+  },
+  "payment": {
+    "secure_powered": "Secure payment powered by Iyzico",
+    "security_description": "Your payment information is secure and encrypted. We use industry-standard SSL encryption to protect your data.",
+    "order_summary": "Order Summary",
+    "booking_summary": "Booking Summary",
+    "includes_fees": "Includes all taxes and fees",
+    "secure_payment": "Secure Payment",
+    "iyzico_description": "Your payment is processed securely through Iyzico, Turkey's leading payment provider.",
+    "name_label": "Name:",
+    "email_label": "Email:",
+    "date_label": "Date:",
+    "time_label": "Time:"
+  },
+  "success_messages": {
+    "payment_successful": "Payment successful! Confirmation email sent.",
+    "booking_created": "Booking created successfully!"
+  },
+  "error_messages": {
+    "payment_failed": "Payment failed",
+    "booking_failed": "Failed to create booking", 
+    "payment_init_failed": "Payment initialization failed"
+  },
+  "seo": {
+    "home": {
+      "title": "Istanbul Portrait Photographer | Professional Photoshoot Services",
+      "description": "Professional portrait photographer in Istanbul. Specializing in rooftop photoshoots, couple sessions, and lifestyle photography with iconic city views. Book your session today!"
+    },
+    "packages": {
+      "title": "Photography Packages | Istanbul Portrait Sessions",
+      "description": "Choose from our professional photography packages in Istanbul. Rooftop sessions, historic locations, and premium quality editing. Starting from $150."
+    },
+    "about": {
+      "title": "About | Professional Istanbul Photographer",
+      "description": "Meet your professional Istanbul photographer with 8+ years experience. Specializing in portrait, couple, and lifestyle photography across the city."
+    },
+    "contact": {
+      "title": "Contact | Book Your Istanbul Photoshoot",
+      "description": "Ready to book your Istanbul photoshoot? Contact us for professional portrait photography sessions. Available 7 days a week."
+    }
+  }
+}

@@ -1,0 +1,182 @@
+"use client";
+
+import { useTranslations } from "next-intl";
+import { motion } from "framer-motion";
+import { CheckCircle, Calendar, Clock, Mail, Phone } from "lucide-react";
+
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
+import { Link } from "@/i18n/routing";
+
+import { packagePrices } from "@/lib/validations";
+import type { PackageId } from "@/lib/validations";
+
+interface BookingSuccessProps {
+  bookingId: string;
+  packageId: PackageId;
+}
+
+export function BookingSuccess({ bookingId, packageId }: BookingSuccessProps) {
+  const t = useTranslations("checkout");
+  const tPackages = useTranslations("packages");
+  const tsuccess = useTranslations("success");
+  const tui = useTranslations("ui");
+
+  const packageInfo = {
+    name: tPackages(`${packageId}.title`),
+    price: packagePrices[packageId],
+  };
+
+  return (
+    <div className="container mx-auto px-4 py-8 max-w-2xl lg:max-w-4xl">
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.6 }}
+      >
+        <Card className="shadow-lg">
+          <CardHeader className="text-center pb-6 sm:pb-8">
+            <motion.div
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ 
+                type: "spring",
+                stiffness: 260,
+                damping: 20,
+                delay: 0.2 
+              }}
+              className="mx-auto mb-4 sm:mb-6"
+            >
+              <div className="w-16 h-16 sm:w-20 sm:h-20 bg-primary rounded-full flex items-center justify-center">
+                <CheckCircle className="w-8 h-8 sm:w-10 sm:h-10 text-primary-foreground" />
+              </div>
+            </motion.div>
+            
+            <CardTitle className="text-2xl sm:text-3xl font-bold mb-3 sm:mb-4">
+              {t("success.title")}
+            </CardTitle>
+            <p className="text-muted-foreground text-base sm:text-lg">
+              {t("success.message")}
+            </p>
+          </CardHeader>
+
+          <CardContent className="space-y-6 sm:space-y-8">
+            {/* Booking Details */}
+            <div className="bg-muted/30 rounded-lg p-4 sm:p-6 border">
+              <h3 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4 flex items-center gap-2">
+                <div className="p-1.5 bg-muted rounded-lg">
+                  <Calendar className="w-4 h-4 sm:w-5 sm:h-5" />
+                </div>
+                {tsuccess("booking_details")}
+              </h3>
+              
+              <div className="space-y-3">
+                <div className="flex justify-between items-center">
+                  <span className="text-muted-foreground text-sm sm:text-base">{t("success.booking_id")}:</span>
+                  <Badge variant="secondary" className="font-mono text-xs">
+                    {bookingId.slice(0, 8).toUpperCase()}
+                  </Badge>
+                </div>
+                
+                <div className="flex justify-between items-center">
+                  <span className="text-muted-foreground text-sm sm:text-base">{tsuccess("package_label")}:</span>
+                  <span className="font-semibold text-sm sm:text-base">{packageInfo.name}</span>
+                </div>
+                
+                <div className="flex justify-between items-center">
+                  <span className="text-muted-foreground text-sm sm:text-base">{tsuccess("amount_paid")}:</span>
+                  <span className="font-bold text-sm sm:text-base">€{packageInfo.price}</span>
+                </div>
+              </div>
+            </div>
+
+            <Separator />
+
+            {/* What's Next */}
+            <div className="space-y-4">
+              <h3 className="text-base sm:text-lg font-semibold flex items-center gap-2">
+                <div className="p-1.5 bg-muted rounded-lg">
+                  <Clock className="w-4 h-4 sm:w-5 sm:h-5" />
+                </div>
+                {tsuccess("whats_next")}
+              </h3>
+              
+              <div className="space-y-4">
+                <div className="flex items-start gap-3 p-3 bg-muted/20 rounded-lg border">
+                  <div className="w-6 h-6 bg-primary text-primary-foreground rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0">
+                    1
+                  </div>
+                  <div>
+                    <p className="font-semibold text-sm sm:text-base">{tsuccess("confirmation_email")}</p>
+                    <p className="text-xs sm:text-sm text-muted-foreground mt-1">
+                      {tsuccess("email_description")}
+                    </p>
+                  </div>
+                </div>
+                
+                <div className="flex items-start gap-3 p-3 bg-muted/20 rounded-lg border">
+                  <div className="w-6 h-6 bg-primary text-primary-foreground rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0">
+                    2
+                  </div>
+                  <div>
+                    <p className="font-semibold text-sm sm:text-base">{tsuccess("pre_session_contact")}</p>
+                    <p className="text-xs sm:text-sm text-muted-foreground mt-1">
+                      {tsuccess("contact_description")}
+                    </p>
+                  </div>
+                </div>
+                
+                <div className="flex items-start gap-3 p-3 bg-muted/20 rounded-lg border">
+                  <div className="w-6 h-6 bg-primary text-primary-foreground rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0">
+                    3
+                  </div>
+                  <div>
+                    <p className="font-semibold text-sm sm:text-base">{tsuccess("photo_delivery")}</p>
+                    <p className="text-xs sm:text-sm text-muted-foreground mt-1">
+                      {tsuccess("delivery_description")}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <Separator />
+
+            {/* Contact Information */}
+            <div className="bg-muted/50 rounded-lg p-4 sm:p-6 border">
+              <h3 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4">
+                {tsuccess("have_questions")}
+              </h3>
+              <div className="space-y-3">
+                <div className="flex items-center gap-3">
+                  <div className="p-1.5 bg-muted rounded-lg">
+                    <Mail className="w-4 h-4" />
+                  </div>
+                  <span className="text-sm font-medium">info@istanbulportrait.com</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <div className="p-1.5 bg-muted rounded-lg">
+                    <Phone className="w-4 h-4" />
+                  </div>
+                  <span className="text-sm font-medium">+90 536 709 37 24</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-4">
+              <Button asChild className="flex-1 h-11">
+                <Link href="/packages">{t("buttons.book_another")}</Link>
+              </Button>
+              <Button asChild variant="outline" className="flex-1 h-11">
+                <Link href="/">{tui("back_to_home")}</Link>
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </motion.div>
+    </div>
+  );
+}
