@@ -1,6 +1,7 @@
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages, getTranslations } from "next-intl/server";
 import { Geist, Geist_Mono } from "next/font/google";
+import { GoogleAnalytics } from '@/components/analytics/google-analytics'
 import "../globals.css";
 import { Navigation } from "@/components/navigation";
 import { Footer } from "@/components/footer";
@@ -86,6 +87,7 @@ export default async function LocaleLayout({
             <div className="flex min-h-screen flex-col">
               <Navigation />
               <main className="flex-1">{children}</main>
+              <GoogleAnalytics />
               <Footer />
             </div>
             <Toaster />

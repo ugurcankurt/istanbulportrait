@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button";
 import { Link } from "@/i18n/routing";
 import { Award, Camera, Heart, Users, Star, MapPin } from "lucide-react";
 import Image from "next/image";
-import { motion } from "framer-motion";
 
 export function AboutSection() {
   const t = useTranslations("about");
@@ -55,27 +54,17 @@ export function AboutSection() {
     <section className="py-12 sm:py-16 lg:py-24 bg-gradient-to-b from-background to-muted/20">
       <div className="container mx-auto px-4">
         {/* Hero */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="text-center mb-8 sm:mb-12 lg:mb-16"
-        >
+        <div className="text-center mb-8 sm:mb-12 lg:mb-16 transition-all duration-700 ease-out">
           <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4 sm:mb-6">{t("title")}</h1>
           <p className="text-base sm:text-lg lg:text-xl text-muted-foreground max-w-3xl mx-auto px-2">
             {t("subtitle")}
           </p>
-        </motion.div>
+        </div>
 
         {/* Main Content */}
         <div className="grid lg:grid-cols-2 gap-8 sm:gap-12 lg:gap-16 items-center max-w-6xl mx-auto mb-12 sm:mb-16 lg:mb-20">
           {/* Image */}
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="relative"
-          >
+          <div className="relative transition-all duration-700 ease-out hover:scale-105">
             <div className="relative aspect-[4/5] rounded-2xl overflow-hidden">
               <Image
                 src="/photographer_in_istanbul.jpg"
@@ -88,15 +77,10 @@ export function AboutSection() {
             <div className="absolute -bottom-2 sm:-bottom-4 -right-2 sm:-right-4 bg-primary text-primary-foreground p-3 sm:p-4 rounded-lg shadow-lg">
               <Camera className="w-6 h-6 sm:w-8 sm:h-8" />
             </div>
-          </motion.div>
+          </div>
 
           {/* Content */}
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-            className="space-y-4 sm:space-y-6"
-          >
+          <div className="space-y-4 sm:space-y-6 transition-all duration-700 ease-out">
             <p className="text-sm sm:text-base lg:text-lg leading-relaxed">{t("description")}</p>
 
             <div className="flex flex-wrap gap-2">
@@ -111,18 +95,13 @@ export function AboutSection() {
                 <Link href="/packages">{tui("view_my_work")}</Link>
               </Button>
             </div>
-          </motion.div>
+          </div>
         </div>
 
         {/* Stats */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.6 }}
-          className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 max-w-4xl mx-auto mb-12 sm:mb-16 lg:mb-20"
-        >
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 max-w-4xl mx-auto mb-12 sm:mb-16 lg:mb-20 transition-all duration-700 ease-out">
           {stats.map((stat, index) => (
-            <Card key={index} className="text-center p-4 sm:p-6 lg:p-8">
+            <Card key={index} className="text-center p-4 sm:p-6 lg:p-8 hover:scale-105 transition-all duration-500">
               <CardContent className="p-0">
                 <div className="w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 mx-auto mb-3 sm:mb-4 rounded-full bg-primary/10 flex items-center justify-center">
                   <stat.icon className="w-6 h-6 sm:w-7 sm:h-7 lg:w-8 lg:h-8 text-primary" />
@@ -136,22 +115,17 @@ export function AboutSection() {
               </CardContent>
             </Card>
           ))}
-        </motion.div>
+        </div>
 
         {/* Highlights */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.8 }}
-          className="max-w-4xl mx-auto"
-        >
+        <div className="max-w-4xl mx-auto transition-all duration-700 ease-out">
           <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-center mb-8 sm:mb-10 lg:mb-12">
             {taboutHighlights("title")}
           </h2>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
             {highlights.map((highlight, index) => (
-              <Card key={index} className="text-center p-4 sm:p-5 lg:p-6">
+              <Card key={index} className="text-center p-4 sm:p-5 lg:p-6 hover:scale-105 transition-all duration-500">
                 <CardContent className="p-0">
                   <div className="w-10 h-10 sm:w-12 sm:h-12 mx-auto mb-3 sm:mb-4 rounded-full bg-primary/10 flex items-center justify-center">
                     <highlight.icon className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
@@ -166,16 +140,11 @@ export function AboutSection() {
               </Card>
             ))}
           </div>
-        </motion.div>
+        </div>
 
         {/* CTA */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 1 }}
-          className="text-center mt-12 sm:mt-16 lg:mt-20"
-        >
-          <div className="bg-muted/30 rounded-lg sm:rounded-xl lg:rounded-2xl p-6 sm:p-8 lg:p-12 max-w-4xl mx-auto">
+        <div className="text-center mt-12 sm:mt-16 lg:mt-20 transition-all duration-700 ease-out">
+          <div className="bg-muted/30 rounded-lg sm:rounded-xl lg:rounded-2xl p-6 sm:p-8 lg:p-12 max-w-4xl mx-auto hover:scale-105 transition-all duration-500">
             <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold mb-3 sm:mb-4">
               {taboutCta("title")}
             </h2>
@@ -191,7 +160,7 @@ export function AboutSection() {
               </Button>
             </div>
           </div>
-        </motion.div>
+        </div>
       </div>
     </section>
   );

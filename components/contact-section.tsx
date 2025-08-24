@@ -4,7 +4,6 @@ import { useTranslations } from "next-intl";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Mail, MapPin, Phone, Clock } from "lucide-react";
-import { motion } from "framer-motion";
 import { Link } from "@/i18n/routing";
 
 
@@ -15,27 +14,18 @@ export function ContactSection() {
   return (
     <section className="py-12 sm:py-16 lg:py-24 bg-gradient-to-b from-background to-muted/20">
       <div className="container mx-auto px-4">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="text-center mb-8 sm:mb-12 lg:mb-16"
-        >
+        <div className="text-center mb-8 sm:mb-12 lg:mb-16 transition-all duration-700 ease-out">
           <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4 sm:mb-6">{t("title")}</h1>
           <p className="text-base sm:text-lg lg:text-xl text-muted-foreground max-w-3xl mx-auto px-2">
             {t("subtitle")}
           </p>
-        </motion.div>
+        </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 max-w-7xl mx-auto">
           {/* Quick Booking CTA */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-          >
+          <div className="transition-all duration-700 ease-out hover:scale-105">
             <Card className="h-full flex flex-col">
-              <CardHeader className="p-4 sm:p-5 lg:p-6">
+              <CardHeader className="px-4 sm:px-5 lg:px-6 pt-4 sm:pt-5 lg:pt-6 pb-2">
                 <CardTitle className="text-lg sm:text-xl lg:text-2xl text-center lg:text-left">
                   {tui("book_your_session")}
                 </CardTitle>
@@ -74,16 +64,57 @@ export function ContactSection() {
                 </div>
               </CardContent>
             </Card>
-          </motion.div>
+          </div>
 
-          {/* Contact Information */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-          >
+          {/* What to Expect & Additional Info */}
+          <div className="transition-all duration-700 ease-out hover:scale-105">
             <Card className="h-full flex flex-col">
-              <CardHeader className="p-4 sm:p-5 lg:p-6">
+              <CardHeader className="px-4 sm:px-5 lg:px-6 pt-4 sm:pt-5 lg:pt-6 pb-2">
+                <CardTitle className="text-lg sm:text-xl text-center lg:text-left">
+                  {tui("what_to_expect")}
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="flex-1 p-4 sm:p-5 lg:p-6 pt-0">
+                <div className="space-y-4 sm:space-y-5">
+                  <div className="space-y-1 sm:space-y-2">
+                    <h4 className="font-medium text-sm sm:text-base">{tui("response_time")}</h4>
+                    <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
+                      {tui("response_time_desc")}
+                    </p>
+                  </div>
+                  
+                  <div className="space-y-1 sm:space-y-2">
+                    <h4 className="font-medium text-sm sm:text-base">{tui("booking_process")}</h4>
+                    <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
+                      {tui("booking_process_desc")}
+                    </p>
+                  </div>
+                  
+                  <div className="space-y-1 sm:space-y-2">
+                    <h4 className="font-medium text-sm sm:text-base">{tui("payment")}</h4>
+                    <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
+                      {tui("payment_desc")}
+                    </p>
+                  </div>
+                  
+                  {/* Additional Professional Quality Info */}
+                  <div className="border-t pt-3 sm:pt-4 mt-4 sm:mt-5">
+                    <div className="p-3 bg-muted/30 rounded-lg">
+                      <h4 className="font-semibold mb-1 text-sm sm:text-base">{t("professional_quality")}</h4>
+                      <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
+                        {t("quality_description")}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+          
+          {/* Contact Information */}
+          <div className="transition-all duration-700 ease-out hover:scale-105">
+            <Card className="h-full flex flex-col">
+              <CardHeader className="px-4 sm:px-5 lg:px-6 pt-4 sm:pt-5 lg:pt-6 pb-2">
                 <CardTitle className="text-lg sm:text-xl text-center lg:text-left">
                   {tui("contact_information")}
                 </CardTitle>
@@ -136,56 +167,7 @@ export function ContactSection() {
                 </div>
               </CardContent>
             </Card>
-          </motion.div>
-
-          {/* What to Expect & Additional Info */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.6 }}
-          >
-            <Card className="h-full flex flex-col">
-              <CardHeader className="p-4 sm:p-5 lg:p-6">
-                <CardTitle className="text-lg sm:text-xl text-center lg:text-left">
-                  {tui("what_to_expect")}
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="flex-1 p-4 sm:p-5 lg:p-6 pt-0">
-                <div className="space-y-4 sm:space-y-5">
-                  <div className="space-y-1 sm:space-y-2">
-                    <h4 className="font-medium text-sm sm:text-base">{tui("response_time")}</h4>
-                    <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
-                      {tui("response_time_desc")}
-                    </p>
-                  </div>
-                  
-                  <div className="space-y-1 sm:space-y-2">
-                    <h4 className="font-medium text-sm sm:text-base">{tui("booking_process")}</h4>
-                    <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
-                      {tui("booking_process_desc")}
-                    </p>
-                  </div>
-                  
-                  <div className="space-y-1 sm:space-y-2">
-                    <h4 className="font-medium text-sm sm:text-base">{tui("payment")}</h4>
-                    <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
-                      {tui("payment_desc")}
-                    </p>
-                  </div>
-                  
-                  {/* Additional Professional Quality Info */}
-                  <div className="border-t pt-3 sm:pt-4 mt-4 sm:mt-5">
-                    <div className="p-3 bg-muted/30 rounded-lg">
-                      <h4 className="font-semibold mb-1 text-sm sm:text-base">{t("professional_quality")}</h4>
-                      <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
-                        {t("quality_description")}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </motion.div>
+          </div>
         </div>
       </div>
     </section>
