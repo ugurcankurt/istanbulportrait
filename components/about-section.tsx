@@ -82,7 +82,7 @@ export function AboutSection() {
                     console.error('All image sources failed');
                     target.style.display = 'none';
                     const parent = target.closest('.relative');
-                    if (parent) {
+                    if (parent && parent instanceof HTMLElement) {
                       const fallback = document.createElement('div');
                       fallback.className = 'absolute inset-0 bg-gradient-to-r from-primary/10 to-primary/5 flex items-center justify-center';
                       fallback.innerHTML = '<div class="text-primary font-medium">Image Loading...</div>';
