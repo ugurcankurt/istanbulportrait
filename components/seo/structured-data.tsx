@@ -26,7 +26,7 @@ export function StructuredData({ type, data }: StructuredDataProps) {
         return {
           "@context": "https://schema.org",
           "@type": "WebSite",
-          name: "Istanbul Portrait",
+          name: "Istanbul Photographer",
           url: baseUrl,
           description: t("seo.home.description"),
           potentialAction: {
@@ -47,7 +47,7 @@ export function StructuredData({ type, data }: StructuredDataProps) {
           "@context": "https://schema.org",
           "@type": "ProfessionalService",
           "@id": `${baseUrl}#organization`,
-          name: "Istanbul Portrait",
+          name: "Istanbul Photographer",
           image: [`${baseUrl}/og-image.jpg`],
           description: t("seo.home.description"),
           url: baseUrl,
@@ -55,7 +55,9 @@ export function StructuredData({ type, data }: StructuredDataProps) {
           email: "info@istanbulportrait.com",
           address: {
             "@type": "PostalAddress",
+            streetAddress: "Alemdar, Molla Fenari, Divan Yolu Cd. No:78/A",
             addressLocality: "Istanbul",
+            postalCode: "34110",
             addressCountry: "TR",
           },
           geo: {
@@ -113,7 +115,8 @@ export function StructuredData({ type, data }: StructuredDataProps) {
           name: "Professional Photography Services in Istanbul",
           provider: {
             "@type": "ProfessionalService",
-            name: "Istanbul Portrait",
+            name: "Istanbul Photographer",
+            priceRange: "€150-€450",
             url: baseUrl,
           },
           description:
@@ -198,7 +201,7 @@ export function StructuredData({ type, data }: StructuredDataProps) {
           "@context": "https://schema.org",
           "@type": "LocalBusiness",
           "@id": `${baseUrl}#business`,
-          name: "Istanbul Portrait",
+          name: "Istanbul Photographer",
           image: [`${baseUrl}/og-image.jpg`],
           description: t("seo.home.description"),
           url: baseUrl,
@@ -206,7 +209,9 @@ export function StructuredData({ type, data }: StructuredDataProps) {
           email: "info@istanbulportrait.com",
           address: {
             "@type": "PostalAddress",
+            streetAddress: "Alemdar, Molla Fenari, Divan Yolu Cd. No:78/A",
             addressLocality: "Istanbul",
+            postalCode: "34110",
             addressCountry: "TR",
           },
           geo: {
@@ -218,17 +223,17 @@ export function StructuredData({ type, data }: StructuredDataProps) {
           priceRange: "€150-€450",
           aggregateRating: {
             "@type": "AggregateRating",
-            ratingValue: "4.9",
+            ratingValue: "4.5",
             reviewCount: "127",
             bestRating: "5",
-            worstRating: "1",
+            worstRating: "0",
           },
           review: [
             {
               "@type": "Review",
               author: {
                 "@type": "Person",
-                name: "Sarah Johnson",
+                name: "Balal Ahmed",
               },
               reviewRating: {
                 "@type": "Rating",
@@ -236,38 +241,38 @@ export function StructuredData({ type, data }: StructuredDataProps) {
                 bestRating: "5",
               },
               reviewBody:
-                "Amazing Istanbul photoshoot experience! Professional photographer with incredible rooftop locations. The photos exceeded all expectations.",
-              datePublished: "2024-10-15",
+                "An Incredible Rooftop Photography Experience with Uğur! Me and my wife had the absolute pleasure of doing a rooftop photography session with Uğur on the 9th of July, and we couldn’t be happier with the entire experience! From start to finish, Uğur was incredibly professional, friendly, and welcoming, making us feel completely at ease throughout the shoot.The rooftop setting was stunning, and Uğur eye for capturing beautiful, natural moments truly impressed us. He guided us perfectly, making the whole experience fun and relaxed while still delivering high-quality, artistic photos that we will treasure forever. On top of the fantastic service, the pricing was very reasonable for the level of quality and care we received. It genuinely felt like a premium experience at a great value. We would highly recommend Uğur to anyone looking for a memorable and beautifully executed photo session. Amazing service all around thank you, Uğur, for making our day so special!",
+              datePublished: "2025-07-15",
             },
             {
               "@type": "Review",
               author: {
                 "@type": "Person",
-                name: "Marco Rodriguez",
+                name: "Xhuljana Cukaj",
               },
               reviewRating: {
                 "@type": "Rating",
-                ratingValue: "5",
+                ratingValue: "4.5",
                 bestRating: "5",
               },
               reviewBody:
-                "Best decision for our Istanbul trip! Beautiful couple photos with Bosphorus views. Highly recommend this photographer.",
-              datePublished: "2024-11-02",
+                "Amazing photographer! Captured Istanbul beautifully and made the whole experience fun and relaxed. The photos turned out stunning—highly recommended!",
+              datePublished: "2025-04-02",
             },
             {
               "@type": "Review",
               author: {
                 "@type": "Person",
-                name: "Emma Thompson",
+                name: "Dima Kaaki",
               },
               reviewRating: {
                 "@type": "Rating",
-                ratingValue: "5",
+                ratingValue: "4.5",
                 bestRating: "5",
               },
               reviewBody:
-                "Professional, creative, and knows all the best spots in Istanbul. Our rooftop session was magical!",
-              datePublished: "2024-11-20",
+                "Perfect spot!! I've had the most beautiful photo session ever!! Very recommended. If you are visiting istanbul this would be an unforgettable memory",
+              datePublished: "2025-8-01",
             },
           ],
         };
@@ -276,7 +281,7 @@ export function StructuredData({ type, data }: StructuredDataProps) {
         return {
           "@context": "https://schema.org",
           "@type": "LocalBusiness",
-          name: "Istanbul Portrait",
+          name: "Istanbul Photographer",
           image: [`${baseUrl}/og-image.jpg`],
           description: t("seo.home.description"),
           url: baseUrl,
@@ -284,9 +289,10 @@ export function StructuredData({ type, data }: StructuredDataProps) {
           email: "info@istanbulportrait.com",
           address: {
             "@type": "PostalAddress",
-            streetAddress: "Professional Photography Services",
+            streetAddress: "Alemdar, Molla Fenari, Divan Yolu Cd. No:78/A",
             addressLocality: "Istanbul",
             addressRegion: "Istanbul",
+            postalCode: "34110",
             addressCountry: "TR",
           },
           geo: {
@@ -337,12 +343,12 @@ export function StructuredData({ type, data }: StructuredDataProps) {
             data.datePublished,
           author: {
             "@type": "Person",
-            name: data.author || "Istanbul Portrait Team",
+            name: data.author || "Istanbul Photographer Team",
             url: baseUrl,
           },
           publisher: {
             "@type": "Organization",
-            name: "Istanbul Portrait",
+            name: "Istanbul Photographer",
             logo: {
               "@type": "ImageObject",
               url: `${baseUrl}/istanbulportrait_dark_logo.png`,
@@ -383,7 +389,7 @@ export function StructuredData({ type, data }: StructuredDataProps) {
           },
           publisher: {
             "@type": "Organization",
-            name: "Istanbul Portrait",
+            name: "Istanbul Photographer",
             logo: {
               "@type": "ImageObject",
               url: `${baseUrl}/istanbulportrait_dark_logo.png`,
