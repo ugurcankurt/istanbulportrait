@@ -22,6 +22,11 @@ export function HeroSection() {
           fill
           className="object-cover"
           priority
+          onError={(e) => {
+            console.error('Failed to load hero image: /istanbul_photographer.jpg');
+            const target = e.target as HTMLImageElement;
+            target.style.display = 'none';
+          }}
         />
         <div className="absolute inset-0 bg-black/40" />
       </div>

@@ -71,6 +71,11 @@ export function AboutSection() {
                 alt={tui("professional_photographer")}
                 fill
                 className="object-cover"
+                onError={(e) => {
+                  console.error('Failed to load about image: /photographer_in_istanbul.jpg');
+                  const target = e.target as HTMLImageElement;
+                  target.style.display = 'none';
+                }}
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
             </div>
