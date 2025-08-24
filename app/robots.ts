@@ -8,6 +8,5 @@ export default function robots(): MetadataRoute.Robots {
       disallow: ["/api/", "/_next/", "/admin/"],
     },
     sitemap: "https://istanbulportrait.com/sitemap.xml",
-    host: "https://istanbulportrait.com",
   };
 }

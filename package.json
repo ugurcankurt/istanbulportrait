@@ -18,6 +18,7 @@
     "health-check:ssl": "node scripts/health-check.js --ssl-only",
     "health-check:perf": "node scripts/health-check.js --performance-only",
     "production-test": "node scripts/production-test.js",
+    "check-translations": "node scripts/check-translations.js",
     "postbuild": "echo 'Build completed successfully!'",
     "clean": "rm -rf .next && rm -rf out"
   },
