@@ -4,13 +4,22 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
-    "build": "next build --turbopack",
+    "build": "npm run type-check && next build",
+    "build:analyze": "ANALYZE=true npm run build",
     "start": "next start",
     "lint": "biome check",
+    "lint:fix": "biome check --apply",
     "format": "biome format --write",
     "type-check": "tsc --noEmit",
     "setup:supabase": "node scripts/setup-supabase.js",
-    "test:db": "node scripts/test-db.js"
+    "test:db": "node scripts/test-db.js",
+    "test:payment": "node scripts/test-payment.js",
+    "health-check": "node scripts/health-check.js",
+    "health-check:ssl": "node scripts/health-check.js --ssl-only",
+    "health-check:perf": "node scripts/health-check.js --performance-only",
+    "production-test": "node scripts/production-test.js",
+    "postbuild": "echo 'Build completed successfully!'",
+    "clean": "rm -rf .next && rm -rf out"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.1",
