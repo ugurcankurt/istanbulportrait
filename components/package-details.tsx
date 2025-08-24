@@ -1,22 +1,25 @@
 "use client";
 
-import { useTranslations } from "next-intl";
 import { motion } from "framer-motion";
 import { Check, Clock, Image as ImageIcon, MapPin } from "lucide-react";
-
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { useTranslations } from "next-intl";
+import { useEffect } from "react";
 import { Badge } from "@/components/ui/badge";
-
-import { packagePrices } from "@/lib/validations";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { trackViewItem } from "@/lib/analytics";
 import type { PackageId } from "@/lib/validations";
+import { packagePrices } from "@/lib/validations";
 
 interface PackageDetailsProps {
   selectedPackage: PackageId | null;
   onPackageSelect: (packageId: PackageId) => void;
 }
 
-export function PackageDetails({ selectedPackage, onPackageSelect }: PackageDetailsProps) {
+export function PackageDetails({
+  selectedPackage,
+  onPackageSelect,
+}: PackageDetailsProps) {
   const t = useTranslations("packages");
   const tui = useTranslations("ui");
   const tpackage = useTranslations("package_selection");
@@ -64,10 +67,19 @@ export function PackageDetails({ selectedPackage, onPackageSelect }: PackageDeta
     },
   ];
 
+  // Track page view for packages on component mount
+  useEffect(() => {
+    packages.forEach((pkg) => {
+      trackViewItem(pkg.id, pkg.price);
+    });
+  }, []);
+
   return (
     <div className="space-y-4 sm:space-y-6">
       <div className="text-center">
-        <h2 className="text-xl sm:text-2xl font-bold mb-2">{tpackage("choose_package")}</h2>
+        <h2 className="text-xl sm:text-2xl font-bold mb-2">
+          {tpackage("choose_package")}
+        </h2>
         <p className="text-muted-foreground text-sm sm:text-base">
           {tpackage("select_description")}
         </p>
@@ -87,8 +99,8 @@ export function PackageDetails({ selectedPackage, onPackageSelect }: PackageDeta
                 selectedPackage === pkg.id
                   ? "ring-2 ring-primary shadow-xl bg-gradient-to-b from-background to-primary/5"
                   : pkg.popular
-                  ? "ring-2 ring-primary/50 shadow-lg bg-gradient-to-b from-background to-primary/5"
-                  : "hover:shadow-md border-2 hover:border-primary/20"
+                    ? "ring-2 ring-primary/50 shadow-lg bg-gradient-to-b from-background to-primary/5"
+                    : "hover:shadow-md border-2 hover:border-primary/20"
               }`}
               onClick={() => onPackageSelect(pkg.id)}
             >
@@ -101,7 +113,9 @@ export function PackageDetails({ selectedPackage, onPackageSelect }: PackageDeta
               )}
 
               <CardHeader className="text-center pb-2 sm:pb-4 px-4 sm:px-6">
-                <CardTitle className="text-lg sm:text-xl font-bold mb-1 sm:mb-2">{pkg.name}</CardTitle>
+                <CardTitle className="text-lg sm:text-xl font-bold mb-1 sm:mb-2">
+                  {pkg.name}
+                </CardTitle>
                 <div className="text-2xl sm:text-3xl font-bold text-primary mb-2 sm:mb-4">
                   €{pkg.price}
                 </div>
@@ -130,14 +144,16 @@ export function PackageDetails({ selectedPackage, onPackageSelect }: PackageDeta
                       className="flex items-start space-x-2"
                     >
                       <Check className="w-3 h-3 sm:w-4 sm:h-4 text-primary mt-0.5 flex-shrink-0" />
-                      <span className="text-xs sm:text-sm leading-relaxed">{feature}</span>
+                      <span className="text-xs sm:text-sm leading-relaxed">
+                        {feature}
+                      </span>
                     </li>
                   ))}
                 </ul>
 
                 <div className="mt-4 sm:mt-6 pt-2">
-                  <Button 
-                    className="w-full py-2 sm:py-3 text-sm sm:text-base" 
+                  <Button
+                    className="w-full py-2 sm:py-3 text-sm sm:text-base"
                     size="sm"
                     variant={selectedPackage === pkg.id ? "default" : "outline"}
                     onClick={(e) => {
@@ -145,7 +161,9 @@ export function PackageDetails({ selectedPackage, onPackageSelect }: PackageDeta
                       onPackageSelect(pkg.id);
                     }}
                   >
-                    {selectedPackage === pkg.id ? tui("selected") : tui("select_package")}
+                    {selectedPackage === pkg.id
+                      ? tui("selected")
+                      : tui("select_package")}
                   </Button>
                 </div>
               </CardContent>
@@ -161,8 +179,9 @@ export function PackageDetails({ selectedPackage, onPackageSelect }: PackageDeta
           className="text-center"
         >
           <p className="text-xs sm:text-sm text-muted-foreground mb-4">
-            {tpackage("you_selected")} <span className="font-semibold text-primary">
-              {packages.find(p => p.id === selectedPackage)?.name}
+            {tpackage("you_selected")}{" "}
+            <span className="font-semibold text-primary">
+              {packages.find((p) => p.id === selectedPackage)?.name}
             </span>
           </p>
         </motion.div>

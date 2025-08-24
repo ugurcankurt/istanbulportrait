@@ -1,14 +1,24 @@
 "use client";
 
+import { Instagram, Mail, MapPin, Phone } from "lucide-react";
+import Image from "next/image";
 import { useTranslations } from "next-intl";
+import { useTheme } from "next-themes";
+import { useEffect, useState } from "react";
 import { Link } from "@/i18n/routing";
-import { Camera, Instagram, Mail, MapPin, Phone } from "lucide-react";
 
 export function Footer() {
   const t = useTranslations("footer");
   const nav = useTranslations("nav");
   const contact = useTranslations("contact.info");
   const tui = useTranslations("ui");
+  const [mounted, setMounted] = useState(false);
+  const { resolvedTheme } = useTheme();
+
+  // Prevent hydration mismatch by waiting for client-side mount
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const socialLinks = [
     {
@@ -32,9 +42,19 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Brand */}
           <div className="space-y-4">
-            <div className="flex items-center space-x-2">
-              <Camera className="h-6 w-6" />
-              <span className="font-bold text-lg">Istanbul Portrait</span>
+            <div className="flex items-center">
+              <Image
+                src={
+                  mounted && resolvedTheme === "dark"
+                    ? "/istanbulportrait_white_logo.png"
+                    : "/istanbulportrait_dark_logo.png"
+                }
+                alt="Istanbul Portrait Logo"
+                width={90}
+                height={24}
+                className="h-6 w-auto"
+                suppressHydrationWarning
+              />
             </div>
             <p className="text-muted-foreground text-sm">{t("description")}</p>
             <div className="flex space-x-4">

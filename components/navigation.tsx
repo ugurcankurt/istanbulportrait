@@ -1,8 +1,11 @@
 "use client";
 
-import { useState } from "react";
-import { useTranslations, useLocale } from "next-intl";
-import { Link, usePathname, useRouter } from "@/i18n/routing";
+import { motion } from "framer-motion";
+import { Globe, Menu } from "lucide-react";
+import Image from "next/image";
+import { useLocale, useTranslations } from "next-intl";
+import { useTheme } from "next-themes";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -10,8 +13,14 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
-import { Menu, Globe, Camera } from "lucide-react";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import { Link, usePathname, useRouter } from "@/i18n/routing";
 import { cn } from "@/lib/utils";
 
 const locales = [
@@ -23,13 +32,17 @@ const locales = [
 
 export function Navigation() {
   const t = useTranslations("nav");
-  const tui = useTranslations("ui");
   const locale = useLocale();
   const pathname = usePathname();
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  const { resolvedTheme } = useTheme();
 
-  const currentLocale = locales.find((l) => l.code === locale);
+  // Prevent hydration mismatch by waiting for client-side mount
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const navItems = [
     { href: "/" as const, label: t("home") },
@@ -43,29 +56,66 @@ export function Navigation() {
   };
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container mx-auto flex h-16 items-center justify-between px-4">
+    <motion.header
+      initial={{ opacity: 0, y: -20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6, ease: "easeOut" }}
+      className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60"
+    >
+      <div className="container mx-auto flex h-14 sm:h-16 items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Logo */}
-        <Link href="/" className="flex items-center space-x-2">
-          <Camera className="h-6 w-6" />
-          <span className="font-bold text-lg">Istanbul Portrait</span>
-        </Link>
+        <motion.div
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.98 }}
+          transition={{ type: "spring", stiffness: 400, damping: 17 }}
+        >
+          <Link href="/" className="flex items-center">
+            <Image
+              src={
+                mounted && resolvedTheme === "dark"
+                  ? "/istanbulportrait_white_logo.png"
+                  : "/istanbulportrait_dark_logo.png"
+              }
+              alt="Istanbul Portrait Logo"
+              width={120}
+              height={32}
+              className="h-6 sm:h-8 w-auto"
+              priority
+              suppressHydrationWarning
+            />
+          </Link>
+        </motion.div>
 
         {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center space-x-6 text-sm font-medium">
-          {navItems.map((item) => (
-            <Link
+        <nav className="hidden md:flex items-center space-x-4 lg:space-x-6 text-sm font-medium">
+          {navItems.map((item, index) => (
+            <motion.div
               key={item.href}
-              href={item.href}
-              className={cn(
-                "transition-colors hover:text-foreground/80",
-                pathname === item.href
-                  ? "text-foreground"
-                  : "text-foreground/60",
-              )}
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: index * 0.1 }}
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.95 }}
             >
-              {item.label}
-            </Link>
+              <Link
+                href={item.href}
+                className={cn(
+                  "relative transition-colors hover:text-foreground/80",
+                  pathname === item.href
+                    ? "text-foreground"
+                    : "text-foreground/60",
+                )}
+              >
+                {item.label}
+                {pathname === item.href && (
+                  <motion.div
+                    layoutId="activeNav"
+                    className="absolute -bottom-1 left-0 right-0 h-0.5 bg-primary"
+                    transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                  />
+                )}
+              </Link>
+            </motion.div>
           ))}
         </nav>
 
@@ -73,9 +123,15 @@ export function Navigation() {
           {/* Language Switcher */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="sm" className="h-8 w-8 px-0">
-                <Globe className="h-4 w-4" />
-              </Button>
+              <motion.div
+                whileHover={{ scale: 1.1, rotate: 10 }}
+                whileTap={{ scale: 0.9 }}
+                transition={{ type: "spring", stiffness: 400, damping: 17 }}
+              >
+                <Button variant="ghost" size="sm" className="h-8 w-8 px-0">
+                  <Globe className="h-4 w-4" />
+                </Button>
+              </motion.div>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               {locales.map((loc) => (
@@ -97,40 +153,76 @@ export function Navigation() {
           {/* Mobile Menu */}
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
             <SheetTrigger asChild className="md:hidden">
-              <Button variant="ghost" size="sm" className="h-8 w-8 px-0 relative">
-                <Menu className="h-4 w-4" />
-                <span className="sr-only">Open menu</span>
-              </Button>
+              <motion.div
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+                transition={{ type: "spring", stiffness: 400, damping: 17 }}
+              >
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-8 w-8 px-0 relative"
+                >
+                  <motion.div
+                    animate={isOpen ? { rotate: 180 } : { rotate: 0 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <Menu className="h-4 w-4" />
+                  </motion.div>
+                  <span className="sr-only">Open menu</span>
+                </Button>
+              </motion.div>
             </SheetTrigger>
             <SheetContent side="right" className="w-80 p-0">
               <SheetHeader className="p-6 pb-4 bg-muted/30">
-                <div className="flex items-center space-x-2">
-                  <Camera className="h-6 w-6 text-primary" />
-                  <SheetTitle className="font-bold text-xl">Istanbul Portrait</SheetTitle>
+                <div className="flex items-center justify-center">
+                  <Image
+                    src={
+                      mounted && resolvedTheme === "dark"
+                        ? "/istanbulportrait_white_logo.png"
+                        : "/istanbulportrait_dark_logo.png"
+                    }
+                    alt="Istanbul Portrait Logo"
+                    width={90}
+                    height={24}
+                    className="h-6 w-auto"
+                    suppressHydrationWarning
+                  />
+                  <SheetTitle className="sr-only">Istanbul Portrait</SheetTitle>
                 </div>
               </SheetHeader>
-              
+
               <nav className="flex flex-col p-6 space-y-2">
-                {navItems.map((item) => (
-                  <Link
+                {navItems.map((item, index) => (
+                  <motion.div
                     key={item.href}
-                    href={item.href}
-                    className={cn(
-                      "flex items-center px-4 py-4 rounded-lg transition-all duration-200 group",
-                      pathname === item.href
-                        ? "bg-primary text-primary-foreground shadow-sm"
-                        : "hover:bg-muted/50 hover:translate-x-1"
-                    )}
-                    onClick={() => setIsOpen(false)}
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.3, delay: index * 0.1 }}
+                    whileHover={{ scale: 1.02, x: 4 }}
+                    whileTap={{ scale: 0.98 }}
                   >
-                    <span className="text-base font-medium">{item.label}</span>
-                  </Link>
+                    <Link
+                      href={item.href}
+                      className={cn(
+                        "flex items-center px-4 py-4 rounded-lg transition-all duration-200 group",
+                        pathname === item.href
+                          ? "bg-primary text-primary-foreground shadow-sm"
+                          : "hover:bg-muted/50",
+                      )}
+                      onClick={() => setIsOpen(false)}
+                    >
+                      <span className="text-base font-medium">
+                        {item.label}
+                      </span>
+                    </Link>
+                  </motion.div>
                 ))}
               </nav>
             </SheetContent>
           </Sheet>
         </div>
       </div>
-    </header>
+    </motion.header>
   );
 }

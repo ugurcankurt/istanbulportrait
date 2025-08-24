@@ -1,8 +1,8 @@
 import { getTranslations } from "next-intl/server";
-import { HeroSection } from "@/components/hero-section";
+import { FAQSection } from "@/components/faq-section";
 import { GallerySection } from "@/components/gallery-section";
+import { HeroSection } from "@/components/hero-section";
 import { PackagesSection } from "@/components/packages-section";
-import { AboutSection } from "@/components/about-section";
 
 export async function generateMetadata({
   params,
@@ -20,10 +20,11 @@ export async function generateMetadata({
 
 export default function HomePage() {
   return (
-    <div>
+    <div className="overflow-hidden">
       <HeroSection />
       <GallerySection />
       <PackagesSection />
+      <FAQSection />
     </div>
   );
 }

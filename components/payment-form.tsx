@@ -1,22 +1,38 @@
 "use client";
 
-import { useState } from "react";
-import { useTranslations } from "next-intl";
-import { UseFormReturn } from "react-hook-form";
-import { CreditCard, Lock, ShieldCheck, Calendar, Mail, User, Clock } from "lucide-react";
 import { motion } from "framer-motion";
-
+import {
+  Calendar,
+  Clock,
+  CreditCard,
+  Lock,
+  Mail,
+  ShieldCheck,
+  User,
+} from "lucide-react";
+import { useTranslations } from "next-intl";
+import { useState } from "react";
+import type { UseFormReturn } from "react-hook-form";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
-import { Separator } from "@/components/ui/separator";
-import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Separator } from "@/components/ui/separator";
+import type {
+  BookingFormData,
+  PackageId,
+  PaymentFormData,
+} from "@/lib/validations";
 import { packagePrices } from "@/lib/validations";
-import type { PaymentFormData, BookingFormData, PackageId } from "@/lib/validations";
 
 interface PaymentFormProps {
   form: UseFormReturn<PaymentFormData>;
@@ -70,16 +86,16 @@ export function PaymentForm({
   };
 
   return (
-    <motion.div 
+    <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
       className="grid grid-cols-1 lg:grid-cols-3 gap-8"
     >
       {/* Payment Form */}
-      <div className="lg:col-span-2 space-y-6">
+      <div className="lg:col-span-2 space-y-1">
         <Card className="shadow-lg">
-          <CardHeader className="space-y-4 pb-6">
+          <CardHeader className="space-y-4 pb-4">
             <div className="flex items-center justify-between">
               <CardTitle className="flex items-center gap-3 text-xl sm:text-2xl">
                 <div className="p-2 bg-muted rounded-lg">
@@ -98,21 +114,23 @@ export function PaymentForm({
             </div>
           </CardHeader>
           <CardContent className="pt-0">
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form onSubmit={handleSubmit} className="space-y-4">
               <FormField
                 control={form.control}
                 name="cardHolderName"
                 render={({ field }) => (
-                  <FormItem className="space-y-2">
+                  <FormItem className="space-y-1">
                     <FormLabel className="text-sm font-medium flex items-center gap-2">
                       <User className="w-4 h-4 text-muted-foreground" />
                       {t("form.card_holder")}
                     </FormLabel>
                     <FormControl>
-                      <Input 
-                        placeholder={tplaceholders("card_holder")} 
+                      <Input
+                        type="text"
+                        autoComplete="cc-name"
+                        placeholder={tplaceholders("card_holder")}
                         className="uppercase h-10 sm:h-11 text-sm sm:text-base font-medium"
-                        {...field} 
+                        {...field}
                       />
                     </FormControl>
                     <FormMessage />
@@ -124,18 +142,25 @@ export function PaymentForm({
                 control={form.control}
                 name="cardNumber"
                 render={({ field }) => (
-                  <FormItem className="space-y-2">
+                  <FormItem className="space-y-1">
                     <FormLabel className="text-sm font-medium flex items-center gap-2">
                       <CreditCard className="w-4 h-4 text-muted-foreground" />
                       {t("form.card_number")}
                     </FormLabel>
                     <FormControl>
                       <Input
+                        type="tel"
+                        autoComplete="cc-number"
                         placeholder={tplaceholders("card_number")}
                         maxLength={19}
+                        pattern="[0-9]*"
+                        inputMode="numeric"
                         className="h-10 sm:h-11 text-sm sm:text-base font-mono tracking-wider"
                         value={formatCardNumber(field.value)}
-                        onChange={(e) => field.onChange(e.target.value.replace(/\s/g, ""))}
+                        onChange={(e) => {
+                          const value = e.target.value.replace(/\D/g, "");
+                          field.onChange(value);
+                        }}
                       />
                     </FormControl>
                     <FormMessage />
@@ -143,23 +168,33 @@ export function PaymentForm({
                 )}
               />
 
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div className="grid grid-cols-3 gap-3">
                 <FormField
                   control={form.control}
                   name="expireMonth"
                   render={({ field }) => (
-                    <FormItem className="space-y-2">
+                    <FormItem className="space-y-1">
                       <FormLabel className="text-sm font-medium flex items-center gap-2">
                         <Calendar className="w-4 h-4 text-muted-foreground" />
                         <span className="block sm:hidden">MM</span>
-                        <span className="hidden sm:block">{t("form.expire_month")}</span>
+                        <span className="hidden sm:block">
+                          {t("form.expire_month")}
+                        </span>
                       </FormLabel>
                       <FormControl>
                         <Input
+                          type="tel"
+                          autoComplete="cc-exp-month"
                           placeholder={tplaceholders("expire_mm")}
                           maxLength={2}
+                          pattern="[0-9]*"
+                          inputMode="numeric"
                           className="h-10 sm:h-11 text-sm sm:text-base font-mono text-center"
-                          {...field}
+                          onChange={(e) => {
+                            const value = e.target.value.replace(/\D/g, "");
+                            field.onChange(value);
+                          }}
+                          value={field.value}
                         />
                       </FormControl>
                       <FormMessage />
@@ -171,17 +206,28 @@ export function PaymentForm({
                   control={form.control}
                   name="expireYear"
                   render={({ field }) => (
-                    <FormItem className="space-y-2">
-                      <FormLabel className="text-sm font-medium">
+                    <FormItem className="space-y-1">
+                      <FormLabel className="text-sm font-medium flex items-center gap-2">
+                        <Calendar className="w-4 h-4 text-muted-foreground" />
                         <span className="block sm:hidden">YY</span>
-                        <span className="hidden sm:block">{t("form.expire_year")}</span>
+                        <span className="hidden sm:block">
+                          {t("form.expire_year")}
+                        </span>
                       </FormLabel>
                       <FormControl>
                         <Input
+                          type="tel"
+                          autoComplete="cc-exp-year"
                           placeholder={tplaceholders("expire_yy")}
                           maxLength={2}
+                          pattern="[0-9]*"
+                          inputMode="numeric"
                           className="h-10 sm:h-11 text-sm sm:text-base font-mono text-center"
-                          {...field}
+                          onChange={(e) => {
+                            const value = e.target.value.replace(/\D/g, "");
+                            field.onChange(value);
+                          }}
+                          value={field.value}
                         />
                       </FormControl>
                       <FormMessage />
@@ -193,18 +239,25 @@ export function PaymentForm({
                   control={form.control}
                   name="cvc"
                   render={({ field }) => (
-                    <FormItem className="space-y-2">
+                    <FormItem className="space-y-1">
                       <FormLabel className="text-sm font-medium flex items-center gap-2">
                         <Lock className="w-4 h-4 text-muted-foreground" />
                         {t("form.cvc")}
                       </FormLabel>
                       <FormControl>
                         <Input
+                          type="tel"
+                          autoComplete="cc-csc"
                           placeholder={tplaceholders("cvc_placeholder")}
                           maxLength={4}
-                          type="password"
+                          pattern="[0-9]*"
+                          inputMode="numeric"
                           className="h-10 sm:h-11 text-sm sm:text-base font-mono text-center"
-                          {...field}
+                          onChange={(e) => {
+                            const value = e.target.value.replace(/\D/g, "");
+                            field.onChange(value);
+                          }}
+                          value={field.value}
                         />
                       </FormControl>
                       <FormMessage />
@@ -226,7 +279,9 @@ export function PaymentForm({
                 <Checkbox
                   id="terms"
                   checked={acceptedTerms}
-                  onCheckedChange={(checked) => setAcceptedTerms(checked === true)}
+                  onCheckedChange={(checked) =>
+                    setAcceptedTerms(checked === true)
+                  }
                   className="mt-0.5"
                 />
                 <label
@@ -237,18 +292,18 @@ export function PaymentForm({
                 </label>
               </div>
 
-              <div className="flex flex-col sm:flex-row justify-between pt-6 gap-3 sm:gap-4">
-                <Button 
-                  type="button" 
-                  variant="outline" 
-                  onClick={onBack} 
+              <div className="flex flex-col sm:flex-row justify-between pt-4 gap-3 sm:gap-4">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={onBack}
                   disabled={isLoading}
                   className="h-11 px-6 text-sm font-medium w-full sm:w-auto"
                 >
                   {t("buttons.back")}
                 </Button>
-                <Button 
-                  type="submit" 
+                <Button
+                  type="submit"
                   disabled={!acceptedTerms || isLoading}
                   className="h-11 px-6 text-sm font-medium w-full sm:min-w-[160px] sm:w-auto"
                 >
@@ -260,7 +315,9 @@ export function PaymentForm({
                   ) : (
                     <div className="flex items-center gap-2">
                       <ShieldCheck className="w-4 h-4" />
-                      {t("buttons.complete_booking")}
+                      {t("buttons.pay_amount", {
+                        amount: `€${packageInfo.price}`,
+                      })}
                     </div>
                   )}
                 </Button>
@@ -271,7 +328,7 @@ export function PaymentForm({
       </div>
 
       {/* Order Summary */}
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, x: 20 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.5, delay: 0.2 }}
@@ -290,17 +347,21 @@ export function PaymentForm({
             <div className="space-y-3">
               <div className="flex justify-between items-center p-3 bg-muted/30 rounded-lg border">
                 <div>
-                  <span className="font-medium text-sm sm:text-base">{packageInfo.name}</span>
+                  <span className="font-medium text-sm sm:text-base">
+                    {packageInfo.name}
+                  </span>
                   <Badge variant="secondary" className="ml-2 text-xs">
                     Premium
                   </Badge>
                 </div>
-                <span className="text-lg font-semibold">€{packageInfo.price}</span>
+                <span className="text-lg font-semibold">
+                  €{packageInfo.price}
+                </span>
               </div>
             </div>
-            
+
             <Separator />
-            
+
             <div className="flex justify-between items-center p-3 bg-muted/50 rounded-lg border">
               <span className="text-lg font-semibold">{tui("total")}:</span>
               <span className="text-xl font-bold">€{packageInfo.price}</span>
@@ -328,28 +389,36 @@ export function PaymentForm({
                   <User className="w-4 h-4" />
                   {tpayment("name_label")}
                 </div>
-                <span className="font-medium text-xs sm:text-sm">{bookingData.customerName}</span>
+                <span className="font-medium text-xs sm:text-sm">
+                  {bookingData.customerName}
+                </span>
               </div>
               <div className="flex items-center justify-between p-3 bg-muted/30 rounded-lg border">
                 <div className="flex items-center gap-2 text-muted-foreground">
                   <Mail className="w-4 h-4" />
                   {tpayment("email_label")}
                 </div>
-                <span className="font-medium text-xs break-all">{bookingData.customerEmail}</span>
+                <span className="font-medium text-xs break-all">
+                  {bookingData.customerEmail}
+                </span>
               </div>
               <div className="flex items-center justify-between p-3 bg-muted/30 rounded-lg border">
                 <div className="flex items-center gap-2 text-muted-foreground">
                   <Calendar className="w-4 h-4" />
                   {tpayment("date_label")}
                 </div>
-                <span className="font-medium text-xs sm:text-sm">{bookingData.bookingDate}</span>
+                <span className="font-medium text-xs sm:text-sm">
+                  {bookingData.bookingDate}
+                </span>
               </div>
               <div className="flex items-center justify-between p-3 bg-muted/30 rounded-lg border">
                 <div className="flex items-center gap-2 text-muted-foreground">
                   <Clock className="w-4 h-4" />
                   {tpayment("time_label")}
                 </div>
-                <span className="font-medium text-xs sm:text-sm">{bookingData.bookingTime}</span>
+                <span className="font-medium text-xs sm:text-sm">
+                  {bookingData.bookingTime}
+                </span>
               </div>
             </div>
           </CardContent>
@@ -361,7 +430,9 @@ export function PaymentForm({
               <div className="p-2 bg-muted rounded-lg">
                 <ShieldCheck className="w-4 h-4" />
               </div>
-              <span className="font-semibold text-base">{tpayment("secure_payment")}</span>
+              <span className="font-semibold text-base">
+                {tpayment("secure_payment")}
+              </span>
             </div>
             <p className="text-sm text-muted-foreground font-medium leading-relaxed">
               {tpayment("iyzico_description")}

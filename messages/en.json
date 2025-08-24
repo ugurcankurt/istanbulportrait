@@ -140,7 +140,7 @@
     "description": "Complete your booking for the perfect Istanbul photoshoot experience",
     "steps": {
       "package": "Package",
-      "details": "Details", 
+      "details": "Details",
       "payment": "Payment",
       "confirmation": "Confirmation"
     },
@@ -166,6 +166,7 @@
       "continue": "Continue",
       "back": "Back",
       "complete_booking": "Complete Booking",
+      "pay_amount": "PAY {amount}",
       "processing": "Processing...",
       "book_another": "Book Another Session"
     },
@@ -217,7 +218,7 @@
     "package_selection_required": "Please select a package"
   },
   "placeholders": {
-    "full_name": "John Doe",
+    "full_name": "Full Name",
     "email": "john@example.com",
     "phone": "+90 536 709 37 24",
     "select_package": "Select a package",
@@ -229,11 +230,11 @@
     "pick_date": "Pick a date",
     "select_time": "Select time",
     "special_requests": "Any special requests or notes about your photoshoot...",
-    "card_holder": "JOHN DOE",
-    "card_number": "1234 5678 9012 3456",
+    "card_holder": "FULL NAME",
+    "card_number": "XXXX XXXX XXXX XXXX",
     "expire_mm": "MM",
     "expire_yy": "YY",
-    "cvc_placeholder": "123"
+    "cvc_placeholder": "XXX"
   },
   "ui": {
     "custom_package": "Custom Package",
@@ -241,7 +242,7 @@
     "send_message": "Send us a message",
     "contact_information": "Contact Information",
     "location": "Location",
-    "email": "Email", 
+    "email": "Email",
     "phone": "Phone",
     "availability": "Availability",
     "what_to_expect": "What to Expect",
@@ -254,7 +255,7 @@
     "professional_photographer": "Professional photographer",
     "professional_photographer_in_istanbul": "Professional photographer in Istanbul",
     "portrait_photography": "Portrait Photography",
-    "couple_sessions": "Couple Sessions", 
+    "couple_sessions": "Couple Sessions",
     "lifestyle": "Lifestyle",
     "rooftop_shoots": "Rooftop Shoots",
     "view_my_work": "View My Work",
@@ -267,7 +268,12 @@
     "select_package": "Select Package",
     "total": "Total",
     "contact": "Contact",
-    "most_popular": "Most Popular"
+    "most_popular": "Most Popular",
+    "breadcrumbs": {
+      "photography_locations": "Photography Locations",
+      "checkout": "Checkout",
+      "locations": "Locations"
+    }
   },
   "about_highlights": {
     "title": "Why Choose Istanbul Portrait?",
@@ -276,7 +282,7 @@
       "description": "Trained in advanced photography techniques with years of experience in portrait photography."
     },
     "local": {
-      "title": "Local Expertise", 
+      "title": "Local Expertise",
       "description": "Intimate knowledge of Istanbul's most photogenic locations, from hidden rooftops to iconic landmarks."
     },
     "personal": {
@@ -311,7 +317,7 @@
     "offer_catalog_name": "Photography Services",
     "portrait_photography": "Portrait Photography",
     "portrait_photography_desc": "Professional portrait photography sessions",
-    "rooftop_photoshoot": "Rooftop Photoshoot", 
+    "rooftop_photoshoot": "Rooftop Photoshoot",
     "rooftop_photoshoot_desc": "Rooftop photography sessions with Istanbul views",
     "couple_photography": "Couple Photography",
     "couple_photography_desc": "Romantic couple photography sessions",
@@ -319,7 +325,7 @@
     "service_description": "Professional portrait and lifestyle photography sessions in Istanbul featuring rooftop views and historic landmarks",
     "languages": {
       "english": "English",
-      "arabic": "Arabic", 
+      "arabic": "Arabic",
       "russian": "Russian",
       "spanish": "Spanish"
     }
@@ -367,8 +373,47 @@
   },
   "error_messages": {
     "payment_failed": "Payment failed",
-    "booking_failed": "Failed to create booking", 
+    "booking_failed": "Failed to create booking",
     "payment_init_failed": "Payment initialization failed"
+  },
+  "faq": {
+    "title": "Frequently Asked Questions",
+    "subtitle": "Everything you need to know about professional photography sessions in Istanbul",
+    "section_title": "Istanbul Photography FAQs",
+    "questions": {
+      "best-istanbul-photographer": {
+        "question": "What makes you the best Istanbul photographer?",
+        "answer": "With 8+ years of experience and over 500 successful photography sessions, I specialize in capturing Istanbul's unique beauty. My deep local knowledge of the city's most photogenic locations, from rooftop venues with Bosphorus views to historic landmarks, ensures exceptional results every time."
+      },
+      "photoshoot-locations": {
+        "question": "Which locations do you recommend for Istanbul photoshoots?",
+        "answer": "I offer sessions at premium rooftop venues with stunning Bosphorus views, historic areas like Sultanahmet (Blue Mosque, Hagia Sophia), Galata Tower surroundings, Ortaköy Mosque, and hidden gems throughout the city. Each location is chosen for its unique character and photogenic qualities."
+      },
+      "session-duration": {
+        "question": "How long does an Istanbul photography session take?",
+        "answer": "Session durations vary by package: Essential (30 minutes), Premium (1.5 hours), Luxury (2.5 hours), and custom rooftop sessions. This allows ample time for multiple poses, outfit changes, and capturing the perfect shots at your chosen locations."
+      },
+      "best-time-photoshoot": {
+        "question": "What's the best time of day for Istanbul photoshoots?",
+        "answer": "Golden hour (1 hour before sunset) provides the most flattering light and stunning city views. For rooftop sessions, sunset timing offers magical Bosphorus reflections. Morning sessions (8-10 AM) are perfect for fewer crowds at historic locations."
+      },
+      "photo-delivery": {
+        "question": "How quickly will I receive my edited photos?",
+        "answer": "Premium and Luxury packages include same-day preview (5-10 preview photos). Full galleries with professionally edited, high-resolution photos are delivered within 5-7 business days via secure online gallery with download options."
+      },
+      "weather-backup": {
+        "question": "What happens if weather conditions are poor?",
+        "answer": "I monitor weather closely and provide covered location alternatives for rainy days. Rooftop sessions can be rescheduled at no extra cost. Indoor venues and covered historic areas ensure your session happens regardless of weather."
+      },
+      "couple-vs-individual": {
+        "question": "Do you photograph both couples and individuals?",
+        "answer": "Absolutely! I specialize in couple photography, individual portraits, lifestyle sessions, and wedding photography. Each session is tailored to your specific needs, whether it's romantic couple shots or professional individual portraits."
+      },
+      "booking-advance": {
+        "question": "How far in advance should I book my Istanbul photoshoot?",
+        "answer": "I recommend booking 2-3 weeks in advance, especially during peak tourist seasons (spring and fall). This ensures availability for your preferred date and time, and allows proper planning for location permits if needed."
+      }
+    }
   },
   "seo": {
     "home": {

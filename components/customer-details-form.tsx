@@ -1,26 +1,42 @@
 "use client";
 
-import { useTranslations } from "next-intl";
-import { UseFormReturn } from "react-hook-form";
 import { format } from "date-fns";
 import { Calendar as CalendarIcon, Clock } from "lucide-react";
+import { useTranslations } from "next-intl";
+import type { UseFormReturn } from "react-hook-form";
 import PhoneInput from "react-phone-number-input";
 import "react-phone-number-input/style.css";
 
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Calendar } from "@/components/ui/calendar";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
-import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Separator } from "@/components/ui/separator";
+import { Textarea } from "@/components/ui/textarea";
 
 import { cn } from "@/lib/utils";
-import { packagePrices } from "@/lib/validations";
 import type { BookingFormData, PackageId } from "@/lib/validations";
+import { packagePrices } from "@/lib/validations";
 
 interface CustomerDetailsFormProps {
   form: UseFormReturn<BookingFormData>;
@@ -33,9 +49,9 @@ interface CustomerDetailsFormProps {
 const generateTimeSlots = () => {
   const slots = [];
   for (let hour = 6; hour <= 18; hour++) {
-    slots.push(`${hour.toString().padStart(2, '0')}:00`);
+    slots.push(`${hour.toString().padStart(2, "0")}:00`);
     if (hour < 18) {
-      slots.push(`${hour.toString().padStart(2, '0')}:30`);
+      slots.push(`${hour.toString().padStart(2, "0")}:30`);
     }
   }
   return slots;
@@ -89,7 +105,10 @@ export function CustomerDetailsForm({
                     <FormItem>
                       <FormLabel>{t("form.name")}</FormLabel>
                       <FormControl>
-                        <Input placeholder={tplaceholders("enter_full_name")} {...field} />
+                        <Input
+                          placeholder={tplaceholders("enter_full_name")}
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -103,7 +122,11 @@ export function CustomerDetailsForm({
                     <FormItem>
                       <FormLabel>{t("form.email")}</FormLabel>
                       <FormControl>
-                        <Input type="email" placeholder={tplaceholders("enter_email")} {...field} />
+                        <Input
+                          type="email"
+                          placeholder={tplaceholders("enter_email")}
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -134,8 +157,10 @@ export function CustomerDetailsForm({
               <Separator />
 
               <div className="space-y-4">
-                <h3 className="text-lg font-semibold">{t("booking_details")}</h3>
-                
+                <h3 className="text-lg font-semibold">
+                  {t("booking_details")}
+                </h3>
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <FormField
                     control={form.control}
@@ -150,7 +175,7 @@ export function CustomerDetailsForm({
                                 variant="outline"
                                 className={cn(
                                   "w-full pl-3 text-left font-normal",
-                                  !field.value && "text-muted-foreground"
+                                  !field.value && "text-muted-foreground",
                                 )}
                               >
                                 {field.value ? (
@@ -165,10 +190,17 @@ export function CustomerDetailsForm({
                           <PopoverContent className="w-auto p-0" align="start">
                             <Calendar
                               mode="single"
-                              selected={field.value ? new Date(field.value) : undefined}
-                              onSelect={(date) => field.onChange(date ? format(date, 'yyyy-MM-dd') : '')}
+                              selected={
+                                field.value ? new Date(field.value) : undefined
+                              }
+                              onSelect={(date) =>
+                                field.onChange(
+                                  date ? format(date, "yyyy-MM-dd") : "",
+                                )
+                              }
                               disabled={(date) =>
-                                date < new Date() || date < new Date("1900-01-01")
+                                date < new Date() ||
+                                date < new Date("1900-01-01")
                               }
                               autoFocus
                             />
@@ -185,10 +217,15 @@ export function CustomerDetailsForm({
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>{t("form.time")}</FormLabel>
-                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <Select
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
+                        >
                           <FormControl>
                             <SelectTrigger>
-                              <SelectValue placeholder={tplaceholders("select_time")} />
+                              <SelectValue
+                                placeholder={tplaceholders("select_time")}
+                              />
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
@@ -231,9 +268,7 @@ export function CustomerDetailsForm({
                 <Button type="button" variant="outline" onClick={onBack}>
                   {t("buttons.back")}
                 </Button>
-                <Button type="submit">
-                  {t("buttons.continue")}
-                </Button>
+                <Button type="submit">{t("buttons.continue")}</Button>
               </div>
             </form>
           </CardContent>
@@ -250,17 +285,23 @@ export function CustomerDetailsForm({
             <div className="flex justify-between items-start">
               <div>
                 <h3 className="font-semibold">{packageInfo.name}</h3>
-                <p className="text-sm text-muted-foreground">{packageInfo.duration}</p>
-                <p className="text-sm text-muted-foreground">{packageInfo.photos}</p>
+                <p className="text-sm text-muted-foreground">
+                  {packageInfo.duration}
+                </p>
+                <p className="text-sm text-muted-foreground">
+                  {packageInfo.photos}
+                </p>
               </div>
               <Badge variant="secondary">{tui("selected")}</Badge>
             </div>
-            
+
             <Separator />
-            
+
             <div className="flex justify-between items-center">
               <span className="font-semibold">{tui("total")}:</span>
-              <span className="text-xl font-bold text-primary">€{packageInfo.price}</span>
+              <span className="text-xl font-bold text-primary">
+                €{packageInfo.price}
+              </span>
             </div>
 
             <div className="text-xs text-muted-foreground space-y-1">

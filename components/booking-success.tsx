@@ -1,17 +1,17 @@
 "use client";
 
-import { useTranslations } from "next-intl";
 import { motion } from "framer-motion";
-import { CheckCircle, Calendar, Clock, Mail, Phone } from "lucide-react";
-
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Calendar, CheckCircle, Clock, Mail, Phone } from "lucide-react";
+import { useTranslations } from "next-intl";
+import { useEffect } from "react";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Link } from "@/i18n/routing";
-
-import { packagePrices } from "@/lib/validations";
+import { event } from "@/lib/analytics";
 import type { PackageId } from "@/lib/validations";
+import { packagePrices } from "@/lib/validations";
 
 interface BookingSuccessProps {
   bookingId: string;
@@ -29,6 +29,22 @@ export function BookingSuccess({ bookingId, packageId }: BookingSuccessProps) {
     price: packagePrices[packageId],
   };
 
+  // Track successful booking conversion
+  useEffect(() => {
+    event("conversion", {
+      event_category: "ecommerce",
+      event_label: `booking_complete_${packageId}`,
+      value: packageInfo.price,
+    });
+
+    // Track goal completion for GA4
+    event("booking_completed", {
+      event_category: "conversion",
+      event_label: packageId,
+      value: packageInfo.price,
+    });
+  }, [packageId, packageInfo.price]);
+
   return (
     <div className="container mx-auto px-4 py-8 max-w-2xl lg:max-w-4xl">
       <motion.div
@@ -41,11 +57,11 @@ export function BookingSuccess({ bookingId, packageId }: BookingSuccessProps) {
             <motion.div
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
-              transition={{ 
+              transition={{
                 type: "spring",
                 stiffness: 260,
                 damping: 20,
-                delay: 0.2 
+                delay: 0.2,
               }}
               className="mx-auto mb-4 sm:mb-6"
             >
@@ -53,7 +69,7 @@ export function BookingSuccess({ bookingId, packageId }: BookingSuccessProps) {
                 <CheckCircle className="w-8 h-8 sm:w-10 sm:h-10 text-primary-foreground" />
               </div>
             </motion.div>
-            
+
             <CardTitle className="text-2xl sm:text-3xl font-bold mb-3 sm:mb-4">
               {t("success.title")}
             </CardTitle>
@@ -71,23 +87,33 @@ export function BookingSuccess({ bookingId, packageId }: BookingSuccessProps) {
                 </div>
                 {tsuccess("booking_details")}
               </h3>
-              
+
               <div className="space-y-3">
                 <div className="flex justify-between items-center">
-                  <span className="text-muted-foreground text-sm sm:text-base">{t("success.booking_id")}:</span>
+                  <span className="text-muted-foreground text-sm sm:text-base">
+                    {t("success.booking_id")}:
+                  </span>
                   <Badge variant="secondary" className="font-mono text-xs">
                     {bookingId.slice(0, 8).toUpperCase()}
                   </Badge>
                 </div>
-                
+
                 <div className="flex justify-between items-center">
-                  <span className="text-muted-foreground text-sm sm:text-base">{tsuccess("package_label")}:</span>
-                  <span className="font-semibold text-sm sm:text-base">{packageInfo.name}</span>
+                  <span className="text-muted-foreground text-sm sm:text-base">
+                    {tsuccess("package_label")}:
+                  </span>
+                  <span className="font-semibold text-sm sm:text-base">
+                    {packageInfo.name}
+                  </span>
                 </div>
-                
+
                 <div className="flex justify-between items-center">
-                  <span className="text-muted-foreground text-sm sm:text-base">{tsuccess("amount_paid")}:</span>
-                  <span className="font-bold text-sm sm:text-base">€{packageInfo.price}</span>
+                  <span className="text-muted-foreground text-sm sm:text-base">
+                    {tsuccess("amount_paid")}:
+                  </span>
+                  <span className="font-bold text-sm sm:text-base">
+                    €{packageInfo.price}
+                  </span>
                 </div>
               </div>
             </div>
@@ -102,38 +128,44 @@ export function BookingSuccess({ bookingId, packageId }: BookingSuccessProps) {
                 </div>
                 {tsuccess("whats_next")}
               </h3>
-              
+
               <div className="space-y-4">
                 <div className="flex items-start gap-3 p-3 bg-muted/20 rounded-lg border">
                   <div className="w-6 h-6 bg-primary text-primary-foreground rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0">
                     1
                   </div>
                   <div>
-                    <p className="font-semibold text-sm sm:text-base">{tsuccess("confirmation_email")}</p>
+                    <p className="font-semibold text-sm sm:text-base">
+                      {tsuccess("confirmation_email")}
+                    </p>
                     <p className="text-xs sm:text-sm text-muted-foreground mt-1">
                       {tsuccess("email_description")}
                     </p>
                   </div>
                 </div>
-                
+
                 <div className="flex items-start gap-3 p-3 bg-muted/20 rounded-lg border">
                   <div className="w-6 h-6 bg-primary text-primary-foreground rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0">
                     2
                   </div>
                   <div>
-                    <p className="font-semibold text-sm sm:text-base">{tsuccess("pre_session_contact")}</p>
+                    <p className="font-semibold text-sm sm:text-base">
+                      {tsuccess("pre_session_contact")}
+                    </p>
                     <p className="text-xs sm:text-sm text-muted-foreground mt-1">
                       {tsuccess("contact_description")}
                     </p>
                   </div>
                 </div>
-                
+
                 <div className="flex items-start gap-3 p-3 bg-muted/20 rounded-lg border">
                   <div className="w-6 h-6 bg-primary text-primary-foreground rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0">
                     3
                   </div>
                   <div>
-                    <p className="font-semibold text-sm sm:text-base">{tsuccess("photo_delivery")}</p>
+                    <p className="font-semibold text-sm sm:text-base">
+                      {tsuccess("photo_delivery")}
+                    </p>
                     <p className="text-xs sm:text-sm text-muted-foreground mt-1">
                       {tsuccess("delivery_description")}
                     </p>
@@ -154,7 +186,9 @@ export function BookingSuccess({ bookingId, packageId }: BookingSuccessProps) {
                   <div className="p-1.5 bg-muted rounded-lg">
                     <Mail className="w-4 h-4" />
                   </div>
-                  <span className="text-sm font-medium">info@istanbulportrait.com</span>
+                  <span className="text-sm font-medium">
+                    info@istanbulportrait.com
+                  </span>
                 </div>
                 <div className="flex items-center gap-3">
                   <div className="p-1.5 bg-muted rounded-lg">

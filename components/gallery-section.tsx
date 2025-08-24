@@ -1,61 +1,67 @@
 "use client";
 
-import { useTranslations } from "next-intl";
-import Image from "next/image";
-import { useState } from "react";
-import { Dialog, DialogContent, DialogTrigger, DialogTitle } from "@/components/ui/dialog";
+import { motion } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import Image from "next/image";
+import { useTranslations } from "next-intl";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 const galleryImages = [
   {
     id: 1,
     src: "/gallery/couple_photoshoot_in_istanbul.jpg",
-    alt: "Istanbul Couple Photoshoot",
-    category: "portrait"
+    alt: "Professional couple photoshoot Istanbul Bosphorus bridge sunset romantic session with city skyline",
+    category: "portrait",
   },
   {
     id: 2,
-    src: "/gallery/istanbul_couple_photoshoot_1.jpg", 
-    alt: "Istanbul Couple Photoshoot",
-    category: "couple"
+    src: "/gallery/istanbul_couple_photoshoot_1.jpg",
+    alt: "Istanbul couple photography session romantic poses historic Sultanahmet professional photographer",
+    category: "couple",
   },
   {
     id: 3,
     src: "/gallery/istanbul_couple_photoshoot.jpg",
-    alt: "Istanbul Couple Photohoot", 
-    category: "rooftop"
+    alt: "Istanbul rooftop couple photoshoot panoramic city view Bosphorus professional photography session",
+    category: "rooftop",
   },
   {
     id: 4,
     src: "/gallery/istanbul_photographer_1.jpg",
-    alt: "Istanbul Photographer",
-    category: "company"
+    alt: "Professional Istanbul photographer portrait session premium quality studio lighting techniques",
+    category: "company",
   },
   {
     id: 5,
     src: "/gallery/istanbul_rooftop_photoshoot_1.jpg",
-    alt: "Istanbul Rooftop Photographer",
-    category: "portrait"
+    alt: "Istanbul rooftop photoshoot city skyline panoramic view professional photographer sunset session",
+    category: "portrait",
   },
   {
     id: 6,
     src: "/gallery/istanbul_rooftop_photoshoot.jpg",
-    alt: "Istanbul Rooftop Photoshoot", 
-    category: "couple"
+    alt: "Couple rooftop photoshoot Istanbul Galata Tower view romantic session professional photographer",
+    category: "couple",
   },
   {
     id: 7,
     src: "/gallery/istanbul_wedding_photographer_1.jpg",
-    alt: "Istanbul Wedding Photographer",
-    category: "wedding"
+    alt: "Istanbul wedding photographer professional ceremony photography Hagia Sophia historic venue",
+    category: "wedding",
   },
   {
     id: 8,
     src: "/gallery/istanbul_wedding_photographer.jpg",
-    alt: "Istanbul Wedding Photographer",
-    category: "wedding"
-  }
+    alt: "Professional wedding photography Istanbul historic landmarks Blue Mosque ceremony session",
+    category: "wedding",
+  },
 ];
 
 export function GallerySection() {
@@ -68,51 +74,68 @@ export function GallerySection() {
     setIsDialogOpen(true);
   };
 
-  const closeLightbox = () => {
-    setSelectedImage(null);
-    setIsDialogOpen(false);
-  };
-
-  const navigateImage = (direction: 'prev' | 'next') => {
+  const navigateImage = (direction: "prev" | "next") => {
     if (selectedImage === null) return;
-    
-    const currentIndex = galleryImages.findIndex(img => img.id === selectedImage);
+
+    const currentIndex = galleryImages.findIndex(
+      (img) => img.id === selectedImage,
+    );
     let newIndex;
-    
-    if (direction === 'next') {
+
+    if (direction === "next") {
       newIndex = (currentIndex + 1) % galleryImages.length;
     } else {
-      newIndex = (currentIndex - 1 + galleryImages.length) % galleryImages.length;
+      newIndex =
+        (currentIndex - 1 + galleryImages.length) % galleryImages.length;
     }
-    
+
     setSelectedImage(galleryImages[newIndex].id);
   };
 
-  const selectedImageData = galleryImages.find(img => img.id === selectedImage);
+  const selectedImageData = galleryImages.find(
+    (img) => img.id === selectedImage,
+  );
 
   return (
     <section className="py-12 sm:py-16 lg:py-24 bg-gradient-to-b from-background to-muted/20">
       <div className="container mx-auto px-4">
         {/* Header */}
-        <div className="text-center mb-8 sm:mb-12 lg:mb-16 transition-all duration-700 ease-out">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          className="text-center mb-8 sm:mb-12 lg:mb-16"
+        >
           <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4 sm:mb-6">
             {t("title")}
           </h2>
           <p className="text-base sm:text-lg lg:text-xl text-muted-foreground max-w-3xl mx-auto px-2">
             {t("subtitle")}
           </p>
-        </div>
+        </motion.div>
 
         {/* Gallery Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 lg:gap-8 max-w-7xl mx-auto">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 lg:gap-8 max-w-7xl mx-auto"
+        >
           {galleryImages.map((image, index) => (
-            <div
+            <motion.div
               key={image.id}
-              className="group relative aspect-square rounded-xl overflow-hidden cursor-pointer transition-all duration-500 ease-out hover:scale-105"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.4 + index * 0.1 }}
+              whileHover={{ scale: 1.05 }}
+              className="group relative aspect-square rounded-xl overflow-hidden cursor-pointer"
             >
               <Dialog>
                 <DialogTrigger asChild>
-                  <div onClick={() => openLightbox(image.id)} className="w-full h-full">
+                  <div
+                    onClick={() => openLightbox(image.id)}
+                    className="w-full h-full"
+                  >
                     <Image
                       src={image.src}
                       alt={image.alt}
@@ -121,7 +144,7 @@ export function GallerySection() {
                       sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
                       onError={(e) => {
                         const target = e.target as HTMLImageElement;
-                        target.style.display = 'none';
+                        target.style.display = "none";
                       }}
                     />
                     <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors duration-300" />
@@ -145,12 +168,20 @@ export function GallerySection() {
                   </div>
                 </DialogTrigger>
               </Dialog>
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
 
         {/* Lightbox Dialog */}
-        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <Dialog
+          open={isDialogOpen}
+          onOpenChange={(open) => {
+            setIsDialogOpen(open);
+            if (!open) {
+              setSelectedImage(null);
+            }
+          }}
+        >
           <DialogContent className="max-w-4xl max-h-[90vh] p-0 bg-black/95">
             <DialogTitle className="sr-only">
               {selectedImageData?.alt}
@@ -169,36 +200,24 @@ export function GallerySection() {
                     }}
                   />
                 </div>
-                
+
                 {/* Navigation */}
                 <Button
                   variant="outline"
                   size="icon"
                   className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/50 border-white/20 text-white hover:bg-black/70"
-                  onClick={() => navigateImage('prev')}
+                  onClick={() => navigateImage("prev")}
                 >
                   <ChevronLeft className="w-4 h-4" />
                 </Button>
-                
+
                 <Button
                   variant="outline"
                   size="icon"
                   className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/50 border-white/20 text-white hover:bg-black/70"
-                  onClick={() => navigateImage('next')}
+                  onClick={() => navigateImage("next")}
                 >
                   <ChevronRight className="w-4 h-4" />
-                </Button>
-
-                {/* Close button */}
-                <Button
-                  variant="outline"
-                  size="icon"
-                  className="absolute top-4 right-4 bg-black/50 border-white/20 text-white hover:bg-black/70"
-                  onClick={closeLightbox}
-                >
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                  </svg>
                 </Button>
               </div>
             )}

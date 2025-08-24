@@ -1,25 +1,34 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { motion } from "framer-motion";
 import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
-
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Progress } from "@/components/ui/progress";
-import { Form } from "@/components/ui/form";
-
-import { PackageDetails } from "@/components/package-details";
-import { CustomerDetailsForm } from "@/components/customer-details-form";
-import { PaymentForm } from "@/components/payment-form";
 import { BookingSuccess } from "@/components/booking-success";
-
-import { bookingSchema, paymentSchema, packagePrices } from "@/lib/validations";
-import type { BookingFormData, PaymentFormData, PackageId } from "@/lib/validations";
+import { CustomerDetailsForm } from "@/components/customer-details-form";
+import { PackageDetails } from "@/components/package-details";
+import { PaymentForm } from "@/components/payment-form";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Form } from "@/components/ui/form";
+import { Progress } from "@/components/ui/progress";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  trackAddToCart,
+  trackBeginCheckout,
+  trackBookingEvent,
+  trackPackageView,
+  trackPaymentEvent,
+  trackPurchase,
+} from "@/lib/analytics";
+import type {
+  BookingFormData,
+  PackageId,
+  PaymentFormData,
+} from "@/lib/validations";
+import { bookingSchema, packagePrices, paymentSchema } from "@/lib/validations";
 
 const steps = ["package", "details", "payment", "confirmation"] as const;
 type Step = (typeof steps)[number];
@@ -30,7 +39,9 @@ export function CheckoutForm() {
   const tPackages = useTranslations("packages");
 
   const [currentStep, setCurrentStep] = useState<Step>("package");
-  const [selectedPackage, setSelectedPackage] = useState<PackageId | null>(null);
+  const [selectedPackage, setSelectedPackage] = useState<PackageId | null>(
+    null,
+  );
   const [bookingId, setBookingId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -77,11 +88,23 @@ export function CheckoutForm() {
     setSelectedPackage(packageId);
     bookingForm.setValue("packageId", packageId);
     bookingForm.setValue("totalAmount", packagePrices[packageId]);
+
+    // Track package selection with Enhanced Ecommerce
+    trackPackageView(packageId);
+    trackAddToCart(packageId, packagePrices[packageId]);
+
     setCurrentStep("details");
   };
 
   const handleDetailsSubmit = (data: BookingFormData) => {
     console.log("Booking details:", data);
+
+    // Track booking process started with Enhanced Ecommerce
+    if (selectedPackage) {
+      trackBookingEvent(selectedPackage, packagePrices[selectedPackage]);
+      trackBeginCheckout(selectedPackage, packagePrices[selectedPackage]);
+    }
+
     setCurrentStep("payment");
   };
 
@@ -91,7 +114,7 @@ export function CheckoutForm() {
     setIsLoading(true);
     try {
       const bookingData = bookingForm.getValues();
-      
+
       // Create booking
       const bookingResponse = await fetch("/api/booking", {
         method: "POST",
@@ -127,12 +150,43 @@ export function CheckoutForm() {
         setBookingId(bookingResult.booking.id);
         setCurrentStep("confirmation");
         toast.success(t("success.payment_successful"));
+
+        // Track successful payment conversion with Enhanced Ecommerce
+        trackPaymentEvent(
+          selectedPackage,
+          packagePrices[selectedPackage],
+          "success",
+        );
+        trackPurchase(
+          bookingResult.booking.id,
+          selectedPackage,
+          packagePrices[selectedPackage],
+        );
       } else {
-        throw new Error(paymentResult.errorMessage || t("error.payment_failed"));
+        // Track failed payment
+        trackPaymentEvent(
+          selectedPackage,
+          packagePrices[selectedPackage],
+          "failure",
+        );
+        throw new Error(
+          paymentResult.errorMessage || t("error.payment_failed"),
+        );
       }
     } catch (error) {
       console.error("Payment error:", error);
-      toast.error(error instanceof Error ? error.message : t("error.payment_failed"));
+      toast.error(
+        error instanceof Error ? error.message : t("error.payment_failed"),
+      );
+
+      // Track payment failure
+      if (selectedPackage) {
+        trackPaymentEvent(
+          selectedPackage,
+          packagePrices[selectedPackage],
+          "failure",
+        );
+      }
     } finally {
       setIsLoading(false);
     }
@@ -142,7 +196,7 @@ export function CheckoutForm() {
     const step = value as Step;
     const stepIndex = getStepIndex(step);
     const currentIndex = getCurrentStepIndex();
-    
+
     // Only allow going back or to current step
     if (stepIndex <= currentIndex) {
       setCurrentStep(step);
@@ -150,30 +204,36 @@ export function CheckoutForm() {
   };
 
   if (currentStep === "confirmation" && bookingId) {
-    return <BookingSuccess bookingId={bookingId} packageId={selectedPackage!} />;
+    return (
+      <BookingSuccess bookingId={bookingId} packageId={selectedPackage!} />
+    );
   }
 
   return (
-    <div className="container mx-auto px-4 py-8 max-w-4xl lg:max-w-6xl xl:max-w-7xl">
+    <div className="container mx-auto px-2 sm:px-4 py-4 sm:py-8 max-w-4xl lg:max-w-6xl xl:max-w-7xl">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
       >
         <Card>
-          <CardHeader className="text-center">
-            <CardTitle className="text-3xl font-bold">{t("title")}</CardTitle>
-            <p className="text-muted-foreground">{t("description")}</p>
-            
-            <div className="mt-6">
+          <CardHeader className="text-center p-4 sm:p-6">
+            <CardTitle className="text-xl sm:text-3xl font-bold">
+              {t("title")}
+            </CardTitle>
+            <p className="text-sm sm:text-base text-muted-foreground">
+              {t("description")}
+            </p>
+
+            <div className="mt-4 sm:mt-6">
               <Progress value={progressPercentage} className="w-full" />
-              <div className="flex justify-between mt-2 text-sm text-muted-foreground">
+              <div className="flex justify-between mt-2 text-xs sm:text-sm text-muted-foreground">
                 {steps.map((step, index) => (
                   <span
                     key={step}
                     className={
-                      index <= getCurrentStepIndex() 
-                        ? "text-primary font-medium" 
+                      index <= getCurrentStepIndex()
+                        ? "text-primary font-medium"
                         : ""
                     }
                   >
@@ -184,23 +244,23 @@ export function CheckoutForm() {
             </div>
           </CardHeader>
 
-          <CardContent>
+          <CardContent className="p-3 sm:p-6">
             <Tabs value={currentStep} onValueChange={handleStepChange}>
-              <TabsList className="grid w-full grid-cols-4">
+              <TabsList className="grid w-full grid-cols-4 h-8 sm:h-10">
                 {steps.map((step, index) => (
                   <TabsTrigger
                     key={step}
                     value={step}
                     disabled={index > getCurrentStepIndex()}
-                    className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+                    className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground text-xs sm:text-sm"
                   >
                     {t(`steps.${step}`)}
                   </TabsTrigger>
                 ))}
               </TabsList>
 
-              <div className="mt-8">
-                <TabsContent value="package" className="space-y-6">
+              <div className="mt-4 sm:mt-8">
+                <TabsContent value="package" className="space-y-3 sm:space-y-6">
                   <motion.div
                     key={`package-${currentStep}`}
                     initial={{ opacity: 0, x: 20 }}
@@ -214,7 +274,7 @@ export function CheckoutForm() {
                   </motion.div>
                 </TabsContent>
 
-                <TabsContent value="details" className="space-y-6">
+                <TabsContent value="details" className="space-y-3 sm:space-y-6">
                   <motion.div
                     key={`details-${currentStep}`}
                     initial={{ opacity: 0, x: 20 }}
@@ -232,7 +292,7 @@ export function CheckoutForm() {
                   </motion.div>
                 </TabsContent>
 
-                <TabsContent value="payment" className="space-y-6">
+                <TabsContent value="payment" className="space-y-3 sm:space-y-6">
                   <motion.div
                     key={`payment-${currentStep}`}
                     initial={{ opacity: 0, x: 20 }}

@@ -1,11 +1,11 @@
 "use client";
 
+import { motion } from "framer-motion";
+import { Camera, MapPin, Star } from "lucide-react";
+import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { Link } from "@/i18n/routing";
-import { Camera, MapPin, Star } from "lucide-react";
-import Image from "next/image";
-import { motion } from "framer-motion";
 
 export function HeroSection() {
   const t = useTranslations("hero");
@@ -26,12 +26,12 @@ export function HeroSection() {
           sizes="100vw"
           onError={(e) => {
             const target = e.target as HTMLImageElement;
-            target.src = '/istanbulportprat_ugur_cankurt.jpg';
+            target.src = "/istanbulportprat_ugur_cankurt.jpg";
             target.onerror = () => {
-              target.style.display = 'none';
-              const parent = target.closest('.absolute');
+              target.style.display = "none";
+              const parent = target.closest(".absolute");
               if (parent && parent instanceof HTMLElement) {
-                parent.style.backgroundColor = 'rgba(0,0,0,0.7)';
+                parent.style.backgroundColor = "rgba(0,0,0,0.7)";
               }
             };
           }}
@@ -64,10 +64,19 @@ export function HeroSection() {
             transition={{ duration: 0.8, delay: 0.2 }}
             className="flex flex-col sm:flex-row justify-center items-center gap-4 mb-8 sm:mb-16 px-4"
           >
-            <Button asChild size="lg" className="text-base sm:text-lg px-6 sm:px-8 py-3 sm:py-6 w-full sm:w-auto min-w-[160px]">
+            <Button
+              asChild
+              size="lg"
+              className="text-base sm:text-lg px-6 sm:px-8 py-3 sm:py-6 w-full sm:w-auto min-w-[160px]"
+            >
               <Link href="/packages">{tui("packages_button")}</Link>
             </Button>
-            <Button asChild variant="outline" size="lg" className="text-base sm:text-lg px-6 sm:px-8 py-3 sm:py-6 w-full sm:w-auto min-w-[160px] bg-white/10 backdrop-blur-sm border-white/30 text-white hover:bg-white/20">
+            <Button
+              asChild
+              variant="outline"
+              size="lg"
+              className="text-base sm:text-lg px-6 sm:px-8 py-3 sm:py-6 w-full sm:w-auto min-w-[160px] bg-white/10 backdrop-blur-sm border-white/30 text-white hover:bg-white/20"
+            >
               <Link href="/checkout">{tui("book_your_session")}</Link>
             </Button>
           </motion.div>
@@ -86,7 +95,9 @@ export function HeroSection() {
               <h3 className="text-base sm:text-xl font-semibold mb-1 sm:mb-2">
                 {features("rooftop.title")}
               </h3>
-              <p className="text-xs sm:text-base text-white/80 leading-relaxed">{features("rooftop.description")}</p>
+              <p className="text-xs sm:text-base text-white/80 leading-relaxed">
+                {features("rooftop.description")}
+              </p>
             </div>
 
             <div className="text-center p-3 sm:p-6 bg-white/10 backdrop-blur-sm rounded-md sm:rounded-lg border border-white/20 hover:bg-white/15 transition-colors">

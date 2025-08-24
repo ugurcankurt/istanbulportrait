@@ -1,17 +1,17 @@
 "use client";
 
+import { motion } from "framer-motion";
+import { Check, Clock, Image as ImageIcon, MapPin } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardFooter,
   CardHeader,
 } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Link } from "@/i18n/routing";
-import { Check, Clock, Image as ImageIcon, MapPin } from "lucide-react";
-import { motion } from "framer-motion";
 
 export function PackagesSection() {
   const t = useTranslations("packages");
@@ -69,7 +69,9 @@ export function PackagesSection() {
           transition={{ duration: 0.8 }}
           className="text-center mb-8 sm:mb-12 lg:mb-16"
         >
-          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4 sm:mb-6">{t("title")}</h1>
+          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4 sm:mb-6">
+            {t("title")}
+          </h1>
           <p className="text-base sm:text-lg lg:text-xl text-muted-foreground max-w-3xl mx-auto px-2">
             {t("subtitle")}
           </p>
@@ -96,7 +98,9 @@ export function PackagesSection() {
                 )}
 
                 <CardHeader className="text-center pb-3 sm:pb-6 px-3 sm:px-6">
-                  <h3 className="text-lg sm:text-xl font-bold mb-2 sm:mb-3">{pkg.name}</h3>
+                  <h3 className="text-lg sm:text-xl font-bold mb-2 sm:mb-3">
+                    {pkg.name}
+                  </h3>
                   <div className="text-2xl sm:text-3xl font-bold text-primary mb-3 sm:mb-6">
                     {pkg.price}
                   </div>
@@ -125,7 +129,9 @@ export function PackagesSection() {
                         className="flex items-start space-x-2 sm:space-x-2.5"
                       >
                         <Check className="w-3 h-3 sm:w-4 sm:h-4 text-primary mt-0.5 flex-shrink-0" />
-                        <span className="text-xs sm:text-sm leading-relaxed">{feature}</span>
+                        <span className="text-xs sm:text-sm leading-relaxed">
+                          {feature}
+                        </span>
                       </li>
                     ))}
                   </ul>
@@ -133,8 +139,15 @@ export function PackagesSection() {
 
                 <CardFooter className="pt-3 sm:pt-4 px-3 sm:px-6">
                   <Button asChild className="w-full" size="sm">
-                    <Link href={{ pathname: "/checkout", query: { package: pkg.id } }}>
-                      <span className="text-xs sm:text-sm font-medium">{tui("book_package")}</span>
+                    <Link
+                      href={{
+                        pathname: "/checkout",
+                        query: { package: pkg.id },
+                      }}
+                    >
+                      <span className="text-xs sm:text-sm font-medium">
+                        {tui("book_package")}
+                      </span>
                     </Link>
                   </Button>
                 </CardFooter>
@@ -150,11 +163,18 @@ export function PackagesSection() {
           className="mt-8 sm:mt-12 lg:mt-16 text-center"
         >
           <div className="bg-muted/30 rounded-lg p-4 sm:p-6 lg:p-8 max-w-4xl mx-auto">
-            <h3 className="text-lg sm:text-xl lg:text-2xl font-bold mb-3 sm:mb-4">{t("custom.title")}</h3>
+            <h3 className="text-lg sm:text-xl lg:text-2xl font-bold mb-3 sm:mb-4">
+              {t("custom.title")}
+            </h3>
             <p className="text-sm sm:text-base text-muted-foreground mb-4 sm:mb-6 px-2">
               {t("custom.description")}
             </p>
-            <Button asChild variant="outline" size="sm" className="sm:text-base">
+            <Button
+              asChild
+              variant="outline"
+              size="sm"
+              className="sm:text-base"
+            >
               <Link href="/contact">{t("custom.button")}</Link>
             </Button>
           </div>

@@ -1,5 +1,5 @@
-import { defineRouting } from "next-intl/routing";
 import { createNavigation } from "next-intl/navigation";
+import { defineRouting } from "next-intl/routing";
 
 export const routing = defineRouting({
   locales: ["en", "ar", "ru", "es"],
@@ -29,6 +29,12 @@ export const routing = defineRouting({
       ar: "/الدفع",
       ru: "/оплата",
       es: "/pago",
+    },
+    "/locations": {
+      en: "/locations",
+      ar: "/المواقع",
+      ru: "/локации",
+      es: "/ubicaciones",
     },
   },
 });

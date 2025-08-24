@@ -1,4 +1,4 @@
-import { z } from "zod"
+import { z } from "zod";
 
 export const bookingSchema = z.object({
   packageId: z.string().min(1, "validation.package_required"),
@@ -9,7 +9,7 @@ export const bookingSchema = z.object({
   bookingTime: z.string().min(1, "validation.time_required"),
   notes: z.string().optional(),
   totalAmount: z.number().positive("validation.amount_positive"),
-})
+});
 
 export const paymentSchema = z.object({
   cardHolderName: z.string().min(2, "validation.cardholder_required"),
@@ -17,16 +17,16 @@ export const paymentSchema = z.object({
   expireMonth: z.string().min(2, "validation.month_required").max(2),
   expireYear: z.string().min(2, "validation.year_required").max(2),
   cvc: z.string().min(3, "validation.cvc_required").max(4),
-})
+});
 
-export type BookingFormData = z.infer<typeof bookingSchema>
-export type PaymentFormData = z.infer<typeof paymentSchema>
+export type BookingFormData = z.infer<typeof bookingSchema>;
+export type PaymentFormData = z.infer<typeof paymentSchema>;
 
 export const packagePrices = {
   essential: 150,
   premium: 280,
   luxury: 450,
   rooftop: 150,
-} as const
+} as const;
 
-export type PackageId = keyof typeof packagePrices
+export type PackageId = keyof typeof packagePrices;

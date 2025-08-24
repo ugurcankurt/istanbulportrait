@@ -1,12 +1,15 @@
+import { Geist, Geist_Mono } from "next/font/google";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages, getTranslations } from "next-intl/server";
-import { Geist, Geist_Mono } from "next/font/google";
-import { GoogleAnalytics } from '@/components/analytics/google-analytics'
+import {
+  CookieConsent,
+  GoogleAnalytics,
+} from "@/components/analytics/google-analytics";
 import "../globals.css";
-import { Navigation } from "@/components/navigation";
-import { Footer } from "@/components/footer";
-import { StructuredData } from "@/components/seo/structured-data";
 import { ThemeProvider } from "next-themes";
+import { Footer } from "@/components/footer";
+import { Navigation } from "@/components/navigation";
+import { StructuredData } from "@/components/seo/structured-data";
 import { Toaster } from "@/components/ui/sonner";
 
 const geistSans = Geist({
@@ -41,9 +44,9 @@ export async function generateMetadata({
       googleBot: {
         index: true,
         follow: true,
-        'max-video-preview': -1,
-        'max-image-preview': 'large',
-        'max-snippet': -1,
+        "max-video-preview": -1,
+        "max-image-preview": "large",
+        "max-snippet": -1,
       },
     },
     alternates: {
@@ -72,6 +75,33 @@ export async function generateMetadata({
       creator: "@istanbulportrait",
       site: "@istanbulportrait",
     },
+    icons: {
+      icon: [
+        {
+          url: "/favicon.ico",
+          sizes: "48x48",
+          type: "image/x-icon",
+        },
+        {
+          url: "/icon1.png",
+          sizes: "96x96",
+          type: "image/png",
+        },
+        {
+          url: "/icon0.svg",
+          sizes: "any",
+          type: "image/svg+xml",
+        },
+      ],
+      apple: [
+        {
+          url: "/apple-icon.png",
+          sizes: "180x180",
+          type: "image/png",
+        },
+      ],
+    },
+    manifest: "/manifest.json",
   };
 }
 
@@ -109,8 +139,11 @@ export default async function LocaleLayout({
               <Footer />
             </div>
             <Toaster />
+            <CookieConsent />
             <StructuredData type="website" />
             <StructuredData type="organization" />
+            <StructuredData type="reviews" />
+            <StructuredData type="localbusiness" />
           </NextIntlClientProvider>
         </ThemeProvider>
       </body>

@@ -1,6 +1,6 @@
-import { Resend } from 'resend';
+import { Resend } from "resend";
 
-const resend = new Resend(process.env.RESEND_API_KEY || 'demo-resend-key');
+const resend = new Resend(process.env.RESEND_API_KEY || "demo-resend-key");
 
 export interface BookingConfirmationData {
   customerName: string;
@@ -12,15 +12,20 @@ export interface BookingConfirmationData {
   bookingId: string;
 }
 
-export const sendBookingConfirmation = async (data: BookingConfirmationData) => {
+export const sendBookingConfirmation = async (
+  data: BookingConfirmationData,
+) => {
   try {
     // Check if we have a valid API key
-    if (!process.env.RESEND_API_KEY || process.env.RESEND_API_KEY === 'demo-resend-key') {
-      throw new Error('Resend API key is not configured properly');
+    if (
+      !process.env.RESEND_API_KEY ||
+      process.env.RESEND_API_KEY === "demo-resend-key"
+    ) {
+      throw new Error("Resend API key is not configured properly");
     }
 
     const result = await resend.emails.send({
-      from: 'Photographer in Istanbul <info@istanbulportrait.com>',
+      from: "Photographer in Istanbul <info@istanbulportrait.com>",
       to: [data.customerEmail],
       subject: `Booking Confirmation - ${data.packageName}`,
       html: `
@@ -68,12 +73,12 @@ export const sendBookingConfirmation = async (data: BookingConfirmationData) => 
             <p style="color: #666; font-size: 14px;">Istanbul Portrait Photography<br/>Istanbul, Turkey</p>
           </div>
         </div>
-      `
+      `,
     });
 
     return result;
   } catch (error) {
-    console.error('Error sending confirmation email:', error);
+    console.error("Error sending confirmation email:", error);
     throw error;
   }
 };

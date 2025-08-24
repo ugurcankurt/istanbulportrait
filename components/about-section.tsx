@@ -1,12 +1,13 @@
 "use client";
 
+import { motion } from "framer-motion";
+import { Award, Camera, Heart, MapPin, Star, Users } from "lucide-react";
+import Image from "next/image";
 import { useTranslations } from "next-intl";
-import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import { Link } from "@/i18n/routing";
-import { Award, Camera, Heart, Users, Star, MapPin } from "lucide-react";
-import Image from "next/image";
 
 export function AboutSection() {
   const t = useTranslations("about");
@@ -54,17 +55,30 @@ export function AboutSection() {
     <section className="py-12 sm:py-16 lg:py-24 bg-gradient-to-b from-background to-muted/20">
       <div className="container mx-auto px-4">
         {/* Hero */}
-        <div className="text-center mb-8 sm:mb-12 lg:mb-16 transition-all duration-700 ease-out">
-          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4 sm:mb-6">{t("title")}</h1>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          className="text-center mb-8 sm:mb-12 lg:mb-16"
+        >
+          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4 sm:mb-6">
+            {t("title")}
+          </h1>
           <p className="text-base sm:text-lg lg:text-xl text-muted-foreground max-w-3xl mx-auto px-2">
             {t("subtitle")}
           </p>
-        </div>
+        </motion.div>
 
         {/* Main Content */}
         <div className="grid lg:grid-cols-2 gap-8 sm:gap-12 lg:gap-16 items-center max-w-6xl mx-auto mb-12 sm:mb-16 lg:mb-20">
           {/* Image */}
-          <div className="relative transition-all duration-700 ease-out hover:scale-105">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            whileHover={{ scale: 1.05 }}
+            className="relative"
+          >
             <div className="relative aspect-[4/5] rounded-2xl overflow-hidden">
               <Image
                 src="/istanbulportprat_ugur_cankurt.jpg"
@@ -76,14 +90,16 @@ export function AboutSection() {
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 600px"
                 onError={(e) => {
                   const target = e.target as HTMLImageElement;
-                  target.src = '/istanbul_photographer.jpg';
+                  target.src = "/istanbul_photographer.jpg";
                   target.onerror = () => {
-                    target.style.display = 'none';
-                    const parent = target.closest('.relative');
+                    target.style.display = "none";
+                    const parent = target.closest(".relative");
                     if (parent && parent instanceof HTMLElement) {
-                      const fallback = document.createElement('div');
-                      fallback.className = 'absolute inset-0 bg-gradient-to-r from-primary/10 to-primary/5 flex items-center justify-center';
-                      fallback.innerHTML = '<div class="text-primary font-medium">Image Loading...</div>';
+                      const fallback = document.createElement("div");
+                      fallback.className =
+                        "absolute inset-0 bg-gradient-to-r from-primary/10 to-primary/5 flex items-center justify-center";
+                      fallback.innerHTML =
+                        '<div class="text-primary font-medium">Image Loading...</div>';
                       parent.appendChild(fallback);
                     }
                   };
@@ -94,74 +110,125 @@ export function AboutSection() {
             <div className="absolute -bottom-2 sm:-bottom-4 -right-2 sm:-right-4 bg-primary text-primary-foreground p-3 sm:p-4 rounded-lg shadow-lg">
               <Camera className="w-6 h-6 sm:w-8 sm:h-8" />
             </div>
-          </div>
+          </motion.div>
 
           {/* Content */}
-          <div className="space-y-4 sm:space-y-6 transition-all duration-700 ease-out">
-            <p className="text-sm sm:text-base lg:text-lg leading-relaxed">{t("description")}</p>
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
+            className="space-y-4 sm:space-y-6"
+          >
+            <p className="text-sm sm:text-base lg:text-lg leading-relaxed">
+              {t("description")}
+            </p>
 
             <div className="flex flex-wrap gap-2">
-              <Badge variant="secondary" className="text-xs sm:text-sm">{tui("portrait_photography")}</Badge>
-              <Badge variant="secondary" className="text-xs sm:text-sm">{tui("couple_sessions")}</Badge>
-              <Badge variant="secondary" className="text-xs sm:text-sm">{tui("lifestyle")}</Badge>
-              <Badge variant="secondary" className="text-xs sm:text-sm">{tui("rooftop_shoots")}</Badge>
+              <Badge variant="secondary" className="text-xs sm:text-sm">
+                {tui("portrait_photography")}
+              </Badge>
+              <Badge variant="secondary" className="text-xs sm:text-sm">
+                {tui("couple_sessions")}
+              </Badge>
+              <Badge variant="secondary" className="text-xs sm:text-sm">
+                {tui("lifestyle")}
+              </Badge>
+              <Badge variant="secondary" className="text-xs sm:text-sm">
+                {tui("rooftop_shoots")}
+              </Badge>
             </div>
 
             <div className="pt-2 sm:pt-4">
-              <Button asChild size="sm" className="sm:size-lg text-xs sm:text-sm">
+              <Button
+                asChild
+                size="sm"
+                className="sm:size-lg text-xs sm:text-sm"
+              >
                 <Link href="/packages">{tui("view_my_work")}</Link>
               </Button>
             </div>
-          </div>
+          </motion.div>
         </div>
 
         {/* Stats */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 max-w-4xl mx-auto mb-12 sm:mb-16 lg:mb-20 transition-all duration-700 ease-out">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.6 }}
+          className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 max-w-4xl mx-auto mb-12 sm:mb-16 lg:mb-20"
+        >
           {stats.map((stat, index) => (
-            <Card key={index} className="text-center p-4 sm:p-6 lg:p-8 hover:scale-105 transition-all duration-500">
-              <CardContent className="p-0">
-                <div className="w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 mx-auto mb-3 sm:mb-4 rounded-full bg-primary/10 flex items-center justify-center">
-                  <stat.icon className="w-6 h-6 sm:w-7 sm:h-7 lg:w-8 lg:h-8 text-primary" />
-                </div>
-                <div className="text-2xl sm:text-3xl font-bold text-primary mb-2">
-                  {stat.number}
-                </div>
-                <p className="text-muted-foreground font-medium text-xs sm:text-sm">
-                  {stat.label}
-                </p>
-              </CardContent>
-            </Card>
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.8 + index * 0.1 }}
+              whileHover={{ scale: 1.05 }}
+            >
+              <Card className="text-center p-4 sm:p-6 lg:p-8">
+                <CardContent className="p-0">
+                  <div className="w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 mx-auto mb-3 sm:mb-4 rounded-full bg-primary/10 flex items-center justify-center">
+                    <stat.icon className="w-6 h-6 sm:w-7 sm:h-7 lg:w-8 lg:h-8 text-primary" />
+                  </div>
+                  <div className="text-2xl sm:text-3xl font-bold text-primary mb-2">
+                    {stat.number}
+                  </div>
+                  <p className="text-muted-foreground font-medium text-xs sm:text-sm">
+                    {stat.label}
+                  </p>
+                </CardContent>
+              </Card>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
 
         {/* Highlights */}
-        <div className="max-w-4xl mx-auto transition-all duration-700 ease-out">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 1.0 }}
+          className="max-w-4xl mx-auto"
+        >
           <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-center mb-8 sm:mb-10 lg:mb-12">
             {taboutHighlights("title")}
           </h2>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
             {highlights.map((highlight, index) => (
-              <Card key={index} className="text-center p-4 sm:p-5 lg:p-6 hover:scale-105 transition-all duration-500">
-                <CardContent className="p-0">
-                  <div className="w-10 h-10 sm:w-12 sm:h-12 mx-auto mb-3 sm:mb-4 rounded-full bg-primary/10 flex items-center justify-center">
-                    <highlight.icon className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
-                  </div>
-                  <h3 className="text-lg sm:text-xl font-semibold mb-2 sm:mb-3">
-                    {highlight.title}
-                  </h3>
-                  <p className="text-muted-foreground text-xs sm:text-sm leading-relaxed">
-                    {highlight.description}
-                  </p>
-                </CardContent>
-              </Card>
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 1.2 + index * 0.1 }}
+                whileHover={{ scale: 1.05 }}
+              >
+                <Card className="text-center p-4 sm:p-5 lg:p-6">
+                  <CardContent className="p-0">
+                    <div className="w-10 h-10 sm:w-12 sm:h-12 mx-auto mb-3 sm:mb-4 rounded-full bg-primary/10 flex items-center justify-center">
+                      <highlight.icon className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
+                    </div>
+                    <h3 className="text-lg sm:text-xl font-semibold mb-2 sm:mb-3">
+                      {highlight.title}
+                    </h3>
+                    <p className="text-muted-foreground text-xs sm:text-sm leading-relaxed">
+                      {highlight.description}
+                    </p>
+                  </CardContent>
+                </Card>
+              </motion.div>
             ))}
           </div>
-        </div>
+        </motion.div>
 
         {/* CTA */}
-        <div className="text-center mt-12 sm:mt-16 lg:mt-20 transition-all duration-700 ease-out">
-          <div className="bg-muted/30 rounded-lg sm:rounded-xl lg:rounded-2xl p-6 sm:p-8 lg:p-12 max-w-4xl mx-auto hover:scale-105 transition-all duration-500">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 1.4 }}
+          whileHover={{ scale: 1.02 }}
+          className="text-center mt-12 sm:mt-16 lg:mt-20"
+        >
+          <div className="bg-muted/30 rounded-lg sm:rounded-xl lg:rounded-2xl p-6 sm:p-8 lg:p-12 max-w-4xl mx-auto">
             <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold mb-3 sm:mb-4">
               {taboutCta("title")}
             </h2>
@@ -169,15 +236,24 @@ export function AboutSection() {
               {taboutCta("description")}
             </p>
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
-              <Button asChild size="sm" className="sm:size-lg text-xs sm:text-sm">
+              <Button
+                asChild
+                size="sm"
+                className="sm:size-lg text-xs sm:text-sm"
+              >
                 <Link href="/contact">{tui("book_your_session")}</Link>
               </Button>
-              <Button asChild variant="outline" size="sm" className="sm:size-lg text-xs sm:text-sm">
+              <Button
+                asChild
+                variant="outline"
+                size="sm"
+                className="sm:size-lg text-xs sm:text-sm"
+              >
                 <Link href="/packages">{tui("view_packages")}</Link>
               </Button>
             </div>
           </div>
-        </div>
+        </motion.div>
       </div>
     </section>
   );

@@ -1,53 +1,42 @@
-import { NextRequest, NextResponse } from "next/server";
-import { supabaseAdmin } from "@/lib/supabase";
-import { initializePayment } from "@/lib/iyzico";
-import { sendBookingConfirmation } from "@/lib/resend";
+import type { NextRequest } from "next/server";
+import { NextResponse } from "next/server";
+import {
+  DatabaseConnectionError,
+  handleSupabaseError,
+  logError,
+  PaymentError,
+  sanitizeErrorForProduction,
+  ValidationError,
+} from "@/lib/errors";
 import type { PaymentRequest } from "@/lib/iyzico";
-
-// Add rate limiting
-const rateLimitMap = new Map();
-
-function rateLimit(ip: string): boolean {
-  const now = Date.now();
-  const windowMs = 60 * 1000; // 1 minute
-  const maxRequests = 5; // Max 5 payment attempts per minute
-
-  if (!rateLimitMap.has(ip)) {
-    rateLimitMap.set(ip, { count: 1, resetTime: now + windowMs });
-    return true;
-  }
-
-  const record = rateLimitMap.get(ip);
-  
-  if (now > record.resetTime) {
-    record.count = 1;
-    record.resetTime = now + windowMs;
-    return true;
-  }
-
-  if (record.count >= maxRequests) {
-    return false;
-  }
-
-  record.count++;
-  return true;
-}
+import { initializePayment } from "@/lib/iyzico";
+import {
+  checkRateLimit,
+  createRateLimitError,
+  getClientIP,
+} from "@/lib/rate-limit";
+import { sendBookingConfirmation } from "@/lib/resend";
+import { supabaseAdmin } from "@/lib/supabase";
 
 export async function POST(request: NextRequest) {
   const startTime = Date.now();
-  
+
   try {
     // Get client IP for rate limiting
-    const forwarded = request.headers.get("x-forwarded-for");
-    const ip = forwarded?.split(",")[0] ?? request.headers.get("x-real-ip") ?? "127.0.0.1";
+    const ip = getClientIP(request);
 
     // Apply rate limiting
-    if (!rateLimit(ip)) {
-      console.warn(`Payment rate limit exceeded for IP: ${ip}`);
-      return NextResponse.json(
-        { error: "Too many payment attempts. Please try again later." },
-        { status: 429 }
-      );
+    const rateLimitResult = await checkRateLimit(ip, {
+      windowMs: 60 * 1000, // 1 minute
+      maxRequests: 5, // Max 5 payment attempts per minute
+    });
+
+    if (!rateLimitResult.success) {
+      logError(new Error("Payment rate limit exceeded"), {
+        ip,
+        endpoint: "payment",
+      });
+      return createRateLimitError(rateLimitResult.resetTime);
     }
 
     const body = await request.json();
@@ -55,26 +44,53 @@ export async function POST(request: NextRequest) {
 
     // Validate required fields
     if (!bookingId || !paymentData || !customerData || !amount) {
+      const validationError = new ValidationError(
+        "Missing required payment data",
+      );
+      logError(validationError, {
+        ip,
+        endpoint: "payment",
+        action: "field_validation",
+      });
+
       return NextResponse.json(
-        { error: "Missing required payment data" },
-        { status: 400 }
+        { error: sanitizeErrorForProduction(validationError) },
+        { status: 400 },
       );
     }
 
     // Validate amount
-    if (typeof amount !== 'number' || amount <= 0 || amount > 10000) {
+    if (typeof amount !== "number" || amount <= 0 || amount > 10000) {
+      const amountError = new ValidationError("Invalid payment amount");
+      logError(amountError, {
+        ip,
+        endpoint: "payment",
+        amount,
+        action: "amount_validation",
+      });
+
       return NextResponse.json(
-        { error: "Invalid payment amount" },
-        { status: 400 }
+        { error: sanitizeErrorForProduction(amountError) },
+        { status: 400 },
       );
     }
 
-    if (process.env.NODE_ENV === 'development') {
-      console.log(`💳 Payment initialization from ${ip} for booking ${bookingId}, amount: €${amount}`);
+    if (process.env.NODE_ENV === "development") {
+      console.log(
+        `💳 Payment initialization from ${ip} for booking ${bookingId}, amount: €${amount}`,
+      );
     }
 
-    let booking;
-    
+    let booking: {
+      id: string;
+      package_id: string;
+      user_name: string;
+      user_email: string;
+      booking_date: string;
+      booking_time: string;
+      total_amount: number;
+    };
+
     try {
       // Try to get booking details from database first
       const { data: bookingData, error: bookingError } = await supabaseAdmin
@@ -86,22 +102,32 @@ export async function POST(request: NextRequest) {
       if (bookingError) {
         throw bookingError;
       }
-      
+
       booking = bookingData;
-    } catch (supabaseError: any) {
-      console.error("❌ Failed to get booking details:", supabaseError);
+    } catch (supabaseError: unknown) {
+      const dbError = new DatabaseConnectionError();
+      logError(handleSupabaseError(supabaseError), {
+        ip,
+        endpoint: "payment",
+        bookingId,
+        action: "booking_fetch",
+      });
+
       return NextResponse.json(
-        { 
+        {
           error: "Booking not found. Please create a booking first.",
-          details: process.env.NODE_ENV === 'development' ? supabaseError.message : undefined
+          details:
+            process.env.NODE_ENV === "development"
+              ? handleSupabaseError(supabaseError).message
+              : undefined,
         },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
     // Format price with proper decimal handling (max 2 decimal places)
     const formattedPrice = parseFloat(amount.toString()).toFixed(2);
-    
+
     // Prepare Iyzico payment request
     const paymentRequest: PaymentRequest = {
       conversationId: bookingId,
@@ -118,11 +144,12 @@ export async function POST(request: NextRequest) {
       },
       buyer: {
         id: `buyer_${bookingId}`,
-        name: customerData.customerName.split(' ')[0] || 'Customer',
-        surname: customerData.customerName.split(' ').slice(1).join(' ') || 'User',
+        name: customerData.customerName.split(" ")[0] || "Customer",
+        surname:
+          customerData.customerName.split(" ").slice(1).join(" ") || "User",
         gsmNumber: customerData.customerPhone,
         email: customerData.customerEmail,
-        identityNumber: "11111111111", // Required by Iyzico, using dummy value
+        identityNumber: process.env.IYZICO_IDENTITY_NUMBER || "11111111111", // Required by Iyzico
         registrationAddress: "Istanbul, Turkey",
         ip: ip,
         city: "Istanbul",
@@ -136,7 +163,7 @@ export async function POST(request: NextRequest) {
       },
       billingAddress: {
         contactName: customerData.customerName,
-        city: "Istanbul", 
+        city: "Istanbul",
         country: "Turkey",
         address: "Istanbul, Turkey",
       },
@@ -160,9 +187,9 @@ export async function POST(request: NextRequest) {
         // Update booking status
         const { error: bookingUpdateError } = await supabaseAdmin
           .from("bookings")
-          .update({ 
+          .update({
             status: "confirmed",
-            updated_at: new Date().toISOString()
+            updated_at: new Date().toISOString(),
           })
           .eq("id", bookingId);
 
@@ -181,7 +208,7 @@ export async function POST(request: NextRequest) {
             amount: amount,
             currency: "EUR",
             provider: "iyzico",
-            provider_response: paymentResult
+            provider_response: paymentResult,
           });
 
         if (paymentInsertError) {
@@ -189,12 +216,20 @@ export async function POST(request: NextRequest) {
         }
 
         const duration = Date.now() - startTime;
-        if (process.env.NODE_ENV === 'development') {
-          console.log(`✅ Payment successful in ${duration}ms:`, paymentResult.paymentId);
+        if (process.env.NODE_ENV === "development") {
+          console.log(
+            `✅ Payment successful in ${duration}ms:`,
+            paymentResult.paymentId,
+          );
         }
-
-      } catch (dbError: any) {
-        console.error(`❌ Database update failed for successful payment:`, dbError);
+      } catch (dbError: unknown) {
+        logError(handleSupabaseError(dbError), {
+          ip,
+          endpoint: "payment",
+          bookingId,
+          paymentId: paymentResult.paymentId,
+          action: "successful_payment_db_update",
+        });
         // Payment was successful but database update failed
         // The payment should still be processed, but we need to handle this gracefully
       }
@@ -210,7 +245,10 @@ export async function POST(request: NextRequest) {
           totalAmount: amount,
           bookingId: bookingId,
         });
-        console.log("✅ Confirmation email sent to", customerData.customerEmail);
+        console.log(
+          "✅ Confirmation email sent to",
+          customerData.customerEmail,
+        );
       } catch (emailError) {
         console.error("❌ Failed to send confirmation email:", emailError);
       }
@@ -227,9 +265,9 @@ export async function POST(request: NextRequest) {
         // Update booking status to cancelled
         const { error: bookingUpdateError } = await supabaseAdmin
           .from("bookings")
-          .update({ 
+          .update({
             status: "cancelled",
-            updated_at: new Date().toISOString()
+            updated_at: new Date().toISOString(),
           })
           .eq("id", bookingId);
 
@@ -248,7 +286,7 @@ export async function POST(request: NextRequest) {
             amount: amount,
             currency: "EUR",
             provider: "iyzico",
-            provider_response: paymentResult
+            provider_response: paymentResult,
           });
 
         if (paymentInsertError) {
@@ -256,12 +294,19 @@ export async function POST(request: NextRequest) {
         }
 
         const duration = Date.now() - startTime;
-        if (process.env.NODE_ENV === 'development') {
-          console.log(`❌ Payment failed in ${duration}ms:`, paymentResult.errorMessage);
+        if (process.env.NODE_ENV === "development") {
+          console.log(
+            `❌ Payment failed in ${duration}ms:`,
+            paymentResult.errorMessage,
+          );
         }
-
-      } catch (dbError: any) {
-        console.error(`❌ Database update failed for failed payment:`, dbError);
+      } catch (dbError: unknown) {
+        logError(handleSupabaseError(dbError), {
+          ip,
+          endpoint: "payment",
+          bookingId,
+          action: "failed_payment_db_update",
+        });
       }
 
       return NextResponse.json({
@@ -270,18 +315,29 @@ export async function POST(request: NextRequest) {
         errorMessage: paymentResult.errorMessage || "Payment failed",
       });
     }
-
-  } catch (error) {
+  } catch (error: unknown) {
     const duration = Date.now() - startTime;
-    console.error(`❌ Payment initialization error after ${duration}ms:`, error);
-    
-    // Don't expose internal error details in production
-    const errorResponse = {
-      error: "Payment processing failed. Please try again later.",
-      details: process.env.NODE_ENV === 'development' ? 
-        (error instanceof Error ? error.message : "Unknown error") : undefined
-    };
-    
-    return NextResponse.json(errorResponse, { status: 500 });
+    const paymentError = new PaymentError(
+      "Payment processing failed. Please try again later.",
+    );
+
+    logError(error, {
+      endpoint: "payment",
+      duration,
+      action: "unexpected_error",
+    });
+
+    return NextResponse.json(
+      {
+        error: sanitizeErrorForProduction(paymentError),
+        details:
+          process.env.NODE_ENV === "development"
+            ? error instanceof Error
+              ? error.message
+              : String(error)
+            : undefined,
+      },
+      { status: 500 },
+    );
   }
 }
