@@ -22,10 +22,20 @@ export function HeroSection() {
           fill
           className="object-cover"
           priority
+          quality={90}
+          sizes="100vw"
           onError={(e) => {
-            console.error('Failed to load hero image: /istanbul_photographer.jpg');
+            console.error('Failed to load primary hero image, trying fallback...');
             const target = e.target as HTMLImageElement;
-            target.style.display = 'none';
+            target.src = '/photographer_in_istanbul.jpg';
+            target.onerror = () => {
+              console.error('All hero image sources failed');
+              target.style.display = 'none';
+              const parent = target.closest('.absolute');
+              if (parent) {
+                parent.style.backgroundColor = 'rgba(0,0,0,0.7)';
+              }
+            };
           }}
         />
         <div className="absolute inset-0 bg-black/40" />

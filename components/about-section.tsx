@@ -71,10 +71,24 @@ export function AboutSection() {
                 alt={tui("professional_photographer")}
                 fill
                 className="object-cover"
+                priority={false}
+                quality={85}
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 600px"
                 onError={(e) => {
-                  console.error('Failed to load about image: /photographer_in_istanbul.jpg');
+                  console.error('Failed to load primary image, trying fallback...');
                   const target = e.target as HTMLImageElement;
-                  target.style.display = 'none';
+                  target.src = '/istanbul_photographer.jpg';
+                  target.onerror = () => {
+                    console.error('All image sources failed');
+                    target.style.display = 'none';
+                    const parent = target.closest('.relative');
+                    if (parent) {
+                      const fallback = document.createElement('div');
+                      fallback.className = 'absolute inset-0 bg-gradient-to-r from-primary/10 to-primary/5 flex items-center justify-center';
+                      fallback.innerHTML = '<div class="text-primary font-medium">Image Loading...</div>';
+                      parent.appendChild(fallback);
+                    }
+                  };
                 }}
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
