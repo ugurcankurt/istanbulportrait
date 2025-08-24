@@ -72,7 +72,9 @@ export async function POST(request: NextRequest) {
     } = validationResult.data;
 
     // Log booking attempt
-    console.log(`Booking attempt from ${ip} for package ${packageId}, customer: ${customerEmail}`);
+    if (process.env.NODE_ENV === 'development') {
+      console.log(`Booking attempt from ${ip} for package ${packageId}, customer: ${customerEmail}`);
+    }
 
     try {
       // Check if package exists
@@ -105,7 +107,9 @@ export async function POST(request: NextRequest) {
         .gte("created_at", fiveMinutesAgo);
 
       if (recentBookings && recentBookings.length > 0) {
-        console.warn("Duplicate booking attempt:", { email: customerEmail, bookingDate, bookingTime });
+        if (process.env.NODE_ENV === 'development') {
+          console.warn("Duplicate booking attempt:", { email: customerEmail, bookingDate, bookingTime });
+        }
         return NextResponse.json(
           { error: "A similar booking was recently created. Please check your email or wait a few minutes." },
           { status: 409 }
@@ -145,7 +149,9 @@ export async function POST(request: NextRequest) {
         .single();
 
       const duration = Date.now() - startTime;
-      console.log(`✅ Booking created successfully in ${duration}ms:`, booking.id);
+      if (process.env.NODE_ENV === 'development') {
+        console.log(`✅ Booking created successfully in ${duration}ms:`, booking.id);
+      }
 
       return NextResponse.json({ 
         success: true, 

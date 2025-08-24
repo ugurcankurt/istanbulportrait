@@ -120,7 +120,6 @@ export function GallerySection() {
                       className="object-cover transition-transform duration-500 group-hover:scale-110"
                       sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
                       onError={(e) => {
-                        console.error(`Failed to load image: ${image.src}`);
                         const target = e.target as HTMLImageElement;
                         target.style.display = 'none';
                       }}
@@ -165,8 +164,8 @@ export function GallerySection() {
                     width={800}
                     height={600}
                     className="object-contain w-full h-full"
-                    onError={(e) => {
-                      console.error(`Failed to load lightbox image: ${selectedImageData.src}`);
+                    onError={() => {
+                      // Image loading failed, fallback handled by browser
                     }}
                   />
                 </div>

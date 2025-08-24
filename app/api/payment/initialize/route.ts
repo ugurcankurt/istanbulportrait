@@ -69,7 +69,9 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    console.log(`💳 Payment initialization from ${ip} for booking ${bookingId}, amount: €${amount}`);
+    if (process.env.NODE_ENV === 'development') {
+      console.log(`💳 Payment initialization from ${ip} for booking ${bookingId}, amount: €${amount}`);
+    }
 
     let booking;
     
@@ -187,7 +189,9 @@ export async function POST(request: NextRequest) {
         }
 
         const duration = Date.now() - startTime;
-        console.log(`✅ Payment successful in ${duration}ms:`, paymentResult.paymentId);
+        if (process.env.NODE_ENV === 'development') {
+          console.log(`✅ Payment successful in ${duration}ms:`, paymentResult.paymentId);
+        }
 
       } catch (dbError: any) {
         console.error(`❌ Database update failed for successful payment:`, dbError);
@@ -252,7 +256,9 @@ export async function POST(request: NextRequest) {
         }
 
         const duration = Date.now() - startTime;
-        console.log(`❌ Payment failed in ${duration}ms:`, paymentResult.errorMessage);
+        if (process.env.NODE_ENV === 'development') {
+          console.log(`❌ Payment failed in ${duration}ms:`, paymentResult.errorMessage);
+        }
 
       } catch (dbError: any) {
         console.error(`❌ Database update failed for failed payment:`, dbError);

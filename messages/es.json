@@ -203,7 +203,7 @@
   "placeholders": {
     "full_name": "Juan Pérez",
     "email": "juan@example.com",
-    "phone": "+90 XXX XXX XX XX",
+    "phone": "+90 536 709 37 24",
     "select_package": "Selecciona un paquete",
     "tell_us_vision": "Cuéntanos sobre tu visión para la sesión fotográfica...",
     "test_card": "5528790000000008 (Usa esta tarjeta de prueba para pago demo exitoso)",
@@ -236,6 +236,7 @@
     "booking_process_desc": "Después de tu consulta, programaremos una consulta para discutir tu visión y finalizar detalles.",
     "payment_desc": "Se requiere pago completo online al momento de la reserva para asegurar tu fecha.",
     "professional_photographer": "Fotógrafo profesional",
+    "professional_photographer_in_istanbul": "Fotógrafo profesional en Estambul",
     "portrait_photography": "Fotografía de Retratos",
     "couple_sessions": "Sesiones de Parejas",
     "lifestyle": "Estilo de Vida",
@@ -345,6 +346,24 @@
     "contact": {
       "title": "Contacto | Reserva tu Sesión Fotográfica en Estambul",
       "description": "¿Listo para reservar tu sesión fotográfica en Estambul? Contáctanos para sesiones profesionales de fotografía de retratos. Disponible 7 días a la semana."
+    }
+  },
+  "seo": {
+    "home": {
+      "title": "Fotógrafo de Estambul | Servicios Profesionales de Sesión Fotográfica",
+      "description": "Fotógrafo profesional de retratos en Estambul. Especializado en sesiones en azoteas, sesiones de parejas y fotografía de estilo de vida con vistas icónicas de la ciudad. ¡Reserva tu sesión hoy!"
+    },
+    "packages": {
+      "title": "Paquetes de Fotografía | Sesiones de Retratos en Estambul",
+      "description": "Elige entre nuestros paquetes de fotografía profesional en Estambul. Sesiones en azoteas, ubicaciones históricas y edición de calidad premium. Desde $150."
+    },
+    "about": {
+      "title": "Acerca de | Fotógrafo Profesional de Estambul",
+      "description": "Conoce a tu fotógrafo profesional de Estambul con más de 8 años de experiencia. Especializado en fotografía de retratos, parejas y estilo de vida por toda la ciudad."
+    },
+    "contact": {
+      "title": "Contacto | Reserva tu Sesión Fotográfica en Estambul",
+      "description": "¿Listo para reservar tu sesión fotográfica en Estambul? Contáctanos para sesiones profesionales de fotografía de retratos. Disponible los 7 días de la semana."
     }
   }
 }

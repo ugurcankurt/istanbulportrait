@@ -219,7 +219,7 @@
   "placeholders": {
     "full_name": "John Doe",
     "email": "john@example.com",
-    "phone": "+90 XXX XXX XX XX",
+    "phone": "+90 536 709 37 24",
     "select_package": "Select a package",
     "tell_us_vision": "Tell us about your vision for the photoshoot...",
     "test_card": "5528790000000008 (Use this test card for successful demo payment)",
@@ -252,6 +252,7 @@
     "booking_process_desc": "After your inquiry, we'll schedule a consultation to discuss your vision and finalize details.",
     "payment_desc": "Full payment required online at the time of booking to secure your date.",
     "professional_photographer": "Professional photographer",
+    "professional_photographer_in_istanbul": "Professional photographer in Istanbul",
     "portrait_photography": "Portrait Photography",
     "couple_sessions": "Couple Sessions", 
     "lifestyle": "Lifestyle",
@@ -371,7 +372,7 @@
   },
   "seo": {
     "home": {
-      "title": "Istanbul Portrait Photographer | Professional Photoshoot Services",
+      "title": "Istanbul Photographer | Professional Photoshoot Services",
       "description": "Professional portrait photographer in Istanbul. Specializing in rooftop photoshoots, couple sessions, and lifestyle photography with iconic city views. Book your session today!"
     },
     "packages": {

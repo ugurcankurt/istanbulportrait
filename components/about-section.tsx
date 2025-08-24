@@ -67,19 +67,17 @@ export function AboutSection() {
           <div className="relative transition-all duration-700 ease-out hover:scale-105">
             <div className="relative aspect-[4/5] rounded-2xl overflow-hidden">
               <Image
-                src="/photographer_in_istanbul.jpg"
-                alt={tui("professional_photographer")}
+                src="/istanbulportprat_ugur_cankurt.jpg"
+                alt={tui("professional_photographer_in_istanbul")}
                 fill
                 className="object-cover"
                 priority={false}
                 quality={85}
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 600px"
                 onError={(e) => {
-                  console.error('Failed to load primary image, trying fallback...');
                   const target = e.target as HTMLImageElement;
                   target.src = '/istanbul_photographer.jpg';
                   target.onerror = () => {
-                    console.error('All image sources failed');
                     target.style.display = 'none';
                     const parent = target.closest('.relative');
                     if (parent && parent instanceof HTMLElement) {

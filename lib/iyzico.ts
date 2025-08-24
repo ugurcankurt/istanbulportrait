@@ -106,7 +106,9 @@ export const initializePayment = async (paymentRequest: PaymentRequest): Promise
     try {
       const authString = generateAuthString(paymentRequest, randomString, '/payment/auth');
       
-      console.log('🔐 Generated IYZWSv2 auth string for Iyzico API');
+      if (process.env.NODE_ENV === 'development') {
+        console.log('🔐 Generated IYZWSv2 auth string for Iyzico API');
+      }
       
       const response = await fetch(`${IYZICO_BASE_URL}/payment/auth`, {
         method: 'POST',

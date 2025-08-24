@@ -25,11 +25,9 @@ export function HeroSection() {
           quality={90}
           sizes="100vw"
           onError={(e) => {
-            console.error('Failed to load primary hero image, trying fallback...');
             const target = e.target as HTMLImageElement;
-            target.src = '/photographer_in_istanbul.jpg';
+            target.src = '/istanbulportprat_ugur_cankurt.jpg';
             target.onerror = () => {
-              console.error('All hero image sources failed');
               target.style.display = 'none';
               const parent = target.closest('.absolute');
               if (parent && parent instanceof HTMLElement) {

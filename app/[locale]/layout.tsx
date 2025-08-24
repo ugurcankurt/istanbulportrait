@@ -33,26 +33,44 @@ export async function generateMetadata({
     description: t("description"),
     keywords:
       "istanbul photographer, istanbul photoshoot, istanbul rooftop photoshoot, portrait photographer istanbul, couple photography istanbul",
-    openGraph: {
-      title: t("title"),
-      description: t("description"),
-      images: ["/og-image.jpg"],
-      locale: locale,
-      type: "website",
-    },
-    twitter: {
-      card: "summary_large_image",
-      title: t("title"),
-      description: t("description"),
-      images: ["/og-image.jpg"],
+    authors: [{ name: "Istanbul Photographer" }],
+    publisher: "istanbulportrait.com",
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        'max-video-preview': -1,
+        'max-image-preview': 'large',
+        'max-snippet': -1,
+      },
     },
     alternates: {
+      canonical: `https://istanbulportrait.com/${locale}`,
       languages: {
         en: "/en",
         ar: "/ar",
         ru: "/ru",
         es: "/es",
       },
+    },
+    openGraph: {
+      title: t("title"),
+      description: t("description"),
+      images: ["/og-image.jpg"],
+      locale: locale,
+      type: "website",
+      url: `https://istanbulportrait.com/${locale}`,
+      siteName: "Istanbul Portrait",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: t("title"),
+      description: t("description"),
+      images: ["/og-image.jpg"],
+      creator: "@istanbulportrait",
+      site: "@istanbulportrait",
     },
   };
 }

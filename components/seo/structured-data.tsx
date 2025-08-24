@@ -42,7 +42,7 @@ export function StructuredData({ type, data }: StructuredDataProps) {
           image: [`${baseUrl}/og-image.jpg`],
           description: t("seo.home.description"),
           url: baseUrl,
-          telephone: "+90-XXX-XXX-XX-XX",
+          telephone: "+90-536-709-37-24",
           email: "info@istanbulportrait.com",
           address: {
             "@type": "PostalAddress",
@@ -160,7 +160,7 @@ export function StructuredData({ type, data }: StructuredDataProps) {
         return {
           "@context": "https://schema.org",
           "@type": "Person",
-          name: "Istanbul Portrait Photographer",
+          name: "Istanbul Photographer",
           jobTitle: "Professional Photographer",
           description:
             "Professional portrait photographer specializing in Istanbul photography sessions",
