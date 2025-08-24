@@ -32,7 +32,7 @@ export function HeroSection() {
               console.error('All hero image sources failed');
               target.style.display = 'none';
               const parent = target.closest('.absolute');
-              if (parent) {
+              if (parent && parent instanceof HTMLElement) {
                 parent.style.backgroundColor = 'rgba(0,0,0,0.7)';
               }
             };
