@@ -265,10 +265,10 @@ export function CustomerDetailsForm({
               </div>
 
               <div className="flex justify-between pt-6">
-                <Button type="button" variant="outline" onClick={onBack}>
+                <Button type="button" variant="outline" onClick={onBack} className="h-12 px-6 text-sm font-medium">
                   {t("buttons.back")}
                 </Button>
-                <Button type="submit">{t("buttons.continue")}</Button>
+                <Button type="submit" className="h-12 px-6 text-sm font-medium">{t("buttons.continue")}</Button>
               </div>
             </form>
           </CardContent>

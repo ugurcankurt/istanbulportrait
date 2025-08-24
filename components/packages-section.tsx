@@ -62,7 +62,7 @@ export function PackagesSection() {
 
   return (
     <section className="py-12 sm:py-16 lg:py-24 bg-gradient-to-b from-background to-muted/20">
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -77,7 +77,7 @@ export function PackagesSection() {
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8 max-w-7xl mx-auto">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8 max-w-6xl mx-auto">
           {packages.map((pkg, index) => (
             <motion.div
               key={pkg.id}
@@ -162,7 +162,7 @@ export function PackagesSection() {
           transition={{ duration: 0.8, delay: 0.4 }}
           className="mt-8 sm:mt-12 lg:mt-16 text-center"
         >
-          <div className="bg-muted/30 rounded-lg p-4 sm:p-6 lg:p-8 max-w-4xl mx-auto">
+          <div className="bg-muted/30 rounded-lg p-4 sm:p-6 lg:p-8 max-w-6xl mx-auto">
             <h3 className="text-lg sm:text-xl lg:text-2xl font-bold mb-3 sm:mb-4">
               {t("custom.title")}
             </h3>

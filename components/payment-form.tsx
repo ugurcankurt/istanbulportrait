@@ -71,18 +71,18 @@ export function PaymentForm({
 
   // Format card number with spaces
   const formatCardNumber = (value: string) => {
-    const v = value.replace(/\s+/g, "").replace(/[^0-9]/gi, "");
-    const matches = v.match(/\d{4,16}/g);
-    const match = (matches && matches[0]) || "";
-    const parts = [];
-    for (let i = 0; i < match.length; i += 4) {
-      parts.push(match.substring(i, i + 4));
-    }
-    if (parts.length) {
-      return parts.join(" ");
-    } else {
-      return v;
-    }
+    if (!value) return "";
+    
+    // Remove all non-digits
+    const digitsOnly = value.replace(/\D/g, "");
+    
+    // Limit to 19 digits maximum
+    const limitedDigits = digitsOnly.slice(0, 19);
+    
+    // Add spaces every 4 digits
+    const formatted = limitedDigits.replace(/(\d{4})(?=\d)/g, "$1 ");
+    
+    return formatted;
   };
 
   return (
@@ -129,7 +129,7 @@ export function PaymentForm({
                         type="text"
                         autoComplete="cc-name"
                         placeholder={tplaceholders("card_holder")}
-                        className="uppercase h-10 sm:h-11 text-sm sm:text-base font-medium"
+                        className="uppercase h-11 sm:h-12 text-sm sm:text-base font-medium"
                         {...field}
                       />
                     </FormControl>
@@ -153,9 +153,9 @@ export function PaymentForm({
                         autoComplete="cc-number"
                         placeholder={tplaceholders("card_number")}
                         maxLength={19}
-                        pattern="[0-9]*"
+                        pattern="[0-9\s]*"
                         inputMode="numeric"
-                        className="h-10 sm:h-11 text-sm sm:text-base font-mono tracking-wider"
+                        className="h-11 sm:h-12 text-sm sm:text-base font-mono tracking-wider"
                         value={formatCardNumber(field.value)}
                         onChange={(e) => {
                           const value = e.target.value.replace(/\D/g, "");
@@ -189,7 +189,7 @@ export function PaymentForm({
                           maxLength={2}
                           pattern="[0-9]*"
                           inputMode="numeric"
-                          className="h-10 sm:h-11 text-sm sm:text-base font-mono text-center"
+                          className="h-11 sm:h-12 text-sm sm:text-base font-mono text-center"
                           onChange={(e) => {
                             const value = e.target.value.replace(/\D/g, "");
                             field.onChange(value);
@@ -222,7 +222,7 @@ export function PaymentForm({
                           maxLength={2}
                           pattern="[0-9]*"
                           inputMode="numeric"
-                          className="h-10 sm:h-11 text-sm sm:text-base font-mono text-center"
+                          className="h-11 sm:h-12 text-sm sm:text-base font-mono text-center"
                           onChange={(e) => {
                             const value = e.target.value.replace(/\D/g, "");
                             field.onChange(value);
@@ -252,7 +252,7 @@ export function PaymentForm({
                           maxLength={4}
                           pattern="[0-9]*"
                           inputMode="numeric"
-                          className="h-10 sm:h-11 text-sm sm:text-base font-mono text-center"
+                          className="h-11 sm:h-12 text-sm sm:text-base font-mono text-center"
                           onChange={(e) => {
                             const value = e.target.value.replace(/\D/g, "");
                             field.onChange(value);
@@ -298,14 +298,14 @@ export function PaymentForm({
                   variant="outline"
                   onClick={onBack}
                   disabled={isLoading}
-                  className="h-11 px-6 text-sm font-medium w-full sm:w-auto"
+                  className="h-12 px-6 text-sm font-medium w-full sm:w-auto"
                 >
                   {t("buttons.back")}
                 </Button>
                 <Button
                   type="submit"
                   disabled={!acceptedTerms || isLoading}
-                  className="h-11 px-6 text-sm font-medium w-full sm:min-w-[160px] sm:w-auto"
+                  className="h-12 px-6 text-sm font-medium w-full sm:min-w-[160px] sm:w-auto"
                 >
                   {isLoading ? (
                     <div className="flex items-center gap-2">

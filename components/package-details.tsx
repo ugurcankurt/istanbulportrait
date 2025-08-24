@@ -153,8 +153,7 @@ export function PackageDetails({
 
                 <div className="mt-4 sm:mt-6 pt-2">
                   <Button
-                    className="w-full py-2 sm:py-3 text-sm sm:text-base"
-                    size="sm"
+                    className="w-full h-12 text-sm sm:text-base font-medium"
                     variant={selectedPackage === pkg.id ? "default" : "outline"}
                     onClick={(e) => {
                       e.stopPropagation();

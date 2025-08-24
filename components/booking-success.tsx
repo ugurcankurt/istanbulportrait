@@ -46,7 +46,7 @@ export function BookingSuccess({ bookingId, packageId }: BookingSuccessProps) {
   }, [packageId, packageInfo.price]);
 
   return (
-    <div className="container mx-auto px-4 py-8 max-w-2xl lg:max-w-4xl">
+    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-24 max-w-6xl">
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}

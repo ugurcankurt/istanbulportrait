@@ -20,7 +20,7 @@ export async function generateMetadata({
 
 function CheckoutSkeleton() {
   return (
-    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 max-w-4xl">
+    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-24 max-w-6xl">
       <Card className="border-0 shadow-sm">
         <CardHeader className="pb-4">
           <Skeleton className="h-6 sm:h-8 w-48 sm:w-64" />
@@ -46,7 +46,7 @@ function CheckoutSkeleton() {
 
 export default function CheckoutPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background to-muted/20 py-6 sm:py-8">
+    <div className="min-h-screen bg-gradient-to-b from-background to-muted/20">
       <Suspense fallback={<CheckoutSkeleton />}>
         <CheckoutForm />
       </Suspense>

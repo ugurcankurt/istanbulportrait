@@ -13,7 +13,16 @@ export const bookingSchema = z.object({
 
 export const paymentSchema = z.object({
   cardHolderName: z.string().min(2, "validation.cardholder_required"),
-  cardNumber: z.string().min(16, "validation.card_number_invalid").max(19),
+  cardNumber: z
+    .string()
+    .min(1, "validation.card_number_required")
+    .refine(
+      (val) => {
+        const digitsOnly = val.replace(/\D/g, "");
+        return digitsOnly.length >= 13 && digitsOnly.length <= 19;
+      },
+      { message: "validation.card_number_invalid" }
+    ),
   expireMonth: z.string().min(2, "validation.month_required").max(2),
   expireYear: z.string().min(2, "validation.year_required").max(2),
   cvc: z.string().min(3, "validation.cvc_required").max(4),
