@@ -14,7 +14,7 @@ import { PaymentForm } from "@/components/payment-form";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Form } from "@/components/ui/form";
 import { Progress } from "@/components/ui/progress";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsContent } from "@/components/ui/tabs";
 import {
   trackAddToCart,
   trackBeginCheckout,
@@ -246,19 +246,6 @@ export function CheckoutForm() {
 
           <CardContent className="p-3 sm:p-6">
             <Tabs value={currentStep} onValueChange={handleStepChange}>
-              <TabsList className="grid w-full grid-cols-4 h-8 sm:h-10">
-                {steps.map((step, index) => (
-                  <TabsTrigger
-                    key={step}
-                    value={step}
-                    disabled={index > getCurrentStepIndex()}
-                    className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground text-xs sm:text-sm"
-                  >
-                    {t(`steps.${step}`)}
-                  </TabsTrigger>
-                ))}
-              </TabsList>
-
               <div className="mt-4 sm:mt-8">
                 <TabsContent value="package" className="space-y-3 sm:space-y-6">
                   <motion.div

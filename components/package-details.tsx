@@ -85,7 +85,7 @@ export function PackageDetails({
         </p>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-4 sm:gap-6">
+      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-2 sm:gap-4 md:gap-6">
         {packages.map((pkg, index) => (
           <motion.div
             key={pkg.id}
@@ -105,55 +105,55 @@ export function PackageDetails({
               onClick={() => onPackageSelect(pkg.id)}
             >
               {pkg.popular && (
-                <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                  <Badge className="bg-primary text-primary-foreground px-2 sm:px-4 py-1 text-xs sm:text-sm">
+                <div className="absolute -top-2 left-1/2 transform -translate-x-1/2">
+                  <Badge className="bg-primary text-primary-foreground px-1 sm:px-3 py-0.5 text-[10px] sm:text-xs">
                     {tui("most_popular")}
                   </Badge>
                 </div>
               )}
 
-              <CardHeader className="text-center pb-2 sm:pb-4 px-4 sm:px-6">
-                <CardTitle className="text-lg sm:text-xl font-bold mb-1 sm:mb-2">
+              <CardHeader className="text-center pb-1 sm:pb-3 px-2 sm:px-4">
+                <CardTitle className="text-sm sm:text-lg font-bold mb-0.5 sm:mb-1">
                   {pkg.name}
                 </CardTitle>
-                <div className="text-2xl sm:text-3xl font-bold text-primary mb-2 sm:mb-4">
+                <div className="text-xl sm:text-2xl font-bold text-primary mb-1 sm:mb-3">
                   €{pkg.price}
                 </div>
 
-                <div className="space-y-1.5 sm:space-y-2">
-                  <div className="flex items-center justify-center space-x-2 text-xs sm:text-sm">
-                    <Clock className="w-3 h-3 sm:w-4 sm:h-4 text-muted-foreground" />
+                <div className="space-y-1 sm:space-y-1.5">
+                  <div className="flex items-center justify-center space-x-1 text-[10px] sm:text-xs">
+                    <Clock className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-muted-foreground" />
                     <span className="font-medium">{pkg.duration}</span>
                   </div>
-                  <div className="flex items-center justify-center space-x-2 text-xs sm:text-sm">
-                    <ImageIcon className="w-3 h-3 sm:w-4 sm:h-4 text-muted-foreground" />
+                  <div className="flex items-center justify-center space-x-1 text-[10px] sm:text-xs">
+                    <ImageIcon className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-muted-foreground" />
                     <span className="font-medium">{pkg.photos}</span>
                   </div>
-                  <div className="flex items-center justify-center space-x-2 text-xs sm:text-sm">
-                    <MapPin className="w-3 h-3 sm:w-4 sm:h-4 text-muted-foreground" />
+                  <div className="flex items-center justify-center space-x-1 text-[10px] sm:text-xs">
+                    <MapPin className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-muted-foreground" />
                     <span className="font-medium">{pkg.locations}</span>
                   </div>
                 </div>
               </CardHeader>
 
-              <CardContent className="flex-1 px-4 sm:px-6 flex flex-col">
-                <ul className="space-y-1.5 sm:space-y-2 flex-1">
+              <CardContent className="flex-1 px-2 sm:px-4 flex flex-col">
+                <ul className="space-y-1 sm:space-y-1.5 flex-1">
                   {pkg.features.map((feature, featureIndex) => (
                     <li
                       key={featureIndex}
-                      className="flex items-start space-x-2"
+                      className="flex items-start space-x-1.5"
                     >
-                      <Check className="w-3 h-3 sm:w-4 sm:h-4 text-primary mt-0.5 flex-shrink-0" />
-                      <span className="text-xs sm:text-sm leading-relaxed">
+                      <Check className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-primary mt-0.5 flex-shrink-0" />
+                      <span className="text-[10px] sm:text-xs leading-tight sm:leading-relaxed">
                         {feature}
                       </span>
                     </li>
                   ))}
                 </ul>
 
-                <div className="mt-4 sm:mt-6 pt-2">
+                <div className="mt-2 sm:mt-4 pt-1 sm:pt-2">
                   <Button
-                    className="w-full h-12 text-sm sm:text-base font-medium"
+                    className="w-full h-8 sm:h-10 text-xs sm:text-sm font-medium"
                     variant={selectedPackage === pkg.id ? "default" : "outline"}
                     onClick={(e) => {
                       e.stopPropagation();

@@ -1,8 +1,10 @@
 "use client";
 
 import { format } from "date-fns";
+import { motion } from "framer-motion";
 import { Calendar as CalendarIcon, Clock } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { useState } from "react";
 import type { UseFormReturn } from "react-hook-form";
 import PhoneInput from "react-phone-number-input";
 import "react-phone-number-input/style.css";
@@ -19,18 +21,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
 
@@ -70,6 +60,10 @@ export function CustomerDetailsForm({
   const tui = useTranslations("ui");
   const tplaceholders = useTranslations("placeholders");
   const tsuccess = useTranslations("success");
+  
+  const [showTimeSelection, setShowTimeSelection] = useState(() => {
+    return !!form.getValues("bookingDate");
+  });
 
   const handleSubmit = form.handleSubmit(onSubmit);
 
@@ -85,9 +79,9 @@ export function CustomerDetailsForm({
   };
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
       {/* Customer Details Form */}
-      <div className="lg:col-span-2 space-y-6">
+      <div className="lg:col-span-2 space-y-4 lg:space-y-6">
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
@@ -95,9 +89,9 @@ export function CustomerDetailsForm({
               {t("customer_details")}
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-6">
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <CardContent className="space-y-4 lg:space-y-6">
+            <form onSubmit={handleSubmit} className="space-y-4 lg:space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 lg:gap-4">
                 <FormField
                   control={form.control}
                   name="customerName"
@@ -156,93 +150,116 @@ export function CustomerDetailsForm({
 
               <Separator />
 
-              <div className="space-y-4">
-                <h3 className="text-lg font-semibold">
+              <div className="space-y-3 lg:space-y-4">
+                <h3 className="text-base lg:text-lg font-semibold">
                   {t("booking_details")}
                 </h3>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <FormField
-                    control={form.control}
-                    name="bookingDate"
-                    render={({ field }) => (
-                      <FormItem className="flex flex-col">
-                        <FormLabel>{t("form.date")}</FormLabel>
-                        <Popover>
-                          <PopoverTrigger asChild>
-                            <FormControl>
-                              <Button
-                                variant="outline"
-                                className={cn(
-                                  "w-full pl-3 text-left font-normal",
-                                  !field.value && "text-muted-foreground",
-                                )}
-                              >
-                                {field.value ? (
-                                  format(new Date(field.value), "PPP")
-                                ) : (
-                                  <span>{tplaceholders("pick_date")}</span>
-                                )}
-                                <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                              </Button>
-                            </FormControl>
-                          </PopoverTrigger>
-                          <PopoverContent className="w-auto p-0" align="start">
+                <div className="space-y-4 lg:space-y-6">
+                  {/* Combined Date & Time Selection */}
+                  <div className="space-y-4">
+                    <FormField
+                      control={form.control}
+                      name="bookingDate"
+                      render={({ field: dateField }) => (
+                        <FormItem className="space-y-4">
+                          <FormLabel className="text-base font-semibold flex items-center gap-2">
+                            <CalendarIcon className="w-5 h-5 text-primary" />
+                            {showTimeSelection ? t("form.date_time") : t("form.date")}
+                          </FormLabel>
+                          
+                          {/* Calendar Widget - Responsive Full Width */}
+                          <div className="w-full max-w-full px-2 sm:max-w-lg sm:mx-auto lg:max-w-3xl xl:max-w-4xl 2xl:max-w-5xl">
                             <Calendar
                               mode="single"
-                              selected={
-                                field.value ? new Date(field.value) : undefined
-                              }
-                              onSelect={(date) =>
-                                field.onChange(
-                                  date ? format(date, "yyyy-MM-dd") : "",
-                                )
-                              }
+                              selected={dateField.value ? new Date(dateField.value) : undefined}
+                              onSelect={(date) => {
+                                const dateString = date ? format(date, "yyyy-MM-dd") : "";
+                                dateField.onChange(dateString);
+                                setShowTimeSelection(!!date);
+                              }}
                               disabled={(date) =>
-                                date < new Date() ||
-                                date < new Date("1900-01-01")
+                                date < new Date() || date < new Date("1900-01-01")
                               }
-                              autoFocus
+                              className="rounded-lg border shadow-sm bg-background p-3 sm:p-5 lg:p-6 w-full"
+                              classNames={{
+                                months: "space-y-4 w-full",
+                                month: "space-y-4 w-full",
+                                caption: "flex justify-center pt-2 sm:pt-3 relative items-center mb-4 sm:mb-5",
+                                caption_label: "text-base sm:text-lg font-semibold",
+                                nav: "space-x-1 flex items-center",
+                                nav_button: cn(
+                                  "h-8 w-8 sm:h-9 sm:w-9 bg-transparent p-0 opacity-70 hover:opacity-100 hover:bg-accent rounded-md transition-all"
+                                ),
+                                nav_button_previous: "absolute left-2",
+                                nav_button_next: "absolute right-2",
+                                table: "w-full border-collapse",
+                                head_row: "flex w-full",
+                                head_cell: "text-muted-foreground rounded-md w-full font-medium text-sm sm:text-base lg:text-sm xl:text-sm flex-1 text-center py-2 sm:py-3",
+                                row: "flex w-full mt-1",
+                                cell: "text-center text-sm p-0 relative flex-1 [&:has([aria-selected])]:bg-accent first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20",
+                                day: cn(
+                                  "h-12 sm:h-14 w-full p-0 font-medium aria-selected:opacity-100 hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground text-sm sm:text-base lg:text-sm xl:text-sm rounded-md transition-colors"
+                                ),
+                                day_selected: "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground font-semibold",
+                                day_today: "bg-accent text-accent-foreground font-semibold",
+                                day_outside: "text-muted-foreground opacity-50",
+                                day_disabled: "text-muted-foreground opacity-50",
+                                day_range_middle: "aria-selected:bg-accent aria-selected:text-accent-foreground",
+                                day_hidden: "invisible",
+                              }}
                             />
-                          </PopoverContent>
-                        </Popover>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                          </div>
 
-                  <FormField
-                    control={form.control}
-                    name="bookingTime"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>{t("form.time")}</FormLabel>
-                        <Select
-                          onValueChange={field.onChange}
-                          defaultValue={field.value}
-                        >
-                          <FormControl>
-                            <SelectTrigger>
-                              <SelectValue
-                                placeholder={tplaceholders("select_time")}
+                          {/* Time Selection - Appears below calendar */}
+                          {showTimeSelection && (
+                            <motion.div
+                              initial={{ opacity: 0, y: -10 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              transition={{ duration: 0.3, ease: "easeOut" }}
+                              className="space-y-3"
+                            >
+                              <div className="flex items-center gap-2 text-sm text-muted-foreground justify-center">
+                                <div className="h-px bg-border flex-1" />
+                                <Clock className="w-4 h-4" />
+                                <span>{t("form.select_time")}</span>
+                                <div className="h-px bg-border flex-1" />
+                              </div>
+                              
+                              <FormField
+                                control={form.control}
+                                name="bookingTime"
+                                render={({ field: timeField }) => (
+                                  <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7 gap-2 sm:gap-3 w-full max-w-full px-2 sm:max-w-lg sm:mx-auto lg:max-w-3xl xl:max-w-4xl 2xl:max-w-5xl">
+                                    {timeSlots.map((time) => (
+                                      <Button
+                                        key={time}
+                                        type="button"
+                                        variant={timeField.value === time ? "default" : "outline"}
+                                        size="sm"
+                                        className={cn(
+                                          "h-11 sm:h-12 flex items-center justify-center gap-1 sm:gap-1.5 text-xs sm:text-sm lg:text-xs xl:text-xs font-medium transition-all min-w-0 px-2 sm:px-3",
+                                          timeField.value === time
+                                            ? "bg-primary text-primary-foreground shadow-md ring-2 ring-primary ring-offset-1"
+                                            : "hover:bg-muted hover:text-foreground hover:border-primary/50"
+                                        )}
+                                        onClick={() => timeField.onChange(time)}
+                                      >
+                                        <Clock className="w-2.5 h-2.5 sm:w-3 sm:h-3 flex-shrink-0" />
+                                        <span className="truncate">{time}</span>
+                                      </Button>
+                                    ))}
+                                  </div>
+                                )}
                               />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            {timeSlots.map((time) => (
-                              <SelectItem key={time} value={time}>
-                                <div className="flex items-center gap-2">
-                                  <Clock className="w-4 h-4" />
-                                  {time}
-                                </div>
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                            </motion.div>
+                          )}
+                          
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
                 </div>
 
                 <FormField
