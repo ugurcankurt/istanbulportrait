@@ -10,7 +10,7 @@ import {
   ShieldCheck,
   User,
 } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useState } from "react";
 import type { UseFormReturn } from "react-hook-form";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -27,6 +27,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
+import { formatCurrency } from "@/lib/utils";
 import type {
   BookingFormData,
   PackageId,
@@ -51,6 +52,7 @@ export function PaymentForm({
   isLoading,
   onBack,
 }: PaymentFormProps) {
+  const locale = useLocale();
   const t = useTranslations("checkout");
   const tPackages = useTranslations("packages");
   const tui = useTranslations("ui");
@@ -275,7 +277,7 @@ export function PaymentForm({
 
               <Separator />
 
-              <div className="flex items-start space-x-3 p-4 bg-muted/50 rounded-lg border">
+              <div className="flex items-start space-x-3 rtl:space-x-reverse p-4 bg-muted/50 rounded-lg border">
                 <Checkbox
                   id="terms"
                   checked={acceptedTerms}
@@ -316,7 +318,7 @@ export function PaymentForm({
                     <div className="flex items-center gap-2">
                       <ShieldCheck className="w-4 h-4" />
                       {t("buttons.pay_amount", {
-                        amount: `€${packageInfo.price}`,
+                        amount: formatCurrency(packageInfo.price, locale),
                       })}
                     </div>
                   )}
@@ -355,7 +357,7 @@ export function PaymentForm({
                   </Badge>
                 </div>
                 <span className="text-lg font-semibold">
-                  €{packageInfo.price}
+{formatCurrency(packageInfo.price, locale)}
                 </span>
               </div>
             </div>
@@ -364,7 +366,7 @@ export function PaymentForm({
 
             <div className="flex justify-between items-center p-3 bg-muted/50 rounded-lg border">
               <span className="text-lg font-semibold">{tui("total")}:</span>
-              <span className="text-xl font-bold">€{packageInfo.price}</span>
+              <span className="text-xl font-bold">{formatCurrency(packageInfo.price, locale)}</span>
             </div>
 
             <div className="text-xs text-muted-foreground bg-muted/30 p-3 rounded-lg">

@@ -31,10 +31,14 @@ export function formatCurrency(amount: number, locale: string = "en"): string {
       maximumFractionDigits: 0,
     });
 
-    return formatter.format(amount);
+    const formatted = formatter.format(amount);
+    
+    // Convert to Arabic numerals if locale is Arabic
+    return localizeNumerals(formatted, locale);
   } catch (error) {
     // Fallback to manual formatting
-    return `${symbol}${amount}`;
+    const fallback = `${symbol}${amount}`;
+    return localizeNumerals(fallback, locale);
   }
 }
 
@@ -66,18 +70,25 @@ export function formatPhoneNumber(
   if (cleaned.startsWith("90")) {
     // International format
     const match = cleaned.match(/^90(\d{3})(\d{3})(\d{2})(\d{2})$/);
-    return match
+    const formatted = match
       ? `+90 ${match[1]} ${match[2]} ${match[3]} ${match[4]}`
       : phone;
+    
+    // Convert to Arabic numerals if locale is Arabic
+    return localizeNumerals(formatted, locale);
   }
 
   // Domestic format
   if (cleaned.length === 10 && cleaned.startsWith("5")) {
     const match = cleaned.match(/^(\d{3})(\d{3})(\d{2})(\d{2})$/);
-    return match ? `${match[1]} ${match[2]} ${match[3]} ${match[4]}` : phone;
+    const formatted = match ? `${match[1]} ${match[2]} ${match[3]} ${match[4]}` : phone;
+    
+    // Convert to Arabic numerals if locale is Arabic
+    return localizeNumerals(formatted, locale);
   }
 
-  return phone;
+  // For any other phone format, just localize numerals
+  return localizeNumerals(phone, locale);
 }
 
 /**
@@ -100,4 +111,32 @@ export function formatDate(date: Date, locale: string = "en"): string {
   } catch (error) {
     return date.toLocaleDateString();
   }
+}
+
+/**
+ * Convert Latin numerals (0-9) to Arabic-Indic numerals (٠-٩)
+ * Used for proper Arabic localization
+ */
+export function convertToArabicNumerals(text: string): string {
+  const arabicNumerals: Record<string, string> = {
+    '0': '٠',
+    '1': '١',
+    '2': '٢',
+    '3': '٣',
+    '4': '٤',
+    '5': '٥',
+    '6': '٦',
+    '7': '٧',
+    '8': '٨',
+    '9': '٩',
+  };
+
+  return text.replace(/[0-9]/g, (match) => arabicNumerals[match] || match);
+}
+
+/**
+ * Format text with Arabic numerals if locale is Arabic
+ */
+export function localizeNumerals(text: string, locale: string): string {
+  return locale === "ar" ? convertToArabicNumerals(text) : text;
 }

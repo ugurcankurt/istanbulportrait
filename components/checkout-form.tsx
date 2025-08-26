@@ -3,7 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { motion } from "framer-motion";
 import { useSearchParams } from "next/navigation";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -23,6 +23,7 @@ import {
   trackPaymentEvent,
   trackPurchase,
 } from "@/lib/analytics";
+import { localizeNumerals } from "@/lib/utils";
 import type {
   BookingFormData,
   PackageId,
@@ -34,6 +35,7 @@ const steps = ["package", "details", "payment", "confirmation"] as const;
 type Step = (typeof steps)[number];
 
 export function CheckoutForm() {
+  const locale = useLocale();
   const searchParams = useSearchParams();
   const t = useTranslations("checkout");
   const tPackages = useTranslations("packages");

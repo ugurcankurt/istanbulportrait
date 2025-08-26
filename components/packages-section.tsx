@@ -92,7 +92,7 @@ export function PackagesSection() {
                 {pkg.popular && (
                   <div className="absolute -top-2 sm:-top-4 left-1/2 transform -translate-x-1/2">
                     <Badge className="bg-primary text-primary-foreground px-2 sm:px-4 py-1 text-xs sm:text-sm">
-                      Most Popular
+                      {tui("most_popular")}
                     </Badge>
                   </div>
                 )}
@@ -106,15 +106,15 @@ export function PackagesSection() {
                   </div>
 
                   <div className="space-y-2 sm:space-y-3">
-                    <div className="flex items-center justify-center space-x-2 text-xs sm:text-sm">
+                    <div className="flex items-center justify-center space-x-2 rtl:space-x-reverse text-xs sm:text-sm">
                       <Clock className="w-3 h-3 sm:w-4 sm:h-4 text-muted-foreground" />
                       <span className="font-medium">{pkg.duration}</span>
                     </div>
-                    <div className="flex items-center justify-center space-x-2 text-xs sm:text-sm">
+                    <div className="flex items-center justify-center space-x-2 rtl:space-x-reverse text-xs sm:text-sm">
                       <ImageIcon className="w-3 h-3 sm:w-4 sm:h-4 text-muted-foreground" />
                       <span className="font-medium">{pkg.photos}</span>
                     </div>
-                    <div className="flex items-center justify-center space-x-2 text-xs sm:text-sm">
+                    <div className="flex items-center justify-center space-x-2 rtl:space-x-reverse text-xs sm:text-sm">
                       <MapPin className="w-3 h-3 sm:w-4 sm:h-4 text-muted-foreground" />
                       <span className="font-medium">{pkg.locations}</span>
                     </div>
@@ -126,7 +126,7 @@ export function PackagesSection() {
                     {pkg.features.map((feature, featureIndex) => (
                       <li
                         key={featureIndex}
-                        className="flex items-start space-x-2 sm:space-x-2.5"
+                        className="flex items-start space-x-2 sm:space-x-2.5 rtl:space-x-reverse"
                       >
                         <Check className="w-3 h-3 sm:w-4 sm:h-4 text-primary mt-0.5 flex-shrink-0" />
                         <span className="text-xs sm:text-sm leading-relaxed">

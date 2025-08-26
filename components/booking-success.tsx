@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import { Calendar, CheckCircle, Clock, Mail, Phone } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useEffect } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -10,6 +10,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Link } from "@/i18n/routing";
 import { event } from "@/lib/analytics";
+import { formatCurrency, localizeNumerals } from "@/lib/utils";
 import type { PackageId } from "@/lib/validations";
 import { packagePrices } from "@/lib/validations";
 
@@ -19,10 +20,12 @@ interface BookingSuccessProps {
 }
 
 export function BookingSuccess({ bookingId, packageId }: BookingSuccessProps) {
+  const locale = useLocale();
   const t = useTranslations("checkout");
   const tPackages = useTranslations("packages");
   const tsuccess = useTranslations("success");
   const tui = useTranslations("ui");
+  const tcontact = useTranslations("contact");
 
   const packageInfo = {
     name: tPackages(`${packageId}.title`),
@@ -81,7 +84,7 @@ export function BookingSuccess({ bookingId, packageId }: BookingSuccessProps) {
           <CardContent className="space-y-6 sm:space-y-8">
             {/* Booking Details */}
             <div className="bg-muted/30 rounded-lg p-4 sm:p-6 border">
-              <h3 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4 flex items-center gap-2">
+              <h3 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4 flex items-center gap-2 rtl:space-x-reverse">
                 <div className="p-1.5 bg-muted rounded-lg">
                   <Calendar className="w-4 h-4 sm:w-5 sm:h-5" />
                 </div>
@@ -112,7 +115,7 @@ export function BookingSuccess({ bookingId, packageId }: BookingSuccessProps) {
                     {tsuccess("amount_paid")}:
                   </span>
                   <span className="font-bold text-sm sm:text-base">
-                    €{packageInfo.price}
+                    {formatCurrency(packageInfo.price, locale)}
                   </span>
                 </div>
               </div>
@@ -122,7 +125,7 @@ export function BookingSuccess({ bookingId, packageId }: BookingSuccessProps) {
 
             {/* What's Next */}
             <div className="space-y-4">
-              <h3 className="text-base sm:text-lg font-semibold flex items-center gap-2">
+              <h3 className="text-base sm:text-lg font-semibold flex items-center gap-2 rtl:space-x-reverse">
                 <div className="p-1.5 bg-muted rounded-lg">
                   <Clock className="w-4 h-4 sm:w-5 sm:h-5" />
                 </div>
@@ -130,9 +133,9 @@ export function BookingSuccess({ bookingId, packageId }: BookingSuccessProps) {
               </h3>
 
               <div className="space-y-4">
-                <div className="flex items-start gap-3 p-3 bg-muted/20 rounded-lg border">
+                <div className="flex items-start gap-3 rtl:gap-reverse p-3 bg-muted/20 rounded-lg border">
                   <div className="w-6 h-6 bg-primary text-primary-foreground rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0">
-                    1
+                    {localizeNumerals("1", locale)}
                   </div>
                   <div>
                     <p className="font-semibold text-sm sm:text-base">
@@ -144,9 +147,9 @@ export function BookingSuccess({ bookingId, packageId }: BookingSuccessProps) {
                   </div>
                 </div>
 
-                <div className="flex items-start gap-3 p-3 bg-muted/20 rounded-lg border">
+                <div className="flex items-start gap-3 rtl:gap-reverse p-3 bg-muted/20 rounded-lg border">
                   <div className="w-6 h-6 bg-primary text-primary-foreground rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0">
-                    2
+                    {localizeNumerals("2", locale)}
                   </div>
                   <div>
                     <p className="font-semibold text-sm sm:text-base">
@@ -158,9 +161,9 @@ export function BookingSuccess({ bookingId, packageId }: BookingSuccessProps) {
                   </div>
                 </div>
 
-                <div className="flex items-start gap-3 p-3 bg-muted/20 rounded-lg border">
+                <div className="flex items-start gap-3 rtl:gap-reverse p-3 bg-muted/20 rounded-lg border">
                   <div className="w-6 h-6 bg-primary text-primary-foreground rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0">
-                    3
+                    {localizeNumerals("3", locale)}
                   </div>
                   <div>
                     <p className="font-semibold text-sm sm:text-base">
@@ -182,7 +185,7 @@ export function BookingSuccess({ bookingId, packageId }: BookingSuccessProps) {
                 {tsuccess("have_questions")}
               </h3>
               <div className="space-y-3">
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-3 rtl:gap-reverse">
                   <div className="p-1.5 bg-muted rounded-lg">
                     <Mail className="w-4 h-4" />
                   </div>
@@ -190,17 +193,17 @@ export function BookingSuccess({ bookingId, packageId }: BookingSuccessProps) {
                     info@istanbulportrait.com
                   </span>
                 </div>
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-3 rtl:gap-reverse">
                   <div className="p-1.5 bg-muted rounded-lg">
                     <Phone className="w-4 h-4" />
                   </div>
-                  <span className="text-sm font-medium">+90 536 709 37 24</span>
+                  <span className="text-sm font-medium phone-number">{tcontact("info.phone")}</span>
                 </div>
               </div>
             </div>
 
             {/* Action Buttons */}
-            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-4">
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 rtl:gap-reverse pt-4">
               <Button asChild className="flex-1 h-11">
                 <Link href="/packages">{t("buttons.book_another")}</Link>
               </Button>

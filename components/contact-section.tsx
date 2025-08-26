@@ -164,7 +164,7 @@ export function ContactSection() {
               </CardHeader>
               <CardContent className="flex-1 p-4 sm:p-5 lg:p-6 pt-0">
                 <div className="space-y-4 sm:space-y-5">
-                  <div className="flex items-start space-x-3 sm:space-x-4">
+                  <div className="flex items-start space-x-3 sm:space-x-4 rtl:space-x-reverse">
                     <MapPin className="w-4 h-4 sm:w-5 sm:h-5 text-primary mt-1 flex-shrink-0" />
                     <div className="flex-1 min-w-0">
                       <h3 className="font-semibold mb-1 text-sm sm:text-base">
@@ -176,7 +176,7 @@ export function ContactSection() {
                     </div>
                   </div>
 
-                  <div className="flex items-start space-x-3 sm:space-x-4">
+                  <div className="flex items-start space-x-3 sm:space-x-4 rtl:space-x-reverse">
                     <Mail className="w-4 h-4 sm:w-5 sm:h-5 text-primary mt-1 flex-shrink-0" />
                     <div className="flex-1 min-w-0">
                       <h3 className="font-semibold mb-1 text-sm sm:text-base">
@@ -191,7 +191,7 @@ export function ContactSection() {
                     </div>
                   </div>
 
-                  <div className="flex items-start space-x-3 sm:space-x-4">
+                  <div className="flex items-start space-x-3 sm:space-x-4 rtl:space-x-reverse">
                     <Phone className="w-4 h-4 sm:w-5 sm:h-5 text-primary mt-1 flex-shrink-0" />
                     <div className="flex-1 min-w-0">
                       <h3 className="font-semibold mb-1 text-sm sm:text-base">
@@ -199,14 +199,14 @@ export function ContactSection() {
                       </h3>
                       <a
                         href={`tel:${t("info.phone")}`}
-                        className="text-muted-foreground hover:text-primary transition-colors text-xs sm:text-sm"
+                        className="text-muted-foreground hover:text-primary transition-colors text-xs sm:text-sm phone-number"
                       >
                         {t("info.phone")}
                       </a>
                     </div>
                   </div>
 
-                  <div className="flex items-start space-x-3 sm:space-x-4">
+                  <div className="flex items-start space-x-3 sm:space-x-4 rtl:space-x-reverse">
                     <Clock className="w-4 h-4 sm:w-5 sm:h-5 text-primary mt-1 flex-shrink-0" />
                     <div className="flex-1 min-w-0">
                       <h3 className="font-semibold mb-1 text-sm sm:text-base">

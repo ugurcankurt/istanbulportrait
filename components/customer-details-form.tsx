@@ -1,9 +1,10 @@
 "use client";
 
 import { format } from "date-fns";
+import { ar, enUS, es, ru } from "date-fns/locale";
 import { motion } from "framer-motion";
 import { Calendar as CalendarIcon, Clock } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useState } from "react";
 import type { UseFormReturn } from "react-hook-form";
 import PhoneInput from "react-phone-number-input";
@@ -49,12 +50,28 @@ const generateTimeSlots = () => {
 
 const timeSlots = generateTimeSlots();
 
+// Locale mapping for date-fns
+const getDateFnsLocale = (locale: string) => {
+  switch (locale) {
+    case 'ar':
+      return ar;
+    case 'es':
+      return es;
+    case 'ru':
+      return ru;
+    case 'en':
+    default:
+      return enUS;
+  }
+};
+
 export function CustomerDetailsForm({
   form,
   onSubmit,
   selectedPackage,
   onBack,
 }: CustomerDetailsFormProps) {
+  const locale = useLocale();
   const t = useTranslations("checkout");
   const tPackages = useTranslations("packages");
   const tui = useTranslations("ui");
@@ -64,6 +81,9 @@ export function CustomerDetailsForm({
   const [showTimeSelection, setShowTimeSelection] = useState(() => {
     return !!form.getValues("bookingDate");
   });
+
+  // Get the appropriate date-fns locale
+  const dateFnsLocale = getDateFnsLocale(locale);
 
   const handleSubmit = form.handleSubmit(onSubmit);
 
@@ -168,42 +188,45 @@ export function CustomerDetailsForm({
                             {showTimeSelection ? t("form.date_time") : t("form.date")}
                           </FormLabel>
                           
-                          {/* Calendar Widget - Responsive Full Width */}
-                          <div className="w-full max-w-full px-2 sm:max-w-lg sm:mx-auto lg:max-w-3xl xl:max-w-4xl 2xl:max-w-5xl">
+                          {/* Calendar Widget - Responsive with Natural Sizing */}
+                          <div className="flex justify-center w-full">
                             <Calendar
                               mode="single"
                               selected={dateField.value ? new Date(dateField.value) : undefined}
                               onSelect={(date) => {
-                                const dateString = date ? format(date, "yyyy-MM-dd") : "";
+                                const dateString = date ? format(date, "yyyy-MM-dd", { locale: dateFnsLocale }) : "";
                                 dateField.onChange(dateString);
                                 setShowTimeSelection(!!date);
                               }}
                               disabled={(date) =>
                                 date < new Date() || date < new Date("1900-01-01")
                               }
-                              className="rounded-lg border shadow-sm bg-background p-3 sm:p-5 lg:p-6 w-full"
+                              locale={dateFnsLocale}
+                              dir={locale === 'ar' ? 'rtl' : 'ltr'}
+                              className="rounded-lg border shadow-sm bg-background"
                               classNames={{
-                                months: "space-y-4 w-full",
-                                month: "space-y-4 w-full",
-                                caption: "flex justify-center pt-2 sm:pt-3 relative items-center mb-4 sm:mb-5",
-                                caption_label: "text-base sm:text-lg font-semibold",
+                                months: "flex flex-col sm:flex-row gap-4",
+                                month: "space-y-4",
+                                caption: "flex justify-center pt-1 relative items-center mb-4",
+                                caption_label: "text-base font-semibold",
                                 nav: "space-x-1 flex items-center",
                                 nav_button: cn(
-                                  "h-8 w-8 sm:h-9 sm:w-9 bg-transparent p-0 opacity-70 hover:opacity-100 hover:bg-accent rounded-md transition-all"
+                                  "h-9 w-9 bg-transparent p-0 opacity-70 hover:opacity-100 hover:bg-accent rounded-md transition-all"
                                 ),
-                                nav_button_previous: "absolute left-2",
-                                nav_button_next: "absolute right-2",
-                                table: "w-full border-collapse",
-                                head_row: "flex w-full",
-                                head_cell: "text-muted-foreground rounded-md w-full font-medium text-sm sm:text-base lg:text-sm xl:text-sm flex-1 text-center py-2 sm:py-3",
-                                row: "flex w-full mt-1",
-                                cell: "text-center text-sm p-0 relative flex-1 [&:has([aria-selected])]:bg-accent first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20",
+                                nav_button_previous: "absolute left-1",
+                                nav_button_next: "absolute right-1",
+                                table: "w-full border-collapse space-y-1",
+                                head_row: "flex",
+                                head_cell: "text-muted-foreground rounded-md w-9 font-normal text-sm text-center",
+                                row: "flex w-full mt-2",
+                                cell: "h-9 w-9 text-center text-sm p-0 relative [&:has([aria-selected].day-range-end)]:rounded-r-md [&:has([aria-selected].day-outside)]:bg-accent/50 [&:has([aria-selected])]:bg-accent first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20",
                                 day: cn(
-                                  "h-12 sm:h-14 w-full p-0 font-medium aria-selected:opacity-100 hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground text-sm sm:text-base lg:text-sm xl:text-sm rounded-md transition-colors"
+                                  "h-9 w-9 p-0 font-normal aria-selected:opacity-100 hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground rounded-md transition-colors"
                                 ),
-                                day_selected: "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground font-semibold",
-                                day_today: "bg-accent text-accent-foreground font-semibold",
-                                day_outside: "text-muted-foreground opacity-50",
+                                day_range_end: "day-range-end",
+                                day_selected: "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground",
+                                day_today: "bg-accent text-accent-foreground",
+                                day_outside: "day-outside text-muted-foreground opacity-50 aria-selected:bg-accent/50 aria-selected:text-muted-foreground aria-selected:opacity-30",
                                 day_disabled: "text-muted-foreground opacity-50",
                                 day_range_middle: "aria-selected:bg-accent aria-selected:text-accent-foreground",
                                 day_hidden: "invisible",
@@ -230,7 +253,7 @@ export function CustomerDetailsForm({
                                 control={form.control}
                                 name="bookingTime"
                                 render={({ field: timeField }) => (
-                                  <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7 gap-2 sm:gap-3 w-full max-w-full px-2 sm:max-w-lg sm:mx-auto lg:max-w-3xl xl:max-w-4xl 2xl:max-w-5xl">
+                                  <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8 gap-2 sm:gap-3 max-w-2xl mx-auto">
                                     {timeSlots.map((time) => (
                                       <Button
                                         key={time}
@@ -238,7 +261,7 @@ export function CustomerDetailsForm({
                                         variant={timeField.value === time ? "default" : "outline"}
                                         size="sm"
                                         className={cn(
-                                          "h-11 sm:h-12 flex items-center justify-center gap-1 sm:gap-1.5 text-xs sm:text-sm lg:text-xs xl:text-xs font-medium transition-all min-w-0 px-2 sm:px-3",
+                                          "h-10 sm:h-11 flex items-center justify-center gap-1 text-xs sm:text-sm font-medium transition-all min-w-0 px-1.5 sm:px-2",
                                           timeField.value === time
                                             ? "bg-primary text-primary-foreground shadow-md ring-2 ring-primary ring-offset-1"
                                             : "hover:bg-muted hover:text-foreground hover:border-primary/50"

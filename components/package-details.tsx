@@ -2,12 +2,13 @@
 
 import { motion } from "framer-motion";
 import { Check, Clock, Image as ImageIcon, MapPin } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useEffect } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { trackViewItem } from "@/lib/analytics";
+import { formatCurrency } from "@/lib/utils";
 import type { PackageId } from "@/lib/validations";
 import { packagePrices } from "@/lib/validations";
 
@@ -20,6 +21,7 @@ export function PackageDetails({
   selectedPackage,
   onPackageSelect,
 }: PackageDetailsProps) {
+  const locale = useLocale();
   const t = useTranslations("packages");
   const tui = useTranslations("ui");
   const tpackage = useTranslations("package_selection");
@@ -117,19 +119,19 @@ export function PackageDetails({
                   {pkg.name}
                 </CardTitle>
                 <div className="text-xl sm:text-2xl font-bold text-primary mb-1 sm:mb-3">
-                  €{pkg.price}
+                  {formatCurrency(pkg.price, locale)}
                 </div>
 
                 <div className="space-y-1 sm:space-y-1.5">
-                  <div className="flex items-center justify-center space-x-1 text-[10px] sm:text-xs">
+                  <div className="flex items-center justify-center space-x-1 rtl:space-x-reverse text-[10px] sm:text-xs">
                     <Clock className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-muted-foreground" />
                     <span className="font-medium">{pkg.duration}</span>
                   </div>
-                  <div className="flex items-center justify-center space-x-1 text-[10px] sm:text-xs">
+                  <div className="flex items-center justify-center space-x-1 rtl:space-x-reverse text-[10px] sm:text-xs">
                     <ImageIcon className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-muted-foreground" />
                     <span className="font-medium">{pkg.photos}</span>
                   </div>
-                  <div className="flex items-center justify-center space-x-1 text-[10px] sm:text-xs">
+                  <div className="flex items-center justify-center space-x-1 rtl:space-x-reverse text-[10px] sm:text-xs">
                     <MapPin className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-muted-foreground" />
                     <span className="font-medium">{pkg.locations}</span>
                   </div>
@@ -141,7 +143,7 @@ export function PackageDetails({
                   {pkg.features.map((feature, featureIndex) => (
                     <li
                       key={featureIndex}
-                      className="flex items-start space-x-1.5"
+                      className="flex items-start space-x-1.5 rtl:space-x-reverse"
                     >
                       <Check className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-primary mt-0.5 flex-shrink-0" />
                       <span className="text-[10px] sm:text-xs leading-tight sm:leading-relaxed">
