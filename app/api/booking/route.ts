@@ -136,7 +136,27 @@ export async function POST(request: NextRequest) {
         );
       }
 
-      // Create booking in Supabase
+      // First create/update customer record (BEFORE booking to avoid FK constraint)
+      const { error: customerError } = await supabaseAdmin
+        .from("customers")
+        .upsert({
+          email: customerEmail,
+          name: customerName,
+          phone: customerPhone,
+        })
+        .select()
+        .single();
+
+      if (customerError) {
+        logError(handleSupabaseError(customerError), {
+          ip,
+          endpoint: "booking",
+          action: "customer_upsert",
+        });
+        // Continue even if customer upsert fails for demo mode compatibility
+      }
+
+      // Now create booking in Supabase (customer already exists)
       const { data: booking, error } = await supabaseAdmin
         .from("bookings")
         .insert({
@@ -156,17 +176,6 @@ export async function POST(request: NextRequest) {
       if (error) {
         throw error;
       }
-
-      // Also create/update customer record
-      await supabaseAdmin
-        .from("customers")
-        .upsert({
-          email: customerEmail,
-          name: customerName,
-          phone: customerPhone,
-        })
-        .select()
-        .single();
 
       const duration = Date.now() - startTime;
       if (process.env.NODE_ENV === "development") {
