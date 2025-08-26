@@ -82,11 +82,11 @@ export function AboutSection() {
             <div className="relative aspect-[4/5] rounded-2xl overflow-hidden">
               <Image
                 src="/istanbulportprat_ugur_cankurt.jpg"
-                alt={tui("professional_photographer_in_istanbul")}
+                alt="Uğur Cankurt - Professional Istanbul Photographer with 8+ years experience in portrait, couple, and rooftop photography sessions"
                 fill
                 className="object-cover"
-                priority={false}
-                quality={85}
+                priority={true}
+                quality={90}
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 600px"
                 onError={(e) => {
                   const target = e.target as HTMLImageElement;
@@ -119,9 +119,20 @@ export function AboutSection() {
             transition={{ duration: 0.8, delay: 0.4 }}
             className="space-y-4 sm:space-y-6"
           >
-            <p className="text-sm sm:text-base lg:text-lg leading-relaxed">
-              {t("description")}
-            </p>
+            <div className="space-y-3">
+              <p className="text-sm sm:text-base lg:text-lg leading-relaxed">
+                {t("description")}
+              </p>
+              <div className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
+                <strong className="text-primary">
+                  Professional Expertise:
+                </strong>{" "}
+                Specializing in portrait photography, couple sessions, rooftop
+                photoshoots with stunning Bosphorus views, and lifestyle
+                photography across Istanbul's most iconic locations including
+                Sultanahmet, Galata Tower, and Ortaköy Mosque.
+              </div>
+            </div>
 
             <div className="flex flex-wrap gap-2">
               <Badge variant="secondary" className="text-xs sm:text-sm">

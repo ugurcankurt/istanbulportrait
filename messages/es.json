@@ -436,5 +436,17 @@
       "title": "Contacto | Reserva tu Sesión Fotográfica en Estambul",
       "description": "¿Listo para reservar tu sesión fotográfica en Estambul? Contáctanos para sesiones profesionales de fotografía de retratos. Disponible los 7 días de la semana."
     }
+  },
+  "cookies": {
+    "banner": {
+      "title": "Utilizamos cookies para mejorar tu experiencia y analizar nuestro tráfico.",
+      "description": "Las cookies esenciales son necesarias para la funcionalidad básica del sitio. Las cookies analíticas nos ayudan a mejorar nuestros servicios.",
+      "privacy_link": "Más información en nuestra Política de Privacidad"
+    },
+    "buttons": {
+      "accept_all": "Aceptar Todo",
+      "essential_only": "Solo Esenciales",
+      "decline_all": "Rechazar Todo"
+    }
   }
 }

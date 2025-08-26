@@ -74,16 +74,16 @@ export function PaymentForm({
   // Format card number with spaces
   const formatCardNumber = (value: string) => {
     if (!value) return "";
-    
+
     // Remove all non-digits
     const digitsOnly = value.replace(/\D/g, "");
-    
+
     // Limit to 19 digits maximum
     const limitedDigits = digitsOnly.slice(0, 19);
-    
+
     // Add spaces every 4 digits
     const formatted = limitedDigits.replace(/(\d{4})(?=\d)/g, "$1 ");
-    
+
     return formatted;
   };
 
@@ -357,7 +357,7 @@ export function PaymentForm({
                   </Badge>
                 </div>
                 <span className="text-lg font-semibold">
-{formatCurrency(packageInfo.price, locale)}
+                  {formatCurrency(packageInfo.price, locale)}
                 </span>
               </div>
             </div>
@@ -366,7 +366,9 @@ export function PaymentForm({
 
             <div className="flex justify-between items-center p-3 bg-muted/50 rounded-lg border">
               <span className="text-lg font-semibold">{tui("total")}:</span>
-              <span className="text-xl font-bold">{formatCurrency(packageInfo.price, locale)}</span>
+              <span className="text-xl font-bold">
+                {formatCurrency(packageInfo.price, locale)}
+              </span>
             </div>
 
             <div className="text-xs text-muted-foreground bg-muted/30 p-3 rounded-lg">

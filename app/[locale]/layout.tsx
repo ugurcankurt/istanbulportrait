@@ -1,10 +1,8 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages, getTranslations } from "next-intl/server";
-import {
-  CookieConsent,
-  GoogleAnalytics,
-} from "@/components/analytics/google-analytics";
+import { GoogleAnalytics } from "@/components/analytics/google-analytics";
+import { MultilingualCookieConsent } from "@/components/analytics/multilingual-cookie-consent";
 import "../globals.css";
 import { ThemeProvider } from "next-themes";
 import { Footer } from "@/components/footer";
@@ -30,48 +28,73 @@ export async function generateMetadata({
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "seo.home" });
 
+  const baseUrl = "https://istanbulportrait.com";
+
   return {
-    metadataBase: new URL("https://istanbulportrait.com"),
+    metadataBase: new URL(baseUrl),
     title: t("title"),
     description: t("description"),
     keywords:
-      "istanbul photographer, istanbul photoshoot, istanbul rooftop photoshoot, portrait photographer istanbul, couple photography istanbul",
-    authors: [{ name: "Istanbul Photographer" }],
-    publisher: "istanbulportrait.com",
+      "istanbul photographer, istanbul photoshoot, istanbul rooftop photoshoot, portrait photographer istanbul, couple photography istanbul, professional photographer istanbul, wedding photographer istanbul",
+    authors: [
+      { name: "Istanbul Portrait Professional Photographer", url: baseUrl },
+    ],
+    publisher: "Istanbul Portrait",
+    category: "Photography Services",
     robots: {
       index: true,
       follow: true,
+      "max-image-preview": "large",
+      "max-video-preview": -1,
+      "max-snippet": -1,
       googleBot: {
         index: true,
         follow: true,
         "max-video-preview": -1,
         "max-image-preview": "large",
         "max-snippet": -1,
+        noimageindex: false,
+        noarchive: false,
+        nocache: false,
       },
     },
     alternates: {
-      canonical: `https://istanbulportrait.com/${locale}`,
+      canonical: `${baseUrl}/${locale}`,
       languages: {
-        en: "/en",
-        ar: "/ar",
-        ru: "/ru",
-        es: "/es",
+        en: `${baseUrl}/en`,
+        ar: `${baseUrl}/ar`,
+        ru: `${baseUrl}/ru`,
+        es: `${baseUrl}/es`,
       },
     },
     openGraph: {
       title: t("title"),
       description: t("description"),
-      images: ["/og-image.jpg"],
+      images: [
+        {
+          url: `${baseUrl}/og-image.jpg`,
+          width: 1200,
+          height: 630,
+          alt: t("title") + " - Professional Photography Services in Istanbul",
+          type: "image/jpeg",
+        },
+      ],
       locale: locale,
       type: "website",
-      url: `https://istanbulportrait.com/${locale}`,
+      url: `${baseUrl}/${locale}`,
       siteName: "Istanbul Portrait",
+      countryName: "Turkey",
     },
     twitter: {
       card: "summary_large_image",
       title: t("title"),
       description: t("description"),
-      images: ["/og-image.jpg"],
+      images: [
+        {
+          url: `${baseUrl}/og-image.jpg`,
+          alt: t("title") + " - Professional Photography Services in Istanbul",
+        },
+      ],
       creator: "@istanbulportrait",
       site: "@istanbulportrait",
     },
@@ -139,7 +162,7 @@ export default async function LocaleLayout({
               <Footer />
             </div>
             <Toaster />
-            <CookieConsent />
+            <MultilingualCookieConsent />
             <StructuredData type="website" />
             <StructuredData type="organization" />
             <StructuredData type="reviews" />

@@ -147,22 +147,22 @@
   [dir="rtl"] {
     text-align: right;
   }
-  
+
   /* RTL Phone number optimizations */
   [dir="rtl"] a[href^="tel:"] {
     direction: ltr;
     text-align: left;
     unicode-bidi: embed;
   }
-  
+
   [dir="rtl"] .phone-number {
     direction: ltr;
     text-align: left;
     unicode-bidi: embed;
     display: inline-block;
   }
-  
-  /* RTL Email optimizations */ 
+
+  /* RTL Email optimizations */
   [dir="rtl"] a[href^="mailto:"] {
     direction: ltr;
     text-align: left;

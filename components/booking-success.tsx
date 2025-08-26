@@ -197,7 +197,9 @@ export function BookingSuccess({ bookingId, packageId }: BookingSuccessProps) {
                   <div className="p-1.5 bg-muted rounded-lg">
                     <Phone className="w-4 h-4" />
                   </div>
-                  <span className="text-sm font-medium phone-number">{tcontact("info.phone")}</span>
+                  <span className="text-sm font-medium phone-number">
+                    {tcontact("info.phone")}
+                  </span>
                 </div>
               </div>
             </div>

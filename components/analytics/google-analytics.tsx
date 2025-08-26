@@ -36,7 +36,7 @@ export function GoogleAnalytics() {
             gtag('js', new Date());
 
             gtag('consent', 'default', {
-              'analytics_storage': 'granted',
+              'analytics_storage': 'denied',
               'ad_storage': 'denied',
               'ad_user_data': 'denied',
               'ad_personalization': 'denied',
@@ -53,6 +53,83 @@ export function GoogleAnalytics() {
                 'custom_dimension_2': 'user_language'
               }
             });
+
+            // Core Web Vitals tracking for 2025 SEO
+            function sendWebVitals() {
+              // Import and track Core Web Vitals
+              import('web-vitals').then(({ getCLS, getFID, getFCP, getLCP, getTTFB, onINP }) => {
+                // Track Largest Contentful Paint (LCP)
+                getLCP((metric) => {
+                  gtag('event', 'web_vitals', {
+                    event_category: 'Web Vitals',
+                    event_label: 'LCP',
+                    value: Math.round(metric.value),
+                    custom_parameter_1: metric.rating,
+                    non_interaction: true,
+                  });
+                });
+
+                // Track First Input Delay (FID) - being replaced by INP in 2025
+                getFID((metric) => {
+                  gtag('event', 'web_vitals', {
+                    event_category: 'Web Vitals',
+                    event_label: 'FID',
+                    value: Math.round(metric.value),
+                    custom_parameter_1: metric.rating,
+                    non_interaction: true,
+                  });
+                });
+
+                // Track Interaction to Next Paint (INP) - new metric for 2025
+                onINP((metric) => {
+                  gtag('event', 'web_vitals', {
+                    event_category: 'Web Vitals',
+                    event_label: 'INP',
+                    value: Math.round(metric.value),
+                    custom_parameter_1: metric.rating,
+                    non_interaction: true,
+                  });
+                });
+
+                // Track Cumulative Layout Shift (CLS)
+                getCLS((metric) => {
+                  gtag('event', 'web_vitals', {
+                    event_category: 'Web Vitals',
+                    event_label: 'CLS',
+                    value: Math.round(metric.value * 1000),
+                    custom_parameter_1: metric.rating,
+                    non_interaction: true,
+                  });
+                });
+
+                // Track First Contentful Paint (FCP)
+                getFCP((metric) => {
+                  gtag('event', 'web_vitals', {
+                    event_category: 'Web Vitals',
+                    event_label: 'FCP',
+                    value: Math.round(metric.value),
+                    custom_parameter_1: metric.rating,
+                    non_interaction: true,
+                  });
+                });
+
+                // Track Time to First Byte (TTFB)
+                getTTFB((metric) => {
+                  gtag('event', 'web_vitals', {
+                    event_category: 'Web Vitals',
+                    event_label: 'TTFB',
+                    value: Math.round(metric.value),
+                    custom_parameter_1: metric.rating,
+                    non_interaction: true,
+                  });
+                });
+              }).catch((error) => {
+                console.log('Web Vitals library failed to load:', error);
+              });
+            }
+
+            // Initialize Web Vitals tracking
+            sendWebVitals();
           `,
         }}
       />
@@ -130,7 +207,7 @@ export function GoogleAnalytics() {
 }
 
 export function CookieConsent() {
-  const handleAcceptCookies = () => {
+  const handleAcceptAll = () => {
     if (typeof window !== "undefined" && window.gtag) {
       window.gtag("consent", "update", {
         analytics_storage: "granted",
@@ -139,14 +216,29 @@ export function CookieConsent() {
         ad_personalization: "granted",
       });
     }
-    localStorage.setItem("cookie_consent", "accepted");
-    // Hide consent banner
-    const banner = document.getElementById("cookie-consent-banner");
-    if (banner) banner.style.display = "none";
+    localStorage.setItem("cookie_consent", "accepted_all");
+    hideBanner();
   };
 
-  const handleDeclineCookies = () => {
+  const handleAcceptEssential = () => {
+    if (typeof window !== "undefined" && window.gtag) {
+      window.gtag("consent", "update", {
+        analytics_storage: "granted",
+        ad_storage: "denied",
+        ad_user_data: "denied",
+        ad_personalization: "denied",
+      });
+    }
+    localStorage.setItem("cookie_consent", "essential_only");
+    hideBanner();
+  };
+
+  const handleDeclineAll = () => {
     localStorage.setItem("cookie_consent", "declined");
+    hideBanner();
+  };
+
+  const hideBanner = () => {
     const banner = document.getElementById("cookie-consent-banner");
     if (banner) banner.style.display = "none";
   };
@@ -154,41 +246,56 @@ export function CookieConsent() {
   useEffect(() => {
     const consent = localStorage.getItem("cookie_consent");
     if (consent) {
-      const banner = document.getElementById("cookie-consent-banner");
-      if (banner) banner.style.display = "none";
+      hideBanner();
     }
   }, []);
 
   return (
     <div
       id="cookie-consent-banner"
-      className="fixed bottom-0 left-0 right-0 bg-background/95 backdrop-blur-sm border-t p-4 z-50"
+      className="fixed bottom-0 left-0 right-0 bg-background/95 backdrop-blur-sm border-t p-4 z-50 shadow-lg"
     >
-      <div className="container mx-auto max-w-4xl flex flex-col sm:flex-row items-center justify-between gap-4">
-        <div className="text-sm text-muted-foreground">
-          <p>
-            We use cookies to enhance your browsing experience and analyze our
-            traffic.
-            <a href="/privacy" className="underline hover:text-foreground ml-1">
-              Learn more
-            </a>
-          </p>
-        </div>
-        <div className="flex gap-2">
-          <button
-            type="button"
-            onClick={handleDeclineCookies}
-            className="px-4 py-2 text-sm border rounded-md hover:bg-muted transition-colors"
-          >
-            Decline
-          </button>
-          <button
-            type="button"
-            onClick={handleAcceptCookies}
-            className="px-4 py-2 text-sm bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors"
-          >
-            Accept
-          </button>
+      <div className="container mx-auto max-w-6xl">
+        <div className="flex flex-col gap-4">
+          <div className="text-sm text-muted-foreground">
+            <p className="font-medium mb-2">
+              We use cookies to enhance your experience and analyze our traffic.
+            </p>
+            <p className="text-xs">
+              Essential cookies are required for basic site functionality.
+              Analytics cookies help us improve our services.
+              <a
+                href="/privacy"
+                className="underline hover:text-foreground ml-1"
+              >
+                Learn more in our Privacy Policy
+              </a>
+            </p>
+          </div>
+
+          <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
+            <button
+              type="button"
+              onClick={handleAcceptAll}
+              className="px-4 py-2 text-sm bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors font-medium"
+            >
+              Accept All
+            </button>
+            <button
+              type="button"
+              onClick={handleAcceptEssential}
+              className="px-4 py-2 text-sm border rounded-md hover:bg-muted transition-colors"
+            >
+              Essential Only
+            </button>
+            <button
+              type="button"
+              onClick={handleDeclineAll}
+              className="px-4 py-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
+            >
+              Decline All
+            </button>
+          </div>
         </div>
       </div>
     </div>

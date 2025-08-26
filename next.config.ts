@@ -14,14 +14,19 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "plus.unsplash.com",
       },
+      {
+        protocol: "https",
+        hostname: "istanbulportrait.com",
+      },
     ],
-    formats: ["image/webp"],
-    minimumCacheTTL: 60,
+    formats: ["image/avif", "image/webp"],
+    minimumCacheTTL: 86400, // 24 hours for better SEO caching
     dangerouslyAllowSVG: true,
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
-    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384, 512],
     qualities: [75, 85, 90, 95, 100],
+    unoptimized: false, // Ensure optimization is enabled
   },
   experimental: {
     optimizePackageImports: ["lucide-react", "@radix-ui/react-icons"],
@@ -71,6 +76,14 @@ const nextConfig: NextConfig = {
             key: "Permissions-Policy",
             value: "camera=(), microphone=(), geolocation=()",
           },
+          {
+            key: "X-DNS-Prefetch-Control",
+            value: "on",
+          },
+          {
+            key: "Strict-Transport-Security",
+            value: "max-age=31536000; includeSubDomains",
+          },
         ],
       },
       {
@@ -84,6 +97,15 @@ const nextConfig: NextConfig = {
       },
       {
         source: "/_next/static/(.*)",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=31536000, immutable",
+          },
+        ],
+      },
+      {
+        source: "/(.*)\\.(jpg|jpeg|png|webp|avif|ico|svg)$",
         headers: [
           {
             key: "Cache-Control",

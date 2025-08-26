@@ -46,7 +46,7 @@ export type Database = {
           user_phone: string;
           booking_date: string;
           booking_time: string;
-          status: "pending" | "confirmed" | "cancelled";
+          status: "pending" | "confirmed" | "cancelled" | "completed";
           total_amount: number;
           notes?: string;
           created_at: string;
@@ -60,7 +60,7 @@ export type Database = {
           user_phone: string;
           booking_date: string;
           booking_time: string;
-          status?: "pending" | "confirmed" | "cancelled";
+          status?: "pending" | "confirmed" | "cancelled" | "completed";
           total_amount: number;
           notes?: string;
           created_at?: string;
@@ -74,7 +74,7 @@ export type Database = {
           user_phone?: string;
           booking_date?: string;
           booking_time?: string;
-          status?: "pending" | "confirmed" | "cancelled";
+          status?: "pending" | "confirmed" | "cancelled" | "completed";
           total_amount?: number;
           notes?: string;
           created_at?: string;
@@ -170,29 +170,79 @@ export type Database = {
       packages: {
         Row: {
           id: string;
-          name: string;
+          name: any; // JSONB with multilingual names
+          description: any; // JSONB with multilingual descriptions  
           price: number;
-          duration: string;
-          features: string[];
+          duration: number; // integer in minutes
+          features: any; // JSONB array
+          is_popular: boolean;
           created_at: string;
           updated_at?: string;
         };
         Insert: {
           id?: string;
-          name: string;
+          name: any;
+          description: any;
           price: number;
-          duration: string;
-          features: string[];
+          duration: number;
+          features: any;
+          is_popular?: boolean;
           created_at?: string;
           updated_at?: string;
         };
         Update: {
           id?: string;
-          name?: string;
+          name?: any;
+          description?: any;
           price?: number;
-          duration?: string;
-          features?: string[];
+          duration?: number;
+          features?: any;
+          is_popular?: boolean;
           created_at?: string;
+          updated_at?: string;
+        };
+      };
+      admin_dashboard_stats: {
+        Row: {
+          id?: string;
+          total_bookings: number;
+          pending_bookings: number;
+          confirmed_bookings: number;
+          cancelled_bookings: number;
+          total_revenue: number;
+          monthly_revenue: number;
+          total_customers: number;
+          total_payments: number;
+          successful_payments: number;
+          failed_payments: number;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          total_bookings: number;
+          pending_bookings: number;
+          confirmed_bookings: number;
+          cancelled_bookings: number;
+          total_revenue: number;
+          monthly_revenue: number;
+          total_customers: number;
+          total_payments: number;
+          successful_payments: number;
+          failed_payments: number;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          total_bookings?: number;
+          pending_bookings?: number;
+          confirmed_bookings?: number;
+          cancelled_bookings?: number;
+          total_revenue?: number;
+          monthly_revenue?: number;
+          total_customers?: number;
+          total_payments?: number;
+          successful_payments?: number;
+          failed_payments?: number;
           updated_at?: string;
         };
       };

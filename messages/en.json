@@ -435,5 +435,78 @@
       "title": "Contact | Book Your Istanbul Photoshoot",
       "description": "Ready to book your Istanbul photoshoot? Contact us for professional portrait photography sessions. Available 7 days a week."
     }
+  },
+  "cookies": {
+    "banner": {
+      "title": "We use cookies to enhance your experience and analyze our traffic.",
+      "description": "Essential cookies are required for basic site functionality. Analytics cookies help us improve our services.",
+      "privacy_link": "Learn more in our Privacy Policy"
+    },
+    "buttons": {
+      "accept_all": "Accept All",
+      "essential_only": "Essential Only",
+      "decline_all": "Decline All"
+    }
+  },
+  "privacy": {
+    "title": "Privacy Policy",
+    "subtitle": "How we collect, use, and protect your personal information",
+    "seo": {
+      "title": "Privacy Policy | Istanbul Portrait",
+      "description": "Learn how Istanbul Portrait collects, uses, and protects your personal information. GDPR compliant privacy policy."
+    },
+    "information_collection": {
+      "title": "Information We Collect",
+      "description": "We collect information you provide directly to us when using our photography services:",
+      "items": {
+        "personal": "Personal information (name, email, phone number)",
+        "contact": "Contact preferences and communication history",
+        "booking": "Booking details and session requirements",
+        "payment": "Payment information (processed securely through Iyzico)"
+      }
+    },
+    "cookies": {
+      "title": "Cookies and Tracking",
+      "description": "We use different types of cookies to enhance your experience:",
+      "essential": {
+        "title": "Essential Cookies",
+        "description": "Required for basic site functionality and cannot be disabled."
+      },
+      "analytics": {
+        "title": "Analytics Cookies",
+        "description": "Help us understand how visitors interact with our website using Google Analytics."
+      },
+      "marketing": {
+        "title": "Marketing Cookies",
+        "description": "Used to deliver relevant advertisements and track campaign effectiveness."
+      }
+    },
+    "data_use": {
+      "title": "How We Use Your Data",
+      "items": {
+        "booking": "Process and manage your photography bookings",
+        "communication": "Communicate with you about our services",
+        "improvement": "Improve our website and service quality",
+        "marketing": "Send promotional materials (with your consent)",
+        "legal": "Comply with legal obligations and resolve disputes"
+      }
+    },
+    "your_rights": {
+      "title": "Your Rights (GDPR)",
+      "items": {
+        "access": "Right to access your personal data",
+        "rectification": "Right to correct inaccurate data",
+        "erasure": "Right to request deletion of your data",
+        "portability": "Right to data portability",
+        "objection": "Right to object to data processing"
+      }
+    },
+    "contact": {
+      "title": "Contact Us",
+      "description": "If you have questions about this privacy policy or your personal data:",
+      "email_label": "Email:",
+      "updated_label": "Last updated:",
+      "updated_date": "January 2025"
+    }
   }
 }

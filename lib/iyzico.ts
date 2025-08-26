@@ -83,15 +83,11 @@ function generateAuthString(
     const base64Auth = Buffer.from(authString, "utf8").toString("base64");
 
     if (process.env.NODE_ENV === "development") {
-      console.log("🔐 Payload Length:", payload.length);
-      console.log("🔐 HMAC-SHA256 Signature:", signature);
-      console.log("🔐 Auth String:", authString);
-      console.log("🔐 Base64 Auth:", base64Auth);
     }
 
     return base64Auth;
   } catch (error) {
-    console.error("❌ Signature generation error:", error);
+    console.error("Iyzico: Signature generation error:", error);
     throw new Error("Failed to generate authentication signature");
   }
 }
@@ -108,7 +104,7 @@ export const initializePayment = async (
       !SECRET_KEY ||
       SECRET_KEY === "demo-secret-key"
     ) {
-      console.warn("⚠️ Using demo mode - Iyzico API keys not configured");
+      console.warn("Warning: Using demo mode - Iyzico API keys not configured");
       return createDemoPaymentResponse(paymentRequest);
     }
 
@@ -123,7 +119,6 @@ export const initializePayment = async (
       );
 
       if (process.env.NODE_ENV === "development") {
-        console.log("🔐 Generated IYZWSv2 auth string for Iyzico API");
       }
 
       const response = await fetch(`${IYZICO_BASE_URL}/payment/auth`, {
@@ -148,13 +143,13 @@ export const initializePayment = async (
 
       return result;
     } catch (apiError) {
-      console.error("🚫 Iyzico API call failed:", apiError);
+      console.error("Iyzico API: Iyzico API call failed:", apiError);
       // Fallback to demo mode if API call fails
-      console.warn("⚠️ Falling back to demo mode due to API error");
+      console.warn("Warning: Falling back to demo mode due to API error");
       return createDemoPaymentResponse(paymentRequest);
     }
   } catch (error) {
-    console.error("❌ Payment initialization error:", error);
+    console.error("Iyzico: Payment initialization error:", error);
     throw new Error("Payment processing failed");
   }
 };

@@ -21,7 +21,7 @@ export const paymentSchema = z.object({
         const digitsOnly = val.replace(/\D/g, "");
         return digitsOnly.length >= 13 && digitsOnly.length <= 19;
       },
-      { message: "validation.card_number_invalid" }
+      { message: "validation.card_number_invalid" },
     ),
   expireMonth: z.string().min(2, "validation.month_required").max(2),
   expireYear: z.string().min(2, "validation.year_required").max(2),
