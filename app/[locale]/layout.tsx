@@ -8,6 +8,7 @@ import { Footer } from "@/components/footer";
 import { Navigation } from "@/components/navigation";
 import { StructuredData } from "@/components/seo/structured-data";
 import { Toaster } from "@/components/ui/sonner";
+import { WhatsAppButton } from "@/components/whatsapp-button";
 
 export async function generateMetadata({
   params,
@@ -124,7 +125,7 @@ export default async function LocaleLayout({
   children: React.ReactNode;
   params: Promise<{ locale: string }>;
 }) {
-  const { locale } = await params;
+  const { locale: _locale } = await params;
   const messages = await getMessages();
 
   return (
@@ -143,6 +144,7 @@ export default async function LocaleLayout({
         </div>
         <Toaster />
         <MultilingualCookieConsent />
+        <WhatsAppButton phoneNumber="+905367093724" />
         <StructuredData type="website" />
         <StructuredData type="organization" />
         <StructuredData type="localbusiness" />

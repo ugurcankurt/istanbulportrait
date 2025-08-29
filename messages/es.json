@@ -5,6 +5,11 @@
     "about": "Acerca",
     "contact": "Contacto"
   },
+  "whatsapp": {
+    "button": "WhatsApp",
+    "tooltip": "Chatea con nosotros en WhatsApp",
+    "message": "¡Hola! Estoy interesado en reservar una sesión de fotografía en Estambul. ¿Pueden ayudarme con más información?"
+  },
   "hero": {
     "title": "Fotógrafo de Estambul | Servicios Profesionales de Fotografía en Estambul",
     "subtitle": "Sesiones profesionales de retratos y lifestyle en el corazón de Estambul",

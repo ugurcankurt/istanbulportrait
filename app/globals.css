@@ -288,3 +288,18 @@
 .PhoneInput__input::placeholder {
   color: hsl(var(--muted-foreground));
 }
+
+/* WhatsApp Button Custom Utilities */
+.bg-gradient-radial {
+  background-image: radial-gradient(ellipse at center, var(--tw-gradient-stops));
+}
+
+/* Modern glassmorphism effect */
+.backdrop-blur-glass {
+  backdrop-filter: blur(16px) saturate(180%);
+}
+
+/* Enhanced focus styles for WhatsApp button - now handled by Framer Motion */
+.whatsapp-focus {
+  @apply focus:outline-none focus:ring-4 focus:ring-green-400/30 focus:ring-offset-2 focus:ring-offset-background;
+}

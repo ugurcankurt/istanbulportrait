@@ -5,6 +5,11 @@
     "about": "About",
     "contact": "Contact"
   },
+  "whatsapp": {
+    "button": "WhatsApp",
+    "tooltip": "Chat with us on WhatsApp",
+    "message": "Hello! I'm interested in booking a photography session in Istanbul. Can you help me with more information?"
+  },
   "hero": {
     "title": "Istanbul Photographer | Professional Istanbul Photoshoot Services",
     "subtitle": "Professional portrait and lifestyle photography sessions in the heart of Istanbul",
