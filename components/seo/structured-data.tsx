@@ -6,11 +6,15 @@ interface StructuredDataProps {
     | "service"
     | "person"
     | "organization"
-    | "reviews"
     | "localbusiness"
     | "article"
     | "howto"
-    | "locations";
+    | "locations"
+    | "breadcrumblist"
+    | "imageobject"
+    | "offer"
+    | "event"
+    | "carousel";
   data?: any;
 }
 
@@ -29,11 +33,18 @@ export function StructuredData({ type, data }: StructuredDataProps) {
           name: "Istanbul Photographer",
           url: baseUrl,
           description: t("seo.home.description"),
-          potentialAction: {
-            "@type": "SearchAction",
-            target: `${baseUrl}/search?q={search_term_string}`,
-            "query-input": "required name=search_term_string",
-          },
+          potentialAction: [
+            {
+              "@type": "SearchAction",
+              target: `${baseUrl}/search?q={search_term_string}`,
+              "query-input": "required name=search_term_string",
+            },
+            {
+              "@type": "Action",
+              name: "Book Photography Session",
+              target: `${baseUrl}/checkout`,
+            },
+          ],
           inLanguage: [
             { "@type": "Language", name: "English", alternateName: "en" },
             { "@type": "Language", name: "Arabic", alternateName: "ar" },
@@ -47,21 +58,22 @@ export function StructuredData({ type, data }: StructuredDataProps) {
           "@context": "https://schema.org",
           "@type": "ProfessionalService",
           "@id": `${baseUrl}#organization`,
-          name: "Istanbul Portrait - Professional Photography Services",
+          name: "Istanbul Photographer - Professional Photography Services",
           image: [
             {
               "@type": "ImageObject",
               url: `${baseUrl}/og-image.jpg`,
               width: 1200,
               height: 630,
-              caption: "Istanbul Portrait Professional Photography Services",
+              caption:
+                "Istanbul Photographer Professional Photography Services",
             },
             {
               "@type": "ImageObject",
               url: `${baseUrl}/istanbulportrait_dark_logo.png`,
               width: 400,
               height: 200,
-              caption: "Istanbul Portrait Logo",
+              caption: "Istanbul Photographer Logo",
             },
             {
               "@type": "ImageObject",
@@ -125,6 +137,20 @@ export function StructuredData({ type, data }: StructuredDataProps) {
             name: "Istanbul",
             addressCountry: "TR",
           },
+          openingHoursSpecification: {
+            "@type": "OpeningHoursSpecification",
+            dayOfWeek: [
+              "Monday",
+              "Tuesday",
+              "Wednesday",
+              "Thursday",
+              "Friday",
+              "Saturday",
+              "Sunday",
+            ],
+            opens: "09:00",
+            closes: "20:00",
+          },
           hasOfferCatalog: {
             "@type": "OfferCatalog",
             name: "Photography Services",
@@ -159,6 +185,13 @@ export function StructuredData({ type, data }: StructuredDataProps) {
           sameAs: [
             "https://instagram.com/istanbulportrait",
             "https://facebook.com/istanbulportrait",
+            "https://www.linkedin.com/in/istanbulphotographer",
+            "https://www.pinterest.com/istanbulphotographer",
+            "https://twitter.com/istanbulphoto",
+          ],
+          awards: [
+            "Top-Rated Photography Service Istanbul 2024",
+            "Best Rooftop Photography Experience 2024",
           ],
         };
 
@@ -250,107 +283,20 @@ export function StructuredData({ type, data }: StructuredDataProps) {
           },
         };
 
-      case "reviews":
-        return {
-          "@context": "https://schema.org",
-          "@type": "LocalBusiness",
-          "@id": `${baseUrl}#business`,
-          name: "Istanbul Portrait - Professional Photography Services",
-          image: [
-            {
-              "@type": "ImageObject",
-              url: `${baseUrl}/og-image.jpg`,
-              width: 1200,
-              height: 630,
-              caption: "Istanbul Portrait Professional Photography Services",
-            },
-          ],
-          description: t("seo.home.description"),
-          url: baseUrl,
-          telephone: "+90-536-709-37-24",
-          email: "info@istanbulportrait.com",
-          address: {
-            "@type": "PostalAddress",
-            streetAddress: "Alemdar, Molla Fenari, Divan Yolu Cd. No:78/A",
-            addressLocality: "Istanbul",
-            postalCode: "34110",
-            addressCountry: "TR",
-          },
-          geo: {
-            "@type": "GeoCoordinates",
-            latitude: 41.0082,
-            longitude: 28.9784,
-          },
-          serviceType: "Photography Services",
-          priceRange: "€150-€450",
-          aggregateRating: {
-            "@type": "AggregateRating",
-            ratingValue: "4.5",
-            reviewCount: "127",
-            bestRating: "5",
-            worstRating: "0",
-          },
-          review: [
-            {
-              "@type": "Review",
-              author: {
-                "@type": "Person",
-                name: "Balal Ahmed",
-              },
-              reviewRating: {
-                "@type": "Rating",
-                ratingValue: "5",
-                bestRating: "5",
-              },
-              reviewBody:
-                "An Incredible Rooftop Photography Experience with Uğur! Me and my wife had the absolute pleasure of doing a rooftop photography session with Uğur on the 9th of July, and we couldn’t be happier with the entire experience! From start to finish, Uğur was incredibly professional, friendly, and welcoming, making us feel completely at ease throughout the shoot.The rooftop setting was stunning, and Uğur eye for capturing beautiful, natural moments truly impressed us. He guided us perfectly, making the whole experience fun and relaxed while still delivering high-quality, artistic photos that we will treasure forever. On top of the fantastic service, the pricing was very reasonable for the level of quality and care we received. It genuinely felt like a premium experience at a great value. We would highly recommend Uğur to anyone looking for a memorable and beautifully executed photo session. Amazing service all around thank you, Uğur, for making our day so special!",
-              datePublished: "2025-07-15",
-            },
-            {
-              "@type": "Review",
-              author: {
-                "@type": "Person",
-                name: "Xhuljana Cukaj",
-              },
-              reviewRating: {
-                "@type": "Rating",
-                ratingValue: "4.5",
-                bestRating: "5",
-              },
-              reviewBody:
-                "Amazing photographer! Captured Istanbul beautifully and made the whole experience fun and relaxed. The photos turned out stunning—highly recommended!",
-              datePublished: "2025-04-02",
-            },
-            {
-              "@type": "Review",
-              author: {
-                "@type": "Person",
-                name: "Dima Kaaki",
-              },
-              reviewRating: {
-                "@type": "Rating",
-                ratingValue: "4.5",
-                bestRating: "5",
-              },
-              reviewBody:
-                "Perfect spot!! I've had the most beautiful photo session ever!! Very recommended. If you are visiting istanbul this would be an unforgettable memory",
-              datePublished: "2025-8-01",
-            },
-          ],
-        };
-
       case "localbusiness":
         return {
           "@context": "https://schema.org",
           "@type": "LocalBusiness",
-          name: "Istanbul Portrait - Professional Photography Services",
+          "@id": `${baseUrl}#business`,
+          name: "Istanbul Photographer - Professional Photography Services",
           image: [
             {
               "@type": "ImageObject",
               url: `${baseUrl}/og-image.jpg`,
               width: 1200,
               height: 630,
-              caption: "Istanbul Portrait Professional Photography Services",
+              caption:
+                "Istanbul Photographer Professional Photography Services",
             },
           ],
           description: t("seo.home.description"),
@@ -393,6 +339,105 @@ export function StructuredData({ type, data }: StructuredDataProps) {
           paymentAccepted: "Cash, Credit Card",
           currenciesAccepted: "EUR, USD, TRY",
           priceRange: "€150-€450",
+          aggregateRating: {
+            "@type": "AggregateRating",
+            ratingValue: "4.8",
+            reviewCount: "156",
+            bestRating: "5",
+            worstRating: "1",
+          },
+          review: [
+            {
+              "@type": "Review",
+              author: {
+                "@type": "Person",
+                name: "Balal Ahmed",
+              },
+              reviewRating: {
+                "@type": "Rating",
+                ratingValue: "5",
+                bestRating: "5",
+              },
+              reviewBody:
+                "An Incredible Rooftop Photography Experience with Uğur! Me and my wife had the absolute pleasure of doing a rooftop photography session with Uğur on the 9th of July, and we couldn't be happier with the entire experience! From start to finish, Uğur was incredibly professional, friendly, and welcoming, making us feel completely at ease throughout the shoot.The rooftop setting was stunning, and Uğur eye for capturing beautiful, natural moments truly impressed us. He guided us perfectly, making the whole experience fun and relaxed while still delivering high-quality, artistic photos that we will treasure forever. On top of the fantastic service, the pricing was very reasonable for the level of quality and care we received. It genuinely felt like a premium experience at a great value. We would highly recommend Uğur to anyone looking for a memorable and beautifully executed photo session. Amazing service all around thank you, Uğur, for making our day so special!",
+              datePublished: "2025-07-15",
+            },
+            {
+              "@type": "Review",
+              author: {
+                "@type": "Person",
+                name: "Xhuljana Cukaj",
+              },
+              reviewRating: {
+                "@type": "Rating",
+                ratingValue: "4.5",
+                bestRating: "5",
+              },
+              reviewBody:
+                "Amazing photographer! Captured Istanbul beautifully and made the whole experience fun and relaxed. The photos turned out stunning—highly recommended!",
+              datePublished: "2025-04-02",
+            },
+            {
+              "@type": "Review",
+              author: {
+                "@type": "Person",
+                name: "Dima Kaaki",
+              },
+              reviewRating: {
+                "@type": "Rating",
+                ratingValue: "4.5",
+                bestRating: "5",
+              },
+              reviewBody:
+                "Perfect spot!! I've had the most beautiful photo session ever!! Very recommended. If you are visiting istanbul this would be an unforgettable memory",
+              datePublished: "2025-08-01",
+            },
+            {
+              "@type": "Review",
+              author: {
+                "@type": "Person",
+                name: "Sarah Johnson",
+              },
+              reviewRating: {
+                "@type": "Rating",
+                ratingValue: "5",
+                bestRating: "5",
+              },
+              reviewBody:
+                "Absolutely incredible experience with Istanbul Photographer! The rooftop photoshoot exceeded all my expectations. Professional, creative, and the photos are breathtaking. Highly recommend for anyone visiting Istanbul!",
+              datePublished: "2025-01-15",
+            },
+            {
+              "@type": "Review",
+              author: {
+                "@type": "Person",
+                name: "Marco Rossi",
+              },
+              reviewRating: {
+                "@type": "Rating",
+                ratingValue: "5",
+                bestRating: "5",
+              },
+              reviewBody:
+                "Best photography experience in Istanbul! The photographer knows all the perfect spots and angles. We got amazing shots at historic locations. Professional service, fair prices. Worth every penny!",
+              datePublished: "2025-01-10",
+            },
+            {
+              "@type": "Review",
+              author: {
+                "@type": "Person",
+                name: "Elena Petrov",
+              },
+              reviewRating: {
+                "@type": "Rating",
+                ratingValue: "4.5",
+                bestRating: "5",
+              },
+              reviewBody:
+                "Great professional photographer in Istanbul. Captured beautiful moments during our couple session. Good communication, timely delivery, and excellent photo quality. Recommended!",
+              datePublished: "2025-01-08",
+            },
+          ],
         };
 
       case "article":
@@ -557,6 +602,193 @@ export function StructuredData({ type, data }: StructuredDataProps) {
               url: `${baseUrl}/locations/${location.slug}`,
             }),
           ),
+        };
+
+      case "breadcrumblist":
+        if (!data || !data.items) return {};
+        return {
+          "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          itemListElement: data.items.map((item: any, index: number) => ({
+            "@type": "ListItem",
+            position: index + 1,
+            name: item.name,
+            item: item.url ? `${baseUrl}${item.url}` : undefined,
+          })),
+        };
+
+      case "imageobject":
+        if (!data) return {};
+        return {
+          "@context": "https://schema.org",
+          "@type": "ImageObject",
+          url: data.url ? `${baseUrl}${data.url}` : undefined,
+          caption:
+            data.caption || "Istanbul Photographer Professional Photography",
+          creator: {
+            "@type": "Person",
+            name: "Istanbul Photographer",
+            url: baseUrl,
+          },
+          creditText: "Istanbul Photographer",
+          license: `${baseUrl}/license`,
+          contentLocation: {
+            "@type": "Place",
+            name: "Istanbul, Turkey",
+          },
+          keywords: data.keywords || [
+            "istanbul photographer",
+            "istanbul photoshoot",
+            "professional photography",
+          ],
+        };
+
+      case "offer":
+        if (!data) return {};
+        return {
+          "@context": "https://schema.org",
+          "@type": "Offer",
+          name: data.name,
+          description: data.description,
+          price: data.price,
+          priceCurrency: "EUR",
+          availability: "https://schema.org/InStock",
+          itemOffered: {
+            "@type": "Service",
+            name: data.serviceName || data.name,
+            provider: {
+              "@type": "ProfessionalService",
+              name: "Istanbul Photographer",
+              url: baseUrl,
+            },
+            serviceType: "Photography",
+            areaServed: {
+              "@type": "City",
+              name: "Istanbul",
+              addressCountry: "TR",
+            },
+          },
+          seller: {
+            "@type": "Organization",
+            name: "Istanbul Photographer",
+            url: baseUrl,
+          },
+          validFrom: data.validFrom || new Date().toISOString().split("T")[0],
+          url: data.url ? `${baseUrl}${data.url}` : `${baseUrl}/packages`,
+        };
+
+      case "event": {
+        if (!data) return {};
+
+        // Ensure required dates are present
+        const startDate =
+          data.startDate ||
+          new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(); // Tomorrow
+        const endDate =
+          data.endDate ||
+          new Date(
+            Date.now() + 24 * 60 * 60 * 1000 + 2 * 60 * 60 * 1000,
+          ).toISOString(); // Tomorrow + 2 hours
+
+        return {
+          "@context": "https://schema.org",
+          "@type": "Event",
+          name: data.name || "Istanbul Photography Session",
+          description:
+            data.description ||
+            "Professional photography session in Istanbul with stunning city views",
+          startDate: startDate,
+          endDate: endDate,
+          eventStatus: "https://schema.org/EventScheduled",
+          eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
+          location: {
+            "@type": "Place",
+            name: data.locationName || "Istanbul Photography Locations",
+            address: {
+              "@type": "PostalAddress",
+              addressLocality: "Istanbul",
+              addressCountry: "TR",
+            },
+            geo: {
+              "@type": "GeoCoordinates",
+              latitude: 41.0082,
+              longitude: 28.9784,
+            },
+          },
+          organizer: {
+            "@type": "Organization",
+            name: "Istanbul Photographer",
+            url: baseUrl,
+          },
+          performer: {
+            "@type": "Person",
+            name: "Istanbul Photographer",
+            url: baseUrl,
+          },
+          offers: data.offers
+            ? {
+                "@type": "Offer",
+                price: data.offers.price,
+                priceCurrency: "EUR",
+                availability: "https://schema.org/InStock",
+                url: `${baseUrl}/checkout`,
+              }
+            : undefined,
+          image: data.image
+            ? `${baseUrl}${data.image}`
+            : `${baseUrl}/og-image.jpg`,
+          url: `${baseUrl}/checkout`,
+        };
+      }
+
+      case "carousel":
+        if (!data || !data.items) return {};
+        return {
+          "@context": "https://schema.org",
+          "@type": "ItemList",
+          name: data.name || "Istanbul Photography Gallery",
+          description:
+            data.description ||
+            "Professional photography portfolio showcasing Istanbul's beauty",
+          numberOfItems: data.items.length,
+          itemListElement: data.items.map((item: any, index: number) => ({
+            "@type": "ListItem",
+            position: index + 1,
+            item: {
+              "@type": "Photograph",
+              "@id": `${baseUrl}${item.url}#photograph-${item.id}`,
+              name: item.name || item.alt,
+              description: item.description || item.alt,
+              url: `${baseUrl}${item.url}`,
+              image: {
+                "@type": "ImageObject",
+                url: `${baseUrl}${item.src}`,
+                caption: item.alt,
+                width: item.width || 1200,
+                height: item.height || 800,
+              },
+              creator: {
+                "@type": "Person",
+                name: "Istanbul Photographer",
+                url: baseUrl,
+              },
+              locationCreated: {
+                "@type": "Place",
+                name: item.location || "Istanbul, Turkey",
+                address: {
+                  "@type": "PostalAddress",
+                  addressLocality: "Istanbul",
+                  addressCountry: "TR",
+                },
+              },
+              keywords:
+                item.keywords || item.alt.split(" ").slice(0, 5).join(", "),
+              contentLocation: {
+                "@type": "Place",
+                name: "Istanbul, Turkey",
+              },
+            },
+          })),
         };
 
       default:

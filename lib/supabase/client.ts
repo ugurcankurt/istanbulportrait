@@ -1,4 +1,4 @@
-import { createBrowserClient } from '@supabase/ssr'
+import { createBrowserClient } from "@supabase/ssr";
 
 export function createClientSupabaseClient() {
   return createBrowserClient(
@@ -11,10 +11,10 @@ export function createClientSupabaseClient() {
         autoRefreshToken: true,
         detectSessionInUrl: false,
         // Remove localStorage storage - let SSR handle cookies automatically
-      }
-    }
-  )
+      },
+    },
+  );
 }
 
 // For backwards compatibility with existing code
-export const supabaseAuth = createClientSupabaseClient()
+export const supabaseAuth = createClientSupabaseClient();

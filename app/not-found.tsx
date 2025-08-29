@@ -1,12 +1,17 @@
-export default function NotFound() {
+"use client";
+
+import { NotFoundContent } from "@/components/not-found-content";
+
+export default function RootNotFound() {
   return (
-    <div className="min-h-screen flex items-center justify-center">
-      <div className="text-center">
-        <h2 className="text-2xl font-bold mb-4">Page Not Found</h2>
-        <p className="text-muted-foreground">
-          Could not find the requested page.
-        </p>
-      </div>
-    </div>
+    <NotFoundContent
+      locale="en"
+      title="Page Not Found"
+      subtitle="Oops! This photography session seems to be missing"
+      description="The page you're looking for doesn't exist. Perhaps you'd like to explore our photography packages or return home to discover the beauty of Istanbul photography."
+      homeButton="Return Home"
+      packagesButton="View Packages"
+      goBack="Go Back"
+    />
   );
 }

@@ -1,7 +1,7 @@
+import { createServerClient } from "@supabase/ssr";
 import { type NextRequest, NextResponse } from "next/server";
 import createMiddleware from "next-intl/middleware";
 import { routing } from "./i18n/routing";
-import { createServerClient } from "@supabase/ssr";
 
 const intlMiddleware = createMiddleware(routing);
 
@@ -44,7 +44,7 @@ export default async function middleware(request: NextRequest) {
           remove(name: string, options: any) {
             request.cookies.set({
               name,
-              value: '',
+              value: "",
               ...options,
             });
             response = NextResponse.next({
@@ -54,12 +54,12 @@ export default async function middleware(request: NextRequest) {
             });
             response.cookies.set({
               name,
-              value: '',
+              value: "",
               ...options,
             });
           },
         },
-      }
+      },
     );
 
     // Refresh session if expired - required for Server Components

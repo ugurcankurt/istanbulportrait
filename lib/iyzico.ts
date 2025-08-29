@@ -1,4 +1,4 @@
-import crypto from "crypto";
+import crypto from "node:crypto";
 
 // Iyzico API endpoint URLs
 const IYZICO_BASE_URL =

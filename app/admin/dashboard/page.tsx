@@ -1,30 +1,30 @@
 "use client";
 
 import {
+  AlertCircle,
   Calendar,
+  CheckCircle,
+  Clock,
   CreditCard,
   DollarSign,
   TrendingUp,
   Users,
-  Clock,
-  CheckCircle,
   XCircle,
-  AlertCircle,
 } from "lucide-react";
+import Link from "next/link";
 import { useEffect } from "react";
-import { useDashboardStore } from "@/stores/dashboard-store";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import Link from "next/link";
+import { useDashboardStore } from "@/stores/dashboard-store";
 
 // Types are now imported from the store
 
-function StatCard({ 
-  title, 
-  value, 
-  icon: Icon, 
-  description, 
-  trend 
+function StatCard({
+  title,
+  value,
+  icon: Icon,
+  description,
+  trend,
 }: {
   title: string;
   value: string | number;
@@ -62,10 +62,13 @@ function StatusBadge({ status }: { status: string }) {
     completed: { color: "text-blue-600 bg-blue-100", icon: CheckCircle },
   };
 
-  const { color, icon: Icon } = config[status as keyof typeof config] || config.pending;
+  const { color, icon: Icon } =
+    config[status as keyof typeof config] || config.pending;
 
   return (
-    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${color}`}>
+    <span
+      className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${color}`}
+    >
       <Icon className="w-3 h-3 mr-1" />
       {status.charAt(0).toUpperCase() + status.slice(1)}
     </span>
@@ -86,7 +89,7 @@ export default function AdminDashboard() {
   useEffect(() => {
     fetchDashboardData();
   }, [fetchDashboardData]);
-  
+
   // Show error as toast if needed
   useEffect(() => {
     if (error) {
@@ -129,7 +132,12 @@ export default function AdminDashboard() {
           <CardContent className="p-6">
             <div className="text-center">
               <p className="text-red-600 mb-4">{error}</p>
-              <Button onClick={() => { clearError(); fetchDashboardData(); }}>
+              <Button
+                onClick={() => {
+                  clearError();
+                  fetchDashboardData();
+                }}
+              >
                 Try Again
               </Button>
             </div>
@@ -139,8 +147,12 @@ export default function AdminDashboard() {
     );
   }
 
-  const formatCurrency = (amount: number) => `€${(amount || 0).toLocaleString()}`;
-  const conversionRate = stats && stats.total_bookings > 0 ? (stats.confirmed_bookings / stats.total_bookings * 100).toFixed(1) : 0;
+  const formatCurrency = (amount: number) =>
+    `€${(amount || 0).toLocaleString()}`;
+  const conversionRate =
+    stats && stats.total_bookings > 0
+      ? ((stats.confirmed_bookings / stats.total_bookings) * 100).toFixed(1)
+      : 0;
 
   return (
     <div className="space-y-8">
@@ -149,7 +161,7 @@ export default function AdminDashboard() {
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
           <p className="text-muted-foreground">
-            Welcome to Istanbul Portrait admin panel
+            Welcome to Istanbul Photographer admin panel
           </p>
         </div>
         <div className="flex gap-2">
@@ -167,7 +179,11 @@ export default function AdminDashboard() {
             value={formatCurrency(stats.total_revenue || 0)}
             icon={DollarSign}
             description={`€${(stats.monthly_revenue || 0).toLocaleString()} this month`}
-            trend={(stats.monthly_revenue || 0) > 0 ? "Active revenue stream" : undefined}
+            trend={
+              (stats.monthly_revenue || 0) > 0
+                ? "Active revenue stream"
+                : undefined
+            }
           />
           <StatCard
             title="Total Bookings"
@@ -195,34 +211,50 @@ export default function AdminDashboard() {
         <div className="grid gap-4 md:grid-cols-3">
           <Card className="hover:shadow-lg transition-shadow">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Pending Bookings</CardTitle>
+              <CardTitle className="text-sm font-medium">
+                Pending Bookings
+              </CardTitle>
               <Clock className="h-4 w-4 text-yellow-600" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-yellow-600">{stats.pending_bookings || 0}</div>
+              <div className="text-2xl font-bold text-yellow-600">
+                {stats.pending_bookings || 0}
+              </div>
               <p className="text-xs text-muted-foreground">Require attention</p>
             </CardContent>
           </Card>
 
           <Card className="hover:shadow-lg transition-shadow">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Confirmed Bookings</CardTitle>
+              <CardTitle className="text-sm font-medium">
+                Confirmed Bookings
+              </CardTitle>
               <CheckCircle className="h-4 w-4 text-green-600" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-green-600">{stats.confirmed_bookings || 0}</div>
-              <p className="text-xs text-muted-foreground">Ready for sessions</p>
+              <div className="text-2xl font-bold text-green-600">
+                {stats.confirmed_bookings || 0}
+              </div>
+              <p className="text-xs text-muted-foreground">
+                Ready for sessions
+              </p>
             </CardContent>
           </Card>
 
           <Card className="hover:shadow-lg transition-shadow">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Cancelled Bookings</CardTitle>
+              <CardTitle className="text-sm font-medium">
+                Cancelled Bookings
+              </CardTitle>
               <XCircle className="h-4 w-4 text-red-600" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-red-600">{stats.cancelled_bookings || 0}</div>
-              <p className="text-xs text-muted-foreground">Cancelled by customers</p>
+              <div className="text-2xl font-bold text-red-600">
+                {stats.cancelled_bookings || 0}
+              </div>
+              <p className="text-xs text-muted-foreground">
+                Cancelled by customers
+              </p>
             </CardContent>
           </Card>
         </div>
@@ -233,7 +265,9 @@ export default function AdminDashboard() {
         <CardHeader className="flex flex-row items-center justify-between">
           <div>
             <CardTitle>Recent Bookings</CardTitle>
-            <p className="text-sm text-muted-foreground">Latest booking activities</p>
+            <p className="text-sm text-muted-foreground">
+              Latest booking activities
+            </p>
           </div>
           <Button asChild variant="outline" size="sm">
             <Link href="/admin/dashboard/bookings">View All</Link>
@@ -265,7 +299,9 @@ export default function AdminDashboard() {
                     </p>
                   </div>
                   <div className="text-right">
-                    <p className="font-medium">{formatCurrency(booking.total_amount)}</p>
+                    <p className="font-medium">
+                      {formatCurrency(booking.total_amount)}
+                    </p>
                     <p className="text-sm text-muted-foreground">
                       {new Date(booking.created_at).toLocaleDateString()}
                     </p>

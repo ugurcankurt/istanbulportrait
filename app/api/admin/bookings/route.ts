@@ -1,5 +1,6 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
+import { createServerAdminClient, requireServerAdmin } from "@/lib/auth-server";
 import {
   DatabaseConnectionError,
   handleSupabaseError,
@@ -7,7 +8,6 @@ import {
   sanitizeErrorForProduction,
   ValidationError,
 } from "@/lib/errors";
-import { requireServerAdmin, createServerAdminClient } from "@/lib/auth-server";
 
 export async function GET(request: NextRequest) {
   try {
@@ -15,8 +15,11 @@ export async function GET(request: NextRequest) {
     await requireServerAdmin();
 
     const { searchParams } = new URL(request.url);
-    const page = Math.max(1, parseInt(searchParams.get("page") || "1"));
-    const limit = Math.min(100, Math.max(1, parseInt(searchParams.get("limit") || "20")));
+    const page = Math.max(1, parseInt(searchParams.get("page") || "1", 10));
+    const limit = Math.min(
+      100,
+      Math.max(1, parseInt(searchParams.get("limit") || "20", 10)),
+    );
     const status = searchParams.get("status");
     const search = searchParams.get("search");
     const sortBy = searchParams.get("sortBy") || "created_at";
@@ -28,9 +31,8 @@ export async function GET(request: NextRequest) {
     const supabase = await createServerAdminClient();
 
     try {
-      let query = supabase
-        .from("bookings")
-        .select(`
+      let query = supabase.from("bookings").select(
+        `
           *,
           payments (
             id,
@@ -40,7 +42,9 @@ export async function GET(request: NextRequest) {
             currency,
             created_at
           )
-        `, { count: 'exact' });
+        `,
+        { count: "exact" },
+      );
 
       // Apply filters
       if (status && status !== "all") {
@@ -49,7 +53,7 @@ export async function GET(request: NextRequest) {
 
       if (search) {
         query = query.or(
-          `user_name.ilike.%${search}%,user_email.ilike.%${search}%,user_phone.ilike.%${search}%`
+          `user_name.ilike.%${search}%,user_email.ilike.%${search}%,user_phone.ilike.%${search}%`,
         );
       }
 
@@ -85,11 +89,12 @@ export async function GET(request: NextRequest) {
       return NextResponse.json(
         {
           error: sanitizeErrorForProduction(dbError),
-          details: process.env.NODE_ENV === "development"
-            ? handleSupabaseError(supabaseError).message
-            : undefined,
+          details:
+            process.env.NODE_ENV === "development"
+              ? handleSupabaseError(supabaseError).message
+              : undefined,
         },
-        { status: 503 }
+        { status: 503 },
       );
     }
   } catch (error) {
@@ -100,7 +105,13 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(
       { error: sanitizeErrorForProduction(error) },
-      { status: error instanceof Error && error.message.includes("Admin access required") ? 403 : 500 }
+      {
+        status:
+          error instanceof Error &&
+          error.message.includes("Admin access required")
+            ? 403
+            : 500,
+      },
     );
   }
 }
@@ -145,7 +156,6 @@ export async function PATCH(request: NextRequest) {
         throw error;
       }
 
-
       return NextResponse.json({
         success: true,
         booking,
@@ -161,11 +171,12 @@ export async function PATCH(request: NextRequest) {
       return NextResponse.json(
         {
           error: sanitizeErrorForProduction(dbError),
-          details: process.env.NODE_ENV === "development"
-            ? handleSupabaseError(supabaseError).message
-            : undefined,
+          details:
+            process.env.NODE_ENV === "development"
+              ? handleSupabaseError(supabaseError).message
+              : undefined,
         },
-        { status: 503 }
+        { status: 503 },
       );
     }
   } catch (error) {
@@ -176,7 +187,13 @@ export async function PATCH(request: NextRequest) {
 
     return NextResponse.json(
       { error: sanitizeErrorForProduction(error) },
-      { status: error instanceof Error && error.message.includes("Admin access required") ? 403 : 500 }
+      {
+        status:
+          error instanceof Error &&
+          error.message.includes("Admin access required")
+            ? 403
+            : 500,
+      },
     );
   }
 }

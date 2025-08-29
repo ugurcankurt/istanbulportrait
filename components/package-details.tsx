@@ -74,7 +74,7 @@ export function PackageDetails({
     packages.forEach((pkg) => {
       trackViewItem(pkg.id, pkg.price);
     });
-  }, []);
+  }, [packages.forEach]);
 
   return (
     <div className="space-y-4 sm:space-y-6">

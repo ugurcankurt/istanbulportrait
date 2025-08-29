@@ -1,5 +1,5 @@
-import { create } from 'zustand';
-import { devtools } from 'zustand/middleware';
+import { create } from "zustand";
+import { devtools } from "zustand/middleware";
 
 export interface PaymentBooking {
   id: string;
@@ -38,7 +38,7 @@ interface PaymentsFilters {
   dateFrom: string;
   dateTo: string;
   sortBy: string;
-  sortOrder: 'asc' | 'desc';
+  sortOrder: "asc" | "desc";
 }
 
 interface PaymentsState {
@@ -61,7 +61,9 @@ interface PaymentsState {
   };
 
   // Actions
-  fetchPayments: (params?: Partial<PaymentsFilters & { page?: number }>) => Promise<void>;
+  fetchPayments: (
+    params?: Partial<PaymentsFilters & { page?: number }>,
+  ) => Promise<void>;
   setFilters: (filters: Partial<PaymentsFilters>) => void;
   setPage: (page: number) => void;
   clearError: () => void;
@@ -69,12 +71,12 @@ interface PaymentsState {
 }
 
 const initialFilters: PaymentsFilters = {
-  search: '',
-  statusFilter: 'all',
-  dateFrom: '',
-  dateTo: '',
-  sortBy: 'created_at',
-  sortOrder: 'desc',
+  search: "",
+  statusFilter: "all",
+  dateFrom: "",
+  dateTo: "",
+  sortBy: "created_at",
+  sortOrder: "desc",
 };
 
 const initialPagination: Pagination = {
@@ -105,7 +107,6 @@ export const usePaymentsStore = create<PaymentsState>()(
 
       // Fetch payments with filtering
       fetchPayments: async (params = {}) => {
-        
         set({ loading: true, error: null });
 
         const currentState = get();
@@ -120,69 +121,89 @@ export const usePaymentsStore = create<PaymentsState>()(
             sortOrder: filters.sortOrder,
           });
 
-          if (filters.search) queryParams.set('search', filters.search);
-          if (filters.statusFilter !== 'all') queryParams.set('status', filters.statusFilter);
-          if (filters.dateFrom) queryParams.set('dateFrom', filters.dateFrom);
-          if (filters.dateTo) queryParams.set('dateTo', filters.dateTo);
-
-          
+          if (filters.search) queryParams.set("search", filters.search);
+          if (filters.statusFilter !== "all")
+            queryParams.set("status", filters.statusFilter);
+          if (filters.dateFrom) queryParams.set("dateFrom", filters.dateFrom);
+          if (filters.dateTo) queryParams.set("dateTo", filters.dateTo);
 
           const response = await fetch(`/api/admin/payments?${queryParams}`);
 
           if (!response.ok) {
             const errorText = await response.text();
-            console.error('Payments Store: API error:', response.status, errorText);
+            console.error(
+              "Payments Store: API error:",
+              response.status,
+              errorText,
+            );
             throw new Error(`API Error ${response.status}: ${errorText}`);
           }
 
           const rawData = await response.text();
-          
 
           let data;
           try {
             data = JSON.parse(rawData);
           } catch (parseError) {
-            console.error('Payments Store: JSON parse error:', parseError);
-            throw new Error('Invalid JSON response from server');
+            console.error("Payments Store: JSON parse error:", parseError);
+            throw new Error("Invalid JSON response from server");
           }
 
           // Validate response structure
-          if (!data || typeof data !== 'object') {
-            console.error('Payments Store: Invalid response structure:', data);
-            throw new Error('Invalid response structure');
+          if (!data || typeof data !== "object") {
+            console.error("Payments Store: Invalid response structure:", data);
+            throw new Error("Invalid response structure");
           }
 
           let paymentsData = Array.isArray(data.payments) ? data.payments : [];
-          const paginationData = data.pagination && typeof data.pagination === 'object' 
-            ? { ...initialPagination, ...data.pagination }
-            : { ...initialPagination, page };
+          const paginationData =
+            data.pagination && typeof data.pagination === "object"
+              ? { ...initialPagination, ...data.pagination }
+              : { ...initialPagination, page };
 
           // Process payments data - fix nested bookings relationship
-          paymentsData = paymentsData.map((payment: any) => {
-            if (!payment || typeof payment !== 'object') {
-              console.warn('⚠️ [Payments Store] Invalid payment object:', payment);
-              return null;
-            }
-            
-            // Handle bookings relationship data - convert array to single object if needed
-            if (payment.bookings && Array.isArray(payment.bookings)) {
-              payment.bookings = payment.bookings[0] || null;
-            }
-            
-            return payment;
-          }).filter((payment: any) => payment !== null);
+          paymentsData = paymentsData
+            .map((payment: any) => {
+              if (!payment || typeof payment !== "object") {
+                console.warn(
+                  "⚠️ [Payments Store] Invalid payment object:",
+                  payment,
+                );
+                return null;
+              }
+
+              // Handle bookings relationship data - convert array to single object if needed
+              if (payment.bookings && Array.isArray(payment.bookings)) {
+                payment.bookings = payment.bookings[0] || null;
+              }
+
+              return payment;
+            })
+            .filter((payment: any) => payment !== null);
 
           // Calculate stats
-          const successfulPayments = paymentsData.filter((p: any) => p?.status === "success");
-          const failedPayments = paymentsData.filter((p: any) => p?.status === "failure");
-          const pendingPayments = paymentsData.filter((p: any) => p?.status === "pending");
-          
-          const totalAmount = successfulPayments.reduce((sum: number, payment: any) => {
-            const amount = payment?.amount || 0;
-            return sum + (typeof amount === 'number' ? amount : 0);
-          }, 0);
-          
-          const successRate = paymentsData.length > 0 ? (successfulPayments.length / paymentsData.length) * 100 : 0;
+          const successfulPayments = paymentsData.filter(
+            (p: any) => p?.status === "success",
+          );
+          const failedPayments = paymentsData.filter(
+            (p: any) => p?.status === "failure",
+          );
+          const pendingPayments = paymentsData.filter(
+            (p: any) => p?.status === "pending",
+          );
+
+          const totalAmount = successfulPayments.reduce(
+            (sum: number, payment: any) => {
+              const amount = payment?.amount || 0;
+              return sum + (typeof amount === "number" ? amount : 0);
+            },
+            0,
+          );
+
+          const successRate =
+            paymentsData.length > 0
+              ? (successfulPayments.length / paymentsData.length) * 100
+              : 0;
 
           const stats = {
             totalAmount,
@@ -191,7 +212,6 @@ export const usePaymentsStore = create<PaymentsState>()(
             pendingPayments: pendingPayments.length,
             successRate,
           };
-
 
           set({
             payments: paymentsData,
@@ -202,8 +222,9 @@ export const usePaymentsStore = create<PaymentsState>()(
             error: null,
           });
         } catch (error) {
-          console.error('Payments Store: Fetch error:', error);
-          const errorMessage = error instanceof Error ? error.message : 'Failed to fetch payments';
+          console.error("Payments Store: Fetch error:", error);
+          const errorMessage =
+            error instanceof Error ? error.message : "Failed to fetch payments";
 
           set({
             payments: [],
@@ -217,14 +238,13 @@ export const usePaymentsStore = create<PaymentsState>()(
 
       // Set filters and trigger fetch
       setFilters: (newFilters: Partial<PaymentsFilters>) => {
-        
         const currentState = get();
         const updatedFilters = { ...currentState.filters, ...newFilters };
 
         // Reset to page 1 when filters change
-        set({ 
+        set({
           filters: updatedFilters,
-          pagination: { ...currentState.pagination, page: 1 }
+          pagination: { ...currentState.pagination, page: 1 },
         });
 
         // Auto-fetch with new filters
@@ -233,11 +253,10 @@ export const usePaymentsStore = create<PaymentsState>()(
 
       // Set page and trigger fetch
       setPage: (page: number) => {
-        
         const currentState = get();
 
         set({
-          pagination: { ...currentState.pagination, page }
+          pagination: { ...currentState.pagination, page },
         });
 
         // Auto-fetch with new page
@@ -251,7 +270,6 @@ export const usePaymentsStore = create<PaymentsState>()(
 
       // Reset store to initial state
       reset: () => {
-        
         set({
           payments: [],
           pagination: initialPagination,
@@ -263,7 +281,7 @@ export const usePaymentsStore = create<PaymentsState>()(
       },
     }),
     {
-      name: 'payments-store',
-    }
-  )
+      name: "payments-store",
+    },
+  ),
 );

@@ -1,5 +1,6 @@
 import { getTranslations } from "next-intl/server";
 import { AboutSection } from "@/components/about-section";
+import { BreadcrumbNav } from "@/components/breadcrumb-nav";
 
 export async function generateMetadata({
   params,
@@ -18,6 +19,7 @@ export async function generateMetadata({
 export default function AboutPage() {
   return (
     <div>
+      <BreadcrumbNav />
       <AboutSection />
     </div>
   );

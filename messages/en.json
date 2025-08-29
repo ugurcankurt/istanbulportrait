@@ -6,7 +6,7 @@
     "contact": "Contact"
   },
   "hero": {
-    "title": "Istanbul Photographer",
+    "title": "Istanbul Photographer | Professional Istanbul Photoshoot Services",
     "subtitle": "Professional portrait and lifestyle photography sessions in the heart of Istanbul",
     "description": "Capture your memories with stunning rooftop views, historic landmarks, and the unique beauty of Istanbul. Professional photographer specializing in portraits, couples, and lifestyle photography.",
     "cta": "Book Your Session",
@@ -174,7 +174,7 @@
     },
     "success": {
       "title": "Booking Confirmed!",
-      "message": "Thank you for booking with Istanbul Portrait. Your booking confirmation has been sent to your email.",
+      "message": "Thank you for booking with Istanbul Photographer. Your booking confirmation has been sent to your email.",
       "booking_id": "Booking ID",
       "payment_successful": "Payment successful! Confirmation email sent."
     },
@@ -279,7 +279,7 @@
     }
   },
   "about_highlights": {
-    "title": "Why Choose Istanbul Portrait?",
+    "title": "Why Choose Istanbul Photographer?",
     "professional": {
       "title": "Professional Excellence",
       "description": "Trained in advanced photography techniques with years of experience in portrait photography."
@@ -311,8 +311,16 @@
     "payment_processing_failed": "Payment processing failed. Please try again later.",
     "unknown_error": "Unknown error"
   },
+  "breadcrumb": {
+    "home": "Home",
+    "about": "About",
+    "packages": "Photography Packages",
+    "contact": "Contact",
+    "checkout": "Checkout",
+    "privacy": "Privacy Policy"
+  },
   "structured_data": {
-    "website_name": "Istanbul Portrait",
+    "website_name": "Istanbul Photographer",
     "service_type": "Photography Services",
     "address_locality": "Istanbul",
     "address_country": "TR",
@@ -424,7 +432,7 @@
       "description": "Professional portrait photographer in Istanbul. Specializing in rooftop photoshoots, couple sessions, and lifestyle photography with iconic city views. Book your session today!"
     },
     "packages": {
-      "title": "Photography Packages | Istanbul Portrait Sessions",
+      "title": "Photography Packages | Istanbul Photographer Sessions",
       "description": "Choose from our professional photography packages in Istanbul. Rooftop sessions, historic locations, and premium quality editing. Starting from $150."
     },
     "about": {
@@ -452,8 +460,8 @@
     "title": "Privacy Policy",
     "subtitle": "How we collect, use, and protect your personal information",
     "seo": {
-      "title": "Privacy Policy | Istanbul Portrait",
-      "description": "Learn how Istanbul Portrait collects, uses, and protects your personal information. GDPR compliant privacy policy."
+      "title": "Privacy Policy | Istanbul Photographer",
+      "description": "Learn how Istanbul Photographer collects, uses, and protects your personal information. GDPR compliant privacy policy."
     },
     "information_collection": {
       "title": "Information We Collect",
@@ -508,5 +516,13 @@
       "updated_label": "Last updated:",
       "updated_date": "January 2025"
     }
+  },
+  "notfound": {
+    "title": "Page Not Found",
+    "subtitle": "Oops! This photography session seems to be missing",
+    "description": "The page you're looking for doesn't exist. Perhaps you'd like to explore our photography packages or return home to discover the beauty of Istanbul photography.",
+    "homeButton": "Return Home",
+    "packagesButton": "View Packages",
+    "goBack": "Go Back"
   }
 }

@@ -59,7 +59,6 @@ const getDateFnsLocale = (locale: string) => {
       return es;
     case "ru":
       return ru;
-    case "en":
     default:
       return enUS;
   }

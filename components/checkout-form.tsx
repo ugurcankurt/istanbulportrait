@@ -23,7 +23,6 @@ import {
   trackPaymentEvent,
   trackPurchase,
 } from "@/lib/analytics";
-import { localizeNumerals } from "@/lib/utils";
 import type {
   BookingFormData,
   PackageId,
@@ -35,10 +34,10 @@ const steps = ["package", "details", "payment", "confirmation"] as const;
 type Step = (typeof steps)[number];
 
 export function CheckoutForm() {
-  const locale = useLocale();
+  const _locale = useLocale();
   const searchParams = useSearchParams();
   const t = useTranslations("checkout");
-  const tPackages = useTranslations("packages");
+  const _tPackages = useTranslations("packages");
 
   const [currentStep, setCurrentStep] = useState<Step>("package");
   const [selectedPackage, setSelectedPackage] = useState<PackageId | null>(

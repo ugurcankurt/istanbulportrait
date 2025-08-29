@@ -1,21 +1,31 @@
 "use client";
 
 import {
-  Users,
-  Search,
-  Mail,
-  Phone,
   Calendar,
-  DollarSign,
-  TrendingUp,
   ChevronLeft,
   ChevronRight,
-  MoreHorizontal,
+  DollarSign,
   Eye,
+  Mail,
+  MoreHorizontal,
+  Phone,
+  Search,
+  TrendingUp,
+  Users,
 } from "lucide-react";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -24,6 +34,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
@@ -39,22 +50,14 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label";
-import { toast } from "sonner";
-import { useCustomersStore, type Customer } from "@/stores/customers-store";
+import { type Customer, useCustomersStore } from "@/stores/customers-store";
 
 function CustomerDetailsDialog({ customer }: { customer: Customer }) {
   const formatCurrency = (amount: number) => `€${amount.toLocaleString()}`;
-  const averageSpent = customer.confirmed_bookings > 0 ? customer.total_spent / customer.confirmed_bookings : 0;
+  const averageSpent =
+    customer.confirmed_bookings > 0
+      ? customer.total_spent / customer.confirmed_bookings
+      : 0;
 
   return (
     <Dialog>
@@ -71,13 +74,15 @@ function CustomerDetailsDialog({ customer }: { customer: Customer }) {
             Complete profile and booking history for {customer.name}
           </DialogDescription>
         </DialogHeader>
-        
+
         <div className="space-y-6">
           {/* Customer Info */}
           <div className="grid grid-cols-2 gap-6">
             <div className="space-y-4">
               <div>
-                <Label className="text-sm font-medium text-muted-foreground">CONTACT INFORMATION</Label>
+                <Label className="text-sm font-medium text-muted-foreground">
+                  CONTACT INFORMATION
+                </Label>
                 <div className="mt-2 space-y-2">
                   <div className="flex items-center gap-2">
                     <Mail className="w-4 h-4 text-muted-foreground" />
@@ -89,14 +94,16 @@ function CustomerDetailsDialog({ customer }: { customer: Customer }) {
                   </div>
                 </div>
               </div>
-              
+
               <div>
-                <Label className="text-sm font-medium text-muted-foreground">REGISTRATION</Label>
+                <Label className="text-sm font-medium text-muted-foreground">
+                  REGISTRATION
+                </Label>
                 <p className="text-sm mt-1">
-                  {new Date(customer.created_at).toLocaleDateString('en-US', {
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric'
+                  {new Date(customer.created_at).toLocaleDateString("en-US", {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
                   })}
                 </p>
               </div>
@@ -104,35 +111,55 @@ function CustomerDetailsDialog({ customer }: { customer: Customer }) {
 
             <div className="space-y-4">
               <div>
-                <Label className="text-sm font-medium text-muted-foreground">BOOKING STATISTICS</Label>
+                <Label className="text-sm font-medium text-muted-foreground">
+                  BOOKING STATISTICS
+                </Label>
                 <div className="mt-2 space-y-2">
                   <div className="flex justify-between">
                     <span className="text-sm">Total Bookings:</span>
-                    <span className="text-sm font-medium">{customer.bookings_count}</span>
+                    <span className="text-sm font-medium">
+                      {customer.bookings_count}
+                    </span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-sm">Confirmed Bookings:</span>
-                    <span className="text-sm font-medium">{customer.confirmed_bookings}</span>
+                    <span className="text-sm font-medium">
+                      {customer.confirmed_bookings}
+                    </span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-sm">Total Spent:</span>
-                    <span className="text-sm font-medium">{formatCurrency(customer.total_spent)}</span>
+                    <span className="text-sm font-medium">
+                      {formatCurrency(customer.total_spent)}
+                    </span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-sm">Average per Booking:</span>
-                    <span className="text-sm font-medium">{formatCurrency(averageSpent)}</span>
+                    <span className="text-sm font-medium">
+                      {formatCurrency(averageSpent)}
+                    </span>
                   </div>
                 </div>
               </div>
 
               {customer.last_booking_date && (
                 <div>
-                  <Label className="text-sm font-medium text-muted-foreground">LAST BOOKING</Label>
+                  <Label className="text-sm font-medium text-muted-foreground">
+                    LAST BOOKING
+                  </Label>
                   <div className="mt-2 space-y-1">
                     <p className="text-sm">
-                      {new Date(customer.last_booking_date).toLocaleDateString()}
+                      {new Date(
+                        customer.last_booking_date,
+                      ).toLocaleDateString()}
                     </p>
-                    <Badge variant={customer.last_booking_status === 'confirmed' ? 'default' : 'secondary'}>
+                    <Badge
+                      variant={
+                        customer.last_booking_status === "confirmed"
+                          ? "default"
+                          : "secondary"
+                      }
+                    >
                       {customer.last_booking_status}
                     </Badge>
                   </div>
@@ -143,7 +170,9 @@ function CustomerDetailsDialog({ customer }: { customer: Customer }) {
 
           {/* Booking History */}
           <div>
-            <Label className="text-sm font-medium text-muted-foreground">BOOKING HISTORY</Label>
+            <Label className="text-sm font-medium text-muted-foreground">
+              BOOKING HISTORY
+            </Label>
             {customer.bookings && customer.bookings.length > 0 ? (
               <div className="mt-3 space-y-3">
                 {customer.bookings.map((booking) => (
@@ -154,9 +183,14 @@ function CustomerDetailsDialog({ customer }: { customer: Customer }) {
                     <div className="space-y-1">
                       <div className="flex items-center gap-2">
                         <Badge variant="outline">{booking.package_id}</Badge>
-                        <Badge 
-                          variant={booking.status === 'confirmed' ? 'default' : 
-                                 booking.status === 'pending' ? 'secondary' : 'destructive'}
+                        <Badge
+                          variant={
+                            booking.status === "confirmed"
+                              ? "default"
+                              : booking.status === "pending"
+                                ? "secondary"
+                                : "destructive"
+                          }
                         >
                           {booking.status}
                         </Badge>
@@ -165,11 +199,14 @@ function CustomerDetailsDialog({ customer }: { customer: Customer }) {
                         {booking.booking_date} at {booking.booking_time}
                       </p>
                       <p className="text-xs text-muted-foreground">
-                        Booked on {new Date(booking.created_at).toLocaleDateString()}
+                        Booked on{" "}
+                        {new Date(booking.created_at).toLocaleDateString()}
                       </p>
                     </div>
                     <div className="text-right">
-                      <p className="font-medium">{formatCurrency(booking.total_amount)}</p>
+                      <p className="font-medium">
+                        {formatCurrency(booking.total_amount)}
+                      </p>
                     </div>
                   </div>
                 ))}
@@ -188,9 +225,12 @@ function CustomerDetailsDialog({ customer }: { customer: Customer }) {
 }
 
 function CustomerTypeLabel({ customer }: { customer: Customer }) {
-  if (customer.confirmed_bookings === 0) return <Badge variant="outline">New</Badge>;
-  if (customer.confirmed_bookings === 1) return <Badge variant="secondary">Regular</Badge>;
-  if (customer.confirmed_bookings >= 2) return <Badge variant="default">VIP</Badge>;
+  if (customer.confirmed_bookings === 0)
+    return <Badge variant="outline">New</Badge>;
+  if (customer.confirmed_bookings === 1)
+    return <Badge variant="secondary">Regular</Badge>;
+  if (customer.confirmed_bookings >= 2)
+    return <Badge variant="default">VIP</Badge>;
   return null;
 }
 
@@ -207,13 +247,13 @@ export default function CustomersPage() {
     setPage,
     clearError,
   } = useCustomersStore();
-  
+
   const { search, sortBy, sortOrder } = filters;
 
   // Fetch customers on component mount
   useEffect(() => {
     fetchCustomers();
-  }, []);
+  }, [fetchCustomers]);
 
   // Show error as toast
   useEffect(() => {
@@ -225,62 +265,84 @@ export default function CustomersPage() {
 
   // Handle search input changes with debouncing
   const [searchInput, setSearchInput] = useState(search);
-  
+
   useEffect(() => {
     const timeoutId = setTimeout(() => {
       if (searchInput !== search) {
         setFilters({ search: searchInput });
       }
     }, 500);
-    
+
     return () => clearTimeout(timeoutId);
   }, [searchInput, search, setFilters]);
 
   const formatCurrency = (amount: number) => `€${amount.toLocaleString()}`;
 
   // Extract stats for easier access
-  const { totalCustomers, totalRevenue, avgRevenuePerCustomer, repeatCustomers, repeatCustomerRate } = stats;
+  const {
+    totalCustomers,
+    totalRevenue,
+    avgRevenuePerCustomer,
+    repeatCustomers,
+    repeatCustomerRate,
+  } = stats;
 
   return (
     <div className="space-y-6">
       {/* Header */}
       <div>
         <h1 className="text-3xl font-bold tracking-tight">Customers</h1>
-        <p className="text-muted-foreground">Manage your customer database and analytics</p>
+        <p className="text-muted-foreground">
+          Manage your customer database and analytics
+        </p>
       </div>
 
       {/* Summary Stats */}
       <div className="grid gap-4 md:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Customers</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              Total Customers
+            </CardTitle>
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{totalCustomers}</div>
-            <p className="text-xs text-muted-foreground">Registered customers</p>
+            <p className="text-xs text-muted-foreground">
+              Registered customers
+            </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Avg Revenue/Customer</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              Avg Revenue/Customer
+            </CardTitle>
             <DollarSign className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{formatCurrency(avgRevenuePerCustomer)}</div>
-            <p className="text-xs text-muted-foreground">Per customer lifetime value</p>
+            <div className="text-2xl font-bold">
+              {formatCurrency(avgRevenuePerCustomer)}
+            </div>
+            <p className="text-xs text-muted-foreground">
+              Per customer lifetime value
+            </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Repeat Customers</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              Repeat Customers
+            </CardTitle>
             <TrendingUp className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{repeatCustomers}</div>
-            <p className="text-xs text-muted-foreground">{repeatCustomerRate.toFixed(1)}% repeat rate</p>
+            <p className="text-xs text-muted-foreground">
+              {repeatCustomerRate.toFixed(1)}% repeat rate
+            </p>
           </CardContent>
         </Card>
 
@@ -290,8 +352,12 @@ export default function CustomersPage() {
             <DollarSign className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{formatCurrency(totalRevenue)}</div>
-            <p className="text-xs text-muted-foreground">Customer lifetime value</p>
+            <div className="text-2xl font-bold">
+              {formatCurrency(totalRevenue)}
+            </div>
+            <p className="text-xs text-muted-foreground">
+              Customer lifetime value
+            </p>
           </CardContent>
         </Card>
       </div>
@@ -314,10 +380,16 @@ export default function CustomersPage() {
                 />
               </div>
             </div>
-            <Select value={`${sortBy}-${sortOrder}`} onValueChange={(value) => {
-              const [field, order] = value.split("-");
-              setFilters({ sortBy: field, sortOrder: order as 'asc' | 'desc' });
-            }}>
+            <Select
+              value={`${sortBy}-${sortOrder}`}
+              onValueChange={(value) => {
+                const [field, order] = value.split("-");
+                setFilters({
+                  sortBy: field,
+                  sortOrder: order as "asc" | "desc",
+                });
+              }}
+            >
               <SelectTrigger className="w-56">
                 <SelectValue placeholder="Sort by" />
               </SelectTrigger>
@@ -326,9 +398,13 @@ export default function CustomersPage() {
                 <SelectItem value="created_at-asc">Oldest First</SelectItem>
                 <SelectItem value="name-asc">Name (A-Z)</SelectItem>
                 <SelectItem value="name-desc">Name (Z-A)</SelectItem>
-                <SelectItem value="total_spent-desc">Highest Spenders</SelectItem>
+                <SelectItem value="total_spent-desc">
+                  Highest Spenders
+                </SelectItem>
                 <SelectItem value="total_spent-asc">Lowest Spenders</SelectItem>
-                <SelectItem value="bookings_count-desc">Most Bookings</SelectItem>
+                <SelectItem value="bookings_count-desc">
+                  Most Bookings
+                </SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -368,7 +444,8 @@ export default function CustomersPage() {
                       <div>
                         <p className="font-medium">{customer.name}</p>
                         <p className="text-xs text-muted-foreground">
-                          Joined {new Date(customer.created_at).toLocaleDateString()}
+                          Joined{" "}
+                          {new Date(customer.created_at).toLocaleDateString()}
                         </p>
                       </div>
                     </TableCell>
@@ -399,14 +476,18 @@ export default function CustomersPage() {
                       {customer.last_booking_date ? (
                         <div>
                           <p className="text-sm">
-                            {new Date(customer.last_booking_date).toLocaleDateString()}
+                            {new Date(
+                              customer.last_booking_date,
+                            ).toLocaleDateString()}
                           </p>
                           <Badge variant="outline" className="text-xs">
                             {customer.last_booking_status}
                           </Badge>
                         </div>
                       ) : (
-                        <span className="text-xs text-muted-foreground">Never</span>
+                        <span className="text-xs text-muted-foreground">
+                          Never
+                        </span>
                       )}
                     </TableCell>
                     <TableCell>
@@ -437,7 +518,7 @@ export default function CustomersPage() {
       {pagination.totalPages > 1 && (
         <div className="flex items-center justify-between">
           <p className="text-sm text-muted-foreground">
-            Showing {((pagination.page - 1) * pagination.limit) + 1} to{" "}
+            Showing {(pagination.page - 1) * pagination.limit + 1} to{" "}
             {Math.min(pagination.page * pagination.limit, pagination.total)} of{" "}
             {pagination.total} customers
           </p>

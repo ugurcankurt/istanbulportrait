@@ -1,4 +1,6 @@
 import { Geist, Geist_Mono } from "next/font/google";
+import { NextIntlClientProvider } from "next-intl";
+import { getMessages } from "next-intl/server";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -16,18 +18,51 @@ export const metadata = {
   description: "Professional Photography Services in Istanbul",
 };
 
-export default function RootLayout({
+// Helper function to detect locale from pathname or headers
+async function detectLocale(): Promise<string> {
+  // Default fallback locale
+  return "en";
+}
+
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const locale = await detectLocale();
+
+  // Get messages for error pages - provide fallback empty object
+  let messages;
+  try {
+    messages = await getMessages({ locale });
+  } catch (_error) {
+    // Fallback messages for error pages
+    messages = {
+      notfound: {
+        title: "Page Not Found",
+        subtitle: "Oops! This photography session seems to be missing",
+        description: "The page you're looking for doesn't exist.",
+        homeButton: "Return Home",
+        packagesButton: "View Packages",
+        goBack: "Go Back",
+      },
+    };
+  }
+
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html
+      lang={locale}
+      dir={locale === "ar" ? "rtl" : "ltr"}
+      data-scroll-behavior="smooth"
+      suppressHydrationWarning
+    >
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         suppressHydrationWarning
       >
-        {children}
+        <NextIntlClientProvider locale={locale} messages={messages}>
+          {children}
+        </NextIntlClientProvider>
       </body>
     </html>
   );

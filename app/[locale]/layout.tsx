@@ -1,4 +1,3 @@
-import { Geist, Geist_Mono } from "next/font/google";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages, getTranslations } from "next-intl/server";
 import { GoogleAnalytics } from "@/components/analytics/google-analytics";
@@ -9,16 +8,6 @@ import { Footer } from "@/components/footer";
 import { Navigation } from "@/components/navigation";
 import { StructuredData } from "@/components/seo/structured-data";
 import { Toaster } from "@/components/ui/sonner";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
 
 export async function generateMetadata({
   params,
@@ -37,9 +26,9 @@ export async function generateMetadata({
     keywords:
       "istanbul photographer, istanbul photoshoot, istanbul rooftop photoshoot, portrait photographer istanbul, couple photography istanbul, professional photographer istanbul, wedding photographer istanbul",
     authors: [
-      { name: "Istanbul Portrait Professional Photographer", url: baseUrl },
+      { name: "Istanbul Photographer Professional Photographer", url: baseUrl },
     ],
-    publisher: "Istanbul Portrait",
+    publisher: "Istanbul Photographer",
     category: "Photography Services",
     robots: {
       index: true,
@@ -75,14 +64,14 @@ export async function generateMetadata({
           url: `${baseUrl}/og-image.jpg`,
           width: 1200,
           height: 630,
-          alt: t("title") + " - Professional Photography Services in Istanbul",
+          alt: `${t("title")} - Professional Photography Services in Istanbul`,
           type: "image/jpeg",
         },
       ],
       locale: locale,
       type: "website",
       url: `${baseUrl}/${locale}`,
-      siteName: "Istanbul Portrait",
+      siteName: "Istanbul Photographer",
       countryName: "Turkey",
     },
     twitter: {
@@ -92,7 +81,7 @@ export async function generateMetadata({
       images: [
         {
           url: `${baseUrl}/og-image.jpg`,
-          alt: t("title") + " - Professional Photography Services in Istanbul",
+          alt: `${t("title")} - Professional Photography Services in Istanbul`,
         },
       ],
       creator: "@istanbulportrait",
@@ -139,37 +128,25 @@ export default async function LocaleLayout({
   const messages = await getMessages();
 
   return (
-    <html
-      lang={locale}
-      dir={locale === "ar" ? "rtl" : "ltr"}
-      data-scroll-behavior="smooth"
-      suppressHydrationWarning
+    <ThemeProvider
+      attribute="class"
+      defaultTheme="light"
+      enableSystem
+      disableTransitionOnChange
     >
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="light"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <NextIntlClientProvider messages={messages}>
-            <div className="flex min-h-screen flex-col">
-              <Navigation />
-              <main className="flex-1">{children}</main>
-              <GoogleAnalytics />
-              <Footer />
-            </div>
-            <Toaster />
-            <MultilingualCookieConsent />
-            <StructuredData type="website" />
-            <StructuredData type="organization" />
-            <StructuredData type="reviews" />
-            <StructuredData type="localbusiness" />
-          </NextIntlClientProvider>
-        </ThemeProvider>
-      </body>
-    </html>
+      <NextIntlClientProvider messages={messages}>
+        <div className="flex min-h-screen flex-col">
+          <Navigation />
+          <main className="flex-1">{children}</main>
+          <GoogleAnalytics />
+          <Footer />
+        </div>
+        <Toaster />
+        <MultilingualCookieConsent />
+        <StructuredData type="website" />
+        <StructuredData type="organization" />
+        <StructuredData type="localbusiness" />
+      </NextIntlClientProvider>
+    </ThemeProvider>
   );
 }

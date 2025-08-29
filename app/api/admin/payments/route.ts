@@ -1,12 +1,12 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
+import { createServerAdminClient, requireServerAdmin } from "@/lib/auth-server";
 import {
   DatabaseConnectionError,
   handleSupabaseError,
   logError,
   sanitizeErrorForProduction,
 } from "@/lib/errors";
-import { requireServerAdmin, createServerAdminClient } from "@/lib/auth-server";
 
 export async function GET(request: NextRequest) {
   try {
@@ -14,8 +14,11 @@ export async function GET(request: NextRequest) {
     await requireServerAdmin();
 
     const { searchParams } = new URL(request.url);
-    const page = Math.max(1, parseInt(searchParams.get("page") || "1"));
-    const limit = Math.min(100, Math.max(1, parseInt(searchParams.get("limit") || "20")));
+    const page = Math.max(1, parseInt(searchParams.get("page") || "1", 10));
+    const limit = Math.min(
+      100,
+      Math.max(1, parseInt(searchParams.get("limit") || "20", 10)),
+    );
     const status = searchParams.get("status");
     const search = searchParams.get("search");
     const sortBy = searchParams.get("sortBy") || "created_at";
@@ -29,9 +32,8 @@ export async function GET(request: NextRequest) {
     const supabase = await createServerAdminClient();
 
     try {
-      let query = supabase
-        .from("payments")
-        .select(`
+      let query = supabase.from("payments").select(
+        `
           *,
           bookings (
             id,
@@ -41,7 +43,9 @@ export async function GET(request: NextRequest) {
             booking_date,
             booking_time
           )
-        `, { count: 'exact' });
+        `,
+        { count: "exact" },
+      );
 
       // Apply filters
       if (status && status !== "all") {
@@ -50,7 +54,7 @@ export async function GET(request: NextRequest) {
 
       if (search) {
         query = query.or(
-          `payment_id.ilike.%${search}%,conversation_id.ilike.%${search}%`
+          `payment_id.ilike.%${search}%,conversation_id.ilike.%${search}%`,
         );
       }
 
@@ -97,11 +101,12 @@ export async function GET(request: NextRequest) {
       return NextResponse.json(
         {
           error: sanitizeErrorForProduction(dbError),
-          details: process.env.NODE_ENV === "development"
-            ? handleSupabaseError(supabaseError).message
-            : undefined,
+          details:
+            process.env.NODE_ENV === "development"
+              ? handleSupabaseError(supabaseError).message
+              : undefined,
         },
-        { status: 503 }
+        { status: 503 },
       );
     }
   } catch (error) {
@@ -112,7 +117,13 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(
       { error: sanitizeErrorForProduction(error) },
-      { status: error instanceof Error && error.message.includes("Admin access required") ? 403 : 500 }
+      {
+        status:
+          error instanceof Error &&
+          error.message.includes("Admin access required")
+            ? 403
+            : 500,
+      },
     );
   }
 }

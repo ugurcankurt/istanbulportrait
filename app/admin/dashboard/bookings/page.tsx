@@ -1,32 +1,41 @@
 "use client";
 
 import {
-  Calendar,
-  Search,
-  Filter,
-  MoreHorizontal,
-  Eye,
-  Edit,
-  CheckCircle,
-  XCircle,
-  Clock,
   AlertCircle,
+  Calendar,
+  CheckCircle,
   ChevronLeft,
   ChevronRight,
   Download,
+  Edit,
+  Eye,
+  MoreHorizontal,
+  Search,
+  XCircle,
 } from "lucide-react";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
@@ -42,20 +51,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-  DialogFooter,
-} from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { toast } from "sonner";
-import { useBookingsStore, type Booking } from "@/stores/bookings-store";
+import { type Booking, useBookingsStore } from "@/stores/bookings-store";
 
 function StatusBadge({ status }: { status: string }) {
   const config = {
@@ -65,7 +62,8 @@ function StatusBadge({ status }: { status: string }) {
     completed: { color: "bg-blue-100 text-blue-800", icon: CheckCircle },
   };
 
-  const { color, icon: Icon } = config[status as keyof typeof config] || config.pending;
+  const { color, icon: Icon } =
+    config[status as keyof typeof config] || config.pending;
 
   return (
     <Badge variant="secondary" className={color}>
@@ -96,8 +94,12 @@ function BookingDetailsDialog({ booking }: { booking: Booking }) {
             <div>
               <Label className="text-sm font-medium">Customer</Label>
               <p className="text-sm">{booking.user_name}</p>
-              <p className="text-sm text-muted-foreground">{booking.user_email}</p>
-              <p className="text-sm text-muted-foreground">{booking.user_phone}</p>
+              <p className="text-sm text-muted-foreground">
+                {booking.user_email}
+              </p>
+              <p className="text-sm text-muted-foreground">
+                {booking.user_phone}
+              </p>
             </div>
             <div>
               <Label className="text-sm font-medium">Package & Amount</Label>
@@ -106,7 +108,7 @@ function BookingDetailsDialog({ booking }: { booking: Booking }) {
               <StatusBadge status={booking.status} />
             </div>
           </div>
-          
+
           <div className="grid grid-cols-2 gap-4">
             <div>
               <Label className="text-sm font-medium">Session Date & Time</Label>
@@ -115,7 +117,9 @@ function BookingDetailsDialog({ booking }: { booking: Booking }) {
             </div>
             <div>
               <Label className="text-sm font-medium">Booking Created</Label>
-              <p className="text-sm">{new Date(booking.created_at).toLocaleDateString()}</p>
+              <p className="text-sm">
+                {new Date(booking.created_at).toLocaleDateString()}
+              </p>
               <p className="text-sm text-muted-foreground">
                 {new Date(booking.created_at).toLocaleTimeString()}
               </p>
@@ -134,14 +138,24 @@ function BookingDetailsDialog({ booking }: { booking: Booking }) {
               <Label className="text-sm font-medium">Payments</Label>
               <div className="space-y-2">
                 {booking.payments.map((payment) => (
-                  <div key={payment.id} className="flex justify-between items-center p-2 bg-muted rounded-md">
+                  <div
+                    key={payment.id}
+                    className="flex justify-between items-center p-2 bg-muted rounded-md"
+                  >
                     <div>
-                      <p className="text-sm font-medium">€{payment.amount} - {payment.status}</p>
+                      <p className="text-sm font-medium">
+                        €{payment.amount} - {payment.status}
+                      </p>
                       <p className="text-xs text-muted-foreground">
-                        {payment.payment_id} • {new Date(payment.created_at).toLocaleDateString()}
+                        {payment.payment_id} •{" "}
+                        {new Date(payment.created_at).toLocaleDateString()}
                       </p>
                     </div>
-                    <Badge variant={payment.status === "success" ? "default" : "destructive"}>
+                    <Badge
+                      variant={
+                        payment.status === "success" ? "default" : "destructive"
+                      }
+                    >
                       {payment.status}
                     </Badge>
                   </div>
@@ -155,12 +169,15 @@ function BookingDetailsDialog({ booking }: { booking: Booking }) {
   );
 }
 
-function EditBookingDialog({ 
-  booking, 
-  onUpdate 
-}: { 
-  booking: Booking; 
-  onUpdate: (id: string, updates: { status: string; notes?: string }) => Promise<void>;
+function EditBookingDialog({
+  booking,
+  onUpdate,
+}: {
+  booking: Booking;
+  onUpdate: (
+    id: string,
+    updates: { status: string; notes?: string },
+  ) => Promise<void>;
 }) {
   const [status, setStatus] = useState(booking.status);
   const [notes, setNotes] = useState(booking.notes || "");
@@ -173,7 +190,7 @@ function EditBookingDialog({
       await onUpdate(booking.id, { status, notes });
       setOpen(false);
       toast.success("Booking updated successfully");
-    } catch (error) {
+    } catch (_error) {
       toast.error("Failed to update booking");
     } finally {
       setIsUpdating(false);
@@ -198,7 +215,12 @@ function EditBookingDialog({
         <div className="space-y-4">
           <div>
             <Label htmlFor="status">Status</Label>
-            <Select value={status} onValueChange={(value: string) => setStatus(value as typeof status)}>
+            <Select
+              value={status}
+              onValueChange={(value: string) =>
+                setStatus(value as typeof status)
+              }
+            >
               <SelectTrigger>
                 <SelectValue />
               </SelectTrigger>
@@ -247,7 +269,7 @@ export default function BookingsPage() {
     setPage,
     clearError,
   } = useBookingsStore();
-  
+
   const { search, statusFilter, sortBy, sortOrder } = filters;
 
   // Fetch bookings on component mount
@@ -265,25 +287,28 @@ export default function BookingsPage() {
 
   // Handle search input changes with debouncing
   const [searchInput, setSearchInput] = useState(search);
-  
+
   useEffect(() => {
     const timeoutId = setTimeout(() => {
       if (searchInput !== search) {
         setFilters({ search: searchInput });
       }
     }, 500);
-    
+
     return () => clearTimeout(timeoutId);
   }, [searchInput, search, setFilters]);
 
   const formatCurrency = (amount: number) => `€${amount.toLocaleString()}`;
 
   // Wrapper for updateBooking that shows success toast
-  const handleUpdateBooking = async (id: string, updates: { status: string; notes?: string }) => {
+  const handleUpdateBooking = async (
+    id: string,
+    updates: { status: string; notes?: string },
+  ) => {
     try {
       await updateBooking(id, updates);
       toast.success("Booking updated successfully");
-    } catch (error) {
+    } catch (_error) {
       // Error toast is already shown by the effect above
     }
   };
@@ -294,7 +319,9 @@ export default function BookingsPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Bookings</h1>
-          <p className="text-muted-foreground">Manage customer bookings and reservations</p>
+          <p className="text-muted-foreground">
+            Manage customer bookings and reservations
+          </p>
         </div>
         <Button variant="outline">
           <Download className="w-4 h-4 mr-2" />
@@ -320,7 +347,10 @@ export default function BookingsPage() {
                 />
               </div>
             </div>
-            <Select value={statusFilter} onValueChange={(value) => setFilters({ statusFilter: value })}>
+            <Select
+              value={statusFilter}
+              onValueChange={(value) => setFilters({ statusFilter: value })}
+            >
               <SelectTrigger className="w-40">
                 <SelectValue placeholder="Status" />
               </SelectTrigger>
@@ -332,20 +362,34 @@ export default function BookingsPage() {
                 <SelectItem value="cancelled">Cancelled</SelectItem>
               </SelectContent>
             </Select>
-            <Select value={`${sortBy}-${sortOrder}`} onValueChange={(value) => {
-              const [field, order] = value.split("-");
-              setFilters({ sortBy: field, sortOrder: order as 'asc' | 'desc' });
-            }}>
+            <Select
+              value={`${sortBy}-${sortOrder}`}
+              onValueChange={(value) => {
+                const [field, order] = value.split("-");
+                setFilters({
+                  sortBy: field,
+                  sortOrder: order as "asc" | "desc",
+                });
+              }}
+            >
               <SelectTrigger className="w-48">
                 <SelectValue placeholder="Sort by" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="created_at-desc">Newest First</SelectItem>
                 <SelectItem value="created_at-asc">Oldest First</SelectItem>
-                <SelectItem value="booking_date-desc">Session Date (Latest)</SelectItem>
-                <SelectItem value="booking_date-asc">Session Date (Earliest)</SelectItem>
-                <SelectItem value="total_amount-desc">Amount (High to Low)</SelectItem>
-                <SelectItem value="total_amount-asc">Amount (Low to High)</SelectItem>
+                <SelectItem value="booking_date-desc">
+                  Session Date (Latest)
+                </SelectItem>
+                <SelectItem value="booking_date-asc">
+                  Session Date (Earliest)
+                </SelectItem>
+                <SelectItem value="total_amount-desc">
+                  Amount (High to Low)
+                </SelectItem>
+                <SelectItem value="total_amount-asc">
+                  Amount (Low to High)
+                </SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -384,7 +428,9 @@ export default function BookingsPage() {
                     <TableCell>
                       <div>
                         <p className="font-medium">{booking.user_name}</p>
-                        <p className="text-sm text-muted-foreground">{booking.user_email}</p>
+                        <p className="text-sm text-muted-foreground">
+                          {booking.user_email}
+                        </p>
                       </div>
                     </TableCell>
                     <TableCell>
@@ -393,7 +439,9 @@ export default function BookingsPage() {
                     <TableCell>
                       <div>
                         <p className="text-sm">{booking.booking_date}</p>
-                        <p className="text-sm text-muted-foreground">{booking.booking_time}</p>
+                        <p className="text-sm text-muted-foreground">
+                          {booking.booking_time}
+                        </p>
                       </div>
                     </TableCell>
                     <TableCell>
@@ -415,7 +463,10 @@ export default function BookingsPage() {
                         <DropdownMenuContent align="end">
                           <DropdownMenuLabel>Actions</DropdownMenuLabel>
                           <BookingDetailsDialog booking={booking} />
-                          <EditBookingDialog booking={booking} onUpdate={handleUpdateBooking} />
+                          <EditBookingDialog
+                            booking={booking}
+                            onUpdate={handleUpdateBooking}
+                          />
                         </DropdownMenuContent>
                       </DropdownMenu>
                     </TableCell>
@@ -431,7 +482,7 @@ export default function BookingsPage() {
       {pagination.totalPages > 1 && (
         <div className="flex items-center justify-between">
           <p className="text-sm text-muted-foreground">
-            Showing {((pagination.page - 1) * pagination.limit) + 1} to{" "}
+            Showing {(pagination.page - 1) * pagination.limit + 1} to{" "}
             {Math.min(pagination.page * pagination.limit, pagination.total)} of{" "}
             {pagination.total} bookings
           </p>

@@ -51,7 +51,7 @@ export function MultilingualCookieConsent() {
     if (consent) {
       hideBanner();
     }
-  }, []);
+  }, [hideBanner]);
 
   return (
     <div

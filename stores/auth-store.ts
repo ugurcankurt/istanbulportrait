@@ -1,7 +1,13 @@
-import { create } from 'zustand';
-import { devtools, persist } from 'zustand/middleware';
-import type { User } from '@supabase/supabase-js';
-import { getCurrentUser, isAdmin, signInWithEmail, signOut as authSignOut, onAuthStateChange } from '@/lib/auth';
+import type { User } from "@supabase/supabase-js";
+import { create } from "zustand";
+import { devtools, persist } from "zustand/middleware";
+import {
+  signOut as authSignOut,
+  getCurrentUser,
+  isAdmin,
+  onAuthStateChange,
+  signInWithEmail,
+} from "@/lib/auth";
 
 interface AuthState {
   // State
@@ -38,13 +44,15 @@ export const useAuthStore = create<AuthState>()(
             const { user } = await signInWithEmail(email, password);
 
             if (!user?.email) {
-              throw new Error('Invalid user data received');
+              throw new Error("Invalid user data received");
             }
 
             const isUserAdmin = await isAdmin(user.email);
 
             if (!isUserAdmin) {
-              throw new Error('Access denied. This account is not authorized for admin access.');
+              throw new Error(
+                "Access denied. This account is not authorized for admin access.",
+              );
             }
 
             set({
@@ -55,9 +63,10 @@ export const useAuthStore = create<AuthState>()(
               error: null,
             });
           } catch (error) {
-            console.error('Auth Store: Sign in error:', error);
-            const errorMessage = error instanceof Error ? error.message : 'Sign in failed';
-            
+            console.error("Auth Store: Sign in error:", error);
+            const errorMessage =
+              error instanceof Error ? error.message : "Sign in failed";
+
             set({
               user: null,
               isAuthenticated: false,
@@ -84,8 +93,8 @@ export const useAuthStore = create<AuthState>()(
               error: null,
             });
           } catch (error) {
-            console.error('Auth Store: Sign out error:', error);
-            
+            console.error("Auth Store: Sign out error:", error);
+
             // Even if sign out fails, clear local state
             set({
               user: null,
@@ -123,7 +132,7 @@ export const useAuthStore = create<AuthState>()(
                 isAuthenticated: false,
                 isAdminUser: false,
                 loading: false,
-                error: 'Admin access required',
+                error: "Admin access required",
               });
               return;
             }
@@ -136,13 +145,13 @@ export const useAuthStore = create<AuthState>()(
               error: null,
             });
           } catch (error) {
-            console.error('Auth Store: Auth check error:', error);
+            console.error("Auth Store: Auth check error:", error);
             set({
               user: null,
               isAuthenticated: false,
               isAdminUser: false,
               loading: false,
-              error: 'Authentication check failed',
+              error: "Authentication check failed",
             });
           }
         },
@@ -158,8 +167,9 @@ export const useAuthStore = create<AuthState>()(
           get().checkAuth();
 
           // Listen for auth state changes
-          const { data: { subscription } } = onAuthStateChange(async (user) => {
-
+          const {
+            data: { subscription },
+          } = onAuthStateChange(async (user) => {
             if (!user) {
               set({
                 user: null,
@@ -173,22 +183,22 @@ export const useAuthStore = create<AuthState>()(
 
             try {
               const isUserAdmin = await isAdmin(user.email);
-              
+
               set({
                 user,
                 isAuthenticated: true,
                 isAdminUser: isUserAdmin,
                 loading: false,
-                error: isUserAdmin ? null : 'Admin access required',
+                error: isUserAdmin ? null : "Admin access required",
               });
             } catch (error) {
-              console.error('Auth Store: Auth state change error:', error);
+              console.error("Auth Store: Auth state change error:", error);
               set({
                 user: null,
                 isAuthenticated: false,
                 isAdminUser: false,
                 loading: false,
-                error: 'Authentication verification failed',
+                error: "Authentication verification failed",
               });
             }
           });
@@ -198,23 +208,23 @@ export const useAuthStore = create<AuthState>()(
         },
       }),
       {
-        name: 'admin-auth',
+        name: "admin-auth",
         partialize: (state) => ({
           // Only persist user data, not loading/error states
           user: state.user,
           isAuthenticated: state.isAuthenticated,
           isAdminUser: state.isAdminUser,
         }),
-      }
+      },
     ),
     {
-      name: 'auth-store',
-    }
-  )
+      name: "auth-store",
+    },
+  ),
 );
 
 // Auto-initialize on store creation
-if (typeof window !== 'undefined') {
+if (typeof window !== "undefined") {
   // Delay initialization to allow auth to settle
   setTimeout(() => {
     useAuthStore.getState().initialize();

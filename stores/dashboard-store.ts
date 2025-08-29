@@ -1,5 +1,5 @@
-import { create } from 'zustand';
-import { devtools } from 'zustand/middleware';
+import { create } from "zustand";
+import { devtools } from "zustand/middleware";
 
 interface DashboardStats {
   total_bookings: number;
@@ -54,7 +54,7 @@ const initialStats: DashboardStats = {
 
 export const useDashboardStore = create<DashboardState>()(
   devtools(
-    (set, get) => ({
+    (set, _get) => ({
       // Initial state
       stats: null,
       recentBookings: [],
@@ -63,43 +63,47 @@ export const useDashboardStore = create<DashboardState>()(
 
       // Fetch dashboard data (stats + recent bookings)
       fetchDashboardData: async () => {
-        
         set({ loading: true, error: null });
 
         try {
           // Fetch both stats and recent bookings in parallel
           const [statsResponse, bookingsResponse] = await Promise.all([
-            fetch('/api/admin/stats'),
-            fetch('/api/admin/bookings?limit=5&sortBy=created_at&sortOrder=desc'),
+            fetch("/api/admin/stats"),
+            fetch(
+              "/api/admin/bookings?limit=5&sortBy=created_at&sortOrder=desc",
+            ),
           ]);
-
-          
-          
 
           // Handle stats response
           if (!statsResponse.ok) {
             const statsError = await statsResponse.text();
-            console.error('Dashboard Store: Stats API error:', statsError);
-            throw new Error(`Failed to fetch dashboard stats: ${statsResponse.status}`);
+            console.error("Dashboard Store: Stats API error:", statsError);
+            throw new Error(
+              `Failed to fetch dashboard stats: ${statsResponse.status}`,
+            );
           }
 
           // Handle bookings response
           if (!bookingsResponse.ok) {
             const bookingsError = await bookingsResponse.text();
-            console.error('Dashboard Store: Bookings API error:', bookingsError);
-            throw new Error(`Failed to fetch recent bookings: ${bookingsResponse.status}`);
+            console.error(
+              "Dashboard Store: Bookings API error:",
+              bookingsError,
+            );
+            throw new Error(
+              `Failed to fetch recent bookings: ${bookingsResponse.status}`,
+            );
           }
 
           // Parse responses
           const statsData = await statsResponse.json();
           const bookingsData = await bookingsResponse.json();
 
-          
-          
-
           // Validate and extract data
           const stats = statsData?.stats || initialStats;
-          const recentBookings = Array.isArray(bookingsData?.bookings) ? bookingsData.bookings : [];
+          const recentBookings = Array.isArray(bookingsData?.bookings)
+            ? bookingsData.bookings
+            : [];
 
           // Ensure stats have safe defaults
           const validatedStats = {
@@ -122,8 +126,11 @@ export const useDashboardStore = create<DashboardState>()(
             error: null,
           });
         } catch (error) {
-          console.error('Dashboard Store: Fetch error:', error);
-          const errorMessage = error instanceof Error ? error.message : 'Failed to load dashboard data';
+          console.error("Dashboard Store: Fetch error:", error);
+          const errorMessage =
+            error instanceof Error
+              ? error.message
+              : "Failed to load dashboard data";
 
           set({
             stats: initialStats,
@@ -141,7 +148,6 @@ export const useDashboardStore = create<DashboardState>()(
 
       // Reset store to initial state
       reset: () => {
-        
         set({
           stats: null,
           recentBookings: [],
@@ -151,7 +157,7 @@ export const useDashboardStore = create<DashboardState>()(
       },
     }),
     {
-      name: 'dashboard-store',
-    }
-  )
+      name: "dashboard-store",
+    },
+  ),
 );

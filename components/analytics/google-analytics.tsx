@@ -248,7 +248,7 @@ export function CookieConsent() {
     if (consent) {
       hideBanner();
     }
-  }, []);
+  }, [hideBanner]);
 
   return (
     <div

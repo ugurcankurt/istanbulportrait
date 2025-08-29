@@ -76,7 +76,7 @@ export function Navigation() {
                   ? "/istanbulportrait_white_logo.png"
                   : "/istanbulportrait_dark_logo.png"
               }
-              alt="Istanbul Portrait Logo"
+              alt="Istanbul Photographer Logo"
               width={120}
               height={32}
               className="h-6 sm:h-8 w-auto"
@@ -182,13 +182,15 @@ export function Navigation() {
                         ? "/istanbulportrait_white_logo.png"
                         : "/istanbulportrait_dark_logo.png"
                     }
-                    alt="Istanbul Portrait Logo"
+                    alt="Istanbul Photographer Logo"
                     width={90}
                     height={24}
                     className="h-6 w-auto"
                     suppressHydrationWarning
                   />
-                  <SheetTitle className="sr-only">Istanbul Portrait</SheetTitle>
+                  <SheetTitle className="sr-only">
+                    Istanbul Photographer
+                  </SheetTitle>
                 </div>
               </SheetHeader>
 

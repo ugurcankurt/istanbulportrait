@@ -1,5 +1,5 @@
-import { create } from 'zustand';
-import { devtools } from 'zustand/middleware';
+import { create } from "zustand";
+import { devtools } from "zustand/middleware";
 
 export interface CustomerBooking {
   id: string;
@@ -36,7 +36,7 @@ interface Pagination {
 interface CustomersFilters {
   search: string;
   sortBy: string;
-  sortOrder: 'asc' | 'desc';
+  sortOrder: "asc" | "desc";
 }
 
 interface CustomersState {
@@ -59,7 +59,9 @@ interface CustomersState {
   };
 
   // Actions
-  fetchCustomers: (params?: Partial<CustomersFilters & { page?: number }>) => Promise<void>;
+  fetchCustomers: (
+    params?: Partial<CustomersFilters & { page?: number }>,
+  ) => Promise<void>;
   setFilters: (filters: Partial<CustomersFilters>) => void;
   setPage: (page: number) => void;
   clearError: () => void;
@@ -67,9 +69,9 @@ interface CustomersState {
 }
 
 const initialFilters: CustomersFilters = {
-  search: '',
-  sortBy: 'created_at',
-  sortOrder: 'desc',
+  search: "",
+  sortBy: "created_at",
+  sortOrder: "desc",
 };
 
 const initialPagination: Pagination = {
@@ -100,7 +102,6 @@ export const useCustomersStore = create<CustomersState>()(
 
       // Fetch customers with filtering
       fetchCustomers: async (params = {}) => {
-        
         set({ loading: true, error: null });
 
         const currentState = get();
@@ -115,49 +116,60 @@ export const useCustomersStore = create<CustomersState>()(
             sortOrder: filters.sortOrder,
           });
 
-          if (filters.search) queryParams.set('search', filters.search);
-
-          
+          if (filters.search) queryParams.set("search", filters.search);
 
           const response = await fetch(`/api/admin/customers?${queryParams}`);
 
           if (!response.ok) {
             const errorText = await response.text();
-            console.error('Customers Store: API error:', response.status, errorText);
+            console.error(
+              "Customers Store: API error:",
+              response.status,
+              errorText,
+            );
             throw new Error(`API Error ${response.status}: ${errorText}`);
           }
 
           const rawData = await response.text();
-          
 
           let data;
           try {
             data = JSON.parse(rawData);
           } catch (parseError) {
-            console.error('Customers Store: JSON parse error:', parseError);
-            throw new Error('Invalid JSON response from server');
+            console.error("Customers Store: JSON parse error:", parseError);
+            throw new Error("Invalid JSON response from server");
           }
 
           // Validate response structure
-          if (!data || typeof data !== 'object') {
-            console.error('Customers Store: Invalid response structure:', data);
-            throw new Error('Invalid response structure');
+          if (!data || typeof data !== "object") {
+            console.error("Customers Store: Invalid response structure:", data);
+            throw new Error("Invalid response structure");
           }
 
-          const customersData = Array.isArray(data.customers) ? data.customers : [];
-          const paginationData = data.pagination && typeof data.pagination === 'object' 
-            ? { ...initialPagination, ...data.pagination }
-            : { ...initialPagination, page };
+          const customersData = Array.isArray(data.customers)
+            ? data.customers
+            : [];
+          const paginationData =
+            data.pagination && typeof data.pagination === "object"
+              ? { ...initialPagination, ...data.pagination }
+              : { ...initialPagination, page };
 
           // Calculate stats
           const totalCustomers = paginationData.total || 0;
-          const totalRevenue = customersData.reduce((sum: number, customer: any) => {
-            const spent = customer?.total_spent || 0;
-            return sum + (typeof spent === 'number' ? spent : 0);
-          }, 0);
-          const avgRevenuePerCustomer = totalCustomers > 0 ? totalRevenue / totalCustomers : 0;
-          const repeatCustomers = customersData.filter((c: any) => (c?.confirmed_bookings || 0) > 1).length;
-          const repeatCustomerRate = totalCustomers > 0 ? (repeatCustomers / totalCustomers) * 100 : 0;
+          const totalRevenue = customersData.reduce(
+            (sum: number, customer: any) => {
+              const spent = customer?.total_spent || 0;
+              return sum + (typeof spent === "number" ? spent : 0);
+            },
+            0,
+          );
+          const avgRevenuePerCustomer =
+            totalCustomers > 0 ? totalRevenue / totalCustomers : 0;
+          const repeatCustomers = customersData.filter(
+            (c: any) => (c?.confirmed_bookings || 0) > 1,
+          ).length;
+          const repeatCustomerRate =
+            totalCustomers > 0 ? (repeatCustomers / totalCustomers) * 100 : 0;
 
           const stats = {
             totalCustomers,
@@ -166,7 +178,6 @@ export const useCustomersStore = create<CustomersState>()(
             repeatCustomers,
             repeatCustomerRate,
           };
-
 
           set({
             customers: customersData,
@@ -177,8 +188,11 @@ export const useCustomersStore = create<CustomersState>()(
             error: null,
           });
         } catch (error) {
-          console.error('Customers Store: Fetch error:', error);
-          const errorMessage = error instanceof Error ? error.message : 'Failed to fetch customers';
+          console.error("Customers Store: Fetch error:", error);
+          const errorMessage =
+            error instanceof Error
+              ? error.message
+              : "Failed to fetch customers";
 
           set({
             customers: [],
@@ -192,14 +206,13 @@ export const useCustomersStore = create<CustomersState>()(
 
       // Set filters and trigger fetch
       setFilters: (newFilters: Partial<CustomersFilters>) => {
-        
         const currentState = get();
         const updatedFilters = { ...currentState.filters, ...newFilters };
 
         // Reset to page 1 when filters change
-        set({ 
+        set({
           filters: updatedFilters,
-          pagination: { ...currentState.pagination, page: 1 }
+          pagination: { ...currentState.pagination, page: 1 },
         });
 
         // Auto-fetch with new filters
@@ -208,11 +221,10 @@ export const useCustomersStore = create<CustomersState>()(
 
       // Set page and trigger fetch
       setPage: (page: number) => {
-        
         const currentState = get();
 
         set({
-          pagination: { ...currentState.pagination, page }
+          pagination: { ...currentState.pagination, page },
         });
 
         // Auto-fetch with new page
@@ -226,7 +238,6 @@ export const useCustomersStore = create<CustomersState>()(
 
       // Reset store to initial state
       reset: () => {
-        
         set({
           customers: [],
           pagination: initialPagination,
@@ -238,7 +249,7 @@ export const useCustomersStore = create<CustomersState>()(
       },
     }),
     {
-      name: 'customers-store',
-    }
-  )
+      name: "customers-store",
+    },
+  ),
 );

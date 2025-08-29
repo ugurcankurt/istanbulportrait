@@ -1,4 +1,5 @@
 import { getTranslations } from "next-intl/server";
+import { BreadcrumbNav } from "@/components/breadcrumb-nav";
 import { PackagesSection } from "@/components/packages-section";
 
 export async function generateMetadata({
@@ -18,6 +19,7 @@ export async function generateMetadata({
 export default function PackagesPage() {
   return (
     <div>
+      <BreadcrumbNav />
       <PackagesSection />
     </div>
   );

@@ -49,7 +49,7 @@ export function Footer() {
                     ? "/istanbulportrait_white_logo.png"
                     : "/istanbulportrait_dark_logo.png"
                 }
-                alt="Istanbul Portrait Logo"
+                alt="Istanbul Photographer Logo"
                 width={90}
                 height={24}
                 className="h-6 w-auto"

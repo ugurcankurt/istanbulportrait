@@ -1,5 +1,8 @@
 import type { User } from "@supabase/supabase-js";
-import { createServerSupabaseClient, createServerSupabaseAdminClient } from "./supabase/server";
+import {
+  createServerSupabaseAdminClient,
+  createServerSupabaseClient,
+} from "./supabase/server";
 
 // Server-side authentication utilities
 // ONLY use these in Server Components, API routes, and middleware
@@ -7,7 +10,7 @@ import { createServerSupabaseClient, createServerSupabaseAdminClient } from "./s
 export async function getServerUser(): Promise<User | null> {
   try {
     const supabase = await createServerSupabaseClient();
-    
+
     const {
       data: { user },
       error,
@@ -28,7 +31,7 @@ export async function getServerUser(): Promise<User | null> {
 export async function getServerSession() {
   try {
     const supabase = await createServerSupabaseClient();
-    
+
     const {
       data: { session },
       error,
@@ -61,7 +64,7 @@ export async function isServerAdmin(email?: string): Promise<boolean> {
   ];
 
   const isAdmin = adminEmails.includes(email.toLowerCase());
-  
+
   return isAdmin;
 }
 

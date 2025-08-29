@@ -1,12 +1,12 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
+import { createServerAdminClient, requireServerAdmin } from "@/lib/auth-server";
 import {
   DatabaseConnectionError,
   handleSupabaseError,
   logError,
   sanitizeErrorForProduction,
 } from "@/lib/errors";
-import { requireServerAdmin, createServerAdminClient } from "@/lib/auth-server";
 
 export async function GET(request: NextRequest) {
   try {
@@ -14,8 +14,11 @@ export async function GET(request: NextRequest) {
     await requireServerAdmin();
 
     const { searchParams } = new URL(request.url);
-    const page = Math.max(1, parseInt(searchParams.get("page") || "1"));
-    const limit = Math.min(100, Math.max(1, parseInt(searchParams.get("limit") || "20")));
+    const page = Math.max(1, parseInt(searchParams.get("page") || "1", 10));
+    const limit = Math.min(
+      100,
+      Math.max(1, parseInt(searchParams.get("limit") || "20", 10)),
+    );
     const search = searchParams.get("search");
     const sortBy = searchParams.get("sortBy") || "created_at";
     const sortOrder = searchParams.get("sortOrder") === "asc" ? "asc" : "desc";
@@ -31,12 +34,11 @@ export async function GET(request: NextRequest) {
       let customers;
       let error;
       let count;
-      
+
       try {
         // Attempt to use the foreign key relationship
-        query = supabase
-          .from("customers")
-          .select(`
+        query = supabase.from("customers").select(
+          `
             *,
             bookings!bookings_user_email_fkey (
               id,
@@ -47,19 +49,23 @@ export async function GET(request: NextRequest) {
               total_amount,
               created_at
             )
-          `, { count: 'exact' });
-      } catch (relationshipError) {
-        console.log("Foreign key relationship not available, using fallback method");
-        
+          `,
+          { count: "exact" },
+        );
+      } catch (_relationshipError) {
+        console.log(
+          "Foreign key relationship not available, using fallback method",
+        );
+
         // Fallback: Query customers and bookings separately
-        query = supabase
-          .from("customers")
-          .select("*", { count: 'exact' });
+        query = supabase.from("customers").select("*", { count: "exact" });
       }
 
       // Apply search filter
       if (search) {
-        query = query.or(`name.ilike.%${search}%,email.ilike.%${search}%,phone.ilike.%${search}%`);
+        query = query.or(
+          `name.ilike.%${search}%,email.ilike.%${search}%,phone.ilike.%${search}%`,
+        );
       }
 
       // Apply sorting
@@ -75,33 +81,42 @@ export async function GET(request: NextRequest) {
 
       if (error) {
         // If the relationship query failed, try fallback method
-        console.log("Relationship query failed, using fallback method:", error.message);
-        
+        console.log(
+          "Relationship query failed, using fallback method:",
+          error.message,
+        );
+
         // Query customers separately
         const customersQuery = supabase
           .from("customers")
-          .select("*", { count: 'exact' });
-          
+          .select("*", { count: "exact" });
+
         if (search) {
-          customersQuery.or(`name.ilike.%${search}%,email.ilike.%${search}%,phone.ilike.%${search}%`);
+          customersQuery.or(
+            `name.ilike.%${search}%,email.ilike.%${search}%,phone.ilike.%${search}%`,
+          );
         }
-        
+
         customersQuery.order(sortBy, { ascending: sortOrder === "asc" });
         customersQuery.range(offset, offset + limit - 1);
-        
-        const { data: customersData, error: customersError, count: customersCount } = await customersQuery;
-        
+
+        const {
+          data: customersData,
+          error: customersError,
+          count: customersCount,
+        } = await customersQuery;
+
         if (customersError) {
           throw customersError;
         }
-        
+
         customers = customersData;
         count = customersCount;
-        
+
         // Manually fetch bookings for each customer
         if (customers && customers.length > 0) {
-          const customerEmails = customers.map(c => c.email);
-          
+          const customerEmails = customers.map((c) => c.email);
+
           const { data: bookingsData } = await supabase
             .from("bookings")
             .select(`
@@ -114,33 +129,46 @@ export async function GET(request: NextRequest) {
               created_at,
               user_email
             `)
-            .in('user_email', customerEmails);
-          
+            .in("user_email", customerEmails);
+
           // Group bookings by email
-          const bookingsByEmail = (bookingsData || []).reduce((acc: Record<string, any[]>, booking: any) => {
-            if (!acc[booking.user_email]) {
-              acc[booking.user_email] = [];
-            }
-            acc[booking.user_email].push(booking);
-            return acc;
-          }, {} as Record<string, any[]>);
-          
+          const bookingsByEmail = (bookingsData || []).reduce(
+            (acc: Record<string, any[]>, booking: any) => {
+              if (!acc[booking.user_email]) {
+                acc[booking.user_email] = [];
+              }
+              acc[booking.user_email].push(booking);
+              return acc;
+            },
+            {} as Record<string, any[]>,
+          );
+
           // Add bookings to customers
           customers = customers.map((customer: any) => ({
             ...customer,
-            bookings: bookingsByEmail[customer.email] || []
+            bookings: bookingsByEmail[customer.email] || [],
           }));
         }
       }
 
       // Calculate customer analytics
-      const customersWithStats = (customers || []).map(customer => {
+      const customersWithStats = (customers || []).map((customer) => {
         const bookings = customer.bookings || [];
-        const confirmedBookings = bookings.filter((b: any) => b.status === 'confirmed');
-        const totalSpent = confirmedBookings.reduce((sum: number, b: any) => sum + b.total_amount, 0);
-        const lastBooking = bookings.length > 0 
-          ? bookings.sort((a: any, b: any) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())[0]
-          : null;
+        const confirmedBookings = bookings.filter(
+          (b: any) => b.status === "confirmed",
+        );
+        const totalSpent = confirmedBookings.reduce(
+          (sum: number, b: any) => sum + b.total_amount,
+          0,
+        );
+        const lastBooking =
+          bookings.length > 0
+            ? bookings.sort(
+                (a: any, b: any) =>
+                  new Date(b.created_at).getTime() -
+                  new Date(a.created_at).getTime(),
+              )[0]
+            : null;
 
         return {
           ...customer,
@@ -172,11 +200,12 @@ export async function GET(request: NextRequest) {
       return NextResponse.json(
         {
           error: sanitizeErrorForProduction(dbError),
-          details: process.env.NODE_ENV === "development"
-            ? handleSupabaseError(supabaseError).message
-            : undefined,
+          details:
+            process.env.NODE_ENV === "development"
+              ? handleSupabaseError(supabaseError).message
+              : undefined,
         },
-        { status: 503 }
+        { status: 503 },
       );
     }
   } catch (error) {
@@ -187,7 +216,13 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(
       { error: sanitizeErrorForProduction(error) },
-      { status: error instanceof Error && error.message.includes("Admin access required") ? 403 : 500 }
+      {
+        status:
+          error instanceof Error &&
+          error.message.includes("Admin access required")
+            ? 403
+            : 500,
+      },
     );
   }
 }

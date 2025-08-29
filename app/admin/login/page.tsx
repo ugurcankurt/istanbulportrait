@@ -14,23 +14,23 @@ export default function AdminLoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
-  
-  const { 
-    user, 
-    isAuthenticated, 
-    isAdminUser, 
-    loading, 
-    error, 
-    signIn, 
-    clearError 
+
+  const {
+    user,
+    isAuthenticated,
+    isAdminUser,
+    loading,
+    error,
+    signIn,
+    clearError,
   } = useAuthStore();
 
   useEffect(() => {
     // If user is already authenticated and admin, redirect to dashboard
     if (isAuthenticated && isAdminUser && user) {
-      router.push('/admin/dashboard');
+      router.push("/admin/dashboard");
     }
-  }, [user, isAuthenticated, isAdminUser, loading, router]);
+  }, [user, isAuthenticated, isAdminUser, router]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -38,11 +38,11 @@ export default function AdminLoginPage() {
 
     try {
       await signIn(email, password);
-      
+
       // signIn will automatically update the auth state
       // The useEffect above will handle the redirect
     } catch (err) {
-      console.error('Login Page: Sign in failed:', err);
+      console.error("Login Page: Sign in failed:", err);
       // Error is already set in the store by signIn action
     }
   };
@@ -56,7 +56,7 @@ export default function AdminLoginPage() {
           </div>
           <CardTitle className="text-2xl font-bold">Admin Login</CardTitle>
           <p className="text-sm text-muted-foreground">
-            Istanbul Portrait Admin Panel
+            Istanbul Photographer Admin Panel
           </p>
         </CardHeader>
         <CardContent>

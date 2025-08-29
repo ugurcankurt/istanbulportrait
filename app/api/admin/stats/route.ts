@@ -1,11 +1,11 @@
 import { NextResponse } from "next/server";
+import { createServerAdminClient, requireServerAdmin } from "@/lib/auth-server";
 import {
   DatabaseConnectionError,
   handleSupabaseError,
   logError,
   sanitizeErrorForProduction,
 } from "@/lib/errors";
-import { requireServerAdmin, createServerAdminClient } from "@/lib/auth-server";
 
 export async function GET() {
   try {
@@ -29,11 +29,14 @@ export async function GET() {
 
       // If view doesn't exist or returns no data, calculate manually
       if (!stats) {
-        const [bookingsResult, customersResult, paymentsResult] = await Promise.all([
-          supabase.from("bookings").select("status, total_amount, created_at"),
-          supabase.from("customers").select("id"),
-          supabase.from("payments").select("status, amount, created_at"),
-        ]);
+        const [bookingsResult, customersResult, paymentsResult] =
+          await Promise.all([
+            supabase
+              .from("bookings")
+              .select("status, total_amount, created_at"),
+            supabase.from("customers").select("id"),
+            supabase.from("payments").select("status, amount, created_at"),
+          ]);
 
         const bookings = bookingsResult.data || [];
         const customers = customersResult.data || [];
@@ -41,28 +44,38 @@ export async function GET() {
 
         // Calculate current month revenue
         const currentMonth = new Date();
-        const firstDayOfMonth = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), 1);
-        
+        const firstDayOfMonth = new Date(
+          currentMonth.getFullYear(),
+          currentMonth.getMonth(),
+          1,
+        );
+
         const monthlyRevenue = bookings
-          .filter(booking => 
-            booking.status === 'confirmed' && 
-            new Date(booking.created_at) >= firstDayOfMonth
+          .filter(
+            (booking) =>
+              booking.status === "confirmed" &&
+              new Date(booking.created_at) >= firstDayOfMonth,
           )
           .reduce((sum, booking) => sum + booking.total_amount, 0);
 
         const manualStats = {
           total_bookings: bookings.length,
-          pending_bookings: bookings.filter(b => b.status === 'pending').length,
-          confirmed_bookings: bookings.filter(b => b.status === 'confirmed').length,
-          cancelled_bookings: bookings.filter(b => b.status === 'cancelled').length,
+          pending_bookings: bookings.filter((b) => b.status === "pending")
+            .length,
+          confirmed_bookings: bookings.filter((b) => b.status === "confirmed")
+            .length,
+          cancelled_bookings: bookings.filter((b) => b.status === "cancelled")
+            .length,
           total_revenue: bookings
-            .filter(b => b.status === 'confirmed')
+            .filter((b) => b.status === "confirmed")
             .reduce((sum, b) => sum + b.total_amount, 0),
           monthly_revenue: monthlyRevenue || 0,
           total_customers: customers.length,
           total_payments: payments.length,
-          successful_payments: payments.filter(p => p.status === 'success').length,
-          failed_payments: payments.filter(p => p.status === 'failure').length,
+          successful_payments: payments.filter((p) => p.status === "success")
+            .length,
+          failed_payments: payments.filter((p) => p.status === "failure")
+            .length,
         };
 
         return NextResponse.json({
@@ -91,11 +104,12 @@ export async function GET() {
       return NextResponse.json(
         {
           error: sanitizeErrorForProduction(dbError),
-          details: process.env.NODE_ENV === "development"
-            ? handleSupabaseError(supabaseError).message
-            : undefined,
+          details:
+            process.env.NODE_ENV === "development"
+              ? handleSupabaseError(supabaseError).message
+              : undefined,
         },
-        { status: 503 }
+        { status: 503 },
       );
     }
   } catch (error) {
@@ -106,7 +120,13 @@ export async function GET() {
 
     return NextResponse.json(
       { error: sanitizeErrorForProduction(error) },
-      { status: error instanceof Error && error.message.includes("Admin access required") ? 403 : 500 }
+      {
+        status:
+          error instanceof Error &&
+          error.message.includes("Admin access required")
+            ? 403
+            : 500,
+      },
     );
   }
 }

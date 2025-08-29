@@ -22,14 +22,14 @@ export class AppError extends Error {
 }
 
 export class ValidationError extends AppError {
-  constructor(message: string, details?: unknown) {
+  constructor(message: string, _details?: unknown) {
     super(message, 400, "VALIDATION_ERROR");
     this.name = "ValidationError";
   }
 }
 
 export class RateLimitError extends AppError {
-  constructor(retryAfter: number) {
+  constructor(_retryAfter: number) {
     super(
       "Too many requests. Please try again later.",
       429,
@@ -47,7 +47,7 @@ export class PaymentError extends AppError {
 }
 
 export class DatabaseConnectionError extends AppError {
-  constructor(originalError?: unknown) {
+  constructor(_originalError?: unknown) {
     super(
       "Database connection failed. Please try again later.",
       503,
@@ -106,7 +106,7 @@ export function createApiError(
 
 export function sanitizeErrorForProduction(error: unknown): string {
   // Never expose sensitive information in production
-  const safeMessages = [
+  const _safeMessages = [
     "Invalid request data",
     "Resource not found",
     "Authentication required",

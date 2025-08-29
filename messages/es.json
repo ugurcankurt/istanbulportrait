@@ -6,7 +6,7 @@
     "contact": "Contacto"
   },
   "hero": {
-    "title": "Fotógrafo de Estambul",
+    "title": "Fotógrafo de Estambul | Servicios Profesionales de Fotografía en Estambul",
     "subtitle": "Sesiones profesionales de retratos y lifestyle en el corazón de Estambul",
     "description": "Captura tus recuerdos con vistas impresionantes desde azoteas, monumentos históricos y la belleza única de Estambul. Fotógrafo profesional especializado en retratos, parejas y fotografía de lifestyle.",
     "cta": "Reserva tu Sesión",
@@ -174,7 +174,7 @@
     },
     "success": {
       "title": "¡Reserva Confirmada!",
-      "message": "Gracias por reservar con Istanbul Portrait. La confirmación de tu reserva ha sido enviada a tu correo electrónico.",
+      "message": "Gracias por reservar con Istanbul Photographer. La confirmación de tu reserva ha sido enviada a tu correo electrónico.",
       "booking_id": "ID de Reserva",
       "payment_successful": "¡Pago exitoso! Correo de confirmación enviado."
     },
@@ -263,7 +263,7 @@
     }
   },
   "about_highlights": {
-    "title": "¿Por qué elegir Istanbul Portrait?",
+    "title": "¿Por qué elegir Istanbul Photographer?",
     "professional": {
       "title": "Excelencia Profesional",
       "description": "Entrenado en técnicas avanzadas de fotografía con años de experiencia en fotografía de retratos."
@@ -397,8 +397,16 @@
     "payment_processing_failed": "El procesamiento del pago falló. Por favor, inténtalo más tarde.",
     "unknown_error": "Error desconocido"
   },
+  "breadcrumb": {
+    "home": "Inicio",
+    "about": "Acerca",
+    "packages": "Paquetes de Fotografía",
+    "contact": "Contacto",
+    "checkout": "Pagar",
+    "privacy": "Política de Privacidad"
+  },
   "structured_data": {
-    "website_name": "Istanbul Portrait",
+    "website_name": "Istanbul Photographer",
     "service_type": "Servicios de Fotografía",
     "address_locality": "Estambul",
     "address_country": "TR",
@@ -448,5 +456,13 @@
       "essential_only": "Solo Esenciales",
       "decline_all": "Rechazar Todo"
     }
+  },
+  "notfound": {
+    "title": "Página No Encontrada",
+    "subtitle": "¡Oops! Parece que esta sesión de fotos se ha perdido",
+    "description": "La página que buscas no existe. Quizás te gustaría explorar nuestros paquetes de fotografía o volver al inicio para descubrir la belleza de la fotografía de Estambul.",
+    "homeButton": "Volver al Inicio",
+    "packagesButton": "Ver Paquetes",
+    "goBack": "Volver Atrás"
   }
 }

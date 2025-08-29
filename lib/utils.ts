@@ -35,7 +35,7 @@ export function formatCurrency(amount: number, locale: string = "en"): string {
 
     // Convert to Arabic numerals if locale is Arabic
     return localizeNumerals(formatted, locale);
-  } catch (error) {
+  } catch (_error) {
     // Fallback to manual formatting
     const fallback = `${symbol}${amount}`;
     return localizeNumerals(fallback, locale);
@@ -110,7 +110,7 @@ export function formatDate(date: Date, locale: string = "en"): string {
       month: "long",
       day: "numeric",
     }).format(date);
-  } catch (error) {
+  } catch (_error) {
     return date.toLocaleDateString();
   }
 }

@@ -1,5 +1,5 @@
-import { create } from 'zustand';
-import { devtools } from 'zustand/middleware';
+import { create } from "zustand";
+import { devtools } from "zustand/middleware";
 
 export interface Payment {
   id: string;
@@ -37,7 +37,7 @@ interface BookingsFilters {
   search: string;
   statusFilter: string;
   sortBy: string;
-  sortOrder: 'asc' | 'desc';
+  sortOrder: "asc" | "desc";
 }
 
 interface BookingsState {
@@ -51,8 +51,13 @@ interface BookingsState {
   filters: BookingsFilters;
 
   // Actions
-  fetchBookings: (params?: Partial<BookingsFilters & { page?: number }>) => Promise<void>;
-  updateBooking: (id: string, updates: { status: string; notes?: string }) => Promise<void>;
+  fetchBookings: (
+    params?: Partial<BookingsFilters & { page?: number }>,
+  ) => Promise<void>;
+  updateBooking: (
+    id: string,
+    updates: { status: string; notes?: string },
+  ) => Promise<void>;
   setFilters: (filters: Partial<BookingsFilters>) => void;
   setPage: (page: number) => void;
   clearError: () => void;
@@ -60,10 +65,10 @@ interface BookingsState {
 }
 
 const initialFilters: BookingsFilters = {
-  search: '',
-  statusFilter: 'all',
-  sortBy: 'created_at',
-  sortOrder: 'desc',
+  search: "",
+  statusFilter: "all",
+  sortBy: "created_at",
+  sortOrder: "desc",
 };
 
 const initialPagination: Pagination = {
@@ -99,15 +104,19 @@ export const useBookingsStore = create<BookingsState>()(
             sortOrder: filters.sortOrder,
           });
 
-          if (filters.search) queryParams.set('search', filters.search);
-          if (filters.statusFilter !== 'all') queryParams.set('status', filters.statusFilter);
-
+          if (filters.search) queryParams.set("search", filters.search);
+          if (filters.statusFilter !== "all")
+            queryParams.set("status", filters.statusFilter);
 
           const response = await fetch(`/api/admin/bookings?${queryParams}`);
 
           if (!response.ok) {
             const errorText = await response.text();
-            console.error('Bookings Store: API error:', response.status, errorText);
+            console.error(
+              "Bookings Store: API error:",
+              response.status,
+              errorText,
+            );
             throw new Error(`API Error ${response.status}: ${errorText}`);
           }
 
@@ -117,21 +126,23 @@ export const useBookingsStore = create<BookingsState>()(
           try {
             data = JSON.parse(rawData);
           } catch (parseError) {
-            console.error('Bookings Store: JSON parse error:', parseError);
-            throw new Error('Invalid JSON response from server');
+            console.error("Bookings Store: JSON parse error:", parseError);
+            throw new Error("Invalid JSON response from server");
           }
 
           // Validate response structure
-          if (!data || typeof data !== 'object') {
-            console.error('Bookings Store: Invalid response structure:', data);
-            throw new Error('Invalid response structure');
+          if (!data || typeof data !== "object") {
+            console.error("Bookings Store: Invalid response structure:", data);
+            throw new Error("Invalid response structure");
           }
 
-          const bookingsData = Array.isArray(data.bookings) ? data.bookings : [];
-          const paginationData = data.pagination && typeof data.pagination === 'object' 
-            ? { ...initialPagination, ...data.pagination }
-            : { ...initialPagination, page };
-
+          const bookingsData = Array.isArray(data.bookings)
+            ? data.bookings
+            : [];
+          const paginationData =
+            data.pagination && typeof data.pagination === "object"
+              ? { ...initialPagination, ...data.pagination }
+              : { ...initialPagination, page };
 
           set({
             bookings: bookingsData,
@@ -141,8 +152,9 @@ export const useBookingsStore = create<BookingsState>()(
             error: null,
           });
         } catch (error) {
-          console.error('Bookings Store: Fetch error:', error);
-          const errorMessage = error instanceof Error ? error.message : 'Failed to fetch bookings';
+          console.error("Bookings Store: Fetch error:", error);
+          const errorMessage =
+            error instanceof Error ? error.message : "Failed to fetch bookings";
 
           set({
             bookings: [],
@@ -154,12 +166,14 @@ export const useBookingsStore = create<BookingsState>()(
       },
 
       // Update booking status and notes
-      updateBooking: async (id: string, updates: { status: string; notes?: string }) => {
-
+      updateBooking: async (
+        id: string,
+        updates: { status: string; notes?: string },
+      ) => {
         try {
-          const response = await fetch('/api/admin/bookings', {
-            method: 'PATCH',
-            headers: { 'Content-Type': 'application/json' },
+          const response = await fetch("/api/admin/bookings", {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
               bookingId: id,
               ...updates,
@@ -168,17 +182,22 @@ export const useBookingsStore = create<BookingsState>()(
 
           if (!response.ok) {
             const errorText = await response.text();
-            console.error('Bookings Store: Update error:', response.status, errorText);
+            console.error(
+              "Bookings Store: Update error:",
+              response.status,
+              errorText,
+            );
             throw new Error(`Failed to update booking: ${response.status}`);
           }
 
-          const data = await response.json();
+          const _data = await response.json();
 
           // Refresh bookings list to reflect changes
           await get().fetchBookings();
         } catch (error) {
-          console.error('Bookings Store: Update error:', error);
-          const errorMessage = error instanceof Error ? error.message : 'Failed to update booking';
+          console.error("Bookings Store: Update error:", error);
+          const errorMessage =
+            error instanceof Error ? error.message : "Failed to update booking";
           set({ error: errorMessage });
           throw error;
         }
@@ -190,9 +209,9 @@ export const useBookingsStore = create<BookingsState>()(
         const updatedFilters = { ...currentState.filters, ...newFilters };
 
         // Reset to page 1 when filters change
-        set({ 
+        set({
           filters: updatedFilters,
-          pagination: { ...currentState.pagination, page: 1 }
+          pagination: { ...currentState.pagination, page: 1 },
         });
 
         // Auto-fetch with new filters
@@ -204,7 +223,7 @@ export const useBookingsStore = create<BookingsState>()(
         const currentState = get();
 
         set({
-          pagination: { ...currentState.pagination, page }
+          pagination: { ...currentState.pagination, page },
         });
 
         // Auto-fetch with new page
@@ -228,7 +247,7 @@ export const useBookingsStore = create<BookingsState>()(
       },
     }),
     {
-      name: 'bookings-store',
-    }
-  )
+      name: "bookings-store",
+    },
+  ),
 );

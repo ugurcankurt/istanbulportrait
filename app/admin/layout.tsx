@@ -55,28 +55,28 @@ const navigation = [
 ];
 
 export default function AdminLayout({ children }: AdminLayoutProps) {
-  const { 
-    user, 
-    isAuthenticated, 
-    isAdminUser, 
-    loading, 
-    error, 
-    checkAuth, 
-    signOut, 
-    clearError 
+  const {
+    user,
+    isAuthenticated,
+    isAdminUser,
+    loading,
+    error,
+    checkAuth,
+    signOut,
+    clearError,
   } = useAuthStore();
   const router = useRouter();
   const pathname = usePathname();
 
   useEffect(() => {
     // Skip auth check for login page
-    if (pathname === '/admin/login') {
+    if (pathname === "/admin/login") {
       return;
     }
 
     // If we have an error or user is not authenticated/admin, redirect to login
     if (!loading && (!isAuthenticated || !isAdminUser)) {
-      router.push('/admin/login');
+      router.push("/admin/login");
       return;
     }
 
@@ -84,19 +84,27 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
     if (!user && !loading) {
       checkAuth();
     }
-  }, [pathname, user, isAuthenticated, isAdminUser, loading, checkAuth, router]);
+  }, [
+    pathname,
+    user,
+    isAuthenticated,
+    isAdminUser,
+    loading,
+    checkAuth,
+    router,
+  ]);
 
   const handleLogout = async () => {
     try {
       await signOut();
-      router.push('/admin/login');
-    } catch (error) {
+      router.push("/admin/login");
+    } catch (_error) {
       // Silent error handling for production
     }
   };
 
   // Skip layout for login page
-  if (pathname === '/admin/login') {
+  if (pathname === "/admin/login") {
     return <>{children}</>;
   }
 
@@ -117,7 +125,12 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <p className="text-red-600 mb-4">{error}</p>
-          <Button onClick={() => { clearError(); router.push('/admin/login'); }}>
+          <Button
+            onClick={() => {
+              clearError();
+              router.push("/admin/login");
+            }}
+          >
             Go to Login
           </Button>
         </div>
@@ -134,12 +147,15 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
       <div className="flex h-screen w-full">
         <Sidebar variant="inset" collapsible="offcanvas">
           <SidebarHeader className="border-b">
-            <Link href="/admin/dashboard" className="flex items-center space-x-2 p-2">
+            <Link
+              href="/admin/dashboard"
+              className="flex items-center space-x-2 p-2"
+            >
               <Camera className="w-8 h-8 text-blue-600" />
-              <span className="font-bold text-xl">Istanbul Portrait</span>
+              <span className="font-bold text-xl">Istanbul Photographer</span>
             </Link>
           </SidebarHeader>
-          
+
           <SidebarContent>
             <SidebarMenu>
               {navigation.map((item) => {
@@ -161,14 +177,16 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
               })}
             </SidebarMenu>
           </SidebarContent>
-          
+
           <SidebarFooter className="border-t">
             <div className="p-2 space-y-2">
               <div className="text-sm">
                 <p className="font-medium text-sidebar-foreground truncate">
                   {user.email?.split("@")[0]}
                 </p>
-                <p className="text-sidebar-foreground/70 text-xs truncate">{user.email}</p>
+                <p className="text-sidebar-foreground/70 text-xs truncate">
+                  {user.email}
+                </p>
               </div>
               <Button
                 variant="outline"

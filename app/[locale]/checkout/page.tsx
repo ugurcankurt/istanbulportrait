@@ -1,5 +1,6 @@
 import { getTranslations } from "next-intl/server";
 import { Suspense } from "react";
+import { BreadcrumbNav } from "@/components/breadcrumb-nav";
 import { CheckoutForm } from "@/components/checkout-form";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -13,7 +14,7 @@ export async function generateMetadata({
   const t = await getTranslations({ locale, namespace: "checkout" });
 
   return {
-    title: `${t("title")} | Istanbul Portrait`,
+    title: `${t("title")} | Istanbul Photographer`,
     description: t("description"),
   };
 }
@@ -47,6 +48,7 @@ function CheckoutSkeleton() {
 export default function CheckoutPage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-muted/20">
+      <BreadcrumbNav />
       <Suspense fallback={<CheckoutSkeleton />}>
         <CheckoutForm />
       </Suspense>

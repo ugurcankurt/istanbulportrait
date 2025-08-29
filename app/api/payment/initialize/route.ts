@@ -105,7 +105,7 @@ export async function POST(request: NextRequest) {
 
       booking = bookingData;
     } catch (supabaseError: unknown) {
-      const dbError = new DatabaseConnectionError();
+      const _dbError = new DatabaseConnectionError();
       logError(handleSupabaseError(supabaseError), {
         ip,
         endpoint: "payment",

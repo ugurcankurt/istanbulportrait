@@ -171,7 +171,7 @@ export type Database = {
         Row: {
           id: string;
           name: any; // JSONB with multilingual names
-          description: any; // JSONB with multilingual descriptions  
+          description: any; // JSONB with multilingual descriptions
           price: number;
           duration: number; // integer in minutes
           features: any; // JSONB array

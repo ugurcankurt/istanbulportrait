@@ -6,7 +6,9 @@ export const supabaseAuth = createClientSupabaseClient();
 
 // Helper to check if we're on client-side and have storage available
 function isClientSide(): boolean {
-  return typeof window !== 'undefined' && typeof window.localStorage !== 'undefined';
+  return (
+    typeof window !== "undefined" && typeof window.localStorage !== "undefined"
+  );
 }
 
 export interface AdminUser {
@@ -62,7 +64,10 @@ export async function getCurrentUser(): Promise<User | null> {
 
     if (error) {
       // Handle AuthSessionMissingError gracefully - this is normal on initial load
-      if (error.message === "Auth session missing!" || error.message?.includes("session_not_found")) {
+      if (
+        error.message === "Auth session missing!" ||
+        error.message?.includes("session_not_found")
+      ) {
         return null;
       }
       console.error("Client: Get user error:", error);
@@ -72,7 +77,10 @@ export async function getCurrentUser(): Promise<User | null> {
     return user;
   } catch (error: any) {
     // Handle AuthSessionMissingError gracefully - this is normal on initial load
-    if (error?.message === "Auth session missing!" || error?.message?.includes("session_not_found")) {
+    if (
+      error?.message === "Auth session missing!" ||
+      error?.message?.includes("session_not_found")
+    ) {
       return null;
     }
     console.error("Client: Get current user error:", error);
@@ -95,7 +103,10 @@ export async function getSession() {
 
     if (error) {
       // Handle AuthSessionMissingError gracefully - this is normal on initial load
-      if (error.message === "Auth session missing!" || error.message?.includes("session_not_found")) {
+      if (
+        error.message === "Auth session missing!" ||
+        error.message?.includes("session_not_found")
+      ) {
         return null;
       }
       console.error("Client: Get session error:", error);
@@ -105,7 +116,10 @@ export async function getSession() {
     return session;
   } catch (error: any) {
     // Handle AuthSessionMissingError gracefully - this is normal on initial load
-    if (error?.message === "Auth session missing!" || error?.message?.includes("session_not_found")) {
+    if (
+      error?.message === "Auth session missing!" ||
+      error?.message?.includes("session_not_found")
+    ) {
       return null;
     }
     console.error("Client: Get session error:", error);
@@ -115,19 +129,19 @@ export async function getSession() {
 
 export function onAuthStateChange(callback: (user: User | null) => void) {
   // Only use auth state change on client-side
-  if (typeof window !== 'undefined') {
+  if (typeof window !== "undefined") {
     return supabaseAuth.auth.onAuthStateChange((_event, session) => {
       callback(session?.user || null);
     });
   }
-  
+
   // Return empty subscription for server-side
   return {
     data: {
       subscription: {
-        unsubscribe: () => {}
-      }
-    }
+        unsubscribe: () => {},
+      },
+    },
   };
 }
 
