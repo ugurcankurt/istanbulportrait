@@ -187,7 +187,6 @@ export function StructuredData({ type, data }: StructuredDataProps) {
             "https://facebook.com/istanbulportrait",
             "https://www.linkedin.com/in/istanbulphotographer",
             "https://www.pinterest.com/istanbulphotographer",
-            "https://twitter.com/istanbulphoto",
           ],
           awards: [
             "Top-Rated Photography Service Istanbul 2024",
