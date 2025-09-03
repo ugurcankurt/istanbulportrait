@@ -145,10 +145,6 @@ export default async function LocaleLayout({
         <Toaster />
         <MultilingualCookieConsent />
         <WhatsAppButton phoneNumber="+905367093724" />
-        <StructuredData type="website" />
-        <StructuredData type="organization" />
-        <StructuredData type="localbusiness" />
-        <StructuredData type="carousel" />
       </NextIntlClientProvider>
     </ThemeProvider>
   );
