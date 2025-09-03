@@ -30,7 +30,7 @@ export function StructuredData({ type, data }: StructuredDataProps) {
         return {
           "@context": "https://schema.org",
           "@type": "WebSite",
-          name: "Istanbul Photographer",
+          name: "Istanbul Photographer - Professional Photography Services",
           url: baseUrl,
           description: t("seo.home.description"),
           potentialAction: [
@@ -201,7 +201,7 @@ export function StructuredData({ type, data }: StructuredDataProps) {
           name: "Professional Photography Services in Istanbul",
           provider: {
             "@type": "ProfessionalService",
-            name: "Istanbul Photographer",
+            name: "Istanbul Photographer - Professional Photography Services",
             priceRange: "€150-€450",
             url: baseUrl,
           },
@@ -258,7 +258,7 @@ export function StructuredData({ type, data }: StructuredDataProps) {
         return {
           "@context": "https://schema.org",
           "@type": "Person",
-          name: "Istanbul Photographer",
+          name: "Istanbul Photographer - Professional Photography Services",
           jobTitle: "Professional Photographer",
           description:
             "Professional portrait photographer specializing in Istanbul photography sessions",

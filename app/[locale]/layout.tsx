@@ -57,7 +57,24 @@ export async function generateMetadata({
         es: `${baseUrl}/es`,
       },
     },
-    
+    openGraph: {
+      title: t("title"),
+      description: t("description"),
+      images: [
+        {
+          url: `${baseUrl}/og-image.jpg`,
+          width: 1200,
+          height: 630,
+          alt: `${t("title")} - Professional Photography Services in Istanbul`,
+          type: "image/jpeg",
+        },
+      ],
+      locale: locale,
+      type: "website",
+      url: `${baseUrl}/${locale}`,
+      siteName: "Istanbul Photographer",
+      countryName: "Turkey",
+    },
     twitter: {
       card: "summary_large_image",
       title: t("title"),
