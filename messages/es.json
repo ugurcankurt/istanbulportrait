@@ -462,6 +462,67 @@
       "decline_all": "Rechazar Todo"
     }
   },
+  "privacy": {
+    "title": "Política De Privacidad",
+    "subtitle": "Cómo recopilamos, usamos y protegemos su información personal",
+    "seo": {
+      "title": "Política De Privacidad | Fotógrafo de Estambul",
+      "description": "Descubra cómo Istanbul Photographer recopila, utiliza y protege su información personal. Política de privacidad conforme al RGPD."
+    },
+    "information_collection": {
+      "title": "Información Que Recopilamos",
+      "description": "Recopilamos la información que usted nos proporciona directamente cuando utiliza nuestros servicios de fotografía:",
+      "items": {
+        "personal": "Información personal (nombre, correo electrónico, número de teléfono)",
+        "contact": "Preferencias de contacto e historial de comunicaciones",
+        "booking": "Detalles de la reserva y requisitos de la sesión",
+        "payment": "Información de pago (procesada de forma segura a través de Iyzico)"
+      }
+    },
+    "cookies": {
+      "title": "Cookies y Seguimiento",
+      "description": "Utilizamos diferentes tipos de cookies para mejorar su experiencia:",
+      "essential": {
+        "title": "Cookies Esenciales",
+        "description": "Necesario para la funcionalidad básica del sitio y no se puede desactivar."
+      },
+      "analytics": {
+        "title": "Cookies De Análisis",
+        "description": "Ayúdenos a comprender cómo los visitantes interactúan con nuestro sitio web mediante Google Analytics."
+      },
+      "marketing": {
+        "title": "Cookies De Marketing",
+        "description": "Se utiliza para ofrecer anuncios relevantes y realizar un seguimiento de la eficacia de la campaña."
+      }
+    },
+    "data_use": {
+      "title": "Cómo Usamos Sus Datos",
+      "items": {
+        "booking": "Procesa y gestiona tus reservas de fotografía",
+        "communication": "Comunicarnos con usted acerca de nuestros servicios",
+        "improvement": "Mejorar nuestro sitio web y la calidad del servicio.",
+        "marketing": "Enviar materiales promocionales (con su consentimiento)",
+        "legal": "Cumplir con las obligaciones legales y resolver disputas"
+      }
+    },
+    "your_rights": {
+      "title": "Sus Derechos (RGPD)",
+      "items": {
+        "access": "Derecho a acceder a sus datos personales",
+        "rectification": "Derecho a corregir datos inexactos",
+        "erasure": "Derecho a solicitar la supresión de sus datos",
+        "portability": "Derecho a la portabilidad de datos",
+        "objection": "Derecho a oponerse al tratamiento de datos"
+      }
+    },
+    "contact": {
+      "title": "Contáctame",
+      "description": "Si tiene preguntas sobre esta política de privacidad o sus datos personales:",
+      "email_label": "Correo electrónico:",
+      "updated_label": "Última actualización:",
+      "updated_date": "Enero de 2025"
+    }
+  },
   "notfound": {
     "title": "Página No Encontrada",
     "subtitle": "¡Oops! Parece que esta sesión de fotos se ha perdido",
