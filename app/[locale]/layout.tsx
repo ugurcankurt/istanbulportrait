@@ -29,7 +29,7 @@ export async function generateMetadata({
     authors: [
       { name: "Istanbul Photographer Professional Photographer", url: baseUrl },
     ],
-    publisher: "Istanbul Photographer",
+    publisher: "istanbulportrait.com",
     category: "Photography Services",
     robots: {
       index: true,

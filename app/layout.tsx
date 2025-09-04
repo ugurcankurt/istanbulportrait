@@ -17,7 +17,7 @@ const geistMono = Geist_Mono({
 
 export const metadata = {
   title: "Istanbul Photographer",
-  description: "Professional Photography Services in Istanbul",
+  description: "Professional Photography Services in Istanbul-Türkiye",
 };
 
 // Helper function to detect locale from pathname or headers
