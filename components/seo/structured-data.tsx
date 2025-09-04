@@ -623,14 +623,16 @@ export function StructuredData({ type, data }: StructuredDataProps) {
           "@type": "ImageObject",
           url: data.url ? `${baseUrl}${data.url}` : undefined,
           caption:
-            data.caption || "Istanbul Photographer Professional Photography",
+            data.caption || "Istanbul Photographer | istanbulportrait.com",
           creator: {
             "@type": "Person",
-            name: "Istanbul Photographer",
+            name: "Uğur CANKURT",
             url: baseUrl,
           },
+          copyrightNotice: "istanbulportrait.com",
           creditText: "Istanbul Photographer",
-          license: `${baseUrl}/license`,
+          acquireLicensePage: `${baseUrl}`,
+          license: `${baseUrl}/privacy`,
           contentLocation: {
             "@type": "Place",
             name: "Istanbul, Turkey",
@@ -638,7 +640,7 @@ export function StructuredData({ type, data }: StructuredDataProps) {
           keywords: data.keywords || [
             "istanbul photographer",
             "istanbul photoshoot",
-            "professional photography",
+            "istanbul rooftop photoshoot",
           ],
         };
 
@@ -768,7 +770,7 @@ export function StructuredData({ type, data }: StructuredDataProps) {
               },
               creator: {
                 "@type": "Person",
-                name: "Istanbul Photographer",
+                name: "Uğur CANKURT",
                 url: baseUrl,
               },
               locationCreated: {
