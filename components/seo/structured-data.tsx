@@ -259,7 +259,7 @@ export function StructuredData({ type, data }: StructuredDataProps) {
         return {
           "@context": "https://schema.org",
           "@type": "Person",
-          name: "Istanbul Photographer - Professional Photography Services",
+          name: "Uğur CANKURT (Lucky)",
           jobTitle: "Professional Photographer",
           description:
             "Professional portrait photographer specializing in Istanbul photography sessions",
@@ -327,17 +327,17 @@ export function StructuredData({ type, data }: StructuredDataProps) {
               "Saturday",
               "Sunday",
             ],
-            opens: "09:00",
+            opens: "06:00",
             closes: "20:00",
           },
-          serviceType: "Photography Services",
+          serviceType: "Photography",
           areaServed: {
             "@type": "City",
             name: "Istanbul",
             addressCountry: "TR",
           },
           paymentAccepted: "Cash, Credit Card",
-          currenciesAccepted: "EUR, USD, TRY",
+          currenciesAccepted: "EUR, USD, GBP, TRY",
           priceRange: "€150-€450",
           aggregateRating: {
             "@type": "AggregateRating",
@@ -438,170 +438,6 @@ export function StructuredData({ type, data }: StructuredDataProps) {
               datePublished: "2025-01-08",
             },
           ],
-        };
-
-      case "article":
-        if (!data) return {};
-        return {
-          "@context": "https://schema.org",
-          "@type": "Article",
-          headline: data.title,
-          description: data.description,
-          image: data.image
-            ? [`${baseUrl}${data.image}`]
-            : [`${baseUrl}/og-image.jpg`],
-          datePublished: data.publishedTime || data.datePublished,
-          dateModified:
-            data.modifiedTime ||
-            data.dateModified ||
-            data.publishedTime ||
-            data.datePublished,
-          author: {
-            "@type": "Person",
-            name: data.author || "Istanbul Photographer Team",
-            url: baseUrl,
-          },
-          publisher: {
-            "@type": "Organization",
-            name: "Istanbul Photographer",
-            logo: {
-              "@type": "ImageObject",
-              url: `${baseUrl}/istanbulportrait_dark_logo.png`,
-            },
-          },
-          mainEntityOfPage: {
-            "@type": "WebPage",
-            "@id": data.url || baseUrl,
-          },
-          keywords:
-            data.keywords || "istanbul photography, professional photographer",
-          wordCount: data.wordCount || 1500,
-          articleSection: data.category || "Photography",
-          inLanguage: locale,
-          about: {
-            "@type": "Thing",
-            name: "Istanbul Photography",
-            description: "Professional photography services in Istanbul",
-          },
-        };
-
-      case "howto":
-        if (!data) return {};
-        return {
-          "@context": "https://schema.org",
-          "@type": "HowTo",
-          name: data.title,
-          description: data.description,
-          image: data.image
-            ? [`${baseUrl}${data.image}`]
-            : [`${baseUrl}/og-image.jpg`],
-          datePublished: data.publishedTime || data.datePublished,
-          dateModified: data.modifiedTime || data.dateModified,
-          author: {
-            "@type": "Person",
-            name: data.author || "Professional Istanbul Photographer",
-            url: baseUrl,
-          },
-          publisher: {
-            "@type": "Organization",
-            name: "Istanbul Photographer",
-            logo: {
-              "@type": "ImageObject",
-              url: `${baseUrl}/istanbulportrait_dark_logo.png`,
-            },
-          },
-          mainEntityOfPage: {
-            "@type": "WebPage",
-            "@id": data.url || baseUrl,
-          },
-          keywords: data.keywords || "photography tips, istanbul photoshoot",
-          estimatedCost: {
-            "@type": "MonetaryAmount",
-            currency: "EUR",
-            value: data.estimatedCost || "150-450",
-          },
-          totalTime: data.totalTime || "PT2H",
-          step: data.steps
-            ? data.steps.map((step: any, index: number) => ({
-                "@type": "HowToStep",
-                position: index + 1,
-                name: step.name,
-                text: step.text,
-                image: step.image ? `${baseUrl}${step.image}` : undefined,
-              }))
-            : [
-                {
-                  "@type": "HowToStep",
-                  position: 1,
-                  name: "Plan Your Session",
-                  text: "Choose the perfect location and time for your Istanbul photoshoot",
-                },
-                {
-                  "@type": "HowToStep",
-                  position: 2,
-                  name: "Prepare for the Shoot",
-                  text: "Select outfits and plan poses that complement your chosen location",
-                },
-                {
-                  "@type": "HowToStep",
-                  position: 3,
-                  name: "Execute the Session",
-                  text: "Work with your photographer to capture stunning images",
-                },
-              ],
-          tool: data.tools || [
-            {
-              "@type": "HowToTool",
-              name: "Professional Camera Equipment",
-            },
-            {
-              "@type": "HowToTool",
-              name: "Professional Lighting Setup",
-            },
-          ],
-          supply: data.supplies || [
-            {
-              "@type": "HowToSupply",
-              name: "Photography Props",
-            },
-            {
-              "@type": "HowToSupply",
-              name: "Backup Outfits",
-            },
-          ],
-        };
-
-      case "locations":
-        if (!data || !data.locations) return {};
-        return {
-          "@context": "https://schema.org",
-          "@type": "ItemList",
-          name: data.title || "Best Photography Locations in Istanbul",
-          description:
-            data.description ||
-            "Premium photography locations in Istanbul for professional photoshoots",
-          numberOfItems: data.locations.length,
-          itemListElement: data.locations.map(
-            (location: any, index: number) => ({
-              "@type": "Place",
-              position: index + 1,
-              name: location.name,
-              description: location.description,
-              address: {
-                "@type": "PostalAddress",
-                addressLocality: "Istanbul",
-                addressCountry: "TR",
-              },
-              geo: location.coordinates
-                ? {
-                    "@type": "GeoCoordinates",
-                    latitude: location.coordinates.lat,
-                    longitude: location.coordinates.lng,
-                  }
-                : undefined,
-              url: `${baseUrl}/locations/${location.slug}`,
-            }),
-          ),
         };
 
       case "breadcrumblist":
