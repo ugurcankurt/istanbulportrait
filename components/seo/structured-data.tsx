@@ -132,6 +132,7 @@ export function StructuredData({ type, data }: StructuredDataProps) {
             longitude: 28.9784,
           },
           serviceType: "Photography Services",
+          priceRange: "€€€",
           areaServed: {
             "@type": "City",
             name: "Istanbul",
@@ -185,8 +186,8 @@ export function StructuredData({ type, data }: StructuredDataProps) {
           sameAs: [
             "https://instagram.com/istanbulportrait",
             "https://facebook.com/istanbulportrait",
-            "https://www.linkedin.com/in/istanbulphotographer",
-            "https://www.pinterest.com/istanbulphotographer",
+            "https://www.linkedin.com/in/istanbulportrait",
+            "https://www.pinterest.com/istanbulportrait",
           ],
           awards: [
             "Top-Rated Photography Service Istanbul 2024",
