@@ -18,20 +18,20 @@ const galleryImages = [
   {
     id: 1,
     src: "/gallery/couple_photoshoot_in_istanbul.jpg",
-    alt: "Professional couple photoshoot Istanbul Bosphorus bridge sunset romantic session with city skyline",
-    category: "portrait",
+    alt: "Professional couple photoshoot Istanbul Balat romantic session with city skyline",
+    category: "couple",
   },
   {
     id: 2,
     src: "/gallery/istanbul_couple_photoshoot_1.jpg",
-    alt: "Istanbul couple photography session romantic poses historic Sultanahmet professional photographer",
+    alt: "Istanbul couple photography session romantic poses historic Galata Tower professional photographer",
     category: "couple",
   },
   {
     id: 3,
     src: "/gallery/istanbul_couple_photoshoot.jpg",
-    alt: "Istanbul rooftop couple photoshoot panoramic city view Bosphorus professional photography session",
-    category: "rooftop",
+    alt: "Istanbul ortaköy couple photoshoot panoramic city view Bosphorus professional photography session",
+    category: "couple",
   },
   {
     id: 4,
@@ -43,18 +43,18 @@ const galleryImages = [
     id: 5,
     src: "/gallery/istanbul_rooftop_photoshoot_1.jpg",
     alt: "Istanbul rooftop photoshoot city skyline panoramic view professional photographer sunset session",
-    category: "portrait",
+    category: "rooftop",
   },
   {
     id: 6,
     src: "/gallery/istanbul_rooftop_photoshoot.jpg",
     alt: "Couple rooftop photoshoot Istanbul Galata Tower view romantic session professional photographer",
-    category: "couple",
+    category: "rooftop",
   },
   {
     id: 7,
     src: "/gallery/istanbul_wedding_photographer_1.jpg",
-    alt: "Istanbul wedding photographer professional ceremony photography Hagia Sophia historic venue",
+    alt: "Istanbul wedding photographer professional ceremony photography Ortaköy historic venue",
     category: "wedding",
   },
   {
@@ -103,7 +103,7 @@ export function GallerySection() {
       <StructuredData
         type="carousel"
         data={{
-          name: "Istanbul Photography Portfolio Gallery",
+          name: "Istanbul Photographer Portfolio Gallery",
           description:
             "Professional photography collection showcasing couples, rooftops, weddings, and lifestyle sessions in Istanbul",
           items: galleryImages.map((image) => ({
