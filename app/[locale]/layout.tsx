@@ -65,7 +65,7 @@ export async function generateMetadata({
           url: `${baseUrl}/og-image.jpg`,
           width: 1200,
           height: 630,
-          alt: `${t("title")} - Professional Photography Services in Istanbul`,
+          alt: `${t("title")} | Professional Photography Services in Istanbul`,
           type: "image/jpeg",
         },
       ],
@@ -115,6 +115,7 @@ export async function generateMetadata({
       ],
     },
     manifest: "/manifest.json",
+    other: { "yandex-verification": "326ca03cbdc0e2bf",}
   };
 }
 
@@ -149,6 +150,8 @@ export default async function LocaleLayout({
         <StructuredData type="organization" />
         <StructuredData type="localbusiness" />
         <StructuredData type="carousel" />
+        <StructuredData type="event" />
+        <StructuredData type="person" />
       </NextIntlClientProvider>
     </ThemeProvider>
   );
