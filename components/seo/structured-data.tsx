@@ -123,6 +123,7 @@ export function StructuredData({ type, data }: StructuredDataProps) {
             "@type": "PostalAddress",
             streetAddress: "Alemdar, Molla Fenari, Divan Yolu Cd. No:78/A",
             addressLocality: "Istanbul",
+            addressRegion: "Istanbul",
             postalCode: "34110",
             addressCountry: "TR",
           },
@@ -494,11 +495,6 @@ export function StructuredData({ type, data }: StructuredDataProps) {
           itemOffered: {
             "@type": "Service",
             name: data.serviceName || data.name,
-            provider: {
-              "@type": "Organization",
-              name: "Istanbul Photographer",
-              url: baseUrl,
-            },
             serviceType: "Photography",
             areaServed: {
               "@type": "City",
@@ -507,8 +503,8 @@ export function StructuredData({ type, data }: StructuredDataProps) {
             },
           },
           seller: {
-            "@type": "Organization",
-            name: "Istanbul Photographer",
+            "@type": "Person",
+            name: "Uğur Cankurt",
             url: baseUrl,
           },
           validFrom: data.validFrom || new Date().toISOString().split("T")[0],
