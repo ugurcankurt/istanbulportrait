@@ -583,50 +583,66 @@ export function StructuredData({ type, data }: StructuredDataProps) {
         if (!data || !data.items) return {};
         return {
           "@context": "https://schema.org",
-          "@type": "ItemList",
+          "@type": "ImageGallery",
           name: data.name || "Istanbul Photography Gallery",
           description:
             data.description ||
             "Professional photography portfolio showcasing Istanbul's beauty",
-          numberOfItems: data.items.length,
-          itemListElement: data.items.map((item: any, index: number) => ({
-            "@type": "ListItem",
-            position: index + 1,
-            item: {
-              "@type": "Photograph",
-              "@id": `${baseUrl}${item.url}#photograph-${item.id}`,
-              name: item.name || item.alt,
-              description: item.description || item.alt,
-              url: `${baseUrl}${item.url}`,
-              image: {
-                "@type": "ImageObject",
-                url: `${baseUrl}${item.src}`,
-                caption: item.alt,
-                width: item.width || 1200,
-                height: item.height || 800,
-              },
-              creator: {
-                "@type": "Person",
-                name: "Uğur CANKURT",
-                url: baseUrl,
-              },
-              locationCreated: {
-                "@type": "Place",
-                name: item.location || "Istanbul, Turkey",
-                address: {
-                  "@type": "PostalAddress",
-                  addressLocality: "Istanbul",
-                  addressCountry: "TR",
-                },
-              },
-              keywords:
-                item.keywords || item.alt.split(" ").slice(0, 5).join(", "),
-              contentLocation: {
-                "@type": "Place",
-                name: "Istanbul, Turkey",
+          image: data.items.map((item: any) => ({
+            "@type": "ImageObject",
+            url: `${baseUrl}${item.src}`,
+            contentUrl: `${baseUrl}${item.src}`,
+            name: item.name || item.alt,
+            caption: item.alt,
+            description: item.description || item.alt,
+            width: item.width || 1200,
+            height: item.height || 800,
+            author: {
+              "@type": "Person",
+              name: "Uğur CANKURT",
+              url: baseUrl,
+            },
+            copyrightHolder: {
+              "@type": "Organization",
+              name: "Istanbul Photographer",
+              url: baseUrl,
+            },
+            copyrightNotice: "© Istanbul Photographer - istanbulportrait.com",
+            creator: {
+              "@type": "Person",
+              name: "Uğur CANKURT",
+              url: baseUrl,
+            },
+            contentLocation: {
+              "@type": "Place",
+              name: item.location || "Istanbul, Turkey",
+              address: {
+                "@type": "PostalAddress",
+                addressLocality: "Istanbul",
+                addressCountry: "TR",
               },
             },
+            keywords: Array.isArray(item.keywords) 
+              ? item.keywords.join(", ")
+              : item.alt.split(" ").slice(0, 6).join(", "),
+            encodingFormat: "image/jpeg",
+            uploadDate: new Date().toISOString().split("T")[0],
           })),
+          author: {
+            "@type": "Person",
+            name: "Uğur CANKURT",
+            url: baseUrl,
+            jobTitle: "Professional Photographer",
+          },
+          publisher: {
+            "@type": "Organization",
+            name: "Istanbul Photographer",
+            url: baseUrl,
+            logo: {
+              "@type": "ImageObject",
+              url: `${baseUrl}/istanbulportrait_dark_logo.png`,
+            },
+          },
         };
 
       default:

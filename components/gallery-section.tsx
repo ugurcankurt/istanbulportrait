@@ -111,7 +111,7 @@ export function GallerySection() {
             name: image.alt,
             alt: image.alt,
             src: image.src,
-            url: `/#gallery-image-${image.id}`,
+            url: `/gallery#image-${image.id}`,
             description: image.alt,
             category: image.category,
             keywords: image.alt.split(" ").slice(0, 5),
@@ -127,18 +127,6 @@ export function GallerySection() {
         }}
       />
 
-      {/* Individual ImageObject Schema for each image */}
-      {galleryImages.map((image) => (
-        <StructuredData
-          key={`image-${image.id}`}
-          type="imageobject"
-          data={{
-            url: image.src,
-            caption: image.alt,
-            keywords: image.alt.split(" ").slice(0, 6),
-          }}
-        />
-      ))}
       <section className="py-12 sm:py-16 lg:py-24 bg-gradient-to-b from-background to-muted/20">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           {/* Header */}
