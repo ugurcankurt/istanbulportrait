@@ -583,13 +583,28 @@ export function StructuredData({ type, data }: StructuredDataProps) {
         if (!data || !data.items) return {};
         return {
           "@context": "https://schema.org",
-          "@type": "ImageGallery",
+          "@type": "WebPage",
+          "@id": `${baseUrl}/#gallery`,
           name: data.name || "Istanbul Photography Gallery",
           description:
             data.description ||
             "Professional photography portfolio showcasing Istanbul's beauty",
+          url: `${baseUrl}/#gallery`,
+          inLanguage: locale || "en",
+          isPartOf: {
+            "@type": "WebSite",
+            "@id": `${baseUrl}/#website`,
+            name: "Istanbul Photographer",
+            url: baseUrl,
+          },
+          about: {
+            "@type": "Thing",
+            name: "Photography Portfolio",
+            description: "Professional photography services in Istanbul",
+          },
           image: data.items.map((item: any) => ({
             "@type": "ImageObject",
+            "@id": `${baseUrl}${item.src}#image`,
             url: `${baseUrl}${item.src}`,
             contentUrl: `${baseUrl}${item.src}`,
             name: item.name || item.alt,
@@ -597,6 +612,12 @@ export function StructuredData({ type, data }: StructuredDataProps) {
             description: item.description || item.alt,
             width: item.width || 1200,
             height: item.height || 800,
+            thumbnail: {
+              "@type": "ImageObject",
+              url: `${baseUrl}${item.src}`,
+              width: 400,
+              height: 300,
+            },
             author: {
               "@type": "Person",
               name: "Uğur CANKURT",
@@ -607,7 +628,6 @@ export function StructuredData({ type, data }: StructuredDataProps) {
               name: "Istanbul Photographer",
               url: baseUrl,
             },
-            copyrightNotice: "© Istanbul Photographer - istanbulportrait.com",
             creator: {
               "@type": "Person",
               name: "Uğur CANKURT",
@@ -626,8 +646,13 @@ export function StructuredData({ type, data }: StructuredDataProps) {
               ? item.keywords.join(", ")
               : item.alt.split(" ").slice(0, 6).join(", "),
             encodingFormat: "image/jpeg",
-            uploadDate: new Date().toISOString().split("T")[0],
           })),
+          primaryImageOfPage: {
+            "@type": "ImageObject",
+            url: `${baseUrl}${data.items[0]?.src || "/og-image.jpg"}`,
+            width: 1200,
+            height: 800,
+          },
           author: {
             "@type": "Person",
             name: "Uğur CANKURT",
@@ -641,8 +666,12 @@ export function StructuredData({ type, data }: StructuredDataProps) {
             logo: {
               "@type": "ImageObject",
               url: `${baseUrl}/istanbulportrait_dark_logo.png`,
+              width: 400,
+              height: 200,
             },
           },
+          datePublished: "2024-01-01",
+          dateModified: new Date().toISOString().split("T")[0],
         };
 
       default:
