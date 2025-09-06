@@ -92,6 +92,47 @@ export const trackLanguageChange = (language: string) => {
   });
 };
 
+// Facebook Pixel integration functions
+export const trackFacebookEvent = async (
+  eventType: "Lead" | "Purchase" | "ViewContent" | "InitiateCheckout",
+  customerData: {
+    email?: string;
+    phone?: string;
+    packageId: string;
+    amount: number;
+    transactionId?: string;
+  }
+) => {
+  try {
+    // Send to our Facebook Conversions API endpoint
+    const response = await fetch("/api/facebook/conversions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        event_name: eventType,
+        customer_email: customerData.email,
+        customer_phone: customerData.phone,
+        package_id: customerData.packageId,
+        amount: customerData.amount,
+        transaction_id: customerData.transactionId,
+      }),
+    });
+
+    const result = await response.json();
+
+    if (process.env.NODE_ENV === "development") {
+      console.log(`Facebook ${eventType} Event:`, result);
+    }
+
+    return result;
+  } catch (error) {
+    console.error(`Facebook ${eventType} tracking error:`, error);
+    return { success: false, error };
+  }
+};
+
 export const trackGalleryView = (imageId?: string) => {
   event("gallery_view", {
     event_category: "engagement",

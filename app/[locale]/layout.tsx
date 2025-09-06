@@ -2,6 +2,7 @@ import { NextIntlClientProvider } from "next-intl";
 import { getMessages, getTranslations } from "next-intl/server";
 import { GoogleAnalytics } from "@/components/analytics/google-analytics";
 import { MultilingualCookieConsent } from "@/components/analytics/multilingual-cookie-consent";
+import { FacebookPixel } from "@/components/analytics/facebook-pixel";
 import "../globals.css";
 import { ThemeProvider } from "next-themes";
 import { Footer } from "@/components/footer";
@@ -141,6 +142,7 @@ export default async function LocaleLayout({
           <Navigation />
           <main className="flex-1">{children}</main>
           <GoogleAnalytics />
+          <FacebookPixel />
           <Footer />
         </div>
         <Toaster />

@@ -22,7 +22,9 @@ import {
   trackPackageView,
   trackPaymentEvent,
   trackPurchase,
+  trackFacebookEvent,
 } from "@/lib/analytics";
+import { fbPixel } from "@/lib/facebook";
 import type {
   BookingFormData,
   PackageId,
@@ -94,6 +96,13 @@ export function CheckoutForm() {
     trackPackageView(packageId);
     trackAddToCart(packageId, packagePrices[packageId]);
 
+    // Track with Facebook Pixel
+    fbPixel.trackViewContent(packageId, packagePrices[packageId]);
+    trackFacebookEvent("ViewContent", {
+      packageId,
+      amount: packagePrices[packageId],
+    });
+
     setCurrentStep("details");
   };
 
@@ -104,6 +113,15 @@ export function CheckoutForm() {
     if (selectedPackage) {
       trackBookingEvent(selectedPackage, packagePrices[selectedPackage]);
       trackBeginCheckout(selectedPackage, packagePrices[selectedPackage]);
+
+      // Track Lead with Facebook (booking form submission)
+      fbPixel.trackLead(packagePrices[selectedPackage]);
+      trackFacebookEvent("Lead", {
+        email: data.customerEmail,
+        phone: data.customerPhone,
+        packageId: selectedPackage,
+        amount: packagePrices[selectedPackage],
+      });
     }
 
     setCurrentStep("payment");
@@ -163,6 +181,21 @@ export function CheckoutForm() {
           selectedPackage,
           packagePrices[selectedPackage],
         );
+
+        // Track Facebook Purchase
+        const bookingData = bookingForm.getValues();
+        fbPixel.trackPurchase(
+          selectedPackage,
+          packagePrices[selectedPackage],
+          bookingResult.booking.id
+        );
+        trackFacebookEvent("Purchase", {
+          email: bookingData.customerEmail,
+          phone: bookingData.customerPhone,
+          packageId: selectedPackage,
+          amount: packagePrices[selectedPackage],
+          transactionId: bookingResult.booking.id,
+        });
       } else {
         // Track failed payment
         trackPaymentEvent(
