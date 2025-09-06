@@ -201,7 +201,7 @@ export function StructuredData({ type, data }: StructuredDataProps) {
           "@type": "Service",
           name: "Professional Photography Services in Istanbul",
           provider: {
-            "@type": "ProfessionalService",
+            "@type": "Organization",
             name: "Istanbul Photographer - Professional Photography Services",
             priceRange: "€150-€450",
             url: baseUrl,
@@ -495,7 +495,7 @@ export function StructuredData({ type, data }: StructuredDataProps) {
             "@type": "Service",
             name: data.serviceName || data.name,
             provider: {
-              "@type": "ProfessionalService",
+              "@type": "Organization",
               name: "Istanbul Photographer",
               url: baseUrl,
             },
