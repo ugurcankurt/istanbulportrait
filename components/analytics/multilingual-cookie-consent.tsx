@@ -35,6 +35,14 @@ export function MultilingualCookieConsent() {
   };
 
   const handleDeclineAll = () => {
+    if (typeof window !== "undefined" && window.gtag) {
+      window.gtag("consent", "update", {
+        analytics_storage: "denied",
+        ad_storage: "denied",
+        ad_user_data: "denied",
+        ad_personalization: "denied",
+      });
+    }
     localStorage.setItem("cookie_consent", "declined");
     hideBanner();
   };

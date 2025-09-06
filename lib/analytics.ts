@@ -37,8 +37,8 @@ export const event = (
       value,
     });
 
-    // Debug logging in development
-    if (process.env.NODE_ENV !== "production") {
+    // Debug logging in development only
+    if (process.env.NODE_ENV === "development") {
       console.log("Analytics Event:", {
         action,
         event_category,
@@ -110,11 +110,15 @@ export const trackPurchase = (
       transaction_id: transactionId,
       value: amount,
       currency: "EUR",
+      affiliation: "Istanbul Portrait",
+      tax: 0,
+      shipping: 0,
       items: [
         {
           item_id: packageId,
           item_name: `Photography Package - ${packageId}`,
           item_category: "Photography Services",
+          item_brand: "Istanbul Portrait",
           item_variant: packageId,
           quantity: 1,
           price: amount,
@@ -124,8 +128,8 @@ export const trackPurchase = (
 
     window.gtag("event", "purchase", eventData);
 
-    // Debug logging in development
-    if (process.env.NODE_ENV !== "production") {
+    // Debug logging in development only
+    if (process.env.NODE_ENV === "development") {
       console.log("Enhanced Ecommerce - Purchase:", eventData);
     }
   }
@@ -141,6 +145,7 @@ export const trackBeginCheckout = (packageId: string, amount: number) => {
           item_id: packageId,
           item_name: `Photography Package - ${packageId}`,
           item_category: "Photography Services",
+          item_brand: "Istanbul Portrait",
           item_variant: packageId,
           quantity: 1,
           price: amount,
@@ -160,6 +165,7 @@ export const trackAddToCart = (packageId: string, amount: number) => {
           item_id: packageId,
           item_name: `Photography Package - ${packageId}`,
           item_category: "Photography Services",
+          item_brand: "Istanbul Portrait",
           item_variant: packageId,
           quantity: 1,
           price: amount,
@@ -179,6 +185,7 @@ export const trackViewItem = (packageId: string, amount: number) => {
           item_id: packageId,
           item_name: `Photography Package - ${packageId}`,
           item_category: "Photography Services",
+          item_brand: "Istanbul Portrait",
           item_variant: packageId,
           quantity: 1,
           price: amount,

@@ -36,7 +36,7 @@ export function GoogleAnalytics() {
             gtag('js', new Date());
 
             gtag('consent', 'default', {
-              'analytics_storage': 'denied',
+              'analytics_storage': 'granted',
               'ad_storage': 'denied',
               'ad_user_data': 'denied',
               'ad_personalization': 'denied',
@@ -47,7 +47,10 @@ export function GoogleAnalytics() {
 
             gtag('config', '${GA_TRACKING_ID}', {
               page_path: window.location.pathname,
-              debug_mode: ${process.env.NODE_ENV !== "production"},
+              debug_mode: false,
+              send_page_view: true,
+              anonymize_ip: true,
+              allow_google_signals: true,
               custom_map: {
                 'custom_dimension_1': 'package_type',
                 'custom_dimension_2': 'user_language'

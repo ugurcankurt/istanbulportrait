@@ -642,6 +642,10 @@ export function StructuredData({ type, data }: StructuredDataProps) {
               ? item.keywords.join(", ")
               : item.alt.split(" ").slice(0, 6).join(", "),
             encodingFormat: "image/jpeg",
+            creditText: "Istanbul Photographer",
+            copyrightNotice: "© 2025 Istanbul Photographer. All rights reserved.",
+            license: `${baseUrl}/privacy`,
+            acquireLicensePage: `${baseUrl}/contact`,
           })),
           primaryImageOfPage: {
             "@type": "ImageObject",
