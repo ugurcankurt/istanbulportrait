@@ -32,7 +32,7 @@ export function StructuredData({ type, data }: StructuredDataProps) {
           "@type": "WebSite",
           name: "Istanbul Photographer - Professional Photography Services",
           url: baseUrl,
-          description: t("seo.home.description"),
+          description: t("seo.home.description").slice(0, 155),
           potentialAction: [
             {
               "@type": "SearchAction",
