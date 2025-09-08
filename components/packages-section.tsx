@@ -98,29 +98,41 @@ export function PackagesSection() {
         />
       ))}
 
-      {/* Facebook Commerce Manager Microdata for each service */}
+      {/* Facebook Commerce Manager Microdata for each product */}
       {packages.map((pkg) => (
         <div key={`commerce-${pkg.id}`} style={{ display: 'none' }}>
-          {/* OpenGraph Service Metadata for Facebook Commerce */}
+          {/* OpenGraph Product Meta Tags */}
+          <meta property="product:retailer_item_id" content={pkg.id} />
+          <meta property="product:brand" content="Istanbul Photographer" />
+          <meta property="product:availability" content="in stock" />
+          <meta property="product:price:amount" content={pkg.price.replace(/[€$]/g, "")} />
+          <meta property="product:price:currency" content="EUR" />
+          <meta property="product:category" content="Photography Services" />
+          
+          {/* Schema.org Product Microdata */}
           <div
             itemScope
-            itemType="https://schema.org/Service"
+            itemType="https://schema.org/Product"
             itemProp="mainEntity"
           >
             <meta itemProp="name" content={pkg.name} />
             <meta itemProp="description" content={`${pkg.duration} photoshoot with ${pkg.photos} and ${pkg.locations}`} />
-            <meta itemProp="serviceType" content="Photography" />
+            <meta itemProp="brand" content="Istanbul Photographer" />
+            <meta itemProp="category" content="Photography Services" />
+            <meta itemProp="identifier" content={pkg.id} />
+            <meta itemProp="productID" content={pkg.id} />
+            <meta itemProp="sku" content={`ip-${pkg.id}-2025`} />
             <div itemProp="offers" itemScope itemType="https://schema.org/Offer">
               <meta itemProp="price" content={pkg.price.replace(/[€$]/g, "")} />
               <meta itemProp="priceCurrency" content="EUR" />
               <meta itemProp="availability" content="https://schema.org/InStock" />
-              <meta itemProp="url" content={`/packages#${pkg.id}`} />
+              <meta itemProp="url" content={`https://istanbulportrait.com/packages#${pkg.id}`} />
               <meta itemProp="seller" content="Istanbul Photographer" />
+              <meta itemProp="itemCondition" content="https://schema.org/NewCondition" />
             </div>
-            <meta itemProp="provider" content="Istanbul Photographer" />
-            <meta itemProp="areaServed" content="Istanbul" />
-            <meta itemProp="category" content="Photography Services" />
-            <meta itemProp="identifier" content={pkg.id} />
+            <meta itemProp="manufacturer" content="Istanbul Photographer" />
+            <meta itemProp="url" content={`https://istanbulportrait.com/packages#${pkg.id}`} />
+            <meta itemProp="image" content="https://istanbulportrait.com/og-image.jpg" />
           </div>
         </div>
       ))}
