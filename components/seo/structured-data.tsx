@@ -494,21 +494,50 @@ export function StructuredData({ type, data }: StructuredDataProps) {
           availability: "https://schema.org/InStock",
           itemOffered: {
             "@type": "Service",
+            "@id": `${baseUrl}/packages#${data.packageId || 'service'}`,
             name: data.serviceName || data.name,
             serviceType: "Photography",
+            category: "Photography Services",
+            provider: {
+              "@type": "Organization",
+              name: "Istanbul Photographer",
+              url: baseUrl,
+            },
             areaServed: {
               "@type": "City",
               name: "Istanbul",
               addressCountry: "TR",
             },
+            brand: {
+              "@type": "Brand",
+              name: "Istanbul Photographer",
+            },
+            identifier: data.packageId,
           },
           seller: {
-            "@type": "Person",
-            name: "Uğur Cankurt",
+            "@type": "Organization",
+            name: "Istanbul Photographer",
             url: baseUrl,
+          },
+          businessFunction: "https://schema.org/Sell",
+          eligibleRegion: {
+            "@type": "Country",
+            name: "Turkey",
           },
           validFrom: data.validFrom || new Date().toISOString().split("T")[0],
           url: data.url ? `${baseUrl}${data.url}` : `${baseUrl}/packages`,
+          additionalProperty: [
+            {
+              "@type": "PropertyValue",
+              name: "content_id",
+              value: data.packageId,
+            },
+            {
+              "@type": "PropertyValue", 
+              name: "content_type",
+              value: "service",
+            },
+          ],
         };
 
       case "event": {

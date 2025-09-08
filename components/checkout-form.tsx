@@ -96,12 +96,8 @@ export function CheckoutForm() {
     trackPackageView(packageId);
     trackAddToCart(packageId, packagePrices[packageId]);
 
-    // Track with Facebook Pixel
+    // Track with Facebook Pixel (client-side only - no customer data needed)
     fbPixel.trackViewContent(packageId, packagePrices[packageId]);
-    trackFacebookEvent("ViewContent", {
-      packageId,
-      amount: packagePrices[packageId],
-    });
 
     setCurrentStep("details");
   };
@@ -114,14 +110,31 @@ export function CheckoutForm() {
       trackBookingEvent(selectedPackage, packagePrices[selectedPackage]);
       trackBeginCheckout(selectedPackage, packagePrices[selectedPackage]);
 
-      // Track Lead with Facebook (booking form submission)
+      // Track Lead with Facebook (booking form submission with customer data)
       fbPixel.trackLead(packagePrices[selectedPackage]);
-      trackFacebookEvent("Lead", {
-        email: data.customerEmail,
-        phone: data.customerPhone,
-        packageId: selectedPackage,
-        amount: packagePrices[selectedPackage],
-      });
+      
+      // Only send to Conversions API if we have customer email or phone
+      if (data.customerEmail || data.customerPhone) {
+        trackFacebookEvent("Lead", {
+          email: data.customerEmail,
+          phone: data.customerPhone,
+          packageId: selectedPackage,
+          amount: packagePrices[selectedPackage],
+        });
+      }
+    }
+
+    // Track InitiateCheckout when moving to payment step (only if we have customer data)
+    if (selectedPackage) {
+      fbPixel.trackInitiateCheckout(selectedPackage, packagePrices[selectedPackage]);
+      if (data.customerEmail || data.customerPhone) {
+        trackFacebookEvent("InitiateCheckout", {
+          email: data.customerEmail,
+          phone: data.customerPhone,
+          packageId: selectedPackage,
+          amount: packagePrices[selectedPackage],
+        });
+      }
     }
 
     setCurrentStep("payment");

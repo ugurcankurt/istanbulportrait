@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { Check, Clock, Image as ImageIcon, MapPin } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { useEffect } from "react";
 import { StructuredData } from "@/components/seo/structured-data";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -13,6 +14,7 @@ import {
   CardHeader,
 } from "@/components/ui/card";
 import { Link } from "@/i18n/routing";
+import { fbPixel } from "@/lib/facebook";
 
 export function PackagesSection() {
   const t = useTranslations("packages");
@@ -61,6 +63,22 @@ export function PackagesSection() {
     },
   ];
 
+  // Track ViewContent events for Facebook Commerce Manager
+  useEffect(() => {
+    // Track each package as a service for Facebook Commerce
+    packages.forEach((pkg) => {
+      fbPixel.track("ViewContent", {
+        content_type: "service",
+        content_ids: [pkg.id],
+        content_name: pkg.name,
+        content_category: "Photography Services",
+        value: parseFloat(pkg.price.replace(/[€$]/g, "")),
+        currency: "EUR",
+        num_items: 1,
+      });
+    });
+  }, [packages]);
+
   return (
     <>
       {/* Offer Schema for each package */}
@@ -73,10 +91,38 @@ export function PackagesSection() {
             description: `${pkg.duration} photoshoot with ${pkg.photos} and ${pkg.locations}`,
             price: pkg.price.replace(/[€$]/g, ""),
             serviceName: `${pkg.name} Photography Package`,
+            packageId: pkg.id,
             url: `/packages#${pkg.id}`,
             validFrom: new Date().toISOString().split("T")[0],
           }}
         />
+      ))}
+
+      {/* Facebook Commerce Manager Microdata for each service */}
+      {packages.map((pkg) => (
+        <div key={`commerce-${pkg.id}`} style={{ display: 'none' }}>
+          {/* OpenGraph Service Metadata for Facebook Commerce */}
+          <div
+            itemScope
+            itemType="https://schema.org/Service"
+            itemProp="mainEntity"
+          >
+            <meta itemProp="name" content={pkg.name} />
+            <meta itemProp="description" content={`${pkg.duration} photoshoot with ${pkg.photos} and ${pkg.locations}`} />
+            <meta itemProp="serviceType" content="Photography" />
+            <div itemProp="offers" itemScope itemType="https://schema.org/Offer">
+              <meta itemProp="price" content={pkg.price.replace(/[€$]/g, "")} />
+              <meta itemProp="priceCurrency" content="EUR" />
+              <meta itemProp="availability" content="https://schema.org/InStock" />
+              <meta itemProp="url" content={`/packages#${pkg.id}`} />
+              <meta itemProp="seller" content="Istanbul Photographer" />
+            </div>
+            <meta itemProp="provider" content="Istanbul Photographer" />
+            <meta itemProp="areaServed" content="Istanbul" />
+            <meta itemProp="category" content="Photography Services" />
+            <meta itemProp="identifier" content={pkg.id} />
+          </div>
+        </div>
       ))}
       <section className="py-12 sm:py-16 lg:py-24 bg-gradient-to-b from-background to-muted/20">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">

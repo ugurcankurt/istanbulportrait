@@ -104,6 +104,12 @@ export const trackFacebookEvent = async (
   }
 ) => {
   try {
+    // Validate that we have at least one customer identifier for the Conversions API
+    if (!customerData.email && !customerData.phone) {
+      console.warn(`Facebook ${eventType} Event: No customer identifiers provided, skipping Conversions API`);
+      return { success: false, error: "No customer identifiers" };
+    }
+
     // Send to our Facebook Conversions API endpoint
     const response = await fetch("/api/facebook/conversions", {
       method: "POST",
@@ -112,11 +118,11 @@ export const trackFacebookEvent = async (
       },
       body: JSON.stringify({
         event_name: eventType,
-        customer_email: customerData.email,
-        customer_phone: customerData.phone,
+        customer_email: customerData.email || undefined,
+        customer_phone: customerData.phone || undefined,
         package_id: customerData.packageId,
         amount: customerData.amount,
-        transaction_id: customerData.transactionId,
+        transaction_id: customerData.transactionId || undefined,
       }),
     });
 
