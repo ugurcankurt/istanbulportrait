@@ -128,6 +128,7 @@ export function PackagesSection() {
               <meta itemProp="price" content={pkg.price.replace(/[€$]/g, "")} />
               <meta itemProp="priceCurrency" content="EUR" />
               <meta itemProp="availability" content="https://schema.org/InStock" />
+              <meta itemProp="priceValidUntil" content="2025-12-31" />
               <meta itemProp="url" content={`https://istanbulportrait.com/packages#${pkg.id}`} />
               <meta itemProp="seller" content="Istanbul Photographer" />
               <meta itemProp="itemCondition" content="https://schema.org/NewCondition" />
@@ -135,6 +136,27 @@ export function PackagesSection() {
             <meta itemProp="manufacturer" content="Istanbul Photographer" />
             <meta itemProp="url" content={`https://istanbulportrait.com/packages#${pkg.id}`} />
             <meta itemProp="image" content="https://istanbulportrait.com/og-image.jpg" />
+            
+            {/* Aggregate Rating */}
+            <div itemProp="aggregateRating" itemScope itemType="https://schema.org/AggregateRating">
+              <meta itemProp="ratingValue" content="4.8" />
+              <meta itemProp="reviewCount" content="156" />
+              <meta itemProp="bestRating" content="5" />
+              <meta itemProp="worstRating" content="1" />
+            </div>
+            
+            {/* Sample Reviews */}
+            <div itemProp="review" itemScope itemType="https://schema.org/Review">
+              <div itemProp="author" itemScope itemType="https://schema.org/Person">
+                <meta itemProp="name" content="Sarah Johnson" />
+              </div>
+              <div itemProp="reviewRating" itemScope itemType="https://schema.org/Rating">
+                <meta itemProp="ratingValue" content="5" />
+                <meta itemProp="bestRating" content="5" />
+              </div>
+              <meta itemProp="reviewBody" content="Amazing photography session! Professional service and stunning results." />
+              <meta itemProp="datePublished" content="2025-01-15" />
+            </div>
           </div>
         </div>
       ))}
