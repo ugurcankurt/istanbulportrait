@@ -537,6 +537,11 @@ export function StructuredData({ type, data }: StructuredDataProps) {
               name: "content_type",
               value: "service",
             },
+            {
+              "@type": "PropertyValue",
+              name: "google_product_category",
+              value: "Arts & Entertainment > Hobbies & Creative Arts > Photography",
+            },
           ],
         };
 

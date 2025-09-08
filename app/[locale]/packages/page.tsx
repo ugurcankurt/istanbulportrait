@@ -35,6 +35,7 @@ export async function generateMetadata({
       "product:brand": "Istanbul Photographer",
       "product:availability": "in stock",
       "product:price:currency": "EUR",
+      "product:google_product_category": "Arts & Entertainment > Hobbies & Creative Arts > Photography",
       "og:type": "product.group",
     },
   };
