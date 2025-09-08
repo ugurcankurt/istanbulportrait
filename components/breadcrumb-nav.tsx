@@ -136,7 +136,7 @@ export function BreadcrumbNav({ className }: BreadcrumbNavProps) {
   const breadcrumbSchemaData = {
     items: breadcrumbs.map((item) => ({
       name: item.label,
-      url: item.href ? `/${locale}${item.href}` : undefined,
+      url: item.href ? `/${locale}${item.href}` : `/${locale}${pathWithoutLocale}`,
     })),
   };
 

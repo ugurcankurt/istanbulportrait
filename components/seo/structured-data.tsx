@@ -450,7 +450,12 @@ export function StructuredData({ type, data }: StructuredDataProps) {
             "@type": "ListItem",
             position: index + 1,
             name: item.name,
-            item: item.url ? `${baseUrl}${item.url}` : undefined,
+            item: {
+              "@type": "Thing",
+              "@id": `${baseUrl}${item.url}`,
+              name: item.name,
+              url: `${baseUrl}${item.url}`,
+            },
           })),
         };
 
