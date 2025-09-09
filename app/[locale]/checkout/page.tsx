@@ -4,6 +4,7 @@ import { BreadcrumbNav } from "@/components/breadcrumb-nav";
 import { CheckoutForm } from "@/components/checkout-form";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { getLocalizedPaths } from "@/lib/localized-url";
 
 export async function generateMetadata({
   params,
@@ -14,18 +15,14 @@ export async function generateMetadata({
   const t = await getTranslations({ locale, namespace: "checkout" });
 
   const baseUrl = "https://istanbulportrait.com";
+  const paths = getLocalizedPaths("/checkout", baseUrl);
 
   return {
     title: `${t("title")} | Istanbul Photographer`,
     description: t("description"),
     alternates: {
-      canonical: `${baseUrl}/${locale}/checkout`,
-      languages: {
-        en: `${baseUrl}/en/checkout`,
-        ar: `${baseUrl}/ar/checkout`,
-        ru: `${baseUrl}/ru/checkout`,
-        es: `${baseUrl}/es/checkout`,
-      },
+      canonical: paths.canonical(locale),
+      languages: paths.languages,
     },
   };
 }

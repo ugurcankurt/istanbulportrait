@@ -2,6 +2,7 @@ import { useTranslations } from "next-intl";
 import { getTranslations } from "next-intl/server";
 import { BreadcrumbNav } from "@/components/breadcrumb-nav";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { getLocalizedPaths } from "@/lib/localized-url";
 
 export async function generateMetadata({
   params,
@@ -10,18 +11,16 @@ export async function generateMetadata({
 }) {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "privacy" });
+  
+  const baseUrl = "https://istanbulportrait.com";
+  const paths = getLocalizedPaths("/privacy", baseUrl);
 
   return {
     title: t("seo.title"),
     description: t("seo.description"),
     alternates: {
-      canonical: `https://istanbulportrait.com/${locale}/privacy`,
-      languages: {
-        en: "https://istanbulportrait.com/en/privacy",
-        ar: "https://istanbulportrait.com/ar/privacy",
-        ru: "https://istanbulportrait.com/ru/privacy",
-        es: "https://istanbulportrait.com/es/privacy",
-      },
+      canonical: paths.canonical(locale),
+      languages: paths.languages,
     },
   };
 }

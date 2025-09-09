@@ -4,6 +4,7 @@ import { GallerySection } from "@/components/gallery-section";
 import { HeroSection } from "@/components/hero-section";
 import { PackagesSection } from "@/components/packages-section";
 import { ReviewsSection } from "@/components/reviews";
+import { getLocalizedPaths } from "@/lib/localized-url";
 
 export async function generateMetadata({
   params,
@@ -14,18 +15,14 @@ export async function generateMetadata({
   const t = await getTranslations({ locale, namespace: "seo.home" });
 
   const baseUrl = "https://istanbulportrait.com";
+  const paths = getLocalizedPaths("/", baseUrl);
 
   return {
     title: t("title"),
     description: t("description"),
     alternates: {
-      canonical: `${baseUrl}/${locale}`,
-      languages: {
-        en: `${baseUrl}/en`,
-        ar: `${baseUrl}/ar`,
-        ru: `${baseUrl}/ru`,
-        es: `${baseUrl}/es`,
-      },
+      canonical: paths.canonical(locale),
+      languages: paths.languages,
     },
   };
 }

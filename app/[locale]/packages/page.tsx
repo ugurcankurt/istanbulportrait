@@ -1,6 +1,7 @@
 import { getTranslations } from "next-intl/server";
 import { BreadcrumbNav } from "@/components/breadcrumb-nav";
 import { PackagesSection } from "@/components/packages-section";
+import { getLocalizedPaths, getOpenGraphUrl } from "@/lib/localized-url";
 
 export async function generateMetadata({
   params,
@@ -11,23 +12,19 @@ export async function generateMetadata({
   const t = await getTranslations({ locale, namespace: "seo.packages" });
 
   const baseUrl = "https://istanbulportrait.com";
+  const paths = getLocalizedPaths("/packages", baseUrl);
 
   return {
     title: t("title"),
     description: t("description"),
     alternates: {
-      canonical: `${baseUrl}/${locale}/packages`,
-      languages: {
-        en: `${baseUrl}/en/packages`,
-        ar: `${baseUrl}/ar/packages`,
-        ru: `${baseUrl}/ru/packages`,
-        es: `${baseUrl}/es/packages`,
-      },
+      canonical: paths.canonical(locale),
+      languages: paths.languages,
     },
     openGraph: {
       title: t("title"),
       description: t("description"),
-      url: `https://istanbulportrait.com/${locale}/packages`,
+      url: getOpenGraphUrl("/packages", locale, baseUrl),
       siteName: "Istanbul Photographer",
       images: [
         {

@@ -1,6 +1,7 @@
 import { getTranslations } from "next-intl/server";
 import { BreadcrumbNav } from "@/components/breadcrumb-nav";
 import { ContactSection } from "@/components/contact-section";
+import { getLocalizedPaths } from "@/lib/localized-url";
 
 export async function generateMetadata({
   params,
@@ -11,18 +12,14 @@ export async function generateMetadata({
   const t = await getTranslations({ locale, namespace: "seo.contact" });
 
   const baseUrl = "https://istanbulportrait.com";
+  const paths = getLocalizedPaths("/contact", baseUrl);
 
   return {
     title: t("title"),
     description: t("description"),
     alternates: {
-      canonical: `${baseUrl}/${locale}/contact`,
-      languages: {
-        en: `${baseUrl}/en/contact`,
-        ar: `${baseUrl}/ar/contact`,
-        ru: `${baseUrl}/ru/contact`,
-        es: `${baseUrl}/es/contact`,
-      },
+      canonical: paths.canonical(locale),
+      languages: paths.languages,
     },
   };
 }
