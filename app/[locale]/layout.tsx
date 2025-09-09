@@ -151,7 +151,6 @@ export default async function LocaleLayout({
         <WhatsAppButton phoneNumber="+905367093724" />
         <StructuredData type="website" />
         <StructuredData type="organization" />
-        <StructuredData type="localbusiness" />
         <StructuredData type="person" />
         <ReviewsSchema />
       </NextIntlClientProvider>
