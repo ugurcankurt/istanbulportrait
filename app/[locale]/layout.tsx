@@ -8,6 +8,7 @@ import { ThemeProvider } from "next-themes";
 import { Footer } from "@/components/footer";
 import { Navigation } from "@/components/navigation";
 import { StructuredData } from "@/components/seo/structured-data";
+import { ReviewsSchema } from "@/components/seo/reviews-schema";
 import { Toaster } from "@/components/ui/sonner";
 import { WhatsAppButton } from "@/components/whatsapp-button";
 
@@ -152,6 +153,7 @@ export default async function LocaleLayout({
         <StructuredData type="organization" />
         <StructuredData type="localbusiness" />
         <StructuredData type="person" />
+        <ReviewsSchema />
       </NextIntlClientProvider>
     </ThemeProvider>
   );

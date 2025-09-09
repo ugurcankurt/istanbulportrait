@@ -1,4 +1,5 @@
 import { useLocale, useTranslations } from "next-intl";
+import { reviewsService } from "@/lib/reviews-service";
 
 interface StructuredDataProps {
   type:
