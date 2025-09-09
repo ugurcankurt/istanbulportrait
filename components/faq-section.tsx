@@ -107,7 +107,7 @@ export function FAQSection() {
   return (
     <>
       {generateFAQSchema()}
-      <section className="py-12 sm:py-16 lg:py-24 bg-gradient-to-b from-muted/20 to-background">
+      <section className="py-8 sm:py-12 lg:py-16 bg-gradient-to-b from-muted/20 to-background">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}

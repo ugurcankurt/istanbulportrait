@@ -1,4 +1,24 @@
-import { GoogleReview, AggregateRating, ReviewsApiResponse, ReviewsServiceConfig } from '@/types/reviews';
+import { GoogleReview, AggregateRating, ReviewsServiceConfig } from '@/types/reviews';
+
+/**
+ * Truncate review text to specified length while preserving word boundaries
+ */
+function truncateReviewText(text: string, maxLength: number = 150): string {
+  if (!text || text.length <= maxLength) return text;
+  
+  // Find last complete word before max length
+  const truncated = text.substring(0, maxLength);
+  const lastSpace = truncated.lastIndexOf(' ');
+  
+  // If no space found, just truncate at max length
+  if (lastSpace === -1) return truncated + '...';
+  
+  // Return text up to last complete word
+  const result = truncated.substring(0, lastSpace);
+  
+  // Add ellipsis if we actually truncated
+  return result + (text.length > lastSpace ? '...' : '');
+}
 
 class ReviewsService {
   private config: ReviewsServiceConfig;
@@ -38,7 +58,7 @@ class ReviewsService {
           photoUrl: review.reviewer?.profilePhotoUrl
         },
         rating: Number(review.starRating) || 5,
-        text: review.comment || '',
+        text: truncateReviewText(review.comment || '', 150),
         date: review.createTime || new Date().toISOString(),
         relativeTimeDescription: review.relativePublishTimeDescription || 'Recent'
       }));
@@ -139,7 +159,7 @@ class ReviewsService {
         id: 'fallback-1',
         author: { name: 'Istanbul Client' },
         rating: 5,
-        text: 'Professional photography service in Istanbul. Highly recommended!',
+        text: 'Professional photography service in Istanbul. Highly recommended! Amazing experience with beautiful photos and great customer service.',
         date: new Date().toISOString().split('T')[0],
         relativeTimeDescription: 'Recent review'
       }
