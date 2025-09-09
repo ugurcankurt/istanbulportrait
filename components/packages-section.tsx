@@ -137,26 +137,8 @@ export function PackagesSection() {
             <meta itemProp="url" content={`https://istanbulportrait.com/packages#${pkg.id}`} />
             <meta itemProp="image" content="https://istanbulportrait.com/og-image.jpg" />
             
-            {/* Aggregate Rating */}
-            <div itemProp="aggregateRating" itemScope itemType="https://schema.org/AggregateRating">
-              <meta itemProp="ratingValue" content="4.8" />
-              <meta itemProp="reviewCount" content="156" />
-              <meta itemProp="bestRating" content="5" />
-              <meta itemProp="worstRating" content="1" />
-            </div>
-            
-            {/* Sample Reviews */}
-            <div itemProp="review" itemScope itemType="https://schema.org/Review">
-              <div itemProp="author" itemScope itemType="https://schema.org/Person">
-                <meta itemProp="name" content="Sarah Johnson" />
-              </div>
-              <div itemProp="reviewRating" itemScope itemType="https://schema.org/Rating">
-                <meta itemProp="ratingValue" content="5" />
-                <meta itemProp="bestRating" content="5" />
-              </div>
-              <meta itemProp="reviewBody" content="Amazing photography session! Professional service and stunning results." />
-              <meta itemProp="datePublished" content="2025-01-15" />
-            </div>
+            {/* Dynamic reviews will be added here when API is integrated */}
+            {/* Removed static fake reviews to avoid SEO penalties */}
           </div>
         </div>
       ))}
@@ -168,12 +150,24 @@ export function PackagesSection() {
             transition={{ duration: 0.8 }}
             className="text-center mb-8 sm:mb-12 lg:mb-16"
           >
-            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4 sm:mb-6">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4 sm:mb-6">
               {t("title")}
-            </h2>
+            </h1>
             <p className="text-base sm:text-lg lg:text-xl text-muted-foreground max-w-3xl mx-auto px-2">
               {t("subtitle")}
             </p>
+          </motion.div>
+
+          {/* Package Options Section */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="mb-8 sm:mb-12"
+          >
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-center mb-6 sm:mb-8">
+              {t("sections.available_packages") || "Available Photography Packages"}
+            </h2>
           </motion.div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8 max-w-6xl mx-auto">
@@ -262,9 +256,9 @@ export function PackagesSection() {
             className="mt-8 sm:mt-12 lg:mt-16 text-center"
           >
             <div className="bg-muted/30 rounded-lg p-4 sm:p-6 lg:p-8 max-w-6xl mx-auto">
-              <h3 className="text-lg sm:text-xl lg:text-2xl font-bold mb-3 sm:mb-4">
+              <h2 className="text-lg sm:text-xl lg:text-2xl font-bold mb-3 sm:mb-4">
                 {t("custom.title")}
-              </h3>
+              </h2>
               <p className="text-sm sm:text-base text-muted-foreground mb-4 sm:mb-6 px-2">
                 {t("custom.description")}
               </p>

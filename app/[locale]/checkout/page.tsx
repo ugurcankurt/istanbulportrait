@@ -13,9 +13,20 @@ export async function generateMetadata({
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "checkout" });
 
+  const baseUrl = "https://istanbulportrait.com";
+
   return {
     title: `${t("title")} | Istanbul Photographer`,
     description: t("description"),
+    alternates: {
+      canonical: `${baseUrl}/${locale}/checkout`,
+      languages: {
+        en: `${baseUrl}/en/checkout`,
+        ar: `${baseUrl}/ar/checkout`,
+        ru: `${baseUrl}/ru/checkout`,
+        es: `${baseUrl}/es/checkout`,
+      },
+    },
   };
 }
 

@@ -17,10 +17,10 @@ export async function generateMetadata({
     alternates: {
       canonical: `https://istanbulportrait.com/${locale}/privacy`,
       languages: {
-        en: "/en/privacy",
-        ar: "/ar/privacy",
-        ru: "/ru/privacy",
-        es: "/es/privacy",
+        en: "https://istanbulportrait.com/en/privacy",
+        ar: "https://istanbulportrait.com/ar/privacy",
+        ru: "https://istanbulportrait.com/ru/privacy",
+        es: "https://istanbulportrait.com/es/privacy",
       },
     },
   };

@@ -76,7 +76,7 @@ export function Navigation() {
                   ? "/istanbulportrait_white_logo.png"
                   : "/istanbulportrait_dark_logo.png"
               }
-              alt="Istanbul Photographer Logo"
+              alt="Professional photographer in Istanbul - Istanbul photoshoot services"
               width={120}
               height={32}
               className="h-6 sm:h-8 w-auto"
@@ -182,7 +182,7 @@ export function Navigation() {
                         ? "/istanbulportrait_white_logo.png"
                         : "/istanbulportrait_dark_logo.png"
                     }
-                    alt="Istanbul Photographer Logo"
+                    alt="Best Istanbul photographer - Professional photography services"
                     width={90}
                     height={24}
                     className="h-6 w-auto"

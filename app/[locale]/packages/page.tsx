@@ -10,9 +10,20 @@ export async function generateMetadata({
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "seo.packages" });
 
+  const baseUrl = "https://istanbulportrait.com";
+
   return {
     title: t("title"),
     description: t("description"),
+    alternates: {
+      canonical: `${baseUrl}/${locale}/packages`,
+      languages: {
+        en: `${baseUrl}/en/packages`,
+        ar: `${baseUrl}/ar/packages`,
+        ru: `${baseUrl}/ru/packages`,
+        es: `${baseUrl}/es/packages`,
+      },
+    },
     openGraph: {
       title: t("title"),
       description: t("description"),

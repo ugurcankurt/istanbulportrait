@@ -11,9 +11,9 @@
     "message": "Hello! I'm interested in booking a photography session in Istanbul. Can you help me with more information?"
   },
   "hero": {
-    "title": "Istanbul Photographer | Professional Istanbul Photoshoot Services",
-    "subtitle": "Professional portrait and lifestyle photography sessions in the heart of Istanbul",
-    "description": "Capture your memories with stunning rooftop views, historic landmarks, and the unique beauty of Istanbul. Professional photographer specializing in portraits, couples, and lifestyle photography.",
+    "title": "Professional Istanbul Photographer | Istanbul Photoshoot Services",
+    "subtitle": "Expert photographer in Istanbul for professional portrait and lifestyle photography sessions",
+    "description": "Capture your memories with stunning rooftop views, historic landmarks, and the unique beauty of Istanbul. Leading photographer in Istanbul specializing in portraits, couples, and lifestyle photography. Experience the best professional photography services with Istanbul's top photographer.",
     "cta": "Book Your Session",
     "learnMore": "Learn More"
   },
@@ -27,8 +27,8 @@
       "description": "Hagia Sophia, Blue Mosque, and iconic landmarks"
     },
     "professional": {
-      "title": "Professional Quality",
-      "description": "High-end equipment and expert post-processing"
+      "title": "Professional Photography Quality",
+      "description": "Best photographer in Istanbul with high-end equipment and expert post-processing"
     }
   },
   "gallery": {
@@ -103,12 +103,15 @@
       "title": "Need a Custom Package?",
       "description": "Every photoshoot is unique. Let's discuss your specific needs and create a custom package that perfectly fits your vision and budget.",
       "button": "Get Custom Quote"
+    },
+    "sections": {
+      "available_packages": "Available Photography Packages"
     }
   },
   "about": {
     "title": "About Me",
-    "subtitle": "Professional photographer capturing Istanbul's beauty",
-    "description": "With over 8 years of experience in portrait photography, I specialize in capturing the unique connection between people and Istanbul's magnificent backdrop. My passion lies in creating timeless memories that reflect both the beauty of my subjects and the historic charm of this incredible city.",
+    "subtitle": "Top photographer in Istanbul capturing the city's beauty",
+    "description": "With over 8 years of experience as a professional photographer in Istanbul, I specialize in capturing the unique connection between people and Istanbul's magnificent backdrop. As the leading Istanbul photographer, my passion lies in creating timeless memories that reflect both the beauty of my subjects and the historic charm of this incredible city.",
     "experience": "8+ Years Experience",
     "sessions": "500+ Sessions Completed",
     "clients": "Happy Clients Worldwide"
@@ -190,7 +193,7 @@
     }
   },
   "footer": {
-    "description": "Professional portrait photography in Istanbul. Capturing your special moments with the city's most iconic backdrops.",
+    "description": "Leading photographer in Istanbul for professional portrait photography. Capturing your special moments with the city's most iconic backdrops.",
     "quickLinks": "Quick Links",
     "services": "Services",
     "followUs": "Follow Us",
@@ -521,6 +524,14 @@
       "updated_label": "Last updated:",
       "updated_date": "January 2025"
     }
+  },
+  "reviews": {
+    "title": "What Our Clients Say",
+    "subtitle": "Real reviews from our photography sessions in Istanbul",
+    "total_reviews": "reviews",
+    "view_all": "View all reviews on Google",
+    "loading": "Loading reviews...",
+    "error": "Unable to load reviews at this time"
   },
   "notfound": {
     "title": "Page Not Found",

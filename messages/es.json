@@ -11,9 +11,9 @@
     "message": "¡Hola! Estoy interesado en reservar una sesión de fotografía en Estambul. ¿Pueden ayudarme con más información?"
   },
   "hero": {
-    "title": "Fotógrafo de Estambul | Servicios Profesionales de Fotografía en Estambul",
-    "subtitle": "Sesiones profesionales de retratos y lifestyle en el corazón de Estambul",
-    "description": "Captura tus recuerdos con vistas impresionantes desde azoteas, monumentos históricos y la belleza única de Estambul. Fotógrafo profesional especializado en retratos, parejas y fotografía de lifestyle.",
+    "title": "Fotógrafo Profesional de Estambul | Servicios de Fotografía en Estambul",
+    "subtitle": "Experto fotógrafo en Estambul para sesiones profesionales de retratos y lifestyle",
+    "description": "Captura tus recuerdos con vistas impresionantes desde azoteas, monumentos históricos y la belleza única de Estambul. El mejor fotógrafo en Estambul especializado en retratos, parejas y fotografía de lifestyle. Experimenta los mejores servicios de fotografía profesional con el mejor fotógrafo de Estambul.",
     "cta": "Reserva tu Sesión",
     "learnMore": "Saber Más"
   },
@@ -27,8 +27,8 @@
       "description": "Santa Sofía, Mezquita Azul y monumentos icónicos"
     },
     "professional": {
-      "title": "Calidad Profesional",
-      "description": "Equipos de alta gama y postprocesado experto"
+      "title": "Calidad Profesional de Fotografía",
+      "description": "El mejor fotógrafo en Estambul con equipos de alta gama y postprocesado experto"
     }
   },
   "gallery": {
@@ -103,6 +103,9 @@
       "title": "¿Necesitas un Paquete Personalizado?",
       "description": "Cada sesión fotográfica es única. Hablemos sobre tus necesidades específicas y creemos un paquete personalizado que se ajuste perfectamente a tu visión y presupuesto.",
       "button": "Obtener Cotización Personalizada"
+    },
+    "sections": {
+      "available_packages": "Paquetes de Fotografía Disponibles"
     }
   },
   "about": {
@@ -522,6 +525,14 @@
       "updated_label": "Última actualización:",
       "updated_date": "Enero de 2025"
     }
+  },
+  "reviews": {
+    "title": "Lo Que Dicen Nuestros Clientes",
+    "subtitle": "Reseñas reales de nuestras sesiones de fotografía en Estambul",
+    "total_reviews": "reseñas",
+    "view_all": "Ver todas las reseñas en Google",
+    "loading": "Cargando reseñas...",
+    "error": "No se pueden cargar las reseñas en este momento"
   },
   "notfound": {
     "title": "Página No Encontrada",

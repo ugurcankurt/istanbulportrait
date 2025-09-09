@@ -101,10 +101,13 @@ export function StructuredData({ type, data }: StructuredDataProps) {
             image: `${baseUrl}/istanbulportprat_ugur_cankurt.jpg`,
             knowsAbout: [
               "Portrait Photography",
-              "Wedding Photography",
+              "Wedding Photography", 
               "Couple Photography",
               "Rooftop Photography",
               "Istanbul Photography",
+              "Photographer in Istanbul",
+              "Professional Photography Istanbul",
+              "Istanbul Photoshoot Services",
             ],
             hasCredential: [
               {
@@ -263,13 +266,16 @@ export function StructuredData({ type, data }: StructuredDataProps) {
           name: "Uğur CANKURT (Lucky)",
           jobTitle: "Professional Photographer",
           description:
-            "Professional portrait photographer specializing in Istanbul photography sessions",
+            "Professional photographer in Istanbul specializing in portrait and photoshoot sessions",
           knowsAbout: [
             "Portrait Photography",
-            "Couple Photography",
+            "Couple Photography", 
             "Rooftop Photography",
             "Istanbul Photography",
             "Lifestyle Photography",
+            "Professional Photographer in Istanbul",
+            "Istanbul Photoshoot Expert",
+            "Best Istanbul Photographer",
           ],
           workLocation: {
             "@type": "City",
@@ -340,105 +346,6 @@ export function StructuredData({ type, data }: StructuredDataProps) {
           paymentAccepted: "Cash, Credit Card",
           currenciesAccepted: "EUR, USD, GBP, TRY",
           priceRange: "€150-€450",
-          aggregateRating: {
-            "@type": "AggregateRating",
-            ratingValue: "4.8",
-            reviewCount: "156",
-            bestRating: "5",
-            worstRating: "1",
-          },
-          review: [
-            {
-              "@type": "Review",
-              author: {
-                "@type": "Person",
-                name: "Balal Ahmed",
-              },
-              reviewRating: {
-                "@type": "Rating",
-                ratingValue: "5",
-                bestRating: "5",
-              },
-              reviewBody:
-                "An Incredible Rooftop Photography Experience with Uğur! Me and my wife had the absolute pleasure of doing a rooftop photography session with Uğur on the 9th of July, and we couldn't be happier with the entire experience! From start to finish, Uğur was incredibly professional, friendly, and welcoming, making us feel completely at ease throughout the shoot.The rooftop setting was stunning, and Uğur eye for capturing beautiful, natural moments truly impressed us. He guided us perfectly, making the whole experience fun and relaxed while still delivering high-quality, artistic photos that we will treasure forever. On top of the fantastic service, the pricing was very reasonable for the level of quality and care we received. It genuinely felt like a premium experience at a great value. We would highly recommend Uğur to anyone looking for a memorable and beautifully executed photo session. Amazing service all around thank you, Uğur, for making our day so special!",
-              datePublished: "2025-07-15",
-            },
-            {
-              "@type": "Review",
-              author: {
-                "@type": "Person",
-                name: "Xhuljana Cukaj",
-              },
-              reviewRating: {
-                "@type": "Rating",
-                ratingValue: "4.5",
-                bestRating: "5",
-              },
-              reviewBody:
-                "Amazing photographer! Captured Istanbul beautifully and made the whole experience fun and relaxed. The photos turned out stunning—highly recommended!",
-              datePublished: "2025-04-02",
-            },
-            {
-              "@type": "Review",
-              author: {
-                "@type": "Person",
-                name: "Dima Kaaki",
-              },
-              reviewRating: {
-                "@type": "Rating",
-                ratingValue: "4.5",
-                bestRating: "5",
-              },
-              reviewBody:
-                "Perfect spot!! I've had the most beautiful photo session ever!! Very recommended. If you are visiting istanbul this would be an unforgettable memory",
-              datePublished: "2025-08-01",
-            },
-            {
-              "@type": "Review",
-              author: {
-                "@type": "Person",
-                name: "Sarah Johnson",
-              },
-              reviewRating: {
-                "@type": "Rating",
-                ratingValue: "5",
-                bestRating: "5",
-              },
-              reviewBody:
-                "Absolutely incredible experience with Istanbul Photographer! The rooftop photoshoot exceeded all my expectations. Professional, creative, and the photos are breathtaking. Highly recommend for anyone visiting Istanbul!",
-              datePublished: "2025-01-15",
-            },
-            {
-              "@type": "Review",
-              author: {
-                "@type": "Person",
-                name: "Marco Rossi",
-              },
-              reviewRating: {
-                "@type": "Rating",
-                ratingValue: "5",
-                bestRating: "5",
-              },
-              reviewBody:
-                "Best photography experience in Istanbul! The photographer knows all the perfect spots and angles. We got amazing shots at historic locations. Professional service, fair prices. Worth every penny!",
-              datePublished: "2025-01-10",
-            },
-            {
-              "@type": "Review",
-              author: {
-                "@type": "Person",
-                name: "Elena Petrov",
-              },
-              reviewRating: {
-                "@type": "Rating",
-                ratingValue: "4.5",
-                bestRating: "5",
-              },
-              reviewBody:
-                "Great professional photographer in Istanbul. Captured beautiful moments during our couple session. Good communication, timely delivery, and excellent photo quality. Recommended!",
-              datePublished: "2025-01-08",
-            },
-          ],
         };
 
       case "breadcrumblist":
@@ -483,7 +390,10 @@ export function StructuredData({ type, data }: StructuredDataProps) {
           keywords: data.keywords || [
             "istanbul photographer",
             "istanbul photoshoot",
+            "photographer in istanbul",
             "istanbul rooftop photoshoot",
+            "professional photographer istanbul",
+            "best istanbul photographer",
           ],
         };
 

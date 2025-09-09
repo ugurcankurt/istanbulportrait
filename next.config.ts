@@ -18,6 +18,10 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "istanbulportrait.com",
       },
+      {
+        protocol: "https",
+        hostname: "lh3.googleusercontent.com",
+      },
     ],
     formats: ["image/avif", "image/webp"],
     minimumCacheTTL: 86400, // 24 hours for better SEO caching

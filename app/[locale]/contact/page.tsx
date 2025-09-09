@@ -10,9 +10,20 @@ export async function generateMetadata({
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "seo.contact" });
 
+  const baseUrl = "https://istanbulportrait.com";
+
   return {
     title: t("title"),
     description: t("description"),
+    alternates: {
+      canonical: `${baseUrl}/${locale}/contact`,
+      languages: {
+        en: `${baseUrl}/en/contact`,
+        ar: `${baseUrl}/ar/contact`,
+        ru: `${baseUrl}/ru/contact`,
+        es: `${baseUrl}/es/contact`,
+      },
+    },
   };
 }
 

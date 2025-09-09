@@ -18,7 +18,7 @@ export function HeroSection() {
       <div className="absolute inset-0 z-0">
         <Image
           src="/istanbul_photographer.jpg"
-          alt="Istanbul photoshoot"
+          alt="Professional Istanbul photographer - Istanbul photoshoot services"
           fill
           className="object-cover"
           priority

@@ -151,7 +151,6 @@ export default async function LocaleLayout({
         <StructuredData type="website" />
         <StructuredData type="organization" />
         <StructuredData type="localbusiness" />
-
         <StructuredData type="person" />
       </NextIntlClientProvider>
     </ThemeProvider>
