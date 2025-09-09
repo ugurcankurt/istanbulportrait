@@ -1,5 +1,4 @@
 import { useLocale, useTranslations } from "next-intl";
-import { reviewsService } from "@/lib/reviews-service";
 
 interface StructuredDataProps {
   type:
@@ -55,6 +54,7 @@ export function StructuredData({ type, data }: StructuredDataProps) {
         };
 
       case "organization":
+        // Static organization schema
         return {
           "@context": "https://schema.org",
           "@type": "ProfessionalService",
@@ -66,8 +66,7 @@ export function StructuredData({ type, data }: StructuredDataProps) {
               url: `${baseUrl}/og-image.jpg`,
               width: 1200,
               height: 630,
-              caption:
-                "Istanbul Photographer Professional Photography Services",
+              caption: "Istanbul Photographer Professional Photography Services",
             },
             {
               "@type": "ImageObject",
@@ -133,8 +132,8 @@ export function StructuredData({ type, data }: StructuredDataProps) {
           },
           geo: {
             "@type": "GeoCoordinates",
-            latitude: 41.0082,
-            longitude: 28.9784,
+            latitude: 41.0084588,
+            longitude: 28.9719997,
           },
           serviceType: "Photography Services",
           priceRange: "€€€",
@@ -146,16 +145,10 @@ export function StructuredData({ type, data }: StructuredDataProps) {
           openingHoursSpecification: {
             "@type": "OpeningHoursSpecification",
             dayOfWeek: [
-              "Monday",
-              "Tuesday",
-              "Wednesday",
-              "Thursday",
-              "Friday",
-              "Saturday",
-              "Sunday",
+              "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"
             ],
-            opens: "09:00",
-            closes: "20:00",
+            opens: "00:00",
+            closes: "23:59",
           },
           hasOfferCatalog: {
             "@type": "OfferCatalog",
@@ -174,8 +167,7 @@ export function StructuredData({ type, data }: StructuredDataProps) {
                 itemOffered: {
                   "@type": "Service",
                   name: "Rooftop Photoshoot",
-                  description:
-                    "Rooftop photography sessions with Istanbul views",
+                  description: "Rooftop photography sessions with Istanbul views",
                 },
               },
               {
@@ -321,8 +313,8 @@ export function StructuredData({ type, data }: StructuredDataProps) {
           },
           geo: {
             "@type": "GeoCoordinates",
-            latitude: 41.0082,
-            longitude: 28.9784,
+            latitude: 41.0084588,
+            longitude: 28.9719997,
           },
           openingHoursSpecification: {
             "@type": "OpeningHoursSpecification",
@@ -335,8 +327,8 @@ export function StructuredData({ type, data }: StructuredDataProps) {
               "Saturday",
               "Sunday",
             ],
-            opens: "06:00",
-            closes: "20:00",
+            opens: "00:00",
+            closes: "23:59",
           },
           serviceType: "Photography",
           areaServed: {
@@ -495,8 +487,8 @@ export function StructuredData({ type, data }: StructuredDataProps) {
             },
             geo: {
               "@type": "GeoCoordinates",
-              latitude: 41.0082,
-              longitude: 28.9784,
+              latitude: 41.0084588,
+              longitude: 28.9719997,
             },
           },
           organizer: {
@@ -630,6 +622,10 @@ export function StructuredData({ type, data }: StructuredDataProps) {
   };
 
   const structuredData = getStructuredData();
+
+  if (!structuredData) {
+    return null;
+  }
 
   return (
     <script

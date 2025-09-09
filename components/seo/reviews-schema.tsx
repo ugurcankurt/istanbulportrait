@@ -6,7 +6,7 @@ interface ReviewsSchemaProps {
 
 export async function ReviewsSchema({ baseUrl = "https://istanbulportrait.com" }: ReviewsSchemaProps) {
   try {
-    // Fetch dynamic reviews and ratings
+    // Use Featurable API for reviews
     const [schemaReviews, aggregateRating] = await Promise.all([
       reviewsService.getSchemaReviews(),
       reviewsService.getSchemaAggregateRating()
@@ -17,6 +17,7 @@ export async function ReviewsSchema({ baseUrl = "https://istanbulportrait.com" }
       return null;
     }
 
+    // Static LocalBusiness schema with Featurable reviews
     const localBusinessWithReviews = {
       "@context": "https://schema.org",
       "@type": "LocalBusiness", 
@@ -35,8 +36,8 @@ export async function ReviewsSchema({ baseUrl = "https://istanbulportrait.com" }
       },
       geo: {
         "@type": "GeoCoordinates",
-        latitude: 41.0082,
-        longitude: 28.9784,
+        latitude: 41.0084588,
+        longitude: 28.9719997,
       },
       openingHoursSpecification: {
         "@type": "OpeningHoursSpecification",
@@ -49,8 +50,8 @@ export async function ReviewsSchema({ baseUrl = "https://istanbulportrait.com" }
           "Saturday",
           "Sunday",
         ],
-        opens: "06:00",
-        closes: "20:00",
+        opens: "00:00",
+        closes: "23:59",
       },
       serviceType: ["Photography", "Portrait Photography", "Wedding Photography", "Event Photography"],
       priceRange: "€150-€450",
@@ -71,7 +72,7 @@ export async function ReviewsSchema({ baseUrl = "https://istanbulportrait.com" }
           caption: "Istanbul Photographer Professional Photography Services",
         },
       ],
-      // Dynamic Google My Business reviews
+      // Reviews from Featurable API
       review: schemaReviews,
       aggregateRating: aggregateRating,
     };
