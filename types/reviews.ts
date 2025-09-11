@@ -33,5 +33,5 @@ export interface ReviewsServiceConfig {
   apiKey: string;
   widgetId: string;
   maxReviews?: number;
-  sortBy?: 'newest' | 'highest' | 'lowest' | 'relevant';
+  sortBy?: "newest" | "highest" | "lowest" | "relevant";
 }

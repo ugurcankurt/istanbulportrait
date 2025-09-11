@@ -18,10 +18,10 @@ export function MultilingualCookieConsent() {
         ad_personalization: "granted",
       });
     }
-    
+
     // Update Facebook Pixel consent
     FacebookPixelConsentUpdate(true);
-    
+
     localStorage.setItem("cookie_consent", "accepted_all");
     hideBanner();
   };
@@ -35,10 +35,10 @@ export function MultilingualCookieConsent() {
         ad_personalization: "denied",
       });
     }
-    
+
     // Facebook Pixel - grant basic analytics but deny ads
     FacebookPixelConsentUpdate(true);
-    
+
     localStorage.setItem("cookie_consent", "essential_only");
     hideBanner();
   };
@@ -52,10 +52,10 @@ export function MultilingualCookieConsent() {
         ad_personalization: "denied",
       });
     }
-    
+
     // Revoke Facebook Pixel consent
     FacebookPixelConsentUpdate(false);
-    
+
     localStorage.setItem("cookie_consent", "declined");
     hideBanner();
   };

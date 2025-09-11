@@ -36,19 +36,21 @@ export function BreadcrumbNav({ className }: BreadcrumbNavProps) {
   const createPathToKeyMapping = () => {
     const pathToKey: Record<string, string> = {};
     const pathnames = routing.pathnames as Record<string, any>;
-    
+
     Object.entries(pathnames).forEach(([key, value]) => {
       if (typeof value === "object" && value[locale as keyof typeof value]) {
         const localizedPath = value[locale as keyof typeof value];
         // Handle both /path and path formats
-        const cleanPath = localizedPath.startsWith('/') ? localizedPath.slice(1) : localizedPath;
-        pathToKey[cleanPath] = key.startsWith('/') ? key.slice(1) : key;
+        const cleanPath = localizedPath.startsWith("/")
+          ? localizedPath.slice(1)
+          : localizedPath;
+        pathToKey[cleanPath] = key.startsWith("/") ? key.slice(1) : key;
       } else if (typeof value === "string") {
-        const cleanPath = value.startsWith('/') ? value.slice(1) : value;
-        pathToKey[cleanPath] = key.startsWith('/') ? key.slice(1) : key;
+        const cleanPath = value.startsWith("/") ? value.slice(1) : value;
+        pathToKey[cleanPath] = key.startsWith("/") ? key.slice(1) : key;
       }
     });
-    
+
     return pathToKey;
   };
 
@@ -56,7 +58,14 @@ export function BreadcrumbNav({ className }: BreadcrumbNavProps) {
 
   // Helper function to get known translations
   const getKnownTranslation = (key: string): string | null => {
-    const knownKeys = ['about', 'packages', 'contact', 'checkout', 'privacy', 'locations'];
+    const knownKeys = [
+      "about",
+      "packages",
+      "contact",
+      "checkout",
+      "privacy",
+      "locations",
+    ];
     if (knownKeys.includes(key)) {
       try {
         return t(key as any);
@@ -105,7 +114,7 @@ export function BreadcrumbNav({ className }: BreadcrumbNavProps) {
 
         // First try to find translation key from path mapping
         const translationKey = pathToKeyMapping[segment];
-        
+
         if (translationKey) {
           // Use the mapped translation key
           try {
@@ -136,7 +145,9 @@ export function BreadcrumbNav({ className }: BreadcrumbNavProps) {
   const breadcrumbSchemaData = {
     items: breadcrumbs.map((item) => ({
       name: item.label,
-      url: item.href ? `/${locale}${item.href}` : `/${locale}${pathWithoutLocale}`,
+      url: item.href
+        ? `/${locale}${item.href}`
+        : `/${locale}${pathWithoutLocale}`,
     })),
   };
 
@@ -147,7 +158,7 @@ export function BreadcrumbNav({ className }: BreadcrumbNavProps) {
 
   return (
     <>
-      <StructuredData type="breadcrumblist" data={breadcrumbSchemaData} />
+      <StructuredData type="breadcrumb" data={breadcrumbSchemaData} />
       <div className={`bg-muted/30 border-b ${className}`}>
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <Breadcrumb className="py-3 sm:py-4">

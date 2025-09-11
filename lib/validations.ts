@@ -30,33 +30,35 @@ export const paymentSchema = z.object({
 });
 
 // Dynamic schemas with translations
-export const createBookingSchema = (t: any) => z.object({
-  packageId: z.string().min(1, t('package_required')),
-  customerName: z.string().min(2, t('name_min')),
-  customerEmail: z.string().email({ message: t('email_invalid') }),
-  customerPhone: z.string().min(1, t('phone_required')),
-  bookingDate: z.string().min(1, t('date_required')),
-  bookingTime: z.string().min(1, t('time_required')),
-  notes: z.string().optional(),
-  totalAmount: z.number().positive(t('amount_positive')),
-});
+export const createBookingSchema = (t: any) =>
+  z.object({
+    packageId: z.string().min(1, t("package_required")),
+    customerName: z.string().min(2, t("name_min")),
+    customerEmail: z.string().email({ message: t("email_invalid") }),
+    customerPhone: z.string().min(1, t("phone_required")),
+    bookingDate: z.string().min(1, t("date_required")),
+    bookingTime: z.string().min(1, t("time_required")),
+    notes: z.string().optional(),
+    totalAmount: z.number().positive(t("amount_positive")),
+  });
 
-export const createPaymentSchema = (t: any) => z.object({
-  cardHolderName: z.string().min(2, t('cardholder_required')),
-  cardNumber: z
-    .string()
-    .min(1, t('card_number_required'))
-    .refine(
-      (val) => {
-        const digitsOnly = val.replace(/\D/g, "");
-        return digitsOnly.length >= 13 && digitsOnly.length <= 19;
-      },
-      { message: t('card_number_invalid') },
-    ),
-  expireMonth: z.string().min(2, t('month_required')).max(2),
-  expireYear: z.string().min(2, t('year_required')).max(2),
-  cvc: z.string().min(3, t('cvc_required')).max(4),
-});
+export const createPaymentSchema = (t: any) =>
+  z.object({
+    cardHolderName: z.string().min(2, t("cardholder_required")),
+    cardNumber: z
+      .string()
+      .min(1, t("card_number_required"))
+      .refine(
+        (val) => {
+          const digitsOnly = val.replace(/\D/g, "");
+          return digitsOnly.length >= 13 && digitsOnly.length <= 19;
+        },
+        { message: t("card_number_invalid") },
+      ),
+    expireMonth: z.string().min(2, t("month_required")).max(2),
+    expireYear: z.string().min(2, t("year_required")).max(2),
+    cvc: z.string().min(3, t("cvc_required")).max(4),
+  });
 
 export type BookingFormData = z.infer<typeof bookingSchema>;
 export type PaymentFormData = z.infer<typeof paymentSchema>;
@@ -83,7 +85,7 @@ export interface PricingData {
   basePrice: number;
   taxInfo: TaxInfo;
   totalPrice: number;
-  currency: 'EUR';
+  currency: "EUR";
 }
 
 // Extended booking data with pricing breakdown

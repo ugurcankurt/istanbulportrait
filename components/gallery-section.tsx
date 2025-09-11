@@ -99,30 +99,17 @@ export function GallerySection() {
 
   return (
     <>
-      {/* Carousel ItemList Schema for gallery collection */}
+      {/* ImageGallery Schema for gallery collection */}
       <StructuredData
-        type="carousel"
+        type="gallery"
         data={{
           name: "Istanbul Photographer Portfolio Gallery",
           description:
             "Professional photography collection showcasing couples, rooftops, weddings, and lifestyle sessions in Istanbul",
-          items: galleryImages.map((image) => ({
-            id: image.id,
-            name: image.alt,
-            alt: image.alt,
-            src: image.src,
-            url: `/gallery#image-${image.id}`,
+          images: galleryImages.map((image) => ({
+            url: image.src,
+            caption: image.alt,
             description: image.alt,
-            category: image.category,
-            keywords: image.alt.split(" ").slice(0, 5),
-            location:
-              image.category === "rooftop"
-                ? "Istanbul Rooftop Locations"
-                : image.category === "wedding"
-                  ? "Istanbul Historic Wedding Venues"
-                  : "Istanbul Photography Locations",
-            width: 1200,
-            height: 800,
           })),
         }}
       />

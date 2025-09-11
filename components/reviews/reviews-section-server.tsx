@@ -1,5 +1,5 @@
-import { reviewsService } from '@/lib/reviews-service';
-import { ReviewsClient } from './reviews-client';
+import { reviewsService } from "@/lib/reviews-service";
+import { ReviewsClient } from "./reviews-client";
 
 export const revalidate = 3600; // Revalidate every hour
 
@@ -15,10 +15,12 @@ export async function ReviewsSection() {
     }
 
     // Pass data to client component for UI rendering
-    return <ReviewsClient reviews={reviews} aggregateRating={aggregateRating} />;
+    return (
+      <ReviewsClient reviews={reviews} aggregateRating={aggregateRating} />
+    );
   } catch (error) {
-    console.error('Error loading reviews on server:', error);
-    
+    console.error("Error loading reviews on server:", error);
+
     // Return null instead of error message to avoid showing incomplete sections
     return null;
   }

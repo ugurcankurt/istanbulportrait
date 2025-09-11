@@ -21,7 +21,10 @@ import {
 // Validation schema for Facebook conversion events
 const facebookConversionSchema = z.object({
   event_name: z.enum(["Lead", "Purchase", "ViewContent", "InitiateCheckout"]),
-  customer_email: z.string().email({ message: "Invalid email format" }).optional(),
+  customer_email: z
+    .string()
+    .email({ message: "Invalid email format" })
+    .optional(),
   customer_phone: z.string().optional(),
   package_id: z.string().min(1),
   amount: z.number().positive(),
@@ -44,9 +47,9 @@ export async function POST(request: NextRequest) {
     });
 
     if (!rateLimitResult.success) {
-      logError(new Error("Rate limit exceeded"), { 
-        ip, 
-        endpoint: "facebook-conversions" 
+      logError(new Error("Rate limit exceeded"), {
+        ip,
+        endpoint: "facebook-conversions",
       });
       return createRateLimitError(rateLimitResult.resetTime);
     }
@@ -57,7 +60,9 @@ export async function POST(request: NextRequest) {
     // Validate the request
     const validationResult = facebookConversionSchema.safeParse(body);
     if (!validationResult.success) {
-      const validationError = new ValidationError("Invalid Facebook conversion data");
+      const validationError = new ValidationError(
+        "Invalid Facebook conversion data",
+      );
       logError(validationError, {
         ip,
         endpoint: "facebook-conversions",
@@ -72,7 +77,7 @@ export async function POST(request: NextRequest) {
               ? validationResult.error.issues
               : undefined,
         },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -90,17 +95,17 @@ export async function POST(request: NextRequest) {
     // Log conversion attempt
     if (process.env.NODE_ENV === "development") {
       console.log(
-        `Facebook Conversion from ${ip} - Event: ${event_name}, Package: ${package_id}, Amount: €${amount}`
+        `Facebook Conversion from ${ip} - Event: ${event_name}, Package: ${package_id}, Amount: €${amount}`,
       );
     }
 
     // Prepare user data with hashed customer information
     const user_data: FacebookConversionEvent["user_data"] = {};
-    
+
     if (customer_email) {
       user_data.em = [hashCustomerData(customer_email)];
     }
-    
+
     if (customer_phone) {
       user_data.ph = [hashPhoneNumber(customer_phone)];
     }
@@ -156,17 +161,17 @@ export async function POST(request: NextRequest) {
               ? "Check server logs for Facebook API response"
               : undefined,
         },
-        { status: 500 }
+        { status: 500 },
       );
     }
 
     // Success response
     const processingTime = Date.now() - startTime;
-    
+
     // Log success
     if (process.env.NODE_ENV === "development") {
       console.log(
-        `Facebook Conversion Success - Event: ${event_name}, Processing time: ${processingTime}ms`
+        `Facebook Conversion Success - Event: ${event_name}, Processing time: ${processingTime}ms`,
       );
     }
 
@@ -176,10 +181,9 @@ export async function POST(request: NextRequest) {
       lead_id: user_data.lead_id,
       processing_time_ms: processingTime,
     });
-
   } catch (error) {
     const processingTime = Date.now() - startTime;
-    
+
     logError(error instanceof Error ? error : new Error("Unknown error"), {
       endpoint: "facebook-conversions",
       processing_time_ms: processingTime,
@@ -189,10 +193,10 @@ export async function POST(request: NextRequest) {
       {
         success: false,
         error: sanitizeErrorForProduction(
-          error instanceof Error ? error : new Error("Internal server error")
+          error instanceof Error ? error : new Error("Internal server error"),
         ),
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -208,7 +212,7 @@ export async function GET() {
     ];
 
     const missingVars = requiredEnvVars.filter(
-      (varName) => !process.env[varName]
+      (varName) => !process.env[varName],
     );
 
     if (missingVars.length > 0) {
@@ -218,7 +222,7 @@ export async function GET() {
           message: "Facebook Conversions API not properly configured",
           missing_environment_variables: missingVars,
         },
-        { status: 500 }
+        { status: 500 },
       );
     }
 
@@ -229,7 +233,6 @@ export async function GET() {
       dataset_configured: !!process.env.FACEBOOK_DATASET_ID,
       access_token_configured: !!process.env.FACEBOOK_ACCESS_TOKEN,
     });
-
   } catch (error) {
     return NextResponse.json(
       {
@@ -237,7 +240,7 @@ export async function GET() {
         message: "Health check failed",
         error: error instanceof Error ? error.message : "Unknown error",
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

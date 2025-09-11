@@ -4,7 +4,9 @@ import { GallerySection } from "@/components/gallery-section";
 import { HeroSection } from "@/components/hero-section";
 import { PackagesSection } from "@/components/packages-section";
 import { ReviewsSection } from "@/components/reviews";
+import { SEOLayout } from "@/components/seo/seo-layout";
 import { getLocalizedPaths } from "@/lib/localized-url";
+import { SEO_CONFIG } from "@/lib/seo-config";
 
 export async function generateMetadata({
   params,
@@ -14,7 +16,7 @@ export async function generateMetadata({
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "seo.home" });
 
-  const baseUrl = "https://istanbulportrait.com";
+  const baseUrl = SEO_CONFIG.site.url;
   const paths = getLocalizedPaths("/", baseUrl);
 
   return {
@@ -29,12 +31,14 @@ export async function generateMetadata({
 
 export default function HomePage() {
   return (
-    <div className="overflow-hidden">
-      <HeroSection />
-      <GallerySection />
-      <PackagesSection />
-      <FAQSection />
-      <ReviewsSection />
-    </div>
+    <SEOLayout>
+      <div className="overflow-hidden">
+        <HeroSection />
+        <GallerySection />
+        <PackagesSection />
+        <FAQSection />
+        <ReviewsSection />
+      </div>
+    </SEOLayout>
   );
 }

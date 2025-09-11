@@ -30,7 +30,10 @@ export async function POST(request: NextRequest) {
     });
 
     if (!rateLimitResult.success) {
-      logError(new Error("Rate limit exceeded"), { ip, endpoint: "booking-confirmed" });
+      logError(new Error("Rate limit exceeded"), {
+        ip,
+        endpoint: "booking-confirmed",
+      });
       return createRateLimitError(rateLimitResult.resetTime);
     }
 

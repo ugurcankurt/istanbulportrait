@@ -1,636 +1,593 @@
-import { useLocale, useTranslations } from "next-intl";
+"use client";
 
-interface StructuredDataProps {
-  type:
-    | "website"
-    | "service"
-    | "person"
-    | "organization"
-    | "localbusiness"
-    | "article"
-    | "howto"
-    | "locations"
-    | "breadcrumblist"
-    | "imageobject"
-    | "offer"
-    | "event"
-    | "carousel";
-  data?: any;
+import Script from "next/script";
+import { SEO_CONFIG } from "@/lib/seo-config";
+
+/**
+ * Schema.org Types for Istanbul Portrait Photography
+ */
+
+// Base Schema Types
+export interface BaseSchema {
+  "@context": "https://schema.org";
+  "@type": string;
 }
 
-export function StructuredData({ type, data }: StructuredDataProps) {
-  const t = useTranslations();
-  const locale = useLocale();
-
-  const getStructuredData = () => {
-    const baseUrl = "https://istanbulportrait.com";
-
-    switch (type) {
-      case "website":
-        return {
-          "@context": "https://schema.org",
-          "@type": "WebSite",
-          name: "Istanbul Photographer - Professional Photography Services",
-          url: baseUrl,
-          description: t("seo.home.description").slice(0, 155),
-          potentialAction: [
-            {
-              "@type": "SearchAction",
-              target: `${baseUrl}/search?q={search_term_string}`,
-              "query-input": "required name=search_term_string",
-            },
-            {
-              "@type": "Action",
-              name: "Book Photography Session",
-              target: `${baseUrl}/checkout`,
-            },
-          ],
-          inLanguage: [
-            { "@type": "Language", name: "English", alternateName: "en" },
-            { "@type": "Language", name: "Arabic", alternateName: "ar" },
-            { "@type": "Language", name: "Russian", alternateName: "ru" },
-            { "@type": "Language", name: "Spanish", alternateName: "es" },
-          ],
-        };
-
-      case "organization":
-        // Static organization schema
-        return {
-          "@context": "https://schema.org",
-          "@type": "ProfessionalService",
-          "@id": `${baseUrl}#organization`,
-          name: "Istanbul Photographer - Professional Photography Services",
-          image: [
-            {
-              "@type": "ImageObject",
-              url: `${baseUrl}/og-image.jpg`,
-              width: 1200,
-              height: 630,
-              caption: "Istanbul Photographer Professional Photography Services",
-            },
-            {
-              "@type": "ImageObject",
-              url: `${baseUrl}/istanbulportrait_dark_logo.png`,
-              width: 400,
-              height: 200,
-              caption: "Istanbul Photographer Logo",
-            },
-            {
-              "@type": "ImageObject",
-              url: `${baseUrl}/istanbulportprat_ugur_cankurt.jpg`,
-              width: 800,
-              height: 1000,
-              caption: "Professional Istanbul Photographer Uğur Cankurt",
-            },
-          ],
-          logo: {
-            "@type": "ImageObject",
-            url: `${baseUrl}/istanbulportrait_dark_logo.png`,
-            width: 400,
-            height: 200,
-          },
-          description: t("seo.home.description"),
-          url: baseUrl,
-          telephone: "+90-536-709-37-24",
-          email: "info@istanbulportrait.com",
-          foundingDate: "2016",
-          founder: {
-            "@type": "Person",
-            name: "Uğur Cankurt",
-            jobTitle: "Professional Photographer",
-            image: `${baseUrl}/istanbulportprat_ugur_cankurt.jpg`,
-            knowsAbout: [
-              "Portrait Photography",
-              "Wedding Photography", 
-              "Couple Photography",
-              "Rooftop Photography",
-              "Istanbul Photography",
-              "Photographer in Istanbul",
-              "Professional Photography Istanbul",
-              "Istanbul Photoshoot Services",
-            ],
-            hasCredential: [
-              {
-                "@type": "EducationalOccupationalCredential",
-                credentialCategory: "Professional Experience",
-                name: "8+ Years Professional Photography Experience",
-              },
-              {
-                "@type": "EducationalOccupationalCredential",
-                credentialCategory: "Client Success",
-                name: "500+ Successful Photography Sessions",
-              },
-            ],
-          },
-          address: {
-            "@type": "PostalAddress",
-            streetAddress: "Alemdar, Molla Fenari, Divan Yolu Cd. No:78/A",
-            addressLocality: "Istanbul",
-            addressRegion: "Istanbul",
-            postalCode: "34110",
-            addressCountry: "TR",
-          },
-          geo: {
-            "@type": "GeoCoordinates",
-            latitude: 41.0084588,
-            longitude: 28.9719997,
-          },
-          serviceType: "Photography Services",
-          priceRange: "€€€",
-          areaServed: {
-            "@type": "City",
-            name: "Istanbul",
-            addressCountry: "TR",
-          },
-          openingHoursSpecification: {
-            "@type": "OpeningHoursSpecification",
-            dayOfWeek: [
-              "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"
-            ],
-            opens: "00:00",
-            closes: "23:59",
-          },
-          hasOfferCatalog: {
-            "@type": "OfferCatalog",
-            name: "Photography Services",
-            itemListElement: [
-              {
-                "@type": "Offer",
-                itemOffered: {
-                  "@type": "Service",
-                  name: "Portrait Photography",
-                  description: "Professional portrait photography sessions",
-                },
-              },
-              {
-                "@type": "Offer",
-                itemOffered: {
-                  "@type": "Service",
-                  name: "Rooftop Photoshoot",
-                  description: "Rooftop photography sessions with Istanbul views",
-                },
-              },
-              {
-                "@type": "Offer",
-                itemOffered: {
-                  "@type": "Service",
-                  name: "Couple Photography",
-                  description: "Romantic couple photography sessions",
-                },
-              },
-            ],
-          },
-          sameAs: [
-            "https://instagram.com/istanbulportrait",
-            "https://facebook.com/istanbulportrait",
-            "https://www.linkedin.com/in/istanbulportrait",
-            "https://www.pinterest.com/istanbulportrait",
-          ],
-          awards: [
-            "Top-Rated Photography Service Istanbul 2024",
-            "Best Rooftop Photography Experience 2024",
-          ],
-        };
-
-      case "service":
-        return {
-          "@context": "https://schema.org",
-          "@type": "Service",
-          name: "Professional Photography Services in Istanbul",
-          provider: {
-            "@type": "Organization",
-            name: "Istanbul Photographer - Professional Photography Services",
-            priceRange: "€150-€450",
-            url: baseUrl,
-          },
-          description:
-            "Professional portrait and lifestyle photography sessions in Istanbul featuring rooftop views and historic landmarks",
-          serviceType: "Photography",
-          areaServed: {
-            "@type": "City",
-            name: "Istanbul",
-            addressCountry: "TR",
-          },
-          hasOfferCatalog: {
-            "@type": "OfferCatalog",
-            name: "Photography Packages",
-            itemListElement: [
-              {
-                "@type": "Offer",
-                price: "150",
-                priceCurrency: "EUR",
-                name: "Essential Package",
-                description: "1 hour photoshoot with 15 edited photos",
-                itemOffered: {
-                  "@type": "Service",
-                  name: "Essential Photography Package",
-                },
-              },
-              {
-                "@type": "Offer",
-                price: "280",
-                priceCurrency: "EUR",
-                name: "Premium Package",
-                description: "2 hour photoshoot with 40 edited photos",
-                itemOffered: {
-                  "@type": "Service",
-                  name: "Premium Photography Package",
-                },
-              },
-              {
-                "@type": "Offer",
-                price: "450",
-                priceCurrency: "EUR",
-                name: "Luxury Package",
-                description: "4 hour photoshoot with 80 edited photos",
-                itemOffered: {
-                  "@type": "Service",
-                  name: "Luxury Photography Package",
-                },
-              },
-            ],
-          },
-        };
-
-      case "person":
-        return {
-          "@context": "https://schema.org",
-          "@type": "Person",
-          name: "Uğur CANKURT (Lucky)",
-          jobTitle: "Professional Photographer",
-          description:
-            "Professional photographer in Istanbul specializing in portrait and photoshoot sessions",
-          knowsAbout: [
-            "Portrait Photography",
-            "Couple Photography", 
-            "Rooftop Photography",
-            "Istanbul Photography",
-            "Lifestyle Photography",
-            "Professional Photographer in Istanbul",
-            "Istanbul Photoshoot Expert",
-            "Best Istanbul Photographer",
-          ],
-          workLocation: {
-            "@type": "City",
-            name: "Istanbul",
-            addressCountry: "TR",
-          },
-          hasOccupation: {
-            "@type": "Occupation",
-            name: "Photographer",
-            occupationalCategory:
-              "Arts, Design, Entertainment, Sports, and Media Occupations",
-          },
-        };
-
-      case "localbusiness":
-        return {
-          "@context": "https://schema.org",
-          "@type": "LocalBusiness",
-          "@id": `${baseUrl}#business`,
-          name: "Istanbul Photographer - Professional Photography Services",
-          image: [
-            {
-              "@type": "ImageObject",
-              url: `${baseUrl}/og-image.jpg`,
-              width: 1200,
-              height: 630,
-              caption:
-                "Istanbul Photographer Professional Photography Services",
-            },
-          ],
-          description: t("seo.home.description"),
-          url: baseUrl,
-          telephone: "+90-536-709-37-24",
-          email: "info@istanbulportrait.com",
-          address: {
-            "@type": "PostalAddress",
-            streetAddress: "Alemdar, Molla Fenari, Divan Yolu Cd. No:78/A",
-            addressLocality: "Istanbul",
-            addressRegion: "Istanbul",
-            postalCode: "34110",
-            addressCountry: "TR",
-          },
-          geo: {
-            "@type": "GeoCoordinates",
-            latitude: 41.0084588,
-            longitude: 28.9719997,
-          },
-          openingHoursSpecification: {
-            "@type": "OpeningHoursSpecification",
-            dayOfWeek: [
-              "Monday",
-              "Tuesday",
-              "Wednesday",
-              "Thursday",
-              "Friday",
-              "Saturday",
-              "Sunday",
-            ],
-            opens: "00:00",
-            closes: "23:59",
-          },
-          serviceType: "Photography",
-          areaServed: {
-            "@type": "City",
-            name: "Istanbul",
-            addressCountry: "TR",
-          },
-          paymentAccepted: "Cash, Credit Card",
-          currenciesAccepted: "EUR, USD, GBP, TRY",
-          priceRange: "€150-€450",
-        };
-
-      case "breadcrumblist":
-        if (!data || !data.items) return {};
-        return {
-          "@context": "https://schema.org",
-          "@type": "BreadcrumbList",
-          itemListElement: data.items.map((item: any, index: number) => ({
-            "@type": "ListItem",
-            position: index + 1,
-            name: item.name,
-            item: {
-              "@type": "Thing",
-              "@id": `${baseUrl}${item.url}`,
-              name: item.name,
-              url: `${baseUrl}${item.url}`,
-            },
-          })),
-        };
-
-      case "imageobject":
-        if (!data) return {};
-        return {
-          "@context": "https://schema.org",
-          "@type": "ImageObject",
-          url: data.url ? `${baseUrl}${data.url}` : undefined,
-          caption:
-            data.caption || "Istanbul Photographer | istanbulportrait.com",
-          creator: {
-            "@type": "Person",
-            name: "Uğur CANKURT",
-            url: baseUrl,
-          },
-          copyrightNotice: "istanbulportrait.com",
-          creditText: "Istanbul Photographer",
-          acquireLicensePage: `${baseUrl}`,
-          license: `${baseUrl}/privacy`,
-          contentLocation: {
-            "@type": "Place",
-            name: "Istanbul, Turkey",
-          },
-          keywords: data.keywords || [
-            "istanbul photographer",
-            "istanbul photoshoot",
-            "photographer in istanbul",
-            "istanbul rooftop photoshoot",
-            "professional photographer istanbul",
-            "best istanbul photographer",
-          ],
-        };
-
-      case "offer":
-        if (!data) return {};
-        return {
-          "@context": "https://schema.org",
-          "@type": "Offer",
-          name: data.name,
-          description: data.description,
-          price: data.price,
-          priceCurrency: "EUR",
-          availability: "https://schema.org/InStock",
-          itemOffered: {
-            "@type": "Service",
-            "@id": `${baseUrl}/packages#${data.packageId || 'service'}`,
-            name: data.serviceName || data.name,
-            serviceType: "Photography",
-            category: "Photography Services",
-            provider: {
-              "@type": "Organization",
-              name: "Istanbul Photographer",
-              url: baseUrl,
-            },
-            areaServed: {
-              "@type": "City",
-              name: "Istanbul",
-              addressCountry: "TR",
-            },
-            brand: {
-              "@type": "Brand",
-              name: "Istanbul Photographer",
-            },
-            identifier: data.packageId,
-          },
-          seller: {
-            "@type": "Organization",
-            name: "Istanbul Photographer",
-            url: baseUrl,
-          },
-          businessFunction: "https://schema.org/Sell",
-          eligibleRegion: {
-            "@type": "Country",
-            name: "Turkey",
-          },
-          validFrom: data.validFrom || new Date().toISOString().split("T")[0],
-          url: data.url ? `${baseUrl}${data.url}` : `${baseUrl}/packages`,
-          additionalProperty: [
-            {
-              "@type": "PropertyValue",
-              name: "content_id",
-              value: data.packageId,
-            },
-            {
-              "@type": "PropertyValue", 
-              name: "content_type",
-              value: "service",
-            },
-            {
-              "@type": "PropertyValue",
-              name: "google_product_category",
-              value: "Arts & Entertainment > Hobbies & Creative Arts > Photography",
-            },
-          ],
-        };
-
-      case "event": {
-        if (!data) return {};
-
-        // Ensure required dates are present
-        const startDate =
-          data.startDate ||
-          new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(); // Tomorrow
-        const endDate =
-          data.endDate ||
-          new Date(
-            Date.now() + 24 * 60 * 60 * 1000 + 2 * 60 * 60 * 1000,
-          ).toISOString(); // Tomorrow + 2 hours
-
-        return {
-          "@context": "https://schema.org",
-          "@type": "Event",
-          name: data.name || "Istanbul Photography Session",
-          description:
-            data.description ||
-            "Professional photography session in Istanbul with stunning city views",
-          startDate: startDate,
-          endDate: endDate,
-          eventStatus: "https://schema.org/EventScheduled",
-          eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
-          location: {
-            "@type": "Place",
-            name: data.locationName || "Istanbul Photography Locations",
-            address: {
-              "@type": "PostalAddress",
-              addressLocality: "Istanbul",
-              addressCountry: "TR",
-            },
-            geo: {
-              "@type": "GeoCoordinates",
-              latitude: 41.0084588,
-              longitude: 28.9719997,
-            },
-          },
-          organizer: {
-            "@type": "Organization",
-            name: "Istanbul Photographer",
-            url: baseUrl,
-          },
-          performer: {
-            "@type": "Person",
-            name: "Istanbul Photographer",
-            url: baseUrl,
-          },
-          offers: data.offers
-            ? {
-                "@type": "Offer",
-                price: data.offers.price,
-                priceCurrency: "EUR",
-                availability: "https://schema.org/InStock",
-                url: `${baseUrl}/checkout`,
-              }
-            : undefined,
-          image: data.image
-            ? `${baseUrl}${data.image}`
-            : `${baseUrl}/og-image.jpg`,
-          url: `${baseUrl}/checkout`,
-        };
-      }
-
-      case "carousel":
-        if (!data || !data.items) return {};
-        return {
-          "@context": "https://schema.org",
-          "@type": "WebPage",
-          "@id": `${baseUrl}/#gallery`,
-          name: data.name || "Istanbul Photography Gallery",
-          description:
-            data.description ||
-            "Professional photography portfolio showcasing Istanbul's beauty",
-          url: `${baseUrl}/#gallery`,
-          inLanguage: locale || "en",
-          isPartOf: {
-            "@type": "WebSite",
-            "@id": `${baseUrl}/#website`,
-            name: "Istanbul Photographer",
-            url: baseUrl,
-          },
-          about: {
-            "@type": "Thing",
-            name: "Photography Portfolio",
-            description: "Professional photography services in Istanbul",
-          },
-          image: data.items.map((item: any) => ({
-            "@type": "ImageObject",
-            "@id": `${baseUrl}${item.src}#image`,
-            url: `${baseUrl}${item.src}`,
-            contentUrl: `${baseUrl}${item.src}`,
-            name: item.name || item.alt,
-            caption: item.alt,
-            description: item.description || item.alt,
-            width: item.width || 1200,
-            height: item.height || 800,
-            thumbnail: {
-              "@type": "ImageObject",
-              url: `${baseUrl}${item.src}`,
-              width: 400,
-              height: 300,
-            },
-            author: {
-              "@type": "Person",
-              name: "Uğur CANKURT",
-              url: baseUrl,
-            },
-            copyrightHolder: {
-              "@type": "Organization",
-              name: "Istanbul Photographer",
-              url: baseUrl,
-            },
-            creator: {
-              "@type": "Person",
-              name: "Uğur CANKURT",
-              url: baseUrl,
-            },
-            contentLocation: {
-              "@type": "Place",
-              name: item.location || "Istanbul, Turkey",
-              address: {
-                "@type": "PostalAddress",
-                addressLocality: "Istanbul",
-                addressCountry: "TR",
-              },
-            },
-            keywords: Array.isArray(item.keywords) 
-              ? item.keywords.join(", ")
-              : item.alt.split(" ").slice(0, 6).join(", "),
-            encodingFormat: "image/jpeg",
-            creditText: "Istanbul Photographer",
-            copyrightNotice: "© 2025 Istanbul Photographer. All rights reserved.",
-            license: `${baseUrl}/privacy`,
-            acquireLicensePage: `${baseUrl}/contact`,
-          })),
-          primaryImageOfPage: {
-            "@type": "ImageObject",
-            url: `${baseUrl}${data.items[0]?.src || "/og-image.jpg"}`,
-            width: 1200,
-            height: 800,
-          },
-          author: {
-            "@type": "Person",
-            name: "Uğur CANKURT",
-            url: baseUrl,
-            jobTitle: "Professional Photographer",
-          },
-          publisher: {
-            "@type": "Organization",
-            name: "Istanbul Photographer",
-            url: baseUrl,
-            logo: {
-              "@type": "ImageObject",
-              url: `${baseUrl}/istanbulportrait_dark_logo.png`,
-              width: 400,
-              height: 200,
-            },
-          },
-          datePublished: "2024-01-01",
-          dateModified: new Date().toISOString().split("T")[0],
-        };
-
-      default:
-        return {};
-    }
+// Organization Schema
+export interface OrganizationSchema extends BaseSchema {
+  "@type": "Organization" | "LocalBusiness" | "ProfessionalService";
+  name: string;
+  url: string;
+  logo?: string;
+  image?: string[];
+  description?: string;
+  address?: {
+    "@type": "PostalAddress";
+    addressCountry: string;
+    addressLocality: string;
+    addressRegion?: string;
+    streetAddress?: string;
+    postalCode?: string;
   };
+  contactPoint?: {
+    "@type": "ContactPoint";
+    telephone: string;
+    contactType: string;
+    areaServed: string;
+    availableLanguage: string[];
+  };
+  sameAs?: string[];
+  openingHours?: string[];
+  priceRange?: string;
+  paymentAccepted?: string[];
+  currenciesAccepted?: string;
+}
 
-  const structuredData = getStructuredData();
+// Person Schema
+export interface PersonSchema extends BaseSchema {
+  "@type": "Person";
+  name: string;
+  url?: string;
+  image?: string;
+  jobTitle?: string;
+  worksFor?: {
+    "@type": "Organization";
+    name: string;
+  };
+  sameAs?: string[];
+  knowsAbout?: string[];
+}
 
-  if (!structuredData) {
-    return null;
+// Service Schema
+export interface ServiceSchema extends BaseSchema {
+  "@type": "Service";
+  name: string;
+  description: string;
+  provider: {
+    "@type": "Organization";
+    name: string;
+    url: string;
+  };
+  areaServed: string;
+  serviceType: string[];
+  offers?: OfferSchema[];
+}
+
+// Offer Schema
+export interface OfferSchema extends BaseSchema {
+  "@type": "Offer";
+  name: string;
+  description: string;
+  price: string;
+  priceCurrency: string;
+  url?: string;
+  availability?: string;
+  validFrom?: string;
+  validThrough?: string;
+  seller?: {
+    "@type": "Organization";
+    name: string;
+  };
+  category?: string;
+  sku?: string;
+}
+
+// FAQ Schema
+export interface FAQSchema extends BaseSchema {
+  "@type": "FAQPage";
+  mainEntity: {
+    "@type": "Question";
+    name: string;
+    acceptedAnswer: {
+      "@type": "Answer";
+      text: string;
+    };
+  }[];
+}
+
+// Breadcrumb Schema
+export interface BreadcrumbSchema extends BaseSchema {
+  "@type": "BreadcrumbList";
+  itemListElement: {
+    "@type": "ListItem";
+    position: number;
+    name: string;
+    item: string;
+  }[];
+}
+
+// ImageGallery Schema
+export interface ImageGallerySchema extends BaseSchema {
+  "@type": "ImageGallery";
+  name: string;
+  description: string;
+  creator: {
+    "@type": "Person";
+    name: string;
+  };
+  associatedMedia: {
+    "@type": "ImageObject";
+    contentUrl: string;
+    caption?: string;
+    description?: string;
+  }[];
+}
+
+// Review Schema
+export interface ReviewSchema extends BaseSchema {
+  "@type": "Review";
+  reviewRating: {
+    "@type": "Rating";
+    ratingValue: number;
+    bestRating: number;
+  };
+  author: {
+    "@type": "Person";
+    name: string;
+  };
+  reviewBody: string;
+  datePublished: string;
+  itemReviewed: {
+    "@type": "Service" | "Organization";
+    name: string;
+  };
+}
+
+// WebSite Schema
+export interface WebSiteSchema extends BaseSchema {
+  "@type": "WebSite";
+  name: string;
+  url: string;
+  description: string;
+  publisher: {
+    "@type": "Organization";
+    name: string;
+    logo: {
+      "@type": "ImageObject";
+      url: string;
+    };
+  };
+  potentialAction?: {
+    "@type": "SearchAction";
+    target: {
+      "@type": "EntryPoint";
+      urlTemplate: string;
+    };
+    "query-input": string;
+  };
+  sameAs?: string[];
+}
+
+// WebPage Schema
+export interface WebPageSchema extends BaseSchema {
+  "@type": "WebPage";
+  name: string;
+  description: string;
+  url: string;
+  mainEntity?: any;
+  breadcrumb?: BreadcrumbSchema;
+  isPartOf: {
+    "@type": "WebSite";
+    name: string;
+    url: string;
+  };
+  about?: {
+    "@type": string;
+    name: string;
+  };
+  mentions?: {
+    "@type": string;
+    name: string;
+  }[];
+}
+
+// Union type for all schema types
+export type SchemaData =
+  | OrganizationSchema
+  | PersonSchema
+  | ServiceSchema
+  | OfferSchema
+  | FAQSchema
+  | BreadcrumbSchema
+  | ImageGallerySchema
+  | ReviewSchema
+  | WebSiteSchema
+  | WebPageSchema;
+
+/**
+ * Structured Data Component Props
+ */
+export interface StructuredDataProps {
+  type:
+    | "organization"
+    | "person"
+    | "service"
+    | "offer"
+    | "faq"
+    | "breadcrumb"
+    | "gallery"
+    | "review"
+    | "website"
+    | "webpage"
+    | "custom";
+  data?: any;
+  children?: React.ReactNode;
+}
+
+/**
+ * Generate Organization Schema
+ */
+function generateOrganizationSchema(): OrganizationSchema {
+  return {
+    "@context": "https://schema.org",
+    "@type": "ProfessionalService",
+    name: SEO_CONFIG.organization.name,
+    url: SEO_CONFIG.organization.url,
+    logo: SEO_CONFIG.organization.logo,
+    image: [...SEO_CONFIG.images.gallery],
+    description: SEO_CONFIG.site.description,
+    address: SEO_CONFIG.organization.address,
+    contactPoint: {
+      "@type": "ContactPoint",
+      telephone: SEO_CONFIG.organization.contactPoint.telephone,
+      contactType: SEO_CONFIG.organization.contactPoint.contactType,
+      areaServed: SEO_CONFIG.organization.contactPoint.areaServed,
+      availableLanguage: [
+        ...SEO_CONFIG.organization.contactPoint.availableLanguage,
+      ],
+    },
+    sameAs: [...SEO_CONFIG.organization.sameAs],
+    openingHours: [...SEO_CONFIG.business.openingHours],
+    priceRange: SEO_CONFIG.business.priceRange,
+    paymentAccepted: [...SEO_CONFIG.business.paymentAccepted],
+    currenciesAccepted: SEO_CONFIG.business.currenciesAccepted,
+  };
+}
+
+/**
+ * Generate Person Schema
+ */
+function generatePersonSchema(): PersonSchema {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    name: SEO_CONFIG.person.name,
+    url: SEO_CONFIG.person.url,
+    image: SEO_CONFIG.person.image,
+    jobTitle: SEO_CONFIG.person.jobTitle,
+    worksFor: {
+      "@type": "Organization",
+      name: SEO_CONFIG.organization.name,
+    },
+    sameAs: [...SEO_CONFIG.person.sameAs],
+    knowsAbout: [
+      "Photography",
+      "Portrait Photography",
+      "Professional Photography",
+      "Istanbul Tourism",
+      "Photo Editing",
+      "Digital Photography",
+    ],
+  };
+}
+
+/**
+ * Generate Service Schema
+ */
+function generateServiceSchema(): ServiceSchema {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    name: SEO_CONFIG.services.name,
+    description: SEO_CONFIG.services.description,
+    provider: {
+      "@type": "Organization",
+      name: SEO_CONFIG.organization.name,
+      url: SEO_CONFIG.organization.url,
+    },
+    areaServed: SEO_CONFIG.services.areaServed,
+    serviceType: [...SEO_CONFIG.services.serviceType],
+    offers: SEO_CONFIG.services.offers.map((offer) => ({
+      "@context": "https://schema.org",
+      "@type": "Offer",
+      name: offer.name,
+      description: offer.description,
+      price: offer.price,
+      priceCurrency: offer.priceCurrency,
+      availability: "https://schema.org/InStock",
+      seller: {
+        "@type": "Organization",
+        name: SEO_CONFIG.organization.name,
+      },
+      category: "Photography Services",
+    })),
+  };
+}
+
+/**
+ * Generate Website Schema
+ */
+function generateWebSiteSchema(): WebSiteSchema {
+  return {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: SEO_CONFIG.site.name,
+    url: SEO_CONFIG.site.url,
+    description: SEO_CONFIG.site.description,
+    publisher: {
+      "@type": "Organization",
+      name: SEO_CONFIG.organization.name,
+      logo: {
+        "@type": "ImageObject",
+        url: SEO_CONFIG.organization.logo,
+      },
+    },
+    sameAs: [...SEO_CONFIG.organization.sameAs],
+    potentialAction: {
+      "@type": "SearchAction",
+      target: {
+        "@type": "EntryPoint",
+        urlTemplate: `${SEO_CONFIG.site.url}/search?q={search_term_string}`,
+      },
+      "query-input": "required name=search_term_string",
+    },
+  };
+}
+
+/**
+ * Generate Offer Schema
+ */
+function generateOfferSchema(data: any): OfferSchema {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Offer",
+    name: data.name,
+    description: data.description,
+    price: data.price,
+    priceCurrency: data.priceCurrency || "EUR",
+    url: data.url ? `${SEO_CONFIG.site.url}${data.url}` : SEO_CONFIG.site.url,
+    availability: data.availability || "https://schema.org/InStock",
+    validFrom: data.validFrom,
+    validThrough: data.validThrough,
+    seller: {
+      "@type": "Organization",
+      name: data.seller || SEO_CONFIG.organization.name,
+    },
+    category: data.category || "Photography Services",
+    sku: data.packageId,
+  };
+}
+
+/**
+ * Generate FAQ Schema
+ */
+function generateFAQSchema(data: any): FAQSchema {
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity:
+      data.faqs?.map((faq: any) => ({
+        "@type": "Question",
+        name: faq.question,
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: faq.answer,
+        },
+      })) || [],
+  };
+}
+
+/**
+ * Generate Breadcrumb Schema
+ */
+function generateBreadcrumbSchema(data: any): BreadcrumbSchema {
+  return {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement:
+      data.items?.map((item: any, index: number) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        name: item.name,
+        item: `${SEO_CONFIG.site.url}${item.url}`,
+      })) || [],
+  };
+}
+
+/**
+ * Generate Image Gallery Schema
+ */
+function generateImageGallerySchema(data: any): ImageGallerySchema {
+  return {
+    "@context": "https://schema.org",
+    "@type": "ImageGallery",
+    name: data.name || "Istanbul Photography Gallery",
+    description:
+      data.description ||
+      "Professional photography gallery showcasing Istanbul photoshoot sessions",
+    creator: {
+      "@type": "Person",
+      name: SEO_CONFIG.person.name,
+    },
+    associatedMedia:
+      data.images?.map((image: any) => ({
+        "@type": "ImageObject",
+        contentUrl: image.url,
+        caption: image.caption,
+        description: image.description,
+      })) || [],
+  };
+}
+
+/**
+ * Generate Review Schema
+ */
+function generateReviewSchema(data: any): ReviewSchema {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Review",
+    reviewRating: {
+      "@type": "Rating",
+      ratingValue: data.rating,
+      bestRating: 5,
+    },
+    author: {
+      "@type": "Person",
+      name: data.author,
+    },
+    reviewBody: data.review,
+    datePublished: data.date,
+    itemReviewed: {
+      "@type": "Service",
+      name: SEO_CONFIG.services.name,
+    },
+  };
+}
+
+/**
+ * Generate WebPage Schema
+ */
+function generateWebPageSchema(data: any): WebPageSchema {
+  return {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    name: data.title,
+    description: data.description,
+    url: `${SEO_CONFIG.site.url}${data.url || ""}`,
+    mainEntity: data.mainEntity,
+    breadcrumb: data.breadcrumb,
+    isPartOf: {
+      "@type": "WebSite",
+      name: SEO_CONFIG.site.name,
+      url: SEO_CONFIG.site.url,
+    },
+    about: data.about,
+    mentions: data.mentions,
+  };
+}
+
+/**
+ * Main StructuredData Component
+ */
+export function StructuredData({ type, data, children }: StructuredDataProps) {
+  let schemaData: SchemaData | null = null;
+
+  switch (type) {
+    case "organization":
+      schemaData = generateOrganizationSchema();
+      break;
+    case "person":
+      schemaData = generatePersonSchema();
+      break;
+    case "service":
+      schemaData = generateServiceSchema();
+      break;
+    case "offer":
+      schemaData = generateOfferSchema(data);
+      break;
+    case "faq":
+      schemaData = generateFAQSchema(data);
+      break;
+    case "breadcrumb":
+      schemaData = generateBreadcrumbSchema(data);
+      break;
+    case "gallery":
+      schemaData = generateImageGallerySchema(data);
+      break;
+    case "review":
+      schemaData = generateReviewSchema(data);
+      break;
+    case "website":
+      schemaData = generateWebSiteSchema();
+      break;
+    case "webpage":
+      schemaData = generateWebPageSchema(data);
+      break;
+    case "custom":
+      schemaData = data;
+      break;
+    default:
+      console.warn(`Unknown schema type: ${type}`);
+      return null;
   }
 
+  if (!schemaData) return null;
+
   return (
-    <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
-    />
+    <>
+      <Script
+        id={`schema-${type}-${Math.random().toString(36).substring(2, 11)}`}
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(schemaData, null, 2),
+        }}
+      />
+      {children}
+    </>
   );
 }
+
+/**
+ * Pre-configured Schema Components for easy usage
+ */
+
+export function OrganizationStructuredData() {
+  return <StructuredData type="organization" />;
+}
+
+export function PersonStructuredData() {
+  return <StructuredData type="person" />;
+}
+
+export function ServiceStructuredData() {
+  return <StructuredData type="service" />;
+}
+
+export function WebSiteStructuredData() {
+  return <StructuredData type="website" />;
+}
+
+/**
+ * Higher Order Component for automatic page schema
+ */
+export function withPageSchema<T extends object>(
+  Component: React.ComponentType<T>,
+  pageData: {
+    title: string;
+    description: string;
+    url: string;
+    breadcrumb?: any;
+    mainEntity?: any;
+  },
+) {
+  return function WrappedComponent(props: T) {
+    return (
+      <>
+        <StructuredData type="webpage" data={pageData} />
+        <Component {...props} />
+      </>
+    );
+  };
+}
+
+export default StructuredData;

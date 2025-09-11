@@ -101,12 +101,14 @@ export const trackFacebookEvent = async (
     packageId: string;
     amount: number;
     transactionId?: string;
-  }
+  },
 ) => {
   try {
     // Validate that we have at least one customer identifier for the Conversions API
     if (!customerData.email && !customerData.phone) {
-      console.warn(`Facebook ${eventType} Event: No customer identifiers provided, skipping Conversions API`);
+      console.warn(
+        `Facebook ${eventType} Event: No customer identifiers provided, skipping Conversions API`,
+      );
       return { success: false, error: "No customer identifiers" };
     }
 

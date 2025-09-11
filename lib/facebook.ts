@@ -8,10 +8,10 @@ export const FACEBOOK_DATASET_ID = process.env.FACEBOOK_DATASET_ID;
 // SHA256 hashing for customer data (required by Meta)
 export function hashCustomerData(value: string): string {
   if (!value) return "";
-  
+
   // Normalize the data before hashing
   const normalized = value.toLowerCase().trim();
-  
+
   // Create SHA256 hash
   return crypto.createHash("sha256").update(normalized).digest("hex");
 }
@@ -19,15 +19,15 @@ export function hashCustomerData(value: string): string {
 // Phone number normalization and hashing
 export function hashPhoneNumber(phone: string): string {
   if (!phone) return "";
-  
+
   // Remove all non-digit characters
   const digitsOnly = phone.replace(/\D/g, "");
-  
+
   // Add country code if not present (assume Turkey +90)
-  const normalizedPhone = digitsOnly.startsWith("90") 
-    ? digitsOnly 
+  const normalizedPhone = digitsOnly.startsWith("90")
+    ? digitsOnly
     : `90${digitsOnly}`;
-  
+
   return hashCustomerData(normalizedPhone);
 }
 
@@ -64,10 +64,12 @@ export interface FacebookConversionEvent {
 
 // Send event to Facebook Conversions API
 export async function sendToFacebookConversionsAPI(
-  events: FacebookConversionEvent[]
+  events: FacebookConversionEvent[],
 ): Promise<boolean> {
   if (!FACEBOOK_ACCESS_TOKEN || !FACEBOOK_DATASET_ID) {
-    console.error("Facebook Conversions API: Missing access token or dataset ID");
+    console.error(
+      "Facebook Conversions API: Missing access token or dataset ID",
+    );
     return false;
   }
 
@@ -83,7 +85,7 @@ export async function sendToFacebookConversionsAPI(
           data: events,
           access_token: FACEBOOK_ACCESS_TOKEN,
         }),
-      }
+      },
     );
 
     const result = await response.json();
@@ -110,7 +112,7 @@ export const fbPixel = {
   // Initialize Facebook Pixel
   init: (pixelId: string) => {
     if (typeof window === "undefined" || !pixelId) return;
-    
+
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const fb = (window as any).fbq;
     if (fb) {
@@ -122,12 +124,12 @@ export const fbPixel = {
   // Track custom events
   track: (eventName: string, parameters?: Record<string, unknown>) => {
     if (typeof window === "undefined") return;
-    
+
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const fb = (window as any).fbq;
     if (fb) {
       fb("track", eventName, parameters);
-      
+
       // Debug logging in development
       if (process.env.NODE_ENV === "development") {
         console.log("Facebook Pixel Event:", { eventName, parameters });
@@ -181,7 +183,7 @@ export const trackFacebookLead = async (
   customerPhone: string,
   packageId: string,
   amount: number,
-  leadId?: number
+  leadId?: number,
 ) => {
   const generatedLeadId = leadId || generateLeadId();
 
@@ -207,7 +209,7 @@ export const trackFacebookLead = async (
 
   // Send to Conversions API (server-side)
   const success = await sendToFacebookConversionsAPI([event]);
-  
+
   // Also track with client-side pixel
   fbPixel.trackLead(amount);
 
@@ -219,7 +221,7 @@ export const trackFacebookPurchase = async (
   customerPhone: string,
   packageId: string,
   amount: number,
-  transactionId: string
+  transactionId: string,
 ) => {
   // Prepare event for Conversions API
   const event: FacebookConversionEvent = {
@@ -242,7 +244,7 @@ export const trackFacebookPurchase = async (
 
   // Send to Conversions API (server-side)
   const success = await sendToFacebookConversionsAPI([event]);
-  
+
   // Also track with client-side pixel
   fbPixel.trackPurchase(packageId, amount, transactionId);
 
@@ -254,7 +256,7 @@ export const facebookDebug = {
   testHashing: () => {
     const email = "test@example.com";
     const phone = "+905551234567";
-    
+
     console.log("Facebook Debug - Hash Testing:");
     console.log("Original email:", email);
     console.log("Hashed email:", hashCustomerData(email));

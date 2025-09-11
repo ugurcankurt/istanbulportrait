@@ -20,7 +20,11 @@ interface BookingSuccessProps {
   customerData?: BookingFormData;
 }
 
-export function BookingSuccess({ bookingId, packageId, customerData }: BookingSuccessProps) {
+export function BookingSuccess({
+  bookingId,
+  packageId,
+  customerData,
+}: BookingSuccessProps) {
   const locale = useLocale();
   const t = useTranslations("checkout");
   const tPackages = useTranslations("packages");

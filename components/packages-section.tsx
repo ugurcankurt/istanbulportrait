@@ -6,6 +6,10 @@ import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 import { BookingModal } from "@/components/booking-modal";
 import { StructuredData } from "@/components/seo/structured-data";
+import {
+  ProductSchema,
+  MultipleProductsSchema,
+} from "@/components/seo/product-schema";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -16,6 +20,7 @@ import {
 } from "@/components/ui/card";
 import { Link } from "@/i18n/routing";
 import { fbPixel } from "@/lib/facebook";
+import { SEO_CONFIG } from "@/lib/seo-config";
 import type { PackageId } from "@/lib/validations";
 
 export function PackagesSection() {
@@ -23,7 +28,8 @@ export function PackagesSection() {
   const tui = useTranslations("ui");
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedPackageForModal, setSelectedPackageForModal] = useState<PackageId | null>(null);
+  const [selectedPackageForModal, setSelectedPackageForModal] =
+    useState<PackageId | null>(null);
 
   const packages = [
     {
@@ -94,9 +100,34 @@ export function PackagesSection() {
     setSelectedPackageForModal(null);
   };
 
+  // Transform packages for schema
+  const productsForSchema = packages.map((pkg) => ({
+    id: pkg.id,
+    name: pkg.name,
+    description: `${pkg.duration} photoshoot with ${pkg.photos} and ${pkg.locations}. ${pkg.features.join(", ")}`,
+    price: pkg.price,
+    currency: "EUR",
+    category: "Photography Services",
+    brand: SEO_CONFIG.organization.name,
+    availability: "https://schema.org/InStock",
+    url: `/packages#${pkg.id}`,
+    features: pkg.features,
+    duration: pkg.duration,
+    photos: pkg.photos,
+    locations: pkg.locations,
+  }));
+
   return (
     <>
-      {/* Offer Schema for each package */}
+      {/* Multiple Products Schema for collection */}
+      <MultipleProductsSchema products={productsForSchema} />
+
+      {/* Individual Product Schema for each package */}
+      {productsForSchema.map((product) => (
+        <ProductSchema key={product.id} product={product} type="Service" />
+      ))}
+
+      {/* Offer Schema for each package (existing) */}
       {packages.map((pkg) => (
         <StructuredData
           key={pkg.id}
@@ -109,54 +140,14 @@ export function PackagesSection() {
             packageId: pkg.id,
             url: `/packages#${pkg.id}`,
             validFrom: new Date().toISOString().split("T")[0],
+            brand: SEO_CONFIG.organization.name,
+            seller: SEO_CONFIG.organization.name,
+            availability: "in stock",
+            category: "Photography Services",
           }}
         />
       ))}
 
-      {/* Facebook Commerce Manager Microdata for each product */}
-      {packages.map((pkg) => (
-        <div key={`commerce-${pkg.id}`} style={{ display: 'none' }}>
-          {/* OpenGraph Product Meta Tags */}
-          <meta property="product:retailer_item_id" content={pkg.id} />
-          <meta property="product:brand" content="Istanbul Photographer" />
-          <meta property="product:availability" content="in stock" />
-          <meta property="product:price:amount" content={pkg.price.replace(/[€$]/g, "")} />
-          <meta property="product:price:currency" content="EUR" />
-          <meta property="product:category" content="Photography Services" />
-          <meta property="product:google_product_category" content="Arts & Entertainment > Hobbies & Creative Arts > Photography" />
-          
-          {/* Schema.org Product Microdata */}
-          <div
-            itemScope
-            itemType="https://schema.org/Product"
-            itemProp="mainEntity"
-          >
-            <meta itemProp="name" content={pkg.name} />
-            <meta itemProp="description" content={`${pkg.duration} photoshoot with ${pkg.photos} and ${pkg.locations}`} />
-            <meta itemProp="brand" content="Istanbul Photographer" />
-            <meta itemProp="category" content="Arts & Entertainment > Photography" />
-            <meta itemProp="google_product_category" content="Arts & Entertainment > Hobbies & Creative Arts > Photography" />
-            <meta itemProp="identifier" content={pkg.id} />
-            <meta itemProp="productID" content={pkg.id} />
-            <meta itemProp="sku" content={`ip-${pkg.id}-2025`} />
-            <div itemProp="offers" itemScope itemType="https://schema.org/Offer">
-              <meta itemProp="price" content={pkg.price.replace(/[€$]/g, "")} />
-              <meta itemProp="priceCurrency" content="EUR" />
-              <meta itemProp="availability" content="https://schema.org/InStock" />
-              <meta itemProp="priceValidUntil" content="2025-12-31" />
-              <meta itemProp="url" content={`https://istanbulportrait.com/packages#${pkg.id}`} />
-              <meta itemProp="seller" content="Istanbul Photographer" />
-              <meta itemProp="itemCondition" content="https://schema.org/NewCondition" />
-            </div>
-            <meta itemProp="manufacturer" content="Istanbul Photographer" />
-            <meta itemProp="url" content={`https://istanbulportrait.com/packages#${pkg.id}`} />
-            <meta itemProp="image" content="https://istanbulportrait.com/og-image.jpg" />
-            
-            {/* Dynamic reviews will be added here when API is integrated */}
-            {/* Removed static fake reviews to avoid SEO penalties */}
-          </div>
-        </div>
-      ))}
       <section className="py-8 sm:py-12 lg:py-16 bg-gradient-to-b from-background to-muted/20">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
@@ -181,7 +172,8 @@ export function PackagesSection() {
             className="mb-8 sm:mb-12"
           >
             <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-center mb-6 sm:mb-8">
-              {t("sections.available_packages") || "Available Photography Packages"}
+              {t("sections.available_packages") ||
+                "Available Photography Packages"}
             </h2>
           </motion.div>
 
@@ -246,8 +238,8 @@ export function PackagesSection() {
                   </CardContent>
 
                   <CardFooter className="pt-3 sm:pt-4 px-3 sm:px-6">
-                    <Button 
-                      className="w-full" 
+                    <Button
+                      className="w-full"
                       size="sm"
                       onClick={() => handlePackageSelect(pkg.id as PackageId)}
                     >

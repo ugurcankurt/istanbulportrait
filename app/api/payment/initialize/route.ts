@@ -64,7 +64,7 @@ export async function POST(request: NextRequest) {
 
     // Get package pricing with tax breakdown
     const packagePricing = getPackagePricing(packageId as PackageId);
-    
+
     // Validate amount matches expected package price (tax-inclusive)
     if (typeof amount !== "number" || amount <= 0 || amount > 10000) {
       const amountError = new ValidationError("Invalid payment amount");
@@ -83,7 +83,9 @@ export async function POST(request: NextRequest) {
 
     // Validate that the provided amount matches the expected package total
     if (Math.abs(amount - packagePricing.totalPrice) > 0.01) {
-      const priceError = new ValidationError("Amount does not match package price");
+      const priceError = new ValidationError(
+        "Amount does not match package price",
+      );
       logError(priceError, {
         ip,
         endpoint: "payment",
@@ -102,7 +104,7 @@ export async function POST(request: NextRequest) {
     if (process.env.NODE_ENV === "development") {
       console.log(
         `💳 Payment initialization from ${ip} for package ${packageId}`,
-        `\n   Base: €${packagePricing.basePrice}, Tax: €${packagePricing.taxAmount}, Total: €${packagePricing.totalPrice}`
+        `\n   Base: €${packagePricing.basePrice}, Tax: €${packagePricing.taxAmount}, Total: €${packagePricing.totalPrice}`,
       );
     }
 

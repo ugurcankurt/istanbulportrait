@@ -2,9 +2,11 @@ import { getTranslations } from "next-intl/server";
 import { Suspense } from "react";
 import { BreadcrumbNav } from "@/components/breadcrumb-nav";
 import { CheckoutForm } from "@/components/checkout-form";
+import { SEOLayout } from "@/components/seo/seo-layout";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getLocalizedPaths } from "@/lib/localized-url";
+import { SEO_CONFIG } from "@/lib/seo-config";
 
 export async function generateMetadata({
   params,
@@ -14,11 +16,11 @@ export async function generateMetadata({
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "checkout" });
 
-  const baseUrl = "https://istanbulportrait.com";
+  const baseUrl = SEO_CONFIG.site.url;
   const paths = getLocalizedPaths("/checkout", baseUrl);
 
   return {
-    title: `${t("title")} | Istanbul Photographer`,
+    title: `${t("title")} | ${SEO_CONFIG.organization.name}`,
     description: t("description"),
     alternates: {
       canonical: paths.canonical(locale),
@@ -55,11 +57,13 @@ function CheckoutSkeleton() {
 
 export default function CheckoutPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background to-muted/20">
-      <BreadcrumbNav />
-      <Suspense fallback={<CheckoutSkeleton />}>
-        <CheckoutForm />
-      </Suspense>
-    </div>
+    <SEOLayout>
+      <div className="min-h-screen bg-gradient-to-b from-background to-muted/20">
+        <BreadcrumbNav />
+        <Suspense fallback={<CheckoutSkeleton />}>
+          <CheckoutForm />
+        </Suspense>
+      </div>
+    </SEOLayout>
   );
 }

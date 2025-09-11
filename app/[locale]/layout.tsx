@@ -4,12 +4,12 @@ import { GoogleAnalytics } from "@/components/analytics/google-analytics";
 import { MultilingualCookieConsent } from "@/components/analytics/multilingual-cookie-consent";
 import { FacebookPixel } from "@/components/analytics/facebook-pixel";
 import { YandexMetrica } from "@/components/analytics/yandex-metrica";
+import { INPTracking } from "@/components/analytics/inp-tracking";
+import { SEO_CONFIG } from "@/lib/seo-config";
 import "../globals.css";
 import { ThemeProvider } from "next-themes";
 import { Footer } from "@/components/footer";
 import { Navigation } from "@/components/navigation";
-import { StructuredData } from "@/components/seo/structured-data";
-import { ReviewsSchema } from "@/components/seo/reviews-schema";
 import { Toaster } from "@/components/ui/sonner";
 import { WhatsAppButton } from "@/components/whatsapp-button";
 
@@ -21,31 +21,20 @@ export async function generateMetadata({
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "seo.home" });
 
-  const baseUrl = "https://istanbulportrait.com";
+  const baseUrl = SEO_CONFIG.site.url;
 
   return {
     metadataBase: new URL(baseUrl),
     title: t("title"),
     description: t("description"),
-    keywords:
-      "istanbul photographer, istanbul photoshoot, istanbul rooftop photoshoot, portrait photographer istanbul, couple photography istanbul, professional photographer istanbul, wedding photographer istanbul",
-    authors: [
-      { name: "Istanbul Photographer Professional Photographer", url: baseUrl },
-    ],
+    keywords: SEO_CONFIG.seo.keywords.join(", "),
+    authors: [{ name: SEO_CONFIG.person.name, url: baseUrl }],
     publisher: "istanbulportrait.com",
     category: "Photography Services",
     robots: {
-      index: true,
-      follow: true,
-      "max-image-preview": "large",
-      "max-video-preview": -1,
-      "max-snippet": -1,
+      ...SEO_CONFIG.seo.robotsDirectives,
       googleBot: {
-        index: true,
-        follow: true,
-        "max-video-preview": -1,
-        "max-image-preview": "large",
-        "max-snippet": -1,
+        ...SEO_CONFIG.seo.robotsDirectives,
         noimageindex: false,
         noarchive: false,
         nocache: false,
@@ -75,7 +64,7 @@ export async function generateMetadata({
       locale: locale,
       type: "website",
       url: `${baseUrl}/${locale}`,
-      siteName: "Istanbul Photographer",
+      siteName: SEO_CONFIG.organization.name,
       countryName: "Turkey",
     },
     twitter: {
@@ -118,11 +107,11 @@ export async function generateMetadata({
       ],
     },
     manifest: "/manifest.json",
-    other: { 
+    other: {
       "yandex-verification": "326ca03cbdc0e2bf",
       "msvalidate.01": process.env.BING_WEBMASTER_KEY || "",
-      "y_key": process.env.YANDEX_WEBMASTER_KEY || ""
-    }
+      y_key: process.env.YANDEX_WEBMASTER_KEY || "",
+    },
   };
 }
 
@@ -150,15 +139,12 @@ export default async function LocaleLayout({
           <GoogleAnalytics />
           <FacebookPixel />
           <YandexMetrica />
+          <INPTracking />
           <Footer />
         </div>
         <Toaster />
         <MultilingualCookieConsent />
         <WhatsAppButton phoneNumber="+905367093724" />
-        <StructuredData type="website" />
-        <StructuredData type="organization" />
-        <StructuredData type="person" />
-        <ReviewsSchema />
       </NextIntlClientProvider>
     </ThemeProvider>
   );

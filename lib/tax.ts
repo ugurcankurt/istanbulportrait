@@ -4,8 +4,8 @@
  */
 
 export const TAX_RATES = {
-  TURKEY: 0.20, // %20 KDV (Turkish VAT)
-  DEFAULT: 0.00,
+  TURKEY: 0.2, // %20 KDV (Turkish VAT)
+  DEFAULT: 0.0,
 } as const;
 
 export interface TaxBreakdown {
@@ -31,7 +31,7 @@ export interface FormattedTaxBreakdown {
  */
 export function calculateTax(
   basePrice: number,
-  taxRate: number = TAX_RATES.TURKEY
+  taxRate: number = TAX_RATES.TURKEY,
 ): number {
   return Math.round(basePrice * taxRate * 100) / 100; // Round to 2 decimal places
 }
@@ -44,9 +44,9 @@ export function calculateTax(
  */
 export function calculateTotalWithTax(
   basePrice: number,
-  taxRate: number = TAX_RATES.TURKEY
+  taxRate: number = TAX_RATES.TURKEY,
 ): number {
-  return Math.round((basePrice * (1 + taxRate)) * 100) / 100;
+  return Math.round(basePrice * (1 + taxRate) * 100) / 100;
 }
 
 /**
@@ -57,7 +57,7 @@ export function calculateTotalWithTax(
  */
 export function calculateBasePrice(
   totalPrice: number,
-  taxRate: number = TAX_RATES.TURKEY
+  taxRate: number = TAX_RATES.TURKEY,
 ): number {
   return Math.round((totalPrice / (1 + taxRate)) * 100) / 100;
 }
@@ -70,7 +70,7 @@ export function calculateBasePrice(
  */
 export function getTaxBreakdown(
   basePrice: number,
-  taxRate: number = TAX_RATES.TURKEY
+  taxRate: number = TAX_RATES.TURKEY,
 ): TaxBreakdown {
   const taxAmount = calculateTax(basePrice, taxRate);
   const totalPrice = basePrice + taxAmount;
@@ -91,7 +91,7 @@ export function getTaxBreakdown(
  */
 export function getTaxBreakdownFromTotal(
   totalPrice: number,
-  taxRate: number = TAX_RATES.TURKEY
+  taxRate: number = TAX_RATES.TURKEY,
 ): TaxBreakdown {
   const basePrice = calculateBasePrice(totalPrice, taxRate);
   const taxAmount = totalPrice - basePrice;
@@ -112,7 +112,7 @@ export function getTaxBreakdownFromTotal(
  */
 export function formatTaxBreakdown(
   breakdown: TaxBreakdown,
-  locale: string = "en"
+  locale: string = "en",
 ): FormattedTaxBreakdown {
   const formatter = new Intl.NumberFormat(getIntlLocale(locale), {
     style: "currency",
@@ -152,12 +152,12 @@ function getIntlLocale(locale: string): string {
  */
 export function isPriceIncludingTax(
   price: number,
-  taxRate: number = TAX_RATES.TURKEY
+  taxRate: number = TAX_RATES.TURKEY,
 ): boolean {
   // This is a heuristic - check if the price is a "round" number when tax is removed
   const basePrice = calculateBasePrice(price, taxRate);
   const recalculatedTotal = calculateTotalWithTax(basePrice, taxRate);
-  
+
   // Allow for small rounding differences (1 cent)
   return Math.abs(recalculatedTotal - price) < 0.01;
 }

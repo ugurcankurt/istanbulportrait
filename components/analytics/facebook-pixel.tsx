@@ -10,7 +10,7 @@ declare global {
     fbq: (
       command: "track" | "trackCustom" | "init" | "consent",
       eventName: string,
-      parameters?: Record<string, unknown>
+      parameters?: Record<string, unknown>,
     ) => void;
     _fbq: typeof window.fbq;
   }
@@ -25,10 +25,10 @@ export function FacebookPixel() {
 
     // Track page views on route changes
     const url = pathname + searchParams.toString();
-    
+
     if (typeof window !== "undefined" && window.fbq) {
       window.fbq("track", "PageView");
-      
+
       // Debug logging in development
       if (process.env.NODE_ENV === "development") {
         console.log("Facebook Pixel - PageView:", url);
@@ -207,6 +207,9 @@ export function FacebookPixelConsentUpdate(consentGranted: boolean) {
 
   // Debug logging in development
   if (process.env.NODE_ENV === "development") {
-    console.log("Facebook Pixel Consent Updated:", consentGranted ? "granted" : "revoked");
+    console.log(
+      "Facebook Pixel Consent Updated:",
+      consentGranted ? "granted" : "revoked",
+    );
   }
 }

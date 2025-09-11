@@ -4,7 +4,14 @@ import { routing } from "@/i18n/routing";
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = "https://istanbulportrait.com";
 
-  const routes = ["", "/packages", "/about", "/contact", "/privacy", "/checkout"];
+  const routes = [
+    "",
+    "/packages",
+    "/about",
+    "/contact",
+    "/privacy",
+    "/checkout",
+  ];
 
   const sitemapEntries = routes.flatMap((route) =>
     routing.locales.map((locale) => {
@@ -17,7 +24,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
         changeFrequency = "daily";
         priority = 1.0;
       } else if (route === "/packages") {
-        changeFrequency = "weekly"; 
+        changeFrequency = "weekly";
         priority = 0.9; // High priority for conversion pages
       } else if (route === "/checkout") {
         changeFrequency = "weekly";
@@ -26,7 +33,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
         changeFrequency = "monthly";
         priority = 0.8; // Good for brand authority
       } else if (route === "/contact") {
-        changeFrequency = "monthly"; 
+        changeFrequency = "monthly";
         priority = 0.75; // Contact pages are important for local SEO
       } else if (route === "/privacy") {
         changeFrequency = "monthly";

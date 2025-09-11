@@ -3,7 +3,13 @@
 import { format } from "date-fns";
 import { ar, enUS, es, ru } from "date-fns/locale";
 import { motion } from "framer-motion";
-import { Calendar as CalendarIcon, Check, Clock, Image as ImageIcon, MapPin } from "lucide-react";
+import {
+  Calendar as CalendarIcon,
+  Check,
+  Clock,
+  Image as ImageIcon,
+  MapPin,
+} from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -131,17 +137,20 @@ export function BookingModal({
   const handleSubmit = form.handleSubmit(
     (data) => {
       console.log("Form submission successful:", data);
-      
+
       // Store booking data in sessionStorage for checkout page
       sessionStorage.setItem("bookingData", JSON.stringify(data));
       console.log("Data stored in sessionStorage");
-      
+
       // Navigate to checkout page
       try {
-        console.log("Attempting to navigate to checkout with package:", selectedPackage);
+        console.log(
+          "Attempting to navigate to checkout with package:",
+          selectedPackage,
+        );
         router.push(`/checkout?package=${selectedPackage}`);
         console.log("Navigation initiated");
-        
+
         // Close modal
         onClose();
       } catch (error) {
@@ -150,7 +159,7 @@ export function BookingModal({
     },
     (errors) => {
       console.error("Form validation errors:", errors);
-    }
+    },
   );
 
   const handleClose = () => {
@@ -165,13 +174,17 @@ export function BookingModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="max-w-md sm:max-w-2xl lg:max-w-4xl max-h-[90vh] overflow-y-auto" showCloseButton={true}>
+      <DialogContent
+        className="max-w-md sm:max-w-2xl lg:max-w-4xl max-h-[90vh] overflow-y-auto"
+        showCloseButton={true}
+      >
         <DialogHeader className="pb-4">
           <DialogTitle className="text-xl sm:text-2xl font-bold">
             {t("booking_details")}
           </DialogTitle>
           <DialogDescription className="text-muted-foreground">
-            {t("modal_description")} <span className="font-semibold">{packageInfo.name}</span>
+            {t("modal_description")}{" "}
+            <span className="font-semibold">{packageInfo.name}</span>
           </DialogDescription>
         </DialogHeader>
 
@@ -182,7 +195,9 @@ export function BookingModal({
               <form onSubmit={handleSubmit} className="space-y-6">
                 <Card>
                   <CardHeader>
-                    <CardTitle className="text-lg">{t("customer_details")}</CardTitle>
+                    <CardTitle className="text-lg">
+                      {t("customer_details")}
+                    </CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-4">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -246,7 +261,9 @@ export function BookingModal({
 
                 <Card>
                   <CardHeader>
-                    <CardTitle className="text-lg">{t("booking_details")}</CardTitle>
+                    <CardTitle className="text-lg">
+                      {t("booking_details")}
+                    </CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-4">
                     {/* Date & Time Selection */}
@@ -258,7 +275,9 @@ export function BookingModal({
                           <FormItem className="space-y-4">
                             <FormLabel className="text-base font-semibold flex items-center gap-2">
                               <CalendarIcon className="w-5 h-5 text-primary" />
-                              {showTimeSelection ? t("form.date_time") : t("form.date")}
+                              {showTimeSelection
+                                ? t("form.date_time")
+                                : t("form.date")}
                             </FormLabel>
 
                             {/* Calendar Widget */}
@@ -323,9 +342,11 @@ export function BookingModal({
                                             "h-10 flex items-center justify-center gap-1 text-xs font-medium transition-all",
                                             timeField.value === time
                                               ? "bg-primary text-primary-foreground shadow-md ring-2 ring-primary ring-offset-1"
-                                              : "hover:bg-muted hover:text-foreground hover:border-primary/50"
+                                              : "hover:bg-muted hover:text-foreground hover:border-primary/50",
                                           )}
-                                          onClick={() => timeField.onChange(time)}
+                                          onClick={() =>
+                                            timeField.onChange(time)
+                                          }
                                         >
                                           <Clock className="w-3 h-3 flex-shrink-0" />
                                           <span>{time}</span>
@@ -362,7 +383,6 @@ export function BookingModal({
                     />
                   </CardContent>
                 </Card>
-
               </form>
             </Form>
           </div>
@@ -371,7 +391,9 @@ export function BookingModal({
           <div className="space-y-4">
             <Card>
               <CardHeader>
-                <CardTitle className="text-lg">{t("package_summary")}</CardTitle>
+                <CardTitle className="text-lg">
+                  {t("package_summary")}
+                </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="flex justify-between items-start">
@@ -397,17 +419,23 @@ export function BookingModal({
 
                 {/* Key Features */}
                 <div className="space-y-2">
-                  <h4 className="text-sm font-medium text-muted-foreground">{t("included_features") || "Included Features"}</h4>
+                  <h4 className="text-sm font-medium text-muted-foreground">
+                    {t("included_features") || "Included Features"}
+                  </h4>
                   <ul className="space-y-1">
                     {packageInfo.features.slice(0, 4).map((feature, index) => (
-                      <li key={index} className="flex items-start gap-2 text-xs">
+                      <li
+                        key={index}
+                        className="flex items-start gap-2 text-xs"
+                      >
                         <Check className="w-3 h-3 text-primary mt-0.5 flex-shrink-0" />
                         <span className="text-muted-foreground">{feature}</span>
                       </li>
                     ))}
                     {packageInfo.features.length > 4 && (
                       <li className="text-xs text-muted-foreground ml-5">
-                        +{packageInfo.features.length - 4} {t("more_features") || "more features"}
+                        +{packageInfo.features.length - 4}{" "}
+                        {t("more_features") || "more features"}
                       </li>
                     )}
                   </ul>
@@ -425,7 +453,7 @@ export function BookingModal({
             </Card>
           </div>
         </div>
-        
+
         <DialogFooter className="pt-6 px-6">
           <Button
             type="button"
@@ -435,11 +463,7 @@ export function BookingModal({
           >
             {t("buttons.cancel")}
           </Button>
-          <Button 
-            type="submit" 
-            className="h-12 px-8"
-            onClick={handleSubmit}
-          >
+          <Button type="submit" className="h-12 px-8" onClick={handleSubmit}>
             {t("buttons.continue_to_payment")}
           </Button>
         </DialogFooter>

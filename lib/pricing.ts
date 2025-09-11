@@ -3,8 +3,14 @@
  * Integrates with package pricing and tax calculations
  */
 
-import { getTaxBreakdownFromTotal, formatTaxBreakdown, type TaxBreakdown, type FormattedTaxBreakdown, TAX_RATES } from './tax';
-import { packagePrices, type PackageId } from './validations';
+import {
+  getTaxBreakdownFromTotal,
+  formatTaxBreakdown,
+  type TaxBreakdown,
+  type FormattedTaxBreakdown,
+  TAX_RATES,
+} from "./tax";
+import { packagePrices, type PackageId } from "./validations";
 
 export interface PriceBreakdown extends TaxBreakdown {
   packageId: PackageId;
@@ -25,11 +31,11 @@ export interface FormattedPriceBreakdown extends FormattedTaxBreakdown {
  */
 export function getPackagePricing(
   packageId: PackageId,
-  taxRate: number = TAX_RATES.TURKEY
+  taxRate: number = TAX_RATES.TURKEY,
 ): PriceBreakdown {
   const totalPrice = packagePrices[packageId];
   const taxBreakdown = getTaxBreakdownFromTotal(totalPrice, taxRate);
-  
+
   return {
     ...taxBreakdown,
     packageId,
@@ -39,7 +45,7 @@ export function getPackagePricing(
 
 /**
  * Format package pricing for display
- * @param packageId - Package identifier  
+ * @param packageId - Package identifier
  * @param locale - Locale for formatting
  * @param taxRate - Tax rate (defaults to Turkey VAT)
  * @returns Formatted price breakdown
@@ -47,11 +53,11 @@ export function getPackagePricing(
 export function formatPackagePricing(
   packageId: PackageId,
   locale: string = "en",
-  taxRate: number = TAX_RATES.TURKEY
+  taxRate: number = TAX_RATES.TURKEY,
 ): FormattedPriceBreakdown {
   const breakdown = getPackagePricing(packageId, taxRate);
   const formatted = formatTaxBreakdown(breakdown, locale);
-  
+
   return {
     ...formatted,
     packageId: breakdown.packageId,
@@ -67,11 +73,11 @@ export function formatPackagePricing(
 function getPackageDisplayName(packageId: PackageId): string {
   const displayNames = {
     essential: "Essential Package",
-    premium: "Premium Package", 
+    premium: "Premium Package",
     luxury: "Luxury Package",
     rooftop: "Rooftop Package",
   };
-  
+
   return displayNames[packageId];
 }
 
@@ -83,19 +89,19 @@ function getPackageDisplayName(packageId: PackageId): string {
  */
 export function calculateMultiPackageTotal(
   packageIds: PackageId[],
-  taxRate: number = TAX_RATES.TURKEY
+  taxRate: number = TAX_RATES.TURKEY,
 ): TaxBreakdown {
-  const breakdowns = packageIds.map(id => getPackagePricing(id, taxRate));
-  
+  const breakdowns = packageIds.map((id) => getPackagePricing(id, taxRate));
+
   const totals = breakdowns.reduce(
     (acc, breakdown) => ({
       basePrice: acc.basePrice + breakdown.basePrice,
       taxAmount: acc.taxAmount + breakdown.taxAmount,
       totalPrice: acc.totalPrice + breakdown.totalPrice,
     }),
-    { basePrice: 0, taxAmount: 0, totalPrice: 0 }
+    { basePrice: 0, taxAmount: 0, totalPrice: 0 },
   );
-  
+
   return {
     basePrice: Math.round(totals.basePrice * 100) / 100,
     taxRate,
@@ -113,12 +119,12 @@ export function calculateMultiPackageTotal(
  */
 export function validatePackagePrice(
   packageId: PackageId,
-  taxRate: number = TAX_RATES.TURKEY
+  taxRate: number = TAX_RATES.TURKEY,
 ): boolean {
   try {
     const breakdown = getPackagePricing(packageId, taxRate);
     const recalculatedTotal = breakdown.basePrice + breakdown.taxAmount;
-    
+
     // Allow for small rounding differences (1 cent)
     return Math.abs(recalculatedTotal - breakdown.totalPrice) < 0.01;
   } catch {
@@ -134,10 +140,10 @@ export function validatePackagePrice(
  */
 export function getAllPackagePricing(
   locale: string = "en",
-  taxRate: number = TAX_RATES.TURKEY
+  taxRate: number = TAX_RATES.TURKEY,
 ): FormattedPriceBreakdown[] {
-  return Object.keys(packagePrices).map(packageId => 
-    formatPackagePricing(packageId as PackageId, locale, taxRate)
+  return Object.keys(packagePrices).map((packageId) =>
+    formatPackagePricing(packageId as PackageId, locale, taxRate),
   );
 }
 
@@ -158,7 +164,7 @@ export function getPackageTotal(packageId: PackageId): number {
  */
 export function getPackageBasePrice(
   packageId: PackageId,
-  taxRate: number = TAX_RATES.TURKEY
+  taxRate: number = TAX_RATES.TURKEY,
 ): number {
   return getPackagePricing(packageId, taxRate).basePrice;
 }

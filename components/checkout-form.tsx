@@ -11,7 +11,12 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { BookingSuccess } from "@/components/booking-success";
 import { PaymentForm } from "@/components/payment-form";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Form } from "@/components/ui/form";
@@ -28,7 +33,11 @@ import type {
   PaymentFormData,
 } from "@/lib/validations";
 import { formatPackagePricing } from "@/lib/pricing";
-import { createBookingSchema, createPaymentSchema, packagePrices } from "@/lib/validations";
+import {
+  createBookingSchema,
+  createPaymentSchema,
+  packagePrices,
+} from "@/lib/validations";
 import { getIyzicoErrorMessage } from "@/lib/iyzico-errors";
 import { useIndexNow } from "@/lib/hooks/use-indexnow";
 
@@ -48,9 +57,10 @@ export function CheckoutForm() {
   );
   const [bookingId, setBookingId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [preFilledBookingData, setPreFilledBookingData] = useState<BookingFormData | null>(null);
+  const [preFilledBookingData, setPreFilledBookingData] =
+    useState<BookingFormData | null>(null);
   const [showSuccess, setShowSuccess] = useState(false);
-  
+
   // IndexNow integration for automatic URL submission
   const { notifyBookingCreated } = useIndexNow();
 
@@ -96,10 +106,13 @@ export function CheckoutForm() {
       try {
         const bookingData = JSON.parse(storedBookingData) as BookingFormData;
         setPreFilledBookingData(bookingData);
-        
+
         // Pre-fill the form with stored data
         Object.keys(bookingData).forEach((key) => {
-          bookingForm.setValue(key as keyof BookingFormData, bookingData[key as keyof BookingFormData]);
+          bookingForm.setValue(
+            key as keyof BookingFormData,
+            bookingData[key as keyof BookingFormData],
+          );
         });
       } catch (error) {
         console.error("Error loading booking data from sessionStorage:", error);
@@ -127,10 +140,10 @@ export function CheckoutForm() {
     if (!selectedPackage) return;
 
     setIsLoading(true);
-    
+
     // Get booking data once at the beginning - outside try block
     const bookingData = bookingForm.getValues();
-    
+
     try {
       // Step 1: Initialize payment FIRST (no booking creation yet)
       const paymentResponse = await fetch("/api/payment/initialize", {
@@ -172,7 +185,7 @@ export function CheckoutForm() {
         setBookingId(bookingResult.booking.id);
         setShowSuccess(true);
         toast.success(t("success.payment_successful"));
-        
+
         // Clear booking data from sessionStorage
         sessionStorage.removeItem("bookingData");
 
@@ -203,7 +216,7 @@ export function CheckoutForm() {
         fbPixel.trackPurchase(
           selectedPackage,
           packagePrices[selectedPackage],
-          bookingResult.booking.id
+          bookingResult.booking.id,
         );
         trackFacebookEvent("Purchase", {
           email: bookingData.customerEmail,
@@ -219,7 +232,7 @@ export function CheckoutForm() {
           packagePrices[selectedPackage],
           "failure",
         );
-        
+
         // Handle Iyzico error with localized message
         const errorCode = paymentResult.errorCode;
         if (process.env.NODE_ENV === "development") {
@@ -227,14 +240,16 @@ export function CheckoutForm() {
             errorCode,
             locale,
             hasErrorCode: !!errorCode,
-            paymentResult
+            paymentResult,
           });
         }
-        
+
         if (errorCode) {
           // Debug log for error code handling (development only)
           if (process.env.NODE_ENV === "development") {
-            console.log(`🎯 Processing error code: ${errorCode} for locale: ${locale}`);
+            console.log(
+              `🎯 Processing error code: ${errorCode} for locale: ${locale}`,
+            );
           }
           const iyzicoError = getIyzicoErrorMessage(errorCode, locale);
           if (process.env.NODE_ENV === "development") {
@@ -242,21 +257,21 @@ export function CheckoutForm() {
           }
           throw new Error(`${iyzicoError.message}|${iyzicoError.suggestion}`);
         }
-        
+
         throw new Error(
           paymentResult.errorMessage || t("error.payment_failed"),
         );
       }
     } catch (error) {
       console.error("Payment error:", error);
-      
+
       // Enhanced error handling with Iyzico error codes
       let errorMessage = t("error.payment_failed");
-      
+
       if (error instanceof Error) {
         // Check if it's an Iyzico error with suggestions (using | separator)
-        if (error.message.includes('|')) {
-          const [message, suggestion] = error.message.split('|');
+        if (error.message.includes("|")) {
+          const [message, suggestion] = error.message.split("|");
           errorMessage = message;
           // Show combined message with suggestion
           toast.error(
@@ -264,19 +279,19 @@ export function CheckoutForm() {
               <div className="font-medium">{message}</div>
               <div className="text-sm text-muted-foreground">{suggestion}</div>
             </div>,
-            { 
+            {
               duration: 8000,
               style: {
-                maxWidth: '400px'
-              }
-            }
+                maxWidth: "400px",
+              },
+            },
           );
           return; // Exit early to avoid showing duplicate toast
         } else {
           errorMessage = error.message;
         }
       }
-      
+
       toast.error(errorMessage);
 
       // Track payment failure
@@ -298,15 +313,21 @@ export function CheckoutForm() {
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
         <div className="flex justify-between">
           <span className="text-muted-foreground">{t("labels.customer")}</span>
-          <span className="font-medium">{preFilledBookingData?.customerName}</span>
+          <span className="font-medium">
+            {preFilledBookingData?.customerName}
+          </span>
         </div>
         <div className="flex justify-between">
           <span className="text-muted-foreground">{t("labels.date")}</span>
-          <span className="font-medium">{preFilledBookingData?.bookingDate}</span>
+          <span className="font-medium">
+            {preFilledBookingData?.bookingDate}
+          </span>
         </div>
         <div className="flex justify-between">
           <span className="text-muted-foreground">{t("labels.time")}</span>
-          <span className="font-medium">{preFilledBookingData?.bookingTime}</span>
+          <span className="font-medium">
+            {preFilledBookingData?.bookingTime}
+          </span>
         </div>
         <div className="flex justify-between">
           <span className="text-muted-foreground">{t("labels.package")}</span>
@@ -317,11 +338,15 @@ export function CheckoutForm() {
   );
 
   // Helper component for Package Summary content with tax breakdown
-  const PackageSummaryContent = ({ tPricing: translations }: { tPricing: any }) => {
+  const PackageSummaryContent = ({
+    tPricing: translations,
+  }: {
+    tPricing: any;
+  }) => {
     if (!selectedPackage) return null;
-    
+
     const pricing = formatPackagePricing(selectedPackage, locale);
-    
+
     return (
       <div className="space-y-4">
         <div className="bg-gradient-to-br from-primary/10 to-primary/5 rounded-lg p-4 border border-primary/20">
@@ -345,14 +370,19 @@ export function CheckoutForm() {
                 </div>
               </div>
             </div>
-            <Badge variant="default" className="bg-green-100 text-green-800 border-green-200">
+            <Badge
+              variant="default"
+              className="bg-green-100 text-green-800 border-green-200"
+            >
               {tui("selected")}
             </Badge>
           </div>
 
           {/* Key Features */}
           <div className="space-y-2 mt-4">
-            <h4 className="text-sm font-medium text-muted-foreground">{t("included_features") || "Included Features"}</h4>
+            <h4 className="text-sm font-medium text-muted-foreground">
+              {t("included_features") || "Included Features"}
+            </h4>
             <ul className="space-y-1">
               {packageInfo?.features.slice(0, 4).map((feature, index) => (
                 <li key={index} className="flex items-start gap-2 text-xs">
@@ -362,7 +392,8 @@ export function CheckoutForm() {
               ))}
               {packageInfo && packageInfo.features.length > 4 && (
                 <li className="text-xs text-muted-foreground ml-5">
-                  +{packageInfo.features.length - 4} {t("more_features") || "more features"}
+                  +{packageInfo.features.length - 4}{" "}
+                  {t("more_features") || "more features"}
                 </li>
               )}
             </ul>
@@ -376,10 +407,12 @@ export function CheckoutForm() {
           <div className="space-y-2">
             {/* Base Price */}
             <div className="flex justify-between items-center text-sm">
-              <span className="text-muted-foreground">{translations("subtotal")}</span>
+              <span className="text-muted-foreground">
+                {translations("subtotal")}
+              </span>
               <span>{pricing.basePrice}</span>
             </div>
-            
+
             {/* Tax Amount */}
             <div className="flex justify-between items-center text-sm">
               <span className="text-muted-foreground">
@@ -387,12 +420,14 @@ export function CheckoutForm() {
               </span>
               <span>{pricing.taxAmount}</span>
             </div>
-            
+
             <Separator className="my-2" />
-            
+
             {/* Total */}
             <div className="flex justify-between items-center">
-              <span className="text-lg font-semibold">{translations("final_total")}</span>
+              <span className="text-lg font-semibold">
+                {translations("final_total")}
+              </span>
               <span className="text-2xl font-bold text-primary">
                 {pricing.totalPrice}
               </span>
@@ -408,8 +443,8 @@ export function CheckoutForm() {
 
   if (showSuccess && bookingId && selectedPackage) {
     return (
-      <BookingSuccess 
-        bookingId={bookingId} 
+      <BookingSuccess
+        bookingId={bookingId}
         packageId={selectedPackage}
         customerData={preFilledBookingData || undefined}
       />
@@ -467,16 +502,24 @@ export function CheckoutForm() {
           <CardContent className="p-3 sm:p-6">
             {/* Mobile Layout: Accordion */}
             <div className="lg:hidden space-y-4">
-              <Accordion type="multiple" defaultValue={["booking-summary"]} className="space-y-4">
+              <Accordion
+                type="multiple"
+                defaultValue={["booking-summary"]}
+                className="space-y-4"
+              >
                 {/* Booking Summary Accordion */}
                 <AccordionItem value="booking-summary">
                   <Card className="border-2 border-primary/10">
                     <AccordionTrigger className="px-4 py-3 hover:no-underline">
                       <div className="flex items-center gap-3">
                         <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
-                          <span className="text-primary-foreground text-sm font-bold">📋</span>
+                          <span className="text-primary-foreground text-sm font-bold">
+                            📋
+                          </span>
                         </div>
-                        <span className="text-base font-semibold">{t("booking_summary")}</span>
+                        <span className="text-base font-semibold">
+                          {t("booking_summary")}
+                        </span>
                       </div>
                     </AccordionTrigger>
                     <AccordionContent className="px-4 pb-4">
@@ -491,9 +534,13 @@ export function CheckoutForm() {
                     <AccordionTrigger className="px-4 py-3 hover:no-underline">
                       <div className="flex items-center gap-3">
                         <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
-                          <span className="text-primary-foreground text-sm font-bold">📦</span>
+                          <span className="text-primary-foreground text-sm font-bold">
+                            📦
+                          </span>
                         </div>
-                        <span className="text-base font-semibold">{t("package_summary")}</span>
+                        <span className="text-base font-semibold">
+                          {t("package_summary")}
+                        </span>
                       </div>
                     </AccordionTrigger>
                     <AccordionContent className="px-4 pb-4">
@@ -508,7 +555,9 @@ export function CheckoutForm() {
                 <CardHeader className="bg-gradient-to-r from-primary/5 to-transparent">
                   <CardTitle className="text-xl font-bold flex items-center gap-3">
                     <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
-                      <span className="text-primary-foreground text-sm font-bold">💳</span>
+                      <span className="text-primary-foreground text-sm font-bold">
+                        💳
+                      </span>
                     </div>
                     {t("payment_details")}
                   </CardTitle>
@@ -540,7 +589,9 @@ export function CheckoutForm() {
                     <CardHeader className="pb-3 bg-gradient-to-r from-primary/5 to-transparent">
                       <CardTitle className="text-xl font-bold flex items-center gap-3">
                         <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
-                          <span className="text-primary-foreground text-sm font-bold">📋</span>
+                          <span className="text-primary-foreground text-sm font-bold">
+                            📋
+                          </span>
                         </div>
                         {t("booking_summary")}
                       </CardTitle>
@@ -558,7 +609,9 @@ export function CheckoutForm() {
                     <CardHeader className="bg-gradient-to-r from-primary/5 to-transparent">
                       <CardTitle className="text-xl font-bold flex items-center gap-3">
                         <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
-                          <span className="text-primary-foreground text-sm font-bold">💳</span>
+                          <span className="text-primary-foreground text-sm font-bold">
+                            💳
+                          </span>
                         </div>
                         {t("payment_details")}
                       </CardTitle>
@@ -586,7 +639,9 @@ export function CheckoutForm() {
                     <CardHeader className="pb-4 bg-gradient-to-r from-primary/5 to-transparent">
                       <CardTitle className="text-xl font-bold flex items-center gap-3">
                         <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
-                          <span className="text-primary-foreground text-sm font-bold">📦</span>
+                          <span className="text-primary-foreground text-sm font-bold">
+                            📦
+                          </span>
                         </div>
                         {t("package_summary")}
                       </CardTitle>
