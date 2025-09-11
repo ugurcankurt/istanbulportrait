@@ -26,9 +26,11 @@ export const SEO_CONFIG = {
     ],
     address: {
       "@type": "PostalAddress",
-      addressCountry: "TR",
-      addressLocality: "Istanbul",
+      streetAddress: "Alemdar, Molla Fenari, Divan Yolu Cd. No:78/A",
+      addressLocality: "Fatih",
       addressRegion: "Istanbul",
+      postalCode: "34110",
+      addressCountry: "TR",
     },
     contactPoint: {
       "@type": "ContactPoint",

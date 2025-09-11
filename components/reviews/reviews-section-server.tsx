@@ -47,6 +47,14 @@ export async function ReviewsSection({
       "@type": "LocalBusiness" as const,
       "@id": `${SEO_CONFIG.site.url}/#localbusiness-reviews`,
       name: SEO_CONFIG.organization.name,
+      address: {
+        "@type": "PostalAddress" as const,
+        streetAddress: SEO_CONFIG.organization.address.streetAddress,
+        addressLocality: SEO_CONFIG.organization.address.addressLocality,
+        addressRegion: SEO_CONFIG.organization.address.addressRegion,
+        postalCode: SEO_CONFIG.organization.address.postalCode,
+        addressCountry: SEO_CONFIG.organization.address.addressCountry,
+      },
       aggregateRating: aggregateRatingSchema,
       review: reviewSchemas.map(schema => ({
         "@type": "Review" as const,

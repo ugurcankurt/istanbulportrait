@@ -43,9 +43,11 @@ export function generateLocalBusinessSchema(
     logo: SEO_CONFIG.organization.logo,
     address: {
       "@type": "PostalAddress",
-      addressCountry: SEO_CONFIG.organization.address.addressCountry,
+      streetAddress: SEO_CONFIG.organization.address.streetAddress,
       addressLocality: SEO_CONFIG.organization.address.addressLocality,
       addressRegion: SEO_CONFIG.organization.address.addressRegion,
+      postalCode: SEO_CONFIG.organization.address.postalCode,
+      addressCountry: SEO_CONFIG.organization.address.addressCountry,
     },
     geo: {
       "@type": "GeoCoordinates",
