@@ -146,6 +146,15 @@
   "checkout": {
     "title": "Reserva tu Sesión",
     "description": "Completa tu reserva para la experiencia perfecta de fotografía en Estambul",
+    "payment_description": "Revisa los detalles de tu reserva y completa el pago",
+    "booking_summary": "Resumen de Reserva",
+    "modal_description": "Completa tus datos para reservar",
+    "booking": {
+      "review_details": "Revisa los detalles de tu reserva"
+    },
+    "package": {
+      "selected_details": "Detalles del paquete fotográfico seleccionado"
+    },
     "steps": {
       "package": "Paquete",
       "details": "Detalles",
@@ -170,11 +179,16 @@
       "expire_month": "MM",
       "expire_year": "AA",
       "cvc": "CVC",
-      "terms": "Acepto los términos y condiciones"
+      "terms": "Acepto los términos y condiciones",
+      "month_short": "MM",
+      "year_short": "AA"
     },
     "buttons": {
       "continue": "Continuar",
       "back": "Atrás",
+      "cancel": "Cancelar",
+      "continue_to_payment": "Continuar al Pago",
+      "edit_details": "Editar Detalles",
       "complete_booking": "Completar Reserva",
       "pay_amount": "PAGAR {amount}",
       "processing": "Procesando...",
@@ -191,6 +205,26 @@
       "payment_failed": "El pago falló. Por favor, verifica los datos de tu tarjeta e inténtalo de nuevo.",
       "booking_failed": "Error al crear la reserva. Por favor, inténtalo de nuevo.",
       "payment_init_failed": "Error al inicializar el pago"
+    },
+    "included_features": "Características Incluidas",
+    "more_features": "más características",
+    "loading_booking": "Cargando detalles de la reserva...",
+    "labels": {
+      "customer": "Cliente:",
+      "date": "Fecha:",
+      "time": "Hora:",
+      "package": "Paquete:",
+      "total_amount": "Importe Total:"
+    },
+    "security": {
+      "ssl_encrypted": "Encriptado SSL",
+      "secure_payment": "Pago Seguro",
+      "pci_compliant": "Compatible PCI",
+      "payment_secure_message": "Pago Seguro • Encriptado SSL • Compatible PCI"
+    },
+    "payment": {
+      "complete_description": "Completa tu reserva ingresando tu información de pago",
+      "secure_no_fees": "Pago seguro • Sin comisiones ocultas"
     }
   },
   "validation": {
@@ -210,7 +244,8 @@
     "message_min": "El mensaje debe tener al menos 10 caracteres",
     "card_number_invalid": "El número de tarjeta debe tener 13-19 dígitos",
     "preferred_date_required": "Por favor, selecciona una fecha preferida",
-    "package_selection_required": "Por favor, selecciona un paquete"
+    "package_selection_required": "Por favor, selecciona un paquete",
+    "phone_required": "El número de teléfono es obligatorio"
   },
   "placeholders": {
     "full_name": "Juan Pérez",
@@ -334,6 +369,135 @@
     "payment_failed": "Pago fallido",
     "booking_failed": "Error al crear la reserva",
     "payment_init_failed": "Error al inicializar el pago"
+  },
+  "iyzico_errors": {
+    "fallback_message": "El pago falló. Por favor, inténtalo de nuevo o contacta con soporte.",
+    "fallback_suggestion": "Por favor, verifica los datos de pago e inténtalo de nuevo",
+    "categories": {
+      "bank": "Error del Banco",
+      "validation": "Error de Validación",
+      "general": "Error de Pago",
+      "system": "Error del Sistema",
+      "demo": "Modo Demo",
+      "unknown": "Error Desconocido",
+      "INVALID_TRANSACTION": "Transacción Inválida",
+      "INVALID_CARD": "Tarjeta Inválida",
+      "NOT_SUFFICIENT_FUNDS": "Fondos Insuficientes",
+      "CONTACT_BANK": "Contactar Banco",
+      "SYSTEM_ERROR": "Error del Sistema"
+    },
+    "codes": {
+      "10012": {
+        "message": "Ocurrió un error durante el proceso de pago, por favor contacte con su banco",
+        "suggestion": "Este es un error relacionado con la tarjeta. Se recomienda que el titular de la tarjeta contacte con su banco"
+      },
+      "10005": {
+        "message": "Su banco ha rechazado esta transacción",
+        "suggestion": "Por favor, contacte con su banco o pruebe un método de pago diferente"
+      },
+      "10051": {
+        "message": "Su tarjeta no tiene fondos suficientes para esta transacción",
+        "suggestion": "Por favor, verifique el saldo de su tarjeta o pruebe un método de pago diferente"
+      },
+      "10054": {
+        "message": "Su tarjeta ha expirado",
+        "suggestion": "Por favor, use una tarjeta diferente o contacte con su banco para obtener una nueva"
+      },
+      "10057": {
+        "message": "Este tipo de transacción no está permitido para su tarjeta",
+        "suggestion": "Por favor, contacte con su banco para habilitar este tipo de transacción"
+      },
+      "10058": {
+        "message": "Transacción no permitida en este comercio",
+        "suggestion": "Por favor, pruebe un método de pago diferente"
+      },
+      "10059": {
+        "message": "Transacción marcada por razones de seguridad",
+        "suggestion": "Por favor, contacte con su banco para verificar y autorizar esta transacción"
+      },
+      "10084": {
+        "message": "La autorización de la transacción ha expirado",
+        "suggestion": "Por favor, inicie el proceso de pago nuevamente"
+      },
+      "10093": {
+        "message": "Su tarjeta no está habilitada para transacciones en línea",
+        "suggestion": "Por favor, contacte con su banco para habilitar pagos en línea para su tarjeta"
+      },
+      "10096": {
+        "message": "El sistema de pago está temporalmente fuera de servicio",
+        "suggestion": "Por favor, inténtelo de nuevo en unos minutos"
+      },
+      "10201": {
+        "message": "El número de tarjeta ingresado es inválido",
+        "suggestion": "Por favor, verifique el número de su tarjeta e inténtelo de nuevo"
+      },
+      "10202": {
+        "message": "Su tarjeta ha expirado",
+        "suggestion": "Por favor, use una tarjeta diferente o contacte con su banco para renovarla"
+      },
+      "10204": {
+        "message": "El código de seguridad (CVC) es incorrecto",
+        "suggestion": "Por favor, verifique el código de seguridad de 3 dígitos en el reverso de su tarjeta"
+      },
+      "10206": {
+        "message": "La fecha de vencimiento de la tarjeta es incorrecta",
+        "suggestion": "Por favor, verifique la fecha de vencimiento en su tarjeta (formato MM/AA)"
+      },
+      "10207": {
+        "message": "Fondos insuficientes en su cuenta",
+        "suggestion": "Por favor, verifique el saldo de su cuenta o pruebe un método de pago diferente"
+      },
+      "10034": {
+        "message": "Transacción marcada como potencialmente fraudulenta",
+        "suggestion": "Por favor, contacte con su banco para verificar esta transacción"
+      },
+      "10208": {
+        "message": "Ocurrió un error del sistema durante el procesamiento del pago",
+        "suggestion": "Por favor, inténtelo de nuevo más tarde o contacte con atención al cliente"
+      },
+      "10209": {
+        "message": "La transacción ha agotado el tiempo límite",
+        "suggestion": "Por favor, intente el pago nuevamente"
+      },
+      "10210": {
+        "message": "Ocurrió un error de conexión de red",
+        "suggestion": "Por favor, verifique su conexión a internet e inténtelo de nuevo"
+      },
+      "5": {
+        "message": "La transacción fue rechazada",
+        "suggestion": "Por favor, contacte con su banco o pruebe un método de pago diferente"
+      },
+      "14": {
+        "message": "El número de tarjeta ingresado es inválido",
+        "suggestion": "Por favor, verifique el número de su tarjeta e inténtelo de nuevo"
+      },
+      "51": {
+        "message": "Fondos insuficientes en su tarjeta",
+        "suggestion": "Por favor, verifique su saldo o use un método de pago diferente"
+      },
+      "54": {
+        "message": "Su tarjeta ha expirado",
+        "suggestion": "Por favor, use una tarjeta diferente o contacte con su banco"
+      },
+      "DEMO_INVALID_CARD": {
+        "message": "Por favor, use la tarjeta de prueba para pagos de demostración",
+        "suggestion": "Use el número de tarjeta: 5528790000000008"
+      },
+      "INVALID_REQUEST": {
+        "message": "La información de pago está incompleta",
+        "suggestion": "Por favor, verifique todos los detalles de pago e inténtelo de nuevo"
+      },
+      "10235": {
+        "message": "Las tarjetas American Express no son aceptadas para pagos en Turquía",
+        "suggestion": "Por favor, use una tarjeta Visa o Mastercard para el pago"
+      }
+    },
+    "common_suggestions": {
+      "contact_bank": "Por favor, contacta con tu banco",
+      "try_different_card": "Por favor, prueba con un método de pago diferente",
+      "check_details": "Por favor, verifica los datos de pago",
+      "try_again_later": "Por favor, inténtalo más tarde"
+    }
   },
   "faq": {
     "title": "Preguntas Frecuentes",
@@ -533,6 +697,17 @@
     "view_all": "Ver todas las reseñas en Google",
     "loading": "Cargando reseñas...",
     "error": "No se pueden cargar las reseñas en este momento"
+  },
+  "pricing": {
+    "base_price": "Precio Base",
+    "tax_rate": "IVA ({rate}%)",
+    "tax_amount": "Importe IVA",
+    "total_price": "Precio Total",
+    "tax_inclusive": "Impuestos Incluidos",
+    "price_breakdown": "Desglose de Precios",
+    "subtotal": "Subtotal",
+    "vat": "IVA",
+    "final_total": "Total Final"
   },
   "notfound": {
     "title": "Página No Encontrada",

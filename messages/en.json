@@ -146,6 +146,15 @@
   "checkout": {
     "title": "Book Your Session",
     "description": "Complete your booking for the perfect Istanbul photoshoot experience",
+    "payment_description": "Review your booking details and complete payment",
+    "booking_summary": "Booking Summary",
+    "modal_description": "Fill in your details to book",
+    "booking": {
+      "review_details": "Review your booking information"
+    },
+    "package": {
+      "selected_details": "Details of your selected photography package"
+    },
     "steps": {
       "package": "Package",
       "details": "Details",
@@ -170,11 +179,16 @@
       "expire_month": "MM",
       "expire_year": "YY",
       "cvc": "CVC",
-      "terms": "I agree to the terms and conditions"
+      "terms": "I agree to the terms and conditions",
+      "month_short": "MM",
+      "year_short": "YY"
     },
     "buttons": {
       "continue": "Continue",
       "back": "Back",
+      "cancel": "Cancel",
+      "continue_to_payment": "Continue to Payment",
+      "edit_details": "Edit Details",
       "complete_booking": "Complete Booking",
       "pay_amount": "PAY {amount}",
       "processing": "Processing...",
@@ -190,6 +204,26 @@
       "generic": "Something went wrong. Please try again.",
       "payment_failed": "Payment failed. Please check your card details and try again.",
       "booking_failed": "Failed to create booking. Please try again."
+    },
+    "included_features": "Included Features",
+    "more_features": "more features",
+    "loading_booking": "Loading booking details...",
+    "labels": {
+      "customer": "Customer:",
+      "date": "Date:",
+      "time": "Time:",
+      "package": "Package:",
+      "total_amount": "Total Amount:"
+    },
+    "security": {
+      "ssl_encrypted": "SSL Encrypted",
+      "secure_payment": "Secure Payment",
+      "pci_compliant": "PCI Compliant",
+      "payment_secure_message": "Secure Payment • SSL Encrypted • PCI Compliant"
+    },
+    "payment": {
+      "complete_description": "Complete your booking by entering your payment information",
+      "secure_no_fees": "Secure payment • No hidden fees"
     }
   },
   "footer": {
@@ -226,7 +260,8 @@
     "message_min": "Message must be at least 10 characters",
     "card_number_invalid": "Card number must be 13-19 digits",
     "preferred_date_required": "Please select a preferred date",
-    "package_selection_required": "Please select a package"
+    "package_selection_required": "Please select a package",
+    "phone_required": "Phone number is required"
   },
   "placeholders": {
     "full_name": "Full Name",
@@ -351,8 +386,16 @@
   },
   "success": {
     "booking_details": "Booking Details",
+    "booking_id": "Booking ID",
+    "customer_details": "Customer Information",
     "package_label": "Package",
     "amount_paid": "Amount Paid",
+    "booking_date": "Date",
+    "booking_time": "Time",
+    "customer_name": "Name",
+    "customer_email": "Email",
+    "customer_phone": "Phone",
+    "notes": "Special Requests",
     "whats_next": "What's Next?",
     "confirmation_email": "Confirmation Email Sent",
     "email_description": "Check your inbox for detailed booking information",
@@ -394,6 +437,135 @@
     "payment_failed": "Payment failed",
     "booking_failed": "Failed to create booking",
     "payment_init_failed": "Payment initialization failed"
+  },
+  "iyzico_errors": {
+    "fallback_message": "Payment failed. Please try again or contact support.",
+    "fallback_suggestion": "Please check your payment details and try again",
+    "categories": {
+      "bank": "Bank Error",
+      "validation": "Validation Error",
+      "general": "Payment Error",
+      "system": "System Error",
+      "demo": "Demo Mode",
+      "unknown": "Unknown Error",
+      "INVALID_TRANSACTION": "Invalid Transaction",
+      "INVALID_CARD": "Invalid Card",
+      "NOT_SUFFICIENT_FUNDS": "Insufficient Funds",
+      "CONTACT_BANK": "Contact Bank",
+      "SYSTEM_ERROR": "System Error"
+    },
+    "codes": {
+      "10012": {
+        "message": "An error occurred during the payment process, please contact your bank",
+        "suggestion": "This is a card-related error. It is recommended that the cardholder contacts their bank"
+      },
+      "10005": {
+        "message": "Your bank has declined this transaction",
+        "suggestion": "Please contact your bank or try a different payment method"
+      },
+      "10051": {
+        "message": "Your card doesn't have sufficient funds for this transaction",
+        "suggestion": "Please check your card balance or try a different payment method"
+      },
+      "10054": {
+        "message": "Your card has expired",
+        "suggestion": "Please use a different card or contact your bank for a new one"
+      },
+      "10057": {
+        "message": "This type of transaction is not allowed for your card",
+        "suggestion": "Please contact your bank to enable this transaction type"
+      },
+      "10058": {
+        "message": "Transaction not permitted at this merchant",
+        "suggestion": "Please try a different payment method"
+      },
+      "10059": {
+        "message": "Transaction flagged for security reasons",
+        "suggestion": "Please contact your bank to verify and authorize this transaction"
+      },
+      "10084": {
+        "message": "Transaction authorization has expired",
+        "suggestion": "Please start the payment process again"
+      },
+      "10093": {
+        "message": "Your card is not enabled for online transactions",
+        "suggestion": "Please contact your bank to enable online payments for your card"
+      },
+      "10096": {
+        "message": "Payment system is temporarily down",
+        "suggestion": "Please try again in a few minutes"
+      },
+      "10201": {
+        "message": "The card number you entered is invalid",
+        "suggestion": "Please check your card number and try again"
+      },
+      "10202": {
+        "message": "Your card has expired",
+        "suggestion": "Please use a different card or contact your bank for renewal"
+      },
+      "10204": {
+        "message": "Security code (CVC) is incorrect",
+        "suggestion": "Please check the 3-digit security code on the back of your card"
+      },
+      "10206": {
+        "message": "Card expiry date is incorrect",
+        "suggestion": "Please check the expiry date on your card (MM/YY format)"
+      },
+      "10207": {
+        "message": "Insufficient funds in your account",
+        "suggestion": "Please check your account balance or try a different payment method"
+      },
+      "10034": {
+        "message": "Transaction flagged as potentially fraudulent",
+        "suggestion": "Please contact your bank to verify this transaction"
+      },
+      "10208": {
+        "message": "A system error occurred during payment processing",
+        "suggestion": "Please try again later or contact customer support"
+      },
+      "10209": {
+        "message": "Transaction timed out",
+        "suggestion": "Please try the payment again"
+      },
+      "10210": {
+        "message": "Network connection error occurred",
+        "suggestion": "Please check your internet connection and try again"
+      },
+      "5": {
+        "message": "Transaction was declined",
+        "suggestion": "Please contact your bank or try a different payment method"
+      },
+      "14": {
+        "message": "The card number you entered is invalid",
+        "suggestion": "Please check your card number and try again"
+      },
+      "51": {
+        "message": "Insufficient funds on your card",
+        "suggestion": "Please check your balance or use a different payment method"
+      },
+      "54": {
+        "message": "Your card has expired",
+        "suggestion": "Please use a different card or contact your bank"
+      },
+      "DEMO_INVALID_CARD": {
+        "message": "Please use the test card for demo payments",
+        "suggestion": "Use card number: 5528790000000008"
+      },
+      "INVALID_REQUEST": {
+        "message": "Payment information is incomplete",
+        "suggestion": "Please check all payment details and try again"
+      },
+      "10235": {
+        "message": "American Express cards are not accepted for payments in Turkey",
+        "suggestion": "Please use a Visa or Mastercard for payment"
+      }
+    },
+    "common_suggestions": {
+      "contact_bank": "Please contact your bank",
+      "try_different_card": "Please try a different payment method",
+      "check_details": "Please check your payment details",
+      "try_again_later": "Please try again later"
+    }
   },
   "faq": {
     "title": "Frequently Asked Questions",
@@ -532,6 +704,17 @@
     "view_all": "View all reviews on Google",
     "loading": "Loading reviews...",
     "error": "Unable to load reviews at this time"
+  },
+  "pricing": {
+    "base_price": "Base Price",
+    "tax_rate": "VAT ({rate}%)",
+    "tax_amount": "VAT Amount",
+    "total_price": "Total Price",
+    "tax_inclusive": "Tax Inclusive",
+    "price_breakdown": "Price Breakdown",
+    "subtotal": "Subtotal",
+    "vat": "VAT",
+    "final_total": "Final Total"
   },
   "notfound": {
     "title": "Page Not Found",

@@ -3,7 +3,8 @@
 import { motion } from "framer-motion";
 import { Check, Clock, Image as ImageIcon, MapPin } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { BookingModal } from "@/components/booking-modal";
 import { StructuredData } from "@/components/seo/structured-data";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -15,10 +16,14 @@ import {
 } from "@/components/ui/card";
 import { Link } from "@/i18n/routing";
 import { fbPixel } from "@/lib/facebook";
+import type { PackageId } from "@/lib/validations";
 
 export function PackagesSection() {
   const t = useTranslations("packages");
   const tui = useTranslations("ui");
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedPackageForModal, setSelectedPackageForModal] = useState<PackageId | null>(null);
 
   const packages = [
     {
@@ -78,6 +83,16 @@ export function PackagesSection() {
       });
     });
   }, [packages]);
+
+  const handlePackageSelect = (packageId: PackageId) => {
+    setSelectedPackageForModal(packageId);
+    setIsModalOpen(true);
+  };
+
+  const handleModalClose = () => {
+    setIsModalOpen(false);
+    setSelectedPackageForModal(null);
+  };
 
   return (
     <>
@@ -231,17 +246,14 @@ export function PackagesSection() {
                   </CardContent>
 
                   <CardFooter className="pt-3 sm:pt-4 px-3 sm:px-6">
-                    <Button asChild className="w-full" size="sm">
-                      <Link
-                        href={{
-                          pathname: "/checkout",
-                          query: { package: pkg.id },
-                        }}
-                      >
-                        <span className="text-xs sm:text-sm font-medium">
-                          {tui("book_package")}
-                        </span>
-                      </Link>
+                    <Button 
+                      className="w-full" 
+                      size="sm"
+                      onClick={() => handlePackageSelect(pkg.id as PackageId)}
+                    >
+                      <span className="text-xs sm:text-sm font-medium">
+                        {tui("book_package")}
+                      </span>
                     </Button>
                   </CardFooter>
                 </Card>
@@ -274,6 +286,13 @@ export function PackagesSection() {
           </motion.div>
         </div>
       </section>
+
+      {/* Booking Modal */}
+      <BookingModal
+        isOpen={isModalOpen}
+        onClose={handleModalClose}
+        selectedPackage={selectedPackageForModal}
+      />
     </>
   );
 }

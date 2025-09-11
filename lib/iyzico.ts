@@ -12,6 +12,7 @@ export interface PaymentRequest {
   paidPrice: string;
   currency: string;
   basketId: string;
+  locale?: string;
   paymentCard: {
     cardHolderName: string;
     cardNumber: string;

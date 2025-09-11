@@ -10,6 +10,8 @@ import {
 } from "@/lib/errors";
 import type { PaymentRequest } from "@/lib/iyzico";
 import { initializePayment } from "@/lib/iyzico";
+import { mapLocaleToIyzico } from "@/lib/iyzico-errors";
+import { getPackagePricing, formatPackagePricing } from "@/lib/pricing";
 import {
   checkRateLimit,
   createRateLimitError,
@@ -17,6 +19,7 @@ import {
 } from "@/lib/rate-limit";
 import { sendBookingConfirmation } from "@/lib/resend";
 import { supabaseAdmin } from "@/lib/supabase";
+import type { PackageId } from "@/lib/validations";
 
 export async function POST(request: NextRequest) {
   const startTime = Date.now();
@@ -40,10 +43,10 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { bookingId, paymentData, customerData, amount } = body;
+    const { paymentData, customerData, amount, packageId, locale } = body;
 
-    // Validate required fields
-    if (!bookingId || !paymentData || !customerData || !amount) {
+    // Validate required fields (removed bookingId requirement)
+    if (!paymentData || !customerData || !amount || !packageId) {
       const validationError = new ValidationError(
         "Missing required payment data",
       );
@@ -59,7 +62,10 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Validate amount
+    // Get package pricing with tax breakdown
+    const packagePricing = getPackagePricing(packageId as PackageId);
+    
+    // Validate amount matches expected package price (tax-inclusive)
     if (typeof amount !== "number" || amount <= 0 || amount > 10000) {
       const amountError = new ValidationError("Invalid payment amount");
       logError(amountError, {
@@ -75,66 +81,46 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    if (process.env.NODE_ENV === "development") {
-      console.log(
-        `💳 Payment initialization from ${ip} for booking ${bookingId}, amount: €${amount}`,
-      );
-    }
-
-    let booking: {
-      id: string;
-      package_id: string;
-      user_name: string;
-      user_email: string;
-      booking_date: string;
-      booking_time: string;
-      total_amount: number;
-    };
-
-    try {
-      // Try to get booking details from database first
-      const { data: bookingData, error: bookingError } = await supabaseAdmin
-        .from("bookings")
-        .select("*")
-        .eq("id", bookingId)
-        .single();
-
-      if (bookingError) {
-        throw bookingError;
-      }
-
-      booking = bookingData;
-    } catch (supabaseError: unknown) {
-      const _dbError = new DatabaseConnectionError();
-      logError(handleSupabaseError(supabaseError), {
+    // Validate that the provided amount matches the expected package total
+    if (Math.abs(amount - packagePricing.totalPrice) > 0.01) {
+      const priceError = new ValidationError("Amount does not match package price");
+      logError(priceError, {
         ip,
         endpoint: "payment",
-        bookingId,
-        action: "booking_fetch",
+        providedAmount: amount,
+        expectedAmount: packagePricing.totalPrice,
+        packageId,
+        action: "price_validation",
       });
 
       return NextResponse.json(
-        {
-          error: "Booking not found. Please create a booking first.",
-          details:
-            process.env.NODE_ENV === "development"
-              ? handleSupabaseError(supabaseError).message
-              : undefined,
-        },
-        { status: 404 },
+        { error: sanitizeErrorForProduction(priceError) },
+        { status: 400 },
       );
     }
+
+    if (process.env.NODE_ENV === "development") {
+      console.log(
+        `💳 Payment initialization from ${ip} for package ${packageId}`,
+        `\n   Base: €${packagePricing.basePrice}, Tax: €${packagePricing.taxAmount}, Total: €${packagePricing.totalPrice}`
+      );
+    }
+
+    // Generate unique conversation ID for this payment attempt
+    const conversationId = `payment_${Date.now()}_${Math.random().toString(36).substring(2, 15)}`;
 
     // Format price with proper decimal handling (max 2 decimal places)
     const formattedPrice = parseFloat(amount.toString()).toFixed(2);
 
-    // Prepare Iyzico payment request
+    // Prepare Iyzico payment request with locale support
+    const iyzicoLocale = mapLocaleToIyzico(locale || "en");
     const paymentRequest: PaymentRequest = {
-      conversationId: bookingId,
+      conversationId,
       price: formattedPrice,
       paidPrice: formattedPrice,
       currency: "EUR",
-      basketId: `basket_${bookingId}`,
+      basketId: `basket_${conversationId}`,
+      locale: iyzicoLocale,
       paymentCard: {
         cardHolderName: paymentData.cardHolderName,
         cardNumber: paymentData.cardNumber,
@@ -143,7 +129,7 @@ export async function POST(request: NextRequest) {
         cvc: paymentData.cvc,
       },
       buyer: {
-        id: `buyer_${bookingId}`,
+        id: `buyer_${conversationId}`,
         name: customerData.customerName.split(" ")[0] || "Customer",
         surname:
           customerData.customerName.split(" ").slice(1).join(" ") || "User",
@@ -169,8 +155,8 @@ export async function POST(request: NextRequest) {
       },
       basketItems: [
         {
-          id: booking.package_id,
-          name: `Photography Package - ${booking.package_id}`,
+          id: packageId,
+          name: `Photography Package - ${packagePricing.displayName}`,
           category1: "Photography",
           itemType: "PHYSICAL",
           price: formattedPrice,
@@ -181,138 +167,35 @@ export async function POST(request: NextRequest) {
     // Initialize payment with Iyzico
     const paymentResult = await initializePayment(paymentRequest);
 
+    const duration = Date.now() - startTime;
+
     if (paymentResult.status === "success") {
-      // Try to update booking status in Supabase
-      try {
-        // Update booking status
-        const { error: bookingUpdateError } = await supabaseAdmin
-          .from("bookings")
-          .update({
-            status: "confirmed",
-            updated_at: new Date().toISOString(),
-          })
-          .eq("id", bookingId);
-
-        if (bookingUpdateError) {
-          console.error("Booking update error:", bookingUpdateError);
-        }
-
-        // Record payment in database
-        const { error: paymentInsertError } = await supabaseAdmin
-          .from("payments")
-          .insert({
-            booking_id: bookingId,
-            payment_id: paymentResult.paymentId || `demo_${Date.now()}`,
-            conversation_id: bookingId,
-            status: "success",
-            amount: amount,
-            currency: "EUR",
-            provider: "iyzico",
-            provider_response: paymentResult,
-          });
-
-        if (paymentInsertError) {
-          console.error("Payment insert error:", paymentInsertError);
-        }
-
-        const duration = Date.now() - startTime;
-        if (process.env.NODE_ENV === "development") {
-          console.log(
-            `✅ Payment successful in ${duration}ms:`,
-            paymentResult.paymentId,
-          );
-        }
-      } catch (dbError: unknown) {
-        logError(handleSupabaseError(dbError), {
-          ip,
-          endpoint: "payment",
-          bookingId,
-          paymentId: paymentResult.paymentId,
-          action: "successful_payment_db_update",
-        });
-        // Payment was successful but database update failed
-        // The payment should still be processed, but we need to handle this gracefully
-      }
-
-      // Send confirmation email (works in both demo and production)
-      try {
-        await sendBookingConfirmation({
-          customerName: customerData.customerName,
-          customerEmail: customerData.customerEmail,
-          packageName: `${booking.package_id.charAt(0).toUpperCase() + booking.package_id.slice(1)} Package`,
-          bookingDate: booking.booking_date,
-          bookingTime: booking.booking_time,
-          totalAmount: amount,
-          bookingId: bookingId,
-        });
+      if (process.env.NODE_ENV === "development") {
         console.log(
-          "✅ Confirmation email sent to",
-          customerData.customerEmail,
+          `✅ Payment successful in ${duration}ms:`,
+          paymentResult.paymentId,
         );
-      } catch (emailError) {
-        console.error("❌ Failed to send confirmation email:", emailError);
       }
 
       return NextResponse.json({
         success: true,
         status: "success",
-        paymentId: paymentResult.paymentId,
-        conversationId: bookingId,
+        paymentId: paymentResult.paymentId || `demo_${Date.now()}`,
+        conversationId,
       });
     } else {
-      // Payment failed - try to update booking status
-      try {
-        // Update booking status to cancelled
-        const { error: bookingUpdateError } = await supabaseAdmin
-          .from("bookings")
-          .update({
-            status: "cancelled",
-            updated_at: new Date().toISOString(),
-          })
-          .eq("id", bookingId);
-
-        if (bookingUpdateError) {
-          console.error("Booking cancellation error:", bookingUpdateError);
-        }
-
-        // Record failed payment
-        const { error: paymentInsertError } = await supabaseAdmin
-          .from("payments")
-          .insert({
-            booking_id: bookingId,
-            payment_id: paymentResult.paymentId || `failed_${Date.now()}`,
-            conversation_id: bookingId,
-            status: "failure",
-            amount: amount,
-            currency: "EUR",
-            provider: "iyzico",
-            provider_response: paymentResult,
-          });
-
-        if (paymentInsertError) {
-          console.error("Failed payment insert error:", paymentInsertError);
-        }
-
-        const duration = Date.now() - startTime;
-        if (process.env.NODE_ENV === "development") {
-          console.log(
-            `❌ Payment failed in ${duration}ms:`,
-            paymentResult.errorMessage,
-          );
-        }
-      } catch (dbError: unknown) {
-        logError(handleSupabaseError(dbError), {
-          ip,
-          endpoint: "payment",
-          bookingId,
-          action: "failed_payment_db_update",
-        });
+      if (process.env.NODE_ENV === "development") {
+        console.log(
+          `❌ Payment failed in ${duration}ms:`,
+          paymentResult.errorMessage,
+        );
       }
 
       return NextResponse.json({
         success: false,
         status: "failure",
         errorMessage: paymentResult.errorMessage || "Payment failed",
+        errorCode: paymentResult.errorCode,
       });
     }
   } catch (error: unknown) {

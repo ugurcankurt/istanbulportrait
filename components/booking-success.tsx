@@ -11,15 +11,16 @@ import { Separator } from "@/components/ui/separator";
 import { Link } from "@/i18n/routing";
 import { event } from "@/lib/analytics";
 import { formatCurrency, localizeNumerals } from "@/lib/utils";
-import type { PackageId } from "@/lib/validations";
+import type { BookingFormData, PackageId } from "@/lib/validations";
 import { packagePrices } from "@/lib/validations";
 
 interface BookingSuccessProps {
   bookingId: string;
   packageId: PackageId;
+  customerData?: BookingFormData;
 }
 
-export function BookingSuccess({ bookingId, packageId }: BookingSuccessProps) {
+export function BookingSuccess({ bookingId, packageId, customerData }: BookingSuccessProps) {
   const locale = useLocale();
   const t = useTranslations("checkout");
   const tPackages = useTranslations("packages");
@@ -94,7 +95,7 @@ export function BookingSuccess({ bookingId, packageId }: BookingSuccessProps) {
               <div className="space-y-3">
                 <div className="flex justify-between items-center">
                   <span className="text-muted-foreground text-sm sm:text-base">
-                    {t("success.booking_id")}:
+                    {tsuccess("booking_id")}:
                   </span>
                   <Badge variant="secondary" className="font-mono text-xs">
                     {bookingId.slice(0, 8).toUpperCase()}
@@ -122,6 +123,80 @@ export function BookingSuccess({ bookingId, packageId }: BookingSuccessProps) {
             </div>
 
             <Separator />
+
+            {/* Customer Details */}
+            {customerData && (
+              <>
+                <div className="bg-muted/30 rounded-lg p-4 sm:p-6 border">
+                  <h3 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4 flex items-center gap-2 rtl:space-x-reverse">
+                    <div className="p-1.5 bg-muted rounded-lg">
+                      <Mail className="w-4 h-4 sm:w-5 sm:h-5" />
+                    </div>
+                    {tsuccess("customer_details")}
+                  </h3>
+
+                  <div className="space-y-3">
+                    <div className="flex justify-between items-center">
+                      <span className="text-muted-foreground text-sm sm:text-base">
+                        {tsuccess("customer_name")}:
+                      </span>
+                      <span className="font-semibold text-sm sm:text-base">
+                        {customerData.customerName}
+                      </span>
+                    </div>
+
+                    <div className="flex justify-between items-center">
+                      <span className="text-muted-foreground text-sm sm:text-base">
+                        {tsuccess("customer_email")}:
+                      </span>
+                      <span className="font-semibold text-sm sm:text-base">
+                        {customerData.customerEmail}
+                      </span>
+                    </div>
+
+                    <div className="flex justify-between items-center">
+                      <span className="text-muted-foreground text-sm sm:text-base">
+                        {tsuccess("customer_phone")}:
+                      </span>
+                      <span className="font-semibold text-sm sm:text-base">
+                        {customerData.customerPhone}
+                      </span>
+                    </div>
+
+                    <div className="flex justify-between items-center">
+                      <span className="text-muted-foreground text-sm sm:text-base">
+                        {tsuccess("booking_date")}:
+                      </span>
+                      <span className="font-semibold text-sm sm:text-base">
+                        {customerData.bookingDate}
+                      </span>
+                    </div>
+
+                    <div className="flex justify-between items-center">
+                      <span className="text-muted-foreground text-sm sm:text-base">
+                        {tsuccess("booking_time")}:
+                      </span>
+                      <span className="font-semibold text-sm sm:text-base">
+                        {customerData.bookingTime}
+                      </span>
+                    </div>
+
+                    {customerData.notes && (
+                      <div className="flex justify-between items-start">
+                        <span className="text-muted-foreground text-sm sm:text-base">
+                          {tsuccess("notes")}:
+                        </span>
+                        <span className="font-semibold text-sm sm:text-base text-right max-w-64 break-words">
+                          {customerData.notes}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                <Separator />
+              </>
+            )}
 
             {/* What's Next */}
             <div className="space-y-4">
