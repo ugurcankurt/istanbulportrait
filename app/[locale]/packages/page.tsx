@@ -3,6 +3,12 @@ import { BreadcrumbNav } from "@/components/breadcrumb-nav";
 import { PackagesSection } from "@/components/packages-section";
 import { getLocalizedPaths, getOpenGraphUrl } from "@/lib/localized-url";
 import { SEO_CONFIG } from "@/lib/seo-config";
+import { 
+  MultipleJsonLd,
+  generateServiceSchema,
+  createSchemaConfig,
+  type PackageData
+} from "@/lib/structured-data";
 
 export async function generateMetadata({
   params,
@@ -52,9 +58,43 @@ export async function generateMetadata({
   };
 }
 
-export default function PackagesPage({ params }: { params: Promise<{ locale: string }> }) {
+export default async function PackagesPage({ 
+  params 
+}: { 
+  params: Promise<{ locale: string }> 
+}) {
+  const { locale } = await params;
+  
+  // Create schema configuration
+  const schemaConfig = createSchemaConfig(locale);
+  
+  // Define package data based on SEO_CONFIG
+  const packagesData: PackageData[] = SEO_CONFIG.services.offers.map((offer) => ({
+    id: offer.name.toLowerCase().replace(/\s+/g, '-'),
+    name: offer.name,
+    description: offer.description,
+    price: Number(offer.price),
+    currency: offer.priceCurrency,
+    duration: offer.name === "Essential Package" ? "30 minutes" : 
+              offer.name === "Premium Package" ? "1.5 hours" : "2.5 hours",
+    included: offer.description.split(' with ')[1]?.split(' at ') || [],
+    locations: offer.name === "Essential Package" ? 1 : 
+               offer.name === "Premium Package" ? 2 : 3,
+    photos: offer.name === "Essential Package" ? 15 :
+            offer.name === "Premium Package" ? 40 : 
+            offer.name === "Luxury Package" ? 80 : 20,
+  }));
+
+  // Generate service schemas for each package
+  const serviceSchemas = packagesData.map(packageData => 
+    generateServiceSchema(packageData, schemaConfig)
+  );
+
   return (
     <div>
+      {/* JSON-LD Structured Data for Services */}
+      <MultipleJsonLd schemas={serviceSchemas} />
+      
       <BreadcrumbNav />
       <PackagesSection />
     </div>

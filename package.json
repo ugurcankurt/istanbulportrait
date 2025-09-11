@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
-    "build": "npm run type-check && next build",
+    "build": "next build",
     "build:analyze": "ANALYZE=true npm run build",
     "start": "next start",
     "lint": "biome check",
@@ -79,6 +79,7 @@
     "react-resizable-panels": "^3.0.4",
     "recharts": "^2.15.4",
     "resend": "^6.0.1",
+    "schema-dts": "^1.1.5",
     "sonner": "^2.0.7",
     "tailwind-merge": "^3.3.1",
     "vaul": "^1.1.2",

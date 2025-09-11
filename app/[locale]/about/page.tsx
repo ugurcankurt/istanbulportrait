@@ -3,6 +3,11 @@ import { AboutSection } from "@/components/about-section";
 import { BreadcrumbNav } from "@/components/breadcrumb-nav";
 import { getLocalizedPaths } from "@/lib/localized-url";
 import { SEO_CONFIG } from "@/lib/seo-config";
+import { 
+  JsonLd,
+  generatePersonSchema, 
+  createSchemaConfig 
+} from "@/lib/structured-data";
 
 export async function generateMetadata({
   params,
@@ -26,9 +31,24 @@ export async function generateMetadata({
   };
 }
 
-export default function AboutPage({ params }: { params: Promise<{ locale: string }> }) {
+export default async function AboutPage({ 
+  params 
+}: { 
+  params: Promise<{ locale: string }> 
+}) {
+  const { locale } = await params;
+  
+  // Create schema configuration
+  const schemaConfig = createSchemaConfig(locale);
+  
+  // Generate Person schema for photographer
+  const personSchema = generatePersonSchema(schemaConfig);
+  
   return (
     <div>
+      {/* JSON-LD Structured Data for Person */}
+      <JsonLd data={personSchema} />
+      
       <BreadcrumbNav />
       <AboutSection />
     </div>
