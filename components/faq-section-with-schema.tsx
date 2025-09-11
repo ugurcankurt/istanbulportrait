@@ -24,44 +24,36 @@ export async function FAQSectionWithSchema({
   // Define FAQ data from translations
   const faqData: FAQData[] = [
     {
-      question: t("best-istanbul-photographer.question"),
-      answer: t("best-istanbul-photographer.answer"),
+      question: t("questions.best-istanbul-photographer.question"),
+      answer: t("questions.best-istanbul-photographer.answer"),
     },
     {
-      question: t("photoshoot-locations.question"),
-      answer: t("photoshoot-locations.answer"),
+      question: t("questions.photoshoot-locations.question"),
+      answer: t("questions.photoshoot-locations.answer"),
     },
     {
-      question: t("session-duration.question"),
-      answer: t("session-duration.answer"),
+      question: t("questions.session-duration.question"),
+      answer: t("questions.session-duration.answer"),
     },
     {
-      question: t("best-time-photoshoot.question"),
-      answer: t("best-time-photoshoot.answer"),
+      question: t("questions.best-time-photoshoot.question"),
+      answer: t("questions.best-time-photoshoot.answer"),
     },
     {
-      question: t("what-to-wear.question"),
-      answer: t("what-to-wear.answer"),
+      question: t("questions.photo-delivery.question"),
+      answer: t("questions.photo-delivery.answer"),
     },
     {
-      question: t("photo-editing.question"),
-      answer: t("photo-editing.answer"),
+      question: t("questions.weather-backup.question"),
+      answer: t("questions.weather-backup.answer"),
     },
     {
-      question: t("booking-process.question"),
-      answer: t("booking-process.answer"),
+      question: t("questions.couple-vs-individual.question"),
+      answer: t("questions.couple-vs-individual.answer"),
     },
     {
-      question: t("payment-methods.question"),
-      answer: t("payment-methods.answer"),
-    },
-    {
-      question: t("cancellation-policy.question"),
-      answer: t("cancellation-policy.answer"),
-    },
-    {
-      question: t("group-shoots.question"),
-      answer: t("group-shoots.answer"),
+      question: t("questions.booking-advance.question"),
+      answer: t("questions.booking-advance.answer"),
     },
   ];
   
