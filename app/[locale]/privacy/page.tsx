@@ -1,7 +1,6 @@
 import { useTranslations } from "next-intl";
 import { getTranslations } from "next-intl/server";
 import { BreadcrumbNav } from "@/components/breadcrumb-nav";
-import { SEOLayout } from "@/components/seo/seo-layout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getLocalizedPaths } from "@/lib/localized-url";
 import { SEO_CONFIG } from "@/lib/seo-config";
@@ -31,7 +30,7 @@ export default function PrivacyPage() {
   const t = useTranslations("privacy");
 
   return (
-    <SEOLayout>
+    <div>
       <BreadcrumbNav />
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-24 max-w-4xl">
         <div className="mb-8">
@@ -146,6 +145,6 @@ export default function PrivacyPage() {
           </Card>
         </div>
       </div>
-    </SEOLayout>
+    </div>
   );
 }

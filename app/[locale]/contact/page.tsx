@@ -1,7 +1,6 @@
 import { getTranslations } from "next-intl/server";
 import { BreadcrumbNav } from "@/components/breadcrumb-nav";
 import { ContactSection } from "@/components/contact-section";
-import { SEOLayout } from "@/components/seo/seo-layout";
 import { getLocalizedPaths } from "@/lib/localized-url";
 import { SEO_CONFIG } from "@/lib/seo-config";
 
@@ -16,6 +15,39 @@ export async function generateMetadata({
   const baseUrl = SEO_CONFIG.site.url;
   const paths = getLocalizedPaths("/contact", baseUrl);
 
+  // ContactPage Schema for Rich Results
+  const contactSchema = {
+    "@context": "https://schema.org",
+    "@type": "ContactPage",
+    "@id": `${baseUrl}/contact#contactpage`,
+    name: "Contact Istanbul Photographer",
+    description: "Get in touch for professional photography services in Istanbul",
+    url: `${baseUrl}/contact`,
+    mainEntity: {
+      "@type": "LocalBusiness",
+      name: SEO_CONFIG.organization.name,
+      telephone: SEO_CONFIG.organization.contactPoint.telephone,
+      address: {
+        "@type": "PostalAddress",
+        addressLocality: SEO_CONFIG.organization.address.addressLocality,
+        addressCountry: SEO_CONFIG.organization.address.addressCountry
+      },
+      geo: {
+        "@type": "GeoCoordinates",
+        latitude: 41.0082,
+        longitude: 28.9784
+      },
+      openingHours: "Mo-Su 09:00-18:00",
+      contactPoint: {
+        "@type": "ContactPoint",
+        telephone: SEO_CONFIG.organization.contactPoint.telephone,
+        contactType: "customer service",
+        areaServed: "Istanbul",
+        availableLanguage: ["Turkish", "English", "Arabic", "Russian", "Spanish"]
+      }
+    }
+  };
+
   return {
     title: t("title"),
     description: t("description"),
@@ -23,16 +55,17 @@ export async function generateMetadata({
       canonical: paths.canonical(locale),
       languages: paths.languages,
     },
+    other: {
+      "application/ld+json": JSON.stringify(contactSchema)
+    },
   };
 }
 
 export default function ContactPage() {
   return (
-    <SEOLayout>
-      <div>
-        <BreadcrumbNav />
-        <ContactSection />
-      </div>
-    </SEOLayout>
+    <div>
+      <BreadcrumbNav />
+      <ContactSection />
+    </div>
   );
 }

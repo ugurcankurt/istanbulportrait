@@ -2,7 +2,6 @@ import { getTranslations } from "next-intl/server";
 import { Suspense } from "react";
 import { BreadcrumbNav } from "@/components/breadcrumb-nav";
 import { CheckoutForm } from "@/components/checkout-form";
-import { SEOLayout } from "@/components/seo/seo-layout";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getLocalizedPaths } from "@/lib/localized-url";
@@ -57,13 +56,11 @@ function CheckoutSkeleton() {
 
 export default function CheckoutPage() {
   return (
-    <SEOLayout>
-      <div className="min-h-screen bg-gradient-to-b from-background to-muted/20">
-        <BreadcrumbNav />
-        <Suspense fallback={<CheckoutSkeleton />}>
-          <CheckoutForm />
-        </Suspense>
-      </div>
-    </SEOLayout>
+    <div className="min-h-screen bg-gradient-to-b from-background to-muted/20">
+      <BreadcrumbNav />
+      <Suspense fallback={<CheckoutSkeleton />}>
+        <CheckoutForm />
+      </Suspense>
+    </div>
   );
 }
