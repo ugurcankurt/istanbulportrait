@@ -3,6 +3,7 @@ import { getMessages, getTranslations } from "next-intl/server";
 import { GoogleAnalytics } from "@/components/analytics/google-analytics";
 import { MultilingualCookieConsent } from "@/components/analytics/multilingual-cookie-consent";
 import { FacebookPixel } from "@/components/analytics/facebook-pixel";
+import { YandexMetrica } from "@/components/analytics/yandex-metrica";
 import "../globals.css";
 import { ThemeProvider } from "next-themes";
 import { Footer } from "@/components/footer";
@@ -117,7 +118,11 @@ export async function generateMetadata({
       ],
     },
     manifest: "/manifest.json",
-    other: { "yandex-verification": "326ca03cbdc0e2bf",}
+    other: { 
+      "yandex-verification": "326ca03cbdc0e2bf",
+      "msvalidate.01": process.env.BING_WEBMASTER_KEY || "",
+      "y_key": process.env.YANDEX_WEBMASTER_KEY || ""
+    }
   };
 }
 
@@ -144,6 +149,7 @@ export default async function LocaleLayout({
           <main className="flex-1">{children}</main>
           <GoogleAnalytics />
           <FacebookPixel />
+          <YandexMetrica />
           <Footer />
         </div>
         <Toaster />

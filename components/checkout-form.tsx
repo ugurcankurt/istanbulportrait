@@ -30,6 +30,7 @@ import type {
 import { formatPackagePricing } from "@/lib/pricing";
 import { createBookingSchema, createPaymentSchema, packagePrices } from "@/lib/validations";
 import { getIyzicoErrorMessage } from "@/lib/iyzico-errors";
+import { useIndexNow } from "@/lib/hooks/use-indexnow";
 
 export function CheckoutForm() {
   const searchParams = useSearchParams();
@@ -49,6 +50,9 @@ export function CheckoutForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [preFilledBookingData, setPreFilledBookingData] = useState<BookingFormData | null>(null);
   const [showSuccess, setShowSuccess] = useState(false);
+  
+  // IndexNow integration for automatic URL submission
+  const { notifyBookingCreated } = useIndexNow();
 
   // Create schemas with translations
   const bookingSchemaWithTranslations = createBookingSchema(tValidation);
@@ -171,6 +175,17 @@ export function CheckoutForm() {
         
         // Clear booking data from sessionStorage
         sessionStorage.removeItem("bookingData");
+
+        // Notify search engines about new booking (IndexNow)
+        try {
+          await notifyBookingCreated(bookingResult.booking.id);
+          if (process.env.NODE_ENV === "development") {
+            console.log("🔄 IndexNow notification sent for new booking");
+          }
+        } catch (indexNowError) {
+          // Don't break the flow if IndexNow fails
+          console.warn("IndexNow notification failed:", indexNowError);
+        }
 
         // Track successful payment conversion with Enhanced Ecommerce
         trackPaymentEvent(
