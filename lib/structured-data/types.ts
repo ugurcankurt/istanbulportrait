@@ -16,6 +16,8 @@ import type {
   OpeningHoursSpecification,
   Offer,
   Product,
+  BreadcrumbList,
+  ListItem,
   WithContext,
 } from "schema-dts";
 
@@ -36,6 +38,7 @@ export type AggregateRatingSchema = AggregateRating;
 // Content schemas
 export type FAQPageSchema = WithContext<FAQPage>;
 export type ImageSchema = WithContext<ImageObject>;
+export type BreadcrumbListSchema = WithContext<BreadcrumbList>;
 
 // Helper schemas
 export type PostalAddressSchema = PostalAddress;
@@ -51,7 +54,8 @@ export type SupportedSchema =
   | ProductSchema
   | ReviewSchema
   | FAQPageSchema
-  | ImageSchema;
+  | ImageSchema
+  | BreadcrumbListSchema;
 
 // Configuration interface for schema generation
 export interface SchemaConfig {
@@ -86,4 +90,11 @@ export interface PackageData {
   included: string[];
   locations: number;
   photos: number;
+}
+
+// Breadcrumb data interface
+export interface BreadcrumbData {
+  name: string;
+  url: string;
+  position: number;
 }

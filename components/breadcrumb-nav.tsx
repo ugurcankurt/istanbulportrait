@@ -13,6 +13,13 @@ import {
 } from "@/components/ui/breadcrumb";
 import { Link } from "@/i18n/routing";
 import { routing } from "@/i18n/routing";
+import { 
+  JsonLd,
+  generateBreadcrumbListSchema,
+  createSchemaConfig,
+  type BreadcrumbData
+} from "@/lib/structured-data";
+import { SEO_CONFIG } from "@/lib/seo-config";
 
 interface BreadcrumbNavProps {
   className?: string;
@@ -145,8 +152,21 @@ export function BreadcrumbNav({ className }: BreadcrumbNavProps) {
     return null;
   }
 
+  // Generate structured data for breadcrumbs
+  const schemaConfig = createSchemaConfig(locale);
+  const breadcrumbsData: BreadcrumbData[] = breadcrumbs.map((item, index) => ({
+    name: item.label,
+    url: item.href ? `${SEO_CONFIG.site.url}${item.href}` : `${SEO_CONFIG.site.url}${pathWithoutLocale}`,
+    position: index + 1,
+  }));
+  
+  const breadcrumbSchema = generateBreadcrumbListSchema(breadcrumbsData, schemaConfig);
+
   return (
     <>
+      {/* JSON-LD Structured Data for Breadcrumbs */}
+      <JsonLd data={breadcrumbSchema} />
+      
       <div className={`bg-muted/30 border-b ${className}`}>
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <Breadcrumb className="py-3 sm:py-4">

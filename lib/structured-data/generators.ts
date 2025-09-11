@@ -10,10 +10,12 @@ import type {
   ServiceSchema,
   ReviewSchema,
   FAQPageSchema,
+  BreadcrumbListSchema,
   SchemaConfig,
   ReviewData,
   FAQData,
   PackageData,
+  BreadcrumbData,
   AggregateRatingSchema,
 } from "./types";
 import { SEO_CONFIG } from "@/lib/seo-config";
@@ -303,6 +305,28 @@ export function generateFAQPageSchema(
         "@type": "Answer",
         text: faq.answer,
       },
+    })),
+  };
+}
+
+/**
+ * Generate BreadcrumbList schema for navigation
+ */
+export function generateBreadcrumbListSchema(
+  breadcrumbs: BreadcrumbData[],
+  config: SchemaConfig,
+): BreadcrumbListSchema {
+  const { baseUrl } = config;
+  
+  return {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "@id": `${baseUrl}/#breadcrumb`,
+    itemListElement: breadcrumbs.map((breadcrumb) => ({
+      "@type": "ListItem",
+      position: breadcrumb.position,
+      name: breadcrumb.name,
+      item: breadcrumb.url,
     })),
   };
 }

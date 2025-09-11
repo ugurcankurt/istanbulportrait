@@ -15,10 +15,12 @@ export type {
   ReviewSchema,
   FAQPageSchema,
   ImageSchema,
+  BreadcrumbListSchema,
   SchemaConfig,
   ReviewData,
   FAQData,
   PackageData,
+  BreadcrumbData,
   AggregateRatingSchema,
 } from "./types";
 
@@ -31,6 +33,7 @@ export {
   generateAggregateRatingSchema,
   generateReviewsSchema,
   generateFAQPageSchema,
+  generateBreadcrumbListSchema,
 } from "./generators";
 
 // Helper functions
