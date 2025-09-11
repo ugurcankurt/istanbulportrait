@@ -3,7 +3,6 @@
 import { ChevronRight, Home } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
-import { StructuredData } from "@/components/seo/structured-data";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -141,16 +140,6 @@ export function BreadcrumbNav({ className }: BreadcrumbNavProps) {
 
   const breadcrumbs = generateBreadcrumbs();
 
-  // Generate structured data for breadcrumbs
-  const breadcrumbSchemaData = {
-    items: breadcrumbs.map((item) => ({
-      name: item.label,
-      url: item.href
-        ? `/${locale}${item.href}`
-        : `/${locale}${pathWithoutLocale}`,
-    })),
-  };
-
   // Don't show breadcrumb on home page
   if (pathWithoutLocale === "/") {
     return null;
@@ -158,7 +147,6 @@ export function BreadcrumbNav({ className }: BreadcrumbNavProps) {
 
   return (
     <>
-      <StructuredData type="breadcrumb" data={breadcrumbSchemaData} />
       <div className={`bg-muted/30 border-b ${className}`}>
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <Breadcrumb className="py-3 sm:py-4">

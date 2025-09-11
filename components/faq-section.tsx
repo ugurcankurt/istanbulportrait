@@ -9,7 +9,6 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { StructuredData } from "@/components/seo/structured-data";
 
 interface FAQItem {
   id: string;
@@ -82,23 +81,8 @@ export function FAQSection() {
     },
   ];
 
-  // Prepare FAQ data for StructuredData component
-  const faqData = {
-    title: "Istanbul Photography FAQ - Frequently Asked Questions",
-    description:
-      "Comprehensive FAQ about professional photography services in Istanbul, rooftop photoshoots, and booking process.",
-    faqItems: faqIds.map((faq) => ({
-      id: faq.id,
-      question: t(`questions.${faq.id}.question`),
-      answer: t(`questions.${faq.id}.answer`),
-      keywords: faq.keywords,
-    })),
-  };
-
   return (
     <>
-      {/* FAQ Schema using StructuredData component */}
-      <StructuredData type="faq" data={faqData} />
       <section className="py-8 sm:py-12 lg:py-16 bg-gradient-to-b from-muted/20 to-background">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div

@@ -5,7 +5,6 @@ import { Star, ExternalLink, Quote } from "lucide-react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { GoogleReview, AggregateRating } from "@/types/reviews";
-import { ReviewsSchema } from "@/components/seo/reviews-schema";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import {
@@ -89,27 +88,8 @@ export function ReviewsClient({
     return null;
   }
 
-  // Transform reviews data for schema
-  const reviewsForSchema = reviews.map((review) => ({
-    author:
-      typeof review.author === "string" ? review.author : review.author.name,
-    rating: review.rating,
-    review: review.text,
-    date: review.date,
-  }));
-
   return (
     <>
-      {/* Reviews Schema for SEO */}
-      <ReviewsSchema
-        reviews={reviewsForSchema}
-        aggregateRating={{
-          ratingValue: aggregateRating.average,
-          reviewCount: aggregateRating.count,
-          bestRating: 5,
-          worstRating: 1,
-        }}
-      />
 
       <section className="py-8 sm:py-12 lg:py-16 bg-gradient-to-b from-background to-muted/20">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">

@@ -5,7 +5,6 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
-import { StructuredData } from "@/components/seo/structured-data";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -99,20 +98,6 @@ export function GallerySection() {
 
   return (
     <>
-      {/* ImageGallery Schema for gallery collection */}
-      <StructuredData
-        type="gallery"
-        data={{
-          name: "Istanbul Photographer Portfolio Gallery",
-          description:
-            "Professional photography collection showcasing couples, rooftops, weddings, and lifestyle sessions in Istanbul",
-          images: galleryImages.map((image) => ({
-            url: image.src,
-            caption: image.alt,
-            description: image.alt,
-          })),
-        }}
-      />
 
       <section className="py-8 sm:py-12 lg:py-16 bg-gradient-to-b from-background to-muted/20">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">

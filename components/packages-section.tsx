@@ -5,11 +5,6 @@ import { Check, Clock, Image as ImageIcon, MapPin } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 import { BookingModal } from "@/components/booking-modal";
-import { StructuredData } from "@/components/seo/structured-data";
-import {
-  ProductSchema,
-  MultipleProductsSchema,
-} from "@/components/seo/product-schema";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -100,53 +95,8 @@ export function PackagesSection() {
     setSelectedPackageForModal(null);
   };
 
-  // Transform packages for schema
-  const productsForSchema = packages.map((pkg) => ({
-    id: pkg.id,
-    name: pkg.name,
-    description: `${pkg.duration} photoshoot with ${pkg.photos} and ${pkg.locations}. ${pkg.features.join(", ")}`,
-    price: pkg.price,
-    currency: "EUR",
-    category: "Photography Services",
-    brand: SEO_CONFIG.organization.name,
-    availability: "https://schema.org/InStock",
-    url: `/packages#${pkg.id}`,
-    features: pkg.features,
-    duration: pkg.duration,
-    photos: pkg.photos,
-    locations: pkg.locations,
-  }));
-
   return (
     <>
-      {/* Multiple Products Schema for collection */}
-      <MultipleProductsSchema products={productsForSchema} />
-
-      {/* Individual Product Schema for each package */}
-      {productsForSchema.map((product) => (
-        <ProductSchema key={product.id} product={product} type="Service" />
-      ))}
-
-      {/* Offer Schema for each package (existing) */}
-      {packages.map((pkg) => (
-        <StructuredData
-          key={pkg.id}
-          type="offer"
-          data={{
-            name: pkg.name,
-            description: `${pkg.duration} photoshoot with ${pkg.photos} and ${pkg.locations}`,
-            price: pkg.price.replace(/[€$]/g, ""),
-            serviceName: `${pkg.name} Photography Package`,
-            packageId: pkg.id,
-            url: `/packages#${pkg.id}`,
-            validFrom: new Date().toISOString().split("T")[0],
-            brand: SEO_CONFIG.organization.name,
-            seller: SEO_CONFIG.organization.name,
-            availability: "in stock",
-            category: "Photography Services",
-          }}
-        />
-      ))}
 
       <section className="py-8 sm:py-12 lg:py-16 bg-gradient-to-b from-background to-muted/20">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">

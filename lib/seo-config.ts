@@ -1,13 +1,13 @@
 /**
- * SEO Configuration for Istanbul Portrait Photography
+ * SEO Configuration for Istanbul Photographer
  * Central SEO settings and metadata configuration
  */
 
 export const SEO_CONFIG = {
   site: {
-    name: "Istanbul Portrait",
+    name: "Istanbul Photographer",
     url: "https://istanbulportrait.com",
-    title: "Professional Istanbul Photographer | Istanbul Photoshoot Services",
+    title: "Photographer in Istanbul | Most Popular Photographer in Istanbul",
     description:
       "Expert photographer in Istanbul for professional portrait and lifestyle photography sessions. Capture your memories with stunning rooftop views and historic landmarks.",
     locale: "en_US",
@@ -15,7 +15,7 @@ export const SEO_CONFIG = {
   },
 
   organization: {
-    name: "Istanbul Portrait",
+    name: "Istanbul Photographer",
     type: "ProfessionalService",
     url: "https://istanbulportrait.com",
     logo: "https://istanbulportrait.com/istanbulportrait_white_logo.png",
@@ -40,7 +40,7 @@ export const SEO_CONFIG = {
   },
 
   person: {
-    name: "Ugur Cankurt",
+    name: "Uğur Cankurt",
     type: "Person",
     jobTitle: "Professional Photographer",
     url: "https://istanbulportrait.com/about",
