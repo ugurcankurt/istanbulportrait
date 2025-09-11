@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
-    "build": "next build",
+    "build": "npm run type-check && next build",
     "build:analyze": "ANALYZE=true npm run build",
     "start": "next start",
     "lint": "biome check",

@@ -72,9 +72,9 @@ export function PackageDetails({
   // Track page view for packages on component mount
   useEffect(() => {
     packages.forEach((pkg) => {
-      trackViewItem(pkg.id, pkg.price);
+      trackViewItem(pkg.id, pkg.name, pkg.price);
     });
-  }, [packages.forEach]);
+  }, [packages]);
 
   return (
     <div className="space-y-4 sm:space-y-6">

@@ -39,18 +39,11 @@ export function BookingSuccess({
 
   // Track successful booking conversion
   useEffect(() => {
-    event("conversion", {
-      event_category: "ecommerce",
-      event_label: `booking_complete_${packageId}`,
-      value: packageInfo.price,
-    });
+    // Track conversion event
+    event("conversion", "ecommerce", `booking_complete_${packageId}`, packageInfo.price);
 
     // Track goal completion for GA4
-    event("booking_completed", {
-      event_category: "conversion",
-      event_label: packageId,
-      value: packageInfo.price,
-    });
+    event("booking_completed", "conversion", packageId, packageInfo.price);
   }, [packageId, packageInfo.price]);
 
   return (

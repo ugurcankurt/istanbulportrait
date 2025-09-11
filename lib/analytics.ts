@@ -43,13 +43,13 @@ export function trackFormSubmission(formType: string) {
 }
 
 // Track payment events
-export function trackPaymentEvent(eventType: string, value?: number) {
-  trackEvent(eventType, "Payment", undefined, value);
+export function trackPaymentEvent(packageId: string, value: number, status: string) {
+  trackEvent(`payment_${status}`, "Payment", packageId, value);
 }
 
-// Track purchase events
-export function trackPurchase(packageName: string, value: number) {
-  trackEvent("purchase", "Ecommerce", packageName, value);
+// Track purchase events  
+export function trackPurchase(transactionId: string, packageId: string, value: number) {
+  trackEvent("purchase", "Ecommerce", `${packageId}_${transactionId}`, value);
 }
 
 // Track Facebook events
