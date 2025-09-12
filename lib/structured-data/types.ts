@@ -18,6 +18,9 @@ import type {
   Product,
   BreadcrumbList,
   ListItem,
+  ItemList,
+  ImageGallery,
+  HowTo,
   WithContext,
 } from "schema-dts";
 
@@ -39,6 +42,9 @@ export type AggregateRatingSchema = AggregateRating;
 export type FAQPageSchema = WithContext<FAQPage>;
 export type ImageSchema = WithContext<ImageObject>;
 export type BreadcrumbListSchema = WithContext<BreadcrumbList>;
+export type ItemListSchema = WithContext<ItemList>;
+export type ImageGallerySchema = WithContext<ImageGallery>;
+export type HowToSchema = WithContext<HowTo>;
 
 // Helper schemas
 export type PostalAddressSchema = PostalAddress;
@@ -55,7 +61,10 @@ export type SupportedSchema =
   | ReviewSchema
   | FAQPageSchema
   | ImageSchema
-  | BreadcrumbListSchema;
+  | BreadcrumbListSchema
+  | ItemListSchema
+  | ImageGallerySchema
+  | HowToSchema;
 
 // Configuration interface for schema generation
 export interface SchemaConfig {
@@ -97,4 +106,33 @@ export interface BreadcrumbData {
   name: string;
   url: string;
   position: number;
+}
+
+// ItemList data interface
+export interface ItemListData {
+  name: string;
+  description?: string;
+  url: string;
+  image?: string;
+  position: number;
+}
+
+// ImageGallery data interface  
+export interface ImageGalleryData {
+  name: string;
+  description?: string;
+  url: string;
+  contentUrl: string;
+  thumbnailUrl?: string;
+  width?: number;
+  height?: number;
+  caption?: string;
+}
+
+// HowTo step data interface
+export interface HowToStepData {
+  name: string;
+  text: string;
+  url?: string;
+  image?: string;
 }

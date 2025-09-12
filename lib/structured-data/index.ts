@@ -16,11 +16,17 @@ export type {
   FAQPageSchema,
   ImageSchema,
   BreadcrumbListSchema,
+  ItemListSchema,
+  ImageGallerySchema,
+  HowToSchema,
   SchemaConfig,
   ReviewData,
   FAQData,
   PackageData,
   BreadcrumbData,
+  ItemListData,
+  ImageGalleryData,
+  HowToStepData,
   AggregateRatingSchema,
 } from "./types";
 
@@ -34,6 +40,9 @@ export {
   generateReviewsSchema,
   generateFAQPageSchema,
   generateBreadcrumbListSchema,
+  generateItemListSchema,
+  generateImageGallerySchema,
+  generateHowToSchema,
 } from "./generators";
 
 // Helper functions

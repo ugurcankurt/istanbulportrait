@@ -11,11 +11,17 @@ import type {
   ReviewSchema,
   FAQPageSchema,
   BreadcrumbListSchema,
+  ItemListSchema,
+  ImageGallerySchema,
+  HowToSchema,
   SchemaConfig,
   ReviewData,
   FAQData,
   PackageData,
   BreadcrumbData,
+  ItemListData,
+  ImageGalleryData,
+  HowToStepData,
   AggregateRatingSchema,
 } from "./types";
 import { SEO_CONFIG } from "@/lib/seo-config";
@@ -121,7 +127,21 @@ export function generateOrganizationSchema(
       SEO_CONFIG.person.image,
     ],
     description: SEO_CONFIG.site.description,
+    foundingDate: SEO_CONFIG.organization.foundingDate,
+    numberOfEmployees: {
+      "@type": "QuantitativeValue",
+      value: parseInt(SEO_CONFIG.organization.numberOfEmployees),
+    },
+    award: SEO_CONFIG.organization.awards,
     sameAs: SEO_CONFIG.organization.sameAs,
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: SEO_CONFIG.organization.address.streetAddress,
+      addressLocality: SEO_CONFIG.organization.address.addressLocality,
+      addressRegion: SEO_CONFIG.organization.address.addressRegion,
+      postalCode: SEO_CONFIG.organization.address.postalCode,
+      addressCountry: SEO_CONFIG.organization.address.addressCountry,
+    },
     contactPoint: {
       "@type": "ContactPoint",
       telephone: SEO_CONFIG.organization.contactPoint.telephone,
@@ -343,5 +363,122 @@ export function generateBreadcrumbListSchema(
       name: breadcrumb.name,
       item: breadcrumb.url,
     })),
+  };
+}
+
+/**
+ * Generate ItemList schema for carousel rich results
+ */
+export function generateItemListSchema(
+  items: ItemListData[],
+  listName: string,
+  config: SchemaConfig,
+): ItemListSchema {
+  const { baseUrl } = config;
+  
+  return {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "@id": `${baseUrl}/#itemlist-${listName.toLowerCase().replace(/\s+/g, '-')}`,
+    name: listName,
+    numberOfItems: items.length,
+    itemListElement: items.map((item) => ({
+      "@type": "ListItem",
+      position: item.position,
+      name: item.name,
+      description: item.description,
+      url: item.url,
+      image: item.image,
+    })),
+  };
+}
+
+/**
+ * Generate ImageGallery schema for photo galleries
+ */
+export function generateImageGallerySchema(
+  images: ImageGalleryData[],
+  galleryName: string,
+  config: SchemaConfig,
+): ImageGallerySchema {
+  const { baseUrl } = config;
+  
+  return {
+    "@context": "https://schema.org",
+    "@type": "ImageGallery",
+    "@id": `${baseUrl}/#gallery-${galleryName.toLowerCase().replace(/\s+/g, '-')}`,
+    name: galleryName,
+    description: `Professional photography gallery showcasing ${galleryName.toLowerCase()} in Istanbul`,
+    image: images.map((img) => ({
+      "@type": "ImageObject" as const,
+      name: img.name,
+      description: img.description,
+      url: img.url,
+      contentUrl: img.contentUrl,
+      thumbnailUrl: img.thumbnailUrl,
+      ...(img.width && { width: img.width.toString() }),
+      ...(img.height && { height: img.height.toString() }),
+      caption: img.caption,
+      creator: {
+        "@type": "Person" as const,
+        name: SEO_CONFIG.person.name,
+      },
+    })),
+    creator: {
+      "@type": "Person",
+      name: SEO_CONFIG.person.name,
+      jobTitle: SEO_CONFIG.person.jobTitle,
+    },
+  };
+}
+
+/**
+ * Generate HowTo schema for photography process
+ */
+export function generateHowToSchema(
+  steps: HowToStepData[],
+  title: string,
+  description: string,
+  config: SchemaConfig,
+): HowToSchema {
+  const { baseUrl } = config;
+  
+  return {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "@id": `${baseUrl}/#howto-${title.toLowerCase().replace(/\s+/g, '-')}`,
+    name: title,
+    description: description,
+    image: steps.find(step => step.image)?.image || SEO_CONFIG.person.image,
+    totalTime: "PT30M", // 30 minutes estimated
+    estimatedCost: {
+      "@type": "MonetaryAmount",
+      currency: "EUR",
+      value: "150",
+    },
+    supply: [
+      {
+        "@type": "HowToSupply",
+        name: "Professional Camera",
+      },
+      {
+        "@type": "HowToSupply", 
+        name: "Lighting Equipment",
+      },
+    ],
+    step: steps.map((step, index) => ({
+      "@type": "HowToStep",
+      position: index + 1,
+      name: step.name,
+      text: step.text,
+      url: step.url,
+      image: step.image,
+    })),
+    author: {
+      "@type": "Person",
+      name: SEO_CONFIG.person.name,
+      jobTitle: SEO_CONFIG.person.jobTitle,
+      image: SEO_CONFIG.person.image,
+    },
   };
 }

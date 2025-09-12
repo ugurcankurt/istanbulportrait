@@ -19,6 +19,13 @@ export const SEO_CONFIG = {
     type: "ProfessionalService",
     url: "https://istanbulportrait.com",
     logo: "https://istanbulportrait.com/istanbulportrait_white_logo.png",
+    foundingDate: "2017-01-01", // 8+ years experience
+    numberOfEmployees: "1",
+    awards: [
+      "Top Rated Photographer in Istanbul",
+      "500+ Successful Sessions",
+      "Multi-language Photography Services"
+    ],
     sameAs: [
       "https://www.instagram.com/istanbulportrait",
       "https://www.facebook.com/istanbulportrait",

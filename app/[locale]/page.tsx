@@ -1,13 +1,12 @@
 import { getTranslations } from "next-intl/server";
 import { FAQSectionWithSchema } from "@/components/faq-section-with-schema";
-import { GallerySection } from "@/components/gallery-section";
+import { GallerySectionWithSchema } from "@/components/gallery-section-with-schema";
 import { HeroSection } from "@/components/hero-section";
 import { PackagesSection } from "@/components/packages-section";
 import { ReviewsSection } from "@/components/reviews";
 import { getLocalizedPaths } from "@/lib/localized-url";
 import { SEO_CONFIG } from "@/lib/seo-config";
-import { 
-  JsonLd, 
+import {  
   MultipleJsonLd,
   generateLocalBusinessSchema, 
   generateOrganizationSchema,
@@ -61,7 +60,7 @@ export default async function HomePage({
       
       <div className="overflow-hidden">
         <HeroSection />
-        <GallerySection />
+        <GallerySectionWithSchema locale={locale} />
         <PackagesSection />
         <FAQSectionWithSchema locale={locale} />
         <ReviewsSection locale={locale} />

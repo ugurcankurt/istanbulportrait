@@ -6,8 +6,10 @@ import { SEO_CONFIG } from "@/lib/seo-config";
 import { 
   MultipleJsonLd,
   generateServiceSchema,
+  generateItemListSchema,
   createSchemaConfig,
-  type PackageData
+  type PackageData,
+  type ItemListData
 } from "@/lib/structured-data";
 
 export async function generateMetadata({
@@ -90,10 +92,26 @@ export default async function PackagesPage({
     generateServiceSchema(packageData, schemaConfig)
   );
 
+  // Create ItemList data for carousel rich results
+  const itemListData: ItemListData[] = packagesData.map((pkg, index) => ({
+    name: pkg.name,
+    description: `${pkg.description} - ${pkg.price} EUR`,
+    url: `${schemaConfig.baseUrl}/packages#${pkg.id}`,
+    image: `${schemaConfig.baseUrl}/packages/${pkg.id}-preview.jpg`,
+    position: index + 1,
+  }));
+
+  // Generate ItemList schema for packages carousel
+  const itemListSchema = generateItemListSchema(
+    itemListData,
+    "Photography Packages in Istanbul",
+    schemaConfig
+  );
+
   return (
     <div>
-      {/* JSON-LD Structured Data for Services */}
-      <MultipleJsonLd schemas={serviceSchemas} />
+      {/* JSON-LD Structured Data for Services and Carousel */}
+      <MultipleJsonLd schemas={[...serviceSchemas, itemListSchema]} />
       
       <BreadcrumbNav />
       <PackagesSection />
