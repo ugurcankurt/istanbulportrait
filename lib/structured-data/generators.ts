@@ -195,8 +195,23 @@ export function generateServiceSchema(
     description: packageData.description,
     provider: {
       "@type": "LocalBusiness",
-      name: SEO_CONFIG.organization.name,
       "@id": `${baseUrl}/#localbusiness`,
+      name: SEO_CONFIG.organization.name,
+      url: baseUrl,
+      telephone: SEO_CONFIG.organization.contactPoint.telephone,
+      priceRange: SEO_CONFIG.business.priceRange,
+      address: {
+        "@type": "PostalAddress",
+        streetAddress: SEO_CONFIG.organization.address.streetAddress,
+        addressLocality: SEO_CONFIG.organization.address.addressLocality,
+        addressRegion: SEO_CONFIG.organization.address.addressRegion,
+        postalCode: SEO_CONFIG.organization.address.postalCode,
+        addressCountry: SEO_CONFIG.organization.address.addressCountry,
+      },
+      image: [
+        SEO_CONFIG.person.image,
+        SEO_CONFIG.organization.logo,
+      ],
     },
     areaServed: {
       "@type": "City",
