@@ -2,7 +2,7 @@
  * Analytics utilities for tracking events
  */
 
-// Google Analytics event tracking
+// Google Analytics event tracking //
 export function trackEvent(
   action: string,
   category: string,
