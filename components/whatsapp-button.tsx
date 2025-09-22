@@ -287,12 +287,12 @@ export function WhatsAppButton({
               "absolute pointer-events-auto z-50",
               // Responsive positioning
               isMobile
-                ? "bottom-full left-1/2 transform -translate-x-1/2 mb-4 max-w-[280px]"
-                : "bottom-full right-0 mb-4 max-w-[320px]"
+                ? "bottom-full left-1/2 transform -translate-x-1/2 mb-4 max-w-[380px] min-w-[300px]"
+                : "bottom-full right-0 mb-4 max-w-[420px] min-w-[320px]"
             )}
           >
             <div className={cn(
-              "relative px-4 py-3 rounded-2xl",
+              "relative px-6 py-4 rounded-2xl",
               "bg-white/98 backdrop-blur-md border border-gray-200/60",
               "shadow-xl shadow-black/5",
               "dark:bg-gray-800/98 dark:border-gray-700/60 dark:shadow-black/20"
@@ -301,7 +301,7 @@ export function WhatsAppButton({
               <button
                 onClick={(e) => dismissTooltip(e)}
                 className={cn(
-                  "absolute top-2 right-2 p-1 rounded-full",
+                  "absolute top-3 right-3 p-1 rounded-full",
                   "hover:bg-gray-100 dark:hover:bg-gray-700",
                   "transition-colors duration-200",
                   "focus:outline-none focus:ring-2 focus:ring-gray-300 dark:focus:ring-gray-600"
@@ -312,16 +312,16 @@ export function WhatsAppButton({
               </button>
 
               {/* Tooltip content */}
-              <div className="pr-6">
+              <div className="pr-8">
                 <h4 className={cn(
-                  "text-sm font-semibold text-gray-900 dark:text-white",
-                  "mb-1"
+                  "text-base font-semibold text-gray-900 dark:text-white",
+                  "mb-2"
                 )}>
                   📱 {t("notification_title")}
                 </h4>
                 <p className={cn(
-                  "text-xs text-gray-600 dark:text-gray-300",
-                  "leading-relaxed"
+                  "text-sm text-gray-600 dark:text-gray-300",
+                  "leading-normal"
                 )}>
                   {t("notification_message")}
                 </p>
