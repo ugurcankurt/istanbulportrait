@@ -287,7 +287,7 @@ export function WhatsAppButton({
               "absolute pointer-events-auto z-50",
               // Responsive positioning
               isMobile
-                ? "bottom-full left-1/2 transform -translate-x-1/2 mb-4 max-w-[380px] min-w-[300px]"
+                ? "bottom-full right-0 mb-4 max-w-[380px] min-w-[300px]"
                 : "bottom-full right-0 mb-4 max-w-[420px] min-w-[320px]"
             )}
           >
@@ -332,9 +332,7 @@ export function WhatsAppButton({
                 "absolute w-3 h-3 transform rotate-45",
                 "bg-white/98 border-r border-b border-gray-200/60",
                 "dark:bg-gray-800/98 dark:border-gray-700/60",
-                isMobile
-                  ? "top-full left-1/2 -translate-x-1/2 -translate-y-1/2"
-                  : "top-full right-6 -translate-y-1/2"
+                "top-full right-6 -translate-y-1/2"
               )} />
             </div>
           </motion.div>
