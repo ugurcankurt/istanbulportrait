@@ -17,12 +17,9 @@ export function WhatsAppButton({
   className,
 }: WhatsAppButtonProps) {
   const t = useTranslations("whatsapp");
-  const [isHovered, setIsHovered] = useState(false);
   const [isClicked, setIsClicked] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [showTooltip, setShowTooltip] = useState(false);
-  const [hasInteracted, setHasInteracted] = useState(false);
-  const [tooltipDismissed, setTooltipDismissed] = useState(false);
 
   // Intersection Observer for scroll-based animation
   const { ref, inView } = useInView({
@@ -37,27 +34,36 @@ export function WhatsAppButton({
       setIsMobile(window.innerWidth < 768);
     };
 
-    // Check if user has already interacted with the button
-    const hasInteractedBefore = localStorage.getItem('whatsapp-tooltip-dismissed') === 'true';
-    setHasInteracted(hasInteractedBefore);
-
-    // Show tooltip after 2 seconds if user hasn't interacted before
-    if (!hasInteractedBefore) {
-      const timer = setTimeout(() => {
-        setShowTooltip(true);
-      }, 2000);
-
-      return () => {
-        clearTimeout(timer);
-        window.removeEventListener("resize", checkMobile);
-      };
-    }
+    // Show tooltip after 2 seconds on every page visit
+    const timer = setTimeout(() => {
+      setShowTooltip(true);
+    }, 2000);
 
     checkMobile();
     window.addEventListener("resize", checkMobile);
 
-    return () => window.removeEventListener("resize", checkMobile);
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener("resize", checkMobile);
+    };
   }, []);
+
+  // Handle document click to close tooltip
+  useEffect(() => {
+    const handleDocumentClick = (event: MouseEvent) => {
+      if (showTooltip) {
+        setShowTooltip(false);
+      }
+    };
+
+    if (showTooltip) {
+      document.addEventListener('click', handleDocumentClick);
+    }
+
+    return () => {
+      document.removeEventListener('click', handleDocumentClick);
+    };
+  }, [showTooltip]);
 
   // Format phone number for WhatsApp URL (remove + and any spaces/dashes)
   const formattedNumber = phoneNumber.replace(/[^\d]/g, "");
@@ -163,22 +169,14 @@ export function WhatsAppButton({
     setIsClicked(true);
     setTimeout(() => setIsClicked(false), 200);
 
-    // Mark as interacted and hide tooltip permanently
-    if (!hasInteracted) {
-      setHasInteracted(true);
-      setShowTooltip(false);
-      localStorage.setItem('whatsapp-tooltip-dismissed', 'true');
-    }
-
-    // Open WhatsApp in new tab
-    window.open(whatsappUrl, "_blank", "noopener,noreferrer");
-  }, [whatsappUrl, hasInteracted]);
-
-  const dismissTooltip = useCallback(() => {
+    // Hide tooltip and open WhatsApp
     setShowTooltip(false);
-    setTooltipDismissed(true);
-    setHasInteracted(true);
-    localStorage.setItem('whatsapp-tooltip-dismissed', 'true');
+    window.open(whatsappUrl, "_blank", "noopener,noreferrer");
+  }, [whatsappUrl]);
+
+  const dismissTooltip = useCallback((event: React.MouseEvent) => {
+    event.stopPropagation();
+    setShowTooltip(false);
   }, []);
 
   return (
@@ -197,8 +195,6 @@ export function WhatsAppButton({
       {/* Floating Action Button */}
       <motion.button
         onClick={handleClick}
-        onMouseEnter={() => !isMobile && setIsHovered(true)}
-        onMouseLeave={() => !isMobile && setIsHovered(false)}
         variants={buttonVariants}
         initial="idle"
         whileHover="hover"
@@ -226,7 +222,7 @@ export function WhatsAppButton({
         <motion.div
           variants={iconVariants}
           initial="idle"
-          animate={isHovered ? "hover" : isClicked ? "tap" : "idle"}
+          animate={isClicked ? "tap" : "idle"}
           className="relative z-10"
         >
           <MessageCircle
@@ -239,7 +235,7 @@ export function WhatsAppButton({
 
         {/* Pulsing ring effect for attention */}
         <AnimatePresence>
-          {showTooltip && !hasInteracted && (
+          {showTooltip && (
             <motion.div
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{
@@ -280,28 +276,8 @@ export function WhatsAppButton({
 
       {/* Enhanced Tooltip System - works on all devices */}
       <AnimatePresence>
-        {/* Hover tooltip for desktop */}
-        {!isMobile && isHovered && !showTooltip && (
-          <motion.div
-            variants={tooltipVariants}
-            initial="hidden"
-            animate="visible"
-            exit="hidden"
-            className={cn(
-              "absolute bottom-full right-0 mb-3 px-4 py-2.5",
-              "bg-white/95 backdrop-blur-md border border-gray-200/50",
-              "rounded-2xl text-gray-800 text-sm font-medium whitespace-nowrap",
-              "shadow-lg pointer-events-none select-none",
-              "dark:bg-gray-800/95 dark:border-gray-700/50 dark:text-white"
-            )}
-          >
-            {t("tooltip")}
-            <div className="absolute top-full right-4 w-2 h-2 bg-white/95 dark:bg-gray-800/95 border-r border-b border-gray-200/50 dark:border-gray-700/50 rotate-45 transform translate-y-[-50%]" />
-          </motion.div>
-        )}
-
-        {/* Persistent notification tooltip */}
-        {showTooltip && !hasInteracted && !tooltipDismissed && (
+        {/* Notification tooltip - shows on every page visit */}
+        {showTooltip && (
           <motion.div
             initial={{ opacity: 0, y: 10, scale: 0.9 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -323,7 +299,7 @@ export function WhatsAppButton({
             )}>
               {/* Close button */}
               <button
-                onClick={dismissTooltip}
+                onClick={(e) => dismissTooltip(e)}
                 className={cn(
                   "absolute top-2 right-2 p-1 rounded-full",
                   "hover:bg-gray-100 dark:hover:bg-gray-700",
@@ -369,7 +345,7 @@ export function WhatsAppButton({
       <motion.div
         variants={glowVariants}
         initial="idle"
-        animate={isHovered || showTooltip ? "hover" : "idle"}
+        animate={showTooltip ? "hover" : "idle"}
         className={cn(
           "absolute inset-0 pointer-events-none -z-10",
           "bg-gradient-radial from-[#25D366]/40 via-[#25D366]/15 to-transparent",
