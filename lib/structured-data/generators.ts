@@ -3,7 +3,7 @@
  * Generates type-safe JSON-LD structured data
  */
 
-import { SEO_CONFIG } from "@/lib/seo-config";
+import { AI_SEARCH_CONFIG, SEO_CONFIG } from "@/lib/seo-config";
 import type {
   AggregateRatingSchema,
   BreadcrumbData,
@@ -89,6 +89,18 @@ export function generateLocalBusinessSchema(
     paymentAccepted: SEO_CONFIG.business.paymentAccepted,
     currenciesAccepted: SEO_CONFIG.business.currenciesAccepted,
     sameAs: SEO_CONFIG.organization.sameAs,
+    // AI Search Enhancement
+    knowsAbout: [
+      "Istanbul Photography",
+      "Portrait Photography",
+      "Couple Photography",
+      "Bosphorus Photography",
+      "Galata Tower Photography",
+      "Sultanahmet Photography",
+      "Professional Photography Techniques",
+      "Tourism Photography",
+      "Wedding Photography"
+    ],
     hasOfferCatalog: {
       "@type": "OfferCatalog",
       name: "Photography Packages",
@@ -596,4 +608,97 @@ export function generateToursItemListSchema(
     "Istanbul Tours and Activities",
     config,
   );
+}
+
+/**
+ * Generate Enhanced LocalBusiness schema with AI Search optimization
+ */
+export function generateEnhancedLocalBusinessSchema(
+  config: SchemaConfig,
+): LocalBusinessSchema {
+  const { baseUrl } = config;
+
+  return {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "@id": `${baseUrl}/#localbusiness`,
+    name: SEO_CONFIG.organization.name,
+    description: SEO_CONFIG.site.description,
+    url: baseUrl,
+    telephone: SEO_CONFIG.organization.contactPoint.telephone,
+    priceRange: SEO_CONFIG.business.priceRange,
+    image: [
+      SEO_CONFIG.person.image,
+      SEO_CONFIG.organization.logo,
+      `${baseUrl}/gallery/istanbul_photographer_1.jpg`,
+    ],
+    logo: SEO_CONFIG.organization.logo,
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: SEO_CONFIG.organization.address.streetAddress,
+      addressLocality: SEO_CONFIG.organization.address.addressLocality,
+      addressRegion: SEO_CONFIG.organization.address.addressRegion,
+      postalCode: SEO_CONFIG.organization.address.postalCode,
+      addressCountry: SEO_CONFIG.organization.address.addressCountry,
+    },
+    geo: {
+      "@type": "GeoCoordinates",
+      latitude: 41.0082,
+      longitude: 28.9784,
+    },
+    areaServed: [
+      {
+        "@type": "City",
+        name: "Istanbul",
+        "@id": "https://en.wikipedia.org/wiki/Istanbul",
+      },
+      {
+        "@type": "Country",
+        name: "Turkey",
+        "@id": "https://en.wikipedia.org/wiki/Turkey",
+      },
+    ],
+    serviceArea: {
+      "@type": "GeoCircle",
+      geoMidpoint: {
+        "@type": "GeoCoordinates",
+        latitude: 41.0082,
+        longitude: 28.9784,
+      },
+      geoRadius: "50000", // 50km radius
+    },
+    openingHours: SEO_CONFIG.business.openingHours,
+    paymentAccepted: SEO_CONFIG.business.paymentAccepted,
+    currenciesAccepted: SEO_CONFIG.business.currenciesAccepted,
+    sameAs: SEO_CONFIG.organization.sameAs,
+    // AI Search Enhancement
+    knowsAbout: [
+      "Istanbul Photography",
+      "Portrait Photography",
+      "Couple Photography",
+      "Bosphorus Photography",
+      "Galata Tower Photography",
+      "Sultanahmet Photography",
+      "Professional Photography Techniques",
+      "Tourism Photography",
+      "Wedding Photography"
+    ],
+    hasOfferCatalog: {
+      "@type": "OfferCatalog",
+      name: "Istanbul Photography Services",
+      itemListElement: SEO_CONFIG.services.offers.map((offer) => ({
+        "@type": "Offer",
+        name: offer.name,
+        description: `${offer.description}. Professional photographer Uğur Cankurt with 8+ years experience. Includes consultation, editing, and digital delivery.`,
+        price: offer.price,
+        priceCurrency: offer.priceCurrency,
+        availability: "https://schema.org/InStock",
+        validFrom: new Date().toISOString(),
+        seller: {
+          "@type": "Organization",
+          name: SEO_CONFIG.organization.name,
+        },
+      })),
+    },
+  };
 }

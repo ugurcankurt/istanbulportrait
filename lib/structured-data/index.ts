@@ -6,6 +6,7 @@
 export {
   generateAggregateRatingSchema,
   generateBreadcrumbListSchema,
+  generateEnhancedLocalBusinessSchema,
   generateFAQPageSchema,
   generateHowToSchema,
   generateImageGallerySchema,

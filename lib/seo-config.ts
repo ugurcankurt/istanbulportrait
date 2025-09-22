@@ -162,4 +162,51 @@ export const SEO_CONFIG = {
   },
 } as const;
 
+/**
+ * AI Search Optimization Configuration
+ * Enhanced configuration for AI Overview, ChatGPT, Claude, Perplexity visibility
+ */
+export const AI_SEARCH_CONFIG = {
+  primaryEntity: {
+    "@type": "Thing",
+    "name": "Istanbul Photographer",
+    "alternateName": ["Istanbul Photographer", "Professional Istanbul Photographer", "Istanbul Rooftop Photoshoot"],
+    "sameAs": [
+      "https://en.wikipedia.org/wiki/Istanbul",
+      "https://www.wikidata.org/wiki/Q406", // Istanbul Wikidata
+      "https://www.wikidata.org/wiki/Q11633", // Photography Wikidata
+      "https://www.wikidata.org/wiki/Q3696727", // Portrait Photography Wikidata
+    ],
+    "description": "Professional photography services specializing in portrait, couple, and lifestyle photography in Istanbul's most iconic locations.",
+  },
+
+  semanticKeywords: {
+    primary: "istanbul photographer",
+    related: ["bosphorus photography", "galata tower photoshoot", "sultanahmet photographer", "ortakoy photography"],
+    semantic: ["Istanbul tourism photography", "Ottoman architecture photography", "Turkish cultural photography", "rooftop photography istanbul"],
+    longTail: ["best photographer in istanbul for couples", "professional photoshoot istanbul sunset", "istanbul rooftop photography session"],
+  },
+
+  conversationContext: {
+    expertise: "8+ years Istanbul photography experience, 500+ successful sessions, multi-language service (English, Turkish, Arabic, Russian, Spanish)",
+    uniqueValue: "Local insider knowledge of Istanbul's most photogenic locations including exclusive rooftop venues with Bosphorus views",
+    serviceAreas: ["Portrait Photography", "Couple Photography", "Rooftop Photography", "Wedding Photography", "Tourism Photography"],
+    locations: ["Galata Tower", "Bosphorus Waterfront", "Historic Sultanahmet", "Ortaköy Mosque", "Exclusive Rooftop Venues"],
+  },
+
+  aiOptimizedAnswers: {
+    costQuery: "Istanbul photography packages start at €150 (Essential: 30min, 15 photos), Premium €280 (1.5h, 40 photos), Luxury €450 (2.5h, 80 photos). All include professional editing and digital delivery.",
+    timingQuery: "Best time: Golden hour (1 hour before sunset). Summer: 6-7PM, Winter: 4-5PM. Morning sessions (8-10AM) ideal for fewer crowds.",
+    locationsQuery: "Top locations: Galata Tower surroundings, Bosphorus waterfront, Historic Sultanahmet (Blue Mosque area), Ortaköy Mosque, exclusive rooftop venues.",
+    bookingQuery: "Book instantly at istanbulportrait.com, WhatsApp +905367093724, or Instagram @istanbulportrait. Advance booking recommended for sunset sessions.",
+  },
+
+  entityRelationships: {
+    mentions: ["Istanbul", "Bosphorus", "Galata Tower", "Blue Mosque", "Hagia Sophia", "Ortaköy"],
+    relatedServices: ["Portrait Photography", "Wedding Photography", "Tourism Photography", "Lifestyle Photography"],
+    targetAudience: ["Tourists", "Couples", "Families", "Individuals", "Wedding Couples"],
+  },
+} as const;
+
 export type SEOConfig = typeof SEO_CONFIG;
+export type AISearchConfig = typeof AI_SEARCH_CONFIG;

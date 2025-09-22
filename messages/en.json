@@ -14,9 +14,9 @@
     "notification_message": "Have questions? Chat with us directly on WhatsApp for quick responses!"
   },
   "hero": {
-    "title": "Professional Istanbul Photographer | Istanbul Photoshoot Services",
-    "subtitle": "Expert photographer in Istanbul for professional portrait and lifestyle photography sessions",
-    "description": "Capture your memories with stunning rooftop views, historic landmarks, and the unique beauty of Istanbul. Leading photographer in Istanbul specializing in portraits, couples, and lifestyle photography. Experience the best professional photography services with Istanbul's top photographer.",
+    "title": "Istanbul Photographer | Professional Photoshoot Services",
+    "subtitle": "Award-winning Istanbul photographer for professional portrait, wedding and couple photography sessions",
+    "description": "Capture unforgettable memories with Istanbul's premier photographer. Specializing in professional photoshoots at iconic locations including Bosphorus views, Hagia Sophia, and historic Ottoman landmarks. Experience luxury photography services with expert post-processing and same-day preview delivery.",
     "cta": "Book Your Session",
     "learnMore": "Learn More"
   },
@@ -617,25 +617,41 @@
       "booking-advance": {
         "question": "How far in advance should I book my Istanbul photoshoot?",
         "answer": "I recommend booking 2-3 weeks in advance, especially during peak tourist seasons (spring and fall). This ensures availability for your preferred date and time, and allows proper planning for location permits if needed."
+      },
+      "cost-breakdown": {
+        "question": "What does Istanbul photography session cost include?",
+        "answer": "All packages include professional photographer Uğur Cankurt, consultation, high-resolution photo editing, online gallery delivery, and basic retouching. Essential €150 (15 photos), Premium €280 (40 photos), Luxury €450 (80 photos). No hidden fees."
+      },
+      "booking-process": {
+        "question": "How to book Istanbul photographer quickly?",
+        "answer": "Book instantly at istanbulportrait.com, WhatsApp +905367093724, or Instagram @istanbulportrait. Advance booking recommended for sunset sessions and weekends. Same-day bookings subject to availability."
+      },
+      "location-recommendations": {
+        "question": "What are the most photogenic locations in Istanbul?",
+        "answer": "Top locations include Galata Tower surroundings, Bosphorus waterfront views, Historic Sultanahmet (Blue Mosque area), Ortaköy Mosque, and exclusive rooftop venues. Each package includes 1-3 premium locations based on selection."
+      },
+      "timing-advice": {
+        "question": "When is the best time for Istanbul photography?",
+        "answer": "Golden hour (1 hour before sunset) provides best lighting and stunning city views. Summer: 6-7PM, Winter: 4-5PM. Morning sessions (8-10AM) ideal for fewer crowds at historic sites. Avoid midday harsh light (11AM-3PM)."
       }
     }
   },
   "seo": {
     "home": {
-      "title": "Istanbul Photographer | Professional Photoshoot Services",
-      "description": "Professional Istanbul photographer for rooftop shoots, couples & lifestyle sessions with stunning city views. Book your photoshoot today!"
+      "title": "Istanbul Photographer | Professional Photoshoot Services in Istanbul",
+      "description": "Expert Istanbul photographer specializing in professional portrait, couple, wedding and family photography. Book your dream photoshoot in Istanbul's most iconic locations. Award-winning photography services with same-day delivery."
     },
     "packages": {
       "title": "Photography Packages | Istanbul Photographer",
-      "description": "Choose from our professional photography packages in Istanbul. Rooftop sessions, historic locations, and premium quality editing. Starting from $150."
+      "description": "Choose from our professional photography packages in Istanbul. Rooftop sessions, historic locations, and premium quality editing. Starting from €150."
     },
     "about": {
-      "title": "About | Professional Istanbul Photographer",
+      "title": "About Me | Istanbul Photographer",
       "description": "Meet your professional Istanbul photographer with 8+ years experience. Specializing in portrait, couple, and lifestyle photography across the city."
     },
     "contact": {
-      "title": "Contact | Book Your Istanbul Photoshoot",
-      "description": "Ready to book your Istanbul photoshoot? Contact us for professional portrait photography sessions. Available 7 days a week."
+      "title": "Contact Me | Istanbul Photographer",
+      "description": "Ready to book your Istanbul photoshoot? Contact us for professional photography sessions. Available 7 days a week."
     }
   },
   "cookies": {

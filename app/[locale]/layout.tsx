@@ -2,7 +2,7 @@ import { NextIntlClientProvider } from "next-intl";
 import { getMessages, getTranslations } from "next-intl/server";
 import { FacebookPixel } from "@/components/analytics/facebook-pixel";
 import { GoogleAnalytics } from "@/components/analytics/google-analytics";
-import { INPTracking } from "@/components/analytics/inp-tracking";
+import { CoreWebVitals } from "@/components/analytics/core-web-vitals";
 import { MultilingualCookieConsent } from "@/components/analytics/multilingual-cookie-consent";
 import { YandexMetrica } from "@/components/analytics/yandex-metrica";
 import { SEO_CONFIG } from "@/lib/seo-config";
@@ -139,7 +139,7 @@ export default async function LocaleLayout({
           <GoogleAnalytics />
           <FacebookPixel />
           <YandexMetrica />
-          <INPTracking />
+          <CoreWebVitals />
           <Footer />
         </div>
         <Toaster />

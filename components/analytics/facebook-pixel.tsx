@@ -60,7 +60,7 @@ export function FacebookPixel() {
             function trackWebVitals() {
               try {
                 // Import and track Core Web Vitals
-                import('web-vitals').then(({ getCLS, getFID, getFCP, getLCP, getTTFB, onINP }) => {
+                import('web-vitals').then(({ getCLS, getFCP, getLCP, getTTFB, onINP }) => {
                   // Track key metrics that affect Facebook ad performance
                   getLCP((metric) => {
                     fbq('trackCustom', 'WebVital_LCP', {
@@ -72,6 +72,21 @@ export function FacebookPixel() {
                   getFCP((metric) => {
                     fbq('trackCustom', 'WebVital_FCP', {
                       value: Math.round(metric.value),
+                      rating: metric.rating
+                    });
+                  });
+
+                  // Track INP (replaced FID in 2024 Core Web Vitals)
+                  onINP((metric) => {
+                    fbq('trackCustom', 'WebVital_INP', {
+                      value: Math.round(metric.value),
+                      rating: metric.rating
+                    });
+                  });
+
+                  getCLS((metric) => {
+                    fbq('trackCustom', 'WebVital_CLS', {
+                      value: Math.round(metric.value * 1000), // CLS is very small, multiply for better reporting
                       rating: metric.rating
                     });
                   });

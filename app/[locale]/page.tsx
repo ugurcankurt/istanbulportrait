@@ -9,6 +9,7 @@ import { getLocalizedPaths } from "@/lib/localized-url";
 import { SEO_CONFIG } from "@/lib/seo-config";
 import {
   createSchemaConfig,
+  generateEnhancedLocalBusinessSchema,
   generateLocalBusinessSchema,
   generateOrganizationSchema,
   generatePersonSchema,
@@ -46,12 +47,12 @@ export default async function HomePage({
   // Create schema configuration
   const schemaConfig = createSchemaConfig(locale);
 
-  // Generate structured data schemas
-  const localBusinessSchema = generateLocalBusinessSchema(schemaConfig);
+  // Generate structured data schemas with AI Search optimization
+  const enhancedLocalBusinessSchema = generateEnhancedLocalBusinessSchema(schemaConfig);
   const organizationSchema = generateOrganizationSchema(schemaConfig);
   const personSchema = generatePersonSchema(schemaConfig);
 
-  const schemas = [localBusinessSchema, organizationSchema, personSchema];
+  const schemas = [enhancedLocalBusinessSchema, organizationSchema, personSchema];
 
   return (
     <>

@@ -544,6 +544,22 @@
       "booking-advance": {
         "question": "¿Con cuánta anticipación debo reservar mi sesión fotográfica en Estambul?",
         "answer": "Recomiendo reservar con 2-3 semanas de anticipación, especialmente durante las temporadas turísticas altas (primavera y otoño). Esto asegura disponibilidad para tu fecha y hora preferidas, y permite la planificación adecuada para permisos de ubicación si es necesario."
+      },
+      "cost-breakdown": {
+        "question": "¿Qué incluye el costo de la sesión fotográfica en Estambul?",
+        "answer": "Todos los paquetes incluyen al fotógrafo profesional Uğur Cankurt, consulta, edición de alta resolución, galería en línea y retoque básico. Essential €150 (15 fotos), Premium €280 (40 fotos), Luxury €450 (80 fotos). Sin tarifas ocultas."
+      },
+      "booking-process": {
+        "question": "¿Cómo reservar fotógrafo de Estambul rápidamente?",
+        "answer": "Reserva al instante en istanbulportrait.com, WhatsApp +905367093724, o Instagram @istanbulportrait. Se recomienda reserva anticipada para sesiones de atardecer y fines de semana. Reservas del mismo día sujetas a disponibilidad."
+      },
+      "location-recommendations": {
+        "question": "¿Cuáles son las ubicaciones más fotogénicas en Estambul?",
+        "answer": "Las mejores ubicaciones incluyen alrededores de Torre Galata, vistas costeras del Bósforo, histórico Sultanahmet (área Mezquita Azul), Mezquita Ortaköy, y lugares exclusivos en azoteas. Cada paquete incluye 1-3 ubicaciones premium según selección."
+      },
+      "timing-advice": {
+        "question": "¿Cuál es el mejor momento para fotografía en Estambul?",
+        "answer": "La hora dorada (1 hora antes del atardecer) proporciona mejor iluminación y vistas impresionantes de la ciudad. Verano: 18-19:00, Invierno: 16-17:00. Sesiones matutinas (8-10:00) ideales para menos multitudes en sitios históricos. Evitar luz dura del mediodía (11:00-15:00)."
       }
     }
   },

@@ -16,8 +16,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "Istanbul Photographer",
-  description: "Professional Photography Services in Istanbul-Türkiye",
+  title: "The Istanbul Photographer",
+  description: "We are a studio of English speaking photographers in Istanbul and our goal is to help you get amazing photos and videos.",
 };
 
 // Helper function to detect locale from pathname or headers
