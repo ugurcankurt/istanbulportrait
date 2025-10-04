@@ -9,6 +9,7 @@ import type {
   BlogPost,
   BlogPostListResponse,
   BlogPostWithRelations,
+  BlogPostWithAllTranslations,
   BlogQueryParams,
   BlogTagListResponse,
   BlogTagWithTranslation,

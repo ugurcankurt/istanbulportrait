@@ -55,11 +55,12 @@ export function Navigation() {
   ];
 
   const handleLocaleChange = (newLocale: string) => {
-    // If we have dynamic route params (like [slug]), include them
-    if (params && Object.keys(params).length > 0) {
-      router.push({ pathname, params }, { locale: newLocale });
+    // Handle locale change by refreshing with new locale
+    // For dynamic routes, use window.location to preserve params
+    if (pathname.includes('[')) {
+      window.location.href = `/${newLocale}${window.location.pathname.replace(/^\/[a-z]{2}/, '')}`;
     } else {
-      router.push(pathname, { locale: newLocale });
+      router.push(pathname as any, { locale: newLocale });
     }
   };
 

@@ -70,7 +70,7 @@ export function BlogForm({
     loadData();
   }, [fetchCategories, fetchTags]);
 
-  const form = useForm<BlogFormData>({
+  const form = useForm({
     resolver: zodResolver(blogFormSchema),
     defaultValues: initialData
       ? {
@@ -140,8 +140,8 @@ export function BlogForm({
   const enContent = form.watch("translations.en.content");
   const readingTime = enContent ? calculateReadingTime(enContent).minutes : 0;
 
-  const handleSubmit = async (data: BlogFormData) => {
-    await onSubmit(data);
+  const handleSubmit = async (data: any) => {
+    await onSubmit(data as BlogFormData);
   };
 
   const handlePublish = () => {
@@ -333,10 +333,10 @@ export function BlogForm({
                             checked={field.value?.includes(category.id)}
                             onCheckedChange={(checked) => {
                               if (checked) {
-                                field.onChange([...field.value, category.id]);
+                                field.onChange([...(field.value || []), category.id]);
                               } else {
                                 field.onChange(
-                                  field.value.filter((id) => id !== category.id),
+                                  (field.value || []).filter((id) => id !== category.id),
                                 );
                               }
                             }}
@@ -383,10 +383,10 @@ export function BlogForm({
                             checked={field.value?.includes(tag.id)}
                             onCheckedChange={(checked) => {
                               if (checked) {
-                                field.onChange([...field.value, tag.id]);
+                                field.onChange([...(field.value || []), tag.id]);
                               } else {
                                 field.onChange(
-                                  field.value.filter((id) => id !== tag.id),
+                                  (field.value || []).filter((id) => id !== tag.id),
                                 );
                               }
                             }}

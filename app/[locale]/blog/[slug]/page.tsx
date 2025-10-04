@@ -73,32 +73,34 @@ export default async function BlogPostPage({
 
   // Generate Article schema
   const articleSchema = {
-    "@context": "https://schema.org",
-    "@type": "BlogPosting",
+    "@context": "https://schema.org" as const,
+    "@type": "BlogPosting" as const,
     headline: post.translation.title,
     description: post.translation.excerpt || post.translation.meta_description || "",
     image: post.featured_image || `${schemaConfig.baseUrl}${SEO_CONFIG.images.ogImage}`,
-    datePublished: post.published_at,
+    datePublished: post.published_at || post.created_at,
     dateModified: post.updated_at,
     author: {
-      "@type": "Person",
+      "@type": "Person" as const,
       name: SEO_CONFIG.organization.name,
       url: schemaConfig.baseUrl,
     },
     publisher: {
-      "@type": "Organization",
+      "@type": "Organization" as const,
       name: SEO_CONFIG.organization.name,
       logo: {
-        "@type": "ImageObject",
+        "@type": "ImageObject" as const,
         url: `${schemaConfig.baseUrl}${SEO_CONFIG.images.logo}`,
       },
     },
     mainEntityOfPage: {
-      "@type": "WebPage",
+      "@type": "WebPage" as const,
       "@id": `${schemaConfig.baseUrl}/${locale}/blog/${slug}`,
     },
     keywords: post.meta_keywords?.join(", ") || "",
-    articleSection: post.categories?.[0]?.category.translation.name || "Photography",
+    articleSection: post.categories && post.categories.length > 0
+      ? (post.categories[0] as any).category?.translation?.name || "Photography"
+      : "Photography",
     wordCount: post.translation.content?.split(" ").length || 0,
   };
 
