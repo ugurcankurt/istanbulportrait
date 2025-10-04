@@ -15,6 +15,9 @@ import {
   MultipleJsonLd,
 } from "@/lib/structured-data";
 
+// Force dynamic rendering for blog list page (uses searchParams)
+export const dynamic = 'force-dynamic';
+
 export async function generateMetadata({
   params,
 }: {

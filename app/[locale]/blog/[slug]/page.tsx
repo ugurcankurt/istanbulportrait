@@ -13,9 +13,18 @@ import { createSchemaConfig, MultipleJsonLd } from "@/lib/structured-data";
 import { SEO_CONFIG } from "@/lib/seo-config";
 import { getTranslations } from "next-intl/server";
 
+// Force dynamic rendering to avoid build-time Supabase issues
+export const dynamic = 'force-dynamic';
+
 export async function generateStaticParams() {
-  const slugs = await getAllPublishedSlugs();
-  return slugs.map((slug) => ({ slug }));
+  try {
+    const slugs = await getAllPublishedSlugs();
+    return slugs.map((slug) => ({ slug }));
+  } catch (error) {
+    console.error('Failed to fetch blog slugs during build:', error);
+    // Return empty array - pages will be generated on-demand at runtime
+    return [];
+  }
 }
 
 export async function generateMetadata({
