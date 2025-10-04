@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
+import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Link } from "@/i18n/routing";
 
 export function Footer() {
@@ -42,19 +43,21 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Brand */}
           <div className="space-y-4">
-            <div className="flex items-center">
-              <Image
-                src={
-                  mounted && resolvedTheme === "dark"
-                    ? "/istanbulportrait_white_logo.png"
-                    : "/istanbulportrait_dark_logo.png"
-                }
-                alt="Professional Istanbul photographer - Top photographer in Istanbul"
-                width={90}
-                height={24}
-                className="h-6 w-auto"
-                suppressHydrationWarning
-              />
+            <div className="w-32 sm:w-40">
+              <AspectRatio ratio={15 / 4}>
+                <Image
+                  src={
+                    mounted && resolvedTheme === "dark"
+                      ? "/istanbulportrait_white_logo.png"
+                      : "/istanbulportrait_dark_logo.png"
+                  }
+                  alt="Professional Istanbul photographer - Top photographer in Istanbul"
+                  fill
+                  sizes="(max-width: 640px) 128px, 160px"
+                  className="object-contain"
+                  suppressHydrationWarning
+                />
+              </AspectRatio>
             </div>
             <p className="text-muted-foreground text-sm">{t("description")}</p>
             <div className="flex space-x-4">

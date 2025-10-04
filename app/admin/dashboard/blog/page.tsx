@@ -19,6 +19,20 @@ import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Spinner } from "@/components/ui/spinner";
+import {
+  Empty,
+  EmptyContent,
+  EmptyDescription,
+  EmptyMedia,
+  EmptyTitle,
+} from "@/components/ui/empty";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+} from "@/components/ui/input-group";
+import { ButtonGroup } from "@/components/ui/button-group";
 import {
   Dialog,
   DialogContent,
@@ -210,15 +224,16 @@ export default function BlogManagementPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             {/* Search */}
             <div className="lg:col-span-2">
-              <div className="relative">
-                <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                <Input
+              <InputGroup>
+                <InputGroupAddon align="inline-start">
+                  <Search className="size-4" />
+                </InputGroupAddon>
+                <InputGroupInput
                   placeholder="Search posts..."
                   value={searchInput}
                   onChange={(e) => setSearchInput(e.target.value)}
-                  className="pl-9"
                 />
-              </div>
+              </InputGroup>
             </div>
 
             {/* Status Filter */}
@@ -346,17 +361,30 @@ export default function BlogManagementPage() {
         <CardContent className="p-0">
           {loading ? (
             <div className="p-8 text-center">
-              <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent" />
+              <Spinner className="size-8 mx-auto" />
               <p className="mt-2 text-sm text-muted-foreground">
                 Loading posts...
               </p>
             </div>
           ) : posts.length === 0 ? (
-            <div className="p-8 text-center">
-              <p className="text-muted-foreground">No blog posts found</p>
-              <Button asChild className="mt-4">
-                <Link href="/admin/dashboard/blog/new">Create First Post</Link>
-              </Button>
+            <div className="p-8">
+              <Empty>
+                <EmptyMedia variant="icon">
+                  <Edit className="size-12" />
+                </EmptyMedia>
+                <EmptyTitle>No blog posts found</EmptyTitle>
+                <EmptyDescription>
+                  Start creating engaging content for your photography blog
+                </EmptyDescription>
+                <EmptyContent>
+                  <Button asChild>
+                    <Link href="/admin/dashboard/blog/new">
+                      <Plus className="w-4 h-4 mr-2" />
+                      Create First Post
+                    </Link>
+                  </Button>
+                </EmptyContent>
+              </Empty>
             </div>
           ) : (
             <>
@@ -460,7 +488,7 @@ export default function BlogManagementPage() {
                     Page {pagination.page} of {pagination.totalPages} (
                     {pagination.total} total posts)
                   </div>
-                  <div className="flex gap-2">
+                  <ButtonGroup>
                     <Button
                       variant="outline"
                       size="sm"
@@ -479,7 +507,7 @@ export default function BlogManagementPage() {
                       Next
                       <ChevronRight className="w-4 h-4 ml-1" />
                     </Button>
-                  </div>
+                  </ButtonGroup>
                 </div>
               )}
             </>

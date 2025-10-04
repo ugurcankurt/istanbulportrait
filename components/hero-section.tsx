@@ -13,34 +13,38 @@ export function HeroSection() {
   const tui = useTranslations("ui");
 
   return (
-    <section className="relative min-h-[90vh] sm:min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Background Image */}
+    <section className="relative min-h-[90vh] sm:min-h-screen overflow-hidden">
+      {/* Background Image with Aspect Ratio */}
       <div className="absolute inset-0 z-0">
-        <Image
-          src="/istanbul_photographer.jpg"
-          alt="Professional Istanbul photographer capturing stunning portrait photography at Bosphorus - Award-winning photography services in Istanbul Turkey"
-          fill
-          className="object-cover"
-          priority
-          quality={90}
-          sizes="100vw"
-          onError={(e) => {
-            const target = e.target as HTMLImageElement;
-            target.src = "/istanbulportprat_ugur_cankurt.jpg";
-            target.onerror = () => {
-              target.style.display = "none";
-              const parent = target.closest(".absolute");
-              if (parent && parent instanceof HTMLElement) {
-                parent.style.backgroundColor = "rgba(0,0,0,0.7)";
-              }
-            };
-          }}
-        />
+        <div className="relative w-full h-full">
+          <Image
+            src="/istanbul_photographer.jpg"
+            alt="Professional Istanbul photographer capturing stunning portrait photography at Bosphorus - Award-winning photography services in Istanbul Turkey"
+            fill
+            className="object-cover"
+            priority
+            quality={90}
+            sizes="100vw"
+            onError={(e) => {
+              const target = e.target as HTMLImageElement;
+              target.src = "/istanbulportprat_ugur_cankurt.jpg";
+              target.onerror = () => {
+                target.style.display = "none";
+                const parent = target.closest(".relative");
+                if (parent && parent instanceof HTMLElement) {
+                  parent.style.backgroundColor = "rgba(0,0,0,0.7)";
+                }
+              };
+            }}
+          />
+        </div>
         <div className="absolute inset-0 bg-black/40" />
       </div>
 
-      {/* Content */}
-      <div className="container relative z-10 mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-16">
+      {/* Content Wrapper */}
+      <div className="relative z-10 min-h-[90vh] sm:min-h-screen flex items-center justify-center">
+
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-16">
         <div className="max-w-6xl mx-auto text-center text-white">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -125,6 +129,7 @@ export function HeroSection() {
             </div>
           </motion.div>
         </div>
+      </div>
       </div>
 
       {/* Scroll Indicator */}

@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
@@ -135,7 +136,7 @@ export function GallerySection() {
                   <DialogTrigger asChild>
                     <div
                       onClick={() => openLightbox(image.id)}
-                      className="w-full h-full"
+                      className="relative w-full h-full"
                     >
                       <Image
                         src={image.src}
@@ -187,6 +188,9 @@ export function GallerySection() {
               <DialogTitle className="sr-only">
                 {selectedImageData?.alt}
               </DialogTitle>
+              <DialogDescription className="sr-only">
+                Gallery image lightbox
+              </DialogDescription>
               {selectedImageData && (
                 <div className="relative">
                   <div className="relative aspect-auto max-h-[80vh]">

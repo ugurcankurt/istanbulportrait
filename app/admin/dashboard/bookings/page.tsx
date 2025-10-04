@@ -18,6 +18,20 @@ import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Spinner } from "@/components/ui/spinner";
+import {
+  Empty,
+  EmptyContent,
+  EmptyDescription,
+  EmptyMedia,
+  EmptyTitle,
+} from "@/components/ui/empty";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+} from "@/components/ui/input-group";
+import { ButtonGroup } from "@/components/ui/button-group";
 import {
   Dialog,
   DialogContent,
@@ -337,15 +351,16 @@ export default function BookingsPage() {
         <CardContent>
           <div className="flex flex-col sm:flex-row gap-4">
             <div className="flex-1">
-              <div className="relative">
-                <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                <Input
+              <InputGroup>
+                <InputGroupAddon align="inline-start">
+                  <Search className="size-4" />
+                </InputGroupAddon>
+                <InputGroupInput
                   placeholder="Search by name, email, or phone..."
                   value={searchInput}
                   onChange={(e) => setSearchInput(e.target.value)}
-                  className="pl-9"
                 />
-              </div>
+              </InputGroup>
             </div>
             <Select
               value={statusFilter}
@@ -401,13 +416,20 @@ export default function BookingsPage() {
         <CardContent className="p-0">
           {loading ? (
             <div className="p-8 text-center">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
+              <Spinner className="size-8 mx-auto" />
               <p className="mt-2 text-muted-foreground">Loading bookings...</p>
             </div>
           ) : bookings.length === 0 ? (
-            <div className="p-8 text-center">
-              <Calendar className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-              <p className="text-muted-foreground">No bookings found</p>
+            <div className="p-8">
+              <Empty>
+                <EmptyMedia variant="icon">
+                  <Calendar className="size-12" />
+                </EmptyMedia>
+                <EmptyTitle>No bookings found</EmptyTitle>
+                <EmptyDescription>
+                  Bookings will appear here when customers make reservations
+                </EmptyDescription>
+              </Empty>
             </div>
           ) : (
             <Table>
@@ -487,27 +509,29 @@ export default function BookingsPage() {
             {pagination.total} bookings
           </p>
           <div className="flex items-center space-x-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setPage(pagination.page - 1)}
-              disabled={pagination.page === 1}
-            >
-              <ChevronLeft className="w-4 h-4 mr-1" />
-              Previous
-            </Button>
+            <ButtonGroup>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setPage(pagination.page - 1)}
+                disabled={pagination.page === 1}
+              >
+                <ChevronLeft className="w-4 h-4 mr-1" />
+                Previous
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setPage(pagination.page + 1)}
+                disabled={pagination.page === pagination.totalPages}
+              >
+                Next
+                <ChevronRight className="w-4 h-4 ml-1" />
+              </Button>
+            </ButtonGroup>
             <span className="text-sm px-4 py-2">
               Page {pagination.page} of {pagination.totalPages}
             </span>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setPage(pagination.page + 1)}
-              disabled={pagination.page === pagination.totalPages}
-            >
-              Next
-              <ChevronRight className="w-4 h-4 ml-1" />
-            </Button>
           </div>
         </div>
       )}

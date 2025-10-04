@@ -9,6 +9,7 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { formatBlogDate } from "@/lib/blog/blog-utils";
 import { BreadcrumbNav } from "@/components/breadcrumb-nav";
+import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { createSchemaConfig, MultipleJsonLd } from "@/lib/structured-data";
 import { SEO_CONFIG } from "@/lib/seo-config";
 import { getTranslations } from "next-intl/server";
@@ -120,17 +121,18 @@ export default async function BlogPostPage({
 
       <BreadcrumbNav />
 
-      <article className="container mx-auto px-4 py-12 max-w-4xl">
+      <div className="container mx-auto px-4 py-12">
+        <article className="max-w-6xl mx-auto">
       {/* Header */}
       <header className="mb-8">
         {post.featured_image && (
-          <div className="aspect-video mb-8 rounded-lg overflow-hidden">
+          <AspectRatio ratio={16 / 9} className="mb-8 rounded-lg overflow-hidden">
             <img
               src={post.featured_image}
               alt={post.translation.title}
               className="w-full h-full object-cover"
             />
-          </div>
+          </AspectRatio>
         )}
 
         <h1 className="text-4xl md:text-5xl font-bold mb-4">
@@ -200,7 +202,8 @@ export default async function BlogPostPage({
           )}
         </div>
       </footer>
-    </article>
+      </article>
+      </div>
     </div>
   );
 }

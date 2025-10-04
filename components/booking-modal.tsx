@@ -273,32 +273,30 @@ export function BookingModal({
                             </FormLabel>
 
                             {/* Calendar Widget */}
-                            <div className="flex justify-center w-full">
-                              <Calendar
-                                mode="single"
-                                selected={
-                                  dateField.value
-                                    ? new Date(dateField.value)
-                                    : undefined
-                                }
-                                onSelect={(date) => {
-                                  const dateString = date
-                                    ? format(date, "yyyy-MM-dd", {
-                                        locale: dateFnsLocale,
-                                      })
-                                    : "";
-                                  dateField.onChange(dateString);
-                                  setShowTimeSelection(!!date);
-                                }}
-                                disabled={(date) =>
-                                  date < new Date() ||
-                                  date < new Date("1900-01-01")
-                                }
-                                locale={dateFnsLocale}
-                                dir={locale === "ar" ? "rtl" : "ltr"}
-                                className="rounded-lg border shadow-sm bg-background"
-                              />
-                            </div>
+                            <Calendar
+                              mode="single"
+                              selected={
+                                dateField.value
+                                  ? new Date(dateField.value)
+                                  : undefined
+                              }
+                              onSelect={(date) => {
+                                const dateString = date
+                                  ? format(date, "yyyy-MM-dd", {
+                                      locale: dateFnsLocale,
+                                    })
+                                  : "";
+                                dateField.onChange(dateString);
+                                setShowTimeSelection(!!date);
+                              }}
+                              disabled={(date) =>
+                                date < new Date() ||
+                                date < new Date("1900-01-01")
+                              }
+                              locale={dateFnsLocale}
+                              dir={locale === "ar" ? "rtl" : "ltr"}
+                              className="w-full rounded-lg border shadow-sm bg-background [--cell-size:2.5rem] sm:[--cell-size:2.75rem] md:[--cell-size:3rem]"
+                            />
 
                             {/* Time Selection */}
                             {showTimeSelection && (

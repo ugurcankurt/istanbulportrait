@@ -7,6 +7,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
+import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -17,6 +18,7 @@ import {
 import {
   Sheet,
   SheetContent,
+  SheetDescription,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
@@ -50,6 +52,7 @@ export function Navigation() {
     { href: "/" as const, label: t("home") },
     { href: "/packages" as const, label: t("packages") },
     { href: "/tours" as const, label: t("tours") },
+    { href: "/blog" as const, label: t("blog") },
     { href: "/about" as const, label: t("about") },
     { href: "/contact" as const, label: t("contact") },
   ];
@@ -73,12 +76,8 @@ export function Navigation() {
     >
       <div className="container mx-auto flex h-14 sm:h-16 items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Logo */}
-        <motion.div
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.98 }}
-          transition={{ type: "spring", stiffness: 400, damping: 17 }}
-        >
-          <Link href="/" className="flex items-center">
+        <Link href="/" className="flex items-center w-40 sm:w-48">
+          <AspectRatio ratio={15 / 4}>
             <Image
               src={
                 mounted && resolvedTheme === "dark"
@@ -86,14 +85,14 @@ export function Navigation() {
                   : "/istanbulportrait_dark_logo.png"
               }
               alt="Professional photographer in Istanbul - Istanbul photoshoot services"
-              width={120}
-              height={32}
-              className="h-6 sm:h-8 w-auto"
+              fill
+              sizes="(max-width: 640px) 160px, 192px"
+              className="object-contain"
               priority
               suppressHydrationWarning
             />
-          </Link>
-        </motion.div>
+          </AspectRatio>
+        </Link>
 
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center space-x-4 lg:space-x-6 text-sm font-medium">
@@ -184,22 +183,27 @@ export function Navigation() {
             </SheetTrigger>
             <SheetContent side="right" className="w-80 p-0">
               <SheetHeader className="p-6 pb-4 bg-muted/30">
-                <div className="flex items-center justify-center">
-                  <Image
-                    src={
-                      mounted && resolvedTheme === "dark"
-                        ? "/istanbulportrait_white_logo.png"
-                        : "/istanbulportrait_dark_logo.png"
-                    }
-                    alt="Best Istanbul photographer - Professional photography services"
-                    width={90}
-                    height={24}
-                    className="h-6 w-auto"
-                    suppressHydrationWarning
-                  />
+                <div className="flex items-center justify-center w-32 mx-auto">
+                  <AspectRatio ratio={15 / 4}>
+                    <Image
+                      src={
+                        mounted && resolvedTheme === "dark"
+                          ? "/istanbulportrait_white_logo.png"
+                          : "/istanbulportrait_dark_logo.png"
+                      }
+                      alt="Best Istanbul photographer - Professional photography services"
+                      fill
+                      sizes="128px"
+                      className="object-contain"
+                      suppressHydrationWarning
+                    />
+                  </AspectRatio>
                   <SheetTitle className="sr-only">
                     Istanbul Photographer
                   </SheetTitle>
+                  <SheetDescription className="sr-only">
+                    Navigation menu
+                  </SheetDescription>
                 </div>
               </SheetHeader>
 

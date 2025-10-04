@@ -82,7 +82,7 @@ export function ToursSection({ locale, className = "" }: ToursSectionProps) {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
-            className="grid gap-6 md:grid-cols-2 lg:grid-cols-3"
+            className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 max-w-6xl mx-auto"
           >
             {popularTours.map((tourId, index) => (
               <motion.div key={tourId} variants={itemVariants}>

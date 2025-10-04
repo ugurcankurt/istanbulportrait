@@ -18,6 +18,14 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
+  Field,
+  FieldDescription,
+  FieldGroup,
+  FieldLabel,
+  FieldSeparator,
+  FieldSet,
+} from "@/components/ui/field";
+import {
   FormControl,
   FormField,
   FormItem,
@@ -25,6 +33,13 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import { formatPackagePricing } from "@/lib/pricing";
 import { formatCurrency } from "@/lib/utils";
@@ -94,211 +109,209 @@ export function PaymentForm({
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="space-y-4"
     >
-      {/* Security Badge */}
-      <div className="flex items-center gap-2 text-sm bg-green-50 p-4 rounded-lg border border-green-200/60">
-        <ShieldCheck className="w-5 h-5 text-green-600 flex-shrink-0" />
-        <span className="text-green-800 font-medium">
-          {t("security.payment_secure_message")}
-        </span>
-      </div>
-
       {/* Payment Form */}
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <FormField
-          control={form.control}
-          name="cardHolderName"
-          render={({ field }) => (
-            <FormItem className="space-y-1">
-              <FormLabel className="text-sm font-medium flex items-center gap-2">
-                <User className="w-4 h-4 text-muted-foreground" />
-                {t("form.card_holder")}
-              </FormLabel>
-              <FormControl>
-                <Input
-                  type="text"
-                  autoComplete="cc-name"
-                  placeholder={tplaceholders("card_holder")}
-                  className="uppercase h-11 sm:h-12 text-sm sm:text-base font-medium"
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+      <form onSubmit={handleSubmit}>
+        <FieldGroup>
+          <FieldSet>
+            <FieldDescription className="flex items-center gap-2">
+              <ShieldCheck className="w-4 h-4 text-green-600" />
+              {t("security.payment_secure_message")}
+            </FieldDescription>
+            <FieldGroup>
+              <FormField
+                control={form.control}
+                name="cardHolderName"
+                render={({ field }) => (
+                  <Field>
+                    <FieldLabel htmlFor="cardHolderName">
+                      <User className="w-4 h-4" />
+                      {t("form.card_holder")}
+                    </FieldLabel>
+                    <Input
+                      id="cardHolderName"
+                      type="text"
+                      autoComplete="cc-name"
+                      placeholder={tplaceholders("card_holder")}
+                      className="uppercase h-11 sm:h-12"
+                      {...field}
+                    />
+                  </Field>
+                )}
+              />
 
-        <FormField
-          control={form.control}
-          name="cardNumber"
-          render={({ field }) => (
-            <FormItem className="space-y-1">
-              <FormLabel className="text-sm font-medium flex items-center gap-2">
-                <CreditCard className="w-4 h-4 text-muted-foreground" />
-                {t("form.card_number")}
-              </FormLabel>
-              <FormControl>
-                <Input
-                  type="tel"
-                  autoComplete="cc-number"
-                  placeholder={tplaceholders("card_number")}
-                  maxLength={19}
-                  pattern="[0-9\s]*"
-                  inputMode="numeric"
-                  className="h-11 sm:h-12 text-sm sm:text-base font-mono tracking-wider"
-                  value={formatCardNumber(field.value)}
-                  onChange={(e) => {
-                    const value = e.target.value.replace(/\D/g, "");
-                    field.onChange(value);
+              <FormField
+                control={form.control}
+                name="cardNumber"
+                render={({ field }) => (
+                  <Field>
+                    <FieldLabel htmlFor="cardNumber">
+                      <CreditCard className="w-4 h-4" />
+                      {t("form.card_number")}
+                    </FieldLabel>
+                    <Input
+                      id="cardNumber"
+                      type="tel"
+                      autoComplete="cc-number"
+                      placeholder={tplaceholders("card_number")}
+                      maxLength={19}
+                      pattern="[0-9\s]*"
+                      inputMode="numeric"
+                      className="h-11 sm:h-12 font-mono tracking-wider"
+                      value={formatCardNumber(field.value)}
+                      onChange={(e) => {
+                        const value = e.target.value.replace(/\D/g, "");
+                        field.onChange(value);
+                      }}
+                    />
+                  </Field>
+                )}
+              />
+
+              <div className="grid grid-cols-3 gap-4">
+                <FormField
+                  control={form.control}
+                  name="expireMonth"
+                  render={({ field }) => (
+                    <Field>
+                      <FieldLabel>
+                        <span className="block sm:hidden">
+                          {t("form.month_short")}
+                        </span>
+                        <span className="hidden sm:block">
+                          {t("form.expire_month")}
+                        </span>
+                      </FieldLabel>
+                      <Select value={field.value} onValueChange={field.onChange}>
+                        <SelectTrigger className="h-9">
+                          <SelectValue placeholder={tplaceholders("expire_mm")} />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="01">01</SelectItem>
+                          <SelectItem value="02">02</SelectItem>
+                          <SelectItem value="03">03</SelectItem>
+                          <SelectItem value="04">04</SelectItem>
+                          <SelectItem value="05">05</SelectItem>
+                          <SelectItem value="06">06</SelectItem>
+                          <SelectItem value="07">07</SelectItem>
+                          <SelectItem value="08">08</SelectItem>
+                          <SelectItem value="09">09</SelectItem>
+                          <SelectItem value="10">10</SelectItem>
+                          <SelectItem value="11">11</SelectItem>
+                          <SelectItem value="12">12</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </Field>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="expireYear"
+                  render={({ field }) => {
+                    // Generate years from current year to +10 years
+                    const currentYear = new Date().getFullYear();
+                    const years = Array.from({ length: 11 }, (_, i) => {
+                      const year = currentYear + i;
+                      return year.toString().slice(-2); // Get last 2 digits
+                    });
+
+                    return (
+                      <Field>
+                        <FieldLabel>
+                          <span className="block sm:hidden">
+                            {t("form.year_short")}
+                          </span>
+                          <span className="hidden sm:block">
+                            {t("form.expire_year")}
+                          </span>
+                        </FieldLabel>
+                        <Select value={field.value} onValueChange={field.onChange}>
+                          <SelectTrigger className="h-9">
+                            <SelectValue placeholder={tplaceholders("expire_yy")} />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {years.map((year) => (
+                              <SelectItem key={year} value={year}>
+                                {year}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </Field>
+                    );
                   }}
                 />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
 
-        <div className="grid grid-cols-3 gap-3">
-          <FormField
-            control={form.control}
-            name="expireMonth"
-            render={({ field }) => (
-              <FormItem className="space-y-1">
-                <FormLabel className="text-sm font-medium flex items-center gap-2">
-                  <Calendar className="w-4 h-4 text-muted-foreground" />
-                  <span className="block sm:hidden">
-                    {t("form.month_short")}
-                  </span>
-                  <span className="hidden sm:block">
-                    {t("form.expire_month")}
-                  </span>
-                </FormLabel>
-                <FormControl>
-                  <Input
-                    type="tel"
-                    autoComplete="cc-exp-month"
-                    placeholder={tplaceholders("expire_mm")}
-                    maxLength={2}
-                    pattern="[0-9]*"
-                    inputMode="numeric"
-                    className="h-11 sm:h-12 text-sm sm:text-base font-mono text-center"
-                    onChange={(e) => {
-                      const value = e.target.value.replace(/\D/g, "");
-                      field.onChange(value);
-                    }}
-                    value={field.value}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="expireYear"
-            render={({ field }) => (
-              <FormItem className="space-y-1">
-                <FormLabel className="text-sm font-medium flex items-center gap-2">
-                  <Calendar className="w-4 h-4 text-muted-foreground" />
-                  <span className="block sm:hidden">
-                    {t("form.year_short")}
-                  </span>
-                  <span className="hidden sm:block">
-                    {t("form.expire_year")}
-                  </span>
-                </FormLabel>
-                <FormControl>
-                  <Input
-                    type="tel"
-                    autoComplete="cc-exp-year"
-                    placeholder={tplaceholders("expire_yy")}
-                    maxLength={2}
-                    pattern="[0-9]*"
-                    inputMode="numeric"
-                    className="h-11 sm:h-12 text-sm sm:text-base font-mono text-center"
-                    onChange={(e) => {
-                      const value = e.target.value.replace(/\D/g, "");
-                      field.onChange(value);
-                    }}
-                    value={field.value}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="cvc"
-            render={({ field }) => (
-              <FormItem className="space-y-1">
-                <FormLabel className="text-sm font-medium flex items-center gap-2">
-                  <Lock className="w-4 h-4 text-muted-foreground" />
-                  {t("form.cvc")}
-                </FormLabel>
-                <FormControl>
-                  <Input
-                    type="tel"
-                    autoComplete="cc-csc"
-                    placeholder={tplaceholders("cvc_placeholder")}
-                    maxLength={4}
-                    pattern="[0-9]*"
-                    inputMode="numeric"
-                    className="h-11 sm:h-12 text-sm sm:text-base font-mono text-center"
-                    onChange={(e) => {
-                      const value = e.target.value.replace(/\D/g, "");
-                      field.onChange(value);
-                    }}
-                    value={field.value}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
-
-        <Separator />
-
-        <div className="flex items-start space-x-3 rtl:space-x-reverse p-4 bg-muted/50 rounded-lg border">
-          <Checkbox
-            id="terms"
-            checked={acceptedTerms}
-            onCheckedChange={(checked) => setAcceptedTerms(checked === true)}
-            className="mt-0.5"
-          />
-          <label
-            htmlFor="terms"
-            className="text-sm font-medium leading-relaxed cursor-pointer"
-          >
-            {t("form.terms")}
-          </label>
-        </div>
-
-        <div className="flex justify-end pt-4">
-          <Button
-            type="submit"
-            disabled={!acceptedTerms || isLoading}
-            className="h-12 px-6 text-sm font-medium w-full sm:min-w-[160px] sm:w-auto"
-          >
-            {isLoading ? (
-              <div className="flex items-center gap-2">
-                <div className="w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
-                {t("buttons.processing")}
+                <FormField
+                  control={form.control}
+                  name="cvc"
+                  render={({ field }) => (
+                    <Field>
+                      <FieldLabel htmlFor="cvc">
+                        {t("form.cvc")}
+                      </FieldLabel>
+                      <Input
+                        id="cvc"
+                        type="tel"
+                        autoComplete="cc-csc"
+                        placeholder={tplaceholders("cvc_placeholder")}
+                        maxLength={4}
+                        pattern="[0-9]*"
+                        inputMode="numeric"
+                        className="h-9 font-mono text-center"
+                        onChange={(e) => {
+                          const value = e.target.value.replace(/\D/g, "");
+                          field.onChange(value);
+                        }}
+                        value={field.value}
+                      />
+                    </Field>
+                  )}
+                />
               </div>
-            ) : (
-              <div className="flex items-center gap-2">
-                <ShieldCheck className="w-4 h-4" />
-                {t("buttons.pay_amount", {
-                  amount: packagePricing.totalPrice,
-                })}
-              </div>
-            )}
-          </Button>
-        </div>
+            </FieldGroup>
+          </FieldSet>
+
+          <FieldSeparator />
+
+          <FieldSet>
+            <FieldGroup>
+              <Field orientation="horizontal">
+                <Checkbox
+                  id="terms"
+                  checked={acceptedTerms}
+                  onCheckedChange={(checked) => setAcceptedTerms(checked === true)}
+                />
+                <FieldLabel htmlFor="terms" className="font-normal">
+                  {t("form.terms")}
+                </FieldLabel>
+              </Field>
+            </FieldGroup>
+          </FieldSet>
+
+          <Field orientation="horizontal">
+            <Button
+              type="submit"
+              disabled={!acceptedTerms || isLoading}
+              className="h-12 px-6 w-full sm:min-w-[160px] sm:w-auto"
+            >
+              {isLoading ? (
+                <div className="flex items-center gap-2">
+                  <div className="w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
+                  {t("buttons.processing")}
+                </div>
+              ) : (
+                <div className="flex items-center gap-2">
+                  <ShieldCheck className="w-4 h-4" />
+                  {t("buttons.pay_amount", {
+                    amount: packagePricing.totalPrice,
+                  })}
+                </div>
+              )}
+            </Button>
+          </Field>
+        </FieldGroup>
       </form>
     </motion.div>
   );

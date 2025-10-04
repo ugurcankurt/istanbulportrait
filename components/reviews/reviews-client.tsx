@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { ExternalLink, Quote, Star } from "lucide-react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import {
@@ -25,29 +26,30 @@ export function ReviewsClient({
   aggregateRating,
 }: ReviewsClientProps) {
   const t = useTranslations("reviews");
+  const [truncatedTexts, setTruncatedTexts] = useState<string[]>([]);
 
-  // Responsive text truncation based on screen size
-  const getResponsiveText = (text: string) => {
-    // Server-side fallback - return original text
-    if (typeof window === "undefined") return text;
+  // Client-side text truncation to avoid hydration mismatch
+  useEffect(() => {
+    const texts = reviews.map((review) => {
+      const text = review.text;
+      const screenWidth = window.innerWidth;
+      let maxLength = 150; // default
 
-    const screenWidth = window.innerWidth;
-    let maxLength = 150; // default
+      if (screenWidth < 640) maxLength = 120; // mobile
+      else if (screenWidth < 1024) maxLength = 140; // tablet
+      else maxLength = 160; // desktop
 
-    if (screenWidth < 640)
-      maxLength = 120; // mobile
-    else if (screenWidth < 1024)
-      maxLength = 140; // tablet
-    else maxLength = 160; // desktop
+      if (text.length <= maxLength) return text;
 
-    if (text.length <= maxLength) return text;
+      const truncated = text.substring(0, maxLength);
+      const lastSpace = truncated.lastIndexOf(" ");
 
-    const truncated = text.substring(0, maxLength);
-    const lastSpace = truncated.lastIndexOf(" ");
+      if (lastSpace === -1) return truncated + "...";
+      return truncated.substring(0, lastSpace) + "...";
+    });
 
-    if (lastSpace === -1) return truncated + "...";
-    return truncated.substring(0, lastSpace) + "...";
-  };
+    setTruncatedTexts(texts);
+  }, [reviews]);
 
   const renderStars = (rating: number, size: "sm" | "md" | "lg" = "md") => {
     const sizeClasses = {
@@ -188,7 +190,7 @@ export function ReviewsClient({
                             <blockquote className="text-sm leading-relaxed text-muted-foreground italic font-medium relative pl-4 min-h-[4rem] flex items-center">
                               <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-border" />
                               <span className="relative z-10">
-                                "{getResponsiveText(review.text)}"
+                                "{truncatedTexts[index] || review.text}"
                               </span>
                             </blockquote>
                           </div>

@@ -4,6 +4,7 @@ import { getPublishedBlogPosts } from "@/lib/blog/blog-service";
 import type { Locale } from "@/types/blog";
 import { Link } from "@/i18n/routing";
 import { formatBlogDate } from "@/lib/blog/blog-utils";
+import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { BreadcrumbNav } from "@/components/breadcrumb-nav";
 import { BlogHeroSection } from "@/components/blog-hero-section";
 import { getLocalizedPaths, getOpenGraphUrl } from "@/lib/localized-url";
@@ -120,7 +121,7 @@ export default async function BlogPage({
               >
                 <article className="border rounded-lg overflow-hidden hover:shadow-lg transition-shadow h-full flex flex-col">
                   {post.featured_image && (
-                    <div className="aspect-video overflow-hidden relative">
+                    <AspectRatio ratio={16 / 9} className="overflow-hidden relative bg-muted">
                       <img
                         src={post.featured_image}
                         alt={post.translation.title}
@@ -133,7 +134,7 @@ export default async function BlogPage({
                           </span>
                         </div>
                       )}
-                    </div>
+                    </AspectRatio>
                   )}
                   <div className="p-6 flex-1 flex flex-col">
                     {post.categories && post.categories.length > 0 && (
