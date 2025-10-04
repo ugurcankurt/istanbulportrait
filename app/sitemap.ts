@@ -66,14 +66,23 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Get all blog post slugs
   const blogSlugs = await getAllPublishedSlugs();
 
-  // Generate blog post sitemap entries
+  // Generate blog post sitemap entries with localized paths
   const blogEntries = blogSlugs.flatMap((slug) =>
-    routing.locales.map((locale) => ({
-      url: `${baseUrl}/${locale}/blog/${slug}`,
-      lastModified: new Date(),
-      changeFrequency: "weekly" as const,
-      priority: 0.7,
-    })),
+    routing.locales.map((locale) => {
+      // Get localized blog path from routing config
+      const blogPathConfig = routing.pathnames["/blog"];
+      const blogPath =
+        typeof blogPathConfig === "object" && locale in blogPathConfig
+          ? blogPathConfig[locale as keyof typeof blogPathConfig]
+          : "/blog";
+
+      return {
+        url: `${baseUrl}/${locale}${blogPath}/${slug}`,
+        lastModified: new Date(),
+        changeFrequency: "weekly" as const,
+        priority: 0.7,
+      };
+    }),
   );
 
   return [
