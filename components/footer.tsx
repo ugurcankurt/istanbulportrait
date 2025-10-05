@@ -76,7 +76,7 @@ export function Footer() {
 
           {/* Quick Links */}
           <div className="space-y-4">
-            <h4 className="font-semibold">{t("quickLinks")}</h4>
+            <p className="font-semibold">{t("quickLinks")}</p>
             <ul className="space-y-2">
               {quickLinks.map((link) => (
                 <li key={link.href}>
@@ -93,7 +93,7 @@ export function Footer() {
 
           {/* Services */}
           <div className="space-y-4">
-            <h4 className="font-semibold">{t("services")}</h4>
+            <p className="font-semibold">{t("services")}</p>
             <ul className="space-y-2 text-sm text-muted-foreground">
               <li>{tui("portrait_photography")}</li>
               <li>{tui("couple_sessions")}</li>
@@ -105,7 +105,7 @@ export function Footer() {
 
           {/* Contact Info */}
           <div className="space-y-4">
-            <h4 className="font-semibold">{tui("contact")}</h4>
+            <p className="font-semibold">{tui("contact")}</p>
             <div className="space-y-3 text-sm text-muted-foreground">
               <div className="flex items-center space-x-2 rtl:space-x-reverse">
                 <MapPin className="h-4 w-4" />

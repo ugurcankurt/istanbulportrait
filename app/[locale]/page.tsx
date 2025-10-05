@@ -10,7 +10,6 @@ import { SEO_CONFIG } from "@/lib/seo-config";
 import {
   createSchemaConfig,
   generateEnhancedLocalBusinessSchema,
-  generateLocalBusinessSchema,
   generateOrganizationSchema,
   generatePersonSchema,
   MultipleJsonLd,

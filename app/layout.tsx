@@ -1,42 +1,20 @@
-import { Analytics } from "@vercel/analytics/next";
-import { SpeedInsights } from "@vercel/speed-insights/next";
-import { Geist, Geist_Mono } from "next/font/google";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
-import "./globals.css";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
 
 export const metadata = {
   title: "The Istanbul Photographer",
   description: "We are a studio of English speaking photographers in Istanbul and our goal is to help you get amazing photos and videos.",
 };
 
-// Helper function to detect locale from pathname or headers
-async function detectLocale(): Promise<string> {
-  // Default fallback locale
-  return "en";
-}
-
 export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const locale = await detectLocale();
-
   // Get messages for error pages - provide fallback empty object
   let messages: any;
   try {
-    messages = await getMessages({ locale });
+    messages = await getMessages();
   } catch (_error) {
     // Fallback messages for error pages
     messages = {
@@ -52,22 +30,8 @@ export default async function RootLayout({
   }
 
   return (
-    <html
-      lang={locale}
-      dir={locale === "ar" ? "rtl" : "ltr"}
-      data-scroll-behavior="smooth"
-      suppressHydrationWarning
-    >
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-        suppressHydrationWarning
-      >
-        <NextIntlClientProvider locale={locale} messages={messages}>
-          {children}
-          <SpeedInsights />
-          <Analytics />
-        </NextIntlClientProvider>
-      </body>
-    </html>
+    <NextIntlClientProvider messages={messages}>
+      {children}
+    </NextIntlClientProvider>
   );
 }

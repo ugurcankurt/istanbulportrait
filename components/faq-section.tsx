@@ -106,9 +106,9 @@ export function FAQSection() {
           >
             <Card>
               <CardHeader className="pb-4">
-                <h4 className="text-xl font-semibold text-center">
+                <p className="text-xl font-semibold text-center">
                   {t("section_title")}
-                </h4>
+                </p>
               </CardHeader>
               <CardContent>
                 <Accordion type="single" collapsible className="w-full">

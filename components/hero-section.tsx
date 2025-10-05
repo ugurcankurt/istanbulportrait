@@ -57,9 +57,9 @@ export function HeroSection() {
             <p className="text-lg sm:text-xl md:text-2xl mb-6 sm:mb-8 text-white/90 px-2">
               {t("subtitle")}
             </p>
-            <p className="text-base sm:text-lg mb-8 sm:mb-12 text-white/80 max-w-4xl mx-auto px-4">
+            <h2 className="text-base sm:text-lg mb-8 sm:mb-12 text-white/80 max-w-4xl mx-auto px-4">
               {t("description")}
-            </p>
+            </h2>
           </motion.div>
 
           <motion.div
@@ -96,9 +96,9 @@ export function HeroSection() {
               <div className="w-8 h-8 sm:w-12 sm:h-12 mx-auto mb-2 sm:mb-4 rounded-full bg-white/20 flex items-center justify-center">
                 <MapPin className="w-4 h-4 sm:w-6 sm:h-6" />
               </div>
-              <h4 className="text-base sm:text-xl font-semibold mb-1 sm:mb-2">
+              <h3 className="text-base sm:text-xl font-semibold mb-1 sm:mb-2">
                 {features("rooftop.title")}
-              </h4>
+              </h3>
               <p className="text-xs sm:text-base text-white/80 leading-relaxed">
                 {features("rooftop.description")}
               </p>
@@ -108,9 +108,9 @@ export function HeroSection() {
               <div className="w-8 h-8 sm:w-12 sm:h-12 mx-auto mb-2 sm:mb-4 rounded-full bg-white/20 flex items-center justify-center">
                 <Star className="w-4 h-4 sm:w-6 sm:h-6" />
               </div>
-              <h4 className="text-base sm:text-xl font-semibold mb-1 sm:mb-2">
+              <h3 className="text-base sm:text-xl font-semibold mb-1 sm:mb-2">
                 {features("historic.title")}
-              </h4>
+              </h3>
               <p className="text-xs sm:text-base text-white/80 leading-relaxed">
                 {features("historic.description")}
               </p>
@@ -120,9 +120,9 @@ export function HeroSection() {
               <div className="w-8 h-8 sm:w-12 sm:h-12 mx-auto mb-2 sm:mb-4 rounded-full bg-white/20 flex items-center justify-center">
                 <Camera className="w-4 h-4 sm:w-6 sm:h-6" />
               </div>
-              <h4 className="text-base sm:text-xl font-semibold mb-1 sm:mb-2">
+              <h3 className="text-base sm:text-xl font-semibold mb-1 sm:mb-2">
                 {features("professional.title")}
-              </h4>
+              </h3>
               <p className="text-xs sm:text-base text-white/80 leading-relaxed">
                 {features("professional.description")}
               </p>

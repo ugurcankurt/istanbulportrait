@@ -313,12 +313,12 @@ export function WhatsAppButton({
 
               {/* Tooltip content */}
               <div className="pr-8">
-                <h4 className={cn(
+                <p className={cn(
                   "text-base font-semibold text-gray-900 dark:text-white",
                   "mb-2"
                 )}>
                   📱 {t("notification_title")}
-                </h4>
+                </p>
                 <p className={cn(
                   "text-sm text-gray-600 dark:text-gray-300",
                   "leading-normal"

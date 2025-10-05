@@ -1,6 +1,9 @@
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages, getTranslations } from "next-intl/server";
 import Script from "next/script";
+import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
+import { Geist, Geist_Mono } from "next/font/google";
 import { FacebookPixel } from "@/components/analytics/facebook-pixel";
 import { GoogleAnalytics } from "@/components/analytics/google-analytics";
 import { CoreWebVitals } from "@/components/analytics/core-web-vitals";
@@ -13,6 +16,16 @@ import { Footer } from "@/components/footer";
 import { Navigation } from "@/components/navigation";
 import { Toaster } from "@/components/ui/sonner";
 import { WhatsAppButton } from "@/components/whatsapp-button";
+
+const geistSans = Geist({
+  variable: "--font-geist-sans",
+  subsets: ["latin"],
+});
+
+const geistMono = Geist_Mono({
+  variable: "--font-geist-mono",
+  subsets: ["latin"],
+});
 
 export async function generateMetadata({
   params,
@@ -123,37 +136,51 @@ export default async function LocaleLayout({
   children: React.ReactNode;
   params: Promise<{ locale: string }>;
 }) {
-  const { locale: _locale } = await params;
+  const { locale } = await params;
   const messages = await getMessages();
 
   return (
-    <ThemeProvider
-      attribute="class"
-      defaultTheme="light"
-      enableSystem
-      disableTransitionOnChange
+    <html
+      lang={locale}
+      dir={locale === "ar" ? "rtl" : "ltr"}
+      data-scroll-behavior="smooth"
+      suppressHydrationWarning
     >
-      <NextIntlClientProvider messages={messages}>
-        <div className="flex min-h-screen flex-col">
-          <Navigation />
-          <main className="flex-1">{children}</main>
-          <GoogleAnalytics />
-          <FacebookPixel />
-          <YandexMetrica />
-          <CoreWebVitals />
-          <Footer />
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        suppressHydrationWarning
+      >
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="light"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <NextIntlClientProvider messages={messages}>
+            <div className="flex min-h-screen flex-col">
+              <Navigation />
+              <main className="flex-1">{children}</main>
+              <GoogleAnalytics />
+              <FacebookPixel />
+              <YandexMetrica />
+              <CoreWebVitals />
+              <Footer />
 
-          {/* GetYourGuide Analytics */}
-          <Script
-            src="https://widget.getyourguide.com/dist/pa.umd.production.min.js"
-            strategy="lazyOnload"
-            data-gyg-partner-id="S6XXHTA"
-          />
-        </div>
-        <Toaster />
-        <MultilingualCookieConsent />
-        <WhatsAppButton phoneNumber="+905367093724" />
-      </NextIntlClientProvider>
-    </ThemeProvider>
+              {/* GetYourGuide Analytics */}
+              <Script
+                src="https://widget.getyourguide.com/dist/pa.umd.production.min.js"
+                strategy="lazyOnload"
+                data-gyg-partner-id="S6XXHTA"
+              />
+            </div>
+            <Toaster />
+            <MultilingualCookieConsent />
+            <WhatsAppButton phoneNumber="+905367093724" />
+          </NextIntlClientProvider>
+        </ThemeProvider>
+        <SpeedInsights />
+        <Analytics />
+      </body>
+    </html>
   );
 }

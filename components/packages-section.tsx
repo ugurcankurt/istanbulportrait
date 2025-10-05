@@ -15,7 +15,6 @@ import {
 } from "@/components/ui/card";
 import { Link } from "@/i18n/routing";
 import { fbPixel } from "@/lib/facebook";
-import { SEO_CONFIG } from "@/lib/seo-config";
 import type { PackageId } from "@/lib/validations";
 
 export function PackagesSection() {
@@ -107,8 +106,7 @@ export function PackagesSection() {
             className="mb-8 sm:mb-12"
           >
             <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-center mb-6 sm:mb-8">
-              {t("sections.available_packages") ||
-                "Available Photography Packages"}
+              {t("sections.available_packages")}
             </h2>
           </motion.div>
 
