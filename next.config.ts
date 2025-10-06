@@ -4,6 +4,14 @@ import createNextIntlPlugin from "next-intl/plugin";
 const withNextIntl = createNextIntlPlugin("./i18n/request.ts");
 
 const nextConfig: NextConfig = {
+  // ========================================
+  // VERCEL OPTIMIZATION
+  // ========================================
+  output: "standalone", // Vercel için optimize edilmiş Docker image
+
+  // ========================================
+  // IMAGE OPTIMIZATION (Vercel CDN)
+  // ========================================
   images: {
     remotePatterns: [
       {
@@ -32,33 +40,57 @@ const nextConfig: NextConfig = {
       },
     ],
     formats: ["image/avif", "image/webp"],
-    minimumCacheTTL: 86400, // 24 hours for better SEO caching
+    minimumCacheTTL: 86400, // 24 hours (Vercel CDN cache)
     dangerouslyAllowSVG: true,
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
-    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
-    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384, 512],
-    qualities: [75, 85, 90, 95, 100],
-    unoptimized: false, // Ensure optimization is enabled
+    // Optimized device sizes (Vercel recommendation: 6-8 sizes)
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920],
+    // Optimized icon sizes
+    imageSizes: [16, 32, 48, 64, 96, 128, 256],
+    unoptimized: false,
   },
+
+  // ========================================
+  // NEXT.JS 15.5 EXPERIMENTAL FEATURES
+  // ========================================
   experimental: {
-    optimizePackageImports: ["lucide-react", "@radix-ui/react-icons"],
-  },
-  turbopack: {
-    rules: {
-      "*.svg": {
-        loaders: ["@svgr/webpack"],
-        as: "*.js",
+    // Turbopack production builds (5x faster on Vercel)
+    turbo: {
+      rules: {
+        "*.svg": {
+          loaders: ["@svgr/webpack"],
+          as: "*.js",
+        },
       },
     },
+    // Type-safe routing (compile-time route validation)
+    typedRoutes: true,
+    // CSS optimization (smaller bundles)
+    optimizeCss: true,
+    // Package import optimization (tree-shaking)
+    optimizePackageImports: [
+      "lucide-react",
+      "@radix-ui/react-icons",
+      "framer-motion",
+      "recharts",
+      "react-markdown",
+      "rehype-highlight",
+      "remark-gfm",
+      "@supabase/supabase-js",
+      "@supabase/ssr",
+      "date-fns",
+    ],
   },
-  compress: true,
-  poweredByHeader: false,
-  generateEtags: true,
-  reactStrictMode: true,
-  env: {
-    CUSTOM_KEY: process.env.CUSTOM_KEY,
-  },
-  // Production optimizations
+
+  // ========================================
+  // PERFORMANCE & SECURITY
+  // ========================================
+  compress: true, // Vercel Gzip/Brotli compression
+  poweredByHeader: false, // Hide X-Powered-By header
+  generateEtags: true, // Enable ETags for caching
+  reactStrictMode: true, // React 19 best practices
+
+  // Production compiler optimizations
   ...(process.env.NODE_ENV === "production" && {
     compiler: {
       removeConsole: {
@@ -66,58 +98,16 @@ const nextConfig: NextConfig = {
       },
     },
   }),
-  // Headers for security and performance
+
+  // ========================================
+  // HEADERS (Managed in vercel.json)
+  // ========================================
+  // Note: Headers are primarily configured in vercel.json
+  // These are fallback headers for local development
   async headers() {
     return [
       {
-        source: "/(.*)",
-        headers: [
-          {
-            key: "X-Frame-Options",
-            value: "DENY",
-          },
-          {
-            key: "X-Content-Type-Options",
-            value: "nosniff",
-          },
-          {
-            key: "Referrer-Policy",
-            value: "origin-when-cross-origin",
-          },
-          {
-            key: "Permissions-Policy",
-            value: "camera=(), microphone=(), geolocation=()",
-          },
-          {
-            key: "X-DNS-Prefetch-Control",
-            value: "on",
-          },
-          {
-            key: "Strict-Transport-Security",
-            value: "max-age=31536000; includeSubDomains",
-          },
-        ],
-      },
-      {
-        source: "/api/(.*)",
-        headers: [
-          {
-            key: "Cache-Control",
-            value: "no-store, max-age=0",
-          },
-        ],
-      },
-      {
         source: "/_next/static/(.*)",
-        headers: [
-          {
-            key: "Cache-Control",
-            value: "public, max-age=31536000, immutable",
-          },
-        ],
-      },
-      {
-        source: "/(.*)\\.(jpg|jpeg|png|webp|avif|ico|svg)$",
         headers: [
           {
             key: "Cache-Control",
