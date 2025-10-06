@@ -5,7 +5,6 @@ import { Camera, MapPin, Star } from "lucide-react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
-import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Link } from "@/i18n/routing";
 
 export function HeroSection() {
@@ -15,33 +14,31 @@ export function HeroSection() {
 
   return (
     <section className="relative min-h-[90vh] sm:min-h-screen overflow-hidden">
-      {/* Background Image with AspectRatio */}
+      {/* Background Image */}
       <div className="absolute inset-0 z-0">
-        <AspectRatio ratio={16 / 9} className="h-full">
-          <Image
-            src="/istanbul_photographer.jpg"
-            alt="Professional Istanbul photographer capturing stunning portrait photography at Bosphorus - Award-winning photography services in Istanbul Turkey"
-            fill
-            className="object-cover"
-            priority
-            fetchPriority="high"
-            quality={90}
-            sizes="100vw"
-            placeholder="blur"
-            blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwA3gAA//9k="
-            onError={(e) => {
-              const target = e.target as HTMLImageElement;
-              target.src = "/istanbulportprat_ugur_cankurt.jpg";
-              target.onerror = () => {
-                target.style.display = "none";
-                const parent = target.closest(".relative");
-                if (parent && parent instanceof HTMLElement) {
-                  parent.style.backgroundColor = "rgba(0,0,0,0.7)";
-                }
-              };
-            }}
-          />
-        </AspectRatio>
+        <Image
+          src="/istanbul_photographer.jpg"
+          alt="Professional Istanbul photographer capturing stunning portrait photography at Bosphorus - Award-winning photography services in Istanbul Turkey"
+          fill
+          className="object-cover"
+          priority
+          fetchPriority="high"
+          quality={90}
+          sizes="100vw"
+          placeholder="blur"
+          blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwA3gAA//9k="
+          onError={(e) => {
+            const target = e.target as HTMLImageElement;
+            target.src = "/istanbulportprat_ugur_cankurt.jpg";
+            target.onerror = () => {
+              target.style.display = "none";
+              const parent = target.closest(".relative");
+              if (parent && parent instanceof HTMLElement) {
+                parent.style.backgroundColor = "rgba(0,0,0,0.7)";
+              }
+            };
+          }}
+        />
         <div className="absolute inset-0 bg-black/40" />
       </div>
 
