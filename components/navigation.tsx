@@ -136,7 +136,12 @@ export function Navigation() {
                 whileTap={{ scale: 0.9 }}
                 transition={{ type: "spring", stiffness: 400, damping: 17 }}
               >
-                <Button variant="ghost" size="sm" className="h-8 w-8 px-0">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-8 w-8 px-0"
+                  aria-label="Change language"
+                >
                   <Globe className="h-4 w-4" />
                 </Button>
               </motion.div>
@@ -170,6 +175,7 @@ export function Navigation() {
                   variant="ghost"
                   size="sm"
                   className="h-8 w-8 px-0 relative"
+                  aria-label="Open menu"
                 >
                   <motion.div
                     animate={isOpen ? { rotate: 180 } : { rotate: 0 }}

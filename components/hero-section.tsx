@@ -23,6 +23,7 @@ export function HeroSection() {
             fill
             className="object-cover"
             priority
+            fetchPriority="high"
             quality={90}
             sizes="100vw"
             onError={(e) => {

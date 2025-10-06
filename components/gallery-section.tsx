@@ -134,9 +134,11 @@ export function GallerySection() {
               >
                 <Dialog>
                   <DialogTrigger asChild>
-                    <div
+                    <button
                       onClick={() => openLightbox(image.id)}
-                      className="relative w-full h-full"
+                      className="relative w-full h-full border-0 p-0 bg-transparent cursor-pointer"
+                      aria-label={`View ${image.alt} in fullscreen`}
+                      type="button"
                     >
                       <Image
                         src={image.src}
@@ -167,7 +169,7 @@ export function GallerySection() {
                           </svg>
                         </div>
                       </div>
-                    </div>
+                    </button>
                   </DialogTrigger>
                 </Dialog>
               </motion.div>
