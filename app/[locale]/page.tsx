@@ -55,14 +55,6 @@ export default async function HomePage({
 
   return (
     <>
-      {/* Preload hero image for LCP optimization */}
-      <link
-        rel="preload"
-        as="image"
-        href="/istanbul_photographer.jpg"
-        fetchPriority="high"
-      />
-
       {/* JSON-LD Structured Data */}
       <MultipleJsonLd schemas={schemas} />
 
