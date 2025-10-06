@@ -51,20 +51,25 @@ const nextConfig: NextConfig = {
   },
 
   // ========================================
-  // NEXT.JS 15.5 EXPERIMENTAL FEATURES
+  // NEXT.JS 15.5 FEATURES
   // ========================================
-  experimental: {
-    // Turbopack production builds (5x faster on Vercel)
-    turbo: {
-      rules: {
-        "*.svg": {
-          loaders: ["@svgr/webpack"],
-          as: "*.js",
-        },
+  // Turbopack production builds (5x faster on Vercel)
+  turbopack: {
+    rules: {
+      "*.svg": {
+        loaders: ["@svgr/webpack"],
+        as: "*.js",
       },
     },
-    // Type-safe routing (compile-time route validation)
-    typedRoutes: true,
+  },
+
+  // Type-safe routing (compile-time route validation)
+  typedRoutes: true,
+
+  // ========================================
+  // EXPERIMENTAL FEATURES
+  // ========================================
+  experimental: {
     // CSS optimization (smaller bundles)
     optimizeCss: true,
     // Package import optimization (tree-shaking)
