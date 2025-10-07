@@ -80,15 +80,15 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
       return;
     }
 
-    // If we have an error or user is not authenticated/admin, redirect to login
-    if (!loading && (!isAuthenticated || !isAdminUser)) {
-      router.push("/admin/login");
+    // Check auth only once on mount if needed
+    if (!user && !loading && !isAuthenticated) {
+      checkAuth();
       return;
     }
 
-    // If we're still loading or don't have auth state, check auth
-    if (!user && !loading) {
-      checkAuth();
+    // If auth check is complete and user is not authenticated/admin, redirect
+    if (!loading && (!isAuthenticated || !isAdminUser)) {
+      router.push("/admin/login");
     }
   }, [
     pathname,

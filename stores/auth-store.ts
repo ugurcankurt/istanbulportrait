@@ -223,8 +223,10 @@ export const useAuthStore = create<AuthState>()(
   ),
 );
 
-// Auto-initialize on store creation
-if (typeof window !== "undefined") {
+// Auto-initialize on store creation (only once)
+let initialized = false;
+if (typeof window !== "undefined" && !initialized) {
+  initialized = true;
   // Delay initialization to allow auth to settle
   setTimeout(() => {
     useAuthStore.getState().initialize();
