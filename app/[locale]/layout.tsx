@@ -9,6 +9,7 @@ import { GoogleAnalytics } from "@/components/analytics/google-analytics";
 import { CoreWebVitals } from "@/components/analytics/core-web-vitals";
 import { MultilingualCookieConsent } from "@/components/analytics/multilingual-cookie-consent";
 import { YandexMetrica } from "@/components/analytics/yandex-metrica";
+import { MicrosoftClarity } from "@/components/analytics/microsoft-clarity";
 import { SEO_CONFIG } from "@/lib/seo-config";
 import "../globals.css";
 import { ThemeProvider } from "next-themes";
@@ -163,6 +164,7 @@ export default async function LocaleLayout({
               <GoogleAnalytics />
               <FacebookPixel />
               <YandexMetrica />
+              <MicrosoftClarity />
               <CoreWebVitals />
               <Footer />
 
