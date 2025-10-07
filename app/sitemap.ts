@@ -54,11 +54,27 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         }
       }
 
+      // Generate alternate languages for hreflang
+      const alternateLanguages: Record<string, string> = {};
+      routing.locales.forEach((altLocale) => {
+        let altLocalizedPath: string = route;
+        if (route !== "" && routing.pathnames[route]) {
+          const pathnameConfig = routing.pathnames[route];
+          if (typeof pathnameConfig === "object" && altLocale in pathnameConfig) {
+            altLocalizedPath = pathnameConfig[altLocale as keyof typeof pathnameConfig] as string;
+          }
+        }
+        alternateLanguages[altLocale] = `${baseUrl}/${altLocale}${altLocalizedPath}`;
+      });
+
       return {
         url: `${baseUrl}/${locale}${localizedPath}`,
         lastModified: new Date(),
         changeFrequency,
         priority,
+        alternates: {
+          languages: alternateLanguages,
+        },
       };
     }),
   );
@@ -76,11 +92,24 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
           ? blogPathConfig[locale as keyof typeof blogPathConfig]
           : "/blog";
 
+      // Generate alternate languages for blog posts
+      const alternateLanguages: Record<string, string> = {};
+      routing.locales.forEach((altLocale) => {
+        const altBlogPath =
+          typeof blogPathConfig === "object" && altLocale in blogPathConfig
+            ? blogPathConfig[altLocale as keyof typeof blogPathConfig]
+            : "/blog";
+        alternateLanguages[altLocale] = `${baseUrl}/${altLocale}${altBlogPath}/${slug}`;
+      });
+
       return {
         url: `${baseUrl}/${locale}${blogPath}/${slug}`,
         lastModified: new Date(),
         changeFrequency: "weekly" as const,
         priority: 0.7,
+        alternates: {
+          languages: alternateLanguages,
+        },
       };
     }),
   );
@@ -91,6 +120,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: new Date(),
       changeFrequency: "daily",
       priority: 1,
+      alternates: {
+        languages: {
+          en: `${baseUrl}/en`,
+          ar: `${baseUrl}/ar`,
+          ru: `${baseUrl}/ru`,
+          es: `${baseUrl}/es`,
+        },
+      },
     },
     ...sitemapEntries,
     ...blogEntries,

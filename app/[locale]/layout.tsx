@@ -57,6 +57,7 @@ export async function generateMetadata({
     alternates: {
       canonical: `${baseUrl}/${locale}`,
       languages: {
+        "x-default": `${baseUrl}/en`,
         en: `${baseUrl}/en`,
         ar: `${baseUrl}/ar`,
         ru: `${baseUrl}/ru`,
@@ -76,6 +77,7 @@ export async function generateMetadata({
         },
       ],
       locale: locale,
+      alternateLocale: ["en", "ar", "ru", "es"].filter((l) => l !== locale),
       type: "website",
       url: `${baseUrl}/${locale}`,
       siteName: SEO_CONFIG.organization.name,
