@@ -18,7 +18,6 @@ export function getLocalizedPaths(
       canonical: (locale: string) =>
         `${baseUrl}/${locale}${pathname === "/" ? "" : pathname}`,
       languages: {
-        "x-default": `${baseUrl}/en${pathname === "/" ? "" : pathname}`,
         en: `${baseUrl}/en${pathname === "/" ? "" : pathname}`,
         ar: `${baseUrl}/ar${pathname === "/" ? "" : pathname}`,
         ru: `${baseUrl}/ru${pathname === "/" ? "" : pathname}`,
@@ -32,7 +31,6 @@ export function getLocalizedPaths(
     canonical: (locale: string) =>
       `${baseUrl}/${locale}${pathConfig[locale as keyof typeof pathConfig]}`,
     languages: {
-      "x-default": `${baseUrl}/en${pathConfig.en}`,
       en: `${baseUrl}/en${pathConfig.en}`,
       ar: `${baseUrl}/ar${pathConfig.ar}`,
       ru: `${baseUrl}/ru${pathConfig.ru}`,
