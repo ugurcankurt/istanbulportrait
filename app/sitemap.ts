@@ -15,37 +15,37 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     "/blog",
   ] as const;
 
-  const sitemapEntries = routes.flatMap((route) =>
-    routing.locales.map((locale) => {
-      let changeFrequency: "daily" | "weekly" | "monthly" = "weekly";
-      let priority = 0.8;
+  const sitemapEntries = routes.map((route) => {
+    let changeFrequency: "daily" | "weekly" | "monthly" = "weekly";
+    let priority = 0.8;
 
-      // Set SEO-optimized frequencies and priorities for 2025
-      // Optimized for Bing, Yandex, and other search engines
-      if (route === "") {
-        changeFrequency = "daily";
-        priority = 1.0;
-      } else if (route === "/packages") {
-        changeFrequency = "weekly";
-        priority = 0.9; // High priority for conversion pages
-      } else if (route === "/checkout") {
-        changeFrequency = "weekly";
-        priority = 0.85; // Important for conversion funnel
-      } else if (route === "/about") {
-        changeFrequency = "monthly";
-        priority = 0.8; // Good for brand authority
-      } else if (route === "/contact") {
-        changeFrequency = "monthly";
-        priority = 0.75; // Contact pages are important for local SEO
-      } else if (route === "/blog") {
-        changeFrequency = "daily";
-        priority = 0.85; // High priority for blog content
-      } else if (route === "/privacy") {
-        changeFrequency = "monthly";
-        priority = 0.3;
-      }
+    // Set SEO-optimized frequencies and priorities for 2025
+    if (route === "") {
+      changeFrequency = "daily";
+      priority = 1.0;
+    } else if (route === "/packages") {
+      changeFrequency = "weekly";
+      priority = 0.9;
+    } else if (route === "/checkout") {
+      changeFrequency = "weekly";
+      priority = 0.85;
+    } else if (route === "/about") {
+      changeFrequency = "monthly";
+      priority = 0.8;
+    } else if (route === "/contact") {
+      changeFrequency = "monthly";
+      priority = 0.75;
+    } else if (route === "/blog") {
+      changeFrequency = "daily";
+      priority = 0.85;
+    } else if (route === "/privacy") {
+      changeFrequency = "monthly";
+      priority = 0.3;
+    }
 
-      // Get localized path from routing config
+    // Build language alternates
+    const languages: Record<string, string> = {};
+    routing.locales.forEach((locale) => {
       let localizedPath: string = route;
       if (route !== "" && routing.pathnames[route]) {
         const pathnameConfig = routing.pathnames[route];
@@ -53,37 +53,47 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
           localizedPath = pathnameConfig[locale as keyof typeof pathnameConfig] as string;
         }
       }
+      languages[locale] = `${baseUrl}/${locale}${localizedPath}`;
+    });
 
-      return {
-        url: `${baseUrl}/${locale}${localizedPath}`,
-        lastModified: new Date(),
-        changeFrequency,
-        priority,
-      };
-    }),
-  );
+    return {
+      url: `${baseUrl}/en${route === "" ? "" : route}`,
+      lastModified: new Date(),
+      changeFrequency,
+      priority,
+      alternates: {
+        languages,
+      },
+    };
+  });
 
   // Get all blog post slugs
   const blogSlugs = await getAllPublishedSlugs();
 
   // Generate blog post sitemap entries with localized paths
-  const blogEntries = blogSlugs.flatMap((slug) =>
-    routing.locales.map((locale) => {
-      // Get localized blog path from routing config
-      const blogPathConfig = routing.pathnames["/blog"];
+  const blogEntries = blogSlugs.map((slug) => {
+    const blogPathConfig = routing.pathnames["/blog"];
+
+    // Build language alternates for blog post
+    const languages: Record<string, string> = {};
+    routing.locales.forEach((locale) => {
       const blogPath =
         typeof blogPathConfig === "object" && locale in blogPathConfig
           ? blogPathConfig[locale as keyof typeof blogPathConfig]
           : "/blog";
+      languages[locale] = `${baseUrl}/${locale}${blogPath}/${slug}`;
+    });
 
-      return {
-        url: `${baseUrl}/${locale}${blogPath}/${slug}`,
-        lastModified: new Date(),
-        changeFrequency: "weekly" as const,
-        priority: 0.7,
-      };
-    }),
-  );
+    return {
+      url: `${baseUrl}/en/blog/${slug}`,
+      lastModified: new Date(),
+      changeFrequency: "weekly" as const,
+      priority: 0.7,
+      alternates: {
+        languages,
+      },
+    };
+  });
 
   return [
     {
