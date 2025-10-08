@@ -472,6 +472,7 @@ export async function getBlogPostByIdWithAllTranslations(
     ar: translationsArray.find((t: any) => t.locale === "ar") || null,
     ru: translationsArray.find((t: any) => t.locale === "ru") || null,
     es: translationsArray.find((t: any) => t.locale === "es") || null,
+    zh: translationsArray.find((t: any) => t.locale === "zh") || null,
   };
 
   // Transform categories and tags
@@ -890,6 +891,7 @@ export async function getCategoryByIdWithAllTranslations(id: string): Promise<an
     ar: translationsArray.find((t: any) => t.locale === "ar") || null,
     ru: translationsArray.find((t: any) => t.locale === "ru") || null,
     es: translationsArray.find((t: any) => t.locale === "es") || null,
+    zh: translationsArray.find((t: any) => t.locale === "zh") || null,
   };
 
   return {
@@ -931,12 +933,15 @@ export async function updateBlogCategory(
     for (const [locale, translation] of Object.entries(translations)) {
       const { error: translationError } = await supabaseAdmin
         .from("blog_category_translations")
-        .update({
+        .upsert({
+          category_id: id,
+          locale,
           name: translation.name,
           description: translation.description || "",
-        })
-        .eq("category_id", id)
-        .eq("locale", locale);
+          updated_at: new Date().toISOString(),
+        }, {
+          onConflict: 'category_id,locale'
+        });
 
       if (translationError) {
         console.error("Error updating category translation:", translationError);
@@ -1117,6 +1122,7 @@ export async function getTagByIdWithAllTranslations(id: string): Promise<any> {
     ar: translationsArray.find((t: any) => t.locale === "ar") || null,
     ru: translationsArray.find((t: any) => t.locale === "ru") || null,
     es: translationsArray.find((t: any) => t.locale === "es") || null,
+    zh: translationsArray.find((t: any) => t.locale === "zh") || null,
   };
 
   return {
@@ -1152,11 +1158,14 @@ export async function updateBlogTag(
     for (const [locale, translation] of Object.entries(translations)) {
       const { error: translationError } = await supabaseAdmin
         .from("blog_tag_translations")
-        .update({
+        .upsert({
+          tag_id: id,
+          locale,
           name: translation.name,
-        })
-        .eq("tag_id", id)
-        .eq("locale", locale);
+          updated_at: new Date().toISOString(),
+        }, {
+          onConflict: 'tag_id,locale'
+        });
 
       if (translationError) {
         console.error("Error updating tag translation:", translationError);

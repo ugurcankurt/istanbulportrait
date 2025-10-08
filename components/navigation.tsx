@@ -31,6 +31,7 @@ const locales = [
   { code: "ar", name: "العربية", flag: "🇸🇦" },
   { code: "ru", name: "Русский", flag: "🇷🇺" },
   { code: "es", name: "Español", flag: "🇪🇸" },
+  { code: "zh", name: "简体中文", flag: "🇨🇳" },
 ];
 
 export function Navigation() {

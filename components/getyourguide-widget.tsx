@@ -16,6 +16,7 @@ const LOCALE_MAP: Record<string, string> = {
   es: "es-ES",
   ru: "ru-RU",
   ar: "en-US", // Fallback to English - GetYourGuide doesn't support Arabic
+  zh: "zh-CN", // Simplified Chinese
 };
 
 export function GetYourGuideWidget({

@@ -21,6 +21,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Form } from "@/components/ui/form";
 import { Separator } from "@/components/ui/separator";
 import {
+  trackAddPaymentInfo,
+  trackBeginCheckout,
   trackFacebookEvent,
   trackPaymentEvent,
   trackPurchase,
@@ -135,13 +137,31 @@ export function CheckoutForm() {
       }
     : null;
 
+  // Track begin_checkout when component mounts with package data
+  useEffect(() => {
+    if (selectedPackage && packageInfo) {
+      trackBeginCheckout(
+        selectedPackage,
+        packageInfo.name,
+        packageInfo.price,
+      );
+    }
+  }, [selectedPackage, packageInfo]);
+
   const handlePaymentSubmit = async (paymentData: PaymentFormData) => {
-    if (!selectedPackage) return;
+    if (!selectedPackage || !packageInfo) return;
 
     setIsLoading(true);
 
     // Get booking data once at the beginning - outside try block
     const bookingData = bookingForm.getValues();
+
+    // Track add payment info event
+    trackAddPaymentInfo(
+      selectedPackage,
+      packageInfo.name,
+      packageInfo.price,
+    );
 
     try {
       // Step 1: Initialize payment FIRST (no booking creation yet)
@@ -204,6 +224,7 @@ export function CheckoutForm() {
         trackPurchase(
           bookingResult.booking.id,
           selectedPackage,
+          packageInfo.name,
           packagePrices[selectedPackage],
         );
 

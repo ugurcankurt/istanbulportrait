@@ -52,6 +52,7 @@ function CategoryDialog({
     ar: { name: "", description: "" },
     ru: { name: "", description: "" },
     es: { name: "", description: "" },
+    zh: { name: "", description: "" },
   });
 
   // Reset form when dialog closes or category changes
@@ -85,6 +86,10 @@ function CategoryDialog({
                 name: data.category.translations?.es?.name || "",
                 description: data.category.translations?.es?.description || "",
               },
+              zh: {
+                name: data.category.translations?.zh?.name || "",
+                description: data.category.translations?.zh?.description || "",
+              },
             });
           }
         } catch (error) {
@@ -105,6 +110,7 @@ function CategoryDialog({
         ar: { name: "", description: "" },
         ru: { name: "", description: "" },
         es: { name: "", description: "" },
+        zh: { name: "", description: "" },
       });
     }
   }, [open, category]);
@@ -196,14 +202,15 @@ function CategoryDialog({
 
           {/* Multi-language Tabs */}
           <Tabs defaultValue="en">
-            <TabsList className="grid w-full grid-cols-4">
+            <TabsList className="grid w-full grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-1">
               <TabsTrigger value="en">🇬🇧 EN</TabsTrigger>
               <TabsTrigger value="ar">🇸🇦 AR</TabsTrigger>
               <TabsTrigger value="ru">🇷🇺 RU</TabsTrigger>
               <TabsTrigger value="es">🇪🇸 ES</TabsTrigger>
+              <TabsTrigger value="zh">🇨🇳 ZH</TabsTrigger>
             </TabsList>
 
-            {(["en", "ar", "ru", "es"] as const).map((locale) => (
+            {(["en", "ar", "ru", "es", "zh"] as const).map((locale) => (
               <TabsContent key={locale} value={locale} className="space-y-4">
                 <div>
                   <Label>Name</Label>

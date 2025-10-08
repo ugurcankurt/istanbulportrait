@@ -54,6 +54,7 @@ export const blogFormSchema = z.object({
     ar: blogTranslationInputSchema,
     ru: blogTranslationInputSchema,
     es: blogTranslationInputSchema,
+    zh: blogTranslationInputSchema,
   }),
   category_ids: z.array(z.string().uuid()).default([]),
   tag_ids: z.array(z.string().uuid()).default([]),
@@ -154,6 +155,7 @@ export const categoryFormSchema = z.object({
     ar: categoryTranslationInputSchema,
     ru: categoryTranslationInputSchema,
     es: categoryTranslationInputSchema,
+    zh: categoryTranslationInputSchema,
   }),
 });
 
@@ -211,6 +213,7 @@ export const tagFormSchema = z.object({
     ar: tagTranslationInputSchema,
     ru: tagTranslationInputSchema,
     es: tagTranslationInputSchema,
+    zh: tagTranslationInputSchema,
   }),
 });
 

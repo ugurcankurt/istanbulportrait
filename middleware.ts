@@ -81,10 +81,11 @@ export default async function middleware(request: NextRequest) {
 }
 
 export const config = {
+  runtime: 'nodejs', // Use Node.js runtime for Supabase compatibility
   matcher: [
     "/((?!api|_next|_vercel|.*\\..*).*)",
     "/",
-    "/(ar|en|ru|es)/:path*",
+    "/(ar|en|ru|es|zh)/:path*",
     "/admin/:path*",
   ],
 };

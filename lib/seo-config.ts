@@ -44,7 +44,7 @@ export const SEO_CONFIG = {
       telephone: "+905367093724",
       contactType: "customer service",
       areaServed: "TR",
-      availableLanguage: ["en", "tr", "ar", "ru", "es"],
+      availableLanguage: ["en", "tr", "ar", "ru", "es", "zh"],
     },
   },
 

@@ -62,6 +62,7 @@ export async function generateMetadata({
         ar: `${baseUrl}/ar`,
         ru: `${baseUrl}/ru`,
         es: `${baseUrl}/es`,
+        zh: `${baseUrl}/zh`,
       },
     },
     openGraph: {

@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Link } from "@/i18n/routing";
-import { event } from "@/lib/analytics";
+import { trackPurchase } from "@/lib/analytics";
 import { formatCurrency, localizeNumerals } from "@/lib/utils";
 import type { BookingFormData, PackageId } from "@/lib/validations";
 import { packagePrices } from "@/lib/validations";
@@ -39,17 +39,14 @@ export function BookingSuccess({
 
   // Track successful booking conversion
   useEffect(() => {
-    // Track conversion event
-    event(
-      "conversion",
-      "ecommerce",
-      `booking_complete_${packageId}`,
+    // Track GA4 Enhanced Ecommerce purchase event
+    trackPurchase(
+      bookingId,
+      packageId,
+      packageInfo.name,
       packageInfo.price,
     );
-
-    // Track goal completion for GA4
-    event("booking_completed", "conversion", packageId, packageInfo.price);
-  }, [packageId, packageInfo.price]);
+  }, [bookingId, packageId, packageInfo.name, packageInfo.price]);
 
   return (
     <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-24 max-w-6xl">

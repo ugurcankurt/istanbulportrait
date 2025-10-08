@@ -47,6 +47,8 @@ const nextConfig: NextConfig = {
     deviceSizes: [640, 750, 828, 1080, 1200, 1920],
     // Optimized icon sizes
     imageSizes: [16, 32, 48, 64, 96, 128, 256],
+    // Image quality levels (required in Next.js 16)
+    qualities: [50, 75, 90],
     unoptimized: false,
   },
 
