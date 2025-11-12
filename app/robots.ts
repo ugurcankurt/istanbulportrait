@@ -6,20 +6,20 @@ export default function robots(): MetadataRoute.Robots {
 
     return {
       rules: [
-        // Tüm botlar için genel kural
         {
           userAgent: "*",
           allow: "/",
           disallow: [
-            "/api/",
-            "/_next/",
             "/admin/",
-            "/private/",
-            "/checkout/success",
-            "/checkout/cancel",
           ],
         },
-        // Yandex için özel crawl hızı
+        {
+          userAgent: "Googlebot",
+          allow: "/",
+          disallow: [
+            "/admin/",
+          ]
+        },
         {
           userAgent: "YandexBot",
           crawlDelay: 2,

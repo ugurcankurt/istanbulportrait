@@ -81,7 +81,7 @@ export async function generateMetadata({
       type: "website",
       url: `${baseUrl}/${locale}`,
       siteName: SEO_CONFIG.organization.name,
-      countryName: "Turkey",
+      countryName: "Türkiye",
     },
     twitter: {
       card: "summary_large_image",

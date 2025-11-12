@@ -85,7 +85,7 @@ export function Navigation() {
                   ? "/istanbulportrait_white_logo.png"
                   : "/istanbulportrait_dark_logo.png"
               }
-              alt="Professional photographer in Istanbul - Istanbul photoshoot services"
+              alt="Photographer in Istanbul - Istanbul Photoshoot"
               fill
               sizes="(max-width: 640px) 160px, 192px"
               className="object-contain"

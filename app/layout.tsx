@@ -2,11 +2,6 @@ import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
 import "./globals.css";
 
-export const metadata = {
-  title: "The Istanbul Photographer",
-  description: "We are a studio of English speaking photographers in Istanbul and our goal is to help you get amazing photos and videos.",
-};
-
 export default async function RootLayout({
   children,
 }: {
