@@ -1,78 +1,31 @@
 "use client";
 
 import { useLocale, useTranslations } from "next-intl";
-import { useEffect } from "react";
 import { FacebookPixelConsentUpdate } from "@/components/analytics/facebook-pixel";
 import { Link } from "@/i18n/routing";
+import { useConsent } from "@/contexts/consent-context";
 
 export function MultilingualCookieConsent() {
   const locale = useLocale();
   const t = useTranslations("cookies");
+  const { consent, setConsent } = useConsent();
 
-  const handleAcceptAll = () => {
-    if (typeof window !== "undefined" && window.gtag) {
-      window.gtag("consent", "update", {
-        analytics_storage: "granted",
-        ad_storage: "granted",
-        ad_user_data: "granted",
-        ad_personalization: "granted",
-      });
-    }
-
+  const handleAcceptAll = async () => {
+    await setConsent("accepted_all");
     // Update Facebook Pixel consent
     FacebookPixelConsentUpdate(true);
-
-    localStorage.setItem("cookie_consent", "accepted_all");
-    hideBanner();
   };
 
-  const handleAcceptEssential = () => {
-    if (typeof window !== "undefined" && window.gtag) {
-      window.gtag("consent", "update", {
-        analytics_storage: "granted",
-        ad_storage: "denied",
-        ad_user_data: "denied",
-        ad_personalization: "denied",
-      });
-    }
-
+  const handleAcceptEssential = async () => {
+    await setConsent("essential_only");
     // Facebook Pixel - grant basic analytics but deny ads
     FacebookPixelConsentUpdate(true);
-
-    localStorage.setItem("cookie_consent", "essential_only");
-    hideBanner();
   };
 
-  const handleDeclineAll = () => {
-    if (typeof window !== "undefined" && window.gtag) {
-      window.gtag("consent", "update", {
-        analytics_storage: "denied",
-        ad_storage: "denied",
-        ad_user_data: "denied",
-        ad_personalization: "denied",
-      });
-    }
-
-    // Revoke Facebook Pixel consent
-    FacebookPixelConsentUpdate(false);
-
-    localStorage.setItem("cookie_consent", "declined");
-    hideBanner();
-  };
-
-  const hideBanner = () => {
-    const banner = document.getElementById(
-      "multilingual-cookie-consent-banner",
-    );
-    if (banner) banner.style.display = "none";
-  };
-
-  useEffect(() => {
-    const consent = localStorage.getItem("cookie_consent");
-    if (consent) {
-      hideBanner();
-    }
-  }, [hideBanner]);
+  // Don't show banner if user has already made a choice
+  if (consent !== null) {
+    return null;
+  }
 
   return (
     <div
@@ -109,13 +62,6 @@ export function MultilingualCookieConsent() {
               className="px-4 py-2 text-sm border rounded-md hover:bg-muted transition-colors"
             >
               {t("buttons.essential_only")}
-            </button>
-            <button
-              type="button"
-              onClick={handleDeclineAll}
-              className="px-4 py-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
-            >
-              {t("buttons.decline_all")}
             </button>
           </div>
         </div>

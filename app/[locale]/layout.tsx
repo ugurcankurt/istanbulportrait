@@ -10,6 +10,8 @@ import { CoreWebVitals } from "@/components/analytics/core-web-vitals";
 import { MultilingualCookieConsent } from "@/components/analytics/multilingual-cookie-consent";
 import { YandexMetrica } from "@/components/analytics/yandex-metrica";
 import { MicrosoftClarity } from "@/components/analytics/microsoft-clarity";
+import { ConsentProvider } from "@/contexts/consent-context";
+import { ConsentGate } from "@/components/consent-gate";
 import { SEO_CONFIG } from "@/lib/seo-config";
 import "../globals.css";
 import { ThemeProvider } from "next-themes";
@@ -158,28 +160,35 @@ export default async function LocaleLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <NextIntlClientProvider messages={messages}>
-            <div className="flex min-h-screen flex-col">
-              <Navigation />
-              <main className="flex-1">{children}</main>
-              <GoogleAnalytics />
-              <FacebookPixel />
-              <YandexMetrica />
-              <MicrosoftClarity />
-              <CoreWebVitals />
-              <Footer />
+          <ConsentProvider>
+            <NextIntlClientProvider messages={messages}>
+              <div className="flex min-h-screen flex-col">
+                <Navigation />
+                <main className="flex-1">{children}</main>
 
-              {/* GetYourGuide Analytics */}
-              <Script
-                src="https://widget.getyourguide.com/dist/pa.umd.production.min.js"
-                strategy="lazyOnload"
-                data-gyg-partner-id="S6XXHTA"
-              />
-            </div>
-            <Toaster />
-            <MultilingualCookieConsent />
-            <WhatsAppButton phoneNumber="+905367093724" />
-          </NextIntlClientProvider>
+                {/* Analytics - Only load after user consent */}
+                <ConsentGate consent="accepted_all">
+                  <GoogleAnalytics />
+                  <FacebookPixel />
+                  <YandexMetrica />
+                  <MicrosoftClarity />
+                </ConsentGate>
+
+                <CoreWebVitals />
+                <Footer />
+
+                {/* GetYourGuide Analytics */}
+                <Script
+                  src="https://widget.getyourguide.com/dist/pa.umd.production.min.js"
+                  strategy="lazyOnload"
+                  data-gyg-partner-id="S6XXHTA"
+                />
+              </div>
+              <Toaster />
+              <MultilingualCookieConsent />
+              <WhatsAppButton phoneNumber="+905367093724" />
+            </NextIntlClientProvider>
+          </ConsentProvider>
         </ThemeProvider>
         <SpeedInsights />
         <Analytics />

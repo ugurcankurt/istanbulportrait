@@ -7,6 +7,7 @@ import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Link } from "@/i18n/routing";
+import { useConsent } from "@/contexts/consent-context";
 
 export function Footer() {
   const t = useTranslations("footer");
@@ -15,6 +16,7 @@ export function Footer() {
   const tui = useTranslations("ui");
   const [mounted, setMounted] = useState(false);
   const { resolvedTheme } = useTheme();
+  const { setConsent } = useConsent();
 
   // Prevent hydration mismatch by waiting for client-side mount
   useEffect(() => {
@@ -136,19 +138,28 @@ export function Footer() {
         <div className="mt-8 pt-8 border-t border-border">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <p className="text-sm text-muted-foreground">{t("copyright")}</p>
-            <div className="flex space-x-4 mt-4 md:mt-0">
-              <a
-                href="#"
+            <div className="flex flex-wrap gap-4 mt-4 md:mt-0">
+              <Link
+                href="/privacy"
                 className="text-sm text-muted-foreground hover:text-foreground transition-colors"
               >
                 {t("privacy_policy")}
-              </a>
-              <a
-                href="#"
+              </Link>
+              <Link
+                href="/privacy"
                 className="text-sm text-muted-foreground hover:text-foreground transition-colors"
               >
                 {t("terms_of_service")}
-              </a>
+              </Link>
+              <button
+                onClick={() => {
+                  setConsent(null);
+                  window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+                }}
+                className="text-sm text-muted-foreground hover:text-foreground transition-colors underline-offset-4 hover:underline"
+              >
+                {tui("cookie_settings")}
+              </button>
             </div>
           </div>
         </div>

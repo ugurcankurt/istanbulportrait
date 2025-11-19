@@ -302,6 +302,7 @@
     "language": "Language",
     "send_message": "Send us a message",
     "contact_information": "Contact Information",
+    "cookie_settings": "Cookie Settings",
     "location": "Location",
     "email": "Email",
     "phone": "Phone",
@@ -704,7 +705,77 @@
       "marketing": {
         "title": "Marketing Cookies",
         "description": "Used to deliver relevant advertisements and track campaign effectiveness."
-      }
+      },
+      "table": {
+        "title": "Detailed Cookie Information",
+        "columns": {
+          "name": "Cookie Name",
+          "purpose": "Purpose",
+          "type": "Type",
+          "duration": "Duration",
+          "provider": "Provider"
+        },
+        "types": {
+          "essential": "Essential",
+          "analytics": "Analytics",
+          "marketing": "Marketing"
+        },
+        "providers": {
+          "first_party": "Istanbul Portrait (First-party)",
+          "google": "Google Analytics",
+          "yandex": "Yandex Metrica",
+          "microsoft": "Microsoft Clarity",
+          "facebook": "Facebook"
+        },
+        "essential": {
+          "user_consent": {
+            "purpose": "Stores your cookie consent preferences",
+            "duration": "12 months"
+          }
+        },
+        "analytics": {
+          "ga": {
+            "purpose": "Distinguishes unique users and sessions",
+            "duration": "2 years"
+          },
+          "gid": {
+            "purpose": "Distinguishes users for 24 hours",
+            "duration": "24 hours"
+          },
+          "gat": {
+            "purpose": "Throttles request rate to Google Analytics",
+            "duration": "1 minute"
+          },
+          "ym_uid": {
+            "purpose": "Yandex Metrica user identifier",
+            "duration": "1 year"
+          },
+          "ym_d": {
+            "purpose": "Yandex Metrica session date",
+            "duration": "1 year"
+          },
+          "clck": {
+            "purpose": "Microsoft Clarity user identifier",
+            "duration": "1 year"
+          },
+          "clsk": {
+            "purpose": "Microsoft Clarity session identifier",
+            "duration": "1 day"
+          }
+        },
+        "marketing": {
+          "fbp": {
+            "purpose": "Facebook Pixel browser identifier",
+            "duration": "3 months"
+          },
+          "fbc": {
+            "purpose": "Facebook Pixel click identifier",
+            "duration": "3 months"
+          }
+        }
+      },
+      "expiration_note": "Your consent choice is stored for 12 months. After this period, you will be asked to provide consent again.",
+      "withdrawal_note": "You can change your cookie preferences at any time by clicking the 'Cookie Settings' button in the footer of this website."
     },
     "data_use": {
       "title": "How We Use Your Data",
