@@ -10,9 +10,10 @@
   "whatsapp": {
     "button": "WhatsApp",
     "tooltip": "Chat with us on WhatsApp",
-    "message": "Hello! I'm interested in booking a photography session in Istanbul. Can you help me with more information?",
-    "notification_title": "Get Instant Help",
-    "notification_message": "Have questions? Chat with us directly on WhatsApp for quick responses!"
+    "message": "Hello! I would like to get information about photoshoots in Istanbul.",
+    "notification_title": "Hello! 👋",
+    "notification_message": "Need help with your booking?",
+    "direction": "ltr"
   },
   "hero": {
     "title": "Professional Photography in Istanbul | Award-Winning Photographer",
@@ -874,6 +875,16 @@
     "meta": {
       "title": "Photography Blog | Istanbul Portrait Tips & Guides",
       "description": "Explore Istanbul photography tips, location guides and behind-the-scenes stories"
+    },
+    "author": {
+      "about_title": "About the Author",
+      "name": "Istanbul Photographer",
+      "bio": "Professional photographer specializing in portrait, couple, and lifestyle photography in Istanbul. With over 8 years of experience, capturing timeless memories against the city's most iconic backdrops.",
+      "follow": "Follow on Instagram"
+    },
+    "summary": {
+      "title": "Key Takeaways",
+      "ai_overview": "AI Overview"
     }
   }
 }

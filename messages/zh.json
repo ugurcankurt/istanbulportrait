@@ -12,7 +12,8 @@
     "tooltip": "通过WhatsApp与我们聊天",
     "message": "您好！我对预订伊斯坦布尔的摄影服务感兴趣。能提供更多信息吗？",
     "notification_title": "获取即时帮助",
-    "notification_message": "有疑问？直接通过WhatsApp与我们聊天，快速获得回复！"
+    "notification_message": "有疑问？直接通过WhatsApp与我们聊天，快速获得回复！",
+    "direction": "ltr"
   },
   "hero": {
     "title": "伊斯坦布尔专业摄影 | 获奖摄影师",
@@ -874,6 +875,16 @@
     "meta": {
       "title": "摄影博客 | 伊斯坦布尔肖像技巧与指南",
       "description": "探索伊斯坦布尔摄影技巧、地点指南和幕后故事"
+    },
+    "author": {
+      "about_title": "关于作者",
+      "name": "伊斯坦布尔摄影师",
+      "bio": "伊斯坦布尔专业摄影师，擅长人像、情侣和生活方式摄影。拥有超过8年的经验，在城市最具标志性的背景下捕捉永恒的记忆。",
+      "follow": "在 Instagram 上关注"
+    },
+    "summary": {
+      "title": "关键要点",
+      "ai_overview": "AI 概览"
     }
   }
 }

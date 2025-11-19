@@ -13,6 +13,8 @@ import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { createSchemaConfig, MultipleJsonLd } from "@/lib/structured-data";
 import { SEO_CONFIG } from "@/lib/seo-config";
 import { getTranslations } from "next-intl/server";
+import { BlogAuthor } from "@/components/blog-author";
+import { BlogSummary } from "@/components/blog-summary";
 
 // Force dynamic rendering to avoid build-time Supabase issues
 export const dynamic = 'force-dynamic';
@@ -123,86 +125,94 @@ export default async function BlogPostPage({
 
       <div className="container mx-auto px-4 py-12">
         <article className="max-w-6xl mx-auto">
-      {/* Header */}
-      <header className="mb-8">
-        {post.featured_image && (
-          <AspectRatio ratio={16 / 9} className="mb-8 rounded-lg overflow-hidden">
-            <img
-              src={post.featured_image}
-              alt={post.translation.title}
-              className="w-full h-full object-cover"
-            />
-          </AspectRatio>
-        )}
+          {/* Header */}
+          <header className="mb-8">
+            {post.featured_image && (
+              <AspectRatio ratio={16 / 9} className="mb-8 rounded-lg overflow-hidden">
+                <img
+                  src={post.featured_image}
+                  alt={post.translation.title}
+                  className="w-full h-full object-cover"
+                />
+              </AspectRatio>
+            )}
 
-        <h1 className="text-4xl md:text-5xl font-bold mb-4">
-          {post.translation.title}
-        </h1>
+            <h1 className="text-4xl md:text-5xl font-bold mb-4">
+              {post.translation.title}
+            </h1>
 
-        <div className="flex flex-wrap gap-4 text-sm text-muted-foreground mb-6">
-          <time dateTime={post.published_at!}>
-            {formatBlogDate(post.published_at!, locale)}
-          </time>
-          <span>•</span>
-          <span>{t("reading_time", { minutes: post.reading_time_minutes })}</span>
-        </div>
-
-        {post.translation.excerpt && (
-          <p className="text-xl text-muted-foreground leading-relaxed">
-            {post.translation.excerpt}
-          </p>
-        )}
-      </header>
-
-      {/* Content */}
-      <div className="prose prose-lg dark:prose-invert max-w-none">
-        <ReactMarkdown remarkPlugins={[remarkGfm]}>
-          {post.translation.content}
-        </ReactMarkdown>
-      </div>
-
-      {/* Categories & Tags */}
-      <footer className="mt-12 pt-8 border-t">
-        <div className="grid md:grid-cols-2 gap-6">
-          {post.categories && post.categories.length > 0 && (
-            <div>
-              <h3 className="text-sm font-semibold mb-3">Categories</h3>
-              <div className="flex flex-wrap gap-2">
-                {post.categories.map((cat: any) => (
-                  <span
-                    key={cat.category.id}
-                    className="px-3 py-1 rounded-full text-sm font-medium"
-                    style={{
-                      backgroundColor: cat.category.color + "20",
-                      color: cat.category.color,
-                    }}
-                  >
-                    {cat.category.icon && <span className="mr-1">{cat.category.icon}</span>}
-                    {cat.category.translation?.name || cat.category.slug}
-                  </span>
-                ))}
-              </div>
+            <div className="flex flex-wrap gap-4 text-sm text-muted-foreground mb-6">
+              <time dateTime={post.published_at!}>
+                {formatBlogDate(post.published_at!, locale)}
+              </time>
+              <span>•</span>
+              <span>{t("reading_time", { minutes: post.reading_time_minutes })}</span>
             </div>
+
+            {post.translation.excerpt && (
+              <p className="text-xl text-muted-foreground leading-relaxed">
+                {post.translation.excerpt}
+              </p>
+            )}
+          </header>
+
+          {/* AI Summary / Key Takeaways */}
+          {post.translation.excerpt && (
+            <BlogSummary summary={post.translation.excerpt} />
           )}
 
-          {post.tags && post.tags.length > 0 && (
-            <div>
-              <h3 className="text-sm font-semibold mb-3">Tags</h3>
-              <div className="flex flex-wrap gap-2">
-                {post.tags.map((tag: any) => (
-                  <span
-                    key={tag.tag.id}
-                    className="px-3 py-1 bg-muted hover:bg-muted/80 rounded-full text-sm transition-colors"
-                  >
-                    #{tag.tag.translation?.name || tag.tag.slug}
-                  </span>
-                ))}
-              </div>
+          {/* Content */}
+          <div className="prose prose-lg dark:prose-invert max-w-none">
+            <ReactMarkdown remarkPlugins={[remarkGfm]}>
+              {post.translation.content}
+            </ReactMarkdown>
+          </div>
+
+          {/* Author Bio */}
+          <BlogAuthor />
+
+          {/* Categories & Tags */}
+          <footer className="mt-12 pt-8 border-t">
+            <div className="grid md:grid-cols-2 gap-6">
+              {post.categories && post.categories.length > 0 && (
+                <div>
+                  <h3 className="text-sm font-semibold mb-3">Categories</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {post.categories.map((cat: any) => (
+                      <span
+                        key={cat.category.id}
+                        className="px-3 py-1 rounded-full text-sm font-medium"
+                        style={{
+                          backgroundColor: cat.category.color + "20",
+                          color: cat.category.color,
+                        }}
+                      >
+                        {cat.category.icon && <span className="mr-1">{cat.category.icon}</span>}
+                        {cat.category.translation?.name || cat.category.slug}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {post.tags && post.tags.length > 0 && (
+                <div>
+                  <h3 className="text-sm font-semibold mb-3">Tags</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {post.tags.map((tag: any) => (
+                      <span
+                        key={tag.tag.id}
+                        className="px-3 py-1 bg-muted hover:bg-muted/80 rounded-full text-sm transition-colors"
+                      >
+                        #{tag.tag.translation?.name || tag.tag.slug}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
-          )}
-        </div>
-      </footer>
-      </article>
+          </footer>
+        </article>
       </div>
     </div>
   );

@@ -125,13 +125,13 @@ export function BookingModal({
 
   const packageInfo = selectedPackage
     ? {
-        name: tPackages(`${selectedPackage}.title`),
-        price: packagePrices[selectedPackage],
-        duration: tPackages(`${selectedPackage}.duration`),
-        photos: tPackages(`${selectedPackage}.photos`),
-        locations: tPackages(`${selectedPackage}.locations`),
-        features: tPackages.raw(`${selectedPackage}.features`) as string[],
-      }
+      name: tPackages(`${selectedPackage}.title`),
+      price: packagePrices[selectedPackage],
+      duration: tPackages(`${selectedPackage}.duration`),
+      photos: tPackages(`${selectedPackage}.photos`),
+      locations: tPackages(`${selectedPackage}.locations`),
+      features: tPackages.raw(`${selectedPackage}.features`) as string[],
+    }
     : null;
 
   const handleSubmit = form.handleSubmit(
@@ -283,8 +283,8 @@ export function BookingModal({
                               onSelect={(date) => {
                                 const dateString = date
                                   ? format(date, "yyyy-MM-dd", {
-                                      locale: dateFnsLocale,
-                                    })
+                                    locale: dateFnsLocale,
+                                  })
                                   : "";
                                 dateField.onChange(dateString);
                                 setShowTimeSelection(!!date);
@@ -295,7 +295,7 @@ export function BookingModal({
                               }
                               locale={dateFnsLocale}
                               dir={locale === "ar" ? "rtl" : "ltr"}
-                              className="w-full rounded-lg border shadow-sm bg-background [--cell-size:2.5rem] sm:[--cell-size:2.75rem] md:[--cell-size:3rem]"
+                              className="w-full mx-auto"
                             />
 
                             {/* Time Selection */}

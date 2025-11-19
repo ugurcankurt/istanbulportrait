@@ -8,11 +8,11 @@
     "blog": "Blog"
   },
   "whatsapp": {
-    "button": "WhatsApp",
     "tooltip": "Chatea con nosotros en WhatsApp",
-    "message": "¡Hola! Estoy interesado en reservar una sesión de fotografía en Estambul. ¿Pueden ayudarme con más información?",
-    "notification_title": "Obtén ayuda instantánea",
-    "notification_message": "¿Tienes preguntas? ¡Chatea con nosotros directamente en WhatsApp para respuestas rápidas!"
+    "message": "¡Hola! Me gustaría obtener información sobre sesiones de fotos en Estambul.",
+    "notification_title": "¡Hola! 👋",
+    "notification_message": "¿Necesitas ayuda con tu reserva?",
+    "direction": "ltr"
   },
   "hero": {
     "title": "Fotógrafo Profesional de Estambul | Servicios de Fotografía en Estambul",
@@ -630,6 +630,16 @@
     "meta": {
       "title": "Blog de Fotografía | Consejos y Guías de Estambul",
       "description": "Explora consejos de fotografía de Estambul, guías de ubicaciones e historias detrás de escena"
+    },
+    "author": {
+      "about_title": "Sobre el Autor",
+      "name": "Fotógrafo de Estambul",
+      "bio": "Fotógrafo profesional especializado en retratos, parejas y fotografía de estilo de vida en Estambul. Con más de 8 años de experiencia, capturando recuerdos atemporales en los escenarios más emblemáticos de la ciudad.",
+      "follow": "Síguenos en Instagram"
+    },
+    "summary": {
+      "title": "Puntos Clave",
+      "ai_overview": "Resumen IA"
     }
   },
   "structured_data": {
