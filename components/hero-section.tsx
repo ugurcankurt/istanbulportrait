@@ -1,11 +1,14 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Camera, MapPin, Star } from "lucide-react";
+import { Camera, MapPin, Star, ArrowRight } from "lucide-react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
 import { Link } from "@/i18n/routing";
+import { trackEvent } from "@/lib/analytics";
 
 export function HeroSection() {
   const t = useTranslations("hero");
@@ -13,8 +16,8 @@ export function HeroSection() {
   const tui = useTranslations("ui");
 
   return (
-    <section className="relative min-h-[90vh] sm:min-h-screen overflow-hidden">
-      {/* Background Image */}
+    <section className="relative min-h-[90vh] sm:min-h-screen overflow-hidden flex items-center justify-center">
+      {/* Background Image with Gradient Overlay */}
       <div className="absolute inset-0 z-0">
         <Image
           src="/istanbul_photographer.jpg"
@@ -39,111 +42,124 @@ export function HeroSection() {
             };
           }}
         />
-        <div className="absolute inset-0 bg-black/40" />
+        {/* Modern Gradient Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/80" />
       </div>
 
       {/* Content Wrapper */}
-      <div className="relative z-10 min-h-[90vh] sm:min-h-screen flex items-center justify-center">
-
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-16">
-        <div className="max-w-6xl mx-auto text-center text-white">
+      <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-20">
+        <div className="max-w-5xl mx-auto text-center text-white">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+            className="flex flex-col items-center"
           >
-            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-6xl xl:text-7xl font-bold mb-4 sm:mb-6 leading-tight">
+            {/* Badge */}
+            <Badge
+              variant="secondary"
+              className="mb-6 px-4 py-1.5 text-sm font-medium bg-white/10 hover:bg-white/20 text-white border-white/20 backdrop-blur-md rounded-full transition-colors"
+            >
+              ✨ Istanbul's Premier Photographer
+            </Badge>
+
+            {/* Main Title */}
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-6 leading-[1.1] tracking-tight drop-shadow-lg text-white">
               {t("title")}
             </h1>
-            <p className="text-lg sm:text-xl md:text-2xl mb-6 sm:mb-8 text-white/90 px-2">
+
+            {/* Subtitle */}
+            <p className="text-lg sm:text-xl md:text-2xl mb-8 text-white/90 max-w-3xl mx-auto leading-relaxed font-light drop-shadow-md">
               {t("subtitle")}
             </p>
-            <h2 className="text-base sm:text-lg mb-8 sm:mb-12 text-white/80 max-w-4xl mx-auto px-4">
+
+            {/* Description */}
+            <p className="text-base sm:text-lg mb-10 text-white/80 max-w-2xl mx-auto hidden sm:block">
               {t("description")}
-            </h2>
+            </p>
+
+            {/* CTA Buttons */}
+            <div className="flex flex-col sm:flex-row justify-center items-center gap-4 mb-16 w-full sm:w-auto">
+              <Button
+                asChild
+                size="lg"
+                className="w-full sm:w-auto min-w-[140px] h-12 font-semibold"
+                onClick={() => trackEvent("cta_click", "Hero", "View Packages")}
+              >
+                <Link href="/packages" className="flex items-center justify-center gap-2">
+                  {tui("packages_button")}
+                  <ArrowRight className="w-4 h-4" />
+                </Link>
+              </Button>
+
+              <Button
+                asChild
+                variant="outline"
+                size="lg"
+                className="w-full sm:w-auto min-w-[140px] h-12 font-semibold bg-transparent text-white border-white hover:bg-white/10 hover:text-white"
+                onClick={() => trackEvent("cta_click", "Hero", "Book Session")}
+              >
+                <Link href="/packages">{tui("book_your_session")}</Link>
+              </Button>
+            </div>
           </motion.div>
 
+          {/* Features Grid with Glassmorphism */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="flex flex-col sm:flex-row justify-center items-center gap-4 mb-8 sm:mb-16 px-4"
+            transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
+            className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 max-w-5xl mx-auto"
           >
-            <Button
-              asChild
-              size="lg"
-              className="text-base sm:text-lg px-6 sm:px-8 py-3 sm:py-6 w-full sm:w-auto min-w-[160px]"
-            >
-              <Link href="/packages">{tui("packages_button")}</Link>
-            </Button>
-            <Button
-              asChild
-              variant="outline"
-              size="lg"
-              className="text-base sm:text-lg px-6 sm:px-8 py-3 sm:py-6 w-full sm:w-auto min-w-[160px] bg-white/10 backdrop-blur-sm border-white/30 text-white hover:bg-white/20"
-            >
-              <Link href="/checkout">{tui("book_your_session")}</Link>
-            </Button>
-          </motion.div>
+            {/* Feature 1 */}
+            <Card className="bg-black/20 backdrop-blur-md border-white/10 text-white hover:bg-black/30 transition-all duration-300 hover:-translate-y-1 group">
+              <CardContent className="p-6 flex flex-col items-center text-center h-full">
+                <div className="w-12 h-12 mb-4 rounded-full bg-white/10 flex items-center justify-center group-hover:bg-white/20 transition-colors">
+                  <MapPin className="w-6 h-6 text-white" />
+                </div>
+                <h3 className="text-lg font-semibold mb-2 text-white">
+                  {features("rooftop.title")}
+                </h3>
+                <p className="text-sm text-white/70 leading-relaxed">
+                  {features("rooftop.description")}
+                </p>
+              </CardContent>
+            </Card>
 
-          {/* Features Grid */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-            className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6 lg:gap-8 max-w-6xl mx-auto px-4"
-          >
-            <div className="text-center p-3 sm:p-6 bg-white/10 backdrop-blur-sm rounded-md sm:rounded-lg border border-white/20 hover:bg-white/15 transition-colors">
-              <div className="w-8 h-8 sm:w-12 sm:h-12 mx-auto mb-2 sm:mb-4 rounded-full bg-white/20 flex items-center justify-center">
-                <MapPin className="w-4 h-4 sm:w-6 sm:h-6" />
-              </div>
-              <h3 className="text-base sm:text-xl font-semibold mb-1 sm:mb-2">
-                {features("rooftop.title")}
-              </h3>
-              <p className="text-xs sm:text-base text-white/80 leading-relaxed">
-                {features("rooftop.description")}
-              </p>
-            </div>
+            {/* Feature 2 */}
+            <Card className="bg-black/20 backdrop-blur-md border-white/10 text-white hover:bg-black/30 transition-all duration-300 hover:-translate-y-1 group">
+              <CardContent className="p-6 flex flex-col items-center text-center h-full">
+                <div className="w-12 h-12 mb-4 rounded-full bg-white/10 flex items-center justify-center group-hover:bg-white/20 transition-colors">
+                  <Star className="w-6 h-6 text-white" />
+                </div>
+                <h3 className="text-lg font-semibold mb-2 text-white">
+                  {features("historic.title")}
+                </h3>
+                <p className="text-sm text-white/70 leading-relaxed">
+                  {features("historic.description")}
+                </p>
+              </CardContent>
+            </Card>
 
-            <div className="text-center p-3 sm:p-6 bg-white/10 backdrop-blur-sm rounded-md sm:rounded-lg border border-white/20 hover:bg-white/15 transition-colors">
-              <div className="w-8 h-8 sm:w-12 sm:h-12 mx-auto mb-2 sm:mb-4 rounded-full bg-white/20 flex items-center justify-center">
-                <Star className="w-4 h-4 sm:w-6 sm:h-6" />
-              </div>
-              <h3 className="text-base sm:text-xl font-semibold mb-1 sm:mb-2">
-                {features("historic.title")}
-              </h3>
-              <p className="text-xs sm:text-base text-white/80 leading-relaxed">
-                {features("historic.description")}
-              </p>
-            </div>
-
-            <div className="text-center p-3 sm:p-6 bg-white/10 backdrop-blur-sm rounded-md sm:rounded-lg border border-white/20 hover:bg-white/15 transition-colors col-span-2 lg:col-span-1">
-              <div className="w-8 h-8 sm:w-12 sm:h-12 mx-auto mb-2 sm:mb-4 rounded-full bg-white/20 flex items-center justify-center">
-                <Camera className="w-4 h-4 sm:w-6 sm:h-6" />
-              </div>
-              <h3 className="text-base sm:text-xl font-semibold mb-1 sm:mb-2">
-                {features("professional.title")}
-              </h3>
-              <p className="text-xs sm:text-base text-white/80 leading-relaxed">
-                {features("professional.description")}
-              </p>
-            </div>
+            {/* Feature 3 */}
+            <Card className="bg-black/20 backdrop-blur-md border-white/10 text-white hover:bg-black/30 transition-all duration-300 hover:-translate-y-1 group">
+              <CardContent className="p-6 flex flex-col items-center text-center h-full">
+                <div className="w-12 h-12 mb-4 rounded-full bg-white/10 flex items-center justify-center group-hover:bg-white/20 transition-colors">
+                  <Camera className="w-6 h-6 text-white" />
+                </div>
+                <h3 className="text-lg font-semibold mb-2 text-white">
+                  {features("professional.title")}
+                </h3>
+                <p className="text-sm text-white/70 leading-relaxed">
+                  {features("professional.description")}
+                </p>
+              </CardContent>
+            </Card>
           </motion.div>
         </div>
       </div>
-      </div>
 
-      {/* Scroll Indicator */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 1, delay: 1 }}
-        className="absolute bottom-4 sm:bottom-8 left-1/2 transform -translate-x-1/2 hidden sm:block"
-      >
-        <div className="w-5 h-8 sm:w-6 sm:h-10 border-2 border-white/50 rounded-full flex justify-center">
-          <div className="w-1 h-2 sm:h-3 bg-white/50 rounded-full mt-2 animate-bounce" />
-        </div>
-      </motion.div>
+
     </section>
   );
 }

@@ -81,8 +81,8 @@ export function WhatsAppButton({
             animate={{ opacity: 1, x: 0, scale: 1 }}
             exit={{ opacity: 0, x: 20, scale: 0.8 }}
             className={cn(
-              "bg-white dark:bg-slate-800 text-slate-800 dark:text-white",
-              "px-4 py-3 rounded-2xl rounded-tr-sm shadow-xl border border-slate-100 dark:border-slate-700",
+              "bg-popover text-popover-foreground",
+              "px-4 py-3 rounded-2xl rounded-tr-sm shadow-xl border border-border",
               "flex items-start gap-3 max-w-[280px]",
               "origin-bottom-right"
             )}
@@ -91,11 +91,11 @@ export function WhatsAppButton({
               <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center text-green-600">
                 <MessageCircle size={20} fill="currentColor" />
               </div>
-              <span className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white dark:border-slate-800 rounded-full"></span>
+              <span className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-background rounded-full"></span>
             </div>
             <div className="flex-1 min-w-0 text-left rtl:text-right" dir={t("direction") === "rtl" ? "rtl" : "ltr"}>
               <p className="text-sm font-semibold mb-0.5">{t("notification_title")}</p>
-              <p className="text-xs text-slate-500 dark:text-slate-400 leading-snug">
+              <p className="text-xs text-muted-foreground leading-snug">
                 {t("notification_message")}
               </p>
             </div>
@@ -104,7 +104,7 @@ export function WhatsAppButton({
                 e.stopPropagation();
                 setShowBubble(false);
               }}
-              className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
+              className="text-muted-foreground hover:text-foreground"
             >
               <X size={14} />
             </button>
@@ -136,7 +136,7 @@ export function WhatsAppButton({
           />
 
           {/* Notification Badge */}
-          <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white ring-2 ring-white dark:ring-slate-900">
+          <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white ring-2 ring-background">
             1
           </span>
         </div>

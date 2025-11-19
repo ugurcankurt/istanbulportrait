@@ -128,13 +128,13 @@ export function CheckoutForm() {
 
   const packageInfo = selectedPackage
     ? {
-        name: _tPackages(`${selectedPackage}.title`),
-        price: packagePrices[selectedPackage],
-        duration: _tPackages(`${selectedPackage}.duration`),
-        photos: _tPackages(`${selectedPackage}.photos`),
-        locations: _tPackages(`${selectedPackage}.locations`),
-        features: _tPackages.raw(`${selectedPackage}.features`) as string[],
-      }
+      name: _tPackages(`${selectedPackage}.title`),
+      price: packagePrices[selectedPackage],
+      duration: _tPackages(`${selectedPackage}.duration`),
+      photos: _tPackages(`${selectedPackage}.photos`),
+      locations: _tPackages(`${selectedPackage}.locations`),
+      features: _tPackages.raw(`${selectedPackage}.features`) as string[],
+    }
     : null;
 
   // Track begin_checkout when component mounts with package data
@@ -371,7 +371,7 @@ export function CheckoutForm() {
             </div>
             <Badge
               variant="default"
-              className="bg-green-100 text-green-800 border-green-200"
+              className="bg-green-500/15 text-green-700 dark:text-green-400 border-green-500/20"
             >
               {tui("selected")}
             </Badge>

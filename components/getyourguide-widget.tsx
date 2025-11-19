@@ -72,10 +72,10 @@ export function GetYourGuideWidget({
       data-tour-id={tourId}
     >
       {/* Loading placeholder */}
-      <div className="flex items-center justify-center min-h-[400px] bg-gray-100 dark:bg-gray-800 rounded-lg">
+      <div className="flex items-center justify-center min-h-[400px] bg-muted rounded-lg">
         <div className="text-center">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-2"></div>
-          <p className="text-sm text-gray-600 dark:text-gray-400">Loading tour: {tourId}</p>
+          <p className="text-sm text-muted-foreground">Loading tour: {tourId}</p>
         </div>
       </div>
     </div>

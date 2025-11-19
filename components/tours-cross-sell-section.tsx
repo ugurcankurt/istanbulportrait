@@ -19,19 +19,19 @@ export function ToursCrossSellSection() {
           transition={{ duration: 0.8 }}
           className="max-w-6xl mx-auto text-center"
         >
-          <div className="bg-black rounded-lg p-4 sm:p-6 lg:p-8">
+          <div className="bg-primary rounded-lg p-4 sm:p-6 lg:p-8">
             <div className="flex items-center justify-center mb-3 sm:mb-4">
-              <Camera className="h-5 w-5 sm:h-6 sm:w-6 text-primary mr-2 sm:mr-3" />
-              <h2 className="text-lg text-white sm:text-xl lg:text-2xl font-bold">
+              <Camera className="h-5 w-5 sm:h-6 sm:w-6 text-primary-foreground mr-2 sm:mr-3" />
+              <h2 className="text-lg text-primary-foreground sm:text-xl lg:text-2xl font-bold">
                 {t("crossSell.title")}
               </h2>
             </div>
-            <p className="text-sm sm:text-base text-muted-foreground mb-4 sm:mb-6 px-2">
+            <p className="text-sm sm:text-base text-primary-foreground/80 mb-4 sm:mb-6 px-2">
               {t("crossSell.description")}
             </p>
             <Button
               asChild
-              variant="outline"
+              variant="secondary"
               size="sm"
               className="sm:text-base"
             >
