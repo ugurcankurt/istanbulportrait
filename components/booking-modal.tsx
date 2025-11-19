@@ -45,6 +45,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import type { BookingFormData, PackageId } from "@/lib/validations";
 import { createBookingSchema, packagePrices } from "@/lib/validations";
+import { trackLead } from "@/lib/analytics";
+import { fbPixel } from "@/lib/facebook";
 
 interface BookingModalProps {
   isOpen: boolean;
@@ -136,6 +138,19 @@ export function BookingModal({
 
   const handleSubmit = form.handleSubmit(
     (data) => {
+      // Track lead conversion - user filled booking form
+      if (selectedPackage && packageInfo) {
+        // GA4 Lead Event
+        trackLead(
+          selectedPackage,
+          packageInfo.name,
+          packageInfo.price,
+        );
+
+        // Facebook Lead Event (client-side)
+        fbPixel.trackLead(packageInfo.price);
+      }
+
       // Store booking data in sessionStorage for checkout page
       sessionStorage.setItem("bookingData", JSON.stringify(data));
 

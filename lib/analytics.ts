@@ -172,5 +172,37 @@ export function trackAddPaymentInfo(
   }
 }
 
+// Track lead generation event (GA4)
+export function trackLead(
+  packageId: string,
+  packageName: string,
+  value?: number,
+  currency: string = "EUR",
+) {
+  if (typeof window !== "undefined" && window.gtag) {
+    window.gtag("event", "generate_lead", {
+      currency: currency,
+      value: value,
+      items: [
+        {
+          item_id: packageId,
+          item_name: packageName,
+          item_category: "Photography Package",
+          price: value || 0,
+          quantity: 1,
+        },
+      ],
+    });
+  }
+
+  // Also track for Facebook
+  trackFacebookEvent("Lead", {
+    content_ids: [packageId],
+    content_name: packageName,
+    value: value,
+    currency: "EUR",
+  });
+}
+
 // Generic event function (alias for trackEvent)
 export const event = trackEvent;
