@@ -8,6 +8,7 @@ import type {
   BlogCategoryWithTranslation,
   BlogPost,
   BlogPostListResponse,
+  BlogPostWithAllTranslations,
   BlogPostWithRelations,
   BlogQueryParams,
   BlogTagListResponse,

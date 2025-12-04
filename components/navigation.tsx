@@ -59,7 +59,7 @@ export function Navigation() {
     if (params && Object.keys(params).length > 0) {
       router.push({ pathname, params } as any, { locale: newLocale });
     } else {
-      router.push(pathname, { locale: newLocale });
+      router.push(pathname as any, { locale: newLocale });
     }
   };
 
