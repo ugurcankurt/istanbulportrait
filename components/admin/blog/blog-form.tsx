@@ -71,60 +71,60 @@ export function BlogForm({
   }, [fetchCategories, fetchTags]);
 
   const form = useForm<BlogFormData>({
-    resolver: zodResolver(blogFormSchema),
+    resolver: zodResolver(blogFormSchema) as any,
     defaultValues: initialData
       ? {
-          slug: initialData.slug,
-          status: initialData.status,
-          featured_image: initialData.featured_image,
-          published_at: initialData.published_at,
-          meta_keywords: initialData.meta_keywords,
-          is_featured: initialData.is_featured,
-          translations: {
-            en: {
-              title: (initialData as any).translations?.en?.title || "",
-              excerpt: (initialData as any).translations?.en?.excerpt || "",
-              content: (initialData as any).translations?.en?.content || "",
-              meta_description: (initialData as any).translations?.en?.meta_description || "",
-            },
-            ar: {
-              title: (initialData as any).translations?.ar?.title || "",
-              excerpt: (initialData as any).translations?.ar?.excerpt || "",
-              content: (initialData as any).translations?.ar?.content || "",
-              meta_description: (initialData as any).translations?.ar?.meta_description || "",
-            },
-            ru: {
-              title: (initialData as any).translations?.ru?.title || "",
-              excerpt: (initialData as any).translations?.ru?.excerpt || "",
-              content: (initialData as any).translations?.ru?.content || "",
-              meta_description: (initialData as any).translations?.ru?.meta_description || "",
-            },
-            es: {
-              title: (initialData as any).translations?.es?.title || "",
-              excerpt: (initialData as any).translations?.es?.excerpt || "",
-              content: (initialData as any).translations?.es?.content || "",
-              meta_description: (initialData as any).translations?.es?.meta_description || "",
-            },
+        slug: initialData.slug,
+        status: initialData.status,
+        featured_image: initialData.featured_image,
+        published_at: initialData.published_at,
+        meta_keywords: initialData.meta_keywords,
+        is_featured: initialData.is_featured,
+        translations: {
+          en: {
+            title: (initialData as any).translations?.en?.title || "",
+            excerpt: (initialData as any).translations?.en?.excerpt || "",
+            content: (initialData as any).translations?.en?.content || "",
+            meta_description: (initialData as any).translations?.en?.meta_description || "",
           },
-          category_ids: (initialData as any).categories?.map((c: any) => c.category.id) || [],
-          tag_ids: (initialData as any).tags?.map((t: any) => t.tag.id) || [],
-        }
-      : {
-          slug: "",
-          status: "draft",
-          featured_image: null,
-          published_at: null,
-          meta_keywords: [],
-          is_featured: false,
-          translations: {
-            en: { title: "", excerpt: "", content: "", meta_description: "" },
-            ar: { title: "", excerpt: "", content: "", meta_description: "" },
-            ru: { title: "", excerpt: "", content: "", meta_description: "" },
-            es: { title: "", excerpt: "", content: "", meta_description: "" },
+          ar: {
+            title: (initialData as any).translations?.ar?.title || "",
+            excerpt: (initialData as any).translations?.ar?.excerpt || "",
+            content: (initialData as any).translations?.ar?.content || "",
+            meta_description: (initialData as any).translations?.ar?.meta_description || "",
           },
-          category_ids: [],
-          tag_ids: [],
+          ru: {
+            title: (initialData as any).translations?.ru?.title || "",
+            excerpt: (initialData as any).translations?.ru?.excerpt || "",
+            content: (initialData as any).translations?.ru?.content || "",
+            meta_description: (initialData as any).translations?.ru?.meta_description || "",
+          },
+          es: {
+            title: (initialData as any).translations?.es?.title || "",
+            excerpt: (initialData as any).translations?.es?.excerpt || "",
+            content: (initialData as any).translations?.es?.content || "",
+            meta_description: (initialData as any).translations?.es?.meta_description || "",
+          },
         },
+        category_ids: (initialData as any).categories?.map((c: any) => c.category.id) || [],
+        tag_ids: (initialData as any).tags?.map((t: any) => t.tag.id) || [],
+      }
+      : {
+        slug: "",
+        status: "draft",
+        featured_image: null,
+        published_at: null,
+        meta_keywords: [],
+        is_featured: false,
+        translations: {
+          en: { title: "", excerpt: "", content: "", meta_description: "" },
+          ar: { title: "", excerpt: "", content: "", meta_description: "" },
+          ru: { title: "", excerpt: "", content: "", meta_description: "" },
+          es: { title: "", excerpt: "", content: "", meta_description: "" },
+        },
+        category_ids: [],
+        tag_ids: [],
+      },
   });
 
   // Auto-generate slug from English title
@@ -140,8 +140,8 @@ export function BlogForm({
   const enContent = form.watch("translations.en.content");
   const readingTime = enContent ? calculateReadingTime(enContent).minutes : 0;
 
-  const handleSubmit = async (data: BlogFormData) => {
-    await onSubmit(data);
+  const handleSubmit = async (data: any) => {
+    await onSubmit(data as BlogFormData);
   };
 
   const handlePublish = () => {

@@ -98,8 +98,8 @@ export interface BlogPostWithTranslations extends BlogPost {
 
 export interface BlogPostWithRelations extends BlogPost {
   translation: BlogPostTranslation; // Single locale translation
-  categories: Array<BlogCategory & { translation: BlogCategoryTranslation }>;
-  tags: Array<BlogTag & { translation: BlogTagTranslation }>;
+  categories: Array<{ category: BlogCategory & { translation: BlogCategoryTranslation } }>;
+  tags: Array<{ tag: BlogTag & { translation: BlogTagTranslation } }>;
   author?: {
     id: string;
     email: string;

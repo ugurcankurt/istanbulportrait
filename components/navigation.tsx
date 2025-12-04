@@ -57,7 +57,7 @@ export function Navigation() {
   const handleLocaleChange = (newLocale: string) => {
     // If we have dynamic route params (like [slug]), include them
     if (params && Object.keys(params).length > 0) {
-      router.push({ pathname, params }, { locale: newLocale });
+      router.push({ pathname, params } as any, { locale: newLocale });
     } else {
       router.push(pathname, { locale: newLocale });
     }

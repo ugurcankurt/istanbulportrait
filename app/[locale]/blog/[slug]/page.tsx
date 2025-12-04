@@ -98,98 +98,98 @@ export default async function BlogPostPage({
       "@id": `${schemaConfig.baseUrl}/${locale}/blog/${slug}`,
     },
     keywords: post.meta_keywords?.join(", ") || "",
-    articleSection: post.categories?.[0]?.category.translation.name || "Photography",
+    articleSection: post.categories?.[0]?.category?.translation?.name || "Photography",
     wordCount: post.translation.content?.split(" ").length || 0,
   };
 
   return (
     <div>
       {/* JSON-LD Structured Data for Article */}
-      <MultipleJsonLd schemas={[articleSchema]} />
+      <MultipleJsonLd schemas={[articleSchema as any]} />
 
       <BreadcrumbNav />
 
       <article className="container mx-auto px-4 py-12 max-w-4xl">
-      {/* Header */}
-      <header className="mb-8">
-        {post.featured_image && (
-          <div className="aspect-video mb-8 rounded-lg overflow-hidden">
-            <img
-              src={post.featured_image}
-              alt={post.translation.title}
-              className="w-full h-full object-cover"
-            />
+        {/* Header */}
+        <header className="mb-8">
+          {post.featured_image && (
+            <div className="aspect-video mb-8 rounded-lg overflow-hidden">
+              <img
+                src={post.featured_image}
+                alt={post.translation.title}
+                className="w-full h-full object-cover"
+              />
+            </div>
+          )}
+
+          <h1 className="text-4xl md:text-5xl font-bold mb-4">
+            {post.translation.title}
+          </h1>
+
+          <div className="flex flex-wrap gap-4 text-sm text-muted-foreground mb-6">
+            <time dateTime={post.published_at!}>
+              {formatBlogDate(post.published_at!, locale)}
+            </time>
+            <span>•</span>
+            <span>{t("reading_time", { minutes: post.reading_time_minutes })}</span>
           </div>
-        )}
 
-        <h1 className="text-4xl md:text-5xl font-bold mb-4">
-          {post.translation.title}
-        </h1>
+          {post.translation.excerpt && (
+            <p className="text-xl text-muted-foreground leading-relaxed">
+              {post.translation.excerpt}
+            </p>
+          )}
+        </header>
 
-        <div className="flex flex-wrap gap-4 text-sm text-muted-foreground mb-6">
-          <time dateTime={post.published_at!}>
-            {formatBlogDate(post.published_at!, locale)}
-          </time>
-          <span>•</span>
-          <span>{t("reading_time", { minutes: post.reading_time_minutes })}</span>
+        {/* Content */}
+        <div className="prose prose-lg dark:prose-invert max-w-none">
+          <ReactMarkdown remarkPlugins={[remarkGfm]}>
+            {post.translation.content}
+          </ReactMarkdown>
         </div>
 
-        {post.translation.excerpt && (
-          <p className="text-xl text-muted-foreground leading-relaxed">
-            {post.translation.excerpt}
-          </p>
-        )}
-      </header>
-
-      {/* Content */}
-      <div className="prose prose-lg dark:prose-invert max-w-none">
-        <ReactMarkdown remarkPlugins={[remarkGfm]}>
-          {post.translation.content}
-        </ReactMarkdown>
-      </div>
-
-      {/* Categories & Tags */}
-      <footer className="mt-12 pt-8 border-t">
-        <div className="grid md:grid-cols-2 gap-6">
-          {post.categories && post.categories.length > 0 && (
-            <div>
-              <h3 className="text-sm font-semibold mb-3">Categories</h3>
-              <div className="flex flex-wrap gap-2">
-                {post.categories.map((cat: any) => (
-                  <span
-                    key={cat.category.id}
-                    className="px-3 py-1 rounded-full text-sm font-medium"
-                    style={{
-                      backgroundColor: cat.category.color + "20",
-                      color: cat.category.color,
-                    }}
-                  >
-                    {cat.category.icon && <span className="mr-1">{cat.category.icon}</span>}
-                    {cat.category.translation?.name || cat.category.slug}
-                  </span>
-                ))}
+        {/* Categories & Tags */}
+        <footer className="mt-12 pt-8 border-t">
+          <div className="grid md:grid-cols-2 gap-6">
+            {post.categories && post.categories.length > 0 && (
+              <div>
+                <h3 className="text-sm font-semibold mb-3">Categories</h3>
+                <div className="flex flex-wrap gap-2">
+                  {post.categories.map((cat: any) => (
+                    <span
+                      key={cat.category.id}
+                      className="px-3 py-1 rounded-full text-sm font-medium"
+                      style={{
+                        backgroundColor: cat.category.color + "20",
+                        color: cat.category.color,
+                      }}
+                    >
+                      {cat.category.icon && <span className="mr-1">{cat.category.icon}</span>}
+                      {cat.category.translation?.name || cat.category.slug}
+                    </span>
+                  ))}
+                </div>
               </div>
-            </div>
-          )}
+            )}
 
-          {post.tags && post.tags.length > 0 && (
-            <div>
-              <h3 className="text-sm font-semibold mb-3">Tags</h3>
-              <div className="flex flex-wrap gap-2">
-                {post.tags.map((tag: any) => (
-                  <span
-                    key={tag.tag.id}
-                    className="px-3 py-1 bg-muted hover:bg-muted/80 rounded-full text-sm transition-colors"
-                  >
-                    #{tag.tag.translation?.name || tag.tag.slug}
-                  </span>
-                ))}
+            {post.tags && post.tags.length > 0 && (
+              <div>
+                <h3 className="text-sm font-semibold mb-3">Tags</h3>
+                <div className="flex flex-wrap gap-2">
+                  {post.tags.map((tag: any) => (
+                    <span
+                      key={tag.tag.id}
+                      className="px-3 py-1 bg-muted hover:bg-muted/80 rounded-full text-sm transition-colors"
+                    >
+                      #{tag.tag.translation?.name || tag.tag.slug}
+                    </span>
+                  ))}
+                </div>
               </div>
-            </div>
-          )}
-        </div>
-      </footer>
-    </article>
+            )}
+          </div>
+        </footer>
+      </article>
     </div>
   );
 }
