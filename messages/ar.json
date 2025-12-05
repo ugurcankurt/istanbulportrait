@@ -258,6 +258,7 @@
       "status_new": "جاري التهيئة...",
       "time_remaining": "الوقت المتبقي",
       "amount_label": "المبلغ",
+      "exchange_rate": "سعر الصرف",
       "instruction_1": "يرجى إكمال الدفع في الصفحة المفتوحة.",
       "open_payment_page": "فتح صفحة الدفع",
       "instruction_2": "لا تغلق هذه النافذة حتى يتم تأكيد الدفع.",

@@ -104,7 +104,9 @@ export async function POST(request: NextRequest) {
       success: true,
       idOrder: turinvoiceOrder.id,
       paymentUrl: turinvoiceOrder.paymentUrl,
-      amount: turinvoiceOrder.amount,
+      amountEUR: turinvoiceOrder.amountEUR,
+      amountTRY: turinvoiceOrder.amount,
+      exchangeRate: turinvoiceOrder.exchangeRate,
       currency: turinvoiceOrder.currency,
       state: turinvoiceOrder.state,
     });

@@ -257,6 +257,7 @@
       "status_new": "Inicializando...",
       "time_remaining": "Tiempo Restante",
       "amount_label": "Monto",
+      "exchange_rate": "Tipo de cambio",
       "instruction_1": "Por favor complete su pago en la página abierta.",
       "open_payment_page": "Abrir Página de Pago",
       "instruction_2": "No cierre esta ventana hasta que se confirme el pago.",

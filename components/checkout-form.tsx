@@ -76,8 +76,9 @@ export function CheckoutForm() {
   const [turinvoiceOrder, setTurinvoiceOrder] = useState<{
     idOrder: number;
     paymentUrl: string;
-    amount: number;
-    currency: string;
+    amountTRY: number;
+    amountEUR: number;
+    exchangeRate: number;
   } | null>(null);
 
   // IndexNow integration for automatic URL submission
@@ -146,13 +147,13 @@ export function CheckoutForm() {
 
   const packageInfo = selectedPackage
     ? {
-        name: _tPackages(`${selectedPackage}.title`),
-        price: packagePrices[selectedPackage],
-        duration: _tPackages(`${selectedPackage}.duration`),
-        photos: _tPackages(`${selectedPackage}.photos`),
-        locations: _tPackages(`${selectedPackage}.locations`),
-        features: _tPackages.raw(`${selectedPackage}.features`) as string[],
-      }
+      name: _tPackages(`${selectedPackage}.title`),
+      price: packagePrices[selectedPackage],
+      duration: _tPackages(`${selectedPackage}.duration`),
+      photos: _tPackages(`${selectedPackage}.photos`),
+      locations: _tPackages(`${selectedPackage}.locations`),
+      features: _tPackages.raw(`${selectedPackage}.features`) as string[],
+    }
     : null;
 
   // Track begin_checkout when component mounts with package data
@@ -344,8 +345,9 @@ export function CheckoutForm() {
         setTurinvoiceOrder({
           idOrder: data.idOrder,
           paymentUrl: data.paymentUrl,
-          amount: data.amount,
-          currency: data.currency,
+          amountTRY: data.amountTRY,
+          amountEUR: data.amountEUR,
+          exchangeRate: data.exchangeRate,
         });
       } else {
         throw new Error(data.error || t("error.payment_init_failed"));
@@ -675,11 +677,10 @@ export function CheckoutForm() {
                 <CardContent className="pt-4 space-y-3">
                   <div className="grid grid-cols-2 gap-3">
                     <div
-                      className={`relative flex flex-col items-center justify-center p-3 border-2 rounded-xl cursor-pointer transition-all hover:border-primary/50 ${
-                        paymentMethod === "iyzico"
-                          ? "border-primary bg-primary/5"
-                          : "border-muted bg-card"
-                      }`}
+                      className={`relative flex flex-col items-center justify-center p-3 border-2 rounded-xl cursor-pointer transition-all hover:border-primary/50 ${paymentMethod === "iyzico"
+                        ? "border-primary bg-primary/5"
+                        : "border-muted bg-card"
+                        }`}
                       onClick={() => setPaymentMethod("iyzico")}
                     >
                       <div className="h-10 sm:h-12 flex items-center justify-center mb-2 relative w-full">
@@ -701,11 +702,10 @@ export function CheckoutForm() {
                     </div>
 
                     <div
-                      className={`relative flex flex-col items-center justify-center p-3 border-2 rounded-xl cursor-pointer transition-all hover:border-primary/50 ${
-                        paymentMethod === "turinvoice"
-                          ? "border-primary bg-primary/5"
-                          : "border-muted bg-card"
-                      }`}
+                      className={`relative flex flex-col items-center justify-center p-3 border-2 rounded-xl cursor-pointer transition-all hover:border-primary/50 ${paymentMethod === "turinvoice"
+                        ? "border-primary bg-primary/5"
+                        : "border-muted bg-card"
+                        }`}
                       onClick={() => setPaymentMethod("turinvoice")}
                     >
                       <div className="h-12 sm:h-14 flex items-center justify-center mb-2 relative w-full">
@@ -782,8 +782,9 @@ export function CheckoutForm() {
                         <TurinvoicePayment
                           idOrder={turinvoiceOrder.idOrder}
                           paymentUrl={turinvoiceOrder.paymentUrl}
-                          amount={turinvoiceOrder.amount}
-                          currency={turinvoiceOrder.currency}
+                          amountTRY={turinvoiceOrder.amountTRY}
+                          amountEUR={turinvoiceOrder.amountEUR}
+                          exchangeRate={turinvoiceOrder.exchangeRate}
                           onSuccess={handleTurinvoiceSuccess}
                           onTimeout={() => setTurinvoiceOrder(null)}
                         />
@@ -834,11 +835,10 @@ export function CheckoutForm() {
                     <CardContent className="pt-4 space-y-4">
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div
-                          className={`relative flex flex-col items-center justify-center p-6 border-2 rounded-xl cursor-pointer transition-all hover:border-primary/50 ${
-                            paymentMethod === "iyzico"
-                              ? "border-primary bg-primary/5"
-                              : "border-muted bg-card"
-                          }`}
+                          className={`relative flex flex-col items-center justify-center p-6 border-2 rounded-xl cursor-pointer transition-all hover:border-primary/50 ${paymentMethod === "iyzico"
+                            ? "border-primary bg-primary/5"
+                            : "border-muted bg-card"
+                            }`}
                           onClick={() => setPaymentMethod("iyzico")}
                         >
                           <div className="h-10 sm:h-12 flex items-center justify-center mb-3">
@@ -859,11 +859,10 @@ export function CheckoutForm() {
                         </div>
 
                         <div
-                          className={`relative flex flex-col items-center justify-center p-6 border-2 rounded-xl cursor-pointer transition-all hover:border-primary/50 ${
-                            paymentMethod === "turinvoice"
-                              ? "border-primary bg-primary/5"
-                              : "border-muted bg-card"
-                          }`}
+                          className={`relative flex flex-col items-center justify-center p-6 border-2 rounded-xl cursor-pointer transition-all hover:border-primary/50 ${paymentMethod === "turinvoice"
+                            ? "border-primary bg-primary/5"
+                            : "border-muted bg-card"
+                            }`}
                           onClick={() => setPaymentMethod("turinvoice")}
                         >
                           <div className="h-12 sm:h-14 flex items-center justify-center mb-3">
@@ -939,8 +938,9 @@ export function CheckoutForm() {
                             <TurinvoicePayment
                               idOrder={turinvoiceOrder.idOrder}
                               paymentUrl={turinvoiceOrder.paymentUrl}
-                              amount={turinvoiceOrder.amount}
-                              currency={turinvoiceOrder.currency}
+                              amountTRY={turinvoiceOrder.amountTRY}
+                              amountEUR={turinvoiceOrder.amountEUR}
+                              exchangeRate={turinvoiceOrder.exchangeRate}
                               onSuccess={handleTurinvoiceSuccess}
                               onTimeout={() => setTurinvoiceOrder(null)}
                             />

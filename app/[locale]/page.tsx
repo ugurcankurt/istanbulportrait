@@ -5,6 +5,7 @@ import { HeroSection } from "@/components/hero-section";
 import { PackagesSection } from "@/components/packages-section";
 import { ReviewsSection } from "@/components/reviews";
 import { ToursSection } from "@/components/tours-section";
+import { WhyChooseSection } from "@/components/why-choose-section";
 import { getLocalizedPaths } from "@/lib/localized-url";
 import { SEO_CONFIG } from "@/lib/seo-config";
 import {
@@ -66,6 +67,7 @@ export default async function HomePage({
       <div className="overflow-hidden">
         <HeroSection />
         <GallerySectionWithSchema locale={locale} />
+        <WhyChooseSection />
         <PackagesSection />
         <ToursSection locale={locale} />
         <FAQSectionWithSchema locale={locale} />

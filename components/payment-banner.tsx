@@ -1,129 +1,123 @@
 "use client";
 
-import { Star } from "lucide-react";
-import Image from "next/image";
-import { useTranslations } from "next-intl";
+import { Calendar, Package } from "lucide-react";
 import { useEffect, useState } from "react";
-import type { GoogleReview } from "@/types/reviews";
+
+interface RecentBooking {
+  firstName: string;
+  packageId: string;
+  bookingDate: string;
+  createdAt: string;
+}
+
+const packageLabels: Record<string, string> = {
+  essential: "Essential",
+  premium: "Premium",
+  luxury: "Luxury",
+  rooftop: "Rooftop",
+};
 
 export function PaymentBanner() {
-  const t = useTranslations("payment_banner");
-  const [reviews, setReviews] = useState<GoogleReview[]>([]);
+  const [bookings, setBookings] = useState<RecentBooking[]>([]);
 
   useEffect(() => {
-    // Fetch reviews on client side
-    fetch("/api/reviews")
+    fetch("/api/recent-bookings")
       .then((res) => res.json())
       .then((data) => {
-        if (data.reviews && data.reviews.length > 0) {
-          setReviews(data.reviews);
+        if (data.bookings && data.bookings.length > 0) {
+          setBookings(data.bookings);
         }
       })
       .catch((error) => {
-        console.error("Error fetching reviews:", error);
+        console.error("Error fetching bookings:", error);
       });
   }, []);
 
-  const renderStars = (rating: number) => {
-    return (
-      <div className="flex items-center gap-0.5">
-        {[1, 2, 3, 4, 5].map((star) => (
-          <Star
-            key={star}
-            className={`w-3 h-3 ${
-              star <= rating
-                ? "fill-yellow-400 text-yellow-400"
-                : "fill-muted text-muted"
-            }`}
-          />
-        ))}
-      </div>
-    );
+  const formatDate = (dateString: string) => {
+    try {
+      const date = new Date(dateString);
+      return date.toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+      });
+    } catch {
+      return dateString;
+    }
   };
+
+  const getTimeAgo = (createdAt: string) => {
+    const now = new Date();
+    const created = new Date(createdAt);
+    const diffMs = now.getTime() - created.getTime();
+    const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+    const diffDays = Math.floor(diffHours / 24);
+
+    if (diffHours < 1) return "just now";
+    if (diffHours < 24) return `${diffHours}h ago`;
+    if (diffDays < 7) return `${diffDays}d ago`;
+    return formatDate(createdAt);
+  };
+
+  // Don't render if no bookings
+  if (bookings.length === 0) {
+    return null;
+  }
 
   return (
     <div className="bg-primary/5 border-b border-primary/10 overflow-hidden">
-      <div className="w-full">
-        <div className="flex flex-col md:flex-row items-center gap-2 md:gap-4 py-1.5 px-4 sm:px-6 lg:px-8">
-          {/* Left: Scrolling Reviews */}
-          <div className="flex-1 w-full overflow-hidden">
-            {reviews.length > 0 ? (
-              <div className="relative flex">
-                {/* First set of reviews */}
-                <div className="animate-marquee flex gap-6 md:gap-8 whitespace-nowrap shrink-0">
-                  {reviews.map((review, index) => (
-                    <div
-                      key={`set1-${review.id}-${index}`}
-                      className="inline-flex items-center gap-2 text-xs sm:text-sm text-muted-foreground"
-                    >
-                      {renderStars(review.rating)}
-                      <span className="font-semibold text-foreground">
-                        {review.author.name}
-                      </span>
-                      <span className="text-muted-foreground">•</span>
-                      <span className="italic">"{review.text}"</span>
-                    </div>
-                  ))}
-                </div>
-                {/* Second set of reviews (duplicate for seamless loop) */}
-                <div className="animate-marquee flex gap-6 md:gap-8 whitespace-nowrap shrink-0">
-                  {reviews.map((review, index) => (
-                    <div
-                      key={`set2-${review.id}-${index}`}
-                      className="inline-flex items-center gap-2 text-xs sm:text-sm text-muted-foreground"
-                    >
-                      {renderStars(review.rating)}
-                      <span className="font-semibold text-foreground">
-                        {review.author.name}
-                      </span>
-                      <span className="text-muted-foreground">•</span>
-                      <span className="italic">"{review.text}"</span>
-                    </div>
-                  ))}
-                </div>
+      <div className="w-full py-1.5 px-4 sm:px-6 lg:px-8">
+        <div className="relative flex overflow-hidden">
+          {/* First set of bookings */}
+          <div className="animate-marquee flex gap-6 md:gap-8 whitespace-nowrap shrink-0">
+            {bookings.map((booking, index) => (
+              <div
+                key={`set1-${index}`}
+                className="inline-flex items-center gap-2 text-xs sm:text-sm text-muted-foreground"
+              >
+                <span className="text-primary">✨</span>
+                <span className="font-semibold text-foreground">
+                  {booking.firstName}
+                </span>
+                <span className="text-muted-foreground">booked</span>
+                <span className="inline-flex items-center gap-1 font-medium text-primary">
+                  <Package className="w-3 h-3" />
+                  {packageLabels[booking.packageId] || booking.packageId}
+                </span>
+                <span className="inline-flex items-center gap-1 text-muted-foreground">
+                  <Calendar className="w-3 h-3" />
+                  {formatDate(booking.bookingDate)}
+                </span>
+                <span className="text-xs text-muted-foreground/60">
+                  ({getTimeAgo(booking.createdAt)})
+                </span>
               </div>
-            ) : (
-              <div className="text-center text-xs sm:text-sm text-muted-foreground">
-                <span className="hidden sm:inline">🔒</span> {t("message")}
-              </div>
-            )}
+            ))}
           </div>
-
-          {/* Right: Payment Info */}
-          <div className="flex items-center gap-2 sm:gap-3 shrink-0">
-            <span className="hidden md:inline text-xs sm:text-sm text-muted-foreground">
-              🔒 {t("message")}
-            </span>
-            <div className="flex items-center gap-2 sm:gap-3">
-              <a
-                href="https://www.iyzico.com/en/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="transition-opacity hover:opacity-100"
+          {/* Second set of bookings (duplicate for seamless loop) */}
+          <div className="animate-marquee flex gap-6 md:gap-8 whitespace-nowrap shrink-0">
+            {bookings.map((booking, index) => (
+              <div
+                key={`set2-${index}`}
+                className="inline-flex items-center gap-2 text-xs sm:text-sm text-muted-foreground"
               >
-                <Image
-                  src="/pay_with_iyzico_colored.svg"
-                  alt="Iyzico"
-                  width={50}
-                  height={5}
-                  className="object-contain opacity-70 hover:opacity-100 transition-opacity w-[50px] sm:w-[50px]"
-                />
-              </a>
-              <a
-                href="https://turinvoice.ru/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="transition-opacity hover:opacity-100"
-              >
-                <Image
-                  src="/turinvoice_logo.png"
-                  alt="Turinvoice"
-                  width={50}
-                  height={5}
-                  className="object-contain opacity-70 hover:opacity-100 transition-opacity w-[50px] sm:w-[50px]"
-                />
-              </a>
-            </div>
+                <span className="text-primary">✨</span>
+                <span className="font-semibold text-foreground">
+                  {booking.firstName}
+                </span>
+                <span className="text-muted-foreground">booked</span>
+                <span className="inline-flex items-center gap-1 font-medium text-primary">
+                  <Package className="w-3 h-3" />
+                  {packageLabels[booking.packageId] || booking.packageId}
+                </span>
+                <span className="inline-flex items-center gap-1 text-muted-foreground">
+                  <Calendar className="w-3 h-3" />
+                  {formatDate(booking.bookingDate)}
+                </span>
+                <span className="text-xs text-muted-foreground/60">
+                  ({getTimeAgo(booking.createdAt)})
+                </span>
+              </div>
+            ))}
           </div>
         </div>
       </div>
@@ -139,7 +133,7 @@ export function PaymentBanner() {
         }
 
         .animate-marquee {
-          animation: marquee 80s linear infinite;
+          animation: marquee 60s linear infinite;
         }
 
         .animate-marquee:hover {

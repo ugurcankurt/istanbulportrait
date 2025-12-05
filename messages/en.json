@@ -257,6 +257,7 @@
       "status_new": "Initializing...",
       "time_remaining": "Time Remaining",
       "amount_label": "Amount",
+      "exchange_rate": "Exchange Rate",
       "instruction_1": "Please complete your payment on the opened page.",
       "open_payment_page": "Open Payment Page",
       "instruction_2": "Do not close this window until payment is confirmed.",

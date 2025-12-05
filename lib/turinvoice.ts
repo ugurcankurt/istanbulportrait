@@ -3,7 +3,10 @@
  *
  * Integration with Turinvoice payment system for Russian customers.
  * Supports order creation, status polling, QR code generation, and refunds.
+ * Note: Turinvoice only supports TRY currency, so EUR amounts are converted.
  */
+
+import { convertEURtoTRY, getEURtoTRYRate } from "./currency";
 
 // Turinvoice API Configuration
 const TURINVOICE_BASE_URL = process.env.TURINVOICE_BASE_URL;
@@ -42,6 +45,8 @@ export interface TurinvoiceOrderRequest {
 export interface TurinvoiceOrder {
   id: number;
   amount: number;
+  amountEUR?: number; // Original EUR amount for reference
+  exchangeRate?: number; // EUR/TRY rate used for conversion
   currency: string;
   number: number;
   name: string;
@@ -122,10 +127,11 @@ export async function turinvoiceLogin(): Promise<string> {
 
 /**
  * Create a new order in Turinvoice
- * @param amountEUR Amount in EUR
+ * Note: Converts EUR to TRY as Turinvoice only supports TRY currency
+ * @param amountEUR Amount in EUR (will be converted to TRY)
  * @param orderName Order description
  * @param redirectURL Optional redirect URL after payment
- * @returns Created order details
+ * @returns Created order details with both TRY and original EUR amounts
  */
 export async function turinvoiceCreateOrder(
   amountEUR: number,
@@ -133,14 +139,22 @@ export async function turinvoiceCreateOrder(
   redirectURL?: string,
 ): Promise<TurinvoiceOrder> {
   try {
+    // Convert EUR to TRY
+    const exchangeRate = await getEURtoTRYRate();
+    const amountTRY = await convertEURtoTRY(amountEUR);
+
+    console.log(
+      `[Turinvoice] Converting ${amountEUR} EUR to ${amountTRY} TRY (rate: ${exchangeRate})`,
+    );
+
     // Login first to get session
     const sessionId = await turinvoiceLogin();
 
     const orderRequest: TurinvoiceOrderRequest = {
       idTSP: Number.parseInt(TURINVOICE_ID_TSP!),
-      amount: amountEUR,
+      amount: amountTRY,
       name: orderName,
-      currency: "EUR",
+      currency: "TRY",
       quantity: 1,
       callbackUrl: TURINVOICE_CALLBACK_URL!,
       ...(redirectURL && { redirectURL }),
@@ -159,7 +173,15 @@ export async function turinvoiceCreateOrder(
       if (response.status === 401) {
         throw new Error("Turinvoice session expired, please retry");
       }
-      throw new Error(`Turinvoice order creation failed: ${response.status}`);
+      // Log detailed error response for debugging
+      const errorBody = await response.text();
+      console.error("Turinvoice order creation failed:", {
+        status: response.status,
+        statusText: response.statusText,
+        body: errorBody,
+        requestPayload: orderRequest,
+      });
+      throw new Error(`Turinvoice order creation failed: ${response.status} - ${errorBody}`);
     }
 
     const data = await response.json();
@@ -168,8 +190,13 @@ export async function turinvoiceCreateOrder(
       throw new Error("No order ID received from Turinvoice");
     }
 
-    // Get full order details
-    return await turinvoiceGetOrderStatus(data.idOrder, sessionId);
+    // Get full order details and add EUR conversion info
+    const order = await turinvoiceGetOrderStatus(data.idOrder, sessionId);
+    return {
+      ...order,
+      amountEUR,
+      exchangeRate,
+    };
   } catch (error) {
     console.error("Turinvoice order creation error:", error);
     throw new Error(

@@ -1,5 +1,6 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
+import { convertEURtoTRY, getEURtoTRYRate } from "@/lib/currency";
 import {
   logError,
   PaymentError,
@@ -100,16 +101,25 @@ export async function POST(request: NextRequest) {
     // Generate unique conversation ID for this payment attempt
     const conversationId = `payment_${Date.now()}_${Math.random().toString(36).substring(2, 15)}`;
 
-    // Format price with proper decimal handling (max 2 decimal places)
-    const formattedPrice = parseFloat(amount.toString()).toFixed(2);
+    // Convert EUR to TRY for iyzico payment
+    const amountEUR = amount;
+    const exchangeRate = await getEURtoTRYRate();
+    const amountTRY = await convertEURtoTRY(amountEUR);
+
+    console.log(
+      `[iyzico] Converting ${amountEUR} EUR to ${amountTRY} TRY (rate: ${exchangeRate})`,
+    );
+
+    // Format TRY price with proper decimal handling (max 2 decimal places)
+    const formattedPriceTRY = amountTRY.toFixed(2);
 
     // Prepare Iyzico payment request with locale support
     const iyzicoLocale = mapLocaleToIyzico(locale || "en");
     const paymentRequest: PaymentRequest = {
       conversationId,
-      price: formattedPrice,
-      paidPrice: formattedPrice,
-      currency: "EUR",
+      price: formattedPriceTRY,
+      paidPrice: formattedPriceTRY,
+      currency: "TRY",
       basketId: `basket_${conversationId}`,
       locale: iyzicoLocale,
       paymentCard: {
@@ -150,7 +160,7 @@ export async function POST(request: NextRequest) {
           name: `Photography Package - ${packagePricing.displayName}`,
           category1: "Photography",
           itemType: "PHYSICAL",
-          price: formattedPrice,
+          price: formattedPriceTRY,
         },
       ],
     };
@@ -166,6 +176,9 @@ export async function POST(request: NextRequest) {
         status: "success",
         paymentId: paymentResult.paymentId || `demo_${Date.now()}`,
         conversationId,
+        amountEUR,
+        amountTRY,
+        exchangeRate,
       });
     } else {
       return NextResponse.json({

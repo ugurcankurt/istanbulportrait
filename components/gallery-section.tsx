@@ -113,6 +113,9 @@ export function GallerySection() {
           <p className="text-base sm:text-lg lg:text-xl text-muted-foreground max-w-3xl mx-auto px-2">
             {t("subtitle")}
           </p>
+          <p className="text-sm sm:text-base text-muted-foreground/80 max-w-4xl mx-auto px-4 mt-4">
+            {t("intro")}
+          </p>
         </motion.div>
 
         {/* Gallery Grid */}

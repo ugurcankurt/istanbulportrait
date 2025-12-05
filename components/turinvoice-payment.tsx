@@ -12,8 +12,9 @@ import { Separator } from "@/components/ui/separator";
 interface TurinvoicePaymentProps {
   idOrder: number;
   paymentUrl: string;
-  amount: number;
-  currency: string;
+  amountTRY: number;
+  amountEUR: number;
+  exchangeRate: number;
   onSuccess: () => void;
   onTimeout: () => void;
 }
@@ -21,8 +22,9 @@ interface TurinvoicePaymentProps {
 export function TurinvoicePayment({
   idOrder,
   paymentUrl,
-  amount,
-  currency,
+  amountTRY,
+  amountEUR,
+  exchangeRate,
   onSuccess,
   onTimeout,
 }: TurinvoicePaymentProps) {
@@ -146,12 +148,20 @@ export function TurinvoicePayment({
       </Alert>
 
       {/* Amount Display */}
-      <div className="bg-muted/50 rounded-lg p-4 border border-border">
+      <div className="bg-muted/50 rounded-lg p-4 border border-border space-y-3">
         <div className="flex justify-between items-center">
           <span className="text-muted-foreground">{t("amount_label")}</span>
-          <span className="text-2xl font-bold text-primary">
-            {amount} {currency}
-          </span>
+          <div className="text-right">
+            <div className="text-2xl font-bold text-primary">
+              €{amountEUR.toFixed(2)}
+            </div>
+            <div className="text-sm text-muted-foreground">
+              ≈ ₺{amountTRY.toFixed(2)} TRY
+            </div>
+          </div>
+        </div>
+        <div className="text-xs text-muted-foreground text-right border-t border-border/50 pt-2">
+          {t("exchange_rate")}: 1 EUR = {exchangeRate.toFixed(4)} TRY
         </div>
       </div>
 
