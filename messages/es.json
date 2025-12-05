@@ -18,7 +18,7 @@
     "direction": "ltr"
   },
   "hero": {
-    "title": "Fotógrafo Profesional de Estambul | Servicios de Fotografía en Estambul",
+    "title": "Fotógrafo en Estambul | Fotografía Profesional en Estambul",
     "subtitle": "Experto fotógrafo en Estambul para sesiones profesionales de retratos y lifestyle",
     "description": "Por Qué Elegir Nuestros Servicios de Fotografía en Estambul",
     "cta": "Reserva tu Sesión",
@@ -39,8 +39,9 @@
     }
   },
   "gallery": {
-    "title": "Nuestra Galería Fotográfica",
-    "subtitle": "Descubre la belleza de Estambul a través de nuestro lente. Navega por nuestra colección de sesiones de retratos, parejas y lifestyle."
+    "title": "Portafolio de Fotografía en Estambul",
+    "subtitle": "Descubre la belleza de Estambul a través de nuestro lente. Navega por nuestra colección de sesiones de retratos, parejas y lifestyle.",
+    "intro": "Explora impresionantes fotografías capturadas por tu fotógrafo profesional en Estambul. Nuestro portafolio muestra sesiones de parejas, sesiones en azoteas y fotografía de retratos en los lugares más emblemáticos de Estambul, incluyendo el Bósforo, la Torre de Gálata y el histórico Sultanahmet."
   },
   "packages": {
     "title": "Paquetes de Fotografía",
@@ -114,7 +115,8 @@
       "button": "Obtener Cotización Personalizada"
     },
     "sections": {
-      "available_packages": "Paquetes de Fotografía Disponibles"
+      "available_packages": "Paquetes de Fotógrafo en Estambul",
+      "intro": "Elige tu paquete de fotografía perfecto con el experto fotógrafo de Estambul. Todas las sesiones incluyen edición profesional, acceso a azoteas premium y fotos en los lugares más emblemáticos de la ciudad. Como tu fotógrafo dedicado en Estambul, aseguro que cada momento sea capturado hermosamente."
     }
   },
   "about": {
@@ -785,12 +787,31 @@
     }
   },
   "reviews": {
-    "title": "Lo Que Dicen Nuestros Clientes",
-    "subtitle": "Reseñas reales de nuestras sesiones de fotografía en Estambul",
+    "title": "Lo Que Dicen los Clientes Sobre Su Fotógrafo en Estambul",
+    "subtitle": "Reseñas reales de clientes satisfechos que nos eligieron para su experiencia fotográfica en Estambul",
     "total_reviews": "reseñas",
     "view_all": "Ver todas las reseñas en Google",
     "loading": "Cargando reseñas...",
     "error": "No se pueden cargar las reseñas en este momento"
+  },
+  "why_choose": {
+    "title": "¿Por Qué Elegir al Fotógrafo de Estambul?",
+    "subtitle": "Experimenta la diferencia con el servicio de fotografía premier de Estambul",
+    "intro": "Como tu fotógrafo dedicado en Estambul, combino experiencia local, equipo profesional y pasión por crear recuerdos inolvidables en una de las ciudades más fotogénicas del mundo.",
+    "features": {
+      "local_knowledge": {
+        "title": "Conocimiento Local Experto",
+        "description": "Más de 8 años fotografiando en las joyas ocultas de Estambul. Conozco las mejores azoteas, miradores secretos y el momento perfecto para la hora dorada en el Bósforo, Gálata y Sultanahmet."
+      },
+      "premium_equipment": {
+        "title": "Equipo Premium",
+        "description": "Cámaras Sony de grado profesional y lentes premium aseguran fotos impresionantes de alta resolución. Cada sesión incluye edición experta y corrección de color para resultados dignos de revista."
+      },
+      "fast_delivery": {
+        "title": "Entrega el Mismo Día",
+        "description": "Obtén tus fotos editadas profesionalmente en 24-48 horas. Perfecto para compartir tus recuerdos de Estambul antes de que siquiera dejes la ciudad."
+      }
+    }
   },
   "pricing": {
     "base_price": "Precio Base",

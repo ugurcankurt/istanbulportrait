@@ -19,7 +19,7 @@
     "direction": "ltr"
   },
   "hero": {
-    "title": "Professional Photography in Istanbul | Award-Winning Photographer",
+    "title": "Istanbul Photographer | Professional Photography in Istanbul",
     "subtitle": "Expert Istanbul photographer for professional portrait, wedding and couple photography sessions",
     "description": "Why Choose Our Istanbul Photography Services",
     "cta": "Book Your Session",
@@ -40,8 +40,9 @@
     }
   },
   "gallery": {
-    "title": "Our Photography Gallery",
-    "subtitle": "Discover the beauty of Istanbul through our lens. Browse through our collection of portrait, couple, and lifestyle photography sessions."
+    "title": "Istanbul Photography Portfolio",
+    "subtitle": "Discover the beauty of Istanbul through our lens. Browse through our collection of portrait, couple, and lifestyle photography sessions.",
+    "intro": "Explore stunning photography captured by your professional Istanbul photographer. Our portfolio showcases couple photoshoots, rooftop sessions, and portrait photography across Istanbul's most iconic locations including the Bosphorus, Galata Tower, and historic Sultanahmet."
   },
   "packages": {
     "title": "Photography Packages",
@@ -115,7 +116,8 @@
       "button": "Get Custom Quote"
     },
     "sections": {
-      "available_packages": "Available Photography Packages"
+      "available_packages": "Istanbul Photographer Packages",
+      "intro": "Choose your perfect photography package with Istanbul's expert photographer. All sessions include professional editing, premium rooftop access, and photos at the city's most iconic locations. As your dedicated Istanbul photographer, I ensure every moment is captured beautifully."
     }
   },
   "about": {
@@ -834,12 +836,31 @@
     }
   },
   "reviews": {
-    "title": "What Our Clients Say",
-    "subtitle": "Real reviews from our photography sessions in Istanbul",
+    "title": "What Clients Say About Their Istanbul Photographer",
+    "subtitle": "Real reviews from satisfied photography clients who chose us for their Istanbul photoshoot experience",
     "total_reviews": "reviews",
     "view_all": "View all reviews on Google",
     "loading": "Loading reviews...",
     "error": "Unable to load reviews at this time"
+  },
+  "why_choose": {
+    "title": "Why Choose Istanbul Photographer?",
+    "subtitle": "Experience the difference with Istanbul's premier photography service",
+    "intro": "As your dedicated Istanbul photographer, I bring together local expertise, professional equipment, and a passion for creating unforgettable memories in one of the world's most photogenic cities.",
+    "features": {
+      "local_knowledge": {
+        "title": "Expert Local Knowledge",
+        "description": "8+ years photographing in Istanbul's hidden gems. I know the best rooftops, secret viewpoints, and perfect timing for golden hour shots across the Bosphorus, Galata, and Sultanahmet."
+      },
+      "premium_equipment": {
+        "title": "Premium Equipment",
+        "description": "Professional-grade Sony cameras and premium lenses ensure stunning, high-resolution photos. Every session includes expert editing and color grading for magazine-worthy results."
+      },
+      "fast_delivery": {
+        "title": "Same-Day Delivery",
+        "description": "Get your professionally edited photos within 24-48 hours. Perfect for sharing your Istanbul memories before you even leave the city."
+      }
+    }
   },
   "pricing": {
     "base_price": "Base Price",
