@@ -5,6 +5,9 @@ export const routing = defineRouting({
   locales: ["en", "ar", "ru", "es", "zh"],
   defaultLocale: "en",
   localeDetection: true,
+  // Disable automatic hreflang headers - we manage them in page metadata
+  // This prevents conflict between header and HTML hreflang tags
+  alternateLinks: false,
   pathnames: {
     "/": "/",
     "/packages": {
