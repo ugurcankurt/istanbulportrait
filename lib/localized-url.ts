@@ -22,6 +22,7 @@ export function getLocalizedPaths(
         ar: `${baseUrl}/ar${pathname === "/" ? "" : pathname}`,
         ru: `${baseUrl}/ru${pathname === "/" ? "" : pathname}`,
         es: `${baseUrl}/es${pathname === "/" ? "" : pathname}`,
+        zh: `${baseUrl}/zh${pathname === "/" ? "" : pathname}`,
       },
     };
   }
@@ -35,6 +36,7 @@ export function getLocalizedPaths(
       ar: `${baseUrl}/ar${pathConfig.ar}`,
       ru: `${baseUrl}/ru${pathConfig.ru}`,
       es: `${baseUrl}/es${pathConfig.es}`,
+      zh: `${baseUrl}/zh${pathConfig.zh}`,
     },
   };
 }

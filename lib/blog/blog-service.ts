@@ -122,7 +122,7 @@ export async function getPublishedBlogPosts(
         ...cat.category,
         translation: Array.isArray(cat.category.translations)
           ? cat.category.translations.find((t: any) => t.locale === locale) ||
-            cat.category.translations[0]
+          cat.category.translations[0]
           : cat.category.translations,
       },
     })),
@@ -132,7 +132,7 @@ export async function getPublishedBlogPosts(
         ...tag.tag,
         translation: Array.isArray(tag.tag.translations)
           ? tag.tag.translations.find((t: any) => t.locale === locale) ||
-            tag.tag.translations[0]
+          tag.tag.translations[0]
           : tag.tag.translations,
       },
     })),
@@ -252,7 +252,7 @@ export async function getAllBlogPosts(
         ...cat.category,
         translation: Array.isArray(cat.category.translations)
           ? cat.category.translations.find((t: any) => t.locale === locale) ||
-            cat.category.translations[0]
+          cat.category.translations[0]
           : cat.category.translations,
       },
     })),
@@ -262,7 +262,7 @@ export async function getAllBlogPosts(
         ...tag.tag,
         translation: Array.isArray(tag.tag.translations)
           ? tag.tag.translations.find((t: any) => t.locale === locale) ||
-            tag.tag.translations[0]
+          tag.tag.translations[0]
           : tag.tag.translations,
       },
     })),
@@ -338,7 +338,7 @@ export async function getBlogPostBySlug(
         ...cat.category,
         translation: Array.isArray(cat.category.translations)
           ? cat.category.translations.find((t: any) => t.locale === locale) ||
-            cat.category.translations[0]
+          cat.category.translations[0]
           : cat.category.translations,
       },
     })),
@@ -348,7 +348,7 @@ export async function getBlogPostBySlug(
         ...tag.tag,
         translation: Array.isArray(tag.tag.translations)
           ? tag.tag.translations.find((t: any) => t.locale === locale) ||
-            tag.tag.translations[0]
+          tag.tag.translations[0]
           : tag.tag.translations,
       },
     })),
@@ -416,7 +416,7 @@ export async function getBlogPostById(
         ...cat.category,
         translation: Array.isArray(cat.category.translations)
           ? cat.category.translations.find((t: any) => t.locale === locale) ||
-            cat.category.translations[0]
+          cat.category.translations[0]
           : cat.category.translations,
       },
     })),
@@ -426,7 +426,7 @@ export async function getBlogPostById(
         ...tag.tag,
         translation: Array.isArray(tag.tag.translations)
           ? tag.tag.translations.find((t: any) => t.locale === locale) ||
-            tag.tag.translations[0]
+          tag.tag.translations[0]
           : tag.tag.translations,
       },
     })),
@@ -1264,6 +1264,39 @@ export async function getAllPublishedSlugs(): Promise<string[]> {
   }
 
   return data.map((post) => post.slug);
+}
+
+/**
+ * Blog post data for sitemap generation
+ */
+export interface BlogPostSitemapData {
+  slug: string;
+  published_at: string;
+  updated_at: string;
+}
+
+/**
+ * Get all published posts with dates for sitemap generation
+ * Returns slug, published_at, and updated_at for proper lastmod
+ */
+export async function getAllPublishedSlugsWithDates(): Promise<BlogPostSitemapData[]> {
+  const { data, error } = await supabaseAdmin
+    .from("blog_posts")
+    .select("slug, published_at, updated_at")
+    .eq("status", "published")
+    .not("published_at", "is", null)
+    .order("published_at", { ascending: false });
+
+  if (error) {
+    console.error("Error fetching slugs with dates:", error);
+    return [];
+  }
+
+  return data.map((post) => ({
+    slug: post.slug,
+    published_at: post.published_at!,
+    updated_at: post.updated_at,
+  }));
 }
 
 /**

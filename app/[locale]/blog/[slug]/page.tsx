@@ -61,11 +61,13 @@ export async function generateMetadata({
       images: post.featured_image ? [post.featured_image] : [],
     },
     alternates: {
+      canonical: `${SEO_CONFIG.site.url}/${locale}/blog/${slug}`,
       languages: {
         en: `/en/blog/${slug}`,
         ar: `/ar/blog/${slug}`,
         ru: `/ru/blog/${slug}`,
         es: `/es/blog/${slug}`,
+        zh: `/zh/blog/${slug}`,
       },
     },
   };
