@@ -20,6 +20,15 @@ export {
   generateToursItemListSchema,
   generateToursListSchema,
 } from "./generators";
+// AI-Optimized Schema Generators
+export {
+  generateAIAnswersSchema,
+  generateAILocalBusinessSchema,
+  generateAIOptimizedArticleSchema,
+  generateAIOptimizedFAQSchema,
+  generateSpeakableSchema,
+  generateWebSiteSchema,
+} from "./ai-schemas";
 // Components
 export { JsonLd, MultipleJsonLd } from "./json-ld";
 // Types

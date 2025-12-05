@@ -13,6 +13,11 @@ import { YandexMetrica } from "@/components/analytics/yandex-metrica";
 import { ConsentGate } from "@/components/consent-gate";
 import { ConsentProvider } from "@/contexts/consent-context";
 import { SEO_CONFIG } from "@/lib/seo-config";
+import {
+  createSchemaConfig,
+  generateWebSiteSchema,
+  JsonLd,
+} from "@/lib/structured-data";
 import "../globals.css";
 import { ThemeProvider } from "next-themes";
 import { Footer } from "@/components/footer";
@@ -164,6 +169,9 @@ export default async function LocaleLayout({
         >
           <ConsentProvider>
             <NextIntlClientProvider messages={messages}>
+              {/* WebSite Schema for AI Overview & Sitelinks Search Box */}
+              <JsonLd data={generateWebSiteSchema(createSchemaConfig(locale))} />
+
               <div className="flex min-h-screen flex-col">
                 <PaymentBanner />
                 <Navigation />

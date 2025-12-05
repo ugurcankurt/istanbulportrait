@@ -86,10 +86,11 @@ export default async function BlogPostPage({
   // Create schema configuration
   const schemaConfig = createSchemaConfig(locale);
 
-  // Generate Article schema
+  // Generate AI-optimized Article schema with SpeakableSpecification
   const articleSchema = {
     "@context": "https://schema.org" as const,
     "@type": "BlogPosting" as const,
+    "@id": `${schemaConfig.baseUrl}/${locale}/blog/${slug}#article`,
     headline: post.translation.title,
     description:
       post.translation.excerpt || post.translation.meta_description || "",
@@ -100,20 +101,33 @@ export default async function BlogPostPage({
     dateModified: post.updated_at,
     author: {
       "@type": "Person" as const,
-      name: SEO_CONFIG.organization.name,
-      url: schemaConfig.baseUrl,
+      name: SEO_CONFIG.person.name,
+      url: `${schemaConfig.baseUrl}/${locale}/about`,
+      image: SEO_CONFIG.person.image,
+      jobTitle: SEO_CONFIG.person.jobTitle,
     },
     publisher: {
       "@type": "Organization" as const,
+      "@id": `${schemaConfig.baseUrl}/#organization`,
       name: SEO_CONFIG.organization.name,
       logo: {
         "@type": "ImageObject" as const,
-        url: `${schemaConfig.baseUrl}${SEO_CONFIG.images.logo}`,
+        url: SEO_CONFIG.organization.logo,
       },
     },
     mainEntityOfPage: {
       "@type": "WebPage" as const,
       "@id": `${schemaConfig.baseUrl}/${locale}/blog/${slug}`,
+    },
+    // AI Overview & Voice Search: SpeakableSpecification
+    speakable: {
+      "@type": "SpeakableSpecification" as const,
+      cssSelector: [
+        "article h1",
+        "article h2",
+        ".blog-summary p",
+        "article > div.prose > p:first-of-type",
+      ],
     },
     keywords: post.meta_keywords?.join(", ") || "",
     articleSection:
@@ -121,6 +135,13 @@ export default async function BlogPostPage({
         ? post.categories[0].category.translation?.name || "Photography"
         : "Photography",
     wordCount: post.translation.content?.split(" ").length || 0,
+    timeRequired: `PT${post.reading_time_minutes}M`,
+    inLanguage: locale,
+    // About entity for AI context
+    about: {
+      "@type": "Thing" as const,
+      name: "Istanbul Photography",
+    },
   };
 
   return (

@@ -20,6 +20,7 @@ import type {
   Product,
   Review,
   Service,
+  WebSite,
   WithContext,
 } from "schema-dts";
 
@@ -44,6 +45,7 @@ export type BreadcrumbListSchema = WithContext<BreadcrumbList>;
 export type ItemListSchema = WithContext<ItemList>;
 export type ImageGallerySchema = WithContext<ImageGallery>;
 export type HowToSchema = WithContext<HowTo>;
+export type WebSiteSchema = WithContext<WebSite>;
 
 // Helper schemas
 export type PostalAddressSchema = PostalAddress;
