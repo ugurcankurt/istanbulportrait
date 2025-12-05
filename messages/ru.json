@@ -1,4 +1,7 @@
 {
+  "payment_banner": {
+    "message": "Безопасная оплата"
+  },
   "nav": {
     "home": "Главная",
     "packages": "Пакеты",
@@ -198,9 +201,6 @@
       "month_short": "ММ",
       "year_short": "ГГ"
     },
-    "payment_method": "Способ оплаты",
-    "payment_method_iyzico": "Кредитная карта (Iyzico)",
-    "payment_method_turinvoice": "Российские карты (Turinvoice)",
     "buttons": {
       "continue": "Продолжить",
       "back": "Назад",
@@ -210,8 +210,8 @@
       "complete_booking": "Завершить бронирование",
       "pay_amount": "ЗАПЛАТИТЬ {amount}",
       "processing": "Обработка...",
-      "continue_payment": "Перейти к оплате",
-      "book_another": "Забронировать еще одну сессию"
+      "book_another": "Забронировать еще одну сессию",
+      "pay_with_turinvoice": "Оплатить через Turinvoice"
     },
     "success": {
       "title": "Бронирование подтверждено!",
@@ -245,30 +245,30 @@
       "complete_description": "Завершите бронирование, введя платежную информацию",
       "secure_no_fees": "Безопасный платеж • Без скрытых комиссий"
     },
+    "payment_method": "Способ оплаты",
+    "payment_methods": {
+      "credit_card": "Кредитная/Дебетовая карта",
+      "russian_banks": "MIR & СБП"
+    },
+    "turinvoice_description": "Вы будете перенаправлены на защищенную страницу оплаты Turinvoice.",
     "turinvoice": {
       "title": "Оплата Turinvoice",
-      "description": "Безопасная оплата российскими банковскими картами через Turinvoice.",
-      "status_new": "Новый",
-      "status_paying": "Обработка",
-      "status_paid": "Оплачено",
-      "status_timeout": "Время истекло",
+      "status_new": "Инициализация...",
       "time_remaining": "Осталось времени",
       "amount_label": "Сумма",
-      "instruction_1": "Нажмите кнопку ниже, чтобы открыть безопасную страницу оплаты.",
+      "instruction_1": "Пожалуйста, завершите оплату на открывшейся странице.",
       "open_payment_page": "Открыть страницу оплаты",
-      "instruction_2": "После оплаты эта страница автоматически обновится.",
-      "payment_successful": "Платеж успешен",
-      "confirmation_message": "Ваш платеж подтвержден.",
-      "payment_timeout": "Время платежа истекло",
-      "timeout_message": "Сеанс оплаты истек. Пожалуйста, попробуйте снова.",
+      "instruction_2": "Не закрывайте это окно до подтверждения платежа.",
       "security_notice": "Безопасная оплата через Turinvoice",
-      "loading_qr": "Загрузка QR-кода...",
-      "scan_qr_description": "Отсканируйте этот QR-код в банковском приложении для оплаты",
-      "or_pay_via_link": "ИЛИ ОПЛАТИТЕ ПО ССЫЛКЕ"
+      "status_paying": "Ожидание платежа...",
+      "status_paid": "Платеж успешен!",
+      "status_timeout": "Время платежа истекло",
+      "success_message": "Ваш платеж подтвержден.",
+      "redirect_message": "Перенаправление...",
+      "timeout_message": "Сеанс оплаты истек.",
+      "timeout_desc": "Пожалуйста, попробуйте еще раз, чтобы перезапустить процесс оплаты.",
+      "try_again": "Попробовать снова"
     }
-  },
-  "payment_banner": {
-    "message": "Принимаем безопасные платежи через Iyzico и Turinvoice"
   },
   "validation": {
     "package_required": "Выбор пакета обязателен",

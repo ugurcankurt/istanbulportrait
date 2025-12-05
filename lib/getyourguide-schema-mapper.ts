@@ -102,19 +102,23 @@ export function generateTourFAQSchema(locale: string = "en") {
     en: [
       {
         question: "How do I book a tour in Istanbul?",
-        answer: "You can easily book tours through our GetYourGuide widgets on each tour page. Simply select your preferred date and complete the booking process.",
+        answer:
+          "You can easily book tours through our GetYourGuide widgets on each tour page. Simply select your preferred date and complete the booking process.",
       },
       {
         question: "Are the tours available in multiple languages?",
-        answer: "Yes, many tours offer guides speaking English, Turkish, Arabic, Russian, and Spanish. Check individual tour details for language availability.",
+        answer:
+          "Yes, many tours offer guides speaking English, Turkish, Arabic, Russian, and Spanish. Check individual tour details for language availability.",
       },
       {
         question: "What is the cancellation policy?",
-        answer: "Most tours offer free cancellation up to 24 hours before the tour date. Specific cancellation terms are available on each tour's booking page.",
+        answer:
+          "Most tours offer free cancellation up to 24 hours before the tour date. Specific cancellation terms are available on each tour's booking page.",
       },
       {
         question: "Can I combine photography sessions with tours?",
-        answer: "Absolutely! We offer special packages that combine professional photography sessions with guided tours for the ultimate Istanbul experience.",
+        answer:
+          "Absolutely! We offer special packages that combine professional photography sessions with guided tours for the ultimate Istanbul experience.",
       },
     ],
     // Add other languages as needed

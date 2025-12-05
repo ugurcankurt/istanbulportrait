@@ -1,9 +1,9 @@
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
 import type {
+  BlogCategoryWithTranslation,
   BlogFilters,
   BlogPostWithRelations,
-  BlogCategoryWithTranslation,
   BlogTagWithTranslation,
   Locale,
 } from "@/types/blog";
@@ -29,7 +29,9 @@ interface BlogState {
   filters: BlogFilters;
 
   // Actions - Posts
-  fetchPosts: (params?: Partial<BlogFilters & { page?: number }>) => Promise<void>;
+  fetchPosts: (
+    params?: Partial<BlogFilters & { page?: number }>,
+  ) => Promise<void>;
   fetchPostById: (id: string, locale?: Locale) => Promise<void>;
   createPost: (data: any) => Promise<boolean>;
   updatePost: (id: string, data: any) => Promise<boolean>;
@@ -103,10 +105,14 @@ export const useBlogStore = create<BlogState>()(
           });
 
           if (filters.search) queryParams.set("search", filters.search);
-          if (filters.status !== "all") queryParams.set("status", filters.status);
-          if (filters.category_id !== "all") queryParams.set("category_id", filters.category_id);
-          if (filters.tag_id !== "all") queryParams.set("tag_id", filters.tag_id);
-          if (filters.is_featured !== "all") queryParams.set("is_featured", String(filters.is_featured));
+          if (filters.status !== "all")
+            queryParams.set("status", filters.status);
+          if (filters.category_id !== "all")
+            queryParams.set("category_id", filters.category_id);
+          if (filters.tag_id !== "all")
+            queryParams.set("tag_id", filters.tag_id);
+          if (filters.is_featured !== "all")
+            queryParams.set("is_featured", String(filters.is_featured));
 
           const response = await fetch(`/api/admin/blog?${queryParams}`);
 
@@ -126,7 +132,9 @@ export const useBlogStore = create<BlogState>()(
         } catch (error) {
           console.error("Blog Store: Fetch error:", error);
           const errorMessage =
-            error instanceof Error ? error.message : "Failed to fetch blog posts";
+            error instanceof Error
+              ? error.message
+              : "Failed to fetch blog posts";
 
           set({
             posts: [],
@@ -142,7 +150,9 @@ export const useBlogStore = create<BlogState>()(
         set({ loading: true, error: null });
 
         try {
-          const response = await fetch(`/api/admin/blog/${id}?locale=${locale}`);
+          const response = await fetch(
+            `/api/admin/blog/${id}?locale=${locale}`,
+          );
 
           if (!response.ok) {
             throw new Error("Post not found");
@@ -160,7 +170,8 @@ export const useBlogStore = create<BlogState>()(
           set({
             currentPost: null,
             loading: false,
-            error: error instanceof Error ? error.message : "Failed to fetch post",
+            error:
+              error instanceof Error ? error.message : "Failed to fetch post",
           });
         }
       },
@@ -193,7 +204,8 @@ export const useBlogStore = create<BlogState>()(
           console.error("Blog Store: Create error:", error);
           set({
             loading: false,
-            error: error instanceof Error ? error.message : "Failed to create post",
+            error:
+              error instanceof Error ? error.message : "Failed to create post",
           });
           return false;
         }
@@ -225,7 +237,8 @@ export const useBlogStore = create<BlogState>()(
           console.error("Blog Store: Update error:", error);
           set({
             loading: false,
-            error: error instanceof Error ? error.message : "Failed to update post",
+            error:
+              error instanceof Error ? error.message : "Failed to update post",
           });
           return false;
         }
@@ -254,7 +267,8 @@ export const useBlogStore = create<BlogState>()(
           console.error("Blog Store: Delete error:", error);
           set({
             loading: false,
-            error: error instanceof Error ? error.message : "Failed to delete post",
+            error:
+              error instanceof Error ? error.message : "Failed to delete post",
           });
           return false;
         }
@@ -263,7 +277,9 @@ export const useBlogStore = create<BlogState>()(
       // Fetch categories
       fetchCategories: async (locale: Locale = "en") => {
         try {
-          const response = await fetch(`/api/admin/blog-categories?locale=${locale}`);
+          const response = await fetch(
+            `/api/admin/blog-categories?locale=${locale}`,
+          );
 
           if (!response.ok) {
             throw new Error("Failed to fetch categories");

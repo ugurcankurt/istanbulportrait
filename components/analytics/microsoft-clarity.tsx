@@ -6,7 +6,9 @@ export function MicrosoftClarity() {
   const clarityId = process.env.NEXT_PUBLIC_CLARITY_PROJECT_ID;
 
   if (!clarityId) {
-    console.warn("Microsoft Clarity Project ID not found. Add NEXT_PUBLIC_CLARITY_PROJECT_ID to .env.local");
+    console.warn(
+      "Microsoft Clarity Project ID not found. Add NEXT_PUBLIC_CLARITY_PROJECT_ID to .env.local",
+    );
     return null;
   }
 
@@ -14,6 +16,7 @@ export function MicrosoftClarity() {
     <Script
       id="ms-clarity"
       strategy="afterInteractive"
+      // biome-ignore lint/security/noDangerouslySetInnerHtml: Microsoft Clarity requires inline script
       dangerouslySetInnerHTML={{
         __html: `
           (function(c,l,a,r,i,t,y){

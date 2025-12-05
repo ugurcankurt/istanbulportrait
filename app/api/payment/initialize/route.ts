@@ -1,8 +1,6 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import {
-  DatabaseConnectionError,
-  handleSupabaseError,
   logError,
   PaymentError,
   sanitizeErrorForProduction,
@@ -11,14 +9,12 @@ import {
 import type { PaymentRequest } from "@/lib/iyzico";
 import { initializePayment } from "@/lib/iyzico";
 import { mapLocaleToIyzico } from "@/lib/iyzico-errors";
-import { formatPackagePricing, getPackagePricing } from "@/lib/pricing";
+import { getPackagePricing } from "@/lib/pricing";
 import {
   checkRateLimit,
   createRateLimitError,
   getClientIP,
 } from "@/lib/rate-limit";
-import { sendBookingConfirmation } from "@/lib/resend";
-import { supabaseAdmin } from "@/lib/supabase";
 import type { PackageId } from "@/lib/validations";
 
 export async function POST(request: NextRequest) {
@@ -162,7 +158,7 @@ export async function POST(request: NextRequest) {
     // Initialize payment with Iyzico
     const paymentResult = await initializePayment(paymentRequest);
 
-    const duration = Date.now() - startTime;
+    const _duration = Date.now() - startTime;
 
     if (paymentResult.status === "success") {
       return NextResponse.json({

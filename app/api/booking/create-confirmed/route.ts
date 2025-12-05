@@ -140,7 +140,9 @@ export async function POST(request: NextRequest) {
           status: "success",
           amount: totalAmount,
           currency: "EUR",
-          provider: "iyzico",
+          provider: body.provider || "iyzico",
+          provider_order_id:
+            body.provider === "turinvoice" ? paymentId : undefined,
         });
 
       if (paymentInsertError) {

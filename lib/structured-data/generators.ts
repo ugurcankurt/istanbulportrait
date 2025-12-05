@@ -99,7 +99,7 @@ export function generateLocalBusinessSchema(
       "Sultanahmet Photography",
       "Professional Photography Techniques",
       "Tourism Photography",
-      "Wedding Photography"
+      "Wedding Photography",
     ],
     hasOfferCatalog: {
       "@type": "OfferCatalog",
@@ -429,7 +429,9 @@ export function generateImageGallerySchema(
       caption: img.caption,
       creditText: img.creditText || `Photography by ${SEO_CONFIG.person.name}`,
       license: img.license || `${baseUrl}/privacy#image-license`,
-      copyrightNotice: img.copyrightNotice || `© ${new Date().getFullYear()} ${SEO_CONFIG.organization.name}`,
+      copyrightNotice:
+        img.copyrightNotice ||
+        `© ${new Date().getFullYear()} ${SEO_CONFIG.organization.name}`,
       acquireLicensePage: img.acquireLicensePage || `${baseUrl}/contact`,
       creator: {
         "@type": "Person" as const,
@@ -681,7 +683,7 @@ export function generateEnhancedLocalBusinessSchema(
       "Sultanahmet Photography",
       "Professional Photography Techniques",
       "Tourism Photography",
-      "Wedding Photography"
+      "Wedding Photography",
     ],
     hasOfferCatalog: {
       "@type": "OfferCatalog",

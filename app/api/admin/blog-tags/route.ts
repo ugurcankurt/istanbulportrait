@@ -1,16 +1,14 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { createBlogTag, getBlogTags } from "@/lib/blog/blog-service";
-import {
-  logError,
-  sanitizeErrorForProduction,
-} from "@/lib/errors";
+import { logError, sanitizeErrorForProduction } from "@/lib/errors";
 import {
   checkRateLimit,
   createRateLimitError,
   getClientIP,
 } from "@/lib/rate-limit";
 import { tagFormSchema } from "@/lib/validations/blog-validations";
+import type { Locale } from "@/types/blog";
 
 export async function GET(request: NextRequest) {
   try {
@@ -28,7 +26,7 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const locale = searchParams.get("locale") || "en";
 
-    const result = await getBlogTags(locale as any);
+    const result = await getBlogTags(locale as Locale);
 
     return NextResponse.json(result);
   } catch (error: unknown) {

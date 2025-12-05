@@ -3,8 +3,8 @@
  * SEO optimization for blog posts
  */
 
-import type { BlogPostWithRelations, Locale } from "@/types/blog";
 import { SEO_CONFIG } from "@/lib/seo-config";
+import type { BlogPostWithRelations, Locale } from "@/types/blog";
 import { stripMarkdown } from "./blog-utils";
 
 export function generateBlogPostingSchema(

@@ -4,15 +4,15 @@
  */
 
 import type {
+  GetYourGuideWidgetConfig,
   TourCategory,
-  GetYourGuideWidgetConfig
 } from "@/types/getyourguide";
 import {
-  ISTANBUL_TOURS,
-  TOUR_CATEGORIES,
+  buildBookingUrl,
   GETYOURGUIDE_CONFIG,
   GETYOURGUIDE_LOCALE_MAP,
-  buildBookingUrl
+  ISTANBUL_TOURS,
+  TOUR_CATEGORIES,
 } from "@/types/getyourguide";
 
 // Re-export commonly used types and constants
@@ -52,7 +52,10 @@ export function getPopularIstanbulTours(limit: number = 6): string[] {
 /**
  * Get tours by category
  */
-export function getToursByCategory(category: TourCategory, limit?: number): string[] {
+export function getToursByCategory(
+  category: TourCategory,
+  limit?: number,
+): string[] {
   const tours = TOUR_CATEGORIES[category] || [];
   return limit ? tours.slice(0, limit) : tours;
 }
@@ -62,7 +65,10 @@ export function getToursByCategory(category: TourCategory, limit?: number): stri
 /**
  * Build GetYourGuide booking URL with affiliate parameters
  */
-export function buildGetYourGuideBookingUrl(tourId: string, locale: string = "en"): string {
+export function buildGetYourGuideBookingUrl(
+  tourId: string,
+  locale: string = "en",
+): string {
   return buildBookingUrl(tourId, locale);
 }
 
@@ -73,10 +79,11 @@ export function buildGetYourGuideBookingUrl(tourId: string, locale: string = "en
 export function getWidgetConfig(
   tourId: string,
   locale: string = "en",
-  variant: "vertical" | "horizontal" | "compact" = "vertical"
+  variant: "vertical" | "horizontal" | "compact" = "vertical",
 ): GetYourGuideWidgetConfig {
   // Use English fallback for Arabic since GetYourGuide doesn't support Arabic
-  const gygLocale = locale === "ar" ? "en-US" : (GETYOURGUIDE_LOCALE_MAP[locale] || "en-US");
+  const gygLocale =
+    locale === "ar" ? "en-US" : GETYOURGUIDE_LOCALE_MAP[locale] || "en-US";
 
   return {
     tourId,
@@ -93,7 +100,7 @@ export function getWidgetConfig(
  */
 export function getCrossSellTours(
   packageType: "essential" | "premium" | "luxury",
-  limit: number = 3
+  limit: number = 3,
 ): string[] {
   const crossSellMap = {
     essential: getToursByCategory("historical", limit),
@@ -140,7 +147,7 @@ export function trackWidgetInteraction(
   action: string,
   tourId: string,
   locale: string,
-  additionalData?: Record<string, unknown>
+  additionalData?: Record<string, unknown>,
 ): void {
   if (typeof window !== "undefined" && window.gtag) {
     window.gtag("event", "getyourguide_widget_interaction", {
@@ -160,7 +167,7 @@ export function trackTourBookingClick(
   tourId: string,
   tourName: string,
   price: number,
-  locale: string
+  locale: string,
 ): void {
   // Google Analytics
   if (typeof window !== "undefined" && window.gtag) {
@@ -201,49 +208,192 @@ export function getAllTourIds(): string[] {
 }
 
 // Tour metadata for filtering and search
-export const TOUR_METADATA: Record<string, {
-  name: string;
-  category: TourCategory;
-  keywords: string[];
-}> = {
+export const TOUR_METADATA: Record<
+  string,
+  {
+    name: string;
+    category: TourCategory;
+    keywords: string[];
+  }
+> = {
   // Priority Bosphorus Tours
-  "653610": { name: "Daytime/Sunset Sightseeing Cruise", category: "cruises", keywords: ["boğaz", "sunset", "sightseeing", "cruise", "audio"] },
-  "854046": { name: "Bosphorus 3-Hour Day Cruise", category: "cruises", keywords: ["boğaz", "3-hour", "asian", "side", "day"] },
-  "418223": { name: "Sunset Boat Cruise", category: "cruises", keywords: ["boğaz", "sunset", "boat", "evening"] },
-  "461969": { name: "Bosphorus Audio Cruise", category: "cruises", keywords: ["boğaz", "audio", "guide", "sightseeing"] },
-  "764101": { name: "Sunset Cruise with Drinks", category: "cruises", keywords: ["boğaz", "sunset", "drinks", "snacks"] },
-  "648978": { name: "Sunset Bosphorus Yacht", category: "cruises", keywords: ["boğaz", "yacht", "sunset", "luxury"] },
-  "426934": { name: "Sunset Cruise with Canapés", category: "cruises", keywords: ["boğaz", "sunset", "canapés", "drinks"] },
-  "438511": { name: "Dinner Cruise with Turkish Show", category: "cruises", keywords: ["boğaz", "dinner", "turkish", "show", "night"] },
-  "415437": { name: "Bosphorus Dinner Cruise", category: "cruises", keywords: ["boğaz", "yemek", "cruise", "dinner", "private"] },
-  "419108": { name: "Dinner Cruise Turkish Night Show", category: "cruises", keywords: ["boğaz", "dinner", "turkish", "night", "show"] },
-  "449332": { name: "Istanbul Yacht Tour", category: "cruises", keywords: ["yacht", "tour", "boğaz", "luxury"] },
+  "653610": {
+    name: "Daytime/Sunset Sightseeing Cruise",
+    category: "cruises",
+    keywords: ["boğaz", "sunset", "sightseeing", "cruise", "audio"],
+  },
+  "854046": {
+    name: "Bosphorus 3-Hour Day Cruise",
+    category: "cruises",
+    keywords: ["boğaz", "3-hour", "asian", "side", "day"],
+  },
+  "418223": {
+    name: "Sunset Boat Cruise",
+    category: "cruises",
+    keywords: ["boğaz", "sunset", "boat", "evening"],
+  },
+  "461969": {
+    name: "Bosphorus Audio Cruise",
+    category: "cruises",
+    keywords: ["boğaz", "audio", "guide", "sightseeing"],
+  },
+  "764101": {
+    name: "Sunset Cruise with Drinks",
+    category: "cruises",
+    keywords: ["boğaz", "sunset", "drinks", "snacks"],
+  },
+  "648978": {
+    name: "Sunset Bosphorus Yacht",
+    category: "cruises",
+    keywords: ["boğaz", "yacht", "sunset", "luxury"],
+  },
+  "426934": {
+    name: "Sunset Cruise with Canapés",
+    category: "cruises",
+    keywords: ["boğaz", "sunset", "canapés", "drinks"],
+  },
+  "438511": {
+    name: "Dinner Cruise with Turkish Show",
+    category: "cruises",
+    keywords: ["boğaz", "dinner", "turkish", "show", "night"],
+  },
+  "415437": {
+    name: "Bosphorus Dinner Cruise",
+    category: "cruises",
+    keywords: ["boğaz", "yemek", "cruise", "dinner", "private"],
+  },
+  "419108": {
+    name: "Dinner Cruise Turkish Night Show",
+    category: "cruises",
+    keywords: ["boğaz", "dinner", "turkish", "night", "show"],
+  },
+  "449332": {
+    name: "Istanbul Yacht Tour",
+    category: "cruises",
+    keywords: ["yacht", "tour", "boğaz", "luxury"],
+  },
 
   // Historical & Cultural Tours
-  "558094": { name: "Dolmabahce Palace Fast Track", category: "historical", keywords: ["dolmabahçe", "palace", "fast", "track", "audio"] },
-  "975641": { name: "Mosaic Workshop", category: "cultural", keywords: ["mozaik", "workshop", "art", "sanat"] },
-  "593344": { name: "Turkish Bath & Spa", category: "private", keywords: ["hamam", "spa", "massage", "masaj"] },
-  "21283": { name: "Whirling Dervishes Show", category: "cultural", keywords: ["semazen", "sufi", "dance", "dans"] },
-  "597339": { name: "Hagia Sophia Skip-Line", category: "historical", keywords: ["ayasofya", "museum", "byzantine"] },
-  "467821": { name: "Turkish Bath & Sauna", category: "private", keywords: ["hamam", "sauna", "relax"] },
-  "396081": { name: "2-Day Cappadocia Trip", category: "adventure", keywords: ["kapadokya", "balloon", "cave"] },
-  "543562": { name: "Ertugrul Film Set Tour", category: "cultural", keywords: ["ertuğrul", "film", "set", "ottoman"] },
-  "203173": { name: "Ephesus Day Trip by Flight", category: "adventure", keywords: ["efes", "flight", "ancient"] },
-  "681083": { name: "Private Bosphorus Tour", category: "cruises", keywords: ["boğaz", "private", "özel"] },
-  "696480": { name: "Istanbul Aquarium", category: "adventure", keywords: ["akvaryum", "aquarium", "fish"] },
-  "176826": { name: "Topkapi & Hagia Sophia Tour", category: "historical", keywords: ["topkapı", "palace", "sultan"] },
-  "452401": { name: "Turkish Coffee Workshop", category: "cultural", keywords: ["kahve", "coffee", "fortune", "fal"] },
-  "26992": { name: "Cappadocia Hot Air Balloon", category: "adventure", keywords: ["kapadokya", "balloon", "sunrise"] },
-  "192789": { name: "Topkapi Palace & Harem", category: "historical", keywords: ["topkapı", "harem", "palace"] },
-  "618558": { name: "Hagia Sophia Audio Guide", category: "historical", keywords: ["ayasofya", "audio", "guide"] },
-  "236532": { name: "Airport Transfer Service", category: "private", keywords: ["airport", "transfer", "havalimanı"] },
-  "477182": { name: "24/7 Airport Shuttle", category: "private", keywords: ["airport", "shuttle", "transport", "ist"] },
-  "495350": { name: "Public Transportation Card", category: "private", keywords: ["transport", "card", "metro", "bus"] },
-  "744461": { name: "Perfume Making Workshop", category: "cultural", keywords: ["perfume", "workshop", "scent", "atelier"] },
-  "740796": { name: "Turkish Food Night & Rooftop", category: "food", keywords: ["food", "rooftop", "night", "turkish"] },
-  "440016": { name: "Guided Segway Tour", category: "walking", keywords: ["segway", "tour", "old", "town"] },
-  "614524": { name: "Stained Glass Painting Workshop", category: "cultural", keywords: ["glass", "painting", "art", "workshop"] },
-  "41496": { name: "Gallipoli ANZAC Full Day Tour", category: "historical", keywords: ["gallipoli", "anzac", "war", "memorial"] }
+  "558094": {
+    name: "Dolmabahce Palace Fast Track",
+    category: "historical",
+    keywords: ["dolmabahçe", "palace", "fast", "track", "audio"],
+  },
+  "975641": {
+    name: "Mosaic Workshop",
+    category: "cultural",
+    keywords: ["mozaik", "workshop", "art", "sanat"],
+  },
+  "593344": {
+    name: "Turkish Bath & Spa",
+    category: "private",
+    keywords: ["hamam", "spa", "massage", "masaj"],
+  },
+  "21283": {
+    name: "Whirling Dervishes Show",
+    category: "cultural",
+    keywords: ["semazen", "sufi", "dance", "dans"],
+  },
+  "597339": {
+    name: "Hagia Sophia Skip-Line",
+    category: "historical",
+    keywords: ["ayasofya", "museum", "byzantine"],
+  },
+  "467821": {
+    name: "Turkish Bath & Sauna",
+    category: "private",
+    keywords: ["hamam", "sauna", "relax"],
+  },
+  "396081": {
+    name: "2-Day Cappadocia Trip",
+    category: "adventure",
+    keywords: ["kapadokya", "balloon", "cave"],
+  },
+  "543562": {
+    name: "Ertugrul Film Set Tour",
+    category: "cultural",
+    keywords: ["ertuğrul", "film", "set", "ottoman"],
+  },
+  "203173": {
+    name: "Ephesus Day Trip by Flight",
+    category: "adventure",
+    keywords: ["efes", "flight", "ancient"],
+  },
+  "681083": {
+    name: "Private Bosphorus Tour",
+    category: "cruises",
+    keywords: ["boğaz", "private", "özel"],
+  },
+  "696480": {
+    name: "Istanbul Aquarium",
+    category: "adventure",
+    keywords: ["akvaryum", "aquarium", "fish"],
+  },
+  "176826": {
+    name: "Topkapi & Hagia Sophia Tour",
+    category: "historical",
+    keywords: ["topkapı", "palace", "sultan"],
+  },
+  "452401": {
+    name: "Turkish Coffee Workshop",
+    category: "cultural",
+    keywords: ["kahve", "coffee", "fortune", "fal"],
+  },
+  "26992": {
+    name: "Cappadocia Hot Air Balloon",
+    category: "adventure",
+    keywords: ["kapadokya", "balloon", "sunrise"],
+  },
+  "192789": {
+    name: "Topkapi Palace & Harem",
+    category: "historical",
+    keywords: ["topkapı", "harem", "palace"],
+  },
+  "618558": {
+    name: "Hagia Sophia Audio Guide",
+    category: "historical",
+    keywords: ["ayasofya", "audio", "guide"],
+  },
+  "236532": {
+    name: "Airport Transfer Service",
+    category: "private",
+    keywords: ["airport", "transfer", "havalimanı"],
+  },
+  "477182": {
+    name: "24/7 Airport Shuttle",
+    category: "private",
+    keywords: ["airport", "shuttle", "transport", "ist"],
+  },
+  "495350": {
+    name: "Public Transportation Card",
+    category: "private",
+    keywords: ["transport", "card", "metro", "bus"],
+  },
+  "744461": {
+    name: "Perfume Making Workshop",
+    category: "cultural",
+    keywords: ["perfume", "workshop", "scent", "atelier"],
+  },
+  "740796": {
+    name: "Turkish Food Night & Rooftop",
+    category: "food",
+    keywords: ["food", "rooftop", "night", "turkish"],
+  },
+  "440016": {
+    name: "Guided Segway Tour",
+    category: "walking",
+    keywords: ["segway", "tour", "old", "town"],
+  },
+  "614524": {
+    name: "Stained Glass Painting Workshop",
+    category: "cultural",
+    keywords: ["glass", "painting", "art", "workshop"],
+  },
+  "41496": {
+    name: "Gallipoli ANZAC Full Day Tour",
+    category: "historical",
+    keywords: ["gallipoli", "anzac", "war", "memorial"],
+  },
 };
 
 /**
@@ -252,7 +402,7 @@ export const TOUR_METADATA: Record<string, {
 export function getFilteredTours(
   category?: TourCategory,
   searchQuery?: string,
-  limit?: number
+  limit?: number,
 ): string[] {
   let tourIds = getAllTourIds();
 
@@ -264,13 +414,15 @@ export function getFilteredTours(
   // Filter by search query
   if (searchQuery && searchQuery.trim()) {
     const query = searchQuery.toLowerCase().trim();
-    tourIds = tourIds.filter(tourId => {
+    tourIds = tourIds.filter((tourId) => {
       const metadata = TOUR_METADATA[tourId];
       if (!metadata) return false;
 
       return (
         metadata.name.toLowerCase().includes(query) ||
-        metadata.keywords.some(keyword => keyword.toLowerCase().includes(query))
+        metadata.keywords.some((keyword) =>
+          keyword.toLowerCase().includes(query),
+        )
       );
     });
   }

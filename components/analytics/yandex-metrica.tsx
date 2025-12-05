@@ -6,7 +6,7 @@ import { useEffect } from "react";
 
 declare global {
   interface Window {
-    ym: (id: number, method: string, ...args: any[]) => void;
+    ym: (id: number, method: string, ...args: unknown[]) => void;
   }
 }
 
@@ -22,6 +22,7 @@ export function YandexMetrica({
   const pathname = usePathname();
 
   // Track page views on route changes
+  // biome-ignore lint/correctness/useExhaustiveDependencies: Track page views on route change
   useEffect(() => {
     if (!id || !enabled || typeof window === "undefined") return;
 
@@ -41,6 +42,7 @@ export function YandexMetrica({
       <Script
         id="yandex-metrica"
         strategy="afterInteractive"
+        // biome-ignore lint/security/noDangerouslySetInnerHtml: Yandex Metrica requires inline script
         dangerouslySetInnerHTML={{
           __html: `
             (function(m,e,t,r,i,k,a){
@@ -75,7 +77,7 @@ export function YandexMetrica({
 
 // Hook for tracking custom events
 export function useYandexMetrica() {
-  const trackEvent = (eventName: string, params?: Record<string, any>) => {
+  const trackEvent = (eventName: string, params?: Record<string, unknown>) => {
     const id = process.env.NEXT_PUBLIC_YANDEX_METRICA_ID;
 
     if (!id || typeof window === "undefined" || !window.ym) return;

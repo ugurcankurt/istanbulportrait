@@ -1,6 +1,7 @@
 import { useTranslations } from "next-intl";
 import { getTranslations } from "next-intl/server";
 import { BreadcrumbNav } from "@/components/breadcrumb-nav";
+import { CookieTable } from "@/components/cookie-table";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getLocalizedPaths } from "@/lib/localized-url";
 import { SEO_CONFIG } from "@/lib/seo-config";
@@ -62,33 +63,22 @@ export default function PrivacyPage() {
             <CardHeader>
               <CardTitle>{t("cookies.title")}</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="space-y-6">
               <p className="text-muted-foreground">
                 {t("cookies.description")}
               </p>
-              <div className="space-y-3">
-                <div>
-                  <h4 className="font-semibold">
-                    {t("cookies.essential.title")}
-                  </h4>
-                  <p className="text-sm text-muted-foreground">
-                    {t("cookies.essential.description")}
+
+              {/* Cookie Table */}
+              <CookieTable />
+
+              {/* Consent Information */}
+              <div className="space-y-3 pt-4 border-t">
+                <div className="bg-muted/50 p-4 rounded-lg space-y-2">
+                  <p className="text-sm font-medium">
+                    {t("cookies.expiration_note")}
                   </p>
-                </div>
-                <div>
-                  <h4 className="font-semibold">
-                    {t("cookies.analytics.title")}
-                  </h4>
                   <p className="text-sm text-muted-foreground">
-                    {t("cookies.analytics.description")}
-                  </p>
-                </div>
-                <div>
-                  <h4 className="font-semibold">
-                    {t("cookies.marketing.title")}
-                  </h4>
-                  <p className="text-sm text-muted-foreground">
-                    {t("cookies.marketing.description")}
+                    {t("cookies.withdrawal_note")}
                   </p>
                 </div>
               </div>

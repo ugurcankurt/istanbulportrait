@@ -107,6 +107,7 @@ export default function AdminDashboard() {
         </div>
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           {[...Array(4)].map((_, i) => (
+            // biome-ignore lint/suspicious/noArrayIndexKey: Index is stable for static skeleton array
             <Card key={`skeleton-card-${i}`} className="animate-pulse">
               <CardHeader className="space-y-0 pb-2">
                 <div className="h-4 bg-muted rounded w-2/3"></div>

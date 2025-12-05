@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Save, Send } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -26,11 +26,11 @@ import {
 } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
-import { MarkdownEditor } from "./markdown-editor";
+import { calculateReadingTime, generateSlug } from "@/lib/blog/blog-utils";
 import { blogFormSchema } from "@/lib/validations/blog-validations";
-import type { BlogFormData, BlogPostWithRelations } from "@/types/blog";
-import { generateSlug, calculateReadingTime } from "@/lib/blog/blog-utils";
 import { useBlogStore } from "@/stores/blog-store";
+import type { BlogFormData, BlogPostWithRelations } from "@/types/blog";
+import { MarkdownEditor } from "./markdown-editor";
 
 interface BlogFormProps {
   initialData?: BlogPostWithRelations;
@@ -43,6 +43,7 @@ const locales = [
   { value: "ar", label: "العربية 🇸🇦" },
   { value: "ru", label: "Русский 🇷🇺" },
   { value: "es", label: "Español 🇪🇸" },
+  { value: "zh", label: "简体中文 🇨🇳" },
 ] as const;
 
 export function BlogForm({
@@ -51,7 +52,9 @@ export function BlogForm({
   isSubmitting,
 }: BlogFormProps) {
   const { categories, tags, fetchCategories, fetchTags } = useBlogStore();
-  const [activeTab, setActiveTab] = useState<"en" | "ar" | "ru" | "es">("en");
+  const [activeTab, setActiveTab] = useState<"en" | "ar" | "ru" | "es" | "zh">(
+    "en",
+  );
   const [autoSlug, setAutoSlug] = useState(!initialData);
   const [isLoadingData, setIsLoadingData] = useState(true);
 
@@ -70,61 +73,75 @@ export function BlogForm({
     loadData();
   }, [fetchCategories, fetchTags]);
 
-  const form = useForm<BlogFormData>({
-    resolver: zodResolver(blogFormSchema) as any,
+  const form = useForm({
+    resolver: zodResolver(blogFormSchema),
     defaultValues: initialData
       ? {
-        slug: initialData.slug,
-        status: initialData.status,
-        featured_image: initialData.featured_image,
-        published_at: initialData.published_at,
-        meta_keywords: initialData.meta_keywords,
-        is_featured: initialData.is_featured,
-        translations: {
-          en: {
-            title: (initialData as any).translations?.en?.title || "",
-            excerpt: (initialData as any).translations?.en?.excerpt || "",
-            content: (initialData as any).translations?.en?.content || "",
-            meta_description: (initialData as any).translations?.en?.meta_description || "",
+          slug: initialData.slug,
+          status: initialData.status,
+          featured_image: initialData.featured_image,
+          published_at: initialData.published_at,
+          meta_keywords: initialData.meta_keywords,
+          is_featured: initialData.is_featured,
+          translations: {
+            en: {
+              title: (initialData as any).translations?.en?.title || "",
+              excerpt: (initialData as any).translations?.en?.excerpt || "",
+              content: (initialData as any).translations?.en?.content || "",
+              meta_description:
+                (initialData as any).translations?.en?.meta_description || "",
+            },
+            ar: {
+              title: (initialData as any).translations?.ar?.title || "",
+              excerpt: (initialData as any).translations?.ar?.excerpt || "",
+              content: (initialData as any).translations?.ar?.content || "",
+              meta_description:
+                (initialData as any).translations?.ar?.meta_description || "",
+            },
+            ru: {
+              title: (initialData as any).translations?.ru?.title || "",
+              excerpt: (initialData as any).translations?.ru?.excerpt || "",
+              content: (initialData as any).translations?.ru?.content || "",
+              meta_description:
+                (initialData as any).translations?.ru?.meta_description || "",
+            },
+            es: {
+              title: (initialData as any).translations?.es?.title || "",
+              excerpt: (initialData as any).translations?.es?.excerpt || "",
+              content: (initialData as any).translations?.es?.content || "",
+              meta_description:
+                (initialData as any).translations?.es?.meta_description || "",
+            },
+            zh: {
+              title: (initialData as any).translations?.zh?.title || "",
+              excerpt: (initialData as any).translations?.zh?.excerpt || "",
+              content: (initialData as any).translations?.zh?.content || "",
+              meta_description:
+                (initialData as any).translations?.zh?.meta_description || "",
+            },
           },
-          ar: {
-            title: (initialData as any).translations?.ar?.title || "",
-            excerpt: (initialData as any).translations?.ar?.excerpt || "",
-            content: (initialData as any).translations?.ar?.content || "",
-            meta_description: (initialData as any).translations?.ar?.meta_description || "",
-          },
-          ru: {
-            title: (initialData as any).translations?.ru?.title || "",
-            excerpt: (initialData as any).translations?.ru?.excerpt || "",
-            content: (initialData as any).translations?.ru?.content || "",
-            meta_description: (initialData as any).translations?.ru?.meta_description || "",
-          },
-          es: {
-            title: (initialData as any).translations?.es?.title || "",
-            excerpt: (initialData as any).translations?.es?.excerpt || "",
-            content: (initialData as any).translations?.es?.content || "",
-            meta_description: (initialData as any).translations?.es?.meta_description || "",
-          },
-        },
-        category_ids: (initialData as any).categories?.map((c: any) => c.category.id) || [],
-        tag_ids: (initialData as any).tags?.map((t: any) => t.tag.id) || [],
-      }
+          category_ids:
+            (initialData as any).categories?.map((c: any) => c.category.id) ||
+            [],
+          tag_ids: (initialData as any).tags?.map((t: any) => t.tag.id) || [],
+        }
       : {
-        slug: "",
-        status: "draft",
-        featured_image: null,
-        published_at: null,
-        meta_keywords: [],
-        is_featured: false,
-        translations: {
-          en: { title: "", excerpt: "", content: "", meta_description: "" },
-          ar: { title: "", excerpt: "", content: "", meta_description: "" },
-          ru: { title: "", excerpt: "", content: "", meta_description: "" },
-          es: { title: "", excerpt: "", content: "", meta_description: "" },
+          slug: "",
+          status: "draft",
+          featured_image: null,
+          published_at: null,
+          meta_keywords: [],
+          is_featured: false,
+          translations: {
+            en: { title: "", excerpt: "", content: "", meta_description: "" },
+            ar: { title: "", excerpt: "", content: "", meta_description: "" },
+            ru: { title: "", excerpt: "", content: "", meta_description: "" },
+            es: { title: "", excerpt: "", content: "", meta_description: "" },
+            zh: { title: "", excerpt: "", content: "", meta_description: "" },
+          },
+          category_ids: [],
+          tag_ids: [],
         },
-        category_ids: [],
-        tag_ids: [],
-      },
   });
 
   // Auto-generate slug from English title
@@ -192,7 +209,8 @@ export function BlogForm({
                       </div>
                     </FormControl>
                     <FormDescription>
-                      URL-friendly identifier (auto-generated from English title)
+                      URL-friendly identifier (auto-generated from English
+                      title)
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
@@ -260,7 +278,9 @@ export function BlogForm({
                         value={field.value ? field.value.slice(0, 16) : ""}
                         onChange={(e) => {
                           const value = e.target.value;
-                          field.onChange(value ? new Date(value).toISOString() : null);
+                          field.onChange(
+                            value ? new Date(value).toISOString() : null,
+                          );
                         }}
                         type="datetime-local"
                       />
@@ -318,6 +338,7 @@ export function BlogForm({
                         href="/admin/dashboard/blog/categories"
                         target="_blank"
                         className="underline hover:text-foreground"
+                        rel="noopener"
                       >
                         Create one
                       </a>
@@ -333,10 +354,15 @@ export function BlogForm({
                             checked={field.value?.includes(category.id)}
                             onCheckedChange={(checked) => {
                               if (checked) {
-                                field.onChange([...field.value, category.id]);
+                                field.onChange([
+                                  ...(field.value || []),
+                                  category.id,
+                                ]);
                               } else {
                                 field.onChange(
-                                  field.value.filter((id) => id !== category.id),
+                                  (field.value || []).filter(
+                                    (id) => id !== category.id,
+                                  ),
                                 );
                               }
                             }}
@@ -371,6 +397,7 @@ export function BlogForm({
                         href="/admin/dashboard/blog/tags"
                         target="_blank"
                         className="underline hover:text-foreground"
+                        rel="noopener"
                       >
                         Create one
                       </a>
@@ -378,15 +405,23 @@ export function BlogForm({
                   ) : (
                     <div className="flex flex-wrap gap-2">
                       {tags.map((tag) => (
-                        <div key={tag.id} className="flex items-center space-x-2">
+                        <div
+                          key={tag.id}
+                          className="flex items-center space-x-2"
+                        >
                           <Checkbox
                             checked={field.value?.includes(tag.id)}
                             onCheckedChange={(checked) => {
                               if (checked) {
-                                field.onChange([...field.value, tag.id]);
+                                field.onChange([
+                                  ...(field.value || []),
+                                  tag.id,
+                                ]);
                               } else {
                                 field.onChange(
-                                  field.value.filter((id) => id !== tag.id),
+                                  (field.value || []).filter(
+                                    (id) => id !== tag.id,
+                                  ),
                                 );
                               }
                             }}
@@ -438,13 +473,36 @@ export function BlogForm({
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as typeof activeTab)}>
-              <TabsList className="grid w-full grid-cols-4">
-                {locales.map((locale) => (
-                  <TabsTrigger key={locale.value} value={locale.value}>
-                    {locale.label}
-                  </TabsTrigger>
-                ))}
+            <Tabs
+              value={activeTab}
+              onValueChange={(v) => setActiveTab(v as typeof activeTab)}
+            >
+              <TabsList className="grid w-full grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-1">
+                {locales.map((locale) => {
+                  const hasContent = form.watch(
+                    `translations.${locale.value}.title`,
+                  );
+                  return (
+                    <TabsTrigger
+                      key={locale.value}
+                      value={locale.value}
+                      className="relative"
+                    >
+                      <span className="hidden sm:inline">{locale.label}</span>
+                      <span className="sm:hidden text-lg">
+                        {locale.label.match(/[\u{1F1E0}-\u{1F1FF}]{2}/u)?.[0]}
+                      </span>
+                      {hasContent && (
+                        <span className="ml-1 text-green-500 text-xs">✓</span>
+                      )}
+                      {!hasContent && locale.value !== "en" && (
+                        <span className="ml-1 text-yellow-500 text-xs opacity-50">
+                          ⚠
+                        </span>
+                      )}
+                    </TabsTrigger>
+                  );
+                })}
               </TabsList>
 
               {locales.map((locale) => (
@@ -452,6 +510,7 @@ export function BlogForm({
                   key={locale.value}
                   value={locale.value}
                   className="space-y-4 mt-4"
+                  dir={locale.value === "ar" ? "rtl" : "ltr"}
                 >
                   {/* Title */}
                   <FormField
@@ -548,11 +607,7 @@ export function BlogForm({
             <Save className="w-4 h-4 mr-2" />
             Save Draft
           </Button>
-          <Button
-            type="button"
-            onClick={handlePublish}
-            disabled={isSubmitting}
-          >
+          <Button type="button" onClick={handlePublish} disabled={isSubmitting}>
             <Send className="w-4 h-4 mr-2" />
             {isSubmitting ? "Publishing..." : "Publish"}
           </Button>

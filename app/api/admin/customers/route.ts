@@ -8,6 +8,34 @@ import {
   sanitizeErrorForProduction,
 } from "@/lib/errors";
 
+interface Booking {
+  id: string;
+  package_id: string;
+  booking_date: string;
+  booking_time: string;
+  status: string;
+  total_amount: number;
+  created_at: string;
+  user_email: string;
+}
+
+interface Customer {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  created_at: string;
+  bookings?: Booking[];
+}
+
+interface CustomerWithStats extends Customer {
+  bookings_count: number;
+  confirmed_bookings: number;
+  total_spent: number;
+  last_booking_date: string | null;
+  last_booking_status: string | null;
+}
+
 export async function GET(request: NextRequest) {
   try {
     // Verify admin access
@@ -30,10 +58,10 @@ export async function GET(request: NextRequest) {
 
     try {
       // Try the relationship query first, fallback to separate queries if needed
+      // biome-ignore lint/suspicious/noExplicitAny: Query builder type is complex
       let query: any;
-      let customers: any[];
-      let error: any;
-      let count: number | null;
+      let customers: Customer[] = [];
+      let count: number | null = null;
 
       try {
         // Attempt to use the foreign key relationship
@@ -73,8 +101,8 @@ export async function GET(request: NextRequest) {
       query = query.range(offset, offset + limit - 1);
 
       const result = await query;
-      customers = result.data;
-      error = result.error;
+      customers = (result.data as Customer[]) || [];
+      const error = result.error;
       count = result.count;
 
       if (error) {
@@ -105,14 +133,12 @@ export async function GET(request: NextRequest) {
           throw customersError;
         }
 
-        customers = customersData;
+        customers = (customersData as Customer[]) || [];
         count = customersCount;
 
         // Manually fetch bookings for each customer
         if (customers && customers.length > 0) {
-          const customerEmails = customers.map(
-            (c: { email: string }) => c.email,
-          );
+          const customerEmails = customers.map((c) => c.email);
 
           const { data: bookingsData } = await supabase
             .from("bookings")
@@ -130,18 +156,18 @@ export async function GET(request: NextRequest) {
 
           // Group bookings by email
           const bookingsByEmail = (bookingsData || []).reduce(
-            (acc: Record<string, any[]>, booking: { user_email: string }) => {
+            (acc: Record<string, Booking[]>, booking: Booking) => {
               if (!acc[booking.user_email]) {
                 acc[booking.user_email] = [];
               }
               acc[booking.user_email].push(booking);
               return acc;
             },
-            {} as Record<string, any[]>,
+            {} as Record<string, Booking[]>,
           );
 
           // Add bookings to customers
-          customers = customers.map((customer: any) => ({
+          customers = customers.map((customer) => ({
             ...customer,
             bookings: bookingsByEmail[customer.email] || [],
           }));
@@ -149,33 +175,35 @@ export async function GET(request: NextRequest) {
       }
 
       // Calculate customer analytics
-      const customersWithStats = (customers || []).map((customer: any) => {
-        const bookings = customer.bookings || [];
-        const confirmedBookings = bookings.filter(
-          (b: any) => b.status === "confirmed",
-        );
-        const totalSpent = confirmedBookings.reduce(
-          (sum: number, b: any) => sum + b.total_amount,
-          0,
-        );
-        const lastBooking =
-          bookings.length > 0
-            ? bookings.sort(
-                (a: any, b: any) =>
-                  new Date(b.created_at).getTime() -
-                  new Date(a.created_at).getTime(),
-              )[0]
-            : null;
+      const customersWithStats: CustomerWithStats[] = (customers || []).map(
+        (customer) => {
+          const bookings = customer.bookings || [];
+          const confirmedBookings = bookings.filter(
+            (b) => b.status === "confirmed",
+          );
+          const totalSpent = confirmedBookings.reduce(
+            (sum, b) => sum + b.total_amount,
+            0,
+          );
+          const lastBooking =
+            bookings.length > 0
+              ? bookings.sort(
+                  (a, b) =>
+                    new Date(b.created_at).getTime() -
+                    new Date(a.created_at).getTime(),
+                )[0]
+              : null;
 
-        return {
-          ...customer,
-          bookings_count: bookings.length,
-          confirmed_bookings: confirmedBookings.length,
-          total_spent: totalSpent,
-          last_booking_date: lastBooking?.created_at || null,
-          last_booking_status: lastBooking?.status || null,
-        };
-      });
+          return {
+            ...customer,
+            bookings_count: bookings.length,
+            confirmed_bookings: confirmedBookings.length,
+            total_spent: totalSpent,
+            last_booking_date: lastBooking?.created_at || null,
+            last_booking_status: lastBooking?.status || null,
+          };
+        },
+      );
 
       return NextResponse.json({
         success: true,

@@ -5,7 +5,7 @@ import { routing } from "./i18n/routing";
 
 const intlMiddleware = createMiddleware(routing);
 
-export default async function middleware(request: NextRequest) {
+export default async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // Handle Supabase auth for all admin routes
@@ -84,7 +84,7 @@ export const config = {
   matcher: [
     "/((?!api|_next|_vercel|.*\\..*).*)",
     "/",
-    "/(ar|en|ru|es)/:path*",
+    "/(ar|en|ru|es|zh)/:path*",
     "/admin/:path*",
   ],
 };

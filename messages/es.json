@@ -1,4 +1,7 @@
 {
+  "payment_banner": {
+    "message": "Pago Seguro"
+  },
   "nav": {
     "home": "Inicio",
     "packages": "Paquetes",
@@ -197,9 +200,6 @@
       "month_short": "MM",
       "year_short": "AA"
     },
-    "payment_method": "Método de Pago",
-    "payment_method_iyzico": "Tarjeta de Crédito (Iyzico)",
-    "payment_method_turinvoice": "Tarjetas Rusas (Turinvoice)",
     "buttons": {
       "continue": "Continuar",
       "back": "Atrás",
@@ -209,8 +209,8 @@
       "complete_booking": "Completar Reserva",
       "pay_amount": "PAGAR {amount}",
       "processing": "Procesando...",
-      "continue_payment": "Continuar al Pago",
-      "book_another": "Reservar Otra Sesión"
+      "book_another": "Reservar Otra Sesión",
+      "pay_with_turinvoice": "Pagar con Turinvoice"
     },
     "success": {
       "title": "¡Reserva Confirmada!",
@@ -244,30 +244,30 @@
       "complete_description": "Completa tu reserva ingresando tu información de pago",
       "secure_no_fees": "Pago seguro • Sin comisiones ocultas"
     },
+    "payment_method": "Método de Pago",
+    "payment_methods": {
+      "credit_card": "Tarjeta de Crédito/Débito",
+      "russian_banks": "MIR & SBP"
+    },
+    "turinvoice_description": "Serás redirigido a la página de pago segura de Turinvoice.",
     "turinvoice": {
       "title": "Pago Turinvoice",
-      "description": "Paga de forma segura con tarjetas bancarias rusas a través de Turinvoice.",
-      "status_new": "Nuevo",
-      "status_paying": "Procesando",
-      "status_paid": "Pagado",
-      "status_timeout": "Tiempo Agotado",
+      "status_new": "Inicializando...",
       "time_remaining": "Tiempo Restante",
       "amount_label": "Monto",
-      "instruction_1": "Haz clic en el botón de abajo para abrir la página de pago segura.",
+      "instruction_1": "Por favor complete su pago en la página abierta.",
       "open_payment_page": "Abrir Página de Pago",
-      "instruction_2": "Después del pago, esta página se actualizará automáticamente.",
-      "payment_successful": "Pago Exitoso",
-      "confirmation_message": "Tu pago ha sido confirmado.",
-      "payment_timeout": "Tiempo de Pago Agotado",
-      "timeout_message": "La sesión de pago ha expirado. Por favor, inténtalo de nuevo.",
+      "instruction_2": "No cierre esta ventana hasta que se confirme el pago.",
       "security_notice": "Pago Seguro vía Turinvoice",
-      "loading_qr": "Cargando código QR...",
-      "scan_qr_description": "Escanea este código QR con tu aplicación bancaria para pagar",
-      "or_pay_via_link": "O PAGA VÍA ENLACE"
+      "status_paying": "Esperando el pago...",
+      "status_paid": "¡Pago Exitoso!",
+      "status_timeout": "Pago Agotado",
+      "success_message": "Su pago ha sido confirmado.",
+      "redirect_message": "Redirigiendo...",
+      "timeout_message": "La sesión de pago ha expirado.",
+      "timeout_desc": "Por favor intente nuevamente para reiniciar el proceso de pago.",
+      "try_again": "Intentar de Nuevo"
     }
-  },
-  "payment_banner": {
-    "message": "Aceptamos pagos seguros a través de Iyzico y Turinvoice"
   },
   "validation": {
     "package_required": "La selección del paquete es obligatoria",

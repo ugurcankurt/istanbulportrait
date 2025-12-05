@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { ArrowLeft, Plus, Trash, X } from "lucide-react";
+import { ArrowLeft, Plus, X } from "lucide-react";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -18,9 +18,9 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useBlogStore } from "@/stores/blog-store";
-import type { BlogTagWithTranslation } from "@/types/blog";
 import { generateSlug } from "@/lib/blog/blog-utils";
+import { useBlogStore } from "@/stores/blog-store";
+import type { BlogTagWithTranslation, TagFormData } from "@/types/blog";
 
 function TagDialog({
   tag,
@@ -31,7 +31,7 @@ function TagDialog({
   tag?: BlogTagWithTranslation;
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onSave: (data: any) => Promise<void>;
+  onSave: (data: TagFormData) => Promise<void>;
 }) {
   const [isSaving, setIsSaving] = useState(false);
   const [slug, setSlug] = useState("");
@@ -93,7 +93,7 @@ function TagDialog({
       });
       onOpenChange(false);
       toast.success(tag ? "Tag updated" : "Tag created");
-    } catch (error) {
+    } catch (_error) {
       toast.error("Failed to save tag");
     } finally {
       setIsSaving(false);
@@ -185,7 +185,7 @@ export default function TagsManagementPage() {
     setDialogOpen(true);
   };
 
-  const handleSave = async (data: any) => {
+  const handleSave = async (data: TagFormData) => {
     if (editingTag) {
       // Update existing tag
       await updateTag(editingTag.id, data);
@@ -248,9 +248,13 @@ export default function TagsManagementPage() {
                   variant="secondary"
                   className="text-sm py-2 px-3 cursor-pointer hover:bg-secondary/80 flex items-center gap-2"
                 >
-                  <span onClick={() => handleEdit(tag)}>
+                  <button
+                    type="button"
+                    onClick={() => handleEdit(tag)}
+                    className="hover:underline focus:outline-none"
+                  >
                     #{tag.translation.name}
-                  </span>
+                  </button>
                   <span className="text-muted-foreground">
                     ({tag.post_count || 0})
                   </span>

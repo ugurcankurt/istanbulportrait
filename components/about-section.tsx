@@ -155,7 +155,7 @@ export function AboutSection() {
         >
           {stats.map((stat, index) => (
             <motion.div
-              key={index}
+              key={stat.label}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.8 + index * 0.1 }}
@@ -192,7 +192,7 @@ export function AboutSection() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
             {highlights.map((highlight, index) => (
               <motion.div
-                key={index}
+                key={highlight.title}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 1.2 + index * 0.1 }}

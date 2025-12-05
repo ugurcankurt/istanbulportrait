@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import type { Metric } from "web-vitals";
 
 /**
  * Core Web Vitals Tracking Component - 2025 Standards
@@ -63,7 +64,7 @@ export function CoreWebVitals() {
           });
 
           // 4. First Contentful Paint (FCP) - Loading experience
-          onFCP((metric: any) => {
+          onFCP((metric: Metric) => {
             if (window.gtag) {
               window.gtag("event", "web_vital", {
                 event_category: "Web Vitals",
@@ -79,7 +80,7 @@ export function CoreWebVitals() {
           });
 
           // 5. Time to First Byte (TTFB) - Server response time
-          onTTFB((metric: any) => {
+          onTTFB((metric: Metric) => {
             if (window.gtag) {
               window.gtag("event", "web_vital", {
                 event_category: "Web Vitals",

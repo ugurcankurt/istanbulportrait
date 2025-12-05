@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { ArrowLeft, Edit, Plus, Trash } from "lucide-react";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -27,9 +27,9 @@ import {
 } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
+import { generateSlug } from "@/lib/blog/blog-utils";
 import { useBlogStore } from "@/stores/blog-store";
 import type { BlogCategoryWithTranslation } from "@/types/blog";
-import { generateSlug } from "@/lib/blog/blog-utils";
 
 function CategoryDialog({
   category,
@@ -40,7 +40,7 @@ function CategoryDialog({
   category?: BlogCategoryWithTranslation;
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onSave: (data: any) => Promise<void>;
+  onSave: (data: unknown) => Promise<void>;
 }) {
   const [isSaving, setIsSaving] = useState(false);
   const [slug, setSlug] = useState("");
@@ -52,6 +52,7 @@ function CategoryDialog({
     ar: { name: "", description: "" },
     ru: { name: "", description: "" },
     es: { name: "", description: "" },
+    zh: { name: "", description: "" },
   });
 
   // Reset form when dialog closes or category changes
@@ -60,7 +61,9 @@ function CategoryDialog({
       // Edit mode - fetch all translations from API
       const fetchAllTranslations = async () => {
         try {
-          const response = await fetch(`/api/admin/blog-categories/${category.id}`);
+          const response = await fetch(
+            `/api/admin/blog-categories/${category.id}`,
+          );
           const data = await response.json();
 
           if (data.success && data.category) {
@@ -85,6 +88,10 @@ function CategoryDialog({
                 name: data.category.translations?.es?.name || "",
                 description: data.category.translations?.es?.description || "",
               },
+              zh: {
+                name: data.category.translations?.zh?.name || "",
+                description: data.category.translations?.zh?.description || "",
+              },
             });
           }
         } catch (error) {
@@ -105,6 +112,7 @@ function CategoryDialog({
         ar: { name: "", description: "" },
         ru: { name: "", description: "" },
         es: { name: "", description: "" },
+        zh: { name: "", description: "" },
       });
     }
   }, [open, category]);
@@ -125,10 +133,8 @@ function CategoryDialog({
         translations,
       });
       onOpenChange(false);
-      toast.success(
-        category ? "Category updated" : "Category created",
-      );
-    } catch (error) {
+      toast.success(category ? "Category updated" : "Category created");
+    } catch (_error) {
       toast.error("Failed to save category");
     } finally {
       setIsSaving(false);
@@ -189,21 +195,24 @@ function CategoryDialog({
                 id="sort_order"
                 type="number"
                 value={sortOrder}
-                onChange={(e) => setSortOrder(Number.parseInt(e.target.value))}
+                onChange={(e) =>
+                  setSortOrder(Number.parseInt(e.target.value, 10))
+                }
               />
             </div>
           </div>
 
           {/* Multi-language Tabs */}
           <Tabs defaultValue="en">
-            <TabsList className="grid w-full grid-cols-4">
+            <TabsList className="grid w-full grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-1">
               <TabsTrigger value="en">🇬🇧 EN</TabsTrigger>
               <TabsTrigger value="ar">🇸🇦 AR</TabsTrigger>
               <TabsTrigger value="ru">🇷🇺 RU</TabsTrigger>
               <TabsTrigger value="es">🇪🇸 ES</TabsTrigger>
+              <TabsTrigger value="zh">🇨🇳 ZH</TabsTrigger>
             </TabsList>
 
-            {(["en", "ar", "ru", "es"] as const).map((locale) => (
+            {(["en", "ar", "ru", "es", "zh"] as const).map((locale) => (
               <TabsContent key={locale} value={locale} className="space-y-4">
                 <div>
                   <Label>Name</Label>
@@ -257,10 +266,17 @@ function CategoryDialog({
 }
 
 export default function CategoriesManagementPage() {
-  const { categories, fetchCategories, createCategory, updateCategory, deleteCategory } = useBlogStore();
+  const {
+    categories,
+    fetchCategories,
+    createCategory,
+    updateCategory,
+    deleteCategory,
+  } = useBlogStore();
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [editingCategory, setEditingCategory] =
-    useState<BlogCategoryWithTranslation | undefined>();
+  const [editingCategory, setEditingCategory] = useState<
+    BlogCategoryWithTranslation | undefined
+  >();
 
   useEffect(() => {
     fetchCategories("en");
@@ -276,7 +292,7 @@ export default function CategoriesManagementPage() {
     setDialogOpen(true);
   };
 
-  const handleSave = async (data: any) => {
+  const handleSave = async (data: unknown) => {
     if (editingCategory) {
       // Update existing category
       await updateCategory(editingCategory.id, data);
@@ -311,9 +327,7 @@ export default function CategoriesManagementPage() {
           </Button>
           <div>
             <h1 className="text-3xl font-bold tracking-tight">Categories</h1>
-            <p className="text-muted-foreground">
-              Manage blog post categories
-            </p>
+            <p className="text-muted-foreground">Manage blog post categories</p>
           </div>
         </div>
         <Button onClick={handleCreate}>
@@ -360,7 +374,10 @@ export default function CategoriesManagementPage() {
                     <TableCell>
                       <Badge
                         variant="secondary"
-                        style={{ backgroundColor: category.color + "20", color: category.color }}
+                        style={{
+                          backgroundColor: `${category.color}20`,
+                          color: category.color,
+                        }}
                       >
                         {category.color}
                       </Badge>

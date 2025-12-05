@@ -41,7 +41,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
-
+import { trackLead } from "@/lib/analytics";
+import { fbPixel } from "@/lib/facebook";
 import { cn } from "@/lib/utils";
 import type { BookingFormData, PackageId } from "@/lib/validations";
 import { createBookingSchema, packagePrices } from "@/lib/validations";
@@ -136,6 +137,15 @@ export function BookingModal({
 
   const handleSubmit = form.handleSubmit(
     (data) => {
+      // Track lead conversion - user filled booking form
+      if (selectedPackage && packageInfo) {
+        // GA4 Lead Event
+        trackLead(selectedPackage, packageInfo.name, packageInfo.price);
+
+        // Facebook Lead Event (client-side)
+        fbPixel.trackLead(packageInfo.price);
+      }
+
       // Store booking data in sessionStorage for checkout page
       sessionStorage.setItem("bookingData", JSON.stringify(data));
 
@@ -273,32 +283,30 @@ export function BookingModal({
                             </FormLabel>
 
                             {/* Calendar Widget */}
-                            <div className="flex justify-center w-full">
-                              <Calendar
-                                mode="single"
-                                selected={
-                                  dateField.value
-                                    ? new Date(dateField.value)
-                                    : undefined
-                                }
-                                onSelect={(date) => {
-                                  const dateString = date
-                                    ? format(date, "yyyy-MM-dd", {
-                                        locale: dateFnsLocale,
-                                      })
-                                    : "";
-                                  dateField.onChange(dateString);
-                                  setShowTimeSelection(!!date);
-                                }}
-                                disabled={(date) =>
-                                  date < new Date() ||
-                                  date < new Date("1900-01-01")
-                                }
-                                locale={dateFnsLocale}
-                                dir={locale === "ar" ? "rtl" : "ltr"}
-                                className="rounded-lg border shadow-sm bg-background"
-                              />
-                            </div>
+                            <Calendar
+                              mode="single"
+                              selected={
+                                dateField.value
+                                  ? new Date(dateField.value)
+                                  : undefined
+                              }
+                              onSelect={(date) => {
+                                const dateString = date
+                                  ? format(date, "yyyy-MM-dd", {
+                                      locale: dateFnsLocale,
+                                    })
+                                  : "";
+                                dateField.onChange(dateString);
+                                setShowTimeSelection(!!date);
+                              }}
+                              disabled={(date) =>
+                                date < new Date() ||
+                                date < new Date("1900-01-01")
+                              }
+                              locale={dateFnsLocale}
+                              dir={locale === "ar" ? "rtl" : "ltr"}
+                              className="w-full mx-auto"
+                            />
 
                             {/* Time Selection */}
                             {showTimeSelection && (

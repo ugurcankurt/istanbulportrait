@@ -5,10 +5,7 @@ import {
   getTagByIdWithAllTranslations,
   updateBlogTag,
 } from "@/lib/blog/blog-service";
-import {
-  logError,
-  sanitizeErrorForProduction,
-} from "@/lib/errors";
+import { logError, sanitizeErrorForProduction } from "@/lib/errors";
 import {
   checkRateLimit,
   createRateLimitError,
@@ -37,10 +34,7 @@ export async function GET(
     const tag = await getTagByIdWithAllTranslations(id);
 
     if (!tag) {
-      return NextResponse.json(
-        { error: "Tag not found" },
-        { status: 404 },
-      );
+      return NextResponse.json({ error: "Tag not found" }, { status: 404 });
     }
 
     return NextResponse.json({ success: true, tag });

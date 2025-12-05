@@ -20,11 +20,12 @@ export function FacebookPixel() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: Track page views on route change
   useEffect(() => {
     if (!FACEBOOK_PIXEL_ID) return;
 
     // Track page views on route changes
-    const url = pathname + searchParams.toString();
+    // const url = pathname + searchParams.toString();
 
     if (typeof window !== "undefined" && window.fbq) {
       window.fbq("track", "PageView");
@@ -42,6 +43,7 @@ export function FacebookPixel() {
       <Script
         id="facebook-pixel"
         strategy="afterInteractive"
+        // biome-ignore lint/security/noDangerouslySetInnerHtml: Facebook Pixel requires inline script
         dangerouslySetInnerHTML={{
           __html: `
             !function(f,b,e,v,n,t,s)
@@ -106,6 +108,7 @@ export function FacebookPixel() {
 
       {/* Facebook Pixel NoScript Fallback */}
       <noscript>
+        {/* biome-ignore lint/performance/noImgElement: Facebook Pixel requires img for noscript */}
         <img
           height="1"
           width="1"

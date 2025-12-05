@@ -2,7 +2,14 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { motion } from "framer-motion";
-import { Check, Clock, Image as ImageIcon, MapPin } from "lucide-react";
+import {
+  Check,
+  Clock,
+  Image as ImageIcon,
+  Loader2,
+  MapPin,
+} from "lucide-react";
+import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
@@ -10,6 +17,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { BookingSuccess } from "@/components/booking-success";
 import { PaymentForm } from "@/components/payment-form";
+import { TurinvoicePayment } from "@/components/turinvoice-payment";
 import {
   Accordion,
   AccordionContent,
@@ -17,10 +25,13 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Form } from "@/components/ui/form";
 import { Separator } from "@/components/ui/separator";
 import {
+  trackAddPaymentInfo,
+  trackBeginCheckout,
   trackFacebookEvent,
   trackPaymentEvent,
   trackPurchase,
@@ -59,6 +70,15 @@ export function CheckoutForm() {
   const [preFilledBookingData, setPreFilledBookingData] =
     useState<BookingFormData | null>(null);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [paymentMethod, setPaymentMethod] = useState<"iyzico" | "turinvoice">(
+    "iyzico",
+  );
+  const [turinvoiceOrder, setTurinvoiceOrder] = useState<{
+    idOrder: number;
+    paymentUrl: string;
+    amount: number;
+    currency: string;
+  } | null>(null);
 
   // IndexNow integration for automatic URL submission
   const { notifyBookingCreated } = useIndexNow();
@@ -135,13 +155,23 @@ export function CheckoutForm() {
       }
     : null;
 
+  // Track begin_checkout when component mounts with package data
+  useEffect(() => {
+    if (selectedPackage && packageInfo) {
+      trackBeginCheckout(selectedPackage, packageInfo.name, packageInfo.price);
+    }
+  }, [selectedPackage, packageInfo]);
+
   const handlePaymentSubmit = async (paymentData: PaymentFormData) => {
-    if (!selectedPackage) return;
+    if (!selectedPackage || !packageInfo) return;
 
     setIsLoading(true);
 
     // Get booking data once at the beginning - outside try block
     const bookingData = bookingForm.getValues();
+
+    // Track add payment info event
+    trackAddPaymentInfo(selectedPackage, packageInfo.name, packageInfo.price);
 
     try {
       // Step 1: Initialize payment FIRST (no booking creation yet)
@@ -204,6 +234,7 @@ export function CheckoutForm() {
         trackPurchase(
           bookingResult.booking.id,
           selectedPackage,
+          packageInfo.name,
           packagePrices[selectedPackage],
         );
 
@@ -285,6 +316,107 @@ export function CheckoutForm() {
     }
   };
 
+  const handleTurinvoiceInitialize = async () => {
+    if (!selectedPackage || !packageInfo) return;
+
+    setIsLoading(true);
+    const bookingData = bookingForm.getValues();
+
+    try {
+      const response = await fetch("/api/payment/initialize/turinvoice", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          customerData: bookingData,
+          amount: packagePrices[selectedPackage],
+          packageId: selectedPackage,
+          locale,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(t("error.payment_init_failed"));
+      }
+
+      const data = await response.json();
+
+      if (data.success) {
+        setTurinvoiceOrder({
+          idOrder: data.idOrder,
+          paymentUrl: data.paymentUrl,
+          amount: data.amount,
+          currency: data.currency,
+        });
+      } else {
+        throw new Error(data.error || t("error.payment_init_failed"));
+      }
+    } catch (error) {
+      console.error("Turinvoice init error:", error);
+      toast.error(t("error.payment_init_failed"));
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleTurinvoiceSuccess = async () => {
+    if (!turinvoiceOrder || !selectedPackage || !packageInfo) return;
+
+    const bookingData = bookingForm.getValues();
+
+    try {
+      const bookingResponse = await fetch("/api/booking/create-confirmed", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...bookingData,
+          paymentId: turinvoiceOrder.idOrder.toString(),
+          conversationId: `turinvoice_${turinvoiceOrder.idOrder}`,
+          provider: "turinvoice",
+        }),
+      });
+
+      if (!bookingResponse.ok) {
+        throw new Error(t("error.booking_failed"));
+      }
+
+      const bookingResult = await bookingResponse.json();
+
+      setBookingId(bookingResult.booking.id);
+      setShowSuccess(true);
+      toast.success(t("success.payment_successful"));
+
+      sessionStorage.removeItem("bookingData");
+
+      try {
+        await notifyBookingCreated(bookingResult.booking.id);
+      } catch (indexNowError) {
+        // Ignore
+      }
+
+      // Track successful payment
+      trackPaymentEvent(
+        selectedPackage,
+        packagePrices[selectedPackage],
+        "success",
+      );
+      trackPurchase(
+        bookingResult.booking.id,
+        selectedPackage,
+        packageInfo.name,
+        packagePrices[selectedPackage],
+      );
+
+      fbPixel.trackPurchase(
+        selectedPackage,
+        packagePrices[selectedPackage],
+        bookingResult.booking.id,
+      );
+    } catch (error) {
+      console.error("Booking creation error:", error);
+      toast.error(t("error.booking_failed"));
+    }
+  };
+
   // Helper component for Booking Summary content
   const BookingSummaryContent = () => (
     <div className="bg-muted/30 rounded-lg p-4">
@@ -350,7 +482,7 @@ export function CheckoutForm() {
             </div>
             <Badge
               variant="default"
-              className="bg-green-100 text-green-800 border-green-200"
+              className="bg-green-500/15 text-green-700 dark:text-green-400 border-green-500/20"
             >
               {tui("selected")}
             </Badge>
@@ -528,13 +660,82 @@ export function CheckoutForm() {
                 </AccordionItem>
               </Accordion>
 
-              {/* Payment Form - Always visible on mobile */}
+              {/* Payment Method Selection - Mobile */}
               <Card className="border-2 border-primary/10">
                 <CardHeader className="bg-gradient-to-r from-primary/5 to-transparent">
-                  <CardTitle className="text-xl font-bold flex items-center gap-3">
+                  <CardTitle className="text-lg font-bold flex items-center gap-3">
                     <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
                       <span className="text-primary-foreground text-sm font-bold">
                         💳
+                      </span>
+                    </div>
+                    {t("payment_method")}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="pt-4 space-y-3">
+                  <div className="grid grid-cols-2 gap-3">
+                    <div
+                      className={`relative flex flex-col items-center justify-center p-3 border-2 rounded-xl cursor-pointer transition-all hover:border-primary/50 ${
+                        paymentMethod === "iyzico"
+                          ? "border-primary bg-primary/5"
+                          : "border-muted bg-card"
+                      }`}
+                      onClick={() => setPaymentMethod("iyzico")}
+                    >
+                      <div className="h-10 sm:h-12 flex items-center justify-center mb-2 relative w-full">
+                        <Image
+                          src="/pay_with_iyzico_colored.svg"
+                          alt="Iyzico"
+                          fill
+                          className="object-contain"
+                        />
+                      </div>
+                      <span className="font-medium text-xs text-center">
+                        {t("payment_methods.credit_card")}
+                      </span>
+                      {paymentMethod === "iyzico" && (
+                        <div className="absolute top-2 right-2 w-4 h-4 bg-primary rounded-full flex items-center justify-center">
+                          <Check className="w-3 h-3 text-primary-foreground" />
+                        </div>
+                      )}
+                    </div>
+
+                    <div
+                      className={`relative flex flex-col items-center justify-center p-3 border-2 rounded-xl cursor-pointer transition-all hover:border-primary/50 ${
+                        paymentMethod === "turinvoice"
+                          ? "border-primary bg-primary/5"
+                          : "border-muted bg-card"
+                      }`}
+                      onClick={() => setPaymentMethod("turinvoice")}
+                    >
+                      <div className="h-12 sm:h-14 flex items-center justify-center mb-2 relative w-full">
+                        <Image
+                          src="/turinvoice_logo.png"
+                          alt="Turinvoice"
+                          fill
+                          className="object-contain"
+                        />
+                      </div>
+                      <span className="font-medium text-xs text-center">
+                        {t("payment_methods.russian_banks")}
+                      </span>
+                      {paymentMethod === "turinvoice" && (
+                        <div className="absolute top-2 right-2 w-4 h-4 bg-primary rounded-full flex items-center justify-center">
+                          <Check className="w-3 h-3 text-primary-foreground" />
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Payment Form or Turinvoice Component - Mobile */}
+              <Card className="border-2 border-primary/10">
+                <CardHeader className="bg-gradient-to-r from-primary/5 to-transparent">
+                  <CardTitle className="text-lg font-bold flex items-center gap-3">
+                    <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
+                      <span className="text-primary-foreground text-sm font-bold">
+                        🔒
                       </span>
                     </div>
                     {t("payment_details")}
@@ -544,15 +745,51 @@ export function CheckoutForm() {
                   </p>
                 </CardHeader>
                 <CardContent className="pt-4">
-                  <Form {...paymentForm}>
-                    <PaymentForm
-                      form={paymentForm}
-                      onSubmit={handlePaymentSubmit}
-                      selectedPackage={selectedPackage}
-                      bookingData={preFilledBookingData}
-                      isLoading={isLoading}
-                    />
-                  </Form>
+                  {paymentMethod === "iyzico" ? (
+                    <Form {...paymentForm}>
+                      <PaymentForm
+                        form={paymentForm}
+                        onSubmit={handlePaymentSubmit}
+                        selectedPackage={selectedPackage}
+                        bookingData={preFilledBookingData}
+                        isLoading={isLoading}
+                      />
+                    </Form>
+                  ) : (
+                    <div className="space-y-6">
+                      {!turinvoiceOrder ? (
+                        <div className="text-center space-y-4 py-4">
+                          <p className="text-muted-foreground text-sm">
+                            {t("turinvoice_description")}
+                          </p>
+                          <Button
+                            size="lg"
+                            className="w-full"
+                            onClick={handleTurinvoiceInitialize}
+                            disabled={isLoading}
+                          >
+                            {isLoading ? (
+                              <>
+                                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                                {t("buttons.processing")}
+                              </>
+                            ) : (
+                              t("buttons.pay_with_turinvoice")
+                            )}
+                          </Button>
+                        </div>
+                      ) : (
+                        <TurinvoicePayment
+                          idOrder={turinvoiceOrder.idOrder}
+                          paymentUrl={turinvoiceOrder.paymentUrl}
+                          amount={turinvoiceOrder.amount}
+                          currency={turinvoiceOrder.currency}
+                          onSuccess={handleTurinvoiceSuccess}
+                          onTimeout={() => setTurinvoiceOrder(null)}
+                        />
+                      )}
+                    </div>
+                  )}
                 </CardContent>
               </Card>
             </div>
@@ -582,13 +819,80 @@ export function CheckoutForm() {
                     </CardContent>
                   </Card>
 
-                  {/* Payment Form */}
+                  {/* Payment Method Selection */}
                   <Card className="border-2 border-primary/10">
                     <CardHeader className="bg-gradient-to-r from-primary/5 to-transparent">
                       <CardTitle className="text-xl font-bold flex items-center gap-3">
                         <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
                           <span className="text-primary-foreground text-sm font-bold">
                             💳
+                          </span>
+                        </div>
+                        {t("payment_method")}
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="pt-4 space-y-4">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div
+                          className={`relative flex flex-col items-center justify-center p-6 border-2 rounded-xl cursor-pointer transition-all hover:border-primary/50 ${
+                            paymentMethod === "iyzico"
+                              ? "border-primary bg-primary/5"
+                              : "border-muted bg-card"
+                          }`}
+                          onClick={() => setPaymentMethod("iyzico")}
+                        >
+                          <div className="h-10 sm:h-12 flex items-center justify-center mb-3">
+                            <img
+                              src="/pay_with_iyzico_colored.svg"
+                              alt="Iyzico"
+                              className="h-6 sm:h-7 w-auto max-w-full object-contain"
+                            />
+                          </div>
+                          <span className="font-medium text-sm text-center">
+                            {t("payment_methods.credit_card")}
+                          </span>
+                          {paymentMethod === "iyzico" && (
+                            <div className="absolute top-3 right-3 w-5 h-5 bg-primary rounded-full flex items-center justify-center">
+                              <Check className="w-3 h-3 text-primary-foreground" />
+                            </div>
+                          )}
+                        </div>
+
+                        <div
+                          className={`relative flex flex-col items-center justify-center p-6 border-2 rounded-xl cursor-pointer transition-all hover:border-primary/50 ${
+                            paymentMethod === "turinvoice"
+                              ? "border-primary bg-primary/5"
+                              : "border-muted bg-card"
+                          }`}
+                          onClick={() => setPaymentMethod("turinvoice")}
+                        >
+                          <div className="h-12 sm:h-14 flex items-center justify-center mb-3">
+                            <img
+                              src="/turinvoice_logo.png"
+                              alt="Turinvoice"
+                              className="h-8 sm:h-18 w-auto max-w-full object-contain"
+                            />
+                          </div>
+                          <span className="font-medium text-sm text-center">
+                            {t("payment_methods.russian_banks")}
+                          </span>
+                          {paymentMethod === "turinvoice" && (
+                            <div className="absolute top-3 right-3 w-5 h-5 bg-primary rounded-full flex items-center justify-center">
+                              <Check className="w-3 h-3 text-primary-foreground" />
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  {/* Payment Form or Turinvoice Component */}
+                  <Card className="border-2 border-primary/10">
+                    <CardHeader className="bg-gradient-to-r from-primary/5 to-transparent">
+                      <CardTitle className="text-xl font-bold flex items-center gap-3">
+                        <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
+                          <span className="text-primary-foreground text-sm font-bold">
+                            🔒
                           </span>
                         </div>
                         {t("payment_details")}
@@ -598,15 +902,51 @@ export function CheckoutForm() {
                       </p>
                     </CardHeader>
                     <CardContent className="pt-4">
-                      <Form {...paymentForm}>
-                        <PaymentForm
-                          form={paymentForm}
-                          onSubmit={handlePaymentSubmit}
-                          selectedPackage={selectedPackage}
-                          bookingData={preFilledBookingData}
-                          isLoading={isLoading}
-                        />
-                      </Form>
+                      {paymentMethod === "iyzico" ? (
+                        <Form {...paymentForm}>
+                          <PaymentForm
+                            form={paymentForm}
+                            onSubmit={handlePaymentSubmit}
+                            selectedPackage={selectedPackage}
+                            bookingData={preFilledBookingData}
+                            isLoading={isLoading}
+                          />
+                        </Form>
+                      ) : (
+                        <div className="space-y-6">
+                          {!turinvoiceOrder ? (
+                            <div className="text-center space-y-4 py-4">
+                              <p className="text-muted-foreground">
+                                {t("turinvoice_description")}
+                              </p>
+                              <Button
+                                size="lg"
+                                className="w-full sm:w-auto min-w-[200px]"
+                                onClick={handleTurinvoiceInitialize}
+                                disabled={isLoading}
+                              >
+                                {isLoading ? (
+                                  <>
+                                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                                    {t("buttons.processing")}
+                                  </>
+                                ) : (
+                                  t("buttons.pay_with_turinvoice")
+                                )}
+                              </Button>
+                            </div>
+                          ) : (
+                            <TurinvoicePayment
+                              idOrder={turinvoiceOrder.idOrder}
+                              paymentUrl={turinvoiceOrder.paymentUrl}
+                              amount={turinvoiceOrder.amount}
+                              currency={turinvoiceOrder.currency}
+                              onSuccess={handleTurinvoiceSuccess}
+                              onTimeout={() => setTurinvoiceOrder(null)}
+                            />
+                          )}
+                        </div>
+                      )}
                     </CardContent>
                   </Card>
                 </div>

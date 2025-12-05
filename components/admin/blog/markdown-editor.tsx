@@ -1,12 +1,20 @@
 "use client";
 
+import {
+  Bold,
+  Code,
+  Image,
+  Italic,
+  Link2,
+  List,
+  ListOrdered,
+} from "lucide-react";
 import { useState } from "react";
-import { Bold, Code, Image, Italic, Link2, List, ListOrdered } from "lucide-react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
 
 interface MarkdownEditorProps {
   value: string;
@@ -91,9 +99,9 @@ export function MarkdownEditor({
     <div className="border rounded-lg">
       {/* Toolbar */}
       <div className="flex items-center gap-1 p-2 border-b bg-muted/50">
-        {toolbar.map((tool, index) => (
+        {toolbar.map((tool) => (
           <Button
-            key={index}
+            key={tool.label}
             type="button"
             variant="ghost"
             size="sm"
@@ -104,7 +112,10 @@ export function MarkdownEditor({
           </Button>
         ))}
         <div className="ml-auto">
-          <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as typeof activeTab)}>
+          <Tabs
+            value={activeTab}
+            onValueChange={(v) => setActiveTab(v as typeof activeTab)}
+          >
             <TabsList className="h-8">
               <TabsTrigger value="edit" className="text-xs">
                 Edit

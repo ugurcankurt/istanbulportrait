@@ -18,6 +18,7 @@ import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { ButtonGroup } from "@/components/ui/button-group";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Dialog,
@@ -34,7 +35,18 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
+import {
+  Empty,
+  EmptyContent,
+  EmptyDescription,
+  EmptyMedia,
+  EmptyTitle,
+} from "@/components/ui/empty";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+} from "@/components/ui/input-group";
 import {
   Select,
   SelectContent,
@@ -42,6 +54,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Spinner } from "@/components/ui/spinner";
 import {
   Table,
   TableBody,
@@ -50,9 +63,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { formatBlogDate } from "@/lib/blog/blog-utils";
 import { useBlogStore } from "@/stores/blog-store";
 import type { BlogPostWithRelations } from "@/types/blog";
-import { formatBlogDate } from "@/lib/blog/blog-utils";
 
 function StatusBadge({ status }: { status: string }) {
   const config = {
@@ -88,7 +101,7 @@ function DeletePostDialog({
       await onDelete(post.id);
       toast.success("Post deleted successfully");
       setOpen(false);
-    } catch (error) {
+    } catch (_error) {
       toast.error("Failed to delete post");
     } finally {
       setIsDeleting(false);
@@ -97,8 +110,13 @@ function DeletePostDialog({
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-        <div onClick={() => setOpen(true)} className="flex items-center w-full">
+      <DropdownMenuItem
+        onSelect={(e) => {
+          e.preventDefault();
+          setOpen(true);
+        }}
+      >
+        <div className="flex items-center w-full">
           <Trash className="w-4 h-4 mr-2" />
           Delete Post
         </div>
@@ -210,15 +228,16 @@ export default function BlogManagementPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             {/* Search */}
             <div className="lg:col-span-2">
-              <div className="relative">
-                <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                <Input
+              <InputGroup>
+                <InputGroupAddon align="inline-start">
+                  <Search className="size-4" />
+                </InputGroupAddon>
+                <InputGroupInput
                   placeholder="Search posts..."
                   value={searchInput}
                   onChange={(e) => setSearchInput(e.target.value)}
-                  className="pl-9"
                 />
-              </div>
+              </InputGroup>
             </div>
 
             {/* Status Filter */}
@@ -346,17 +365,30 @@ export default function BlogManagementPage() {
         <CardContent className="p-0">
           {loading ? (
             <div className="p-8 text-center">
-              <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent" />
+              <Spinner className="size-8 mx-auto" />
               <p className="mt-2 text-sm text-muted-foreground">
                 Loading posts...
               </p>
             </div>
           ) : posts.length === 0 ? (
-            <div className="p-8 text-center">
-              <p className="text-muted-foreground">No blog posts found</p>
-              <Button asChild className="mt-4">
-                <Link href="/admin/dashboard/blog/new">Create First Post</Link>
-              </Button>
+            <div className="p-8">
+              <Empty>
+                <EmptyMedia variant="icon">
+                  <Edit className="size-12" />
+                </EmptyMedia>
+                <EmptyTitle>No blog posts found</EmptyTitle>
+                <EmptyDescription>
+                  Start creating engaging content for your photography blog
+                </EmptyDescription>
+                <EmptyContent>
+                  <Button asChild>
+                    <Link href="/admin/dashboard/blog/new">
+                      <Plus className="w-4 h-4 mr-2" />
+                      Create First Post
+                    </Link>
+                  </Button>
+                </EmptyContent>
+              </Empty>
             </div>
           ) : (
             <>
@@ -394,7 +426,7 @@ export default function BlogManagementPage() {
                       </TableCell>
                       <TableCell>
                         <div className="flex flex-wrap gap-1">
-                          {post.categories?.slice(0, 2).map((cat: any) => (
+                          {post.categories?.slice(0, 2).map((cat) => (
                             <Badge
                               key={cat.category.id}
                               variant="outline"
@@ -460,7 +492,7 @@ export default function BlogManagementPage() {
                     Page {pagination.page} of {pagination.totalPages} (
                     {pagination.total} total posts)
                   </div>
-                  <div className="flex gap-2">
+                  <ButtonGroup>
                     <Button
                       variant="outline"
                       size="sm"
@@ -479,7 +511,7 @@ export default function BlogManagementPage() {
                       Next
                       <ChevronRight className="w-4 h-4 ml-1" />
                     </Button>
-                  </div>
+                  </ButtonGroup>
                 </div>
               )}
             </>

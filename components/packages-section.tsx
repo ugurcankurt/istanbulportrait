@@ -15,7 +15,6 @@ import {
 } from "@/components/ui/card";
 import { Link } from "@/i18n/routing";
 import { fbPixel } from "@/lib/facebook";
-import { SEO_CONFIG } from "@/lib/seo-config";
 import type { PackageId } from "@/lib/validations";
 
 export function PackagesSection() {
@@ -107,8 +106,7 @@ export function PackagesSection() {
             className="mb-8 sm:mb-12"
           >
             <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-center mb-6 sm:mb-8">
-              {t("sections.available_packages") ||
-                "Available Photography Packages"}
+              {t("sections.available_packages")}
             </h2>
           </motion.div>
 
@@ -194,16 +192,16 @@ export function PackagesSection() {
             transition={{ duration: 0.8, delay: 0.4 }}
             className="mt-8 sm:mt-12 lg:mt-16 text-center"
           >
-            <div className="bg-black rounded-lg p-4 sm:p-6 lg:p-8 max-w-6xl mx-auto">
-              <h2 className="text-lg text-white sm:text-xl lg:text-2xl font-bold mb-3 sm:mb-4">
+            <div className="bg-primary rounded-lg p-4 sm:p-6 lg:p-8 max-w-6xl mx-auto">
+              <h2 className="text-lg text-primary-foreground sm:text-xl lg:text-2xl font-bold mb-3 sm:mb-4">
                 {t("custom.title")}
               </h2>
-              <p className="text-sm sm:text-base text-muted-foreground mb-4 sm:mb-6 px-2">
+              <p className="text-sm sm:text-base text-primary-foreground/80 mb-4 sm:mb-6 px-2">
                 {t("custom.description")}
               </p>
               <Button
                 asChild
-                variant="outline"
+                variant="secondary"
                 size="sm"
                 className="sm:text-base"
               >

@@ -56,13 +56,30 @@ export function trackPaymentEvent(
   trackEvent(`payment_${status}`, "Payment", packageId, value);
 }
 
-// Track purchase events
+// Track purchase events (GA4 Enhanced Ecommerce)
 export function trackPurchase(
   transactionId: string,
   packageId: string,
+  packageName: string,
   value: number,
+  currency: string = "EUR",
 ) {
-  trackEvent("purchase", "Ecommerce", `${packageId}_${transactionId}`, value);
+  if (typeof window !== "undefined" && window.gtag) {
+    window.gtag("event", "purchase", {
+      transaction_id: transactionId,
+      currency: currency,
+      value: value,
+      items: [
+        {
+          item_id: packageId,
+          item_name: packageName,
+          item_category: "Photography Package",
+          price: value,
+          quantity: 1,
+        },
+      ],
+    });
+  }
 }
 
 // Track Facebook events
@@ -72,19 +89,116 @@ export function trackFacebookEvent(eventType: string, data?: any) {
   }
 }
 
-// Track view item events
+// Track view item events (GA4 Enhanced Ecommerce)
 export function trackViewItem(
   itemId: string,
   itemName: string,
   value?: number,
+  currency: string = "EUR",
 ) {
-  trackEvent("view_item", "Ecommerce", itemName, value);
+  if (typeof window !== "undefined" && window.gtag) {
+    window.gtag("event", "view_item", {
+      currency: currency,
+      value: value,
+      items: [
+        {
+          item_id: itemId,
+          item_name: itemName,
+          item_category: "Photography Package",
+          price: value || 0,
+          quantity: 1,
+        },
+      ],
+    });
+  }
 
   // Also track for Facebook
   trackFacebookEvent("ViewContent", {
     content_ids: [itemId],
     content_type: "product",
     content_name: itemName,
+    value: value,
+    currency: "EUR",
+  });
+}
+
+// Track begin checkout event (GA4 Enhanced Ecommerce)
+export function trackBeginCheckout(
+  packageId: string,
+  packageName: string,
+  value: number,
+  currency: string = "EUR",
+) {
+  if (typeof window !== "undefined" && window.gtag) {
+    window.gtag("event", "begin_checkout", {
+      currency: currency,
+      value: value,
+      items: [
+        {
+          item_id: packageId,
+          item_name: packageName,
+          item_category: "Photography Package",
+          price: value,
+          quantity: 1,
+        },
+      ],
+    });
+  }
+}
+
+// Track add payment info event (GA4 Enhanced Ecommerce)
+export function trackAddPaymentInfo(
+  packageId: string,
+  packageName: string,
+  value: number,
+  paymentType: string = "credit_card",
+  currency: string = "EUR",
+) {
+  if (typeof window !== "undefined" && window.gtag) {
+    window.gtag("event", "add_payment_info", {
+      currency: currency,
+      value: value,
+      payment_type: paymentType,
+      items: [
+        {
+          item_id: packageId,
+          item_name: packageName,
+          item_category: "Photography Package",
+          price: value,
+          quantity: 1,
+        },
+      ],
+    });
+  }
+}
+
+// Track lead generation event (GA4)
+export function trackLead(
+  packageId: string,
+  packageName: string,
+  value?: number,
+  currency: string = "EUR",
+) {
+  if (typeof window !== "undefined" && window.gtag) {
+    window.gtag("event", "generate_lead", {
+      currency: currency,
+      value: value,
+      items: [
+        {
+          item_id: packageId,
+          item_name: packageName,
+          item_category: "Photography Package",
+          price: value || 0,
+          quantity: 1,
+        },
+      ],
+    });
+  }
+
+  // Also track for Facebook
+  trackFacebookEvent("Lead", {
+    content_ids: [packageId],
+    content_name: packageName,
     value: value,
     currency: "EUR",
   });

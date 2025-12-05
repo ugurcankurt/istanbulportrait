@@ -1,4 +1,7 @@
 {
+  "payment_banner": {
+    "message": "Secure Payment"
+  },
   "nav": {
     "home": "Home",
     "packages": "Packages",
@@ -198,9 +201,6 @@
       "month_short": "MM",
       "year_short": "YY"
     },
-    "payment_method": "Payment Method",
-    "payment_method_iyzico": "Credit Card (Iyzico)",
-    "payment_method_turinvoice": "Russian Cards (Turinvoice)",
     "buttons": {
       "continue": "Continue",
       "back": "Back",
@@ -210,8 +210,8 @@
       "complete_booking": "Complete Booking",
       "pay_amount": "PAY {amount}",
       "processing": "Processing...",
-      "continue_payment": "Continue to Payment",
-      "book_another": "Book Another Session"
+      "book_another": "Book Another Session",
+      "pay_with_turinvoice": "Pay with Turinvoice"
     },
     "success": {
       "title": "Booking Confirmed!",
@@ -244,30 +244,30 @@
       "complete_description": "Complete your booking by entering your payment information",
       "secure_no_fees": "Secure payment • No hidden fees"
     },
+    "payment_method": "Payment Method",
+    "payment_methods": {
+      "credit_card": "Credit/Debit Card",
+      "russian_banks": "MIR & SBP"
+    },
+    "turinvoice_description": "You will be redirected to Turinvoice secure payment page.",
     "turinvoice": {
       "title": "Turinvoice Payment",
-      "description": "Pay securely with Russian bank cards via Turinvoice.",
-      "status_new": "New",
-      "status_paying": "Processing",
-      "status_paid": "Paid",
-      "status_timeout": "Timed Out",
+      "status_new": "Initializing...",
       "time_remaining": "Time Remaining",
       "amount_label": "Amount",
-      "instruction_1": "Click the button below to open the secure payment page.",
+      "instruction_1": "Please complete your payment on the opened page.",
       "open_payment_page": "Open Payment Page",
-      "instruction_2": "After payment, this page will automatically update.",
-      "payment_successful": "Payment Successful",
-      "confirmation_message": "Your payment has been confirmed.",
-      "payment_timeout": "Payment Timed Out",
-      "timeout_message": "The payment session has expired. Please try again.",
+      "instruction_2": "Do not close this window until payment is confirmed.",
       "security_notice": "Secure Payment via Turinvoice",
-      "loading_qr": "Loading QR code...",
-      "scan_qr_description": "Scan this QR code with your banking app to pay",
-      "or_pay_via_link": "OR PAY VIA LINK"
+      "status_paying": "Waiting for payment...",
+      "status_paid": "Payment Successful!",
+      "status_timeout": "Payment Timed Out",
+      "success_message": "Your payment has been confirmed.",
+      "redirect_message": "Redirecting...",
+      "timeout_message": "The payment session has expired.",
+      "timeout_desc": "Please try again to restart the payment process.",
+      "try_again": "Try Again"
     }
-  },
-  "payment_banner": {
-    "message": "Secure payments accepted via Iyzico and Turinvoice"
   },
   "footer": {
     "description": "Leading photographer in Istanbul for professional portrait photography. Capturing your special moments with the city's most iconic backdrops.",

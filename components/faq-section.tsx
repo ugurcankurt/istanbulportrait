@@ -83,63 +83,61 @@ export function FAQSection() {
 
   return (
     <section className="py-8 sm:py-12 lg:py-16 bg-gradient-to-b from-muted/20 to-background">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="text-center mb-8 sm:mb-12 lg:mb-16"
-          >
-            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4 sm:mb-6">
-              {t("title")}
-            </h2>
-            <p className="text-base sm:text-lg lg:text-xl text-muted-foreground max-w-3xl mx-auto px-2">
-              {t("subtitle")}
-            </p>
-          </motion.div>
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          className="text-center mb-8 sm:mb-12 lg:mb-16"
+        >
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4 sm:mb-6">
+            {t("title")}
+          </h2>
+          <p className="text-base sm:text-lg lg:text-xl text-muted-foreground max-w-3xl mx-auto px-2">
+            {t("subtitle")}
+          </p>
+        </motion.div>
 
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="max-w-6xl mx-auto"
-          >
-            <Card>
-              <CardHeader className="pb-4">
-                <h4 className="text-xl font-semibold text-center">
-                  {t("section_title")}
-                </h4>
-              </CardHeader>
-              <CardContent>
-                <Accordion type="single" collapsible className="w-full">
-                  {faqIds.map((faq, index) => (
-                    <motion.div
-                      key={faq.id}
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ duration: 0.5, delay: 0.4 + index * 0.1 }}
-                    >
-                      <AccordionItem value={faq.id}>
-                        <AccordionTrigger className="text-left hover:text-primary">
-                          <span className="font-medium">
-                            {t(`questions.${faq.id}.question`)}
-                          </span>
-                        </AccordionTrigger>
-                        <AccordionContent className="text-muted-foreground leading-relaxed">
-                          <p>{t(`questions.${faq.id}.answer`)}</p>
-                          {/* Hidden keywords for SEO - not visible to users */}
-                          <div className="sr-only">
-                            {faq.keywords.join(", ")}
-                          </div>
-                        </AccordionContent>
-                      </AccordionItem>
-                    </motion.div>
-                  ))}
-                </Accordion>
-              </CardContent>
-            </Card>
-          </motion.div>
-        </div>
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+          className="max-w-6xl mx-auto"
+        >
+          <Card>
+            <CardHeader className="pb-4">
+              <p className="text-xl font-semibold text-center">
+                {t("section_title")}
+              </p>
+            </CardHeader>
+            <CardContent>
+              <Accordion type="single" collapsible className="w-full">
+                {faqIds.map((faq, index) => (
+                  <motion.div
+                    key={faq.id}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.5, delay: 0.4 + index * 0.1 }}
+                  >
+                    <AccordionItem value={faq.id}>
+                      <AccordionTrigger className="text-left hover:text-primary">
+                        <span className="font-medium">
+                          {t(`questions.${faq.id}.question`)}
+                        </span>
+                      </AccordionTrigger>
+                      <AccordionContent className="text-muted-foreground leading-relaxed">
+                        <p>{t(`questions.${faq.id}.answer`)}</p>
+                        {/* Hidden keywords for SEO - not visible to users */}
+                        <div className="sr-only">{faq.keywords.join(", ")}</div>
+                      </AccordionContent>
+                    </AccordionItem>
+                  </motion.div>
+                ))}
+              </Accordion>
+            </CardContent>
+          </Card>
+        </motion.div>
+      </div>
     </section>
   );
 }

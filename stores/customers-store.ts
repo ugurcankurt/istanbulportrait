@@ -132,7 +132,7 @@ export const useCustomersStore = create<CustomersState>()(
 
           const rawData = await response.text();
 
-          let data: any;
+          let data: unknown;
           try {
             data = JSON.parse(rawData);
           } catch (parseError) {
@@ -146,19 +146,25 @@ export const useCustomersStore = create<CustomersState>()(
             throw new Error("Invalid response structure");
           }
 
-          const customersData = Array.isArray(data.customers)
-            ? data.customers
-            : [];
+          const customersData = (
+            Array.isArray((data as { customers: unknown }).customers)
+              ? (data as { customers: unknown[] }).customers
+              : []
+          ) as Customer[];
           const paginationData =
-            data.pagination && typeof data.pagination === "object"
-              ? { ...initialPagination, ...data.pagination }
+            (data as { pagination: unknown }).pagination &&
+            typeof (data as { pagination: unknown }).pagination === "object"
+              ? {
+                  ...initialPagination,
+                  ...(data as { pagination: Pagination }).pagination,
+                }
               : { ...initialPagination, page };
 
           // Calculate stats
           const totalCustomers = paginationData.total || 0;
           const totalRevenue = customersData.reduce(
-            (sum: number, customer: any) => {
-              const spent = customer?.total_spent || 0;
+            (sum: number, customer: Customer) => {
+              const spent = customer.total_spent || 0;
               return sum + (typeof spent === "number" ? spent : 0);
             },
             0,
@@ -166,7 +172,7 @@ export const useCustomersStore = create<CustomersState>()(
           const avgRevenuePerCustomer =
             totalCustomers > 0 ? totalRevenue / totalCustomers : 0;
           const repeatCustomers = customersData.filter(
-            (c: any) => (c?.confirmed_bookings || 0) > 1,
+            (c: Customer) => (c.confirmed_bookings || 0) > 1,
           ).length;
           const repeatCustomerRate =
             totalCustomers > 0 ? (repeatCustomers / totalCustomers) * 100 : 0;

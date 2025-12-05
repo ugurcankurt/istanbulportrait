@@ -164,7 +164,7 @@ export function NotFoundContent({
               asChild
               variant="outline"
               size="lg"
-              className="w-full sm:w-auto text-black sm:px-8"
+              className="w-full sm:w-auto text-white border-white hover:bg-white hover:text-black sm:px-8"
             >
               <Link
                 href={`/${locale}/packages`}

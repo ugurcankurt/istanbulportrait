@@ -173,7 +173,7 @@ export function AdminLayoutClient({ children }: AdminLayoutClientProps) {
                       isActive={isActive}
                       tooltip={item.name}
                     >
-                      <Link href={item.href}>
+                      <Link href={item.href as string}>
                         <item.icon className="w-5 h-5" />
                         <span>{item.name}</span>
                       </Link>

@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { Filter, Search, SlidersHorizontal } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
+import { GetYourGuideWidget } from "@/components/getyourguide-widget";
 import { TourCardSkeleton } from "@/components/tour-card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -23,8 +24,12 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { GetYourGuideWidget } from "@/components/getyourguide-widget";
-import { getPopularIstanbulTours, getFilteredTours, getToursByCategory, type TourCategory } from "@/lib/getyourguide";
+import {
+  getFilteredTours,
+  getPopularIstanbulTours,
+  getToursByCategory,
+  type TourCategory,
+} from "@/lib/getyourguide";
 
 interface ToursPageContentProps {
   locale: string;
@@ -50,8 +55,8 @@ export function ToursPageContent({ locale }: ToursPageContentProps) {
 
   const [tourIds, setTourIds] = useState<string[]>([]);
   const [filteredTourIds, setFilteredTourIds] = useState<string[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [loading, _setLoading] = useState(false);
+  const [error, _setError] = useState<string | null>(null);
 
   // Filters and search
   const [searchQuery, setSearchQuery] = useState("");
@@ -79,7 +84,7 @@ export function ToursPageContent({ locale }: ToursPageContentProps) {
     if (searchQuery.trim()) {
       filtered = getFilteredTours(
         categoryFilter === "all" ? undefined : (categoryFilter as TourCategory),
-        searchQuery
+        searchQuery,
       );
     }
 
@@ -87,7 +92,7 @@ export function ToursPageContent({ locale }: ToursPageContentProps) {
     // For now, we maintain the current order
 
     setFilteredTourIds(filtered);
-  }, [tourIds, searchQuery, sortBy, categoryFilter]);
+  }, [tourIds, searchQuery, categoryFilter]);
 
   const clearFilters = () => {
     setSearchQuery("");
@@ -113,6 +118,7 @@ export function ToursPageContent({ locale }: ToursPageContentProps) {
         {/* Tours grid skeleton */}
         <div className="grid gap-4 sm:gap-6 lg:gap-8 md:grid-cols-2 lg:grid-cols-3">
           {Array.from({ length: 9 }).map((_, index) => (
+            // biome-ignore lint/suspicious/noArrayIndexKey: Index is stable for static skeleton array
             <TourCardSkeleton key={`tour-skeleton-${index}`} />
           ))}
         </div>

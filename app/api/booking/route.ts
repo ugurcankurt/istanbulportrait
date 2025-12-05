@@ -170,7 +170,7 @@ export async function POST(request: NextRequest) {
         throw error;
       }
 
-      const duration = Date.now() - startTime;
+      const _duration = Date.now() - startTime;
 
       return NextResponse.json({
         success: true,

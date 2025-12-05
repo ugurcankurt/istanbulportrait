@@ -1,4 +1,7 @@
 {
+  "payment_banner": {
+    "message": "安全支付"
+  },
   "nav": {
     "home": "首页",
     "packages": "套餐",
@@ -198,9 +201,6 @@
       "month_short": "月",
       "year_short": "年"
     },
-    "payment_method": "付款方式",
-    "payment_method_iyzico": "信用卡 (Iyzico)",
-    "payment_method_turinvoice": "俄罗斯卡 (Turinvoice)",
     "buttons": {
       "continue": "继续",
       "back": "返回",
@@ -210,8 +210,8 @@
       "complete_booking": "完成预订",
       "pay_amount": "支付 {amount}",
       "processing": "处理中...",
-      "continue_payment": "继续付款",
-      "book_another": "预订另一次拍摄"
+      "book_another": "预订另一次拍摄",
+      "pay_with_turinvoice": "使用Turinvoice支付"
     },
     "success": {
       "title": "预订已确认！",
@@ -244,30 +244,30 @@
       "complete_description": "输入您的付款信息完成预订",
       "secure_no_fees": "安全付款 • 无隐藏费用"
     },
+    "payment_method": "付款方式",
+    "payment_methods": {
+      "credit_card": "信用卡/借记卡",
+      "russian_banks": "MIR & SBP"
+    },
+    "turinvoice_description": "您将被重定向到Turinvoice安全付款页面。",
     "turinvoice": {
       "title": "Turinvoice付款",
-      "description": "通过Turinvoice使用俄罗斯银行卡安全付款。",
-      "status_new": "新建",
-      "status_paying": "处理中",
-      "status_paid": "已付款",
-      "status_timeout": "超时",
+      "status_new": "初始化中...",
       "time_remaining": "剩余时间",
       "amount_label": "金额",
-      "instruction_1": "点击下面的按钮打开安全付款页面。",
+      "instruction_1": "请在打开的页面上完成付款。",
       "open_payment_page": "打开付款页面",
-      "instruction_2": "付款后，此页面将自动更新。",
-      "payment_successful": "付款成功",
-      "confirmation_message": "您的付款已确认。",
-      "payment_timeout": "付款超时",
-      "timeout_message": "付款会话已过期。请重试。",
+      "instruction_2": "在确认付款之前，请勿关闭此窗口。",
       "security_notice": "通过Turinvoice安全付款",
-      "loading_qr": "正在加载二维码...",
-      "scan_qr_description": "使用您的银行应用扫描此二维码进行支付",
-      "or_pay_via_link": "或通过链接支付"
+      "status_paying": "等待付款中...",
+      "status_paid": "付款成功！",
+      "status_timeout": "付款超时",
+      "success_message": "您的付款已确认。",
+      "redirect_message": "重定向中...",
+      "timeout_message": "付款会话已过期。",
+      "timeout_desc": "请重试以重新启动付款流程。",
+      "try_again": "重试"
     }
-  },
-  "payment_banner": {
-    "message": "我们接受通过Iyzico和Turinvoice的安全付款"
   },
   "footer": {
     "description": "伊斯坦布尔领先的专业人像摄影师。以城市最具标志性的背景捕捉您的特殊时刻。",

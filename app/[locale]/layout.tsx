@@ -1,18 +1,35 @@
+import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
+import { Geist, Geist_Mono } from "next/font/google";
+import Script from "next/script";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages, getTranslations } from "next-intl/server";
-import Script from "next/script";
+import { CoreWebVitals } from "@/components/analytics/core-web-vitals";
 import { FacebookPixel } from "@/components/analytics/facebook-pixel";
 import { GoogleAnalytics } from "@/components/analytics/google-analytics";
-import { CoreWebVitals } from "@/components/analytics/core-web-vitals";
+import { MicrosoftClarity } from "@/components/analytics/microsoft-clarity";
 import { MultilingualCookieConsent } from "@/components/analytics/multilingual-cookie-consent";
 import { YandexMetrica } from "@/components/analytics/yandex-metrica";
+import { ConsentGate } from "@/components/consent-gate";
+import { ConsentProvider } from "@/contexts/consent-context";
 import { SEO_CONFIG } from "@/lib/seo-config";
 import "../globals.css";
 import { ThemeProvider } from "next-themes";
 import { Footer } from "@/components/footer";
 import { Navigation } from "@/components/navigation";
+import { PaymentBanner } from "@/components/payment-banner";
 import { Toaster } from "@/components/ui/sonner";
 import { WhatsAppButton } from "@/components/whatsapp-button";
+
+const geistSans = Geist({
+  variable: "--font-geist-sans",
+  subsets: ["latin"],
+});
+
+const geistMono = Geist_Mono({
+  variable: "--font-geist-mono",
+  subsets: ["latin"],
+});
 
 export async function generateMetadata({
   params,
@@ -48,6 +65,7 @@ export async function generateMetadata({
         ar: `${baseUrl}/ar`,
         ru: `${baseUrl}/ru`,
         es: `${baseUrl}/es`,
+        zh: `${baseUrl}/zh`,
       },
     },
     openGraph: {
@@ -66,7 +84,7 @@ export async function generateMetadata({
       type: "website",
       url: `${baseUrl}/${locale}`,
       siteName: SEO_CONFIG.organization.name,
-      countryName: "Turkey",
+      countryName: "Türkiye",
     },
     twitter: {
       card: "summary_large_image",
@@ -123,37 +141,60 @@ export default async function LocaleLayout({
   children: React.ReactNode;
   params: Promise<{ locale: string }>;
 }) {
-  const { locale: _locale } = await params;
+  const { locale } = await params;
   const messages = await getMessages();
 
   return (
-    <ThemeProvider
-      attribute="class"
-      defaultTheme="light"
-      enableSystem
-      disableTransitionOnChange
+    <html
+      lang={locale}
+      dir={locale === "ar" ? "rtl" : "ltr"}
+      data-scroll-behavior="smooth"
+      suppressHydrationWarning
     >
-      <NextIntlClientProvider messages={messages}>
-        <div className="flex min-h-screen flex-col">
-          <Navigation />
-          <main className="flex-1">{children}</main>
-          <GoogleAnalytics />
-          <FacebookPixel />
-          <YandexMetrica />
-          <CoreWebVitals />
-          <Footer />
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        suppressHydrationWarning
+      >
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="light"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <ConsentProvider>
+            <NextIntlClientProvider messages={messages}>
+              <div className="flex min-h-screen flex-col">
+                <PaymentBanner />
+                <Navigation />
+                <main className="flex-1">{children}</main>
 
-          {/* GetYourGuide Analytics */}
-          <Script
-            src="https://widget.getyourguide.com/dist/pa.umd.production.min.js"
-            strategy="lazyOnload"
-            data-gyg-partner-id="S6XXHTA"
-          />
-        </div>
-        <Toaster />
-        <MultilingualCookieConsent />
-        <WhatsAppButton phoneNumber="+905367093724" />
-      </NextIntlClientProvider>
-    </ThemeProvider>
+                {/* Analytics - Only load after user consent */}
+                <ConsentGate consent="accepted_all">
+                  <GoogleAnalytics />
+                  <FacebookPixel />
+                  <YandexMetrica />
+                  <MicrosoftClarity />
+                </ConsentGate>
+
+                <CoreWebVitals />
+                <Footer />
+
+                {/* GetYourGuide Analytics */}
+                <Script
+                  src="https://widget.getyourguide.com/dist/pa.umd.production.min.js"
+                  strategy="lazyOnload"
+                  data-gyg-partner-id="S6XXHTA"
+                />
+              </div>
+              <Toaster />
+              <MultilingualCookieConsent />
+              <WhatsAppButton phoneNumber="+905367093724" />
+            </NextIntlClientProvider>
+          </ConsentProvider>
+        </ThemeProvider>
+        <SpeedInsights />
+        <Analytics />
+      </body>
+    </html>
   );
 }

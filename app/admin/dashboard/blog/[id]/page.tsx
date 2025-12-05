@@ -1,14 +1,14 @@
 "use client";
 
-import { use, useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import { ArrowLeft, Loader2 } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { use, useEffect, useState } from "react";
 import { toast } from "sonner";
-import { Button } from "@/components/ui/button";
 import { BlogForm } from "@/components/admin/blog/blog-form";
+import { Button } from "@/components/ui/button";
 import { useBlogStore } from "@/stores/blog-store";
-import type { BlogFormData } from "@/types/blog";
+import type { BlogFormData, BlogPostWithAllTranslations } from "@/types/blog";
 
 export default function EditBlogPostPage({
   params,
@@ -93,11 +93,15 @@ export default function EditBlogPostPage({
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Edit Post</h1>
           <p className="text-muted-foreground">
-            {(currentPost as any).translations?.en?.title ||
-             (currentPost as any).translations?.ar?.title ||
-             (currentPost as any).translations?.ru?.title ||
-             (currentPost as any).translations?.es?.title ||
-             "Untitled Post"}
+            {(currentPost as unknown as BlogPostWithAllTranslations)
+              .translations?.en?.title ||
+              (currentPost as unknown as BlogPostWithAllTranslations)
+                .translations?.ar?.title ||
+              (currentPost as unknown as BlogPostWithAllTranslations)
+                .translations?.ru?.title ||
+              (currentPost as unknown as BlogPostWithAllTranslations)
+                .translations?.es?.title ||
+              "Untitled Post"}
           </p>
         </div>
       </div>

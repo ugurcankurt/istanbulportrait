@@ -141,9 +141,13 @@ export const usePaymentsStore = create<PaymentsState>()(
 
           const rawData = await response.text();
 
-          let data: any;
+          interface PaymentsResponse {
+            payments: unknown[];
+            pagination: Pagination;
+          }
+          let data: PaymentsResponse;
           try {
-            data = JSON.parse(rawData);
+            data = JSON.parse(rawData) as PaymentsResponse;
           } catch (parseError) {
             console.error("Payments Store: JSON parse error:", parseError);
             throw new Error("Invalid JSON response from server");
@@ -155,54 +159,49 @@ export const usePaymentsStore = create<PaymentsState>()(
             throw new Error("Invalid response structure");
           }
 
-          let paymentsData = Array.isArray(data.payments) ? data.payments : [];
+          const paymentsData = Array.isArray(data.payments)
+            ? data.payments
+            : [];
           const paginationData =
             data.pagination && typeof data.pagination === "object"
               ? { ...initialPagination, ...data.pagination }
               : { ...initialPagination, page };
 
           // Process payments data - fix nested bookings relationship
-          paymentsData = paymentsData
-            .map((payment: { status: string; booking_id?: string; id: string; amount: number; currency: string; [key: string]: any }) => {
-              if (!payment || typeof payment !== "object") {
-                console.warn(
-                  "⚠️ [Payments Store] Invalid payment object:",
-                  payment,
-                );
+          const processedPayments = paymentsData
+            .map((paymentItem: unknown) => {
+              if (!paymentItem || typeof paymentItem !== "object") {
                 return null;
               }
+              const p = paymentItem as Payment;
 
               // Handle bookings relationship data - convert array to single object if needed
-              if (payment.bookings && Array.isArray(payment.bookings)) {
-                payment.bookings = payment.bookings[0] || null;
+              if (p.bookings && Array.isArray(p.bookings)) {
+                p.bookings = p.bookings[0] || null;
               }
-
-              return payment;
+              return p;
             })
-            .filter((payment: { status: string; booking_id?: string; id: string; amount: number; currency: string; [key: string]: any } | null) => payment !== null);
+            .filter((p): p is Payment => p !== null);
 
           // Calculate stats
-          const successfulPayments = paymentsData.filter(
-            (p: { status: string }) => p?.status === "success",
+          const successfulPayments = processedPayments.filter(
+            (p) => p.status === "success",
           );
-          const failedPayments = paymentsData.filter(
-            (p: { status: string }) => p?.status === "failure",
+          const failedPayments = processedPayments.filter(
+            (p) => p.status === "failure",
           );
-          const pendingPayments = paymentsData.filter(
-            (p: { status: string }) => p?.status === "pending",
+          const pendingPayments = processedPayments.filter(
+            (p) => p.status === "pending",
           );
 
-          const totalAmount = successfulPayments.reduce(
-            (sum: number, payment: { amount?: number }) => {
-              const amount = payment?.amount || 0;
-              return sum + (typeof amount === "number" ? amount : 0);
-            },
-            0,
-          );
+          const totalAmount = successfulPayments.reduce((sum, payment) => {
+            const amount = payment.amount || 0;
+            return sum + (typeof amount === "number" ? amount : 0);
+          }, 0);
 
           const successRate =
-            paymentsData.length > 0
-              ? (successfulPayments.length / paymentsData.length) * 100
+            processedPayments.length > 0
+              ? (successfulPayments.length / processedPayments.length) * 100
               : 0;
 
           const stats = {
@@ -214,7 +213,7 @@ export const usePaymentsStore = create<PaymentsState>()(
           };
 
           set({
-            payments: paymentsData,
+            payments: processedPayments,
             pagination: paginationData,
             filters,
             stats,

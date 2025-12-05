@@ -122,7 +122,7 @@ export const useBookingsStore = create<BookingsState>()(
 
           const rawData = await response.text();
 
-          let data: any;
+          let data: unknown;
           try {
             data = JSON.parse(rawData);
           } catch (parseError) {
@@ -136,12 +136,19 @@ export const useBookingsStore = create<BookingsState>()(
             throw new Error("Invalid response structure");
           }
 
-          const bookingsData = Array.isArray(data.bookings)
-            ? data.bookings
-            : [];
+          const bookingsData = (
+            Array.isArray((data as { bookings: unknown }).bookings)
+              ? (data as { bookings: unknown[] }).bookings
+              : []
+          ) as Booking[];
+
           const paginationData =
-            data.pagination && typeof data.pagination === "object"
-              ? { ...initialPagination, ...data.pagination }
+            (data as { pagination?: Pagination }).pagination &&
+            typeof (data as { pagination?: Pagination }).pagination === "object"
+              ? {
+                  ...initialPagination,
+                  ...(data as { pagination: Pagination }).pagination,
+                }
               : { ...initialPagination, page };
 
           set({

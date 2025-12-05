@@ -3,6 +3,7 @@
  * Database operations for blog system using Supabase
  */
 
+import { supabaseAdmin } from "@/lib/supabase";
 import type {
   BlogCategoryListResponse,
   BlogCategoryWithTranslation,
@@ -17,7 +18,6 @@ import type {
   Locale,
   TagFormData,
 } from "@/types/blog";
-import { supabaseAdmin } from "@/lib/supabase";
 import { calculateReadingTime } from "./blog-utils";
 
 // =============================================
@@ -113,13 +113,16 @@ export async function getPublishedBlogPosts(
   // Transform array translations to objects and filter by locale
   const transformedPosts = (data || []).map((post: any) => ({
     ...post,
-    translation: Array.isArray(post.translation) ? post.translation[0] : post.translation,
+    translation: Array.isArray(post.translation)
+      ? post.translation[0]
+      : post.translation,
     categories: (post.categories || []).map((cat: any) => ({
       ...cat,
       category: {
         ...cat.category,
         translation: Array.isArray(cat.category.translations)
-          ? cat.category.translations.find((t: any) => t.locale === locale) || cat.category.translations[0]
+          ? cat.category.translations.find((t: any) => t.locale === locale) ||
+            cat.category.translations[0]
           : cat.category.translations,
       },
     })),
@@ -128,7 +131,8 @@ export async function getPublishedBlogPosts(
       tag: {
         ...tag.tag,
         translation: Array.isArray(tag.tag.translations)
-          ? tag.tag.translations.find((t: any) => t.locale === locale) || tag.tag.translations[0]
+          ? tag.tag.translations.find((t: any) => t.locale === locale) ||
+            tag.tag.translations[0]
           : tag.tag.translations,
       },
     })),
@@ -204,7 +208,9 @@ export async function getAllBlogPosts(
   }
 
   if (search) {
-    query = query.or(`translation.title.ilike.%${search}%,slug.ilike.%${search}%`);
+    query = query.or(
+      `translation.title.ilike.%${search}%,slug.ilike.%${search}%`,
+    );
   }
 
   if (category_id && category_id !== "all") {
@@ -237,13 +243,16 @@ export async function getAllBlogPosts(
   // Transform array translations to objects and filter by locale
   const transformedPosts = (data || []).map((post: any) => ({
     ...post,
-    translation: Array.isArray(post.translation) ? post.translation[0] : post.translation,
+    translation: Array.isArray(post.translation)
+      ? post.translation[0]
+      : post.translation,
     categories: (post.categories || []).map((cat: any) => ({
       ...cat,
       category: {
         ...cat.category,
         translation: Array.isArray(cat.category.translations)
-          ? cat.category.translations.find((t: any) => t.locale === locale) || cat.category.translations[0]
+          ? cat.category.translations.find((t: any) => t.locale === locale) ||
+            cat.category.translations[0]
           : cat.category.translations,
       },
     })),
@@ -252,7 +261,8 @@ export async function getAllBlogPosts(
       tag: {
         ...tag.tag,
         translation: Array.isArray(tag.tag.translations)
-          ? tag.tag.translations.find((t: any) => t.locale === locale) || tag.tag.translations[0]
+          ? tag.tag.translations.find((t: any) => t.locale === locale) ||
+            tag.tag.translations[0]
           : tag.tag.translations,
       },
     })),
@@ -319,13 +329,16 @@ export async function getBlogPostBySlug(
   // Transform array translations to objects and filter by locale
   const transformedPost = {
     ...data,
-    translation: Array.isArray(data.translation) ? data.translation[0] : data.translation,
+    translation: Array.isArray(data.translation)
+      ? data.translation[0]
+      : data.translation,
     categories: (data.categories || []).map((cat: any) => ({
       ...cat,
       category: {
         ...cat.category,
         translation: Array.isArray(cat.category.translations)
-          ? cat.category.translations.find((t: any) => t.locale === locale) || cat.category.translations[0]
+          ? cat.category.translations.find((t: any) => t.locale === locale) ||
+            cat.category.translations[0]
           : cat.category.translations,
       },
     })),
@@ -334,7 +347,8 @@ export async function getBlogPostBySlug(
       tag: {
         ...tag.tag,
         translation: Array.isArray(tag.tag.translations)
-          ? tag.tag.translations.find((t: any) => t.locale === locale) || tag.tag.translations[0]
+          ? tag.tag.translations.find((t: any) => t.locale === locale) ||
+            tag.tag.translations[0]
           : tag.tag.translations,
       },
     })),
@@ -393,13 +407,16 @@ export async function getBlogPostById(
   // Transform array translations to objects
   const transformedPost = {
     ...data,
-    translation: Array.isArray(data.translation) ? data.translation[0] : data.translation,
+    translation: Array.isArray(data.translation)
+      ? data.translation[0]
+      : data.translation,
     categories: (data.categories || []).map((cat: any) => ({
       ...cat,
       category: {
         ...cat.category,
         translation: Array.isArray(cat.category.translations)
-          ? cat.category.translations.find((t: any) => t.locale === locale) || cat.category.translations[0]
+          ? cat.category.translations.find((t: any) => t.locale === locale) ||
+            cat.category.translations[0]
           : cat.category.translations,
       },
     })),
@@ -408,7 +425,8 @@ export async function getBlogPostById(
       tag: {
         ...tag.tag,
         translation: Array.isArray(tag.tag.translations)
-          ? tag.tag.translations.find((t: any) => t.locale === locale) || tag.tag.translations[0]
+          ? tag.tag.translations.find((t: any) => t.locale === locale) ||
+            tag.tag.translations[0]
           : tag.tag.translations,
       },
     })),
@@ -472,6 +490,7 @@ export async function getBlogPostByIdWithAllTranslations(
     ar: translationsArray.find((t: any) => t.locale === "ar") || null,
     ru: translationsArray.find((t: any) => t.locale === "ru") || null,
     es: translationsArray.find((t: any) => t.locale === "es") || null,
+    zh: translationsArray.find((t: any) => t.locale === "zh") || null,
   };
 
   // Transform categories and tags
@@ -506,9 +525,7 @@ export async function getBlogPostByIdWithAllTranslations(
 /**
  * Create blog post
  */
-export async function createBlogPost(
-  formData: any,
-): Promise<BlogPost | null> {
+export async function createBlogPost(formData: any): Promise<BlogPost | null> {
   const {
     slug,
     status,
@@ -531,7 +548,9 @@ export async function createBlogPost(
       slug,
       status,
       featured_image,
-      published_at: published_at || (status === "published" ? new Date().toISOString() : null),
+      published_at:
+        published_at ||
+        (status === "published" ? new Date().toISOString() : null),
       meta_keywords,
       is_featured,
       reading_time_minutes: readingTime.minutes,
@@ -669,7 +688,10 @@ export async function updateBlogPost(
         });
 
       if (translationError) {
-        console.error(`Error updating translation for ${locale}:`, translationError);
+        console.error(
+          `Error updating translation for ${locale}:`,
+          translationError,
+        );
       }
     }
   }
@@ -713,7 +735,10 @@ export async function updateBlogPost(
  * Delete blog post
  */
 export async function deleteBlogPost(id: string): Promise<boolean> {
-  const { error } = await supabaseAdmin.from("blog_posts").delete().eq("id", id);
+  const { error } = await supabaseAdmin
+    .from("blog_posts")
+    .delete()
+    .eq("id", id);
 
   if (error) {
     console.error("Error deleting blog post:", error);
@@ -777,7 +802,9 @@ export async function getBlogCategories(
   // Transform array response to object
   const categories = (data || []).map((item: any) => ({
     ...item,
-    translation: Array.isArray(item.translation) ? item.translation[0] : item.translation,
+    translation: Array.isArray(item.translation)
+      ? item.translation[0]
+      : item.translation,
   }));
 
   return {
@@ -858,7 +885,9 @@ export async function getBlogCategoryById(
 /**
  * Get category by ID with ALL translations (for editing)
  */
-export async function getCategoryByIdWithAllTranslations(id: string): Promise<any> {
+export async function getCategoryByIdWithAllTranslations(
+  id: string,
+): Promise<any> {
   const { data, error } = await supabaseAdmin
     .from("blog_categories")
     .select(
@@ -890,6 +919,7 @@ export async function getCategoryByIdWithAllTranslations(id: string): Promise<an
     ar: translationsArray.find((t: any) => t.locale === "ar") || null,
     ru: translationsArray.find((t: any) => t.locale === "ru") || null,
     es: translationsArray.find((t: any) => t.locale === "es") || null,
+    zh: translationsArray.find((t: any) => t.locale === "zh") || null,
   };
 
   return {
@@ -931,12 +961,18 @@ export async function updateBlogCategory(
     for (const [locale, translation] of Object.entries(translations)) {
       const { error: translationError } = await supabaseAdmin
         .from("blog_category_translations")
-        .update({
-          name: translation.name,
-          description: translation.description || "",
-        })
-        .eq("category_id", id)
-        .eq("locale", locale);
+        .upsert(
+          {
+            category_id: id,
+            locale,
+            name: translation.name,
+            description: translation.description || "",
+            updated_at: new Date().toISOString(),
+          },
+          {
+            onConflict: "category_id,locale",
+          },
+        );
 
       if (translationError) {
         console.error("Error updating category translation:", translationError);
@@ -982,7 +1018,9 @@ export async function deleteBlogCategory(id: string): Promise<void> {
 /**
  * Get all tags
  */
-export async function getBlogTags(locale: Locale = "en"): Promise<BlogTagListResponse> {
+export async function getBlogTags(
+  locale: Locale = "en",
+): Promise<BlogTagListResponse> {
   const { data, error } = await supabaseAdmin
     .from("blog_tags")
     .select(
@@ -1002,7 +1040,9 @@ export async function getBlogTags(locale: Locale = "en"): Promise<BlogTagListRes
   // Transform array response to object
   const tags = (data || []).map((item: any) => ({
     ...item,
-    translation: Array.isArray(item.translation) ? item.translation[0] : item.translation,
+    translation: Array.isArray(item.translation)
+      ? item.translation[0]
+      : item.translation,
   }));
 
   return {
@@ -1077,7 +1117,9 @@ export async function getBlogTagById(
   // Transform array to object
   const tag = {
     ...data,
-    translation: Array.isArray(data.translation) ? data.translation[0] : data.translation,
+    translation: Array.isArray(data.translation)
+      ? data.translation[0]
+      : data.translation,
   };
 
   return tag as BlogTagWithTranslation;
@@ -1117,6 +1159,7 @@ export async function getTagByIdWithAllTranslations(id: string): Promise<any> {
     ar: translationsArray.find((t: any) => t.locale === "ar") || null,
     ru: translationsArray.find((t: any) => t.locale === "ru") || null,
     es: translationsArray.find((t: any) => t.locale === "es") || null,
+    zh: translationsArray.find((t: any) => t.locale === "zh") || null,
   };
 
   return {
@@ -1152,11 +1195,17 @@ export async function updateBlogTag(
     for (const [locale, translation] of Object.entries(translations)) {
       const { error: translationError } = await supabaseAdmin
         .from("blog_tag_translations")
-        .update({
-          name: translation.name,
-        })
-        .eq("tag_id", id)
-        .eq("locale", locale);
+        .upsert(
+          {
+            tag_id: id,
+            locale,
+            name: translation.name,
+            updated_at: new Date().toISOString(),
+          },
+          {
+            onConflict: "tag_id,locale",
+          },
+        );
 
       if (translationError) {
         console.error("Error updating tag translation:", translationError);

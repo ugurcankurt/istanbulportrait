@@ -1,4 +1,7 @@
 {
+  "payment_banner": {
+    "message": "دفع آمن"
+  },
   "nav": {
     "home": "الرئيسية",
     "packages": "الحزم",
@@ -198,9 +201,6 @@
       "month_short": "الشهر",
       "year_short": "السنة"
     },
-    "payment_method": "طريقة الدفع",
-    "payment_method_iyzico": "بطاقة ائتمان (Iyzico)",
-    "payment_method_turinvoice": "البطاقات الروسية (Turinvoice)",
     "buttons": {
       "continue": "متابعة",
       "back": "رجوع",
@@ -210,8 +210,8 @@
       "complete_booking": "إتمام الحجز",
       "pay_amount": "ادفع {amount}",
       "processing": "جاري المعالجة...",
-      "continue_payment": "متابعة إلى الدفع",
-      "book_another": "احجز جلسة أخرى"
+      "book_another": "احجز جلسة أخرى",
+      "pay_with_turinvoice": "ادفع مع Turinvoice"
     },
     "success": {
       "title": "تم تأكيد الحجز!",
@@ -245,30 +245,30 @@
       "complete_description": "أكمل حجزك عن طريق إدخال معلومات الدفع",
       "secure_no_fees": "دفع آمن • بدون رسوم مخفية"
     },
+    "payment_method": "طريقة الدفع",
+    "payment_methods": {
+      "credit_card": "بطاقة ائتمان/خصم",
+      "russian_banks": "MIR & SBP"
+    },
+    "turinvoice_description": "سيتم إعادة توجيهك إلى صفحة الدفع الآمنة Turinvoice.",
     "turinvoice": {
       "title": "دفع Turinvoice",
-      "description": "ادفع بأمان باستخدام البطاقات المصرفية الروسية عبر Turinvoice.",
-      "status_new": "جديد",
-      "status_paying": "جاري المعالجة",
-      "status_paid": "تم الدفع",
-      "status_timeout": "انتهت المهلة",
+      "status_new": "جاري التهيئة...",
       "time_remaining": "الوقت المتبقي",
       "amount_label": "المبلغ",
-      "instruction_1": "انقر على الزر أدناه لفتح صفحة الدفع الآمنة.",
+      "instruction_1": "يرجى إكمال الدفع في الصفحة المفتوحة.",
       "open_payment_page": "فتح صفحة الدفع",
-      "instruction_2": "بعد الدفع، سيتم تحديث هذه الصفحة تلقائياً.",
-      "payment_successful": "تم الدفع بنجاح",
-      "confirmation_message": "تم تأكيد دفعتك.",
-      "payment_timeout": "انتهت مهلة الدفع",
-      "timeout_message": "انتهت جلسة الدفع. يرجى المحاولة مرة أخرى.",
+      "instruction_2": "لا تغلق هذه النافذة حتى يتم تأكيد الدفع.",
       "security_notice": "دفع آمن عبر Turinvoice",
-      "loading_qr": "جاري تحميل رمز الاستجابة السريعة...",
-      "scan_qr_description": "امسح رمز الاستجابة السريعة هذا باستخدام تطبيقك المصرفي للدفع",
-      "or_pay_via_link": "أو ادفع عبر الرابط"
+      "status_paying": "في انتظار الدفع...",
+      "status_paid": "تم الدفع بنجاح!",
+      "status_timeout": "انتهت مهلة الدفع",
+      "success_message": "تم تأكيد دفعتك.",
+      "redirect_message": "جاري إعادة التوجيه...",
+      "timeout_message": "انتهت صلاحية جلسة الدفع.",
+      "timeout_desc": "يرجى المحاولة مرة أخرى لإعادة تشغيل عملية الدفع.",
+      "try_again": "حاول مرة أخرى"
     }
-  },
-  "payment_banner": {
-    "message": "نقبل المدفوعات الآمنة عبر Iyzico و Turinvoice"
   },
   "validation": {
     "package_required": "اختيار الحزمة مطلوب",

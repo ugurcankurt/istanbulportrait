@@ -35,7 +35,10 @@ export async function GET(
     });
 
     if (!rateLimitResult.success) {
-      logError(new Error("Rate limit exceeded"), { ip, endpoint: "admin-blog-get" });
+      logError(new Error("Rate limit exceeded"), {
+        ip,
+        endpoint: "admin-blog-get",
+      });
       return createRateLimitError(rateLimitResult.resetTime);
     }
 
@@ -81,7 +84,10 @@ export async function PATCH(
     });
 
     if (!rateLimitResult.success) {
-      logError(new Error("Rate limit exceeded"), { ip, endpoint: "admin-blog-update" });
+      logError(new Error("Rate limit exceeded"), {
+        ip,
+        endpoint: "admin-blog-update",
+      });
       return createRateLimitError(rateLimitResult.resetTime);
     }
 
@@ -174,7 +180,10 @@ export async function DELETE(
     });
 
     if (!rateLimitResult.success) {
-      logError(new Error("Rate limit exceeded"), { ip, endpoint: "admin-blog-delete" });
+      logError(new Error("Rate limit exceeded"), {
+        ip,
+        endpoint: "admin-blog-delete",
+      });
       return createRateLimitError(rateLimitResult.resetTime);
     }
 

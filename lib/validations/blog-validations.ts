@@ -45,7 +45,10 @@ export const blogFormSchema = z.object({
     .max(200, "validation.blog.slug_max")
     .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, "validation.blog.slug_invalid"),
   status: blogStatusSchema,
-  featured_image: z.string().url("validation.blog.image_url_invalid").nullable(),
+  featured_image: z
+    .string()
+    .url("validation.blog.image_url_invalid")
+    .nullable(),
   published_at: z.string().datetime().nullable(),
   meta_keywords: z.array(z.string()).default([]),
   is_featured: z.boolean().default(false),
@@ -54,6 +57,7 @@ export const blogFormSchema = z.object({
     ar: blogTranslationInputSchema,
     ru: blogTranslationInputSchema,
     es: blogTranslationInputSchema,
+    zh: blogTranslationInputSchema,
   }),
   category_ids: z.array(z.string().uuid()).default([]),
   tag_ids: z.array(z.string().uuid()).default([]),
@@ -81,7 +85,11 @@ export const createBlogFormSchema = (t: any) =>
     translations: z.object({
       en: z.object({
         title: z.string().min(1, t("title_required")).max(200, t("title_max")),
-        excerpt: z.string().max(500, t("excerpt_max")).optional().or(z.literal("")),
+        excerpt: z
+          .string()
+          .max(500, t("excerpt_max"))
+          .optional()
+          .or(z.literal("")),
         content: z.string().min(1, t("content_required")),
         meta_description: z
           .string()
@@ -91,7 +99,11 @@ export const createBlogFormSchema = (t: any) =>
       }),
       ar: z.object({
         title: z.string().min(1, t("title_required")).max(200, t("title_max")),
-        excerpt: z.string().max(500, t("excerpt_max")).optional().or(z.literal("")),
+        excerpt: z
+          .string()
+          .max(500, t("excerpt_max"))
+          .optional()
+          .or(z.literal("")),
         content: z.string().min(1, t("content_required")),
         meta_description: z
           .string()
@@ -101,7 +113,11 @@ export const createBlogFormSchema = (t: any) =>
       }),
       ru: z.object({
         title: z.string().min(1, t("title_required")).max(200, t("title_max")),
-        excerpt: z.string().max(500, t("excerpt_max")).optional().or(z.literal("")),
+        excerpt: z
+          .string()
+          .max(500, t("excerpt_max"))
+          .optional()
+          .or(z.literal("")),
         content: z.string().min(1, t("content_required")),
         meta_description: z
           .string()
@@ -111,7 +127,11 @@ export const createBlogFormSchema = (t: any) =>
       }),
       es: z.object({
         title: z.string().min(1, t("title_required")).max(200, t("title_max")),
-        excerpt: z.string().max(500, t("excerpt_max")).optional().or(z.literal("")),
+        excerpt: z
+          .string()
+          .max(500, t("excerpt_max"))
+          .optional()
+          .or(z.literal("")),
         content: z.string().min(1, t("content_required")),
         meta_description: z
           .string()
@@ -147,13 +167,17 @@ export const categoryFormSchema = z.object({
     .max(100, "validation.blog.slug_max")
     .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, "validation.blog.slug_invalid"),
   icon: z.string().optional().nullable(),
-  color: z.string().regex(/^#[0-9A-Fa-f]{6}$/, "validation.blog.color_invalid").default("#6366f1"),
+  color: z
+    .string()
+    .regex(/^#[0-9A-Fa-f]{6}$/, "validation.blog.color_invalid")
+    .default("#6366f1"),
   sort_order: z.number().int().min(0).default(0),
   translations: z.object({
     en: categoryTranslationInputSchema,
     ar: categoryTranslationInputSchema,
     ru: categoryTranslationInputSchema,
     es: categoryTranslationInputSchema,
+    zh: categoryTranslationInputSchema,
   }),
 });
 
@@ -167,24 +191,43 @@ export const createCategoryFormSchema = (t: any) =>
       .max(100, t("slug_max"))
       .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, t("slug_invalid")),
     icon: z.string().optional().nullable(),
-    color: z.string().regex(/^#[0-9A-Fa-f]{6}$/, t("color_invalid")).default("#6366f1"),
+    color: z
+      .string()
+      .regex(/^#[0-9A-Fa-f]{6}$/, t("color_invalid"))
+      .default("#6366f1"),
     sort_order: z.number().int().min(0).default(0),
     translations: z.object({
       en: z.object({
         name: z.string().min(1, t("name_required")).max(100, t("name_max")),
-        description: z.string().max(500, t("description_max")).optional().or(z.literal("")),
+        description: z
+          .string()
+          .max(500, t("description_max"))
+          .optional()
+          .or(z.literal("")),
       }),
       ar: z.object({
         name: z.string().min(1, t("name_required")).max(100, t("name_max")),
-        description: z.string().max(500, t("description_max")).optional().or(z.literal("")),
+        description: z
+          .string()
+          .max(500, t("description_max"))
+          .optional()
+          .or(z.literal("")),
       }),
       ru: z.object({
         name: z.string().min(1, t("name_required")).max(100, t("name_max")),
-        description: z.string().max(500, t("description_max")).optional().or(z.literal("")),
+        description: z
+          .string()
+          .max(500, t("description_max"))
+          .optional()
+          .or(z.literal("")),
       }),
       es: z.object({
         name: z.string().min(1, t("name_required")).max(100, t("name_max")),
-        description: z.string().max(500, t("description_max")).optional().or(z.literal("")),
+        description: z
+          .string()
+          .max(500, t("description_max"))
+          .optional()
+          .or(z.literal("")),
       }),
     }),
   });
@@ -211,6 +254,7 @@ export const tagFormSchema = z.object({
     ar: tagTranslationInputSchema,
     ru: tagTranslationInputSchema,
     es: tagTranslationInputSchema,
+    zh: tagTranslationInputSchema,
   }),
 });
 

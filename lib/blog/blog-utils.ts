@@ -3,7 +3,11 @@
  * Slug generation, reading time calculation, text processing
  */
 
-import type { Locale, ReadingTimeResult, SlugGenerationOptions } from "@/types/blog";
+import type {
+  Locale,
+  ReadingTimeResult,
+  SlugGenerationOptions,
+} from "@/types/blog";
 
 // =============================================
 // SLUG GENERATION
@@ -487,9 +491,7 @@ export function isYouTubeUrl(url: string): boolean {
  * Extract YouTube video ID
  */
 export function extractYouTubeId(url: string): string | null {
-  const match = url.match(
-    /(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\s]+)/,
-  );
+  const match = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\s]+)/);
   return match ? match[1] : null;
 }
 
@@ -503,7 +505,10 @@ export function extractYouTubeId(url: string): string | null {
  */
 export function sanitizeHtml(html: string): string {
   // Remove script tags
-  let sanitized = html.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "");
+  let sanitized = html.replace(
+    /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi,
+    "",
+  );
 
   // Remove event handlers
   sanitized = sanitized.replace(/on\w+="[^"]*"/gi, "");

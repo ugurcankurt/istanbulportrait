@@ -1,7 +1,7 @@
 "use server";
 
+import { createHash } from "node:crypto";
 import { createServerAdminClient } from "@/lib/auth-server";
-import { createHash } from "crypto";
 
 /**
  * Hashes a string using SHA-256 for privacy
@@ -9,7 +9,7 @@ import { createHash } from "crypto";
  * @returns Hashed string
  */
 function hashString(input: string): string {
-    return createHash("sha256").update(input).digest("hex");
+  return createHash("sha256").update(input).digest("hex");
 }
 
 /**
@@ -20,40 +20,40 @@ function hashString(input: string): string {
  * @returns Success status
  */
 export async function logConsentEvent(
-    consent: "accepted_all" | "essential_only",
-    userAgent?: string,
-    ipAddress?: string,
+  consent: "accepted_all" | "essential_only",
+  userAgent?: string,
+  ipAddress?: string,
 ): Promise<{ success: boolean; error?: string }> {
-    try {
-        const supabase = await createServerAdminClient();
+  try {
+    const supabase = await createServerAdminClient();
 
-        // Hash IP address for privacy (GDPR requirement)
-        const hashedIp = ipAddress ? hashString(ipAddress) : null;
+    // Hash IP address for privacy (GDPR requirement)
+    const hashedIp = ipAddress ? hashString(ipAddress) : null;
 
-        // Use hashed IP as identifier, or generate a random one if not available
-        const userIdentifier = hashedIp || hashString(Date.now().toString());
+    // Use hashed IP as identifier, or generate a random one if not available
+    const userIdentifier = hashedIp || hashString(Date.now().toString());
 
-        const { error } = await supabase.from("consent_logs").insert({
-            user_identifier: userIdentifier,
-            consent_choice: consent,
-            consent_version: "1.0", // Update this when consent policy changes
-            user_agent: userAgent || null,
-            ip_address: hashedIp,
-        });
+    const { error } = await supabase.from("consent_logs").insert({
+      user_identifier: userIdentifier,
+      consent_choice: consent,
+      consent_version: "1.0", // Update this when consent policy changes
+      user_agent: userAgent || null,
+      ip_address: hashedIp,
+    });
 
-        if (error) {
-            console.error("Error logging consent event:", error);
-            return { success: false, error: error.message };
-        }
-
-        return { success: true };
-    } catch (error) {
-        console.error("Unexpected error logging consent:", error);
-        return {
-            success: false,
-            error: error instanceof Error ? error.message : "Unknown error",
-        };
+    if (error) {
+      console.error("Error logging consent event:", error);
+      return { success: false, error: error.message };
     }
+
+    return { success: true };
+  } catch (error) {
+    console.error("Unexpected error logging consent:", error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Unknown error",
+    };
+  }
 }
 
 /**
@@ -62,27 +62,27 @@ export async function logConsentEvent(
  * @returns Array of consent logs
  */
 export async function getConsentLogs(userIdentifier: string) {
-    try {
-        const supabase = await createServerAdminClient();
+  try {
+    const supabase = await createServerAdminClient();
 
-        const { data, error } = await supabase
-            .from("consent_logs")
-            .select("*")
-            .eq("user_identifier", userIdentifier)
-            .order("timestamp", { ascending: false });
+    const { data, error } = await supabase
+      .from("consent_logs")
+      .select("*")
+      .eq("user_identifier", userIdentifier)
+      .order("timestamp", { ascending: false });
 
-        if (error) {
-            console.error("Error fetching consent logs:", error);
-            return { success: false, error: error.message, data: null };
-        }
-
-        return { success: true, data };
-    } catch (error) {
-        console.error("Unexpected error fetching consent logs:", error);
-        return {
-            success: false,
-            error: error instanceof Error ? error.message : "Unknown error",
-            data: null,
-        };
+    if (error) {
+      console.error("Error fetching consent logs:", error);
+      return { success: false, error: error.message, data: null };
     }
+
+    return { success: true, data };
+  } catch (error) {
+    console.error("Unexpected error fetching consent logs:", error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Unknown error",
+      data: null,
+    };
+  }
 }

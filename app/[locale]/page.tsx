@@ -10,7 +10,6 @@ import { SEO_CONFIG } from "@/lib/seo-config";
 import {
   createSchemaConfig,
   generateEnhancedLocalBusinessSchema,
-  generateLocalBusinessSchema,
   generateOrganizationSchema,
   generatePersonSchema,
   MultipleJsonLd,
@@ -48,11 +47,16 @@ export default async function HomePage({
   const schemaConfig = createSchemaConfig(locale);
 
   // Generate structured data schemas with AI Search optimization
-  const enhancedLocalBusinessSchema = generateEnhancedLocalBusinessSchema(schemaConfig);
+  const enhancedLocalBusinessSchema =
+    generateEnhancedLocalBusinessSchema(schemaConfig);
   const organizationSchema = generateOrganizationSchema(schemaConfig);
   const personSchema = generatePersonSchema(schemaConfig);
 
-  const schemas = [enhancedLocalBusinessSchema, organizationSchema, personSchema];
+  const schemas = [
+    enhancedLocalBusinessSchema,
+    organizationSchema,
+    personSchema,
+  ];
 
   return (
     <>

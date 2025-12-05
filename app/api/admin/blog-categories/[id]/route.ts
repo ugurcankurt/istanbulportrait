@@ -5,13 +5,7 @@ import {
   getCategoryByIdWithAllTranslations,
   updateBlogCategory,
 } from "@/lib/blog/blog-service";
-import {
-  DatabaseConnectionError,
-  handleSupabaseError,
-  logError,
-  sanitizeErrorForProduction,
-  ValidationError,
-} from "@/lib/errors";
+import { logError, sanitizeErrorForProduction } from "@/lib/errors";
 import {
   checkRateLimit,
   createRateLimitError,
