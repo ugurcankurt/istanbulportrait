@@ -48,6 +48,41 @@ export function getLocalizedPaths(
 }
 
 /**
+ * Generate localized URL paths for blog posts with dynamic slug
+ * Uses the localized /blog path for each language (e.g., /ar/mudawwana, /ru/blog)
+ */
+export function getBlogPostLocalizedPaths(
+  slug: string,
+  baseUrl = SEO_CONFIG.site.url,
+): {
+  canonical: (locale: string) => string;
+  languages: Record<string, string>;
+} {
+  const blogPathConfig = routing.pathnames["/blog"];
+
+  // Get localized blog path for each locale
+  const getLocalizedBlogPath = (locale: string): string => {
+    if (typeof blogPathConfig === "object" && locale in blogPathConfig) {
+      return blogPathConfig[locale as keyof typeof blogPathConfig];
+    }
+    return "/blog";
+  };
+
+  return {
+    canonical: (locale: string) =>
+      `${baseUrl}/${locale}${getLocalizedBlogPath(locale)}/${slug}`,
+    languages: {
+      en: `${baseUrl}/en${getLocalizedBlogPath("en")}/${slug}`,
+      ar: `${baseUrl}/ar${getLocalizedBlogPath("ar")}/${slug}`,
+      ru: `${baseUrl}/ru${getLocalizedBlogPath("ru")}/${slug}`,
+      es: `${baseUrl}/es${getLocalizedBlogPath("es")}/${slug}`,
+      zh: `${baseUrl}/zh${getLocalizedBlogPath("zh")}/${slug}`,
+      "x-default": `${baseUrl}/en${getLocalizedBlogPath("en")}/${slug}`,
+    },
+  };
+}
+
+/**
  * Get Open Graph URL for current locale
  */
 export function getOpenGraphUrl(

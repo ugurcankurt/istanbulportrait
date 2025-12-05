@@ -13,6 +13,7 @@ import {
   getBlogPostBySlug,
 } from "@/lib/blog/blog-service";
 import { formatBlogDate } from "@/lib/blog/blog-utils";
+import { getBlogPostLocalizedPaths } from "@/lib/localized-url";
 import { SEO_CONFIG } from "@/lib/seo-config";
 import { createSchemaConfig, MultipleJsonLd } from "@/lib/structured-data";
 import type { Locale } from "@/types/blog";
@@ -45,6 +46,8 @@ export async function generateMetadata({
     };
   }
 
+  const paths = getBlogPostLocalizedPaths(slug);
+
   return {
     title: post.translation.title,
     description:
@@ -61,14 +64,8 @@ export async function generateMetadata({
       images: post.featured_image ? [post.featured_image] : [],
     },
     alternates: {
-      canonical: `${SEO_CONFIG.site.url}/${locale}/blog/${slug}`,
-      languages: {
-        en: `/en/blog/${slug}`,
-        ar: `/ar/blog/${slug}`,
-        ru: `/ru/blog/${slug}`,
-        es: `/es/blog/${slug}`,
-        zh: `/zh/blog/${slug}`,
-      },
+      canonical: paths.canonical(locale),
+      languages: paths.languages,
     },
   };
 }
