@@ -5,24 +5,29 @@ type LocalePath = keyof typeof routing.pathnames;
 
 /**
  * Generate localized URL paths for hreflang and canonical URLs
+ * Includes x-default pointing to English version for Google SEO best practices
  */
 export function getLocalizedPaths(
   pathname: LocalePath,
   baseUrl = SEO_CONFIG.site.url,
-) {
+): {
+  canonical: (locale: string) => string;
+  languages: Record<string, string>;
+} {
   const pathConfig = routing.pathnames[pathname];
 
   if (!pathConfig || typeof pathConfig === "string") {
     // Simple path case (like "/")
+    const pathSuffix = pathname === "/" ? "" : pathname;
     return {
-      canonical: (locale: string) =>
-        `${baseUrl}/${locale}${pathname === "/" ? "" : pathname}`,
+      canonical: (locale: string) => `${baseUrl}/${locale}${pathSuffix}`,
       languages: {
-        en: `${baseUrl}/en${pathname === "/" ? "" : pathname}`,
-        ar: `${baseUrl}/ar${pathname === "/" ? "" : pathname}`,
-        ru: `${baseUrl}/ru${pathname === "/" ? "" : pathname}`,
-        es: `${baseUrl}/es${pathname === "/" ? "" : pathname}`,
-        zh: `${baseUrl}/zh${pathname === "/" ? "" : pathname}`,
+        en: `${baseUrl}/en${pathSuffix}`,
+        ar: `${baseUrl}/ar${pathSuffix}`,
+        ru: `${baseUrl}/ru${pathSuffix}`,
+        es: `${baseUrl}/es${pathSuffix}`,
+        zh: `${baseUrl}/zh${pathSuffix}`,
+        "x-default": `${baseUrl}/en${pathSuffix}`,
       },
     };
   }
@@ -37,6 +42,7 @@ export function getLocalizedPaths(
       ru: `${baseUrl}/ru${pathConfig.ru}`,
       es: `${baseUrl}/es${pathConfig.es}`,
       zh: `${baseUrl}/zh${pathConfig.zh}`,
+      "x-default": `${baseUrl}/en${pathConfig.en}`,
     },
   };
 }
