@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { routing } from "@/i18n/routing";
 import { getAllPublishedSlugsWithDates } from "@/lib/blog/blog-service";
+import { getAllLocationSlugs } from "@/lib/locations/location-data";
 
 /**
  * SEO-Optimized Sitemap for Istanbul Portrait
@@ -15,7 +16,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = "https://istanbulportrait.com";
 
   // Static page last modified date - update this when major content changes occur
-  const staticPagesLastMod = new Date("2025-12-01T00:00:00Z");
+  const staticPagesLastMod = new Date("2025-12-06T00:00:00Z");
 
   // Define static routes - excluding checkout (transactional page, no SEO value)
   type PathnameKey = keyof typeof routing.pathnames;
@@ -26,6 +27,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     "/contact",
     "/privacy",
     "/blog",
+    "/locations",
   ];
 
   const sitemapEntries: MetadataRoute.Sitemap = [];
@@ -124,6 +126,41 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         lastModified: lastmod,
         changeFrequency: "weekly",
         priority: 0.7,
+        alternates: {
+          languages,
+        },
+      });
+    }
+  }
+
+  // Generate location pages sitemap entries
+  const locationSlugs = getAllLocationSlugs();
+  for (const slug of locationSlugs) {
+    for (const locale of routing.locales) {
+      const locationsPathConfig = routing.pathnames["/locations"];
+      const locationsPath =
+        typeof locationsPathConfig === "object" && locale in locationsPathConfig
+          ? locationsPathConfig[locale as keyof typeof locationsPathConfig]
+          : "/locations";
+
+      // Build language alternates for location with x-default
+      const languages: Record<string, string> = {};
+      routing.locales.forEach((l) => {
+        const lp =
+          typeof locationsPathConfig === "object" && l in locationsPathConfig
+            ? locationsPathConfig[l as keyof typeof locationsPathConfig]
+            : "/locations";
+        languages[l] = `${baseUrl}/${l}${lp}/${slug}`;
+      });
+
+      // Add x-default pointing to English version
+      languages["x-default"] = languages["en"];
+
+      sitemapEntries.push({
+        url: `${baseUrl}/${locale}${locationsPath}/${slug}`,
+        lastModified: staticPagesLastMod,
+        changeFrequency: "monthly",
+        priority: 0.75,
         alternates: {
           languages,
         },

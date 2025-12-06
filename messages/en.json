@@ -1007,5 +1007,223 @@
       "title": "Key Takeaways",
       "ai_overview": "AI Overview"
     }
+  },
+  "locations": {
+    "title": "Istanbul Photography Locations",
+    "subtitle": "Discover the most photogenic spots in Istanbul for your professional photoshoot",
+    "intro": "Explore Istanbul's most stunning photography locations with your professional photographer. From historic landmarks to hidden rooftops, each location offers unique backdrops for unforgettable photos.",
+    "viewPhotos": "View Photos",
+    "aboutLocation": "About This Location",
+    "photographyTips": "Photography Tips",
+    "gallery": "Photo Gallery",
+    "bestTimeToVisit": "Best Time to Visit",
+    "locationInfo": "Location Information",
+    "viewOnMap": "View on Google Maps →",
+    "bookPhotoshoot": "Book a Photoshoot Here",
+    "bookPhotoshootDescription": "Capture your memories at this stunning location with a professional photographer.",
+    "viewPackages": "View Packages",
+    "seo": {
+      "title": "Istanbul Photography Locations | Best Photo Spots in Istanbul",
+      "description": "Discover the best photography locations in Istanbul. From Galata Tower to Bosphorus rooftops, find the perfect backdrop for your professional photoshoot."
+    },
+    "tags": {
+      "historic": "Historic",
+      "iconic": "Iconic",
+      "rooftop": "Rooftop",
+      "couple": "Couples",
+      "colorful": "Colorful",
+      "instagram": "Instagram Worthy",
+      "solo": "Solo",
+      "bosphorus": "Bosphorus",
+      "mosque": "Mosque",
+      "bridge": "Bridge",
+      "romantic": "Romantic",
+      "unesco": "UNESCO",
+      "architecture": "Architecture",
+      "panoramic": "Panoramic",
+      "premium": "Premium",
+      "market": "Market",
+      "culture": "Cultural"
+    },
+    "bestTime": {
+      "sunset": "Sunset",
+      "morning": "Morning",
+      "early_morning": "Early Morning",
+      "sunrise": "Sunrise",
+      "golden_hour": "Golden Hour",
+      "afternoon": "Afternoon"
+    },
+    "bestTimeDescription": {
+      "sunset": "Capture stunning golden light and dramatic silhouettes",
+      "morning": "Fewer crowds and soft natural lighting",
+      "early_morning": "Best light and minimal tourists",
+      "sunrise": "Magical atmosphere with warm colors",
+      "golden_hour": "Perfect lighting for romantic photos",
+      "afternoon": "Great for interior and covered areas"
+    },
+    "tips": {
+      "golden_hour": {
+        "title": "Golden Hour Magic",
+        "description": "Arrive 1 hour before sunset for the best lighting conditions"
+      },
+      "rooftop_view": {
+        "title": "Rooftop Perspective",
+        "description": "Capture panoramic city views with the skyline as backdrop"
+      },
+      "cobblestone_streets": {
+        "title": "Cobblestone Streets",
+        "description": "Use the charming streets for authentic Istanbul atmosphere"
+      },
+      "colorful_houses": {
+        "title": "Colorful Houses",
+        "description": "The vibrant facades create perfect Instagram-worthy backdrops"
+      },
+      "narrow_streets": {
+        "title": "Narrow Streets",
+        "description": "Explore hidden alleys for unique and intimate shots"
+      },
+      "local_cafes": {
+        "title": "Local Cafes",
+        "description": "Stop at traditional cafes for lifestyle photography"
+      },
+      "mosque_bridge": {
+        "title": "Mosque & Bridge",
+        "description": "Frame the mosque with Bosphorus Bridge in background"
+      },
+      "bosphorus_view": {
+        "title": "Bosphorus Views",
+        "description": "Capture the iconic waterway at its most photogenic"
+      },
+      "street_food": {
+        "title": "Street Food Scene",
+        "description": "Include local kumpir and waffle stands for lifestyle shots"
+      },
+      "exterior_shots": {
+        "title": "Exterior Architecture",
+        "description": "The Byzantine architecture provides stunning backdrops"
+      },
+      "fountain_reflection": {
+        "title": "Fountain Reflections",
+        "description": "Use the courtyard fountain for creative reflection shots"
+      },
+      "sultanahmet_square": {
+        "title": "Sultanahmet Square",
+        "description": "Wide open space perfect for full-body fashion shots"
+      },
+      "six_minarets": {
+        "title": "Six Minarets",
+        "description": "Capture the unique silhouette of the only six-minaret mosque"
+      },
+      "courtyard": {
+        "title": "Courtyard Setting",
+        "description": "The inner courtyard offers peaceful photo opportunities"
+      },
+      "garden_view": {
+        "title": "Garden Views",
+        "description": "Beautiful gardens with mosque backdrop"
+      },
+      "panoramic_view": {
+        "title": "Panoramic Views",
+        "description": "360-degree views of Istanbul's iconic skyline"
+      },
+      "flying_dress": {
+        "title": "Flying Dress",
+        "description": "Perfect for dramatic flowing dress photography"
+      },
+      "sunset_silhouette": {
+        "title": "Sunset Silhouettes",
+        "description": "Create dramatic silhouettes against the sunset sky"
+      },
+      "terrace_view": {
+        "title": "Terrace Views",
+        "description": "Stunning vistas over the Golden Horn"
+      },
+      "golden_horn": {
+        "title": "Golden Horn",
+        "description": "Capture the historic waterway from above"
+      },
+      "ottoman_architecture": {
+        "title": "Ottoman Architecture",
+        "description": "Masterpiece of Ottoman imperial architecture"
+      },
+      "colorful_lamps": {
+        "title": "Colorful Lamps",
+        "description": "Iconic Turkish lamps create magical lighting"
+      },
+      "narrow_alleys": {
+        "title": "Covered Alleys",
+        "description": "Historic covered passages with unique atmosphere"
+      },
+      "local_vendors": {
+        "title": "Local Vendors",
+        "description": "Authentic scenes with traditional craftsmen"
+      }
+    },
+    "items": {
+      "galata-tower": {
+        "name": "Galata Tower",
+        "shortDescription": "Medieval stone tower with panoramic views of Istanbul and the Bosphorus",
+        "description": "The Galata Tower is one of Istanbul's most iconic landmarks, offering breathtaking 360-degree views of the city. Built in 1348 by the Genoese, this medieval stone tower stands 67 meters tall and has become a symbol of Istanbul. The surrounding Galata neighborhood features charming cobblestone streets, historic buildings, and cozy cafes perfect for lifestyle photography.",
+        "address": "Galata, Bereketzade, 34421 Beyoğlu/Istanbul",
+        "seoTitle": "Galata Tower Photography | Istanbul Photographer at Galata",
+        "seoDescription": "Professional photoshoot at Galata Tower, Istanbul's iconic medieval landmark. Stunning panoramic views and cobblestone streets for unforgettable photos."
+      },
+      "balat": {
+        "name": "Balat",
+        "shortDescription": "Colorful historic neighborhood with vibrant houses and authentic Istanbul charm",
+        "description": "Balat is one of Istanbul's oldest and most colorful neighborhoods, known for its vibrant painted houses, narrow streets, and authentic atmosphere. This UNESCO-listed district offers endless photography opportunities with its rainbow-colored facades, vintage shops, and traditional cafes. The neighborhood's unique character makes it perfect for Instagram-worthy shots.",
+        "address": "Balat, 34087 Fatih/Istanbul",
+        "seoTitle": "Balat Photography | Colorful Istanbul Photoshoot Location",
+        "seoDescription": "Capture stunning photos in Balat's colorful streets. Professional photography in Istanbul's most Instagram-worthy neighborhood with vibrant houses."
+      },
+      "ortakoy": {
+        "name": "Ortaköy",
+        "shortDescription": "Charming Bosphorus waterfront with iconic mosque and bridge views",
+        "description": "Ortaköy is a picturesque neighborhood on the European shore of the Bosphorus, famous for its elegant mosque and stunning views of the Bosphorus Bridge. The waterfront area offers perfect photo opportunities with the iconic mosque framed against the bridge. The lively atmosphere with street food vendors and cafes adds character to any photoshoot.",
+        "address": "Ortaköy, 34347 Beşiktaş/Istanbul",
+        "seoTitle": "Ortaköy Photography | Bosphorus Bridge Istanbul Photoshoot",
+        "seoDescription": "Professional photography at Ortaköy with Bosphorus Bridge views. Capture the iconic mosque and waterfront in your Istanbul photoshoot."
+      },
+      "hagia-sophia": {
+        "name": "Hagia Sophia",
+        "shortDescription": "UNESCO World Heritage Byzantine masterpiece, symbol of Istanbul",
+        "description": "Hagia Sophia is one of the world's greatest architectural achievements and Istanbul's most famous landmark. Built in 537 AD as a cathedral, this UNESCO World Heritage site showcases stunning Byzantine architecture with its massive dome and intricate mosaics. The exterior provides magnificent photo opportunities, especially during golden hour when the ancient walls glow warmly.",
+        "address": "Sultan Ahmet, Ayasofya Meydanı No:1, 34122 Fatih/Istanbul",
+        "seoTitle": "Hagia Sophia Photography | Istanbul UNESCO Heritage Photoshoot",
+        "seoDescription": "Professional photoshoot at Hagia Sophia, Istanbul's UNESCO World Heritage site. Capture Byzantine architecture and historic grandeur."
+      },
+      "blue-mosque": {
+        "name": "Blue Mosque",
+        "shortDescription": "Magnificent Ottoman mosque with six minarets and stunning architecture",
+        "description": "The Sultan Ahmed Mosque, popularly known as the Blue Mosque, is a masterpiece of Ottoman architecture built between 1609-1616. Famous for its six minarets and blue İznik tiles, the mosque offers spectacular photo opportunities. The courtyard and surrounding gardens provide beautiful settings for photography, especially at sunrise when the light is soft and crowds are minimal.",
+        "address": "Sultan Ahmet, Atmeydanı Cd. No:7, 34122 Fatih/Istanbul",
+        "seoTitle": "Blue Mosque Photography | Sultan Ahmed Mosque Istanbul Photoshoot",
+        "seoDescription": "Professional photography at the Blue Mosque, Istanbul's most magnificent Ottoman mosque. Capture six minarets and stunning architecture."
+      },
+      "bosphorus-rooftop": {
+        "name": "Bosphorus Rooftop",
+        "shortDescription": "Exclusive rooftop venues with panoramic Bosphorus and city views",
+        "description": "Experience Istanbul from above at our exclusive rooftop photography locations. These premium venues offer unparalleled 360-degree views of the Bosphorus, Galata Tower, and Istanbul's iconic skyline. Perfect for flying dress photography, sunset sessions, and romantic couple shoots. The dramatic backdrop creates magazine-worthy images.",
+        "address": "Various Rooftop Locations, Istanbul",
+        "seoTitle": "Rooftop Photography Istanbul | Bosphorus View Photoshoot",
+        "seoDescription": "Exclusive rooftop photography with panoramic Bosphorus views. Flying dress sessions and sunset shoots at Istanbul's premium rooftop venues."
+      },
+      "suleymaniye": {
+        "name": "Süleymaniye Mosque",
+        "shortDescription": "Imperial Ottoman mosque with stunning Golden Horn terrace views",
+        "description": "The Süleymaniye Mosque, built by legendary architect Mimar Sinan for Sultan Süleyman the Magnificent, is considered the finest example of Ottoman imperial architecture. The mosque complex offers stunning terrace views overlooking the Golden Horn and provides a peaceful atmosphere for photography. The gardens and courtyards offer multiple unique photo settings.",
+        "address": "Süleymaniye, Prof. Sıddık Sami Onar Cd. No:1, 34116 Fatih/Istanbul",
+        "seoTitle": "Süleymaniye Mosque Photography | Golden Horn View Istanbul",
+        "seoDescription": "Professional photoshoot at Süleymaniye Mosque with Golden Horn views. Ottoman imperial architecture and panoramic terrace photos in Istanbul."
+      },
+      "grand-bazaar": {
+        "name": "Grand Bazaar",
+        "shortDescription": "World's oldest covered market with colorful lamps and historic atmosphere",
+        "description": "The Grand Bazaar is one of the world's largest and oldest covered markets, with over 4,000 shops spread across 61 covered streets. Dating back to 1461, this historic market offers incredible photo opportunities with its colorful Turkish lamps, ornate ceilings, and bustling atmosphere. The covered passages provide unique lighting conditions for creative photography.",
+        "address": "Beyazıt, Kalpakçılar Cd. No:22, 34126 Fatih/Istanbul",
+        "seoTitle": "Grand Bazaar Photography | Historic Market Istanbul Photoshoot",
+        "seoDescription": "Unique photography at the Grand Bazaar, Istanbul's historic covered market. Colorful lamps and authentic Turkish atmosphere for your photoshoot."
+      }
+    }
   }
 }

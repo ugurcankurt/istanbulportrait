@@ -73,6 +73,13 @@ export const routing = defineRouting({
       es: "/blog/[slug]",
       zh: "/blog/[slug]",
     },
+    "/locations/[slug]": {
+      en: "/locations/[slug]",
+      ar: "/mawaqe/[slug]",
+      ru: "/lokatsii/[slug]",
+      es: "/ubicaciones/[slug]",
+      zh: "/didian/[slug]",
+    },
   },
 });
 

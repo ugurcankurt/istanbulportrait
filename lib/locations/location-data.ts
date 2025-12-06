@@ -1,0 +1,167 @@
+/**
+ * Istanbul Photography Locations Data
+ * 
+ * Static data sourced from Wikidata for SEO optimization.
+ * Run `npm run update-locations` to refresh from Wikidata API.
+ */
+
+export interface LocationData {
+    slug: string;
+    wikidataId: string;
+    coordinates: {
+        lat: number;
+        lng: number;
+    };
+    images: {
+        hero: string;
+        gallery: string[];
+    };
+    bestTime: string;
+    photographyTips: string[];
+    nearbyLocations: string[];
+    tags: string[];
+}
+
+export const LOCATIONS: LocationData[] = [
+    {
+        slug: "galata-tower",
+        wikidataId: "Q181862",
+        coordinates: { lat: 41.0256, lng: 28.9744 },
+        images: {
+            hero: "/images/locations/galata-tower-hero.jpg",
+            gallery: [
+                "/images/locations/galata-tower-1.jpg",
+                "/images/locations/galata-tower-2.jpg",
+            ],
+        },
+        bestTime: "sunset",
+        photographyTips: ["golden_hour", "rooftop_view", "cobblestone_streets"],
+        nearbyLocations: ["karakoy", "balat"],
+        tags: ["historic", "iconic", "rooftop", "couple"],
+    },
+    {
+        slug: "balat",
+        wikidataId: "Q2313872",
+        coordinates: { lat: 41.0303, lng: 28.9481 },
+        images: {
+            hero: "/images/locations/balat-hero.jpg",
+            gallery: [
+                "/images/locations/balat-1.jpg",
+                "/images/locations/balat-2.jpg",
+            ],
+        },
+        bestTime: "morning",
+        photographyTips: ["colorful_houses", "narrow_streets", "local_cafes"],
+        nearbyLocations: ["fener", "suleymaniye"],
+        tags: ["colorful", "historic", "instagram", "couple", "solo"],
+    },
+    {
+        slug: "ortakoy",
+        wikidataId: "Q1662306",
+        coordinates: { lat: 41.0479, lng: 29.0273 },
+        images: {
+            hero: "/images/locations/ortakoy-hero.jpg",
+            gallery: [
+                "/images/locations/ortakoy-1.jpg",
+                "/images/locations/ortakoy-2.jpg",
+            ],
+        },
+        bestTime: "sunset",
+        photographyTips: ["mosque_bridge", "bosphorus_view", "street_food"],
+        nearbyLocations: ["bebek", "besiktas"],
+        tags: ["bosphorus", "mosque", "bridge", "romantic"],
+    },
+    {
+        slug: "hagia-sophia",
+        wikidataId: "Q12506",
+        coordinates: { lat: 41.0086, lng: 28.9802 },
+        images: {
+            hero: "/images/locations/hagia-sophia-hero.jpg",
+            gallery: [
+                "/images/locations/hagia-sophia-1.jpg",
+                "/images/locations/hagia-sophia-2.jpg",
+            ],
+        },
+        bestTime: "early_morning",
+        photographyTips: ["exterior_shots", "fountain_reflection", "sultanahmet_square"],
+        nearbyLocations: ["blue-mosque", "topkapi"],
+        tags: ["historic", "unesco", "iconic", "architecture"],
+    },
+    {
+        slug: "blue-mosque",
+        wikidataId: "Q194342",
+        coordinates: { lat: 41.0054, lng: 28.9768 },
+        images: {
+            hero: "/images/locations/blue-mosque-hero.jpg",
+            gallery: [
+                "/images/locations/blue-mosque-1.jpg",
+                "/images/locations/blue-mosque-2.jpg",
+            ],
+        },
+        bestTime: "sunrise",
+        photographyTips: ["six_minarets", "courtyard", "garden_view"],
+        nearbyLocations: ["hagia-sophia", "hippodrome"],
+        tags: ["historic", "mosque", "iconic", "architecture"],
+    },
+    {
+        slug: "bosphorus-rooftop",
+        wikidataId: "Q124089",
+        coordinates: { lat: 41.04, lng: 29.01 },
+        images: {
+            hero: "/images/locations/bosphorus-rooftop-hero.jpg",
+            gallery: [
+                "/images/locations/bosphorus-rooftop-1.jpg",
+                "/images/locations/bosphorus-rooftop-2.jpg",
+            ],
+        },
+        bestTime: "golden_hour",
+        photographyTips: ["panoramic_view", "flying_dress", "sunset_silhouette"],
+        nearbyLocations: ["galata-tower", "ortakoy"],
+        tags: ["rooftop", "panoramic", "romantic", "premium"],
+    },
+    {
+        slug: "suleymaniye",
+        wikidataId: "Q133458",
+        coordinates: { lat: 41.0163, lng: 28.9641 },
+        images: {
+            hero: "/images/locations/suleymaniye-hero.jpg",
+            gallery: [
+                "/images/locations/suleymaniye-1.jpg",
+                "/images/locations/suleymaniye-2.jpg",
+            ],
+        },
+        bestTime: "afternoon",
+        photographyTips: ["terrace_view", "golden_horn", "ottoman_architecture"],
+        nearbyLocations: ["grand-bazaar", "balat"],
+        tags: ["historic", "mosque", "panoramic", "architecture"],
+    },
+    {
+        slug: "grand-bazaar",
+        wikidataId: "Q182854",
+        coordinates: { lat: 41.0107, lng: 28.968 },
+        images: {
+            hero: "/images/locations/grand-bazaar-hero.jpg",
+            gallery: [
+                "/images/locations/grand-bazaar-1.jpg",
+                "/images/locations/grand-bazaar-2.jpg",
+            ],
+        },
+        bestTime: "morning",
+        photographyTips: ["colorful_lamps", "narrow_alleys", "local_vendors"],
+        nearbyLocations: ["suleymaniye", "blue-mosque"],
+        tags: ["historic", "colorful", "market", "culture"],
+    },
+];
+
+// Helper functions
+export function getLocationBySlug(slug: string): LocationData | undefined {
+    return LOCATIONS.find((loc) => loc.slug === slug);
+}
+
+export function getAllLocationSlugs(): string[] {
+    return LOCATIONS.map((loc) => loc.slug);
+}
+
+export function getLocationsByTag(tag: string): LocationData[] {
+    return LOCATIONS.filter((loc) => loc.tags.includes(tag));
+}
