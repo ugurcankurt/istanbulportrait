@@ -89,10 +89,6 @@ export function LocationCard({ location, index }: LocationCardProps) {
                                     <MapPin className="w-3 h-3 text-primary/70" />
                                     <span>Istanbul</span>
                                 </div>
-                                <div className="flex items-center gap-1">
-                                    <Camera className="w-3 h-3 text-primary/70" />
-                                    <span className="hidden xs:inline">{t("viewPhotos")}</span>
-                                </div>
                             </div>
 
                             {/* Arrow indicator */}
