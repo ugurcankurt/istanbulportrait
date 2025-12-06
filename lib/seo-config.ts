@@ -33,10 +33,10 @@ export const SEO_CONFIG = {
     ],
     address: {
       "@type": "PostalAddress",
-      streetAddress: "Alemdar, Molla Fenari, Divan Yolu Cd. No:78/A",
+      streetAddress: "Süleymaniye, Siyavuş Paşa Sk. No:24/2",
       addressLocality: "Fatih",
       addressRegion: "Istanbul",
-      postalCode: "34110",
+      postalCode: "34116",
       addressCountry: "TR",
     },
     contactPoint: {
