@@ -8,7 +8,8 @@
     "about": "About",
     "contact": "Contact",
     "tours": "Tours",
-    "blog": "Blog"
+    "blog": "Blog",
+    "locations": "Locations"
   },
   "whatsapp": {
     "button": "WhatsApp",
@@ -413,7 +414,8 @@
     "contact": "Contact",
     "checkout": "Checkout",
     "privacy": "Privacy Policy",
-    "blog": "Blog"
+    "blog": "Blog",
+    "locations": "Photography Locations"
   },
   "structured_data": {
     "website_name": "Istanbul Photographer",

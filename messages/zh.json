@@ -8,7 +8,8 @@
     "about": "关于",
     "contact": "联系",
     "tours": "旅游",
-    "blog": "博客"
+    "blog": "博客",
+    "locations": "地点"
   },
   "whatsapp": {
     "button": "WhatsApp",
@@ -413,7 +414,8 @@
     "contact": "联系",
     "checkout": "结算",
     "privacy": "隐私政策",
-    "blog": "博客"
+    "blog": "博客",
+    "locations": "摄影地点"
   },
   "structured_data": {
     "website_name": "伊斯坦布尔摄影师",

@@ -8,7 +8,8 @@
     "tours": "Tours",
     "about": "Acerca",
     "contact": "Contacto",
-    "blog": "Blog"
+    "blog": "Blog",
+    "locations": "Ubicaciones"
   },
   "whatsapp": {
     "tooltip": "Chatea con nosotros en WhatsApp",
@@ -639,7 +640,8 @@
     "contact": "Contacto",
     "checkout": "Pagar",
     "privacy": "Política de Privacidad",
-    "blog": "Blog"
+    "blog": "Blog",
+    "locations": "Ubicaciones de Fotografía"
   },
   "blog": {
     "title": "Blog de Fotografía",
