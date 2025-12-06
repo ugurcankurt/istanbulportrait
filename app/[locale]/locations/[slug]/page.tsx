@@ -20,10 +20,18 @@ import {
 } from "@/lib/structured-data";
 import { Camera, Clock, MapPin, Star, ExternalLink, Sparkles } from "lucide-react";
 
+// Allow on-demand generation for paths not in generateStaticParams
+export const dynamicParams = true;
+
 // Generate static params for all locations
 export async function generateStaticParams() {
-    const slugs = getAllLocationSlugs();
-    return slugs.map((slug) => ({ slug }));
+    try {
+        const slugs = getAllLocationSlugs();
+        return slugs.map((slug) => ({ slug }));
+    } catch (error) {
+        console.error("Failed to generate location slugs:", error);
+        return [];
+    }
 }
 
 export async function generateMetadata({
