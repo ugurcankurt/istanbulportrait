@@ -63,8 +63,30 @@ export function trackPurchase(
   packageName: string,
   value: number,
   currency: string = "EUR",
+  userData?: {
+    email?: string;
+    phone?: string;
+    firstName?: string;
+    lastName?: string;
+    city?: string;
+    country?: string;
+  },
 ) {
   if (typeof window !== "undefined" && window.gtag) {
+    // Set Enhanced Conversions user data if provided
+    if (userData) {
+      window.gtag("set", "user_data", {
+        email: userData.email,
+        phone_number: userData.phone,
+        address: {
+          first_name: userData.firstName,
+          last_name: userData.lastName,
+          city: userData.city || "Istanbul",
+          country: userData.country || "TR",
+        },
+      });
+    }
+
     window.gtag("event", "purchase", {
       transaction_id: transactionId,
       currency: currency,

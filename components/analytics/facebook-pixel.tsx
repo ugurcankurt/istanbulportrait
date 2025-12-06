@@ -56,6 +56,12 @@ export function FacebookPixel() {
             'https://connect.facebook.net/en_US/fbevents.js');
             
             fbq('init', '${FACEBOOK_PIXEL_ID}');
+            
+            // CCPA Compliance: Limited Data Use (LDU) for California
+            // 0, 0 means no geographic restriction - applies to all users
+            // For California-only: use 1, 1000
+            fbq('dataProcessingOptions', ['LDU'], 0, 0);
+            
             fbq('track', 'PageView');
             
             // Track Core Web Vitals for Facebook

@@ -34,7 +34,7 @@ interface GA4EventParams {
 declare global {
   interface Window {
     gtag: (
-      command: "config" | "event" | "js" | "consent",
+      command: "config" | "event" | "js" | "consent" | "set",
       targetId: string | Date,
       config?: GA4EventParams,
     ) => void;
@@ -51,4 +51,4 @@ declare global {
   }
 }
 
-export {};
+export { };

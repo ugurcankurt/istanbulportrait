@@ -2,7 +2,7 @@ import { getTranslations } from "next-intl/server";
 import { AboutHeroSection } from "@/components/about-hero-section";
 import { AboutSection } from "@/components/about-section";
 import { BreadcrumbNav } from "@/components/breadcrumb-nav";
-import { getLocalizedPaths } from "@/lib/localized-url";
+import { getLocalizedPaths, getOpenGraphUrl } from "@/lib/localized-url";
 import { SEO_CONFIG } from "@/lib/seo-config";
 import {
   createSchemaConfig,
@@ -27,6 +27,29 @@ export async function generateMetadata({
     alternates: {
       canonical: paths.canonical(locale),
       languages: paths.languages,
+    },
+    openGraph: {
+      title: t("title"),
+      description: t("description"),
+      url: getOpenGraphUrl("/about", locale, baseUrl),
+      siteName: SEO_CONFIG.organization.name,
+      images: [
+        {
+          url: SEO_CONFIG.person.image,
+          width: 800,
+          height: 800,
+          alt: `${SEO_CONFIG.person.name} - ${SEO_CONFIG.person.jobTitle}`,
+        },
+      ],
+      locale: locale,
+      type: "profile",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: t("title"),
+      description: t("description"),
+      images: [SEO_CONFIG.person.image],
+      creator: "@istanbulportrait",
     },
   };
 }

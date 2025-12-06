@@ -105,6 +105,7 @@ export default async function BlogPostPage({
       url: `${schemaConfig.baseUrl}/${locale}/about`,
       image: SEO_CONFIG.person.image,
       jobTitle: SEO_CONFIG.person.jobTitle,
+      sameAs: SEO_CONFIG.organization.sameAs,
     },
     publisher: {
       "@type": "Organization" as const,
