@@ -20,6 +20,9 @@ import {
 } from "@/lib/structured-data";
 import { Camera, Clock, MapPin, Star, ExternalLink, Sparkles } from "lucide-react";
 
+// Force dynamic rendering to avoid Vercel build-time issues with next-intl
+export const dynamic = "force-dynamic";
+
 // Allow on-demand generation for paths not in generateStaticParams
 export const dynamicParams = true;
 
