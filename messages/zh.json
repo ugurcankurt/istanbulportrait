@@ -939,5 +939,256 @@
       "title": "关键要点",
       "ai_overview": "AI 概览"
     }
+  },
+  "locations": {
+    "title": "伊斯坦布尔摄影地点",
+    "subtitle": "发现伊斯坦布尔最适合专业摄影的上镜地点",
+    "intro": "与您的专业摄影师一起探索伊斯坦布尔最令人惊叹的摄影地点。从历史地标到隐秘屋顶，每个地点都提供独特的背景，让您拍摄难忘的照片。",
+    "viewPhotos": "查看照片",
+    "aboutLocation": "关于这个地点",
+    "photographyTips": "摄影技巧",
+    "gallery": "照片画廊",
+    "nearbyLocations": "附近地点",
+    "bestTimeToVisit": "最佳访问时间",
+    "locationInfo": "地点信息",
+    "viewOnMap": "在谷歌地图查看 →",
+    "bookPhotoshoot": "在此预订摄影",
+    "bookPhotoshootDescription": "与专业摄影师一起在这个令人惊叹的地点捕捉您的回忆。",
+    "viewPackages": "查看套餐",
+    "seo": {
+      "title": "伊斯坦布尔摄影地点 | 伊斯坦布尔最佳拍照地点",
+      "description": "发现伊斯坦布尔最佳摄影地点。从加拉塔塔到博斯普鲁斯海峡屋顶，为您的专业摄影找到完美背景。"
+    },
+    "tags": {
+      "historic": "历史",
+      "iconic": "标志性",
+      "rooftop": "屋顶",
+      "couple": "情侣",
+      "colorful": "多彩",
+      "instagram": "网红打卡",
+      "solo": "个人",
+      "bosphorus": "博斯普鲁斯海峡",
+      "mosque": "清真寺",
+      "bridge": "桥梁",
+      "romantic": "浪漫",
+      "unesco": "联合国教科文组织",
+      "architecture": "建筑",
+      "panoramic": "全景",
+      "premium": "高端",
+      "market": "市场",
+      "culture": "文化"
+    },
+    "bestTime": {
+      "sunset": "日落",
+      "morning": "早晨",
+      "early_morning": "清晨",
+      "sunrise": "日出",
+      "golden_hour": "黄金时段",
+      "afternoon": "下午"
+    },
+    "bestTimeDescription": {
+      "sunset": "捕捉令人惊叹的金色光线和戏剧性剪影",
+      "morning": "人少，自然光柔和",
+      "early_morning": "最佳光线，游客最少",
+      "sunrise": "温暖色调的魔幻氛围",
+      "golden_hour": "浪漫照片的完美光线",
+      "afternoon": "适合室内和遮蔽区域"
+    },
+    "tips": {
+      "golden_hour": {
+        "title": "黄金时段魔力",
+        "description": "在日落前1小时到达以获得最佳光线条件"
+      },
+      "rooftop_view": {
+        "title": "屋顶视角",
+        "description": "以城市天际线为背景捕捉全景城市景观"
+      },
+      "cobblestone_streets": {
+        "title": "鹅卵石街道",
+        "description": "利用迷人的街道营造真实的伊斯坦布尔氛围"
+      },
+      "colorful_houses": {
+        "title": "彩色房屋",
+        "description": "充满活力的外墙为Instagram创造完美背景"
+      },
+      "narrow_streets": {
+        "title": "狭窄街道",
+        "description": "探索隐藏的小巷获得独特而亲密的镜头"
+      },
+      "local_cafes": {
+        "title": "当地咖啡馆",
+        "description": "在传统咖啡馆停留进行生活方式摄影"
+      },
+      "mosque_bridge": {
+        "title": "清真寺与桥梁",
+        "description": "以博斯普鲁斯大桥为背景构图清真寺"
+      },
+      "bosphorus_view": {
+        "title": "博斯普鲁斯海峡景观",
+        "description": "在最上镜的时刻捕捉标志性海峡"
+      },
+      "street_food": {
+        "title": "街头美食场景",
+        "description": "加入当地烤土豆和华夫饼摊位进行生活方式拍摄"
+      },
+      "exterior_shots": {
+        "title": "外部建筑",
+        "description": "拜占庭建筑提供令人惊叹的背景"
+      },
+      "fountain_reflection": {
+        "title": "喷泉倒影",
+        "description": "利用庭院喷泉进行创意倒影拍摄"
+      },
+      "sultanahmet_square": {
+        "title": "苏丹艾哈迈德广场",
+        "description": "宽敞的开放空间非常适合全身时尚拍摄"
+      },
+      "six_minarets": {
+        "title": "六座宣礼塔",
+        "description": "捕捉唯一六塔清真寺的独特剪影"
+      },
+      "courtyard": {
+        "title": "庭院设置",
+        "description": "内庭院提供宁静的拍摄机会"
+      },
+      "garden_view": {
+        "title": "花园景观",
+        "description": "以清真寺为背景的美丽花园"
+      },
+      "panoramic_view": {
+        "title": "全景视野",
+        "description": "伊斯坦布尔标志性天际线的360度全景"
+      },
+      "flying_dress": {
+        "title": "飞裙",
+        "description": "非常适合戏剧性飘逸裙装摄影"
+      },
+      "sunset_silhouette": {
+        "title": "日落剪影",
+        "description": "在日落天空下创造戏剧性剪影"
+      },
+      "terrace_view": {
+        "title": "露台景观",
+        "description": "金角湾上方的壮丽全景"
+      },
+      "golden_horn": {
+        "title": "金角湾",
+        "description": "从高处捕捉历史水道"
+      },
+      "ottoman_architecture": {
+        "title": "奥斯曼建筑",
+        "description": "奥斯曼帝国建筑杰作"
+      },
+      "colorful_lamps": {
+        "title": "彩色灯饰",
+        "description": "标志性土耳其灯饰营造魔幻光影"
+      },
+      "narrow_alleys": {
+        "title": "有顶小巷",
+        "description": "独特氛围的历史有顶通道"
+      },
+      "local_vendors": {
+        "title": "当地摊贩",
+        "description": "传统工匠的真实场景"
+      },
+      "art_nouveau": {
+        "title": "新艺术设计",
+        "description": "令人惊叹的20世纪初建筑细节"
+      },
+      "symmetry": {
+        "title": "完美对称",
+        "description": "六角形楼梯创造出迷人的几何图案"
+      },
+      "spiral_view": {
+        "title": "螺旋视角",
+        "description": "仰视或俯视获得戯剧性的螺旋透视效果"
+      },
+      "golden_horn_view": {
+        "title": "金角湾视角",
+        "description": "令人惊叹的历史水道和清真寺景观"
+      },
+      "fishermen": {
+        "title": "当地渔民",
+        "description": "捕捉传统渔业文化的真实场景"
+      },
+      "mosque_skyline": {
+        "title": "清真寺天际线",
+        "description": "多座历史清真寺创造出令人惊叹的剑影"
+      }
+    },
+    "items": {
+      "galata-tower": {
+        "name": "加拉塔塔",
+        "shortDescription": "中世纪石塔，可俯瞰伊斯坦布尔和博斯普鲁斯海峡全景",
+        "description": "加拉塔塔是伊斯坦布尔最具标志性的地标之一，提供令人惊叹的360度城市全景。这座中世纪石塔由热那亚人于1348年建造，高67米，已成为伊斯坦布尔的象征。周围的加拉塔社区拥有迷人的鹅卵石街道、历史建筑和舒适的咖啡馆，非常适合生活方式摄影。",
+        "address": "加拉塔，贝雷凯特扎德，34421 贝伊奥卢/伊斯坦布尔",
+        "seoTitle": "加拉塔塔摄影 | 伊斯坦布尔加拉塔摄影师",
+        "seoDescription": "在伊斯坦布尔标志性中世纪地标加拉塔塔进行专业摄影。令人惊叹的全景和鹅卵石街道，拍摄难忘照片。"
+      },
+      "balat": {
+        "name": "巴拉特",
+        "shortDescription": "色彩缤纷的历史街区，充满活力的房屋和真实的伊斯坦布尔魅力",
+        "description": "巴拉特是伊斯坦布尔最古老、最多彩的社区之一，以其充满活力的彩色房屋、狭窄街道和真实氛围而闻名。这个联合国教科文组织列名区提供无尽的摄影机会，拥有彩虹色外墙、复古商店和传统咖啡馆。",
+        "address": "巴拉特，34087 法提赫/伊斯坦布尔",
+        "seoTitle": "巴拉特摄影 | 伊斯坦布尔多彩摄影地点",
+        "seoDescription": "在巴拉特多彩街道上拍摄令人惊叹的照片。伊斯坦布尔最具Instagram风格社区的专业摄影。"
+      },
+      "ortakoy": {
+        "name": "奥塔科伊",
+        "shortDescription": "迷人的博斯普鲁斯海滨，拥有标志性清真寺和桥梁景观",
+        "description": "奥塔科伊是博斯普鲁斯海峡欧洲海岸上的一个风景如画的社区，以其优雅的清真寺和壮观的博斯普鲁斯大桥景观而闻名。海滨区域提供完美的拍摄机会，标志性清真寺与大桥交相辉映。",
+        "address": "奥塔科伊，34347 贝西克塔什/伊斯坦布尔",
+        "seoTitle": "奥塔科伊摄影 | 博斯普鲁斯大桥伊斯坦布尔摄影",
+        "seoDescription": "在奥塔科伊进行专业摄影，欣赏博斯普鲁斯大桥景观。捕捉标志性清真寺和海滨。"
+      },
+      "hagia-sophia": {
+        "name": "圣索菲亚大教堂",
+        "shortDescription": "联合国教科文组织世界遗产拜占庭杰作，伊斯坦布尔的象征",
+        "description": "圣索菲亚大教堂是世界上最伟大的建筑成就之一，也是伊斯坦布尔最著名的地标。建于公元537年作为大教堂，这座联合国教科文组织世界遗产展示了令人惊叹的拜占庭建筑，拥有巨大的圆顶和精美的马赛克。",
+        "address": "苏丹艾哈迈德，圣索菲亚广场1号，34122 法提赫/伊斯坦布尔",
+        "seoTitle": "圣索菲亚大教堂摄影 | 伊斯坦布尔联合国教科文组织遗产摄影",
+        "seoDescription": "在伊斯坦布尔联合国教科文组织世界遗产圣索菲亚大教堂进行专业摄影。捕捉拜占庭建筑和历史辉煌。"
+      },
+      "blue-mosque": {
+        "name": "蓝色清真寺",
+        "shortDescription": "壮丽的奥斯曼清真寺，拥有六座宣礼塔和令人惊叹的建筑",
+        "description": "苏丹艾哈迈德清真寺，俗称蓝色清真寺，是1609-1616年间建造的奥斯曼建筑杰作。以其六座宣礼塔和蓝色伊兹尼克瓷砖而闻名，这座清真寺提供壮观的摄影机会。",
+        "address": "苏丹艾哈迈德，马场大街7号，34122 法提赫/伊斯坦布尔",
+        "seoTitle": "蓝色清真寺摄影 | 苏丹艾哈迈德清真寺伊斯坦布尔摄影",
+        "seoDescription": "在伊斯坦布尔最壮丽的奥斯曼清真寺蓝色清真寺进行专业摄影。捕捉六座宣礼塔和令人惊叹的建筑。"
+      },
+      "bosphorus-rooftop": {
+        "name": "博斯普鲁斯海峡屋顶",
+        "shortDescription": "独家屋顶场地，拥有博斯普鲁斯海峡和城市全景",
+        "description": "在我们独家的屋顶摄影地点从高处体验伊斯坦布尔。这些高端场地提供无与伦比的360度博斯普鲁斯海峡、加拉塔塔和伊斯坦布尔标志性天际线全景。非常适合飞裙摄影、日落拍摄和浪漫情侣摄影。",
+        "address": "伊斯坦布尔各屋顶地点",
+        "seoTitle": "伊斯坦布尔屋顶摄影 | 博斯普鲁斯海峡景观摄影",
+        "seoDescription": "在博斯普鲁斯海峡全景下进行独家屋顶摄影。飞裙拍摄和日落摄影在伊斯坦布尔高端屋顶场地。"
+      },
+      "suleymaniye": {
+        "name": "苏莱曼尼耶清真寺",
+        "shortDescription": "奥斯曼帝国清真寺，拥有金角湾壮丽露台景观",
+        "description": "苏莱曼尼耶清真寺由传奇建筑师米马尔·希南为苏莱曼大帝建造，被认为是奥斯曼帝国建筑的最佳典范。清真寺建筑群提供俯瞰金角湾的壮丽露台景观，为摄影提供宁静的氛围。",
+        "address": "苏莱曼尼耶，西迪克·萨米·奥纳尔教授街1号，34116 法提赫/伊斯坦布尔",
+        "seoTitle": "苏莱曼尼耶清真寺摄影 | 金角湾伊斯坦布尔摄影",
+        "seoDescription": "在苏莱曼尼耶清真寺进行专业摄影，欣赏金角湾景观。奥斯曼帝国建筑和全景露台照片。"
+      },
+      "camondo-stairs": {
+        "name": "卡蒙多楼梯",
+        "shortDescription": "连接卡拉科伊和加拉塔塔的优雅新艺术楼梯",
+        "description": "卡蒙多楼梯（Kamondo Merdivenleri）是伍斯坦布尔卡拉科伊区中心一座令人惊叹的新艺术建筑典范。这座优雅的六角形楼梯由富有的卡蒙多银行家族于19世纪70年代初期建造，将银行区与加拉塔社区连接起来。独特的几何设计和历史特色使其成为伊斯坦布尔最受欢迎的隐藏宝石之一。",
+        "address": "凯马拉尔塔大街，卡拉科伊，34421 贝伊奥卢/伊斯坦布尔",
+        "seoTitle": "卡蒙多楼梯摄影 | 伊斯坦布尔隐藏宝石摄影",
+        "seoDescription": "在伊斯坦布尔标志性的卡蒙多楼梯进行专业摄影。新艺术建筑和令人惊叹的几何图案，拍摄独特照片。"
+      },
+      "galata-bridge": {
+        "name": "加拉塔大桥",
+        "shortDescription": "横跨金角湾的历史名桥，拥有令人惊叹的清真寺景观",
+        "description": "加拉塔大桥（Galata Köprüsü）是伊斯坦布尔最标志性的地标之一，跨越金角湾连接历史半岛和现代贝伊奥卢区。这座桥提供壮观的摄影机会，可以欣赏到苏莱曼尼耶、埃米尼诺妓和耶尼清真寺的景观，形成令人惊叹的天际线。桥上传统渔民的身影为任何摄影增添了真实的特色。",
+        "address": "加拉塔大桥，埃米尼诺妓-卡拉科伊，伊斯坦布尔",
+        "seoTitle": "加拉塔大桥摄影 | 金角湾伊斯坦布尔摄影",
+        "seoDescription": "在加拉塔大桥进行专业摄影，欣赏金角湾壮丽景观。捕捉标志性清真寺天际线和真实氛围。"
+      }
+    }
   }
 }

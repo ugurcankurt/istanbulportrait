@@ -1018,6 +1018,7 @@
     "aboutLocation": "About This Location",
     "photographyTips": "Photography Tips",
     "gallery": "Photo Gallery",
+    "nearbyLocations": "Nearby Locations",
     "bestTimeToVisit": "Best Time to Visit",
     "locationInfo": "Location Information",
     "viewOnMap": "View on Google Maps →",
@@ -1159,6 +1160,30 @@
       "local_vendors": {
         "title": "Local Vendors",
         "description": "Authentic scenes with traditional craftsmen"
+      },
+      "art_nouveau": {
+        "title": "Art Nouveau Design",
+        "description": "Stunning early 20th century architectural details"
+      },
+      "symmetry": {
+        "title": "Perfect Symmetry",
+        "description": "The hexagonal stairs create mesmerizing geometric patterns"
+      },
+      "spiral_view": {
+        "title": "Spiral View",
+        "description": "Look up or down for dramatic spiral perspectives"
+      },
+      "golden_horn_view": {
+        "title": "Golden Horn Vista",
+        "description": "Stunning views of the historic waterway and mosques"
+      },
+      "fishermen": {
+        "title": "Local Fishermen",
+        "description": "Capture authentic scenes of traditional fishing culture"
+      },
+      "mosque_skyline": {
+        "title": "Mosque Skyline",
+        "description": "Multiple historic mosques create a stunning silhouette"
       }
     },
     "items": {
@@ -1218,13 +1243,21 @@
         "seoTitle": "Süleymaniye Mosque Photography | Golden Horn View Istanbul",
         "seoDescription": "Professional photoshoot at Süleymaniye Mosque with Golden Horn views. Ottoman imperial architecture and panoramic terrace photos in Istanbul."
       },
-      "grand-bazaar": {
-        "name": "Grand Bazaar",
-        "shortDescription": "World's oldest covered market with colorful lamps and historic atmosphere",
-        "description": "The Grand Bazaar is one of the world's largest and oldest covered markets, with over 4,000 shops spread across 61 covered streets. Dating back to 1461, this historic market offers incredible photo opportunities with its colorful Turkish lamps, ornate ceilings, and bustling atmosphere. The covered passages provide unique lighting conditions for creative photography.",
-        "address": "Beyazıt, Kalpakçılar Cd. No:22, 34126 Fatih/Istanbul",
-        "seoTitle": "Grand Bazaar Photography | Historic Market Istanbul Photoshoot",
-        "seoDescription": "Unique photography at the Grand Bazaar, Istanbul's historic covered market. Colorful lamps and authentic Turkish atmosphere for your photoshoot."
+      "camondo-stairs": {
+        "name": "Camondo Stairs",
+        "shortDescription": "Elegant Art Nouveau staircase connecting Karaköy to Galata Tower",
+        "description": "The Camondo Stairs (Kamondo Merdivenleri) are a stunning example of Art Nouveau architecture in the heart of Istanbul's Karaköy district. Built in the early 1870s by the wealthy Camondo banking family, these elegant hexagonal stairs connect the banking district to the Galata neighborhood. The unique geometric design and historic character make them one of Istanbul's most photographed hidden gems.",
+        "address": "Kemeraltı Caddesi, Karaköy, 34421 Beyoğlu/Istanbul",
+        "seoTitle": "Camondo Stairs Photography | Istanbul Hidden Gem Photoshoot",
+        "seoDescription": "Professional photography at the iconic Camondo Stairs in Istanbul. Art Nouveau architecture and stunning geometric patterns for unique photos."
+      },
+      "galata-bridge": {
+        "name": "Galata Bridge",
+        "shortDescription": "Historic bridge spanning the Golden Horn with stunning mosque views",
+        "description": "Galata Bridge (Galata Köprüsü) is one of Istanbul's most iconic landmarks, connecting the historic peninsula to the modern Beyoğlu district across the Golden Horn. The bridge offers spectacular photo opportunities with views of the Süleymaniye, Eminönü, and Yeni mosques creating a stunning skyline. The traditional fishermen lining the bridge add authentic character to any photoshoot.",
+        "address": "Galata Bridge, Eminönü-Karaköy, Istanbul",
+        "seoTitle": "Galata Bridge Photography | Golden Horn Istanbul Photoshoot",
+        "seoDescription": "Professional photography at Galata Bridge with stunning Golden Horn views. Capture Istanbul's iconic mosque skyline and authentic atmosphere."
       }
     }
   }

@@ -33,6 +33,8 @@ export async function generateMetadata({
         openGraph: {
             title: t("title"),
             description: t("description"),
+            url: paths.canonical(locale),
+            siteName: SEO_CONFIG.organization.name,
             images: [
                 {
                     url: `${baseUrl}/og-locations.jpg`,
@@ -43,7 +45,6 @@ export async function generateMetadata({
             ],
             locale: locale,
             type: "website",
-            url: paths.canonical(locale),
         },
         twitter: {
             card: "summary_large_image",
@@ -92,7 +93,7 @@ export default async function LocationsPage({
             {/* Locations Grid */}
             <section className="py-8 sm:py-12 lg:py-16">
                 <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-5 lg:gap-6">
                         {LOCATIONS.map((location, index) => (
                             <LocationCard key={location.slug} location={location} index={index} />
                         ))}

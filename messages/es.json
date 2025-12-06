@@ -908,5 +908,256 @@
       "tourDetails": "Detalles del Tour para {tourName}",
       "tourBooking": "Reservar {tourName} - Tour de Estambul"
     }
+  },
+  "locations": {
+    "title": "Ubicaciones de Fotografía en Estambul",
+    "subtitle": "Descubre los lugares más fotogénicos de Estambul para tu sesión de fotos profesional",
+    "intro": "Explora las ubicaciones de fotografía más impresionantes de Estambul con tu fotógrafo profesional. Desde monumentos históricos hasta azoteas ocultas, cada ubicación ofrece fondos únicos para fotos inolvidables.",
+    "viewPhotos": "Ver Fotos",
+    "aboutLocation": "Sobre Esta Ubicación",
+    "photographyTips": "Consejos de Fotografía",
+    "gallery": "Galería de Fotos",
+    "nearbyLocations": "Ubicaciones Cercanas",
+    "bestTimeToVisit": "Mejor Momento para Visitar",
+    "locationInfo": "Información de la Ubicación",
+    "viewOnMap": "Ver en Google Maps →",
+    "bookPhotoshoot": "Reservar Sesión de Fotos Aquí",
+    "bookPhotoshootDescription": "Captura tus recuerdos en esta impresionante ubicación con un fotógrafo profesional.",
+    "viewPackages": "Ver Paquetes",
+    "seo": {
+      "title": "Ubicaciones de Fotografía en Estambul | Mejores Lugares para Fotos",
+      "description": "Descubre las mejores ubicaciones de fotografía en Estambul. Desde la Torre de Gálata hasta las azoteas del Bósforo, encuentra el fondo perfecto para tu sesión profesional."
+    },
+    "tags": {
+      "historic": "Histórico",
+      "iconic": "Icónico",
+      "rooftop": "Azotea",
+      "couple": "Parejas",
+      "colorful": "Colorido",
+      "instagram": "Instagram",
+      "solo": "Individual",
+      "bosphorus": "Bósforo",
+      "mosque": "Mezquita",
+      "bridge": "Puente",
+      "romantic": "Romántico",
+      "unesco": "UNESCO",
+      "architecture": "Arquitectura",
+      "panoramic": "Panorámico",
+      "premium": "Premium",
+      "market": "Mercado",
+      "culture": "Cultural"
+    },
+    "bestTime": {
+      "sunset": "Atardecer",
+      "morning": "Mañana",
+      "early_morning": "Madrugada",
+      "sunrise": "Amanecer",
+      "golden_hour": "Hora Dorada",
+      "afternoon": "Tarde"
+    },
+    "bestTimeDescription": {
+      "sunset": "Captura una impresionante luz dorada y siluetas dramáticas",
+      "morning": "Menos multitudes e iluminación natural suave",
+      "early_morning": "Mejor luz y mínimos turistas",
+      "sunrise": "Atmósfera mágica con colores cálidos",
+      "golden_hour": "Iluminación perfecta para fotos románticas",
+      "afternoon": "Ideal para interiores y áreas cubiertas"
+    },
+    "tips": {
+      "golden_hour": {
+        "title": "Magia de la Hora Dorada",
+        "description": "Llega 1 hora antes del atardecer para las mejores condiciones de luz"
+      },
+      "rooftop_view": {
+        "title": "Perspectiva de Azotea",
+        "description": "Captura vistas panorámicas de la ciudad con el horizonte de fondo"
+      },
+      "cobblestone_streets": {
+        "title": "Calles Empedradas",
+        "description": "Usa las calles encantadoras para la auténtica atmósfera de Estambul"
+      },
+      "colorful_houses": {
+        "title": "Casas Coloridas",
+        "description": "Las fachadas vibrantes crean fondos perfectos para Instagram"
+      },
+      "narrow_streets": {
+        "title": "Calles Estrechas",
+        "description": "Explora callejones ocultos para tomas únicas e íntimas"
+      },
+      "local_cafes": {
+        "title": "Cafés Locales",
+        "description": "Para en cafés tradicionales para fotografía de estilo de vida"
+      },
+      "mosque_bridge": {
+        "title": "Mezquita y Puente",
+        "description": "Enmarca la mezquita con el Puente del Bósforo de fondo"
+      },
+      "bosphorus_view": {
+        "title": "Vistas del Bósforo",
+        "description": "Captura el icónico estrecho en su mejor momento"
+      },
+      "street_food": {
+        "title": "Comida Callejera",
+        "description": "Incluye puestos locales de kumpir y gofres para fotos de estilo de vida"
+      },
+      "exterior_shots": {
+        "title": "Arquitectura Exterior",
+        "description": "La arquitectura bizantina proporciona fondos impresionantes"
+      },
+      "fountain_reflection": {
+        "title": "Reflejos de Fuente",
+        "description": "Usa la fuente del patio para tomas creativas con reflejos"
+      },
+      "sultanahmet_square": {
+        "title": "Plaza Sultanahmet",
+        "description": "Amplio espacio abierto perfecto para fotos de moda de cuerpo entero"
+      },
+      "six_minarets": {
+        "title": "Seis Minaretes",
+        "description": "Captura la silueta única de la única mezquita de seis minaretes"
+      },
+      "courtyard": {
+        "title": "Patio Interior",
+        "description": "El patio interior ofrece oportunidades de fotos tranquilas"
+      },
+      "garden_view": {
+        "title": "Vistas del Jardín",
+        "description": "Hermosos jardines con la mezquita de fondo"
+      },
+      "panoramic_view": {
+        "title": "Vistas Panorámicas",
+        "description": "Vistas de 360 grados del icónico horizonte de Estambul"
+      },
+      "flying_dress": {
+        "title": "Vestido Volador",
+        "description": "Perfecto para fotografía dramática de vestidos fluidos"
+      },
+      "sunset_silhouette": {
+        "title": "Siluetas al Atardecer",
+        "description": "Crea siluetas dramáticas contra el cielo del atardecer"
+      },
+      "terrace_view": {
+        "title": "Vistas de Terraza",
+        "description": "Impresionantes panoramas sobre el Cuerno de Oro"
+      },
+      "golden_horn": {
+        "title": "Cuerno de Oro",
+        "description": "Captura el histórico estuario desde arriba"
+      },
+      "ottoman_architecture": {
+        "title": "Arquitectura Otomana",
+        "description": "Obra maestra de la arquitectura imperial otomana"
+      },
+      "colorful_lamps": {
+        "title": "Lámparas Coloridas",
+        "description": "Las icónicas lámparas turcas crean iluminación mágica"
+      },
+      "narrow_alleys": {
+        "title": "Callejones Cubiertos",
+        "description": "Pasajes cubiertos históricos con atmósfera única"
+      },
+      "local_vendors": {
+        "title": "Vendedores Locales",
+        "description": "Escenas auténticas con artesanos tradicionales"
+      },
+      "art_nouveau": {
+        "title": "Diseño Art Nouveau",
+        "description": "Impresionantes detalles arquitectónicos de principios del siglo XX"
+      },
+      "symmetry": {
+        "title": "Simetría Perfecta",
+        "description": "Las escaleras hexagonales crean fascinantes patrones geométricos"
+      },
+      "spiral_view": {
+        "title": "Vista en Espiral",
+        "description": "Mira hacia arriba o abajo para perspectivas espirales dramáticas"
+      },
+      "golden_horn_view": {
+        "title": "Vista del Cuerno de Oro",
+        "description": "Impresionantes vistas del histórico canal y las mezquitas"
+      },
+      "fishermen": {
+        "title": "Pescadores Locales",
+        "description": "Captura escenas auténticas de la cultura pesquera tradicional"
+      },
+      "mosque_skyline": {
+        "title": "Silueta de Mezquitas",
+        "description": "Múltiples mezquitas históricas crean una silueta impresionante"
+      }
+    },
+    "items": {
+      "galata-tower": {
+        "name": "Torre de Gálata",
+        "shortDescription": "Torre de piedra medieval con vistas panorámicas de Estambul y el Bósforo",
+        "description": "La Torre de Gálata es uno de los monumentos más icónicos de Estambul, ofreciendo impresionantes vistas de 360 grados de la ciudad. Construida en 1348 por los genoveses, esta torre de piedra medieval de 67 metros de altura se ha convertido en un símbolo de Estambul. El barrio de Gálata que la rodea cuenta con encantadoras calles empedradas, edificios históricos y acogedores cafés perfectos para fotografía de estilo de vida.",
+        "address": "Gálata, Bereketzade, 34421 Beyoğlu/Estambul",
+        "seoTitle": "Fotografía Torre de Gálata | Fotógrafo en Estambul",
+        "seoDescription": "Sesión de fotos profesional en la Torre de Gálata, el icónico monumento medieval de Estambul. Impresionantes vistas panorámicas y calles empedradas."
+      },
+      "balat": {
+        "name": "Balat",
+        "shortDescription": "Barrio histórico colorido con casas vibrantes y auténtico encanto de Estambul",
+        "description": "Balat es uno de los barrios más antiguos y coloridos de Estambul, conocido por sus casas pintadas de colores vibrantes, calles estrechas y atmósfera auténtica. Este distrito listado por la UNESCO ofrece infinitas oportunidades para fotografía con sus fachadas de colores del arcoíris, tiendas vintage y cafés tradicionales.",
+        "address": "Balat, 34087 Fatih/Estambul",
+        "seoTitle": "Fotografía Balat | Ubicación Colorida de Estambul",
+        "seoDescription": "Captura fotos impresionantes en las coloridas calles de Balat. Fotografía profesional en el barrio más instagrameable de Estambul."
+      },
+      "ortakoy": {
+        "name": "Ortaköy",
+        "shortDescription": "Encantadora costa del Bósforo con icónicas vistas de mezquita y puente",
+        "description": "Ortaköy es un pintoresco barrio en la orilla europea del Bósforo, famoso por su elegante mezquita y sus impresionantes vistas del Puente del Bósforo. El paseo marítimo ofrece perfectas oportunidades fotográficas con la icónica mezquita enmarcada contra el puente.",
+        "address": "Ortaköy, 34347 Beşiktaş/Estambul",
+        "seoTitle": "Fotografía Ortaköy | Puente del Bósforo Estambul",
+        "seoDescription": "Fotografía profesional en Ortaköy con vistas al Puente del Bósforo. Captura la icónica mezquita y el paseo marítimo."
+      },
+      "hagia-sophia": {
+        "name": "Santa Sofía",
+        "shortDescription": "Obra maestra bizantina Patrimonio de la Humanidad UNESCO, símbolo de Estambul",
+        "description": "Santa Sofía es uno de los mayores logros arquitectónicos del mundo y el monumento más famoso de Estambul. Construida en 537 d.C. como catedral, este sitio Patrimonio de la Humanidad UNESCO muestra una impresionante arquitectura bizantina con su cúpula masiva e intrincados mosaicos.",
+        "address": "Sultan Ahmet, Plaza Ayasofya No:1, 34122 Fatih/Estambul",
+        "seoTitle": "Fotografía Santa Sofía | UNESCO Estambul",
+        "seoDescription": "Sesión profesional en Santa Sofía, sitio Patrimonio de la Humanidad UNESCO de Estambul. Captura arquitectura bizantina y grandeza histórica."
+      },
+      "blue-mosque": {
+        "name": "Mezquita Azul",
+        "shortDescription": "Magnífica mezquita otomana con seis minaretes y arquitectura impresionante",
+        "description": "La Mezquita del Sultán Ahmed, conocida popularmente como la Mezquita Azul, es una obra maestra de la arquitectura otomana construida entre 1609-1616. Famosa por sus seis minaretes y azulejos de İznik azules, la mezquita ofrece espectaculares oportunidades para fotografía.",
+        "address": "Sultan Ahmet, Calle Atmeydanı No:7, 34122 Fatih/Estambul",
+        "seoTitle": "Fotografía Mezquita Azul | Sultanahmet Estambul",
+        "seoDescription": "Fotografía profesional en la Mezquita Azul, la mezquita otomana más magnífica de Estambul. Captura seis minaretes y arquitectura impresionante."
+      },
+      "bosphorus-rooftop": {
+        "name": "Azotea del Bósforo",
+        "shortDescription": "Lugares exclusivos en azoteas con vistas panorámicas del Bósforo y la ciudad",
+        "description": "Experimenta Estambul desde arriba en nuestras ubicaciones exclusivas de fotografía en azoteas. Estos lugares premium ofrecen vistas inigualables de 360 grados del Bósforo, la Torre de Gálata y el icónico horizonte de Estambul. Perfectos para fotografía de vestido volador, sesiones de atardecer y fotos románticas de parejas.",
+        "address": "Varias Ubicaciones de Azoteas, Estambul",
+        "seoTitle": "Fotografía Azotea Estambul | Vista del Bósforo",
+        "seoDescription": "Fotografía exclusiva en azotea con vistas panorámicas del Bósforo. Sesiones de vestido volador y fotos al atardecer."
+      },
+      "suleymaniye": {
+        "name": "Mezquita Süleymaniye",
+        "shortDescription": "Mezquita otomana imperial con impresionantes vistas de terraza al Cuerno de Oro",
+        "description": "La Mezquita Süleymaniye, construida por el legendario arquitecto Mimar Sinan para el Sultán Suleimán el Magnífico, se considera el mejor ejemplo de arquitectura imperial otomana. El complejo de la mezquita ofrece impresionantes vistas de terraza sobre el Cuerno de Oro y proporciona una atmósfera tranquila para fotografía.",
+        "address": "Süleymaniye, Calle Prof. Sıddık Sami Onar No:1, 34116 Fatih/Estambul",
+        "seoTitle": "Fotografía Mezquita Süleymaniye | Cuerno de Oro Estambul",
+        "seoDescription": "Sesión profesional en la Mezquita Süleymaniye con vistas al Cuerno de Oro. Arquitectura imperial otomana y fotos panorámicas de terraza."
+      },
+      "camondo-stairs": {
+        "name": "Escaleras Camondo",
+        "shortDescription": "Elegante escalera Art Nouveau que conecta Karaköy con la Torre de Gálata",
+        "description": "Las Escaleras Camondo (Kamondo Merdivenleri) son un impresionante ejemplo de arquitectura Art Nouveau en el corazón del distrito de Karaköy de Estambul. Construidas a principios de la década de 1870 por la acaudalada familia banquera Camondo, estas elegantes escaleras hexagonales conectan el distrito bancario con el barrio de Gálata. El diseño geométrico único y el carácter histórico las convierten en una de las joyas ocultas más fotografiadas de Estambul.",
+        "address": "Kemeraltı Caddesi, Karaköy, 34421 Beyoğlu/Estambul",
+        "seoTitle": "Fotografía Escaleras Camondo | Joya Oculta de Estambul",
+        "seoDescription": "Fotografía profesional en las icónicas Escaleras Camondo de Estambul. Arquitectura Art Nouveau y patrones geométricos impresionantes para fotos únicas."
+      },
+      "galata-bridge": {
+        "name": "Puente de Gálata",
+        "shortDescription": "Histórico puente que cruza el Cuerno de Oro con impresionantes vistas de mezquitas",
+        "description": "El Puente de Gálata (Galata Köprüsü) es uno de los monumentos más icónicos de Estambul, conectando la península histórica con el moderno distrito de Beyoğlu a través del Cuerno de Oro. El puente ofrece espectaculares oportunidades fotográficas con vistas a las mezquitas Süleymaniye, Eminönü y Yeni que crean una silueta impresionante. Los pescadores tradicionales a lo largo del puente añaden carácter auténtico a cualquier sesión fotográfica.",
+        "address": "Puente de Gálata, Eminönü-Karaköy, Estambul",
+        "seoTitle": "Fotografía Puente de Gálata | Cuerno de Oro Estambul",
+        "seoDescription": "Fotografía profesional en el Puente de Gálata con impresionantes vistas del Cuerno de Oro. Captura la icónica silueta de mezquitas y atmósfera auténtica."
+      }
+    }
   }
 }

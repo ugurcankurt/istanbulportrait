@@ -36,7 +36,7 @@ export const LOCATIONS: LocationData[] = [
         },
         bestTime: "sunset",
         photographyTips: ["golden_hour", "rooftop_view", "cobblestone_streets"],
-        nearbyLocations: ["karakoy", "balat"],
+        nearbyLocations: ["camondo-stairs", "galata-bridge"],
         tags: ["historic", "iconic", "rooftop", "couple"],
     },
     {
@@ -52,7 +52,7 @@ export const LOCATIONS: LocationData[] = [
         },
         bestTime: "morning",
         photographyTips: ["colorful_houses", "narrow_streets", "local_cafes"],
-        nearbyLocations: ["fener", "suleymaniye"],
+        nearbyLocations: ["suleymaniye", "galata-tower"],
         tags: ["colorful", "historic", "instagram", "couple", "solo"],
     },
     {
@@ -68,7 +68,7 @@ export const LOCATIONS: LocationData[] = [
         },
         bestTime: "sunset",
         photographyTips: ["mosque_bridge", "bosphorus_view", "street_food"],
-        nearbyLocations: ["bebek", "besiktas"],
+        nearbyLocations: ["bosphorus-rooftop", "galata-tower"],
         tags: ["bosphorus", "mosque", "bridge", "romantic"],
     },
     {
@@ -132,24 +132,40 @@ export const LOCATIONS: LocationData[] = [
         },
         bestTime: "afternoon",
         photographyTips: ["terrace_view", "golden_horn", "ottoman_architecture"],
-        nearbyLocations: ["grand-bazaar", "balat"],
+        nearbyLocations: ["camondo-stairs", "balat"],
         tags: ["historic", "mosque", "panoramic", "architecture"],
     },
     {
-        slug: "grand-bazaar",
-        wikidataId: "Q182854",
-        coordinates: { lat: 41.0107, lng: 28.968 },
+        slug: "camondo-stairs",
+        wikidataId: "Q6027749",
+        coordinates: { lat: 41.024, lng: 28.974 },
         images: {
-            hero: "/images/locations/grand-bazaar-hero.jpg",
+            hero: "/images/locations/camondo-stairs-hero.jpg",
             gallery: [
-                "/images/locations/grand-bazaar-1.jpg",
-                "/images/locations/grand-bazaar-2.jpg",
+                "/images/locations/camondo-stairs-1.jpg",
+                "/images/locations/camondo-stairs-2.jpg",
             ],
         },
         bestTime: "morning",
-        photographyTips: ["colorful_lamps", "narrow_alleys", "local_vendors"],
-        nearbyLocations: ["suleymaniye", "blue-mosque"],
-        tags: ["historic", "colorful", "market", "culture"],
+        photographyTips: ["art_nouveau", "symmetry", "spiral_view"],
+        nearbyLocations: ["galata-tower", "galata-bridge"],
+        tags: ["historic", "architecture", "instagram", "solo"],
+    },
+    {
+        slug: "galata-bridge",
+        wikidataId: "Q81523",
+        coordinates: { lat: 41.02, lng: 28.973 },
+        images: {
+            hero: "/images/locations/galata-bridge-hero.jpg",
+            gallery: [
+                "/images/locations/galata-bridge-1.jpg",
+                "/images/locations/galata-bridge-2.jpg",
+            ],
+        },
+        bestTime: "sunset",
+        photographyTips: ["golden_horn_view", "fishermen", "mosque_skyline"],
+        nearbyLocations: ["galata-tower", "camondo-stairs"],
+        tags: ["historic", "bosphorus", "iconic", "couple"],
     },
 ];
 
