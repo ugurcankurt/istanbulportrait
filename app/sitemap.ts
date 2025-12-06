@@ -38,7 +38,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
       // Set SEO-optimized frequencies and priorities
       if (route === "/") {
-        changeFrequency = "daily";
+        changeFrequency = "weekly";
         priority = 1.0;
       } else if (route === "/packages") {
         changeFrequency = "weekly";
