@@ -120,9 +120,9 @@ export function HeroSection() {
                 <div className="w-12 h-12 mb-4 rounded-full bg-white/10 flex items-center justify-center group-hover:bg-white/20 transition-colors">
                   <MapPin className="w-6 h-6 text-white" />
                 </div>
-                <h3 className="text-lg font-semibold mb-2 text-white">
+                <span className="text-lg font-semibold mb-2 text-white block">
                   {features("rooftop.title")}
-                </h3>
+                </span>
                 <p className="text-sm text-white/70 leading-relaxed">
                   {features("rooftop.description")}
                 </p>
@@ -135,9 +135,9 @@ export function HeroSection() {
                 <div className="w-12 h-12 mb-4 rounded-full bg-white/10 flex items-center justify-center group-hover:bg-white/20 transition-colors">
                   <Star className="w-6 h-6 text-white" />
                 </div>
-                <h3 className="text-lg font-semibold mb-2 text-white">
+                <span className="text-lg font-semibold mb-2 text-white block">
                   {features("historic.title")}
-                </h3>
+                </span>
                 <p className="text-sm text-white/70 leading-relaxed">
                   {features("historic.description")}
                 </p>
@@ -150,9 +150,9 @@ export function HeroSection() {
                 <div className="w-12 h-12 mb-4 rounded-full bg-white/10 flex items-center justify-center group-hover:bg-white/20 transition-colors">
                   <Camera className="w-6 h-6 text-white" />
                 </div>
-                <h3 className="text-lg font-semibold mb-2 text-white">
+                <span className="text-lg font-semibold mb-2 text-white block">
                   {features("professional.title")}
-                </h3>
+                </span>
                 <p className="text-sm text-white/70 leading-relaxed">
                   {features("professional.description")}
                 </p>
