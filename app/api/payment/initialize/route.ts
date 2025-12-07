@@ -106,10 +106,6 @@ export async function POST(request: NextRequest) {
     const exchangeRate = await getEURtoTRYRate();
     const amountTRY = await convertEURtoTRY(amountEUR);
 
-    console.log(
-      `[iyzico] Converting ${amountEUR} EUR to ${amountTRY} TRY (rate: ${exchangeRate})`,
-    );
-
     // Format TRY price with proper decimal handling (max 2 decimal places)
     const formattedPriceTRY = amountTRY.toFixed(2);
 

@@ -97,7 +97,7 @@ export function CoreWebVitals() {
 
           // Development logging
           if (process.env.NODE_ENV === "development") {
-            console.log("Core Web Vitals tracking initialized");
+            // console.log("Core Web Vitals tracking initialized");
           }
         })
         .catch((error) => {

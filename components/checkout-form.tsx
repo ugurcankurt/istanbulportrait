@@ -114,14 +114,15 @@ export function CheckoutForm() {
   });
 
   // Initialize with package from URL params and load booking data from sessionStorage
+  // Initialize with package from URL params or load from sessionStorage
   useEffect(() => {
+    // 1. Try to get package from URL
     const packageParam = searchParams.get("package") as PackageId;
-    if (packageParam && packageParam in packagePrices) {
-      setSelectedPackage(packageParam);
-    }
+    let effectivePackageId = (packageParam && packageParam in packagePrices) ? packageParam : null;
 
-    // Load pre-filled booking data from sessionStorage
-    const storedBookingData = sessionStorage.getItem("bookingData");
+    // 2. Load pre-filled booking data from sessionStorage
+    const storedBookingData = typeof window !== 'undefined' ? sessionStorage.getItem("bookingData") : null;
+
     if (storedBookingData) {
       try {
         const bookingData = JSON.parse(storedBookingData) as BookingFormData;
@@ -134,13 +135,21 @@ export function CheckoutForm() {
             bookingData[key as keyof BookingFormData],
           );
         });
+
+        // Fallback: If URL didn't have package, but Session does, use that
+        if (!effectivePackageId && bookingData.packageId && bookingData.packageId in packagePrices) {
+          effectivePackageId = bookingData.packageId as PackageId;
+        }
+
       } catch (error) {
         console.error("Error loading booking data from sessionStorage:", error);
-        // If no booking data, redirect back to packages
-        router.push("/packages");
       }
+    }
+
+    if (effectivePackageId) {
+      setSelectedPackage(effectivePackageId);
     } else {
-      // If no booking data, redirect back to packages
+      // If no valid package found in URL or Session, redirect
       router.push("/packages");
     }
   }, [searchParams, bookingForm, router]);
@@ -201,6 +210,7 @@ export function CheckoutForm() {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             ...bookingData,
+            totalAmount: packagePrices[selectedPackage], // Ensure totalAmount is correct and positive
             paymentId: paymentResult.paymentId,
             conversationId: paymentResult.conversationId,
           }),
@@ -252,6 +262,17 @@ export function CheckoutForm() {
           amount: packagePrices[selectedPackage],
           transactionId: bookingResult.booking.id,
         });
+
+        // Trigger Chatbot Success Message
+        if (typeof window !== "undefined") {
+          window.dispatchEvent(new CustomEvent("booking_confirmed", {
+            detail: {
+              customerName: bookingData.customerName,
+              bookingDate: bookingData.bookingDate,
+              packageId: selectedPackage
+            }
+          }));
+        }
       } else {
         // Payment failed - no booking created, user can retry
         trackPaymentEvent(
@@ -371,6 +392,7 @@ export function CheckoutForm() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...bookingData,
+          totalAmount: packagePrices[selectedPackage], // Ensure totalAmount is correct and positive
           paymentId: turinvoiceOrder.idOrder.toString(),
           conversationId: `turinvoice_${turinvoiceOrder.idOrder}`,
           provider: "turinvoice",

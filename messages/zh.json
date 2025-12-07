@@ -1190,5 +1190,17 @@
         "seoDescription": "在加拉塔大桥进行专业摄影，欣赏金角湾壮丽景观。捕捉标志性清真寺天际线和真实氛围。"
       }
     }
+  },
+  "chat_widget": {
+    "header_title": "Emily",
+    "header_subtitle": "在线 • 摄影助理",
+    "welcome_title": "您好！👋",
+    "welcome_message": "我是Emily，在这里帮您策划完美的伊斯坦布尔拍摄。",
+    "input_placeholder": "给Emily发消息...",
+    "whatsapp_fallback": "切换到WhatsApp获取紧急支持",
+    "redirecting": "太棒了！我现在将您重定向到付款页面。请在那里完成付款信息以锁定您的预订！💳✨",
+    "connection_error": "抱歉，连接出现问题。请重试或使用WhatsApp。",
+    "bot_avatar_alt": "Emily",
+    "checkout_nudge": "嘿！我注意到您在最后一步了。需要我帮您完成预订吗？😊"
   }
 }

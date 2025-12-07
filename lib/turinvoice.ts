@@ -143,10 +143,6 @@ export async function turinvoiceCreateOrder(
     const exchangeRate = await getEURtoTRYRate();
     const amountTRY = await convertEURtoTRY(amountEUR);
 
-    console.log(
-      `[Turinvoice] Converting ${amountEUR} EUR to ${amountTRY} TRY (rate: ${exchangeRate})`,
-    );
-
     // Login first to get session
     const sessionId = await turinvoiceLogin();
 

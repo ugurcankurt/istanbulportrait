@@ -25,9 +25,6 @@ export async function getEURtoTRYRate(): Promise<number> {
 
     // Return cached rate if still valid
     if (cached && Date.now() - cached.timestamp < CACHE_DURATION_MS) {
-        console.log(
-            `[Currency] Using cached EUR/TRY rate: ${cached.rate} (cached ${Math.round((Date.now() - cached.timestamp) / 1000 / 60)}m ago)`,
-        );
         return cached.rate;
     }
 
@@ -63,23 +60,18 @@ export async function getEURtoTRYRate(): Promise<number> {
             timestamp: Date.now(),
         });
 
-        console.log(`[Currency] Fetched fresh EUR/TRY rate: ${rate}`);
         return rate;
     } catch (error) {
         console.error("[Currency] Failed to fetch exchange rate:", error);
 
         // Return cached rate even if expired, as fallback
         if (cached) {
-            console.log(
-                `[Currency] Using expired cached rate as fallback: ${cached.rate}`,
-            );
             return cached.rate;
         }
 
         // Ultimate fallback: approximate rate (should be updated periodically)
         // As of December 2024, EUR/TRY is around 36-37
         const fallbackRate = 36.5;
-        console.log(`[Currency] Using hardcoded fallback rate: ${fallbackRate}`);
         return fallbackRate;
     }
 }
@@ -96,10 +88,6 @@ export async function convertEURtoTRY(amountEUR: number): Promise<number> {
     // Add 1 EUR buffer to cover exchange rate differences
     const amountWithBuffer = amountEUR + 1;
     const amountTRY = amountWithBuffer * rate;
-
-    console.log(
-        `[Currency] Converting ${amountEUR} EUR + 1 EUR buffer = ${amountWithBuffer} EUR → ${amountTRY.toFixed(2)} TRY`,
-    );
 
     // Round to 2 decimal places
     return Math.round(amountTRY * 100) / 100;

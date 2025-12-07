@@ -1159,5 +1159,17 @@
         "seoDescription": "Fotografía profesional en el Puente de Gálata con impresionantes vistas del Cuerno de Oro. Captura la icónica silueta de mezquitas y atmósfera auténtica."
       }
     }
+  },
+  "chat_widget": {
+    "header_title": "Emily",
+    "header_subtitle": "En línea • Asistente de Fotografía",
+    "welcome_title": "¡Hola! 👋",
+    "welcome_message": "Soy Emily, estoy aquí para ayudarte a planificar la sesión de fotos perfecta en Estambul.",
+    "input_placeholder": "Mensaje a Emily...",
+    "whatsapp_fallback": "Cambiar a WhatsApp para soporte urgente",
+    "redirecting": "¡Perfecto! Te redirijo a la página de pago ahora. ¡Por favor, completa tus datos de pago allí para asegurar tu lugar! 💳✨",
+    "connection_error": "Lo siento, tengo problemas de conexión. Por favor, inténtalo de nuevo o usa WhatsApp.",
+    "bot_avatar_alt": "Emily",
+    "checkout_nudge": "¡Hola! He notado que estás en el último paso. ¿Necesitas ayuda para completar tu reserva? 😊"
   }
 }

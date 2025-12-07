@@ -1260,5 +1260,17 @@
         "seoDescription": "Professional photography at Galata Bridge with stunning Golden Horn views. Capture Istanbul's iconic mosque skyline and authentic atmosphere."
       }
     }
+  },
+  "chat_widget": {
+    "header_title": "Emily",
+    "header_subtitle": "Online • Photography Assistant",
+    "welcome_title": "Hello there! 👋",
+    "welcome_message": "I'm Emily, here to help you plan the perfect photoshoot in Istanbul.",
+    "input_placeholder": "Message Emily...",
+    "whatsapp_fallback": "Switch to WhatsApp for urgent support",
+    "redirecting": "Perfect! I'm redirecting you to the checkout page now. Please complete your payment details there to secure your spot! 💳✨",
+    "connection_error": "Sorry, I'm having trouble connecting. Please try again or use WhatsApp.",
+    "bot_avatar_alt": "Emily",
+    "checkout_nudge": "Hey! I noticed you're at the final step. Do you need any help completing your booking? 😊"
   }
 }
