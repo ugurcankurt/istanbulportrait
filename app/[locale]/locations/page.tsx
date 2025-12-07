@@ -7,8 +7,8 @@ import { getLocalizedPaths } from "@/lib/localized-url";
 import { SEO_CONFIG } from "@/lib/seo-config";
 import {
     createSchemaConfig,
-    generateItemListSchema,
-    type ItemListData,
+    generatePlaceListSchema,
+    type PlaceListData,
     MultipleJsonLd,
 } from "@/lib/structured-data";
 
@@ -28,7 +28,6 @@ export async function generateMetadata({
         description: t("description"),
         alternates: {
             canonical: paths.canonical(locale),
-            languages: paths.languages,
         },
         openGraph: {
             title: t("title"),
@@ -66,18 +65,20 @@ export default async function LocationsPage({
     // Create schema configuration
     const schemaConfig = createSchemaConfig(locale);
 
-    // Create ItemList data for locations
-    const itemListData: ItemListData[] = LOCATIONS.map((location, index) => ({
+    // Create PlaceList data for Top Places List
+    const placeListData: PlaceListData[] = LOCATIONS.map((location, index) => ({
         name: t(`items.${location.slug}.name`),
         description: t(`items.${location.slug}.shortDescription`),
         url: `${schemaConfig.baseUrl}/${locale}/locations/${location.slug}`,
         image: `${schemaConfig.baseUrl}${location.images.hero}`,
+        address: "Istanbul, Turkey",
+        geo: location.coordinates,
         position: index + 1,
     }));
 
-    // Generate ItemList schema for locations
-    const itemListSchema = generateItemListSchema(
-        itemListData,
+    // Generate PlaceList schema for locations (Google Top Places List)
+    const itemListSchema = generatePlaceListSchema(
+        placeListData,
         "Istanbul Photography Locations",
         schemaConfig
     );

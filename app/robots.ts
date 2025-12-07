@@ -13,7 +13,7 @@ export default function robots(): MetadataRoute.Robots {
       },
       {
         userAgent: "Googlebot",
-        allow: "/",
+        allow: ["/", "/ai-training.txt"],
         disallow: ["/admin/"],
       },
       {

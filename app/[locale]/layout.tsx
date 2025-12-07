@@ -58,20 +58,10 @@ export async function generateMetadata({
       googleBot: {
         ...SEO_CONFIG.seo.robotsDirectives,
         noimageindex: false,
-        noarchive: false,
-        nocache: false,
       },
     },
     alternates: {
       canonical: `${baseUrl}/${locale}`,
-      languages: {
-        en: `${baseUrl}/en`,
-        ar: `${baseUrl}/ar`,
-        ru: `${baseUrl}/ru`,
-        es: `${baseUrl}/es`,
-        zh: `${baseUrl}/zh`,
-        "x-default": `${baseUrl}/en`,
-      },
     },
     openGraph: {
       title: t("title"),

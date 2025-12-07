@@ -7,7 +7,6 @@ import { SEO_CONFIG } from "@/lib/seo-config";
 import {
   createSchemaConfig,
   generateHowToSchema,
-  generateLocalBusinessSchema,
   type HowToStepData,
   MultipleJsonLd,
 } from "@/lib/structured-data";
@@ -28,7 +27,6 @@ export async function generateMetadata({
     description: t("description"),
     alternates: {
       canonical: paths.canonical(locale),
-      languages: paths.languages,
     },
   };
 }
@@ -42,9 +40,6 @@ export default async function ContactPage({
 
   // Create schema configuration
   const schemaConfig = createSchemaConfig(locale);
-
-  // Generate LocalBusiness schema for contact page
-  const localBusinessSchema = generateLocalBusinessSchema(schemaConfig);
 
   // Define HowTo steps for photography booking process
   const bookingSteps: HowToStepData[] = [
@@ -86,8 +81,8 @@ export default async function ContactPage({
 
   return (
     <div>
-      {/* JSON-LD Structured Data for Local Business and Booking Process */}
-      <MultipleJsonLd schemas={[localBusinessSchema, howToSchema]} />
+      {/* JSON-LD Structured Data for Booking Process */}
+      <MultipleJsonLd schemas={[howToSchema]} />
 
       <BreadcrumbNav />
       <ContactHeroSection />

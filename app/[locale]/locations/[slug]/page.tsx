@@ -57,14 +57,6 @@ export async function generateMetadata({
         description: t(`items.${slug}.seoDescription`),
         alternates: {
             canonical: `${baseUrl}/${locale}/locations/${slug}`,
-            languages: {
-                en: `${baseUrl}/en/locations/${slug}`,
-                ar: `${baseUrl}/ar/mawaqe/${slug}`,
-                ru: `${baseUrl}/ru/lokatsii/${slug}`,
-                es: `${baseUrl}/es/ubicaciones/${slug}`,
-                zh: `${baseUrl}/zh/didian/${slug}`,
-                "x-default": `${baseUrl}/en/locations/${slug}`,
-            },
         },
         openGraph: {
             title: t(`items.${slug}.seoTitle`),

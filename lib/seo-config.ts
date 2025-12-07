@@ -5,7 +5,8 @@
 
 export const SEO_CONFIG = {
   site: {
-    name: "Istanbul Photographer",
+    name: "Istanbul Portrait",
+    alternateName: "Istanbul Photographer",
     url: "https://istanbulportrait.com",
     title: "Photographer in Istanbul | Most Popular Photographer in Istanbul",
     description:
@@ -15,7 +16,7 @@ export const SEO_CONFIG = {
   },
 
   organization: {
-    name: "Istanbul Photographer",
+    name: "Istanbul Portrait",
     type: "ProfessionalService",
     url: "https://istanbulportrait.com",
     logo: "https://istanbulportrait.com/istanbulportrait_white_logo.png",

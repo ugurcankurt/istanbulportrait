@@ -10,7 +10,6 @@ import {
   type BreadcrumbData,
   createSchemaConfig,
   generateBreadcrumbListSchema,
-  generateLocalBusinessSchema,
   generateToursListSchema,
   MultipleJsonLd,
   type TourData,
@@ -32,7 +31,6 @@ export async function generateMetadata({
     description: t("description"),
     alternates: {
       canonical: paths.canonical(locale),
-      languages: paths.languages,
     },
     openGraph: {
       title: t("title"),
@@ -67,9 +65,6 @@ export default async function ToursPage({
 
   // Create schema configuration
   const schemaConfig = createSchemaConfig(locale);
-
-  // Generate LocalBusiness schema for the tours page
-  const localBusinessSchema = generateLocalBusinessSchema(schemaConfig);
 
   // Generate breadcrumb schema for tours page
   const breadcrumbData: BreadcrumbData[] = [
@@ -115,7 +110,7 @@ export default async function ToursPage({
   const tourSchemas = generateToursListSchema(toursData, schemaConfig);
 
   // Combine all schemas
-  const allSchemas = [localBusinessSchema, breadcrumbSchema, ...tourSchemas];
+  const allSchemas = [breadcrumbSchema, ...tourSchemas];
 
   return (
     <div>

@@ -153,13 +153,19 @@ export function BreadcrumbNav({ className }: BreadcrumbNavProps) {
 
   // Generate structured data for breadcrumbs
   const schemaConfig = createSchemaConfig(locale);
-  const breadcrumbsData: BreadcrumbData[] = breadcrumbs.map((item, index) => ({
-    name: item.label,
-    url: item.href
-      ? `${SEO_CONFIG.site.url}${item.href}`
-      : `${SEO_CONFIG.site.url}${pathWithoutLocale}`,
-    position: index + 1,
-  }));
+  const breadcrumbsData: BreadcrumbData[] = breadcrumbs.map((item, index) => {
+    const path = item.href || pathWithoutLocale;
+    // Ensure locale is included for correct SEO indexing (e.g. /en/about)
+    const url = item.isHome
+      ? `${SEO_CONFIG.site.url}/${locale}`
+      : `${SEO_CONFIG.site.url}/${locale}${path}`;
+
+    return {
+      name: item.label,
+      url: url,
+      position: index + 1,
+    };
+  });
 
   const breadcrumbSchema = generateBreadcrumbListSchema(
     breadcrumbsData,

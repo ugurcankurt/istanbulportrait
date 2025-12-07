@@ -22,7 +22,6 @@ export async function generateMetadata({
     description: t("seo.description"),
     alternates: {
       canonical: paths.canonical(locale),
-      languages: paths.languages,
     },
   };
 }

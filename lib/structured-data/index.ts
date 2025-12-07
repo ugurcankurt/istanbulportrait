@@ -19,6 +19,7 @@ export {
   generateTourSchema,
   generateToursItemListSchema,
   generateToursListSchema,
+  generatePlaceListSchema,
 } from "./generators";
 // AI-Optimized Schema Generators
 export {
@@ -56,6 +57,8 @@ export type {
   ServiceSchema,
   TourData,
   TourSchema,
+  PlaceListData,
+  PlaceSchema,
 } from "./types";
 
 // Helper functions

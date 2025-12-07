@@ -65,7 +65,6 @@ export async function generateMetadata({
     },
     alternates: {
       canonical: paths.canonical(locale),
-      languages: paths.languages,
     },
   };
 }

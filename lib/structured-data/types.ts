@@ -22,12 +22,15 @@ import type {
   Service,
   WebSite,
   WithContext,
+  ProfessionalService,
+  Place,
 } from "schema-dts";
 
 // Core business schemas
-export type LocalBusinessSchema = WithContext<LocalBusiness>;
+export type LocalBusinessSchema = WithContext<LocalBusiness | ProfessionalService>;
 export type OrganizationSchema = WithContext<Organization>;
 export type PersonSchema = WithContext<Person>;
+export type PlaceSchema = WithContext<Place>;
 
 // Service and product schemas
 export type ServiceSchema = WithContext<Service>;
@@ -140,6 +143,20 @@ export interface ItemListData {
   description?: string;
   url: string;
   image?: string;
+  position: number;
+}
+
+// Place Item List data interface for Top Places
+export interface PlaceListData {
+  name: string;
+  description?: string;
+  url: string;
+  image?: string;
+  address?: string;
+  geo?: {
+    lat: number;
+    lng: number;
+  };
   position: number;
 }
 

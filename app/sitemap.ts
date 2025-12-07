@@ -168,5 +168,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }
   }
 
+  // Add ai-training.txt for AI crawler discovery (2025 best practice)
+  sitemapEntries.push({
+    url: `${baseUrl}/ai-training.txt`,
+    lastModified: staticPagesLastMod,
+    changeFrequency: "monthly",
+    priority: 0.5,
+  });
+
   return sitemapEntries;
 }

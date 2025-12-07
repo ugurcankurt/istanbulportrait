@@ -36,7 +36,6 @@ export async function generateMetadata({
     description: t("meta.description"),
     alternates: {
       canonical: paths.canonical(locale),
-      languages: paths.languages,
     },
     openGraph: {
       title: t("meta.title"),

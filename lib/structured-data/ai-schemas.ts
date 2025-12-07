@@ -20,7 +20,8 @@ export function generateWebSiteSchema(config: SchemaConfig) {
         "@context": "https://schema.org" as const,
         "@type": "WebSite" as const,
         "@id": `${baseUrl}/#website`,
-        name: SEO_CONFIG.organization.name,
+        name: SEO_CONFIG.site.name,
+        alternateName: SEO_CONFIG.site.alternateName,
         url: baseUrl,
         description: SEO_CONFIG.site.description,
         publisher: {

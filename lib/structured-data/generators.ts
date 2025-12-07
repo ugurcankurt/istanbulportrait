@@ -38,7 +38,7 @@ export function generateLocalBusinessSchema(
 
   return {
     "@context": "https://schema.org",
-    "@type": "LocalBusiness",
+    "@type": "ProfessionalService",
     "@id": `${baseUrl}/#localbusiness`,
     name: SEO_CONFIG.organization.name,
     description: SEO_CONFIG.site.description,
@@ -89,6 +89,7 @@ export function generateLocalBusinessSchema(
     paymentAccepted: SEO_CONFIG.business.paymentAccepted,
     currenciesAccepted: SEO_CONFIG.business.currenciesAccepted,
     sameAs: SEO_CONFIG.organization.sameAs,
+    knowsLanguage: SEO_CONFIG.organization.contactPoint.availableLanguage,
     // AI Search Enhancement
     knowsAbout: [
       "Istanbul Photography",
@@ -402,6 +403,53 @@ export function generateItemListSchema(
 }
 
 /**
+ * Generate Place List schema for "Top Places" rich result
+ * Creates a carousel of places with geo-coordinates
+ */
+export function generatePlaceListSchema(
+  places: import("./types").PlaceListData[],
+  listName: string,
+  config: SchemaConfig,
+): ItemListSchema {
+  const { baseUrl } = config;
+
+  return {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "@id": `${baseUrl}/#placelist-${listName.toLowerCase().replace(/\s+/g, "-")}`,
+    name: listName,
+    description: `Top ${places.length} photography locations in Istanbul`,
+    numberOfItems: places.length,
+    itemListElement: places.map((place) => ({
+      "@type": "ListItem",
+      position: place.position,
+      item: {
+        "@type": "Place",
+        name: place.name,
+        description: place.description,
+        url: place.url,
+        image: place.image,
+        ...(place.address && {
+          address: {
+            "@type": "PostalAddress",
+            addressLocality: "Istanbul",
+            addressCountry: "TR",
+            streetAddress: place.address,
+          },
+        }),
+        ...(place.geo && {
+          geo: {
+            "@type": "GeoCoordinates",
+            latitude: place.geo.lat,
+            longitude: place.geo.lng,
+          },
+        }),
+      },
+    })),
+  };
+}
+
+/**
  * Generate ImageGallery schema for photo galleries
  */
 export function generateImageGallerySchema(
@@ -710,5 +758,34 @@ export function generateEnhancedLocalBusinessSchema(
       bestRating: "5",
       worstRating: "1",
     },
+    // AI Discovery: potentialAction for booking
+    potentialAction: [
+      {
+        "@type": "ReserveAction",
+        target: {
+          "@type": "EntryPoint",
+          urlTemplate: `${baseUrl}/packages`,
+          actionPlatform: [
+            "http://schema.org/DesktopWebPlatform",
+            "http://schema.org/MobileWebPlatform",
+          ],
+        },
+        result: {
+          "@type": "Reservation",
+          name: "Photography Session Booking",
+        },
+      },
+      {
+        "@type": "CommunicateAction",
+        target: {
+          "@type": "EntryPoint",
+          urlTemplate: `${baseUrl}/contact`,
+          actionPlatform: [
+            "http://schema.org/DesktopWebPlatform",
+            "http://schema.org/MobileWebPlatform",
+          ],
+        },
+      },
+    ],
   };
 }
