@@ -22,7 +22,6 @@ import "../globals.css";
 import { ThemeProvider } from "next-themes";
 import { Footer } from "@/components/footer";
 import { Navigation } from "@/components/navigation";
-import { PaymentBanner } from "@/components/payment-banner";
 import { Toaster } from "@/components/ui/sonner";
 import { WhatsAppButton } from "@/components/whatsapp-button";
 
@@ -193,7 +192,7 @@ export default async function LocaleLayout({
               <JsonLd data={generateWebSiteSchema(createSchemaConfig(locale))} />
 
               <div className="flex min-h-screen flex-col">
-                <PaymentBanner />
+                {/* PaymentBanner removed as per user request */}
                 <Navigation />
                 <main className="flex-1">{children}</main>
 

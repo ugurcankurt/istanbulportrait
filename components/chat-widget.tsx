@@ -98,6 +98,27 @@ export function ChatWidget({ isOpen, onClose, whatsappNumber }: ChatWidgetProps)
         };
     }, []);
 
+    const widgetRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        function handleClickOutside(event: MouseEvent) {
+            if (widgetRef.current && !widgetRef.current.contains(event.target as Node)) {
+                // Check if the click is on the toggle button (to prevent immediate reopen)
+                // The toggle button in whatsapp-button.tsx usually has a specific class or we can trust the parent to handle toggle logic
+                // But simplified: just close if outside widget
+                onClose();
+            }
+        }
+
+        if (isOpen) {
+            document.addEventListener("mousedown", handleClickOutside);
+        }
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, [isOpen, onClose]);
+
+
     // Checkout Dropout Recovery Logic
     useEffect(() => {
         let timer: NodeJS.Timeout;
@@ -278,41 +299,42 @@ export function ChatWidget({ isOpen, onClose, whatsappNumber }: ChatWidgetProps)
         <AnimatePresence>
             {isOpen && (
                 <motion.div
+                    ref={widgetRef}
                     initial={{ opacity: 0, y: 20, scale: 0.95 }}
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: 20, scale: 0.95 }}
                     transition={{ duration: 0.2 }}
-                    className="fixed bottom-24 right-4 z-50 w-[90vw] max-w-[400px] h-[500px] sm:right-8 bg-background border border-violet-200 shadow-2xl flex flex-col overflow-hidden rounded-xl"
+                    className="fixed bottom-24 right-4 z-50 w-[90vw] max-w-[400px] h-[500px] sm:right-8 bg-background border border-border shadow-2xl flex flex-col overflow-hidden rounded-xl"
                 >
                     {/* Header */}
-                    <div className="bg-gradient-to-r from-violet-600 to-indigo-600 p-4 flex items-center justify-between text-white shadow-md">
+                    <div className="bg-primary p-4 flex items-center justify-between text-primary-foreground shadow-md">
                         <div className="flex items-center gap-3">
                             <div className="relative">
-                                <div className="w-10 h-10 rounded-full border-2 border-white/20 overflow-hidden shadow-inner">
+                                <div className="w-10 h-10 rounded-full border-2 border-primary-foreground/20 overflow-hidden shadow-inner">
                                     <img src="/emily.png" alt="Emily" className="w-full h-full object-cover" />
                                 </div>
-                                <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 border-2 border-violet-600 rounded-full"></span>
+                                <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 border-2 border-primary rounded-full"></span>
                             </div>
                             <div>
-                                <h3 className="font-semibold text-sm">Emily</h3>
-                                <p className="text-[10px] text-violet-100/80 font-medium">
+                                <h3 className="font-semibold text-sm text-white">Emily</h3>
+                                <p className="text-[10px] text-primary-foreground/80 font-medium">
                                     {t("role")} • <span className="text-green-300">{t("online")}</span>
                                 </p>
                             </div>
                         </div>
                         <button
                             onClick={onClose}
-                            className="p-2 hover:bg-white/10 rounded-full transition-colors"
+                            className="p-2 hover:bg-primary-foreground/10 rounded-full transition-colors"
                         >
-                            <X size={18} className="text-white/90" />
+                            <X size={18} className="text-primary-foreground/90" />
                         </button>
                     </div>
 
                     {/* Messages */}
-                    <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-slate-50/80 scrollbar-thin scrollbar-thumb-violet-200 scrollbar-track-transparent">
+                    <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-muted/30 scrollbar-thin scrollbar-thumb-muted-foreground/20 scrollbar-track-transparent">
                         {messages.length === 0 && (
                             <div className="flex flex-col items-center justify-center h-full text-center px-6 animate-in fade-in zoom-in duration-300">
-                                <div className="w-20 h-20 bg-violet-100 rounded-full flex items-center justify-center mb-4 overflow-hidden shadow-sm border border-white/50">
+                                <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mb-4 overflow-hidden shadow-sm border border-border">
                                     <img src="/emily.png" alt="Emily" className="w-full h-full object-cover" />
                                 </div>
                                 <h4 className="font-semibold text-lg mb-2">{t('welcome_title')}</h4>
@@ -332,7 +354,7 @@ export function ChatWidget({ isOpen, onClose, whatsappNumber }: ChatWidgetProps)
                                                 setInput(text);
                                                 // Automatic send could be handled here if we extracted handleSubmit logic
                                             }}
-                                            className="text-xs bg-white border border-violet-100 hover:border-violet-200 hover:bg-violet-50 text-muted-foreground hover:text-violet-600 py-2 px-3 rounded-lg transition-all shadow-sm text-center"
+                                            className="text-xs bg-background border border-border hover:border-primary/50 hover:bg-muted text-muted-foreground hover:text-primary py-2 px-3 rounded-lg transition-all shadow-sm text-center"
                                         >
                                             {text}
                                         </button>
@@ -354,24 +376,24 @@ export function ChatWidget({ isOpen, onClose, whatsappNumber }: ChatWidgetProps)
                             >
                                 {m.role !== "user" && (
                                     <div
-                                        className="w-8 h-8 rounded-full flex items-center justify-center shrink-0 bg-white border shadow-sm overflow-hidden mt-1"
+                                        className="w-8 h-8 rounded-full flex items-center justify-center shrink-0 bg-background border border-border shadow-sm overflow-hidden mt-1"
                                     >
                                         <img src="/emily.png" alt="Emily" className="w-full h-full object-cover" />
                                     </div>
                                 )}
-                                <div className="flex flex-col gap-1">
+                                <div className={cn("flex flex-col gap-1", m.role === "user" ? "items-end" : "items-start")}>
                                     <div
                                         className={cn(
-                                            "p-3.5 rounded-2xl text-sm leading-relaxed shadow-sm max-w-[85%]", // Added max-w for better bubble look
+                                            "p-3.5 rounded-2xl text-sm leading-relaxed shadow-sm", // Removed inner max-w to verify alignmentfix
                                             m.role === "user"
-                                                ? "bg-gradient-to-br from-violet-600 to-indigo-600 text-white rounded-tr-sm"
-                                                : "bg-white border border-gray-100 text-foreground rounded-tl-sm"
+                                                ? "bg-primary text-primary-foreground rounded-tr-sm"
+                                                : "bg-background border border-border text-foreground rounded-tl-sm"
                                         )}
                                     >
                                         <ReactMarkdown
                                             remarkPlugins={[remarkGfm]}
                                             components={{
-                                                a: ({ node, ...props }: any) => <a {...props} target="_blank" rel="noopener noreferrer" className={cn("underline hover:opacity-80", m.role === "user" ? "text-white" : "text-violet-600")} />,
+                                                a: ({ node, ...props }: any) => <a {...props} target="_blank" rel="noopener noreferrer" className={cn("underline hover:opacity-80", m.role === "user" ? "text-primary-foreground" : "text-primary")} />,
                                                 table: ({ node, ...props }: any) => <table {...props} className="border-collapse border border-border/50 my-2 text-xs w-full" />,
                                                 th: ({ node, ...props }: any) => <th {...props} className="border border-border/50 p-1.5 bg-muted/50 font-medium" />,
                                                 td: ({ node, ...props }: any) => <td {...props} className="border border-border/50 p-1.5" />,
@@ -394,13 +416,13 @@ export function ChatWidget({ isOpen, onClose, whatsappNumber }: ChatWidgetProps)
                         ))}
                         {isLoading && messages[messages.length - 1]?.role === "user" && (
                             <div className="flex gap-3 mr-auto max-w-[85%]">
-                                <div className="w-8 h-8 rounded-full bg-white border shadow-sm flex items-center justify-center shrink-0 overflow-hidden">
+                                <div className="w-8 h-8 rounded-full bg-background border border-border shadow-sm flex items-center justify-center shrink-0 overflow-hidden">
                                     <img src="/emily.png" alt="Emily" className="w-full h-full object-cover" />
                                 </div>
-                                <div className="bg-white border border-gray-100 p-3.5 rounded-2xl rounded-tl-sm shadow-sm flex items-center gap-1">
-                                    <span className="w-1.5 h-1.5 bg-violet-400 rounded-full animate-bounce [animation-delay:-0.3s]"></span>
-                                    <span className="w-1.5 h-1.5 bg-violet-400 rounded-full animate-bounce mx-0.5 [animation-delay:-0.15s]"></span>
-                                    <span className="w-1.5 h-1.5 bg-violet-400 rounded-full animate-bounce"></span>
+                                <div className="bg-background border border-border p-3.5 rounded-2xl rounded-tl-sm shadow-sm flex items-center gap-1">
+                                    <span className="w-1.5 h-1.5 bg-primary/60 rounded-full animate-bounce [animation-delay:-0.3s]"></span>
+                                    <span className="w-1.5 h-1.5 bg-primary/60 rounded-full animate-bounce mx-0.5 [animation-delay:-0.15s]"></span>
+                                    <span className="w-1.5 h-1.5 bg-primary/60 rounded-full animate-bounce"></span>
                                 </div>
                             </div>
                         )}
@@ -408,15 +430,15 @@ export function ChatWidget({ isOpen, onClose, whatsappNumber }: ChatWidgetProps)
                     </div>
 
                     {/* Action Area */}
-                    <div className="p-4 bg-background border-t">
+                    <div className="p-4 bg-background border-t border-border">
                         {/* WhatsApp Fallback */}
                         <a
                             href={whatsappUrl}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="flex items-center justify-center gap-2 w-full mb-3 text-[11px] font-medium text-muted-foreground hover:text-violet-600 transition-colors py-1.5 hover:bg-violet-50/50 rounded-md group"
+                            className="flex items-center justify-center gap-2 w-full mb-3 text-[11px] font-medium text-muted-foreground hover:text-primary transition-colors py-1.5 hover:bg-muted/50 rounded-md group"
                         >
-                            <Phone size={12} className="group-hover:text-violet-600" />
+                            <Phone size={12} className="group-hover:text-primary" />
                             <span>{t('whatsapp_fallback')}</span>
                         </a>
 
@@ -425,12 +447,12 @@ export function ChatWidget({ isOpen, onClose, whatsappNumber }: ChatWidgetProps)
                                 value={input}
                                 onChange={(e) => setInput(e.target.value)}
                                 placeholder={t('input_placeholder')}
-                                className="flex-1 bg-slate-50 hover:bg-white border-0 ring-1 ring-gray-200 focus:ring-2 focus:ring-violet-200 px-4 py-3 rounded-2xl text-base focus:outline-none transition-all placeholder:text-muted-foreground/50"
+                                className="flex-1 bg-muted/50 hover:bg-background border-0 ring-1 ring-border focus:ring-2 focus:ring-primary/20 px-4 py-3 rounded-2xl text-base focus:outline-none transition-all placeholder:text-muted-foreground/50"
                             />
                             <button
                                 type="submit"
                                 disabled={isLoading || !input.trim()}
-                                className="bg-gradient-to-r from-violet-600 to-indigo-600 text-white w-11 h-11 rounded-full flex items-center justify-center shadow-md hover:shadow-lg hover:from-violet-500 hover:to-indigo-500 transition-all disabled:opacity-50 disabled:shadow-none disabled:cursor-not-allowed hover:scale-105 active:scale-95"
+                                className="bg-primary text-primary-foreground w-11 h-11 rounded-full flex items-center justify-center shadow-md hover:shadow-lg hover:bg-primary/90 transition-all disabled:opacity-50 disabled:shadow-none disabled:cursor-not-allowed hover:scale-105 active:scale-95"
                             >
                                 {isLoading ? <Loader2 size={18} className="animate-spin" /> : <Send size={18} className="ml-0.5" />}
                             </button>

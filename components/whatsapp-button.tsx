@@ -151,7 +151,7 @@ export function WhatsAppButton({
           <div
             className={cn(
               "relative flex items-center justify-center rounded-full shadow-lg transition-all duration-300",
-              isChatOpen ? "bg-violet-600 hover:bg-violet-700" : "bg-[#25D366] hover:bg-[#20ba5a]",
+              isChatOpen ? "bg-primary hover:bg-primary/90" : "bg-[#25D366] hover:bg-[#20ba5a]",
               mounted && isMobile ? "w-14 h-14" : "w-16 h-16",
             )}
           >
