@@ -16,6 +16,7 @@
     "message": "¡Hola! Me gustaría obtener información sobre sesiones de fotos en Estambul.",
     "notification_title": "¡Hola! 👋",
     "notification_message": "¿Necesitas ayuda con tu reserva?",
+    "close_notification": "Cerrar notificación",
     "direction": "ltr"
   },
   "hero": {
@@ -1170,6 +1171,8 @@
     "redirecting": "¡Perfecto! Te redirijo a la página de pago ahora. ¡Por favor, completa tus datos de pago allí para asegurar tu lugar! 💳✨",
     "connection_error": "Lo siento, tengo problemas de conexión. Por favor, inténtalo de nuevo o usa WhatsApp.",
     "bot_avatar_alt": "Emily",
-    "checkout_nudge": "¡Hola! He notado que estás en el último paso. ¿Necesitas ayuda para completar tu reserva? 😊"
+    "checkout_nudge": "¡Hola! He notado que estás en el último paso. ¿Necesitas ayuda para completar tu reserva? 😊",
+    "role": "Asistente de Fotografía",
+    "online": "En línea"
   }
 }

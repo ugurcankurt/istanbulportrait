@@ -19,7 +19,12 @@ interface Message {
     id: string;
     role: "user" | "assistant";
     content: string;
+    timestamp: number;
 }
+
+const formatTime = (timestamp: number) => {
+    return new Date(timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+};
 
 export function ChatWidget({ isOpen, onClose, whatsappNumber }: ChatWidgetProps) {
     const t = useTranslations("chat_widget");
@@ -45,7 +50,13 @@ export function ChatWidget({ isOpen, onClose, whatsappNumber }: ChatWidgetProps)
         const savedMessages = localStorage.getItem('chat_history');
         if (savedMessages) {
             try {
-                setMessages(JSON.parse(savedMessages));
+                const parsed = JSON.parse(savedMessages);
+                // Backwards compatibility: add timestamp if missing
+                const hydrated = parsed.map((m: any) => ({
+                    ...m,
+                    timestamp: m.timestamp || Date.now()
+                }));
+                setMessages(hydrated);
             } catch (e) {
                 console.error("Failed to parse chat history", e);
             }
@@ -71,7 +82,8 @@ export function ChatWidget({ isOpen, onClose, whatsappNumber }: ChatWidgetProps)
                 {
                     id: Date.now().toString(),
                     role: "assistant",
-                    content: `🎉 **Amazing news, ${customerName}!**\n\nYour **${packageId}** package is confirmed for **${bookingDate}**! I'm so excited for you.\n\nCheck your email for the confirmation details. If you need anything else, I'm right here!`
+                    content: `🎉 **Amazing news, ${customerName}!**\n\nYour **${packageId}** package is confirmed for **${bookingDate}**! I'm so excited for you.\n\nCheck your email for the confirmation details. If you need anything else, I'm right here!`,
+                    timestamp: Date.now()
                 }
             ]);
 
@@ -101,7 +113,8 @@ export function ChatWidget({ isOpen, onClose, whatsappNumber }: ChatWidgetProps)
                         {
                             id: Date.now().toString(),
                             role: "assistant",
-                            content: t('checkout_nudge')
+                            content: t('checkout_nudge'),
+                            timestamp: Date.now()
                         }
                     ]);
                     setHasNudged(true);
@@ -128,6 +141,7 @@ export function ChatWidget({ isOpen, onClose, whatsappNumber }: ChatWidgetProps)
             id: Date.now().toString(),
             role: "user",
             content: input,
+            timestamp: Date.now(),
         };
 
         const newMessages = [...messages, userMessage];
@@ -161,7 +175,7 @@ export function ChatWidget({ isOpen, onClose, whatsappNumber }: ChatWidgetProps)
             const assistantMsgId = (Date.now() + 1).toString();
             setMessages((prev) => [
                 ...prev,
-                { id: assistantMsgId, role: "assistant", content: "" }
+                { id: assistantMsgId, role: "assistant", content: "", timestamp: Date.now() }
             ]);
 
             while (true) {
@@ -252,7 +266,8 @@ export function ChatWidget({ isOpen, onClose, whatsappNumber }: ChatWidgetProps)
             // Fallback error message
             setMessages((prev) => [
                 ...prev,
-                { id: Date.now().toString(), role: "assistant", content: t('connection_error') }
+                ...prev,
+                { id: Date.now().toString(), role: "assistant", content: t('connection_error'), timestamp: Date.now() }
             ]);
         } finally {
             setIsLoading(false);
@@ -267,47 +282,71 @@ export function ChatWidget({ isOpen, onClose, whatsappNumber }: ChatWidgetProps)
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: 20, scale: 0.95 }}
                     transition={{ duration: 0.2 }}
-                    className="fixed bottom-24 right-4 z-50 w-[90vw] max-w-[400px] h-[500px] sm:right-8 bg-background border border-border rounded-xl shadow-2xl flex flex-col overflow-hidden"
+                    className="fixed bottom-24 right-4 z-50 w-[90vw] max-w-[400px] h-[500px] sm:right-8 bg-background border border-violet-200 shadow-2xl flex flex-col overflow-hidden rounded-xl"
                 >
                     {/* Header */}
-                    <div className="bg-primary p-4 flex items-center justify-between text-white shadow-sm">
+                    <div className="bg-gradient-to-r from-violet-600 to-indigo-600 p-4 flex items-center justify-between text-white shadow-md">
                         <div className="flex items-center gap-3">
                             <div className="relative">
-                                <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center backdrop-blur-sm border border-white/20 overflow-hidden">
+                                <div className="w-10 h-10 rounded-full border-2 border-white/20 overflow-hidden shadow-inner">
                                     <img src="/emily.png" alt="Emily" className="w-full h-full object-cover" />
                                 </div>
-                                <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-400 border-2 border-primary rounded-full"></span>
+                                <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 border-2 border-violet-600 rounded-full"></span>
                             </div>
                             <div>
-                                <h3 className="font-semibold text-base leading-none text-white">{t('header_title')}</h3>
-                                <p className="text-xs opacity-90 font-light mt-0.5 text-white/90">{t('header_subtitle')}</p>
+                                <h3 className="font-semibold text-sm">Emily</h3>
+                                <p className="text-[10px] text-violet-100/80 font-medium">
+                                    {t("role")} • <span className="text-green-300">{t("online")}</span>
+                                </p>
                             </div>
                         </div>
                         <button
                             onClick={onClose}
-                            className="p-1.5 hover:bg-white/10 rounded-full transition-colors"
+                            className="p-2 hover:bg-white/10 rounded-full transition-colors"
                         >
-                            <X size={20} />
+                            <X size={18} className="text-white/90" />
                         </button>
                     </div>
 
                     {/* Messages */}
-                    <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-muted/20">
+                    <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-slate-50/80 scrollbar-thin scrollbar-thumb-violet-200 scrollbar-track-transparent">
                         {messages.length === 0 && (
                             <div className="flex flex-col items-center justify-center h-full text-center px-6 animate-in fade-in zoom-in duration-300">
-                                <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mb-4 overflow-hidden shadow-sm border border-white/50">
+                                <div className="w-20 h-20 bg-violet-100 rounded-full flex items-center justify-center mb-4 overflow-hidden shadow-sm border border-white/50">
                                     <img src="/emily.png" alt="Emily" className="w-full h-full object-cover" />
                                 </div>
                                 <h4 className="font-semibold text-lg mb-2">{t('welcome_title')}</h4>
-                                <p className="text-sm text-muted-foreground leading-relaxed max-w-[250px]">
+                                <p className="text-sm text-muted-foreground leading-relaxed max-w-[250px] mb-6">
                                     {t('welcome_message')}
                                 </p>
+                                <div className="grid grid-cols-1 gap-2 w-full max-w-[240px]">
+                                    {[
+                                        "📸 View Packages",
+                                        "💰 Pricing",
+                                        "📍 Locations",
+                                        "👰 Rooftop Shoot"
+                                    ].map((text, i) => (
+                                        <button
+                                            key={i}
+                                            onClick={() => {
+                                                setInput(text);
+                                                // Automatic send could be handled here if we extracted handleSubmit logic
+                                            }}
+                                            className="text-xs bg-white border border-violet-100 hover:border-violet-200 hover:bg-violet-50 text-muted-foreground hover:text-violet-600 py-2 px-3 rounded-lg transition-all shadow-sm text-center"
+                                        >
+                                            {text}
+                                        </button>
+                                    ))}
+                                </div>
                             </div>
                         )}
 
                         {messages.map((m) => (
-                            <div
+                            <motion.div
                                 key={m.id}
+                                initial={{ opacity: 0, scale: 0.95, y: 10 }}
+                                animate={{ opacity: 1, scale: 1, y: 0 }}
+                                transition={{ duration: 0.3 }}
                                 className={cn(
                                     "flex gap-3 max-w-[85%]",
                                     m.role === "user" ? "ml-auto flex-row-reverse" : "mr-auto"
@@ -315,45 +354,53 @@ export function ChatWidget({ isOpen, onClose, whatsappNumber }: ChatWidgetProps)
                             >
                                 {m.role !== "user" && (
                                     <div
-                                        className="w-8 h-8 rounded-full flex items-center justify-center shrink-0 bg-white border shadow-sm overflow-hidden"
+                                        className="w-8 h-8 rounded-full flex items-center justify-center shrink-0 bg-white border shadow-sm overflow-hidden mt-1"
                                     >
                                         <img src="/emily.png" alt="Emily" className="w-full h-full object-cover" />
                                     </div>
                                 )}
-                                <div
-                                    className={cn(
-                                        "p-3.5 rounded-2xl text-sm leading-relaxed shadow-sm",
-                                        m.role === "user"
-                                            ? "bg-primary text-primary-foreground rounded-tr-sm"
-                                            : "bg-white border border-border/50 text-foreground rounded-tl-sm"
-                                    )}
-                                >
-                                    <ReactMarkdown
-                                        remarkPlugins={[remarkGfm]}
-                                        components={{
-                                            a: ({ node, ...props }: any) => <a {...props} target="_blank" rel="noopener noreferrer" className={cn("underline hover:opacity-80", m.role === "user" ? "text-white" : "text-primary")} />,
-                                            table: ({ node, ...props }: any) => <table {...props} className="border-collapse border border-border/50 my-2 text-xs w-full" />,
-                                            th: ({ node, ...props }: any) => <th {...props} className="border border-border/50 p-1.5 bg-muted/50 font-medium" />,
-                                            td: ({ node, ...props }: any) => <td {...props} className="border border-border/50 p-1.5" />,
-                                            ul: ({ node, ...props }: any) => <ul {...props} className="list-disc ml-4 my-1 space-y-0.5" />,
-                                            ol: ({ node, ...props }: any) => <ol {...props} className="list-decimal ml-4 my-1 space-y-0.5" />,
-                                            p: ({ node, ...props }: any) => <p {...props} className="mb-1 last:mb-0" />,
-                                        }}
+                                <div className="flex flex-col gap-1">
+                                    <div
+                                        className={cn(
+                                            "p-3.5 rounded-2xl text-sm leading-relaxed shadow-sm max-w-[85%]", // Added max-w for better bubble look
+                                            m.role === "user"
+                                                ? "bg-gradient-to-br from-violet-600 to-indigo-600 text-white rounded-tr-sm"
+                                                : "bg-white border border-gray-100 text-foreground rounded-tl-sm"
+                                        )}
                                     >
-                                        {m.content}
-                                    </ReactMarkdown>
+                                        <ReactMarkdown
+                                            remarkPlugins={[remarkGfm]}
+                                            components={{
+                                                a: ({ node, ...props }: any) => <a {...props} target="_blank" rel="noopener noreferrer" className={cn("underline hover:opacity-80", m.role === "user" ? "text-white" : "text-violet-600")} />,
+                                                table: ({ node, ...props }: any) => <table {...props} className="border-collapse border border-border/50 my-2 text-xs w-full" />,
+                                                th: ({ node, ...props }: any) => <th {...props} className="border border-border/50 p-1.5 bg-muted/50 font-medium" />,
+                                                td: ({ node, ...props }: any) => <td {...props} className="border border-border/50 p-1.5" />,
+                                                ul: ({ node, ...props }: any) => <ul {...props} className="list-disc ml-4 my-1 space-y-0.5" />,
+                                                ol: ({ node, ...props }: any) => <ol {...props} className="list-decimal ml-4 my-1 space-y-0.5" />,
+                                                p: ({ node, ...props }: any) => <p {...props} className="mb-1 last:mb-0" />,
+                                            }}
+                                        >
+                                            {m.content}
+                                        </ReactMarkdown>
+                                    </div>
+                                    <span className={cn(
+                                        "text-[10px] text-muted-foreground/60 px-1",
+                                        m.role === "user" ? "text-right" : "text-left"
+                                    )}>
+                                        {formatTime(m.timestamp)}
+                                    </span>
                                 </div>
-                            </div>
+                            </motion.div>
                         ))}
                         {isLoading && messages[messages.length - 1]?.role === "user" && (
                             <div className="flex gap-3 mr-auto max-w-[85%]">
                                 <div className="w-8 h-8 rounded-full bg-white border shadow-sm flex items-center justify-center shrink-0 overflow-hidden">
                                     <img src="/emily.png" alt="Emily" className="w-full h-full object-cover" />
                                 </div>
-                                <div className="bg-white border border-border/50 p-3.5 rounded-2xl rounded-tl-sm shadow-sm flex items-center gap-1">
-                                    <span className="w-1.5 h-1.5 bg-primary/40 rounded-full animate-bounce [animation-delay:-0.3s]"></span>
-                                    <span className="w-1.5 h-1.5 bg-primary/40 rounded-full animate-bounce mx-0.5 [animation-delay:-0.15s]"></span>
-                                    <span className="w-1.5 h-1.5 bg-primary/40 rounded-full animate-bounce"></span>
+                                <div className="bg-white border border-gray-100 p-3.5 rounded-2xl rounded-tl-sm shadow-sm flex items-center gap-1">
+                                    <span className="w-1.5 h-1.5 bg-violet-400 rounded-full animate-bounce [animation-delay:-0.3s]"></span>
+                                    <span className="w-1.5 h-1.5 bg-violet-400 rounded-full animate-bounce mx-0.5 [animation-delay:-0.15s]"></span>
+                                    <span className="w-1.5 h-1.5 bg-violet-400 rounded-full animate-bounce"></span>
                                 </div>
                             </div>
                         )}
@@ -367,9 +414,9 @@ export function ChatWidget({ isOpen, onClose, whatsappNumber }: ChatWidgetProps)
                             href={whatsappUrl}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="flex items-center justify-center gap-2 w-full mb-3 text-[11px] font-medium text-muted-foreground hover:text-green-600 transition-colors py-1.5 hover:bg-green-50/50 rounded-md group"
+                            className="flex items-center justify-center gap-2 w-full mb-3 text-[11px] font-medium text-muted-foreground hover:text-violet-600 transition-colors py-1.5 hover:bg-violet-50/50 rounded-md group"
                         >
-                            <Phone size={12} className="group-hover:text-green-600" />
+                            <Phone size={12} className="group-hover:text-violet-600" />
                             <span>{t('whatsapp_fallback')}</span>
                         </a>
 
@@ -378,12 +425,12 @@ export function ChatWidget({ isOpen, onClose, whatsappNumber }: ChatWidgetProps)
                                 value={input}
                                 onChange={(e) => setInput(e.target.value)}
                                 placeholder={t('input_placeholder')}
-                                className="flex-1 bg-muted/30 hover:bg-muted/50 border-0 ring-1 ring-border/50 focus:ring-2 focus:ring-primary/20 px-4 py-3 rounded-2xl text-base focus:outline-none transition-all placeholder:text-muted-foreground/50"
+                                className="flex-1 bg-slate-50 hover:bg-white border-0 ring-1 ring-gray-200 focus:ring-2 focus:ring-violet-200 px-4 py-3 rounded-2xl text-base focus:outline-none transition-all placeholder:text-muted-foreground/50"
                             />
                             <button
                                 type="submit"
                                 disabled={isLoading || !input.trim()}
-                                className="bg-primary text-primary-foreground w-11 h-11 rounded-full flex items-center justify-center shadow-md hover:bg-primary/90 transition-all disabled:opacity-50 disabled:shadow-none disabled:cursor-not-allowed hover:scale-105 active:scale-95"
+                                className="bg-gradient-to-r from-violet-600 to-indigo-600 text-white w-11 h-11 rounded-full flex items-center justify-center shadow-md hover:shadow-lg hover:from-violet-500 hover:to-indigo-500 transition-all disabled:opacity-50 disabled:shadow-none disabled:cursor-not-allowed hover:scale-105 active:scale-95"
                             >
                                 {isLoading ? <Loader2 size={18} className="animate-spin" /> : <Send size={18} className="ml-0.5" />}
                             </button>

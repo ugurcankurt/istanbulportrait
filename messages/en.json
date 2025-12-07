@@ -17,6 +17,7 @@
     "message": "Hello! I would like to get information about photoshoots in Istanbul.",
     "notification_title": "Hello! 👋",
     "notification_message": "Need help with your booking?",
+    "close_notification": "Close notification",
     "direction": "ltr"
   },
   "hero": {
@@ -1271,6 +1272,8 @@
     "redirecting": "Perfect! I'm redirecting you to the checkout page now. Please complete your payment details there to secure your spot! 💳✨",
     "connection_error": "Sorry, I'm having trouble connecting. Please try again or use WhatsApp.",
     "bot_avatar_alt": "Emily",
-    "checkout_nudge": "Hey! I noticed you're at the final step. Do you need any help completing your booking? 😊"
+    "checkout_nudge": "Hey! I noticed you're at the final step. Do you need any help completing your booking? 😊",
+    "role": "Photography Assistant",
+    "online": "Online"
   }
 }
