@@ -126,13 +126,13 @@ export function BookingModal({
 
   const packageInfo = selectedPackage
     ? {
-        name: tPackages(`${selectedPackage}.title`),
-        price: packagePrices[selectedPackage],
-        duration: tPackages(`${selectedPackage}.duration`),
-        photos: tPackages(`${selectedPackage}.photos`),
-        locations: tPackages(`${selectedPackage}.locations`),
-        features: tPackages.raw(`${selectedPackage}.features`) as string[],
-      }
+      name: tPackages(`${selectedPackage}.title`),
+      price: packagePrices[selectedPackage],
+      duration: tPackages(`${selectedPackage}.duration`),
+      photos: tPackages(`${selectedPackage}.photos`),
+      locations: tPackages(`${selectedPackage}.locations`),
+      features: tPackages.raw(`${selectedPackage}.features`) as string[],
+    }
     : null;
 
   const handleSubmit = form.handleSubmit(
@@ -251,7 +251,7 @@ export function BookingModal({
                               onChange={field.onChange}
                               defaultCountry="TR"
                               placeholder={tplaceholders("phone_number")}
-                              className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                              className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background placeholder:text-muted-foreground focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                             />
                           </FormControl>
                           <FormMessage />
@@ -293,8 +293,8 @@ export function BookingModal({
                               onSelect={(date) => {
                                 const dateString = date
                                   ? format(date, "yyyy-MM-dd", {
-                                      locale: dateFnsLocale,
-                                    })
+                                    locale: dateFnsLocale,
+                                  })
                                   : "";
                                 dateField.onChange(dateString);
                                 setShowTimeSelection(!!date);

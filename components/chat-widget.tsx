@@ -378,7 +378,7 @@ export function ChatWidget({ isOpen, onClose, whatsappNumber }: ChatWidgetProps)
                                 value={input}
                                 onChange={(e) => setInput(e.target.value)}
                                 placeholder={t('input_placeholder')}
-                                className="flex-1 bg-muted/30 hover:bg-muted/50 border-0 ring-1 ring-border/50 focus:ring-2 focus:ring-primary/20 px-4 py-3 rounded-2xl text-sm focus:outline-none transition-all placeholder:text-muted-foreground/50"
+                                className="flex-1 bg-muted/30 hover:bg-muted/50 border-0 ring-1 ring-border/50 focus:ring-2 focus:ring-primary/20 px-4 py-3 rounded-2xl text-base focus:outline-none transition-all placeholder:text-muted-foreground/50"
                             />
                             <button
                                 type="submit"

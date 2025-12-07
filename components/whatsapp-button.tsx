@@ -40,9 +40,10 @@ export function WhatsAppButton({
     checkMobile();
     window.addEventListener("resize", checkMobile);
 
-    // Show chat bubble after delay if chat is not open
+    // Show chat bubble after delay if chat is not open and not dismissed
     const timer = setTimeout(() => {
-      if (!isChatOpen) {
+      const isDismissed = localStorage.getItem("chat_bubble_dismissed");
+      if (!isChatOpen && !isDismissed) {
         setShowBubble(true);
       }
     }, 3000);
@@ -117,10 +118,12 @@ export function WhatsAppButton({
                 onClick={(e) => {
                   e.stopPropagation();
                   setShowBubble(false);
+                  localStorage.setItem("chat_bubble_dismissed", "true");
                 }}
-                className="text-muted-foreground hover:text-foreground"
+                className="p-3 -mr-2 -mt-2 text-muted-foreground hover:text-foreground hover:bg-muted/20 rounded-full transition-colors"
+                aria-label={t("close_notification")}
               >
-                <X size={14} />
+                <X size={18} />
               </button>
             </motion.div>
           )}
