@@ -113,29 +113,38 @@ For Custom Inquiry:
 \`\`\`
 `;
 
-    const chatHistory = messages.map((m: any) => ({
+    // Convert message history to Google's format
+    const contents = messages.map((m: any) => ({
         role: m.role === 'user' ? 'user' : 'model',
         parts: [{ text: m.content }]
     }));
 
-    // Call Gemini API
-    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
+    // Use the same model as the website: gemini-2.0-flash-exp
+    // Not using stream here for simplicity in webhook context
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${GEMINI_API_KEY}`;
+
+    const geminiBody = {
+        contents: contents,
+        system_instruction: {
+            parts: [{ text: systemInstruction }]
+        },
+        generationConfig: {
+            maxOutputTokens: 1000,
+            temperature: 0.7,
+        },
+    };
+
+    const response = await fetch(url, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-            contents: [
-                { role: "user", parts: [{ text: systemInstruction }] }, // System instruction as first user message for stronger adherence
-                ...chatHistory
-            ],
-            generationConfig: {
-                maxOutputTokens: 1000,
-                temperature: 0.7,
-            },
-        }),
+        body: JSON.stringify(geminiBody),
     });
 
     if (!response.ok) {
-        throw new Error(`Gemini API Error: ${response.statusText}`);
+        // Log detailed error from Google
+        const errorText = await response.text();
+        console.error(`Gemini API Error (${response.status}):`, errorText);
+        throw new Error(`Gemini API Error: ${response.statusText} - ${errorText}`);
     }
 
     const data = await response.json();
