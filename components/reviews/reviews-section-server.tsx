@@ -48,7 +48,7 @@ export async function ReviewsSection({
     const localBusinessWithReviews = {
       "@context": "https://schema.org" as const,
       "@type": "LocalBusiness" as const,
-      "@id": `${SEO_CONFIG.site.url}/#localbusiness-reviews`,
+      "@id": `${SEO_CONFIG.site.url}/#localbusiness`,
       name: SEO_CONFIG.organization.name,
       address: {
         "@type": "PostalAddress" as const,

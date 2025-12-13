@@ -91,17 +91,11 @@ export function generateLocalBusinessSchema(
     sameAs: SEO_CONFIG.organization.sameAs,
     knowsLanguage: SEO_CONFIG.organization.contactPoint.availableLanguage,
     // AI Search Enhancement
-    knowsAbout: [
-      "Istanbul Photography",
-      "Portrait Photography",
-      "Couple Photography",
-      "Bosphorus Photography",
-      "Galata Tower Photography",
-      "Sultanahmet Photography",
-      "Professional Photography Techniques",
-      "Tourism Photography",
-      "Wedding Photography",
-    ],
+    knowsAbout: config.t
+      ? config.t("knowsAbout")
+        .split(",")
+        .map((s: string) => s.trim())
+      : AI_SEARCH_CONFIG.conversationContext.serviceAreas,
     hasOfferCatalog: {
       "@type": "OfferCatalog",
       name: "Photography Packages",
@@ -183,7 +177,9 @@ export function generatePersonSchema(config: SchemaConfig): PersonSchema {
     "@id": `${baseUrl}/#person`,
     name: SEO_CONFIG.person.name,
     jobTitle: SEO_CONFIG.person.jobTitle,
-    description: `Professional photographer specializing in portrait and lifestyle photography in Istanbul, Turkey.`,
+    description: config.t
+      ? config.t("offerDescription")
+      : `Professional photographer specializing in portrait and lifestyle photography in Istanbul, Turkey.`,
     image: SEO_CONFIG.person.image,
     url: SEO_CONFIG.person.url,
     sameAs: SEO_CONFIG.person.sameAs,
@@ -194,18 +190,22 @@ export function generatePersonSchema(config: SchemaConfig): PersonSchema {
     },
     hasOccupation: {
       "@type": "Occupation",
-      name: "Professional Photographer",
+      name: config.t ? config.t("jobTitle") : "Professional Photographer",
       occupationLocation: {
         "@type": "City",
-        name: "Istanbul, Turkey",
+        name: config.t ? config.t("occupationLocation") : "Istanbul, Turkey",
       },
-      skills: [
-        "Portrait Photography",
-        "Lifestyle Photography",
-        "Couple Photography",
-        "Tourism Photography",
-        "Rooftop Photography",
-      ],
+      skills: config.t
+        ? config.t("skills")
+          .split(",")
+          .map((s: string) => s.trim())
+        : [
+          "Portrait Photography",
+          "Lifestyle Photography",
+          "Couple Photography",
+          "Tourism Photography",
+          "Rooftop Photography",
+        ],
     },
   };
 }
@@ -464,7 +464,7 @@ export function generateImageGallerySchema(
     "@type": "ImageGallery",
     "@id": `${baseUrl}/#gallery-${galleryName.toLowerCase().replace(/\s+/g, "-")}`,
     name: galleryName,
-    description: `Professional photography gallery showcasing ${galleryName.toLowerCase()} in Istanbul`,
+    description: config.t ? config.t("galleryDescription", { name: galleryName }) : `Professional photography gallery showcasing ${galleryName} in Istanbul`,
     image: images.map((img) => ({
       "@type": "ImageObject" as const,
       name: img.name,
@@ -475,7 +475,7 @@ export function generateImageGallerySchema(
       ...(img.width && { width: img.width.toString() }),
       ...(img.height && { height: img.height.toString() }),
       caption: img.caption,
-      creditText: img.creditText || `Photography by ${SEO_CONFIG.person.name}`,
+      creditText: img.creditText || (config.t ? config.t("creditText", { name: SEO_CONFIG.person.name }) : `Photography by ${SEO_CONFIG.person.name}`),
       license: img.license || `${baseUrl}/privacy#image-license`,
       copyrightNotice:
         img.copyrightNotice ||
@@ -521,11 +521,11 @@ export function generateHowToSchema(
     supply: [
       {
         "@type": "HowToSupply",
-        name: "Professional Camera",
+        name: config.t ? config.t("howtoCamera") : "Professional Camera",
       },
       {
         "@type": "HowToSupply",
-        name: "Lighting Equipment",
+        name: config.t ? config.t("howtoLighting") : "Lighting Equipment",
       },
     ],
     step: steps.map((step, index) => ({
@@ -722,24 +722,20 @@ export function generateEnhancedLocalBusinessSchema(
     currenciesAccepted: SEO_CONFIG.business.currenciesAccepted,
     sameAs: SEO_CONFIG.organization.sameAs,
     // AI Search Enhancement
-    knowsAbout: [
-      "Istanbul Photography",
-      "Portrait Photography",
-      "Couple Photography",
-      "Bosphorus Photography",
-      "Galata Tower Photography",
-      "Sultanahmet Photography",
-      "Professional Photography Techniques",
-      "Tourism Photography",
-      "Wedding Photography",
-    ],
+    knowsAbout: config.t
+      ? config.t("knowsAbout")
+        .split(",")
+        .map((s: string) => s.trim())
+      : AI_SEARCH_CONFIG.conversationContext.serviceAreas,
     hasOfferCatalog: {
       "@type": "OfferCatalog",
       name: "Istanbul Photography Services",
       itemListElement: SEO_CONFIG.services.offers.map((offer) => ({
         "@type": "Offer",
         name: offer.name,
-        description: `${offer.description}. Professional photographer Uğur Cankurt with 8+ years experience. Includes consultation, editing, and digital delivery.`,
+        description: config.t
+          ? `${offer.description}. ${config.t("offerDescription")}`
+          : `${offer.description}. Professional photographer Uğur Cankurt with 8+ years experience. Includes consultation, editing, and digital delivery.`,
         price: offer.price,
         priceCurrency: offer.priceCurrency,
         availability: "https://schema.org/InStock",
@@ -750,14 +746,7 @@ export function generateEnhancedLocalBusinessSchema(
         },
       })),
     },
-    // AggregateRating for Google Rich Results (star ratings)
-    aggregateRating: {
-      "@type": "AggregateRating",
-      ratingValue: "4.9",
-      reviewCount: "50",
-      bestRating: "5",
-      worstRating: "1",
-    },
+
     // AI Discovery: potentialAction for booking
     potentialAction: [
       {

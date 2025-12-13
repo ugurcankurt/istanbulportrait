@@ -155,7 +155,7 @@
       "error": "Something went wrong. Please try again."
     },
     "info": {
-      "location": "Istanbul, Turkey",
+      "location": "Süleymaniye, Siyavuş Paşa Sk. No:24/2, 34116 Fatih/İstanbul, Türkiye",
       "email": "info@istanbulportrait.com",
       "phone": "+90 536 709 37 24",
       "hours": "Available 7 days a week"
@@ -681,7 +681,23 @@
   "seo": {
     "home": {
       "title": "Istanbul Photographer | Professional Photoshoots in Istanbul",
-      "description": "Book your Istanbul photoshoot with an expert photographer in Istanbul. Professional photoshoot in Istanbul at iconic locations. Same-day delivery. From €150."
+      "description": "Book your Istanbul photoshoot with an expert photographer in Istanbul. Professional photoshoot in Istanbul at iconic locations. Same-day delivery. From €150.",
+      "keywords": "istanbul photographer, professional photographer istanbul, istanbul photoshoot, portrait photographer istanbul, couple photography istanbul, lifestyle photography istanbul, rooftop photoshoot istanbul, photography services istanbul, best photographer istanbul, istanbul photography session, tourism photography istanbul, professional photos istanbul"
+    },
+    "schema": {
+      "knowsAbout": "Istanbul Photography, Portrait Photography, Couple Photography, Bosphorus Photography, Galata Tower Photography, Sultanahmet Photography, Professional Photography Techniques, Tourism Photography, Wedding Photography",
+      "skills": "Portrait Photography, Lifestyle Photography, Couple Photography, Tourism Photography, Rooftop Photography",
+      "serviceType": "Photography Service",
+      "slogan": "Capturing Your Istanbul Story",
+      "jobTitle": "Professional Photographer",
+      "occupationLocation": "Istanbul, Turkey",
+      "offerDescription": "Professional photographer Uğur Cankurt with 8+ years experience. Includes consultation, editing, and digital delivery.",
+      "areaServed": "Istanbul",
+      "galleryDescription": "Professional photography gallery showcasing {name} in Istanbul",
+      "creditText": "Photography by {name}",
+      "howtoCamera": "Professional Camera",
+      "howtoLighting": "Lighting Equipment",
+      "faqTitle": "Frequently Asked Questions about {topic}"
     },
     "packages": {
       "title": "Istanbul Photoshoot Packages | Photographer in Istanbul",

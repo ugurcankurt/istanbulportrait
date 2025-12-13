@@ -35,6 +35,16 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+export const viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#000000" },
+  ],
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+};
+
 export async function generateMetadata({
   params,
 }: {
@@ -49,7 +59,7 @@ export async function generateMetadata({
     metadataBase: new URL(baseUrl),
     title: t("title"),
     description: t("description"),
-    keywords: SEO_CONFIG.seo.keywords.join(", "),
+    keywords: t("keywords"),
     authors: [{ name: SEO_CONFIG.person.name, url: baseUrl }],
     publisher: "istanbulportrait.com",
     category: "Photography Services",

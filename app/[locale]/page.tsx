@@ -42,9 +42,10 @@ export default async function HomePage({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
+  const tSchema = await getTranslations({ locale, namespace: "seo.schema" });
 
   // Create schema configuration
-  const schemaConfig = createSchemaConfig(locale);
+  const schemaConfig = createSchemaConfig(locale, { t: tSchema });
 
   // Generate structured data schemas with AI Search optimization
   const enhancedLocalBusinessSchema =

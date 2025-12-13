@@ -8,7 +8,7 @@ export const SEO_CONFIG = {
     name: "Istanbul Portrait",
     alternateName: "Istanbul Photographer",
     url: "https://istanbulportrait.com",
-    title: "Photographer in Istanbul | Most Popular Photographer in Istanbul",
+    title: "Istanbul Photographer - Professional Portrait & Lifestyle Photography",
     description:
       "Expert photographer in Istanbul for professional portrait and lifestyle photography sessions. Capture your memories with stunning rooftop views and historic landmarks.",
     locale: "en_US",

@@ -154,7 +154,7 @@
       "error": "Algo salió mal. Por favor intenta de nuevo."
     },
     "info": {
-      "location": "Estambul, Turquía",
+      "location": "Süleymaniye, Siyavuş Paşa Sk. No:24/2, 34116 Fatih/İstanbul, Türkiye",
       "email": "info@istanbulportrait.com",
       "phone": "+90 536 709 37 24",
       "hours": "Disponible 7 días a la semana"
@@ -702,7 +702,23 @@
   "seo": {
     "home": {
       "title": "Sesión Fotográfica en Estambul | Fotógrafo Profesional en Estambul",
-      "description": "Reserva tu sesión fotográfica en Estambul con un fotógrafo experto en Estambul. Sesión fotográfica profesional en Estambul en ubicaciones icónicas. Entrega el mismo día. Desde €150."
+      "description": "Reserva tu sesión fotográfica en Estambul con un fotógrafo experto en Estambul. Sesión fotográfica profesional en Estambul en ubicaciones icónicas. Entrega el mismo día. Desde €150.",
+      "keywords": "fotógrafo estambul, fotógrafo profesional estambul, sesión de fotos estambul, fotógrafo de retratos estambul, fotografía de parejas estambul, fotografía lifestyle estambul, sesión de fotos en azotea estambul, servicios de fotografía estambul, mejor fotógrafo estambul, sesión fotográfica estambul, fotografía turística estambul, fotos profesionales estambul"
+    },
+    "schema": {
+      "knowsAbout": "Fotografía en Estambul, Fotografía de Retratos, Fotografía de Parejas, Fotografía del Bósforo, Fotografía Torre Gálata, Fotografía Sultanahmet, Técnicas de Fotografía Profesional, Fotografía Turística, Fotografía de Bodas",
+      "skills": "Fotografía de Retratos, Fotografía Lifestyle, Fotografía de Parejas, Fotografía Turística, Fotografía en Azotea",
+      "serviceType": "Servicio de Fotografía",
+      "slogan": "Capturando Tu Historia en Estambul",
+      "jobTitle": "Fotógrafo Profesional",
+      "occupationLocation": "Estambul, Turquía",
+      "offerDescription": "Fotógrafo profesional Uğur Cankurt con más de 8 años de experiencia. Incluye consulta, edición y entrega digital.",
+      "areaServed": "Estambul",
+      "galleryDescription": "Galería de fotografía profesional mostrando {name} en Estambul",
+      "creditText": "Fotografía por {name}",
+      "howtoCamera": "Cámara Profesional",
+      "howtoLighting": "Equipo de Iluminación",
+      "faqTitle": "Preguntas frecuentes sobre {topic}"
     },
     "packages": {
       "title": "Paquetes de Sesión Fotográfica en Estambul | Fotógrafo en Estambul",

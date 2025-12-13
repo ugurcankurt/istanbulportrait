@@ -155,7 +155,7 @@
       "error": "出了点问题，请重试。"
     },
     "info": {
-      "location": "土耳其伊斯坦布尔",
+      "location": "Süleymaniye, Siyavuş Paşa Sk. No:24/2, 34116 Fatih/İstanbul, Türkiye",
       "email": "info@istanbulportrait.com",
       "phone": "+90 536 709 37 24",
       "hours": "每周7天可预约"
@@ -681,7 +681,23 @@
   "seo": {
     "home": {
       "title": "伊斯坦布尔拍摄 | 伊斯坦布尔专业摄影师",
-      "description": "与伊斯坦布尔专业摄影师预订您的伊斯坦布尔拍摄。在标志性地点进行专业拍摄。当天交付。从€150起。"
+      "description": "与伊斯坦布尔专业摄影师预订您的伊斯坦布尔拍摄。在标志性地点进行专业拍摄。当天交付。从€150起。",
+      "keywords": "伊斯坦布尔摄影师, 伊斯坦布尔专业摄影师, 伊斯坦布尔旅拍, 伊斯坦布尔人像摄影师, 伊斯坦布尔情侣摄影, 伊斯坦布尔生活方式摄影, 伊斯坦布尔天台摄影, 伊斯坦布尔摄影服务, 伊斯坦布尔最好的摄影师, 伊斯坦布尔摄影, 伊斯坦布尔旅游摄影, 伊斯坦布尔专业照片"
+    },
+    "schema": {
+      "knowsAbout": "伊斯坦布尔摄影, 人像摄影, 情侣摄影, 博斯普鲁斯海峡摄影, 加拉塔塔摄影, 苏丹艾哈迈德摄影, 专业摄影技术, 旅游摄影, 婚礼摄影",
+      "skills": "人像摄影, 生活方式摄影, 情侣摄影, 旅游摄影, 天台摄影",
+      "serviceType": "摄影服务",
+      "slogan": "捕捉您的伊斯坦布尔故事",
+      "jobTitle": "专业摄影师",
+      "occupationLocation": "土耳其伊斯坦布尔",
+      "offerDescription": "拥有8年以上经验的专业摄影师Uğur Cankurt。包括咨询、编辑和数字交付。",
+      "areaServed": "伊斯坦布尔",
+      "galleryDescription": "展示伊斯坦布尔{name}的专业摄影画廊",
+      "creditText": "摄影：{name}",
+      "howtoCamera": "专业相机",
+      "howtoLighting": "照明设备",
+      "faqTitle": "关于{topic}的常见问题"
     },
     "packages": {
       "title": "伊斯坦布尔拍摄套餐 | 伊斯坦布尔摄影师",

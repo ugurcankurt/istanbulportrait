@@ -80,6 +80,7 @@ export interface SchemaConfig {
   baseUrl: string;
   includeReviews?: boolean;
   includeFAQ?: boolean;
+  t?: any;
 }
 
 // Review data interface

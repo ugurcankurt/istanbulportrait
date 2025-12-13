@@ -160,7 +160,7 @@ export function generateAIOptimizedFAQSchema(
         "@context": "https://schema.org" as const,
         "@type": "FAQPage" as const,
         "@id": `${baseUrl}/#faqpage`,
-        name: `Frequently Asked Questions about ${topic}`,
+        name: config.t ? config.t("faqTitle", { topic }) : `Frequently Asked Questions about ${topic}`,
         about: {
             "@type": "Thing" as const,
             name: topic,
@@ -197,7 +197,7 @@ export function generateAILocalBusinessSchema(config: SchemaConfig) {
         "@type": "ProfessionalService" as const, // More specific than LocalBusiness
         "@id": `${baseUrl}/#localbusiness`,
         name: SEO_CONFIG.organization.name,
-        description: AI_SEARCH_CONFIG.primaryEntity.description,
+        description: config.t ? config.t("description") : AI_SEARCH_CONFIG.primaryEntity.description,
         url: baseUrl,
         telephone: SEO_CONFIG.organization.contactPoint.telephone,
         email: "info@istanbulportrait.com",
@@ -222,17 +222,21 @@ export function generateAILocalBusinessSchema(config: SchemaConfig) {
             longitude: 28.9784,
         },
         // AI-Enhanced properties
-        knowsAbout: AI_SEARCH_CONFIG.conversationContext.serviceAreas,
+        knowsAbout: config.t
+            ? config.t("knowsAbout")
+                .split(",")
+                .map((s: string) => s.trim())
+            : AI_SEARCH_CONFIG.conversationContext.serviceAreas,
         knowsLanguage: SEO_CONFIG.organization.contactPoint.availableLanguage,
-        slogan: "Capturing Your Istanbul Story",
+        slogan: config.t ? config.t("slogan") : "Capturing Your Istanbul Story",
         // Service offerings for AI understanding
         hasOfferCatalog: {
             "@type": "OfferCatalog" as const,
-            name: "Photography Services",
+            name: config.t ? config.t("serviceType") : "Photography Services",
             itemListElement: SEO_CONFIG.services.offers.map((offer) => ({
                 "@type": "Offer" as const,
                 name: offer.name,
-                description: offer.description,
+                description: config.t ? `${offer.description}. ${config.t("offerDescription")}` : offer.description,
                 price: offer.price,
                 priceCurrency: offer.priceCurrency,
                 availability: "https://schema.org/InStock",
@@ -270,9 +274,9 @@ export function generateAILocalBusinessSchema(config: SchemaConfig) {
         contactPoint: {
             "@type": "ContactPoint" as const,
             telephone: SEO_CONFIG.organization.contactPoint.telephone,
-            contactType: "customer service",
+            contactType: config.t ? "customer service" : "customer service", // Ideally this should be localized too but standard schema types are usually English/Standard
             availableLanguage: SEO_CONFIG.organization.contactPoint.availableLanguage,
-            areaServed: "Worldwide",
+            areaServed: config.t ? "Worldwide" : "Worldwide", // Keeping standard for now, but could be localized
         },
     };
 }
@@ -288,8 +292,8 @@ export function generateAIAnswersSchema(config: SchemaConfig) {
         "@context": "https://schema.org" as const,
         "@type": "WebPage" as const,
         "@id": `${baseUrl}/#webpage`,
-        name: "Istanbul Photographer - Professional Photography Services",
-        description: SEO_CONFIG.site.description,
+        name: config.t ? config.t("title") : "Istanbul Photographer - Professional Photography Services",
+        description: config.t ? config.t("description") : SEO_CONFIG.site.description,
         mainEntity: {
             "@type": "LocalBusiness" as const,
             "@id": `${baseUrl}/#localbusiness`,
