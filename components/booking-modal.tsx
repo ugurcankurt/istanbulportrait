@@ -139,11 +139,20 @@ export function BookingModal({
     (data) => {
       // Track lead conversion - user filled booking form
       if (selectedPackage && packageInfo) {
+        // Generate unique event ID for deduplication
+        const eventId = crypto.randomUUID();
+
         // GA4 Lead Event
-        trackLead(selectedPackage, packageInfo.name, packageInfo.price);
+        trackLead(
+          selectedPackage,
+          packageInfo.name,
+          packageInfo.price,
+          "EUR",
+          eventId,
+        );
 
         // Facebook Lead Event (client-side)
-        fbPixel.trackLead(packageInfo.price);
+        fbPixel.trackLead(packageInfo.price, eventId);
       }
 
       // Store booking data in sessionStorage for checkout page

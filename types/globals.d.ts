@@ -43,6 +43,7 @@ declare global {
       command: "track" | "trackCustom" | "init" | "consent",
       eventName: string,
       parameters?: Record<string, unknown>,
+      options?: { eventID?: string },
     ) => void;
 
     _fbq: typeof window.fbq;

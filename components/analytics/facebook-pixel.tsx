@@ -5,16 +5,7 @@ import Script from "next/script";
 import { useEffect } from "react";
 import { FACEBOOK_PIXEL_ID } from "@/lib/facebook";
 
-declare global {
-  interface Window {
-    fbq: (
-      command: "track" | "trackCustom" | "init" | "consent",
-      eventName: string,
-      parameters?: Record<string, unknown>,
-    ) => void;
-    _fbq: typeof window.fbq;
-  }
-}
+
 
 export function FacebookPixel() {
   const pathname = usePathname();

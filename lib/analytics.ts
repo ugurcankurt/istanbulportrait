@@ -71,6 +71,7 @@ export function trackPurchase(
     city?: string;
     country?: string;
   },
+  eventId?: string,
 ) {
   if (typeof window !== "undefined" && window.gtag) {
     // Set Enhanced Conversions user data if provided
@@ -102,16 +103,38 @@ export function trackPurchase(
       ],
     });
   }
+
+  // Track Facebook Purchase
+  trackFacebookEvent(
+    "Purchase",
+    {
+      content_ids: [packageId],
+      content_name: packageName,
+      value: value,
+      currency: "EUR",
+      transaction_id: transactionId,
+    },
+    eventId,
+  );
 }
 
 // Track Facebook events
-export function trackFacebookEvent(eventType: string, data?: any) {
+export function trackFacebookEvent(
+  eventType: string,
+  data?: any,
+  eventId?: string,
+) {
   if (typeof window !== "undefined" && window.fbq) {
-    window.fbq("track", eventType, data);
+    if (eventId) {
+      window.fbq("track", eventType, data, { eventID: eventId });
+    } else {
+      window.fbq("track", eventType, data);
+    }
   }
 }
 
 // Track view item events (GA4 Enhanced Ecommerce)
+// Note: We don't usually deduplicate ViewContent, but adding support is fine
 export function trackViewItem(
   itemId: string,
   itemName: string,
@@ -150,6 +173,7 @@ export function trackBeginCheckout(
   packageName: string,
   value: number,
   currency: string = "EUR",
+  eventId?: string,
 ) {
   if (typeof window !== "undefined" && window.gtag) {
     window.gtag("event", "begin_checkout", {
@@ -166,6 +190,19 @@ export function trackBeginCheckout(
       ],
     });
   }
+
+  // Also track for Facebook
+  trackFacebookEvent(
+    "InitiateCheckout",
+    {
+      content_ids: [packageId],
+      content_name: packageName,
+      content_type: "product",
+      value: value,
+      currency: "EUR",
+    },
+    eventId,
+  );
 }
 
 // Track add payment info event (GA4 Enhanced Ecommerce)
@@ -200,6 +237,7 @@ export function trackLead(
   packageName: string,
   value?: number,
   currency: string = "EUR",
+  eventId?: string,
 ) {
   if (typeof window !== "undefined" && window.gtag) {
     window.gtag("event", "generate_lead", {
@@ -218,12 +256,16 @@ export function trackLead(
   }
 
   // Also track for Facebook
-  trackFacebookEvent("Lead", {
-    content_ids: [packageId],
-    content_name: packageName,
-    value: value,
-    currency: "EUR",
-  });
+  trackFacebookEvent(
+    "Lead",
+    {
+      content_ids: [packageId],
+      content_name: packageName,
+      value: value,
+      currency: "EUR",
+    },
+    eventId,
+  );
 }
 
 // Generic event function (alias for trackEvent)

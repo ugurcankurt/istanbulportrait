@@ -43,6 +43,7 @@ export function generateLeadId(): number {
 export interface FacebookConversionEvent {
   event_name: string;
   event_time: number;
+  event_id?: string; // Critical for deduplication
   action_source: "system_generated" | "website";
   user_data: {
     em?: string[]; // hashed email
@@ -117,53 +118,86 @@ export const fbPixel = {
   },
 
   // Track custom events
-  track: (eventName: string, parameters?: Record<string, unknown>) => {
+  track: (
+    eventName: string,
+    parameters?: Record<string, unknown>,
+    eventId?: string,
+  ) => {
     if (typeof window === "undefined") return;
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const fb = (window as any).fbq;
     if (fb) {
-      fb("track", eventName, parameters);
+      if (eventId) {
+        fb("track", eventName, parameters, { eventID: eventId });
+      } else {
+        fb("track", eventName, parameters);
+      }
     }
   },
 
   // Track ViewContent event
-  trackViewContent: (contentId: string, value?: number) => {
-    fbPixel.track("ViewContent", {
-      content_ids: [contentId],
-      content_type: "product",
-      value: value,
-      currency: "EUR",
-    });
+  trackViewContent: (contentId: string, value?: number, eventId?: string) => {
+    fbPixel.track(
+      "ViewContent",
+      {
+        content_ids: [contentId],
+        content_type: "product",
+        value: value,
+        currency: "EUR",
+      },
+      eventId,
+    );
   },
 
   // Track Lead event
-  trackLead: (value?: number) => {
-    fbPixel.track("Lead", {
-      value: value,
-      currency: "EUR",
-    });
+  trackLead: (value?: number, eventId?: string) => {
+    fbPixel.track(
+      "Lead",
+      {
+        value: value,
+        currency: "EUR",
+      },
+      eventId,
+    );
   },
 
   // Track InitiateCheckout event
-  trackInitiateCheckout: (contentId: string, value: number) => {
-    fbPixel.track("InitiateCheckout", {
-      content_ids: [contentId],
-      content_type: "product",
-      value: value,
-      currency: "EUR",
-    });
+  trackInitiateCheckout: (
+    contentId: string,
+    value: number,
+    eventId?: string,
+  ) => {
+    fbPixel.track(
+      "InitiateCheckout",
+      {
+        content_ids: [contentId],
+        content_type: "product",
+        value: value,
+        currency: "EUR",
+      },
+      eventId,
+    );
   },
 
   // Track Purchase event
-  trackPurchase: (contentId: string, value: number, transactionId: string) => {
-    fbPixel.track("Purchase", {
-      content_ids: [contentId],
-      content_type: "product",
-      value: value,
-      currency: "EUR",
-      transaction_id: transactionId,
-    });
+  trackPurchase: (
+    contentId: string,
+    value: number,
+    transactionId: string,
+    eventId?: string,
+  ) => {
+    fbPixel.track(
+      "Purchase",
+      {
+        content_ids: [contentId],
+        content_type: "product",
+        value: value,
+        currency: "EUR",
+        transaction_id: transactionId,
+      },
+      eventId,
+    );
   },
 };
 
@@ -174,6 +208,7 @@ export const trackFacebookLead = async (
   packageId: string,
   amount: number,
   leadId?: number,
+  eventId?: string,
 ) => {
   const generatedLeadId = leadId || generateLeadId();
 
@@ -181,6 +216,7 @@ export const trackFacebookLead = async (
   const event: FacebookConversionEvent = {
     event_name: "Lead",
     event_time: Math.floor(Date.now() / 1000),
+    event_id: eventId,
     action_source: "system_generated",
     user_data: {
       em: customerEmail ? [hashCustomerData(customerEmail)] : [],
@@ -198,10 +234,14 @@ export const trackFacebookLead = async (
   };
 
   // Send to Conversions API (server-side)
+  // Only send CAPI if we have sufficient data or if it's critical
+  // For leads, we might rely on client-side mostly, but CAPI helps
   const success = await sendToFacebookConversionsAPI([event]);
 
-  // Also track with client-side pixel
-  fbPixel.trackLead(amount);
+  // Client-side pixel should be called from the component, but if called here:
+  if (typeof window !== "undefined") {
+    fbPixel.trackLead(amount, eventId);
+  }
 
   return { success, leadId: generatedLeadId };
 };
@@ -212,11 +252,13 @@ export const trackFacebookPurchase = async (
   packageId: string,
   amount: number,
   transactionId: string,
+  eventId?: string,
 ) => {
   // Prepare event for Conversions API
   const event: FacebookConversionEvent = {
     event_name: "Purchase",
     event_time: Math.floor(Date.now() / 1000),
+    event_id: eventId,
     action_source: "system_generated",
     user_data: {
       em: customerEmail ? [hashCustomerData(customerEmail)] : [],
@@ -229,14 +271,18 @@ export const trackFacebookPurchase = async (
       content_type: "photography_package",
       value: amount,
       currency: "EUR",
+      transaction_id: transactionId,
     },
   };
 
   // Send to Conversions API (server-side)
   const success = await sendToFacebookConversionsAPI([event]);
 
-  // Also track with client-side pixel
-  fbPixel.trackPurchase(packageId, amount, transactionId);
+  // Client-side pixel tracking logic is usually separate for Purchase
+  // (e.g. on Thank You page), but if this function is called client-side:
+  if (typeof window !== "undefined") {
+    fbPixel.trackPurchase(packageId, amount, transactionId, eventId);
+  }
 
   return { success };
 };

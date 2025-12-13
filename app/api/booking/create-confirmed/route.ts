@@ -163,6 +163,26 @@ export async function POST(request: NextRequest) {
           totalAmount,
           bookingId: booking.id,
         });
+
+        // Track Facebook CAPI Purchase
+        // We do this here because we now have a guaranteed Booking ID (Transaction ID)
+        // and we are running server-side.
+        if (body.eventId) {
+          try {
+            const { trackFacebookPurchase } = await import("@/lib/facebook");
+            await trackFacebookPurchase(
+              customerEmail,
+              customerPhone,
+              packageId,
+              totalAmount,
+              booking.id, // Transaction ID
+              body.eventId, // Deduplication Key
+            );
+          } catch (facebookError) {
+            console.error("Facebook CAPI Error:", facebookError);
+            // Non-blocking error
+          }
+        }
       } catch (emailError) {
         console.error("❌ Failed to send confirmation email:", emailError);
         // Don't fail the booking creation if email fails

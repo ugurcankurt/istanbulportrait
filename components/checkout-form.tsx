@@ -81,6 +81,9 @@ export function CheckoutForm() {
     exchangeRate: number;
   } | null>(null);
 
+  // Unique Event ID for Facebook Deduplication (Purchase Event)
+  const [eventId, setEventId] = useState<string>("");
+
   // IndexNow integration for automatic URL submission
   const { notifyBookingCreated } = useIndexNow();
 
@@ -113,9 +116,13 @@ export function CheckoutForm() {
     },
   });
 
-  // Initialize with package from URL params and load booking data from sessionStorage
   // Initialize with package from URL params or load from sessionStorage
   useEffect(() => {
+    // Generate Event ID only once on mount
+    if (!eventId) {
+      setEventId(crypto.randomUUID());
+    }
+
     // 1. Try to get package from URL
     const packageParam = searchParams.get("package") as PackageId;
     let effectivePackageId = (packageParam && packageParam in packagePrices) ? packageParam : null;
@@ -152,7 +159,7 @@ export function CheckoutForm() {
       // If no valid package found in URL or Session, redirect
       router.push("/packages");
     }
-  }, [searchParams, bookingForm, router]);
+  }, [searchParams, bookingForm, router, eventId]);
 
   const packageInfo = selectedPackage
     ? {
@@ -167,10 +174,16 @@ export function CheckoutForm() {
 
   // Track begin_checkout when component mounts with package data
   useEffect(() => {
-    if (selectedPackage && packageInfo) {
-      trackBeginCheckout(selectedPackage, packageInfo.name, packageInfo.price);
+    if (selectedPackage && packageInfo && eventId) {
+      trackBeginCheckout(
+        selectedPackage,
+        packageInfo.name,
+        packageInfo.price,
+        "EUR",
+        eventId
+      );
     }
-  }, [selectedPackage, packageInfo]);
+  }, [selectedPackage, packageInfo, eventId]);
 
   const handlePaymentSubmit = async (paymentData: PaymentFormData) => {
     if (!selectedPackage || !packageInfo) return;
@@ -194,6 +207,7 @@ export function CheckoutForm() {
           amount: packagePrices[selectedPackage],
           packageId: selectedPackage,
           locale,
+          eventId, // Pass Event ID to backend for CAPI
         }),
       });
 
@@ -213,6 +227,7 @@ export function CheckoutForm() {
             totalAmount: packagePrices[selectedPackage], // Ensure totalAmount is correct and positive
             paymentId: paymentResult.paymentId,
             conversationId: paymentResult.conversationId,
+            eventId, // Required for CAPI Deduplication
           }),
         });
 
@@ -247,6 +262,9 @@ export function CheckoutForm() {
           selectedPackage,
           packageInfo.name,
           packagePrices[selectedPackage],
+          "EUR",
+          undefined,
+          eventId,
         );
 
         // Track Facebook Purchase
@@ -254,14 +272,19 @@ export function CheckoutForm() {
           selectedPackage,
           packagePrices[selectedPackage],
           bookingResult.booking.id,
+          eventId,
         );
-        trackFacebookEvent("Purchase", {
-          email: bookingData.customerEmail,
-          phone: bookingData.customerPhone,
-          packageId: selectedPackage,
-          amount: packagePrices[selectedPackage],
-          transactionId: bookingResult.booking.id,
-        });
+        trackFacebookEvent(
+          "Purchase",
+          {
+            email: bookingData.customerEmail,
+            phone: bookingData.customerPhone,
+            packageId: selectedPackage,
+            amount: packagePrices[selectedPackage],
+            transactionId: bookingResult.booking.id,
+          },
+          eventId,
+        );
 
         // Trigger Chatbot Success Message
         if (typeof window !== "undefined") {
@@ -353,6 +376,7 @@ export function CheckoutForm() {
           amount: packagePrices[selectedPackage],
           packageId: selectedPackage,
           locale,
+          eventId,
         }),
       });
 
@@ -396,6 +420,7 @@ export function CheckoutForm() {
           paymentId: turinvoiceOrder.idOrder.toString(),
           conversationId: `turinvoice_${turinvoiceOrder.idOrder}`,
           provider: "turinvoice",
+          eventId, // Required for CAPI Deduplication
         }),
       });
 
@@ -428,12 +453,16 @@ export function CheckoutForm() {
         selectedPackage,
         packageInfo.name,
         packagePrices[selectedPackage],
+        "EUR",
+        undefined,
+        eventId,
       );
 
       fbPixel.trackPurchase(
         selectedPackage,
         packagePrices[selectedPackage],
         bookingResult.booking.id,
+        eventId,
       );
     } catch (error) {
       console.error("Booking creation error:", error);
