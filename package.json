@@ -67,11 +67,7 @@
     "google-auth-library": "^10.3.0",
     "input-otp": "^1.4.2",
     "lucide-react": "^0.541.0",
-<<<<<<< HEAD
     "next": "^16.0.10",
-=======
-    "next": "16.0.7",
->>>>>>> 7422c938eddd00e7e1e79341c2a85a05906324e5
     "next-intl": "^4.3.5",
     "next-themes": "^0.4.6",
     "react": "19.2.1",
@@ -110,8 +106,4 @@
     "tw-animate-css": "^1.3.7",
     "typescript": "^5"
   }
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> 7422c938eddd00e7e1e79341c2a85a05906324e5

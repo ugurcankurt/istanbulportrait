@@ -7,10 +7,7 @@ import { getMessages, getTranslations } from "next-intl/server";
 import { CoreWebVitals } from "@/components/analytics/core-web-vitals";
 import { FacebookPixel } from "@/components/analytics/facebook-pixel";
 import { GoogleAnalytics } from "@/components/analytics/google-analytics";
-<<<<<<< HEAD
 import { GoogleTag } from "@/components/analytics/google-tag";
-=======
->>>>>>> 7422c938eddd00e7e1e79341c2a85a05906324e5
 import { MicrosoftClarity } from "@/components/analytics/microsoft-clarity";
 import { MultilingualCookieConsent } from "@/components/analytics/multilingual-cookie-consent";
 import { YandexMetrica } from "@/components/analytics/yandex-metrica";
@@ -200,13 +197,10 @@ export default async function LocaleLayout({
                 <Navigation />
                 <main className="flex-1">{children}</main>
 
-<<<<<<< HEAD
-  {/* Analytics - Google Tag loads on all pages (Advanced Consent Mode) */ }
-  <GoogleTag />
+                {/* Analytics - Google Tag loads on all pages (Advanced Consent Mode) */}
+                <GoogleTag />
 
-=======
->>>>>>> 7422c938eddd00e7e1e79341c2a85a05906324e5
-  {/* Analytics - Only load after user consent */ }
+                {/* Analytics - Only load after user consent */}
                 <ConsentGate consent="accepted_all">
                   <GoogleAnalytics />
                   <FacebookPixel />
@@ -217,12 +211,12 @@ export default async function LocaleLayout({
                 <CoreWebVitals />
                 <Footer />
 
-  {/* GetYourGuide Analytics */ }
-  <Script
-    src="https://widget.getyourguide.com/dist/pa.umd.production.min.js"
-    strategy="lazyOnload"
-    data-gyg-partner-id="S6XXHTA"
-  />
+                {/* GetYourGuide Analytics */}
+                <Script
+                  src="https://widget.getyourguide.com/dist/pa.umd.production.min.js"
+                  strategy="lazyOnload"
+                  data-gyg-partner-id="S6XXHTA"
+                />
               </div >
               <Toaster />
               <MultilingualCookieConsent />
