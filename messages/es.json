@@ -1,0 +1,1194 @@
+{
+  "payment_banner": {
+    "message": "Pago Seguro"
+  },
+  "nav": {
+    "home": "Inicio",
+    "packages": "Paquetes",
+    "tours": "Tours",
+    "about": "Acerca",
+    "contact": "Contacto",
+    "blog": "Blog",
+    "locations": "Ubicaciones"
+  },
+  "whatsapp": {
+    "tooltip": "Chatea con nosotros en WhatsApp",
+    "message": "¡Hola! Me gustaría obtener información sobre sesiones de fotos en Estambul.",
+    "notification_title": "¡Hola! 👋",
+    "notification_message": "¿Necesitas ayuda con tu reserva?",
+    "close_notification": "Cerrar notificación",
+    "direction": "ltr"
+  },
+  "hero": {
+    "title": "Fotógrafo en Estambul | Fotografía Profesional en Estambul",
+    "subtitle": "Experto fotógrafo en Estambul para sesiones profesionales de retratos y lifestyle",
+    "description": "Por Qué Elegir Nuestros Servicios de Fotografía en Estambul",
+    "cta": "Reserva tu Sesión",
+    "learnMore": "Saber Más"
+  },
+  "features": {
+    "rooftop": {
+      "title": "Sesiones en Azoteas",
+      "description": "Vistas impresionantes del Bósforo y el horizonte de Estambul"
+    },
+    "historic": {
+      "title": "Lugares Históricos",
+      "description": "Santa Sofía, Mezquita Azul y monumentos icónicos"
+    },
+    "professional": {
+      "title": "Calidad Profesional de Fotografía",
+      "description": "El mejor fotógrafo en Estambul con equipos de alta gama y postprocesado experto"
+    }
+  },
+  "gallery": {
+    "title": "Portafolio de Fotografía en Estambul",
+    "subtitle": "Descubre la belleza de Estambul a través de nuestro lente. Navega por nuestra colección de sesiones de retratos, parejas y lifestyle.",
+    "intro": "Explora impresionantes fotografías capturadas por tu fotógrafo profesional en Estambul. Nuestro portafolio muestra sesiones de parejas, sesiones en azoteas y fotografía de retratos en los lugares más emblemáticos de Estambul, incluyendo el Bósforo, la Torre de Gálata y el histórico Sultanahmet."
+  },
+  "packages": {
+    "title": "Paquetes de Fotografía",
+    "subtitle": "Elige el paquete perfecto para tu sesión fotográfica en Estambul",
+    "sectionTitle": "Paquetes de Fotografía",
+    "sectionDescription": "Elige el paquete perfecto para tu experiencia fotográfica en Estambul",
+    "essential": {
+      "title": "Esencial",
+      "price": "€150",
+      "duration": "30 Minutos",
+      "photos": "15 Fotos Editadas",
+      "locations": "1 Ubicación",
+      "features": [
+        "Fotógrafo profesional",
+        "Sesión fotográfica de 30 minutos",
+        "15 fotos editadas de alta resolución",
+        "Entrega en galería online",
+        "Retoque básico incluido"
+      ]
+    },
+    "premium": {
+      "title": "Premium",
+      "price": "€280",
+      "duration": "1.5 Horas",
+      "photos": "40 Fotos Editadas",
+      "locations": "2 Ubicaciones",
+      "popular": true,
+      "features": [
+        "Fotógrafo profesional",
+        "Sesión fotográfica de 1.5 horas",
+        "40 fotos editadas de alta resolución",
+        "2 ubicaciones diferentes",
+        "Retoque avanzado",
+        "Vista previa el mismo día"
+      ]
+    },
+    "luxury": {
+      "title": "Lujo",
+      "price": "€450",
+      "duration": "2.5 Horas",
+      "photos": "80 Fotos Editadas",
+      "locations": "3 Ubicaciones",
+      "features": [
+        "Fotógrafo profesional",
+        "Sesión fotográfica de 2.5 horas",
+        "80 fotos editadas de alta resolución",
+        "3 ubicaciones premium",
+        "Retoque profesional",
+        "Vista previa el mismo día",
+        "Consultoría de estilo"
+      ]
+    },
+    "rooftop": {
+      "title": "Sesión en Azotea",
+      "price": "€150",
+      "duration": "Por Persona",
+      "photos": "20 Fotos Editadas",
+      "locations": "Estudio en Azotea",
+      "features": [
+        "Fotógrafo profesional",
+        "20 fotos editadas de alta resolución",
+        "1 vestido largo moderno o vestido tradicional",
+        "2 videos cortos para móvil",
+        "Tarifa del estudio en azotea incluida",
+        "Retoque profesional"
+      ]
+    },
+    "custom": {
+      "title": "¿Necesitas un Paquete Personalizado?",
+      "description": "Cada sesión fotográfica es única. Hablemos sobre tus necesidades específicas y creemos un paquete personalizado que se ajuste perfectamente a tu visión y presupuesto.",
+      "button": "Obtener Cotización Personalizada"
+    },
+    "sections": {
+      "available_packages": "Paquetes de Fotógrafo en Estambul",
+      "intro": "Elige tu paquete de fotografía perfecto con el experto fotógrafo de Estambul. Todas las sesiones incluyen edición profesional, acceso a azoteas premium y fotos en los lugares más emblemáticos de la ciudad. Como tu fotógrafo dedicado en Estambul, aseguro que cada momento sea capturado hermosamente."
+    }
+  },
+  "about": {
+    "title": "Acerca de Mí",
+    "subtitle": "Fotógrafo profesional capturando la belleza de Estambul",
+    "sectionTitle": "Acerca de Mí",
+    "sectionDescription": "Descubre mi trayectoria como fotógrafo líder de Estambul y la pasión detrás de capturar tus momentos perfectos",
+    "description": "Con más de 8 años de experiencia en fotografía de retratos, me especializo en capturar la conexión única entre las personas y el magnífico telón de fondo de Estambul. Mi pasión radica en crear recuerdos atemporales que reflejen tanto la belleza de mis sujetos como el encanto histórico de esta ciudad increíble.",
+    "experience": "Más de 8 años de experiencia",
+    "sessions": "Más de 500 sesiones completadas",
+    "clients": "Clientes felices en todo el mundo"
+  },
+  "contact": {
+    "title": "Ponte en Contacto",
+    "sectionTitle": "Ponte en Contacto",
+    "sectionDescription": "¿Listo para reservar tu sesión fotográfica en Estambul? Hablemos sobre tus necesidades fotográficas y creemos algo hermoso juntos",
+    "subtitle": "¿Listo para reservar tu sesión fotográfica en Estambul?",
+    "cta_description": "¿Listo para capturar tus recuerdos en Estambul? Navega nuestros paquetes y reserva tu sesión directamente online.",
+    "experience_description": "Más de 8 años de experiencia capturando la belleza de Estambul",
+    "premium_locations": "Ubicaciones Premium",
+    "locations_description": "Azoteas, monumentos históricos y gemas ocultas",
+    "professional_quality": "Calidad Profesional",
+    "quality_description": "Fotos editadas de alta resolución entregadas digitalmente",
+    "form": {
+      "name": "Nombre Completo",
+      "email": "Dirección de Email",
+      "phone": "Número de Teléfono",
+      "date": "Fecha Preferida",
+      "package": "Seleccionar Paquete",
+      "message": "Mensaje",
+      "submit": "Enviar Mensaje",
+      "success": "¡Gracias! Te contactaremos pronto.",
+      "error": "Algo salió mal. Por favor intenta de nuevo."
+    },
+    "info": {
+      "location": "Süleymaniye, Siyavuş Paşa Sk. No:24/2, 34116 Fatih/İstanbul, Türkiye",
+      "email": "info@istanbulportrait.com",
+      "phone": "+90 536 709 37 24",
+      "hours": "Disponible 7 días a la semana"
+    }
+  },
+  "checkout": {
+    "title": "Reserva tu Sesión",
+    "description": "Completa tu reserva para la experiencia perfecta de fotografía en Estambul",
+    "seo": {
+      "title": "Pagar | Reserva tu Sesión de Fotografía en Estambul",
+      "description": "Completa tu reserva de fotografía en Estambul de forma segura. Paquetes fotográficos profesionales con confirmación instantánea y opciones de pago flexibles."
+    },
+    "payment_description": "Revisa los detalles de tu reserva y completa el pago",
+    "booking_summary": "Resumen de Reserva",
+    "modal_description": "Completa tus datos para reservar",
+    "booking": {
+      "review_details": "Revisa los detalles de tu reserva"
+    },
+    "package": {
+      "selected_details": "Detalles del paquete fotográfico seleccionado"
+    },
+    "steps": {
+      "package": "Paquete",
+      "details": "Detalles",
+      "payment": "Pago",
+      "confirmation": "Confirmación"
+    },
+    "package_summary": "Resumen del Paquete",
+    "customer_details": "Datos del Cliente",
+    "payment_details": "Detalles del Pago",
+    "booking_details": "Detalles de la Reserva",
+    "form": {
+      "name": "Nombre Completo",
+      "email": "Dirección de Correo",
+      "phone": "Número de Teléfono",
+      "date": "Seleccionar Fecha",
+      "date_time": "Seleccionar Fecha y Hora",
+      "time": "Seleccionar Hora",
+      "select_time": "Seleccionar Hora",
+      "notes": "Solicitudes Especiales (Opcional)",
+      "card_holder": "Nombre del Titular",
+      "card_number": "Número de Tarjeta",
+      "expire_month": "MM",
+      "expire_year": "AA",
+      "cvc": "CVC",
+      "terms": "Acepto los términos y condiciones",
+      "month_short": "MM",
+      "year_short": "AA"
+    },
+    "buttons": {
+      "continue": "Continuar",
+      "back": "Atrás",
+      "cancel": "Cancelar",
+      "continue_to_payment": "Continuar al Pago",
+      "edit_details": "Editar Detalles",
+      "complete_booking": "Completar Reserva",
+      "pay_amount": "PAGAR {amount}",
+      "processing": "Procesando...",
+      "book_another": "Reservar Otra Sesión",
+      "pay_with_turinvoice": "Pagar con Turinvoice"
+    },
+    "success": {
+      "title": "¡Reserva Confirmada!",
+      "message": "Gracias por reservar con Istanbul Photographer. La confirmación de tu reserva ha sido enviada a tu correo electrónico.",
+      "booking_id": "ID de Reserva",
+      "payment_successful": "¡Pago exitoso! Correo de confirmación enviado."
+    },
+    "error": {
+      "generic": "Algo salió mal. Por favor, inténtalo de nuevo.",
+      "payment_failed": "El pago falló. Por favor, verifica los datos de tu tarjeta e inténtalo de nuevo.",
+      "booking_failed": "Error al crear la reserva. Por favor, inténtalo de nuevo.",
+      "payment_init_failed": "Error al inicializar el pago"
+    },
+    "included_features": "Características Incluidas",
+    "more_features": "más características",
+    "loading_booking": "Cargando detalles de la reserva...",
+    "labels": {
+      "customer": "Cliente:",
+      "date": "Fecha:",
+      "time": "Hora:",
+      "package": "Paquete:",
+      "total_amount": "Importe Total:"
+    },
+    "security": {
+      "ssl_encrypted": "Encriptado SSL",
+      "secure_payment": "Pago Seguro",
+      "pci_compliant": "Compatible PCI",
+      "payment_secure_message": "Pago Seguro • Encriptado SSL • Compatible PCI"
+    },
+    "payment": {
+      "complete_description": "Completa tu reserva ingresando tu información de pago",
+      "secure_no_fees": "Pago seguro • Sin comisiones ocultas"
+    },
+    "payment_method": "Método de Pago",
+    "payment_methods": {
+      "credit_card": "Tarjeta de Crédito/Débito",
+      "russian_banks": "MIR & SBP"
+    },
+    "turinvoice_description": "Serás redirigido a la página de pago segura de Turinvoice.",
+    "turinvoice": {
+      "title": "Pago Turinvoice",
+      "status_new": "Inicializando...",
+      "time_remaining": "Tiempo Restante",
+      "amount_label": "Monto",
+      "exchange_rate": "Tipo de cambio",
+      "instruction_1": "Por favor complete su pago en la página abierta.",
+      "open_payment_page": "Abrir Página de Pago",
+      "instruction_2": "No cierre esta ventana hasta que se confirme el pago.",
+      "security_notice": "Pago Seguro vía Turinvoice",
+      "status_paying": "Esperando el pago...",
+      "status_paid": "¡Pago Exitoso!",
+      "status_timeout": "Pago Agotado",
+      "success_message": "Su pago ha sido confirmado.",
+      "redirect_message": "Redirigiendo...",
+      "timeout_message": "La sesión de pago ha expirado.",
+      "timeout_desc": "Por favor intente nuevamente para reiniciar el proceso de pago.",
+      "try_again": "Intentar de Nuevo"
+    }
+  },
+  "validation": {
+    "package_required": "La selección del paquete es obligatoria",
+    "email_invalid": "Por favor, introduce una dirección de correo válida",
+    "phone_invalid": "Por favor, introduce un número de teléfono válido",
+    "date_required": "Por favor, selecciona una fecha",
+    "time_required": "Por favor, selecciona una hora",
+    "amount_positive": "El importe total debe ser positivo",
+    "cardholder_required": "El nombre del titular de la tarjeta es obligatorio",
+    "card_number_required": "El número de tarjeta es obligatorio",
+    "month_required": "El mes es obligatorio",
+    "year_required": "El año es obligatorio",
+    "cvc_required": "El CVC debe tener 3 dígitos",
+    "name_min": "El nombre debe tener al menos 2 caracteres",
+    "phone_min": "El número de teléfono debe tener al menos 10 dígitos",
+    "message_min": "El mensaje debe tener al menos 10 caracteres",
+    "card_number_invalid": "El número de tarjeta debe tener 13-19 dígitos",
+    "preferred_date_required": "Por favor, selecciona una fecha preferida",
+    "package_selection_required": "Por favor, selecciona un paquete",
+    "phone_required": "El número de teléfono es obligatorio"
+  },
+  "placeholders": {
+    "full_name": "Juan Pérez",
+    "email": "juan@example.com",
+    "phone": "+90 536 709 37 24",
+    "select_package": "Selecciona un paquete",
+    "tell_us_vision": "Cuéntanos sobre tu visión para la sesión fotográfica...",
+    "test_card": "5528790000000008 (Usa esta tarjeta de prueba para pago demo exitoso)",
+    "enter_full_name": "Ingresa tu nombre completo",
+    "enter_email": "Ingresa tu email",
+    "phone_number": "+90 555 123 45 67",
+    "pick_date": "Selecciona una fecha",
+    "select_time": "Selecciona hora",
+    "special_requests": "Cualquier solicitud especial o notas sobre tu sesión fotográfica...",
+    "card_holder": "JUAN PÉREZ",
+    "card_number": "1234 5678 9012 3456",
+    "expire_mm": "MM",
+    "expire_yy": "AA",
+    "cvc_placeholder": "123"
+  },
+  "ui": {
+    "custom_package": "Paquete Personalizado",
+    "language": "Idioma",
+    "send_message": "Envíanos un mensaje",
+    "contact_information": "Información de Contacto",
+    "cookie_settings": "Configuración de Cookies",
+    "location": "Ubicación",
+    "email": "Correo Electrónico",
+    "phone": "Teléfono",
+    "availability": "Disponibilidad",
+    "what_to_expect": "Qué Esperar",
+    "response_time": "Tiempo de Respuesta",
+    "booking_process": "Proceso de Reserva",
+    "payment": "Pago",
+    "response_time_desc": "Normalmente respondemos a las consultas en 24 horas.",
+    "booking_process_desc": "Después de tu consulta, programaremos una reunión para discutir tu visión y finalizar los detalles.",
+    "payment_desc": "Se requiere pago completo online al momento de la reserva para asegurar tu fecha.",
+    "professional_photographer": "Fotógrafo profesional",
+    "professional_photographer_in_istanbul": "Fotógrafo profesional en Estambul",
+    "portrait_photography": "Fotografía de Retratos",
+    "couple_sessions": "Sesiones de Parejas",
+    "lifestyle": "Lifestyle",
+    "rooftop_shoots": "Sesiones en Azoteas",
+    "view_my_work": "Ver mi Trabajo",
+    "book_your_session": "Reserva tu Sesión",
+    "view_packages": "Ver Paquetes",
+    "packages_button": "Paquetes",
+    "book_package": "Reservar Este Paquete",
+    "back_to_home": "Volver al Inicio",
+    "selected": "Seleccionado",
+    "select_package": "Seleccionar Paquete",
+    "total": "Total",
+    "contact": "Contacto",
+    "most_popular": "Más Popular",
+    "breadcrumbs": {
+      "photography_locations": "Ubicaciones de Fotografía",
+      "checkout": "Checkout",
+      "locations": "Ubicaciones"
+    }
+  },
+  "about_highlights": {
+    "title": "¿Por qué elegir Istanbul Photographer?",
+    "professional": {
+      "title": "Excelencia Profesional",
+      "description": "Entrenado en técnicas avanzadas de fotografía con años de experiencia en fotografía de retratos."
+    },
+    "local": {
+      "title": "Experiencia Local",
+      "description": "Conocimiento íntimo de los lugares más fotogénicos de Estambul, desde azoteas ocultas hasta lugares emblemáticos."
+    },
+    "personal": {
+      "title": "Enfoque Personal",
+      "description": "Cada sesión está adaptada a tu estilo y visión únicos, asegurando resultados auténticos y memorables."
+    }
+  },
+  "about_cta": {
+    "title": "¿Listo para crear algo hermoso?",
+    "description": "Capturemos tu historia contra el impresionante telón de fondo de Estambul."
+  },
+  "package_selection": {
+    "choose_package": "Elige Tu Paquete",
+    "select_description": "Selecciona el paquete de fotografía que mejor se adapte a tus necesidades",
+    "you_selected": "Seleccionaste:"
+  },
+  "payment": {
+    "secure_powered": "Pago seguro impulsado por Iyzico",
+    "security_description": "Tu información de pago es segura y está encriptada. Utilizamos encriptación SSL estándar de la industria para proteger tus datos.",
+    "order_summary": "Resumen del Pedido",
+    "booking_summary": "Resumen de Reserva",
+    "includes_fees": "Incluye todos los impuestos y tarifas",
+    "secure_payment": "Pago Seguro",
+    "iyzico_description": "Tu pago se procesa de forma segura a través de Iyzico, el proveedor de pagos líder de Turquía.",
+    "name_label": "Nombre:",
+    "email_label": "Email:",
+    "date_label": "Fecha:",
+    "time_label": "Hora:"
+  },
+  "success": {
+    "booking_details": "Detalles de la Reserva",
+    "package_label": "Paquete",
+    "amount_paid": "Monto Pagado",
+    "whats_next": "¿Qué sigue?",
+    "confirmation_email": "Email de Confirmación Enviado",
+    "email_description": "Revisa tu bandeja de entrada para información detallada de la reserva",
+    "pre_session_contact": "Contacto Pre-Sesión",
+    "contact_description": "Te contactaremos 24 horas antes de tu sesión para confirmar detalles",
+    "photo_delivery": "Entrega de Fotos",
+    "delivery_description": "Tus fotos editadas serán entregadas dentro de 5-7 días hábiles",
+    "have_questions": "¿Tienes Preguntas?",
+    "bullet_professional": "• Fotógrafo profesional incluido",
+    "bullet_photos": "• Fotos editadas de alta resolución",
+    "bullet_gallery": "• Entrega de galería en línea",
+    "bullet_retouching": "• Retoque profesional",
+    "need_help": "¿Necesitas Ayuda?",
+    "help_description": "¿Preguntas sobre tu reserva? Contáctanos en cualquier momento."
+  },
+  "success_messages": {
+    "payment_successful": "¡Pago exitoso! Correo de confirmación enviado.",
+    "booking_created": "¡Reserva creada exitosamente!"
+  },
+  "error_messages": {
+    "payment_failed": "Pago fallido",
+    "booking_failed": "Error al crear la reserva",
+    "payment_init_failed": "Error al inicializar el pago"
+  },
+  "iyzico_errors": {
+    "fallback_message": "El pago falló. Por favor, inténtalo de nuevo o contacta con soporte.",
+    "fallback_suggestion": "Por favor, verifica los datos de pago e inténtalo de nuevo",
+    "categories": {
+      "bank": "Error del Banco",
+      "validation": "Error de Validación",
+      "general": "Error de Pago",
+      "system": "Error del Sistema",
+      "demo": "Modo Demo",
+      "unknown": "Error Desconocido",
+      "INVALID_TRANSACTION": "Transacción Inválida",
+      "INVALID_CARD": "Tarjeta Inválida",
+      "NOT_SUFFICIENT_FUNDS": "Fondos Insuficientes",
+      "CONTACT_BANK": "Contactar Banco",
+      "SYSTEM_ERROR": "Error del Sistema"
+    },
+    "codes": {
+      "10012": {
+        "message": "Ocurrió un error durante el proceso de pago, por favor contacte con su banco",
+        "suggestion": "Este es un error relacionado con la tarjeta. Se recomienda que el titular de la tarjeta contacte con su banco"
+      },
+      "10005": {
+        "message": "Su banco ha rechazado esta transacción",
+        "suggestion": "Por favor, contacte con su banco o pruebe un método de pago diferente"
+      },
+      "10051": {
+        "message": "Su tarjeta no tiene fondos suficientes para esta transacción",
+        "suggestion": "Por favor, verifique el saldo de su tarjeta o pruebe un método de pago diferente"
+      },
+      "10054": {
+        "message": "Su tarjeta ha expirado",
+        "suggestion": "Por favor, use una tarjeta diferente o contacte con su banco para obtener una nueva"
+      },
+      "10057": {
+        "message": "Este tipo de transacción no está permitido para su tarjeta",
+        "suggestion": "Por favor, contacte con su banco para habilitar este tipo de transacción"
+      },
+      "10058": {
+        "message": "Transacción no permitida en este comercio",
+        "suggestion": "Por favor, pruebe un método de pago diferente"
+      },
+      "10059": {
+        "message": "Transacción marcada por razones de seguridad",
+        "suggestion": "Por favor, contacte con su banco para verificar y autorizar esta transacción"
+      },
+      "10084": {
+        "message": "La autorización de la transacción ha expirado",
+        "suggestion": "Por favor, inicie el proceso de pago nuevamente"
+      },
+      "10093": {
+        "message": "Su tarjeta no está habilitada para transacciones en línea",
+        "suggestion": "Por favor, contacte con su banco para habilitar pagos en línea para su tarjeta"
+      },
+      "10096": {
+        "message": "El sistema de pago está temporalmente fuera de servicio",
+        "suggestion": "Por favor, inténtelo de nuevo en unos minutos"
+      },
+      "10201": {
+        "message": "El número de tarjeta ingresado es inválido",
+        "suggestion": "Por favor, verifique el número de su tarjeta e inténtelo de nuevo"
+      },
+      "10202": {
+        "message": "Su tarjeta ha expirado",
+        "suggestion": "Por favor, use una tarjeta diferente o contacte con su banco para renovarla"
+      },
+      "10204": {
+        "message": "El código de seguridad (CVC) es incorrecto",
+        "suggestion": "Por favor, verifique el código de seguridad de 3 dígitos en el reverso de su tarjeta"
+      },
+      "10206": {
+        "message": "La fecha de vencimiento de la tarjeta es incorrecta",
+        "suggestion": "Por favor, verifique la fecha de vencimiento en su tarjeta (formato MM/AA)"
+      },
+      "10207": {
+        "message": "Fondos insuficientes en su cuenta",
+        "suggestion": "Por favor, verifique el saldo de su cuenta o pruebe un método de pago diferente"
+      },
+      "10034": {
+        "message": "Transacción marcada como potencialmente fraudulenta",
+        "suggestion": "Por favor, contacte con su banco para verificar esta transacción"
+      },
+      "10208": {
+        "message": "Ocurrió un error del sistema durante el procesamiento del pago",
+        "suggestion": "Por favor, inténtelo de nuevo más tarde o contacte con atención al cliente"
+      },
+      "10209": {
+        "message": "La transacción ha agotado el tiempo límite",
+        "suggestion": "Por favor, intente el pago nuevamente"
+      },
+      "10210": {
+        "message": "Ocurrió un error de conexión de red",
+        "suggestion": "Por favor, verifique su conexión a internet e inténtelo de nuevo"
+      },
+      "5": {
+        "message": "La transacción fue rechazada",
+        "suggestion": "Por favor, contacte con su banco o pruebe un método de pago diferente"
+      },
+      "14": {
+        "message": "El número de tarjeta ingresado es inválido",
+        "suggestion": "Por favor, verifique el número de su tarjeta e inténtelo de nuevo"
+      },
+      "51": {
+        "message": "Fondos insuficientes en su tarjeta",
+        "suggestion": "Por favor, verifique su saldo o use un método de pago diferente"
+      },
+      "54": {
+        "message": "Su tarjeta ha expirado",
+        "suggestion": "Por favor, use una tarjeta diferente o contacte con su banco"
+      },
+      "DEMO_INVALID_CARD": {
+        "message": "Por favor, use la tarjeta de prueba para pagos de demostración",
+        "suggestion": "Use el número de tarjeta: 5528790000000008"
+      },
+      "INVALID_REQUEST": {
+        "message": "La información de pago está incompleta",
+        "suggestion": "Por favor, verifique todos los detalles de pago e inténtelo de nuevo"
+      },
+      "10235": {
+        "message": "Las tarjetas American Express no son aceptadas para pagos en Turquía",
+        "suggestion": "Por favor, use una tarjeta Visa o Mastercard para el pago"
+      }
+    },
+    "common_suggestions": {
+      "contact_bank": "Por favor, contacta con tu banco",
+      "try_different_card": "Por favor, prueba con un método de pago diferente",
+      "check_details": "Por favor, verifica los datos de pago",
+      "try_again_later": "Por favor, inténtalo más tarde"
+    }
+  },
+  "faq": {
+    "title": "Preguntas Frecuentes",
+    "subtitle": "Todo lo que necesitas saber sobre sesiones fotográficas profesionales en Estambul",
+    "section_title": "Preguntas Frecuentes de Fotografía en Estambul",
+    "questions": {
+      "best-istanbul-photographer": {
+        "question": "¿Qué te hace el mejor fotógrafo de Estambul?",
+        "answer": "Con más de 8 años de experiencia y más de 500 sesiones fotográficas exitosas, me especializo en capturar la belleza única de Estambul. Mi profundo conocimiento local de los lugares más fotogénicos de la ciudad, desde terrazas con vistas al Bósforo hasta monumentos históricos, garantiza resultados excepcionales cada vez."
+      },
+      "photoshoot-locations": {
+        "question": "¿Qué ubicaciones recomiendas para sesiones fotográficas en Estambul?",
+        "answer": "Ofrezco sesiones en terrazas premium con vistas impresionantes al Bósforo, áreas históricas como Sultanahmet (Mezquita Azul, Santa Sofía), alrededores de la Torre de Gálata, Mezquita de Ortaköy, y joyas ocultas por toda la ciudad. Cada ubicación se elige por su carácter único y cualidades fotogénicas."
+      },
+      "session-duration": {
+        "question": "¿Cuánto dura una sesión fotográfica en Estambul?",
+        "answer": "La duración de las sesiones varía según el paquete: Esencial (30 minutos), Premium (1.5 horas), Lujo (2.5 horas), y sesiones personalizadas en azoteas. Esto permite tiempo suficiente para múltiples poses, cambios de vestuario y capturar las tomas perfectas en las ubicaciones elegidas."
+      },
+      "best-time-photoshoot": {
+        "question": "¿Cuál es la mejor hora del día para sesiones fotográficas en Estambul?",
+        "answer": "La hora dorada (1 hora antes del atardecer) proporciona la luz más favorecedora y vistas impresionantes de la ciudad. Para sesiones en azoteas, el momento del atardecer ofrece reflejos mágicos del Bósforo. Las sesiones matutinas (8-10 AM) son perfectas para menos multitudes en lugares históricos."
+      },
+      "photo-delivery": {
+        "question": "¿Qué tan rápido recibiré mis fotos editadas?",
+        "answer": "Los paquetes Premium y Lujo incluyen vista previa el mismo día (5-10 fotos de vista previa). Las galerías completas con fotos editadas profesionalmente en alta resolución se entregan en 5-7 días hábiles a través de galería en línea segura con opciones de descarga."
+      },
+      "weather-backup": {
+        "question": "¿Qué pasa si las condiciones climáticas son malas?",
+        "answer": "Monitoreo el clima de cerca y proporciono alternativas de ubicaciones cubiertas para días lluviosos. Las sesiones en azoteas pueden reprogramarse sin costo adicional. Los espacios interiores y áreas históricas cubiertas aseguran que tu sesión ocurra independientemente del clima."
+      },
+      "couple-vs-individual": {
+        "question": "¿Fotografías tanto a parejas como individuos?",
+        "answer": "¡Absolutamente! Me especializo en fotografía de parejas, retratos individuales, sesiones de lifestyle y fotografía de bodas. Cada sesión se adapta a tus necesidades específicas, ya sean tomas románticas de pareja o retratos individuales profesionales."
+      },
+      "booking-advance": {
+        "question": "¿Con cuánta anticipación debo reservar mi sesión fotográfica en Estambul?",
+        "answer": "Recomiendo reservar con 2-3 semanas de anticipación, especialmente durante las temporadas turísticas altas (primavera y otoño). Esto asegura disponibilidad para tu fecha y hora preferidas, y permite la planificación adecuada para permisos de ubicación si es necesario."
+      },
+      "cost-breakdown": {
+        "question": "¿Qué incluye el costo de la sesión fotográfica en Estambul?",
+        "answer": "Todos los paquetes incluyen al fotógrafo profesional Uğur Cankurt, consulta, edición de alta resolución, galería en línea y retoque básico. Essential €150 (15 fotos), Premium €280 (40 fotos), Luxury €450 (80 fotos). Sin tarifas ocultas."
+      },
+      "booking-process": {
+        "question": "¿Cómo reservar fotógrafo de Estambul rápidamente?",
+        "answer": "Reserva al instante en istanbulportrait.com, WhatsApp +905367093724, o Instagram @istanbulportrait. Se recomienda reserva anticipada para sesiones de atardecer y fines de semana. Reservas del mismo día sujetas a disponibilidad."
+      },
+      "location-recommendations": {
+        "question": "¿Cuáles son las ubicaciones más fotogénicas en Estambul?",
+        "answer": "Las mejores ubicaciones incluyen alrededores de Torre Galata, vistas costeras del Bósforo, histórico Sultanahmet (área Mezquita Azul), Mezquita Ortaköy, y lugares exclusivos en azoteas. Cada paquete incluye 1-3 ubicaciones premium según selección."
+      },
+      "timing-advice": {
+        "question": "¿Cuál es el mejor momento para fotografía en Estambul?",
+        "answer": "La hora dorada (1 hora antes del atardecer) proporciona mejor iluminación y vistas impresionantes de la ciudad. Verano: 18-19:00, Invierno: 16-17:00. Sesiones matutinas (8-10:00) ideales para menos multitudes en sitios históricos. Evitar luz dura del mediodía (11:00-15:00)."
+      }
+    }
+  },
+  "footer": {
+    "description": "Fotografía profesional de retratos en Estambul. Capturando tus momentos especiales con los telones de fondo más icónicos de la ciudad.",
+    "quickLinks": "Enlaces Rápidos",
+    "services": "Servicios",
+    "followUs": "Síguenos",
+    "copyright": "© 2025 istanbulportrait.com | Todos los derechos reservados.",
+    "service_items": {
+      "portrait": "Fotografía de Retratos",
+      "couples": "Sesiones de Parejas",
+      "rooftop": "Sesiones en Azoteas",
+      "historic": "Sesiones en Lugares Históricos",
+      "lifestyle": "Fotografía de Estilo de Vida",
+      "historic_shoots": "Sesiones en Lugares Históricos"
+    },
+    "privacy_policy": "Política de Privacidad",
+    "terms_of_service": "Términos de Servicio"
+  },
+  "api_errors": {
+    "rate_limit": "Demasiadas solicitudes. Por favor, inténtalo más tarde.",
+    "payment_rate_limit": "Demasiados intentos de pago. Por favor, inténtalo más tarde.",
+    "invalid_data": "Datos de solicitud inválidos",
+    "missing_payment_data": "Faltan datos de pago requeridos",
+    "invalid_amount": "Monto de pago inválido",
+    "booking_not_found": "Reserva no encontrada. Por favor, crea una reserva primero.",
+    "invalid_package_price": "Precio de paquete inválido",
+    "duplicate_booking": "Se creó una reserva similar recientemente. Por favor, revisa tu correo o espera unos minutos.",
+    "booking_config_error": "No se puede procesar la reserva. Por favor, verifica tu configuración de Supabase.",
+    "internal_error": "Error interno del servidor",
+    "payment_processing_failed": "El procesamiento del pago falló. Por favor, inténtalo más tarde.",
+    "unknown_error": "Error desconocido"
+  },
+  "breadcrumb": {
+    "home": "Inicio",
+    "about": "Acerca",
+    "packages": "Paquetes de Fotografía",
+    "tours": "Tours de Estambul",
+    "contact": "Contacto",
+    "checkout": "Pagar",
+    "privacy": "Política de Privacidad",
+    "blog": "Blog",
+    "locations": "Ubicaciones de Fotografía"
+  },
+  "blog": {
+    "title": "Blog de Fotografía",
+    "subtitle": "Consejos, guías e historias desde Estambul",
+    "read_more": "Leer más",
+    "reading_time": "{minutes} min de lectura",
+    "published_on": "Publicado el {date}",
+    "by_author": "Por {author}",
+    "categories": "Categorías",
+    "tags": "Etiquetas",
+    "related_posts": "Artículos relacionados",
+    "recent_posts": "Artículos recientes",
+    "no_posts": "No se encontraron artículos",
+    "search": "Buscar en el blog...",
+    "all_categories": "Todas las categorías",
+    "previous": "Anterior",
+    "next": "Siguiente",
+    "page": "Página {current} de {total}",
+    "featured": "Destacado",
+    "meta": {
+      "title": "Blog de Fotografía | Consejos y Guías de Estambul",
+      "description": "Explora consejos de fotografía de Estambul, guías de ubicaciones e historias detrás de escena"
+    },
+    "author": {
+      "about_title": "Sobre el Autor",
+      "name": "Fotógrafo de Estambul",
+      "bio": "Fotógrafo profesional especializado en retratos, parejas y fotografía de estilo de vida en Estambul. Con más de 8 años de experiencia, capturando recuerdos atemporales en los escenarios más emblemáticos de la ciudad.",
+      "follow": "Síguenos en Instagram"
+    },
+    "summary": {
+      "title": "Puntos Clave",
+      "ai_overview": "Resumen IA"
+    }
+  },
+  "structured_data": {
+    "website_name": "Istanbul Photographer",
+    "service_type": "Servicios de Fotografía",
+    "address_locality": "Estambul",
+    "address_country": "TR",
+    "city_name": "Estambul",
+    "offer_catalog_name": "Servicios de Fotografía",
+    "portrait_photography": "Fotografía de Retratos",
+    "portrait_photography_desc": "Sesiones profesionales de fotografía de retratos",
+    "rooftop_photoshoot": "Sesión en Azotea",
+    "rooftop_photoshoot_desc": "Sesiones de fotografía en azoteas con vistas de Estambul",
+    "couple_photography": "Fotografía de Parejas",
+    "couple_photography_desc": "Sesiones románticas de fotografía de parejas",
+    "service_name": "Servicios Profesionales de Fotografía en Estambul",
+    "service_description": "Sesiones profesionales de retratos y fotografía de estilo de vida en Estambul con vistas desde azoteas y lugares históricos",
+    "languages": {
+      "english": "Inglés",
+      "arabic": "Árabe",
+      "russian": "Ruso",
+      "spanish": "Español"
+    }
+  },
+  "seo": {
+    "home": {
+      "title": "Sesión Fotográfica en Estambul | Fotógrafo Profesional en Estambul",
+      "description": "Reserva tu sesión fotográfica en Estambul con un fotógrafo experto en Estambul. Sesión fotográfica profesional en Estambul en ubicaciones icónicas. Entrega el mismo día. Desde €150.",
+      "keywords": "fotógrafo estambul, fotógrafo profesional estambul, sesión de fotos estambul, fotógrafo de retratos estambul, fotografía de parejas estambul, fotografía lifestyle estambul, sesión de fotos en azotea estambul, servicios de fotografía estambul, mejor fotógrafo estambul, sesión fotográfica estambul, fotografía turística estambul, fotos profesionales estambul"
+    },
+    "schema": {
+      "knowsAbout": "Fotografía en Estambul, Fotografía de Retratos, Fotografía de Parejas, Fotografía del Bósforo, Fotografía Torre Gálata, Fotografía Sultanahmet, Técnicas de Fotografía Profesional, Fotografía Turística, Fotografía de Bodas",
+      "skills": "Fotografía de Retratos, Fotografía Lifestyle, Fotografía de Parejas, Fotografía Turística, Fotografía en Azotea",
+      "serviceType": "Servicio de Fotografía",
+      "slogan": "Capturando Tu Historia en Estambul",
+      "jobTitle": "Fotógrafo Profesional",
+      "occupationLocation": "Estambul, Turquía",
+      "offerDescription": "Fotógrafo profesional Uğur Cankurt con más de 8 años de experiencia. Incluye consulta, edición y entrega digital.",
+      "areaServed": "Estambul",
+      "galleryDescription": "Galería de fotografía profesional mostrando {name} en Estambul",
+      "creditText": "Fotografía por {name}",
+      "howtoCamera": "Cámara Profesional",
+      "howtoLighting": "Equipo de Iluminación",
+      "faqTitle": "Preguntas frecuentes sobre {topic}"
+    },
+    "packages": {
+      "title": "Paquetes de Sesión Fotográfica en Estambul | Fotógrafo en Estambul",
+      "description": "Paquetes de sesión fotográfica profesional en Estambul. Elige tu fotógrafo en Estambul para sesiones en azoteas, ubicaciones históricas y edición premium. Desde €150."
+    },
+    "about": {
+      "title": "Acerca de tu Fotógrafo en Estambul | Sesión Fotográfica en Estambul",
+      "description": "Conoce a tu fotógrafo profesional en Estambul con más de 8 años de experiencia. Especializado en sesiones fotográficas en Estambul para retratos, parejas y fotografía de estilo de vida."
+    },
+    "contact": {
+      "title": "Reserva tu Sesión Fotográfica en Estambul | Fotógrafo en Estambul",
+      "description": "¿Listo para reservar tu sesión fotográfica en Estambul? Contacta a tu fotógrafo profesional en Estambul para sesiones de fotos memorables. Disponible 7 días de la semana."
+    }
+  },
+  "cookies": {
+    "banner": {
+      "title": "Utilizamos cookies para mejorar tu experiencia y analizar nuestro tráfico.",
+      "description": "Las cookies esenciales son necesarias para la funcionalidad básica del sitio. Las cookies analíticas nos ayudan a mejorar nuestros servicios.",
+      "privacy_link": "Más información en nuestra Política de Privacidad"
+    },
+    "buttons": {
+      "accept_all": "Aceptar Todo",
+      "essential_only": "Solo Esenciales",
+      "decline_all": "Rechazar Todo"
+    }
+  },
+  "privacy": {
+    "title": "Política De Privacidad",
+    "subtitle": "Cómo recopilamos, usamos y protegemos su información personal",
+    "seo": {
+      "title": "Política De Privacidad | Fotógrafo de Estambul",
+      "description": "Descubra cómo Istanbul Photographer recopila, utiliza y protege su información personal. Política de privacidad conforme al RGPD."
+    },
+    "information_collection": {
+      "title": "Información Que Recopilamos",
+      "description": "Recopilamos la información que usted nos proporciona directamente cuando utiliza nuestros servicios de fotografía:",
+      "items": {
+        "personal": "Información personal (nombre, correo electrónico, número de teléfono)",
+        "contact": "Preferencias de contacto e historial de comunicaciones",
+        "booking": "Detalles de la reserva y requisitos de la sesión",
+        "payment": "Información de pago (procesada de forma segura a través de Iyzico)"
+      }
+    },
+    "cookies": {
+      "title": "Cookies y Seguimiento",
+      "description": "Utilizamos diferentes tipos de cookies para mejorar su experiencia:",
+      "essential": {
+        "title": "Cookies Esenciales",
+        "description": "Necesario para la funcionalidad básica del sitio y no se puede desactivar."
+      },
+      "analytics": {
+        "title": "Cookies De Análisis",
+        "description": "Ayúdenos a comprender cómo los visitantes interactúan con nuestro sitio web mediante Google Analytics."
+      },
+      "marketing": {
+        "title": "Cookies De Marketing",
+        "description": "Se utiliza para ofrecer anuncios relevantes y realizar un seguimiento de la eficacia de la campaña."
+      }
+    },
+    "data_use": {
+      "title": "Cómo Usamos Sus Datos",
+      "items": {
+        "booking": "Procesa y gestiona tus reservas de fotografía",
+        "communication": "Comunicarnos con usted acerca de nuestros servicios",
+        "improvement": "Mejorar nuestro sitio web y la calidad del servicio.",
+        "marketing": "Enviar materiales promocionales (con su consentimiento)",
+        "legal": "Cumplir con las obligaciones legales y resolver disputas"
+      }
+    },
+    "your_rights": {
+      "title": "Sus Derechos (RGPD)",
+      "items": {
+        "access": "Derecho a acceder a sus datos personales",
+        "rectification": "Derecho a corregir datos inexactos",
+        "erasure": "Derecho a solicitar la supresión de sus datos",
+        "portability": "Derecho a la portabilidad de datos",
+        "objection": "Derecho a oponerse al tratamiento de datos"
+      }
+    },
+    "contact": {
+      "title": "Contáctame",
+      "description": "Si tiene preguntas sobre esta política de privacidad o sus datos personales:",
+      "email_label": "Correo electrónico:",
+      "updated_label": "Última actualización:",
+      "updated_date": "Enero de 2025"
+    }
+  },
+  "reviews": {
+    "title": "Lo Que Dicen los Clientes Sobre Su Fotógrafo en Estambul",
+    "subtitle": "Reseñas reales de clientes satisfechos que nos eligieron para su experiencia fotográfica en Estambul",
+    "total_reviews": "reseñas",
+    "view_all": "Ver todas las reseñas en Google",
+    "loading": "Cargando reseñas...",
+    "error": "No se pueden cargar las reseñas en este momento"
+  },
+  "why_choose": {
+    "title": "¿Por Qué Elegir al Fotógrafo de Estambul?",
+    "subtitle": "Experimenta la diferencia con el servicio de fotografía premier de Estambul",
+    "intro": "Como tu fotógrafo dedicado en Estambul, combino experiencia local, equipo profesional y pasión por crear recuerdos inolvidables en una de las ciudades más fotogénicas del mundo.",
+    "features": {
+      "local_knowledge": {
+        "title": "Conocimiento Local Experto",
+        "description": "Más de 8 años fotografiando en las joyas ocultas de Estambul. Conozco las mejores azoteas, miradores secretos y el momento perfecto para la hora dorada en el Bósforo, Gálata y Sultanahmet."
+      },
+      "premium_equipment": {
+        "title": "Equipo Premium",
+        "description": "Cámaras Sony de grado profesional y lentes premium aseguran fotos impresionantes de alta resolución. Cada sesión incluye edición experta y corrección de color para resultados dignos de revista."
+      },
+      "fast_delivery": {
+        "title": "Entrega el Mismo Día",
+        "description": "Obtén tus fotos editadas profesionalmente en 24-48 horas. Perfecto para compartir tus recuerdos de Estambul antes de que siquiera dejes la ciudad."
+      }
+    }
+  },
+  "pricing": {
+    "base_price": "Precio Base",
+    "tax_rate": "IVA ({rate}%)",
+    "tax_amount": "Importe IVA",
+    "total_price": "Precio Total",
+    "tax_inclusive": "Impuestos Incluidos",
+    "price_breakdown": "Desglose de Precios",
+    "subtotal": "Subtotal",
+    "vat": "IVA",
+    "final_total": "Total Final"
+  },
+  "notfound": {
+    "title": "Página No Encontrada",
+    "subtitle": "¡Oops! Parece que esta sesión de fotos se ha perdido",
+    "description": "La página que buscas no existe. Quizás te gustaría explorar nuestros paquetes de fotografía o volver al inicio para descubrir la belleza de la fotografía de Estambul.",
+    "homeButton": "Volver al Inicio",
+    "packagesButton": "Ver Paquetes",
+    "goBack": "Volver Atrás"
+  },
+  "tours": {
+    "sectionTitle": "Descubre los Tours de Estambul",
+    "sectionDescription": "Complementa tu sesión de fotos con experiencias cuidadosamente seleccionadas de Estambul. Explora los monumentos históricos de la ciudad, tesoros culturales y gemas ocultas a través de GetYourGuide.",
+    "crossSellMessage": "Complemento perfecto para tu sesión de fotos",
+    "viewAllTours": "Ver Todos los Tours",
+    "bookNow": "Reservar Ahora",
+    "fromPrice": "Desde",
+    "reviews": "reseñas",
+    "specialOffer": "Oferta Especial",
+    "likelyToSellOut": "Probable que se agote",
+    "highlights": "Destacados",
+    "errorTitle": "No se pueden cargar los tours",
+    "noToursTitle": "No hay tours disponibles",
+    "noToursDescription": "Actualmente estamos actualizando nuestra selección de tours. Por favor, vuelve a comprobar pronto.",
+    "packageDealTitle": "Paquetes de Fotografía + Tour",
+    "packageDealDescription": "Ahorra más cuando combines tu sesión de fotos con un tour guiado. Crea recuerdos duraderos con una experiencia completa de Estambul.",
+    "viewPackages": "Ver Paquetes de Fotos",
+    "customPackage": "Oferta de Paquete Personalizado",
+    "duration": "Duración",
+    "location": "Ubicación",
+    "supplier": "Operador de Tours",
+    "included": "Qué está incluido",
+    "notIncluded": "Qué no está incluido",
+    "additionalInfo": "Información Adicional",
+    "itinerary": "Itinerario",
+    "dayNumber": "Día {number}",
+    "loading": "Cargando tours...",
+    "error": "Error al cargar tours. Por favor, inténtalo de nuevo más tarde.",
+    "searchPlaceholder": "Buscar tours...",
+    "categories": {
+      "historical": "Histórico y Cultural",
+      "photography": "Tours de Fotografía",
+      "food": "Comida y Culinario",
+      "cruises": "Cruceros por el Bósforo",
+      "walking": "Tours a Pie",
+      "private": "Tours Privados",
+      "cultural": "Cultural y Artes",
+      "adventure": "Aventura y Turismo",
+      "all": "Todos los Tours"
+    },
+    "filters": {
+      "category": "Categoría",
+      "duration": "Duración",
+      "price": "Rango de Precio",
+      "rating": "Valoración",
+      "sortBy": "Ordenar Por",
+      "priceAsc": "Precio (Bajo a Alto)",
+      "priceDesc": "Precio (Alto a Bajo)",
+      "ratingDesc": "Mayor Valoración",
+      "ratingAsc": "Menor Valoración",
+      "clearFilters": "Limpiar Todos los Filtros"
+    },
+    "crossSell": {
+      "title": "Completa tu Experiencia en Estambul",
+      "subtitle": "Añade un tour a tu sesión de fotos",
+      "description": "Descubre la belleza de Estambul desde detrás del objetivo y como explorador. Nuestras combinaciones de foto + tour ofrecen la manera perfecta de experimentar la ciudad.",
+      "photoTour": "Sesión de Fotos + Tour",
+      "savings": "Ahorra hasta 20%",
+      "benefits": [
+        "Sesión de fotografía profesional",
+        "Tour guiado con experto local",
+        "Descuento de paquete combinado",
+        "Coordinación perfecta de experiencia"
+      ]
+    },
+    "seo": {
+      "title": "Tours de Estambul | Fotografía + Tours | Fotógrafo de Estambul",
+      "description": "Descubre Estambul con tours guiados perfectos para entusiastas de la fotografía. Combina tu sesión de fotos con experiencias culturales y exploración de la ciudad."
+    },
+    "meta": {
+      "tourDetails": "Detalles del Tour para {tourName}",
+      "tourBooking": "Reservar {tourName} - Tour de Estambul"
+    }
+  },
+  "locations": {
+    "title": "Ubicaciones de Fotografía en Estambul",
+    "subtitle": "Descubre los lugares más fotogénicos de Estambul para tu sesión de fotos profesional",
+    "intro": "Explora las ubicaciones de fotografía más impresionantes de Estambul con tu fotógrafo profesional. Desde monumentos históricos hasta azoteas ocultas, cada ubicación ofrece fondos únicos para fotos inolvidables.",
+    "viewPhotos": "Ver Fotos",
+    "aboutLocation": "Sobre Esta Ubicación",
+    "photographyTips": "Consejos de Fotografía",
+    "gallery": "Galería de Fotos",
+    "nearbyLocations": "Ubicaciones Cercanas",
+    "bestTimeToVisit": "Mejor Momento para Visitar",
+    "locationInfo": "Información de la Ubicación",
+    "viewOnMap": "Ver en Google Maps →",
+    "bookPhotoshoot": "Reservar Sesión de Fotos Aquí",
+    "bookPhotoshootDescription": "Captura tus recuerdos en esta impresionante ubicación con un fotógrafo profesional.",
+    "viewPackages": "Ver Paquetes",
+    "seo": {
+      "title": "Ubicaciones de Fotografía en Estambul | Mejores Lugares para Fotos",
+      "description": "Descubre las mejores ubicaciones de fotografía en Estambul. Desde la Torre de Gálata hasta las azoteas del Bósforo, encuentra el fondo perfecto para tu sesión profesional."
+    },
+    "tags": {
+      "historic": "Histórico",
+      "iconic": "Icónico",
+      "rooftop": "Azotea",
+      "couple": "Parejas",
+      "colorful": "Colorido",
+      "instagram": "Instagram",
+      "solo": "Individual",
+      "bosphorus": "Bósforo",
+      "mosque": "Mezquita",
+      "bridge": "Puente",
+      "romantic": "Romántico",
+      "unesco": "UNESCO",
+      "architecture": "Arquitectura",
+      "panoramic": "Panorámico",
+      "premium": "Premium",
+      "market": "Mercado",
+      "culture": "Cultural"
+    },
+    "bestTime": {
+      "sunset": "Atardecer",
+      "morning": "Mañana",
+      "early_morning": "Madrugada",
+      "sunrise": "Amanecer",
+      "golden_hour": "Hora Dorada",
+      "afternoon": "Tarde"
+    },
+    "bestTimeDescription": {
+      "sunset": "Captura una impresionante luz dorada y siluetas dramáticas",
+      "morning": "Menos multitudes e iluminación natural suave",
+      "early_morning": "Mejor luz y mínimos turistas",
+      "sunrise": "Atmósfera mágica con colores cálidos",
+      "golden_hour": "Iluminación perfecta para fotos románticas",
+      "afternoon": "Ideal para interiores y áreas cubiertas"
+    },
+    "tips": {
+      "golden_hour": {
+        "title": "Magia de la Hora Dorada",
+        "description": "Llega 1 hora antes del atardecer para las mejores condiciones de luz"
+      },
+      "rooftop_view": {
+        "title": "Perspectiva de Azotea",
+        "description": "Captura vistas panorámicas de la ciudad con el horizonte de fondo"
+      },
+      "cobblestone_streets": {
+        "title": "Calles Empedradas",
+        "description": "Usa las calles encantadoras para la auténtica atmósfera de Estambul"
+      },
+      "colorful_houses": {
+        "title": "Casas Coloridas",
+        "description": "Las fachadas vibrantes crean fondos perfectos para Instagram"
+      },
+      "narrow_streets": {
+        "title": "Calles Estrechas",
+        "description": "Explora callejones ocultos para tomas únicas e íntimas"
+      },
+      "local_cafes": {
+        "title": "Cafés Locales",
+        "description": "Para en cafés tradicionales para fotografía de estilo de vida"
+      },
+      "mosque_bridge": {
+        "title": "Mezquita y Puente",
+        "description": "Enmarca la mezquita con el Puente del Bósforo de fondo"
+      },
+      "bosphorus_view": {
+        "title": "Vistas del Bósforo",
+        "description": "Captura el icónico estrecho en su mejor momento"
+      },
+      "street_food": {
+        "title": "Comida Callejera",
+        "description": "Incluye puestos locales de kumpir y gofres para fotos de estilo de vida"
+      },
+      "exterior_shots": {
+        "title": "Arquitectura Exterior",
+        "description": "La arquitectura bizantina proporciona fondos impresionantes"
+      },
+      "fountain_reflection": {
+        "title": "Reflejos de Fuente",
+        "description": "Usa la fuente del patio para tomas creativas con reflejos"
+      },
+      "sultanahmet_square": {
+        "title": "Plaza Sultanahmet",
+        "description": "Amplio espacio abierto perfecto para fotos de moda de cuerpo entero"
+      },
+      "six_minarets": {
+        "title": "Seis Minaretes",
+        "description": "Captura la silueta única de la única mezquita de seis minaretes"
+      },
+      "courtyard": {
+        "title": "Patio Interior",
+        "description": "El patio interior ofrece oportunidades de fotos tranquilas"
+      },
+      "garden_view": {
+        "title": "Vistas del Jardín",
+        "description": "Hermosos jardines con la mezquita de fondo"
+      },
+      "panoramic_view": {
+        "title": "Vistas Panorámicas",
+        "description": "Vistas de 360 grados del icónico horizonte de Estambul"
+      },
+      "flying_dress": {
+        "title": "Vestido Volador",
+        "description": "Perfecto para fotografía dramática de vestidos fluidos"
+      },
+      "sunset_silhouette": {
+        "title": "Siluetas al Atardecer",
+        "description": "Crea siluetas dramáticas contra el cielo del atardecer"
+      },
+      "terrace_view": {
+        "title": "Vistas de Terraza",
+        "description": "Impresionantes panoramas sobre el Cuerno de Oro"
+      },
+      "golden_horn": {
+        "title": "Cuerno de Oro",
+        "description": "Captura el histórico estuario desde arriba"
+      },
+      "ottoman_architecture": {
+        "title": "Arquitectura Otomana",
+        "description": "Obra maestra de la arquitectura imperial otomana"
+      },
+      "colorful_lamps": {
+        "title": "Lámparas Coloridas",
+        "description": "Las icónicas lámparas turcas crean iluminación mágica"
+      },
+      "narrow_alleys": {
+        "title": "Callejones Cubiertos",
+        "description": "Pasajes cubiertos históricos con atmósfera única"
+      },
+      "local_vendors": {
+        "title": "Vendedores Locales",
+        "description": "Escenas auténticas con artesanos tradicionales"
+      },
+      "art_nouveau": {
+        "title": "Diseño Art Nouveau",
+        "description": "Impresionantes detalles arquitectónicos de principios del siglo XX"
+      },
+      "symmetry": {
+        "title": "Simetría Perfecta",
+        "description": "Las escaleras hexagonales crean fascinantes patrones geométricos"
+      },
+      "spiral_view": {
+        "title": "Vista en Espiral",
+        "description": "Mira hacia arriba o abajo para perspectivas espirales dramáticas"
+      },
+      "golden_horn_view": {
+        "title": "Vista del Cuerno de Oro",
+        "description": "Impresionantes vistas del histórico canal y las mezquitas"
+      },
+      "fishermen": {
+        "title": "Pescadores Locales",
+        "description": "Captura escenas auténticas de la cultura pesquera tradicional"
+      },
+      "mosque_skyline": {
+        "title": "Silueta de Mezquitas",
+        "description": "Múltiples mezquitas históricas crean una silueta impresionante"
+      }
+    },
+    "items": {
+      "galata-tower": {
+        "name": "Torre de Gálata",
+        "shortDescription": "Torre de piedra medieval con vistas panorámicas de Estambul y el Bósforo",
+        "description": "La Torre de Gálata es uno de los monumentos más icónicos de Estambul, ofreciendo impresionantes vistas de 360 grados de la ciudad. Construida en 1348 por los genoveses, esta torre de piedra medieval de 67 metros de altura se ha convertido en un símbolo de Estambul. El barrio de Gálata que la rodea cuenta con encantadoras calles empedradas, edificios históricos y acogedores cafés perfectos para fotografía de estilo de vida.",
+        "address": "Gálata, Bereketzade, 34421 Beyoğlu/Estambul",
+        "seoTitle": "Fotografía Torre de Gálata | Fotógrafo en Estambul",
+        "seoDescription": "Sesión de fotos profesional en la Torre de Gálata, el icónico monumento medieval de Estambul. Impresionantes vistas panorámicas y calles empedradas."
+      },
+      "balat": {
+        "name": "Balat",
+        "shortDescription": "Barrio histórico colorido con casas vibrantes y auténtico encanto de Estambul",
+        "description": "Balat es uno de los barrios más antiguos y coloridos de Estambul, conocido por sus casas pintadas de colores vibrantes, calles estrechas y atmósfera auténtica. Este distrito listado por la UNESCO ofrece infinitas oportunidades para fotografía con sus fachadas de colores del arcoíris, tiendas vintage y cafés tradicionales.",
+        "address": "Balat, 34087 Fatih/Estambul",
+        "seoTitle": "Fotografía Balat | Ubicación Colorida de Estambul",
+        "seoDescription": "Captura fotos impresionantes en las coloridas calles de Balat. Fotografía profesional en el barrio más instagrameable de Estambul."
+      },
+      "ortakoy": {
+        "name": "Ortaköy",
+        "shortDescription": "Encantadora costa del Bósforo con icónicas vistas de mezquita y puente",
+        "description": "Ortaköy es un pintoresco barrio en la orilla europea del Bósforo, famoso por su elegante mezquita y sus impresionantes vistas del Puente del Bósforo. El paseo marítimo ofrece perfectas oportunidades fotográficas con la icónica mezquita enmarcada contra el puente.",
+        "address": "Ortaköy, 34347 Beşiktaş/Estambul",
+        "seoTitle": "Fotografía Ortaköy | Puente del Bósforo Estambul",
+        "seoDescription": "Fotografía profesional en Ortaköy con vistas al Puente del Bósforo. Captura la icónica mezquita y el paseo marítimo."
+      },
+      "hagia-sophia": {
+        "name": "Santa Sofía",
+        "shortDescription": "Obra maestra bizantina Patrimonio de la Humanidad UNESCO, símbolo de Estambul",
+        "description": "Santa Sofía es uno de los mayores logros arquitectónicos del mundo y el monumento más famoso de Estambul. Construida en 537 d.C. como catedral, este sitio Patrimonio de la Humanidad UNESCO muestra una impresionante arquitectura bizantina con su cúpula masiva e intrincados mosaicos.",
+        "address": "Sultan Ahmet, Plaza Ayasofya No:1, 34122 Fatih/Estambul",
+        "seoTitle": "Fotografía Santa Sofía | UNESCO Estambul",
+        "seoDescription": "Sesión profesional en Santa Sofía, sitio Patrimonio de la Humanidad UNESCO de Estambul. Captura arquitectura bizantina y grandeza histórica."
+      },
+      "blue-mosque": {
+        "name": "Mezquita Azul",
+        "shortDescription": "Magnífica mezquita otomana con seis minaretes y arquitectura impresionante",
+        "description": "La Mezquita del Sultán Ahmed, conocida popularmente como la Mezquita Azul, es una obra maestra de la arquitectura otomana construida entre 1609-1616. Famosa por sus seis minaretes y azulejos de İznik azules, la mezquita ofrece espectaculares oportunidades para fotografía.",
+        "address": "Sultan Ahmet, Calle Atmeydanı No:7, 34122 Fatih/Estambul",
+        "seoTitle": "Fotografía Mezquita Azul | Sultanahmet Estambul",
+        "seoDescription": "Fotografía profesional en la Mezquita Azul, la mezquita otomana más magnífica de Estambul. Captura seis minaretes y arquitectura impresionante."
+      },
+      "bosphorus-rooftop": {
+        "name": "Azotea del Bósforo",
+        "shortDescription": "Lugares exclusivos en azoteas con vistas panorámicas del Bósforo y la ciudad",
+        "description": "Experimenta Estambul desde arriba en nuestras ubicaciones exclusivas de fotografía en azoteas. Estos lugares premium ofrecen vistas inigualables de 360 grados del Bósforo, la Torre de Gálata y el icónico horizonte de Estambul. Perfectos para fotografía de vestido volador, sesiones de atardecer y fotos románticas de parejas.",
+        "address": "Varias Ubicaciones de Azoteas, Estambul",
+        "seoTitle": "Fotografía Azotea Estambul | Vista del Bósforo",
+        "seoDescription": "Fotografía exclusiva en azotea con vistas panorámicas del Bósforo. Sesiones de vestido volador y fotos al atardecer."
+      },
+      "suleymaniye": {
+        "name": "Mezquita Süleymaniye",
+        "shortDescription": "Mezquita otomana imperial con impresionantes vistas de terraza al Cuerno de Oro",
+        "description": "La Mezquita Süleymaniye, construida por el legendario arquitecto Mimar Sinan para el Sultán Suleimán el Magnífico, se considera el mejor ejemplo de arquitectura imperial otomana. El complejo de la mezquita ofrece impresionantes vistas de terraza sobre el Cuerno de Oro y proporciona una atmósfera tranquila para fotografía.",
+        "address": "Süleymaniye, Calle Prof. Sıddık Sami Onar No:1, 34116 Fatih/Estambul",
+        "seoTitle": "Fotografía Mezquita Süleymaniye | Cuerno de Oro Estambul",
+        "seoDescription": "Sesión profesional en la Mezquita Süleymaniye con vistas al Cuerno de Oro. Arquitectura imperial otomana y fotos panorámicas de terraza."
+      },
+      "camondo-stairs": {
+        "name": "Escaleras Camondo",
+        "shortDescription": "Elegante escalera Art Nouveau que conecta Karaköy con la Torre de Gálata",
+        "description": "Las Escaleras Camondo (Kamondo Merdivenleri) son un impresionante ejemplo de arquitectura Art Nouveau en el corazón del distrito de Karaköy de Estambul. Construidas a principios de la década de 1870 por la acaudalada familia banquera Camondo, estas elegantes escaleras hexagonales conectan el distrito bancario con el barrio de Gálata. El diseño geométrico único y el carácter histórico las convierten en una de las joyas ocultas más fotografiadas de Estambul.",
+        "address": "Kemeraltı Caddesi, Karaköy, 34421 Beyoğlu/Estambul",
+        "seoTitle": "Fotografía Escaleras Camondo | Joya Oculta de Estambul",
+        "seoDescription": "Fotografía profesional en las icónicas Escaleras Camondo de Estambul. Arquitectura Art Nouveau y patrones geométricos impresionantes para fotos únicas."
+      },
+      "galata-bridge": {
+        "name": "Puente de Gálata",
+        "shortDescription": "Histórico puente que cruza el Cuerno de Oro con impresionantes vistas de mezquitas",
+        "description": "El Puente de Gálata (Galata Köprüsü) es uno de los monumentos más icónicos de Estambul, conectando la península histórica con el moderno distrito de Beyoğlu a través del Cuerno de Oro. El puente ofrece espectaculares oportunidades fotográficas con vistas a las mezquitas Süleymaniye, Eminönü y Yeni que crean una silueta impresionante. Los pescadores tradicionales a lo largo del puente añaden carácter auténtico a cualquier sesión fotográfica.",
+        "address": "Puente de Gálata, Eminönü-Karaköy, Estambul",
+        "seoTitle": "Fotografía Puente de Gálata | Cuerno de Oro Estambul",
+        "seoDescription": "Fotografía profesional en el Puente de Gálata con impresionantes vistas del Cuerno de Oro. Captura la icónica silueta de mezquitas y atmósfera auténtica."
+      }
+    }
+  },
+  "chat_widget": {
+    "header_title": "Emily",
+    "header_subtitle": "En línea • Asistente de Fotografía",
+    "welcome_title": "¡Hola! 👋",
+    "welcome_message": "Soy Emily, estoy aquí para ayudarte a planificar la sesión de fotos perfecta en Estambul.",
+    "input_placeholder": "Mensaje a Emily...",
+    "whatsapp_fallback": "Cambiar a WhatsApp para soporte urgente",
+    "redirecting": "¡Perfecto! Te redirijo a la página de pago ahora. ¡Por favor, completa tus datos de pago allí para asegurar tu lugar! 💳✨",
+    "connection_error": "Lo siento, tengo problemas de conexión. Por favor, inténtalo de nuevo o usa WhatsApp.",
+    "bot_avatar_alt": "Emily",
+    "checkout_nudge": "¡Hola! He notado que estás en el último paso. ¿Necesitas ayuda para completar tu reserva? 😊",
+    "role": "Asistente de Fotografía",
+    "online": "En línea"
+  }
+}
