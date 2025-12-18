@@ -136,7 +136,7 @@ export function BookingModal({
     : null;
 
   const handleSubmit = form.handleSubmit(
-    (data) => {
+    async (data) => {
       // Track lead conversion - user filled booking form
       if (selectedPackage && packageInfo) {
         // Generate unique event ID for deduplication
@@ -153,6 +153,24 @@ export function BookingModal({
 
         // Facebook Lead Event (client-side)
         fbPixel.trackLead(packageInfo.price, eventId);
+
+        // --- NEW: Save Draft Booking to Supabase (Background) ---
+        try {
+          // We don't await this to keep UI snappy, or we use a fire-and-forget approach
+          // But to be safe, let's trigger it. We don't strictly need the ID for checkout
+          // as we want to be non-invasive to existing flow.
+          fetch("/api/booking/create-draft", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              ...data,
+              totalAmount: packagePrices[selectedPackage],
+              locale, // Send current locale
+            }),
+          }).catch(err => console.error("Draft creation failed silently:", err));
+        } catch (e) {
+          // Ignore draft errors to not block checkout
+        }
       }
 
       // Store booking data in sessionStorage for checkout page
