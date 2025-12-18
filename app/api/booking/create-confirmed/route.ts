@@ -141,6 +141,7 @@ export async function POST(request: NextRequest) {
           amount: totalAmount,
           currency: "EUR",
           provider: body.provider || "iyzico",
+          provider_response: body.providerResponse || {}, // Save the raw response
           provider_order_id:
             body.provider === "turinvoice" ? paymentId : undefined,
         });

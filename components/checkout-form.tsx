@@ -227,6 +227,7 @@ export function CheckoutForm() {
             totalAmount: packagePrices[selectedPackage], // Ensure totalAmount is correct and positive
             paymentId: paymentResult.paymentId,
             conversationId: paymentResult.conversationId,
+            providerResponse: paymentResult.providerResponse, // Pass full provider response
             eventId, // Required for CAPI Deduplication
           }),
         });

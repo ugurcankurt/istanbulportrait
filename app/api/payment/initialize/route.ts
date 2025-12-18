@@ -175,6 +175,7 @@ export async function POST(request: NextRequest) {
         amountEUR,
         amountTRY,
         exchangeRate,
+        providerResponse: paymentResult, // Return full response for debugging/storage
       });
     } else {
       return NextResponse.json({
