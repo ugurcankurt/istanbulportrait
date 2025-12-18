@@ -51,6 +51,7 @@ export interface FacebookConversionEvent {
     lead_id?: number;
     fbc?: string; // Facebook click ID
     fbp?: string; // Facebook browser ID
+    external_id?: string[]; // Unique external ID (hashed)
   };
   custom_data?: {
     event_source?: "crm" | "website";
@@ -76,7 +77,7 @@ export async function sendToFacebookConversionsAPI(
 
   try {
     const response = await fetch(
-      `https://graph.facebook.com/v23.0/${FACEBOOK_DATASET_ID}/events`,
+      `https://graph.facebook.com/v19.0/${FACEBOOK_DATASET_ID}/events`,
       {
         method: "POST",
         headers: {
@@ -201,6 +202,12 @@ export const fbPixel = {
   },
 };
 
+export interface FacebookEventOptions {
+  fbc?: string;
+  fbp?: string;
+  externalId?: string;
+}
+
 // Instagram Portrait specific tracking functions
 export const trackFacebookLead = async (
   customerEmail: string,
@@ -209,6 +216,7 @@ export const trackFacebookLead = async (
   amount: number,
   leadId?: number,
   eventId?: string,
+  options?: FacebookEventOptions,
 ) => {
   const generatedLeadId = leadId || generateLeadId();
 
@@ -217,11 +225,14 @@ export const trackFacebookLead = async (
     event_name: "Lead",
     event_time: Math.floor(Date.now() / 1000),
     event_id: eventId,
-    action_source: "system_generated",
+    action_source: "website",
     user_data: {
       em: customerEmail ? [hashCustomerData(customerEmail)] : [],
       ph: customerPhone ? [hashPhoneNumber(customerPhone)] : [],
       lead_id: generatedLeadId,
+      fbc: options?.fbc,
+      fbp: options?.fbp,
+      external_id: options?.externalId ? [options.externalId] : undefined,
     },
     custom_data: {
       event_source: "crm",
@@ -253,16 +264,20 @@ export const trackFacebookPurchase = async (
   amount: number,
   transactionId: string,
   eventId?: string,
+  options?: FacebookEventOptions,
 ) => {
   // Prepare event for Conversions API
   const event: FacebookConversionEvent = {
     event_name: "Purchase",
     event_time: Math.floor(Date.now() / 1000),
     event_id: eventId,
-    action_source: "system_generated",
+    action_source: "website",
     user_data: {
       em: customerEmail ? [hashCustomerData(customerEmail)] : [],
       ph: customerPhone ? [hashPhoneNumber(customerPhone)] : [],
+      fbc: options?.fbc,
+      fbp: options?.fbp,
+      external_id: options?.externalId ? [options.externalId] : undefined,
     },
     custom_data: {
       event_source: "crm",

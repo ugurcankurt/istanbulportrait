@@ -41,6 +41,12 @@ export function BookingSuccess({
   useEffect(() => {
     // Track GA4 Enhanced Ecommerce purchase event
     trackPurchase(bookingId, packageId, packageInfo.name, packageInfo.price);
+
+    // Track Facebook CAPI Purchase event (Server-Action)
+    // We import dynamically or use the function if available
+    import("@/app/actions/marketing-actions").then(({ reportPurchaseToFacebook }) => {
+      reportPurchaseToFacebook(bookingId);
+    });
   }, [bookingId, packageId, packageInfo.name, packageInfo.price]);
 
   return (
