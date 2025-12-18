@@ -856,7 +856,77 @@
       "marketing": {
         "title": "ملفات تعريف الارتباط التسويقية",
         "description": "يتم استخدامه لتقديم إعلانات ذات صلة وتتبع فعالية الحملة."
-      }
+      },
+      "table": {
+        "title": "معلومات مفصلة عن ملفات تعريف الارتباط",
+        "columns": {
+          "name": "اسم ملف تعريف الارتباط",
+          "purpose": "الغرض",
+          "type": "النوع",
+          "duration": "المدة",
+          "provider": "المزود"
+        },
+        "types": {
+          "essential": "ضروري",
+          "analytics": "تحليلات",
+          "marketing": "تسويق"
+        },
+        "providers": {
+          "first_party": "Istanbul Portrait (الطرف الأول)",
+          "google": "Google Analytics",
+          "yandex": "Yandex Metrica",
+          "microsoft": "Microsoft Clarity",
+          "facebook": "Facebook"
+        },
+        "essential": {
+          "user_consent": {
+            "purpose": "يخزن تفضيلات الموافقة على ملفات تعريف الارتباط الخاصة بك",
+            "duration": "12 شهرًا"
+          }
+        },
+        "analytics": {
+          "ga": {
+            "purpose": "يميز المستخدمين والجلسات الفريدة",
+            "duration": "2 سنوات"
+          },
+          "gid": {
+            "purpose": "يميز المستخدمين لمدة 24 ساعة",
+            "duration": "24 ساعة"
+          },
+          "gat": {
+            "purpose": "يخفف معدل الطلبات إلى Google Analytics",
+            "duration": "1 دقيقة"
+          },
+          "ym_uid": {
+            "purpose": "معرف مستخدم Yandex Metrica",
+            "duration": "1 سنة"
+          },
+          "ym_d": {
+            "purpose": "تاريخ جلسة Yandex Metrica",
+            "duration": "1 سنة"
+          },
+          "clck": {
+            "purpose": "معرف مستخدم Microsoft Clarity",
+            "duration": "1 سنة"
+          },
+          "clsk": {
+            "purpose": "معرف جلسة Microsoft Clarity",
+            "duration": "1 يوم"
+          }
+        },
+        "marketing": {
+          "fbp": {
+            "purpose": "معرف متصفح Facebook Pixel",
+            "duration": "3 أشهر"
+          },
+          "fbc": {
+            "purpose": "معرف نقر Facebook Pixel",
+            "duration": "3 أشهر"
+          }
+        }
+      },
+      "expiration_note": "يتم تخزين خيار الموافقة الخاص بك لمدة 12 شهرًا. بعد هذه الفترة، سيطلب منك تقديم الموافقة مرة أخرى.",
+      "withdrawal_note": "يمكنك تغيير تفضيلات ملفات تعريف الارتباط الخاصة بك في أي وقت بالنقر فوق زر 'إعدادات ملفات تعريف الارتباط' في تذييل هذا الموقع."
     },
     "data_use": {
       "title": "كيف نستخدم بياناتك",
@@ -867,6 +937,12 @@
         "marketing": "إرسال المواد الترويجية (بموافقتك)",
         "legal": "الالتزام بالالتزامات القانونية وحل النزاعات"
       }
+    },
+    "image_license": {
+      "title": "رخصة الصورة وحقوق الاستخدام",
+      "description": "عند حجز جلسة تصوير مع Istanbul Portrait، يتم منحك حقوقًا محددة لصورك.",
+      "rights": "لديك حقوق استخدام شخصية كاملة. يمكنك طباعة الصور ومشاركتها على وسائل التواصل الاجتماعي واستخدامها لأي غرض غير تجاري.",
+      "usage": "لطلبات الاستخدام التجاري، يرجى الاتصال بنا مباشرة لمناقشة خيارات الترخيص."
     },
     "your_rights": {
       "title": "حقوقك (GDPR)",

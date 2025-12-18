@@ -755,7 +755,77 @@
       "marketing": {
         "title": "营销Cookies",
         "description": "用于提供相关广告并跟踪营销活动效果。"
-      }
+      },
+      "table": {
+        "title": "详细的 Cookie 信息",
+        "columns": {
+          "name": "Cookie 名称",
+          "purpose": "用途",
+          "type": "类型",
+          "duration": "持续时间",
+          "provider": "提供商"
+        },
+        "types": {
+          "essential": "必要",
+          "analytics": "分析",
+          "marketing": "营销"
+        },
+        "providers": {
+          "first_party": "Istanbul Portrait (第一方)",
+          "google": "Google Analytics",
+          "yandex": "Yandex Metrica",
+          "microsoft": "Microsoft Clarity",
+          "facebook": "Facebook"
+        },
+        "essential": {
+          "user_consent": {
+            "purpose": "存储您的 Cookie 同意偏好",
+            "duration": "12 个月"
+          }
+        },
+        "analytics": {
+          "ga": {
+            "purpose": "区分独立用户和会话",
+            "duration": "2 年"
+          },
+          "gid": {
+            "purpose": "区分用户 24 小时",
+            "duration": "24 小时"
+          },
+          "gat": {
+            "purpose": "限制 Google Analytics 的请求速率",
+            "duration": "1 分钟"
+          },
+          "ym_uid": {
+            "purpose": "Yandex Metrica 用户标识符",
+            "duration": "1 年"
+          },
+          "ym_d": {
+            "purpose": "Yandex Metrica 会话日期",
+            "duration": "1 年"
+          },
+          "clck": {
+            "purpose": "Microsoft Clarity 用户标识符",
+            "duration": "1 年"
+          },
+          "clsk": {
+            "purpose": "Microsoft Clarity 会话标识符",
+            "duration": "1 天"
+          }
+        },
+        "marketing": {
+          "fbp": {
+            "purpose": "Facebook Pixel 浏览器标识符",
+            "duration": "3 个月"
+          },
+          "fbc": {
+            "purpose": "Facebook Pixel 点击标识符",
+            "duration": "3 个月"
+          }
+        }
+      },
+      "expiration_note": "您的同意选择将保存 12 个月。在此期限之后，我们将再次要求您提供同意。",
+      "withdrawal_note": "您可以随时点击本网站页脚的“Cookie 设置”按钮更改您的 Cookie 首选项。"
     },
     "data_use": {
       "title": "我们如何使用您的数据",
@@ -766,6 +836,12 @@
         "marketing": "发送促销材料（经您同意）",
         "legal": "遵守法律义务并解决争议"
       }
+    },
+    "image_license": {
+      "title": "图片许可与使用权",
+      "description": "当您在 Istanbul Portrait 预订拍摄时，您将被授予特定的图片使用权。",
+      "rights": "您拥有完全的个人使用权。您可以打印、在社交媒体上分享以及用于任何非商业目的。",
+      "usage": "如需商业用途，请直接联系我们讨论许可选项。"
     },
     "your_rights": {
       "title": "您的权利（GDPR）",

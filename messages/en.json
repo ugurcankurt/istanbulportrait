@@ -837,6 +837,12 @@
         "legal": "Comply with legal obligations and resolve disputes"
       }
     },
+    "image_license": {
+      "title": "Image License & Usage Rights",
+      "description": "When you book a photoshoot with Istanbul Portrait, you are granted specific rights to your images.",
+      "rights": "You have full personal usage rights. You can print, share on social media, and use the photos for any non-commercial purpose.",
+      "usage": "For commercial usage requests, please contact us directly to discuss licensing options."
+    },
     "your_rights": {
       "title": "Your Rights (GDPR)",
       "items": {

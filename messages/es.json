@@ -776,7 +776,77 @@
       "marketing": {
         "title": "Cookies De Marketing",
         "description": "Se utiliza para ofrecer anuncios relevantes y realizar un seguimiento de la eficacia de la campaña."
-      }
+      },
+      "table": {
+        "title": "Información Detallada de Cookies",
+        "columns": {
+          "name": "Nombre de Cookie",
+          "purpose": "Propósito",
+          "type": "Tipo",
+          "duration": "Duración",
+          "provider": "Proveedor"
+        },
+        "types": {
+          "essential": "Esencial",
+          "analytics": "Analítica",
+          "marketing": "Marketing"
+        },
+        "providers": {
+          "first_party": "Istanbul Portrait (Primarios)",
+          "google": "Google Analytics",
+          "yandex": "Yandex Metrica",
+          "microsoft": "Microsoft Clarity",
+          "facebook": "Facebook"
+        },
+        "essential": {
+          "user_consent": {
+            "purpose": "Almacena sus preferencias de consentimiento de cookies",
+            "duration": "12 meses"
+          }
+        },
+        "analytics": {
+          "ga": {
+            "purpose": "Distingue usuarios y sesiones únicos",
+            "duration": "2 años"
+          },
+          "gid": {
+            "purpose": "Distingue usuarios por 24 horas",
+            "duration": "24 horas"
+          },
+          "gat": {
+            "purpose": "Limita la tasa de solicitudes a Google Analytics",
+            "duration": "1 minuto"
+          },
+          "ym_uid": {
+            "purpose": "Identificador de usuario de Yandex Metrica",
+            "duration": "1 año"
+          },
+          "ym_d": {
+            "purpose": "Fecha de sesión de Yandex Metrica",
+            "duration": "1 año"
+          },
+          "clck": {
+            "purpose": "Identificador de usuario de Microsoft Clarity",
+            "duration": "1 año"
+          },
+          "clsk": {
+            "purpose": "Identificador de sesión de Microsoft Clarity",
+            "duration": "1 día"
+          }
+        },
+        "marketing": {
+          "fbp": {
+            "purpose": "Identificador de navegador de Pixel de Facebook",
+            "duration": "3 meses"
+          },
+          "fbc": {
+            "purpose": "Identificador de clic de Pixel de Facebook",
+            "duration": "3 meses"
+          }
+        }
+      },
+      "expiration_note": "Su elección de consentimiento se guarda durante 12 meses. Después de este período, se le pedirá que preste su consentimiento nuevamente.",
+      "withdrawal_note": "Puede cambiar sus preferencias de cookies en cualquier momento haciendo clic en el botón 'Configuración de Cookies' en el pie de página de este sitio web."
     },
     "data_use": {
       "title": "Cómo Usamos Sus Datos",
@@ -787,6 +857,12 @@
         "marketing": "Enviar materiales promocionales (con su consentimiento)",
         "legal": "Cumplir con las obligaciones legales y resolver disputas"
       }
+    },
+    "image_license": {
+      "title": "Licencia de Imagen y Derechos de Uso",
+      "description": "Al reservar una sesión de fotos con Istanbul Portrait, se le otorgan derechos específicos sobre sus imágenes.",
+      "rights": "Tiene derechos completos de uso personal. Puede imprimir, compartir en redes sociales y usar las fotos para cualquier propósito no comercial.",
+      "usage": "Para solicitudes de uso comercial, contáctenos directamente para discutir opciones de licencia."
     },
     "your_rights": {
       "title": "Sus Derechos (RGPD)",

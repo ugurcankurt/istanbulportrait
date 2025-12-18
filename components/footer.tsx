@@ -109,12 +109,12 @@ export function Footer() {
           <div className="space-y-4">
             <p className="font-semibold">{tui("contact")}</p>
             <div className="space-y-3 text-sm text-muted-foreground">
-              <div className="flex items-center space-x-2 rtl:space-x-reverse">
-                <MapPin className="h-4 w-4" />
+              <div className="flex items-start space-x-2 rtl:space-x-reverse">
+                <MapPin className="h-5 w-5 shrink-0" />
                 <span>{contact("location")}</span>
               </div>
               <div className="flex items-center space-x-2 rtl:space-x-reverse">
-                <Mail className="h-4 w-4" />
+                <Mail className="h-5 w-5 shrink-0" />
                 <a
                   href={`mailto:${contact("email")}`}
                   className="hover:text-foreground transition-colors"
@@ -123,7 +123,7 @@ export function Footer() {
                 </a>
               </div>
               <div className="flex items-center space-x-2 rtl:space-x-reverse">
-                <Phone className="h-4 w-4" />
+                <Phone className="h-5 w-5 shrink-0" />
                 <a
                   href={`tel:${contact("phone")}`}
                   className="hover:text-foreground transition-colors phone-number"
