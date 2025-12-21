@@ -416,6 +416,7 @@ export function formatBlogDate(
     ar: "ar-EG",
     ru: "ru-RU",
     es: "es-ES",
+    zh: "zh-CN",
   };
 
   return dateObj.toLocaleDateString(localeMap[locale], {
