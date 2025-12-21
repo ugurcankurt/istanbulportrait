@@ -577,11 +577,34 @@ export function generateTourSchema(
           ? "https://schema.org/InStock"
           : "https://schema.org/OutOfStock",
       validFrom: new Date().toISOString(),
+      // Price valid for 1 year from now
+      priceValidUntil: new Date(new Date().setFullYear(new Date().getFullYear() + 1)).toISOString(),
       url: tourData.bookingUrl,
       seller: {
         "@type": "Organization",
         name: tourData.provider || "Viator",
         url: "https://www.viator.com",
+      },
+      // Merchant Listing Requirements
+      hasMerchantReturnPolicy: {
+        "@type": "MerchantReturnPolicy",
+        applicableCountry: "TR",
+        returnPolicyCategory: "https://schema.org/MerchantReturnFiniteReturnWindow",
+        merchantReturnDays: 1,
+        returnMethod: "https://schema.org/ReturnByMail",
+        returnFees: "https://schema.org/FreeReturn",
+      },
+      shippingDetails: {
+        "@type": "OfferShippingDetails",
+        shippingRate: {
+          "@type": "MonetaryAmount",
+          value: "0",
+          currency: "EUR",
+        },
+        shippingDestination: {
+          "@type": "DefinedRegion",
+          addressCountry: "TR",
+        },
       },
       additionalProperty: [
         {
@@ -749,9 +772,32 @@ export function generateEnhancedLocalBusinessSchema(
         priceCurrency: offer.priceCurrency,
         availability: "https://schema.org/InStock",
         validFrom: new Date().toISOString(),
+        // Price valid for 1 year from now
+        priceValidUntil: new Date(new Date().setFullYear(new Date().getFullYear() + 1)).toISOString(),
         seller: {
           "@type": "Organization",
           name: SEO_CONFIG.organization.name,
+        },
+        // Merchant Listing Requirements
+        hasMerchantReturnPolicy: {
+          "@type": "MerchantReturnPolicy",
+          applicableCountry: "TR",
+          returnPolicyCategory: "https://schema.org/MerchantReturnFiniteReturnWindow",
+          merchantReturnDays: 1,
+          returnMethod: "https://schema.org/ReturnByMail",
+          returnFees: "https://schema.org/FreeReturn",
+        },
+        shippingDetails: {
+          "@type": "OfferShippingDetails",
+          shippingRate: {
+            "@type": "MonetaryAmount",
+            value: "0",
+            currency: "EUR",
+          },
+          shippingDestination: {
+            "@type": "DefinedRegion",
+            addressCountry: "TR",
+          },
         },
       })),
     },
