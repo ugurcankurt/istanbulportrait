@@ -135,10 +135,7 @@ export function CheckoutForm() {
         const storedData = JSON.parse(storedBookingData);
         // Safely check for bookingId (extra field not in BookingFormData schema)
         if (storedData && typeof storedData === 'object' && 'bookingId' in storedData) {
-          console.log("[CheckoutForm] Found bookingId in session:", storedData.bookingId);
           setBookingId(storedData.bookingId as string);
-        } else {
-          console.log("[CheckoutForm] No bookingId in session storage");
         }
 
         const bookingData = storedData as BookingFormData;
@@ -484,6 +481,8 @@ export function CheckoutForm() {
     }
   };
 
+
+
   // Helper component for Booking Summary content
   const BookingSummaryContent = () => (
     <div className="bg-muted/30 rounded-lg p-4">
@@ -790,6 +789,8 @@ export function CheckoutForm() {
                         </div>
                       )}
                     </div>
+
+
                   </div>
                 </CardContent>
               </Card>
@@ -820,7 +821,7 @@ export function CheckoutForm() {
                         isLoading={isLoading}
                       />
                     </Form>
-                  ) : (
+                  ) : paymentMethod === "turinvoice" ? (
                     <div className="space-y-6">
                       {!turinvoiceOrder ? (
                         <div className="text-center space-y-4 py-4">
@@ -855,7 +856,7 @@ export function CheckoutForm() {
                         />
                       )}
                     </div>
-                  )}
+                  ) : null}
                 </CardContent>
               </Card>
             </div>
@@ -946,6 +947,8 @@ export function CheckoutForm() {
                             </div>
                           )}
                         </div>
+
+
                       </div>
                     </CardContent>
                   </Card>
@@ -976,7 +979,7 @@ export function CheckoutForm() {
                             isLoading={isLoading}
                           />
                         </Form>
-                      ) : (
+                      ) : paymentMethod === "turinvoice" ? (
                         <div className="space-y-6">
                           {!turinvoiceOrder ? (
                             <div className="text-center space-y-4 py-4">
@@ -1011,7 +1014,7 @@ export function CheckoutForm() {
                             />
                           )}
                         </div>
-                      )}
+                      ) : null}
                     </CardContent>
                   </Card>
                 </div>

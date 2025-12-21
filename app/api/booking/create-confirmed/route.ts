@@ -111,11 +111,9 @@ export async function POST(request: NextRequest) {
 
       let booking;
       const { bookingId } = body;
-      console.log(`[CreateConfirmed] Processing booking. BookingID present: ${!!bookingId}`, { bookingId });
 
       if (bookingId) {
         // Update existing draft booking
-        console.log(`[CreateConfirmed] Attempting update for bookingId: ${bookingId}`);
         const { data: existingBooking, error: updateError } = await supabaseAdmin
           .from("bookings")
           .update({
@@ -133,13 +131,10 @@ export async function POST(request: NextRequest) {
           .single();
 
         if (updateError) {
-          console.error(`[CreateConfirmed] Update failed for bookingId ${bookingId}:`, updateError);
           throw updateError;
         }
         booking = existingBooking;
-        console.log(`[CreateConfirmed] Update success for bookingId: ${bookingId}`);
       } else {
-        console.log(`[CreateConfirmed] No bookingId provided, creating new booking.`);
         // Create confirmed booking in Supabase (fallback)
         const { data: newBooking, error: insertError } = await supabaseAdmin
           .from("bookings")
