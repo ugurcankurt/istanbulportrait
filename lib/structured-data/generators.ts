@@ -721,6 +721,15 @@ export function generateEnhancedLocalBusinessSchema(
     paymentAccepted: SEO_CONFIG.business.paymentAccepted,
     currenciesAccepted: SEO_CONFIG.business.currenciesAccepted,
     sameAs: SEO_CONFIG.organization.sameAs,
+    ...(config.rating && {
+      aggregateRating: {
+        "@type": "AggregateRating",
+        ratingValue: config.rating.ratingValue,
+        reviewCount: config.rating.reviewCount,
+        bestRating: config.rating.bestRating || 5,
+        worstRating: config.rating.worstRating || 1,
+      },
+    }),
     // AI Search Enhancement
     knowsAbout: config.t
       ? config.t("knowsAbout")

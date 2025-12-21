@@ -8,6 +8,7 @@ import { ToursSection } from "@/components/tours-section";
 import { WhyChooseSection } from "@/components/why-choose-section";
 import { getLocalizedPaths } from "@/lib/localized-url";
 import { SEO_CONFIG } from "@/lib/seo-config";
+import { reviewsService } from "@/lib/reviews-service";
 import {
   createSchemaConfig,
   generateEnhancedLocalBusinessSchema,
@@ -44,8 +45,17 @@ export default async function HomePage({
   const { locale } = await params;
   const tSchema = await getTranslations({ locale, namespace: "seo.schema" });
 
+  // Fetch aggregate rating for schema
+  const aggregateRating = await reviewsService.getAggregateRating();
+
   // Create schema configuration
-  const schemaConfig = createSchemaConfig(locale, { t: tSchema });
+  const schemaConfig = createSchemaConfig(locale, {
+    t: tSchema,
+    rating: {
+      ratingValue: aggregateRating.average,
+      reviewCount: aggregateRating.count,
+    },
+  });
 
   // Generate structured data schemas with AI Search optimization
   const enhancedLocalBusinessSchema =

@@ -81,6 +81,12 @@ export interface SchemaConfig {
   includeReviews?: boolean;
   includeFAQ?: boolean;
   t?: any;
+  rating?: {
+    ratingValue: number;
+    reviewCount: number;
+    bestRating?: number;
+    worstRating?: number;
+  };
 }
 
 // Review data interface

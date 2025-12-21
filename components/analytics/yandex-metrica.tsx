@@ -1,12 +1,15 @@
 "use client";
 
+
 import { usePathname } from "next/navigation";
 import Script from "next/script";
 import { useEffect } from "react";
+import { packagePrices } from "@/lib/validations";
 
 declare global {
   interface Window {
     ym: (id: number, method: string, ...args: unknown[]) => void;
+    dataLayer: Record<string, unknown>[];
   }
 }
 
@@ -95,7 +98,7 @@ export function useYandexMetrica() {
 
     if (!id || typeof window === "undefined" || !window.ym) return;
 
-    // Enhanced E-commerce tracking for Yandex
+    // 1. Legacy reachGoal tracking (keeping for continuity)
     window.ym(parseInt(id, 10), "reachGoal", "purchase", {
       order_id: bookingId,
       order_price: amount,
@@ -110,14 +113,80 @@ export function useYandexMetrica() {
         },
       ],
     });
+
+    // 2. Standard E-commerce dataLayer tracking
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({
+      ecommerce: {
+        purchase: {
+          actionField: {
+            id: bookingId,
+            revenue: amount,
+            currency: currency,
+          },
+          products: [
+            {
+              id: packageId,
+              name: `Photography Package - ${packageId}`,
+              price: amount,
+              category: "Photography Services",
+              quantity: 1,
+            },
+          ],
+        },
+      },
+    });
   };
 
   const trackBookingStart = (packageId: string) => {
     trackEvent("booking_start", { package_id: packageId });
+
+    // Track as "Add to Cart" for E-commerce funnel
+    if (typeof window !== "undefined") {
+      const price = packagePrices[packageId as keyof typeof packagePrices] || 0;
+
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({
+        ecommerce: {
+          add: {
+            products: [
+              {
+                id: packageId,
+                name: `Photography Package - ${packageId}`,
+                price: price,
+                category: "Photography Services",
+                quantity: 1,
+              },
+            ],
+          },
+        },
+      });
+    }
   };
 
   const trackPackageView = (packageId: string) => {
     trackEvent("package_view", { package_id: packageId });
+
+    // Track as "Detail" view for E-commerce
+    if (typeof window !== "undefined") {
+      const price = packagePrices[packageId as keyof typeof packagePrices] || 0;
+
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({
+        ecommerce: {
+          detail: {
+            products: [
+              {
+                id: packageId,
+                name: `Photography Package - ${packageId}`,
+                price: price,
+                category: "Photography Services",
+              },
+            ],
+          },
+        },
+      });
+    }
   };
 
   const trackContactForm = (source: string) => {

@@ -18,6 +18,7 @@ import { useForm } from "react-hook-form";
 import PhoneInput from "react-phone-number-input";
 import "react-phone-number-input/style.css";
 
+import { useYandexMetrica } from "@/components/analytics/yandex-metrica";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
@@ -101,6 +102,15 @@ export function BookingModal({
 
   // Create schema with translations
   const bookingSchemaWithTranslations = createBookingSchema(tValidation);
+  const { trackBookingStart, trackPackageView } = useYandexMetrica();
+  const [step, setStep] = useState<"details" | "summary">("details");
+
+  // Track package view when modal opens
+  useEffect(() => {
+    if (isOpen && selectedPackage) {
+      trackPackageView(selectedPackage);
+    }
+  }, [isOpen, selectedPackage, trackPackageView]);
 
   const form = useForm<BookingFormData>({
     resolver: zodResolver(bookingSchemaWithTranslations),
@@ -151,8 +161,11 @@ export function BookingModal({
           eventId,
         );
 
-        // Facebook Lead Event (client-side)
-        fbPixel.trackLead(packageInfo.price, eventId);
+        // Track Booking Start Event
+        trackBookingStart(selectedPackage);
+
+        // Track InitiateCheckout with Facebook Pixel
+        fbPixel.trackInitiateCheckout(selectedPackage, packageInfo.price, eventId);
 
         // --- NEW: Save Draft Booking to Supabase (Background) ---
         try {

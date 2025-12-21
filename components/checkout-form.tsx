@@ -50,6 +50,7 @@ import {
   createPaymentSchema,
   packagePrices,
 } from "@/lib/validations";
+import { useYandexMetrica } from "@/components/analytics/yandex-metrica";
 
 export function CheckoutForm() {
   const searchParams = useSearchParams();
@@ -86,6 +87,7 @@ export function CheckoutForm() {
 
   // IndexNow integration for automatic URL submission
   const { notifyBookingCreated } = useIndexNow();
+  const { trackPurchase: trackYandexPurchase } = useYandexMetrica();
 
   // Create schemas with translations
   const bookingSchemaWithTranslations = createBookingSchema(tValidation);
@@ -296,6 +298,13 @@ export function CheckoutForm() {
           eventId,
         );
 
+        // Track Yandex Purchase
+        trackYandexPurchase(
+          bookingResult.booking.id,
+          selectedPackage,
+          packagePrices[selectedPackage],
+        );
+
         // Trigger Chatbot Success Message
         if (typeof window !== "undefined") {
           window.dispatchEvent(new CustomEvent("booking_confirmed", {
@@ -474,6 +483,13 @@ export function CheckoutForm() {
         packagePrices[selectedPackage],
         bookingResult.booking.id,
         eventId,
+      );
+
+      // Track Yandex Purchase
+      trackYandexPurchase(
+        bookingResult.booking.id,
+        selectedPackage,
+        packagePrices[selectedPackage],
       );
     } catch (error) {
       console.error("Booking creation error:", error);
