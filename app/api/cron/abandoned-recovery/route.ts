@@ -203,7 +203,7 @@ export async function GET(request: Request) {
       const locale = draft.locale && EMAIL_TEMPLATES[draft.locale] ? draft.locale : "en";
       const template = EMAIL_TEMPLATES[locale] || EMAIL_TEMPLATES["en"];
       // Reconstruct checkout URL to deep link directly to the specific package
-      const checkoutUrl = `${process.env.NEXT_PUBLIC_APP_URL}/${locale}/checkout?package=${draft.package_id}`;
+      const checkoutUrl = `${process.env.NEXT_PUBLIC_APP_URL}/${locale}/packages`;
 
       const { data: emailData, error: emailError } = await resend.emails.send({
         from: "Istanbul Portrait <info@istanbulportrait.com>",

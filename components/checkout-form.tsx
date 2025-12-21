@@ -132,7 +132,16 @@ export function CheckoutForm() {
 
     if (storedBookingData) {
       try {
-        const bookingData = JSON.parse(storedBookingData) as BookingFormData;
+        const storedData = JSON.parse(storedBookingData);
+        // Safely check for bookingId (extra field not in BookingFormData schema)
+        if (storedData && typeof storedData === 'object' && 'bookingId' in storedData) {
+          console.log("[CheckoutForm] Found bookingId in session:", storedData.bookingId);
+          setBookingId(storedData.bookingId as string);
+        } else {
+          console.log("[CheckoutForm] No bookingId in session storage");
+        }
+
+        const bookingData = storedData as BookingFormData;
         setPreFilledBookingData(bookingData);
 
         // Pre-fill the form with stored data
@@ -142,6 +151,8 @@ export function CheckoutForm() {
             bookingData[key as keyof BookingFormData],
           );
         });
+
+
 
         // Fallback: If URL didn't have package, but Session does, use that
         if (!effectivePackageId && bookingData.packageId && bookingData.packageId in packagePrices) {
@@ -229,6 +240,7 @@ export function CheckoutForm() {
             conversationId: paymentResult.conversationId,
             providerResponse: paymentResult.providerResponse, // Pass full provider response
             eventId, // Required for CAPI Deduplication
+            bookingId: bookingId || undefined, // Pass existing booking ID to avoid duplication
           }),
         });
 
@@ -422,6 +434,7 @@ export function CheckoutForm() {
           conversationId: `turinvoice_${turinvoiceOrder.idOrder}`,
           provider: "turinvoice",
           eventId, // Required for CAPI Deduplication
+          bookingId: bookingId || undefined, // Pass existing booking ID to avoid duplication
         }),
       });
 

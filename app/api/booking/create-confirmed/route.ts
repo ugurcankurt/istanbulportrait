@@ -96,7 +96,7 @@ export async function POST(request: NextRequest) {
           email: customerEmail,
           name: customerName,
           phone: customerPhone,
-        })
+        }, { onConflict: "email" })
         .select()
         .single();
 
@@ -109,25 +109,58 @@ export async function POST(request: NextRequest) {
         // Continue even if customer upsert fails for demo mode compatibility
       }
 
-      // Create confirmed booking in Supabase (payment already successful)
-      const { data: booking, error } = await supabaseAdmin
-        .from("bookings")
-        .insert({
-          package_id: packageId,
-          user_name: customerName,
-          user_email: customerEmail,
-          user_phone: customerPhone,
-          booking_date: bookingDate,
-          booking_time: bookingTime,
-          status: "confirmed", // Directly confirmed since payment succeeded
-          total_amount: totalAmount,
-          notes: notes || null,
-        })
-        .select()
-        .single();
+      let booking;
+      const { bookingId } = body;
+      console.log(`[CreateConfirmed] Processing booking. BookingID present: ${!!bookingId}`, { bookingId });
 
-      if (error) {
-        throw error;
+      if (bookingId) {
+        // Update existing draft booking
+        console.log(`[CreateConfirmed] Attempting update for bookingId: ${bookingId}`);
+        const { data: existingBooking, error: updateError } = await supabaseAdmin
+          .from("bookings")
+          .update({
+            status: "confirmed",
+            total_amount: totalAmount,
+            notes: notes || null,
+            // Update other fields in case they changed during checkout
+            user_name: customerName,
+            user_phone: customerPhone,
+            booking_date: bookingDate,
+            booking_time: bookingTime,
+          })
+          .eq("id", bookingId)
+          .select()
+          .single();
+
+        if (updateError) {
+          console.error(`[CreateConfirmed] Update failed for bookingId ${bookingId}:`, updateError);
+          throw updateError;
+        }
+        booking = existingBooking;
+        console.log(`[CreateConfirmed] Update success for bookingId: ${bookingId}`);
+      } else {
+        console.log(`[CreateConfirmed] No bookingId provided, creating new booking.`);
+        // Create confirmed booking in Supabase (fallback)
+        const { data: newBooking, error: insertError } = await supabaseAdmin
+          .from("bookings")
+          .insert({
+            package_id: packageId,
+            user_name: customerName,
+            user_email: customerEmail,
+            user_phone: customerPhone,
+            booking_date: bookingDate,
+            booking_time: bookingTime,
+            status: "confirmed", // Directly confirmed since payment succeeded
+            total_amount: totalAmount,
+            notes: notes || null,
+          })
+          .select()
+          .single();
+
+        if (insertError) {
+          throw insertError;
+        }
+        booking = newBooking;
       }
 
       // Record payment in database (linking to booking)

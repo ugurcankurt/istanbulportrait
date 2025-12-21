@@ -156,10 +156,8 @@ export function BookingModal({
 
         // --- NEW: Save Draft Booking to Supabase (Background) ---
         try {
-          // We don't await this to keep UI snappy, or we use a fire-and-forget approach
-          // But to be safe, let's trigger it. We don't strictly need the ID for checkout
-          // as we want to be non-invasive to existing flow.
-          fetch("/api/booking/create-draft", {
+          // Wait for draft creation to get the booking ID
+          const draftResponse = await fetch("/api/booking/create-draft", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -167,23 +165,34 @@ export function BookingModal({
               totalAmount: packagePrices[selectedPackage],
               locale, // Send current locale
             }),
-          }).catch(err => console.error("Draft creation failed silently:", err));
+          });
+
+          const draftResult = await draftResponse.json();
+          if (draftResult.bookingId) {
+            // Add bookingId to the data stored in session
+            const bookingDataWithId = {
+              ...data,
+              bookingId: draftResult.bookingId,
+            };
+            sessionStorage.setItem("bookingData", JSON.stringify(bookingDataWithId));
+          } else {
+            sessionStorage.setItem("bookingData", JSON.stringify(data));
+          }
         } catch (e) {
-          // Ignore draft errors to not block checkout
+          // Ignore draft errors to not block checkout, just store form data
+          console.error("Draft creation error:", e);
+          sessionStorage.setItem("bookingData", JSON.stringify(data));
         }
-      }
 
-      // Store booking data in sessionStorage for checkout page
-      sessionStorage.setItem("bookingData", JSON.stringify(data));
+        // Navigate to checkout page
+        try {
+          router.push(`/checkout?package=${selectedPackage}`);
 
-      // Navigate to checkout page
-      try {
-        router.push(`/checkout?package=${selectedPackage}`);
-
-        // Close modal
-        onClose();
-      } catch (error) {
-        // Navigation error
+          // Close modal
+          onClose();
+        } catch (error) {
+          // Navigation error
+        }
       }
     },
     (errors) => {

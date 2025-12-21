@@ -67,7 +67,7 @@ export async function POST(request: NextRequest) {
                     email: customerEmail,
                     name: customerName,
                     phone: customerPhone,
-                })
+                }, { onConflict: "email" })
                 .select()
                 .single();
 
