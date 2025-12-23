@@ -15,7 +15,7 @@ export function MicrosoftClarity() {
   return (
     <Script
       id="ms-clarity"
-      strategy="afterInteractive"
+      strategy="lazyOnload"
       // biome-ignore lint/security/noDangerouslySetInnerHtml: Microsoft Clarity requires inline script
       dangerouslySetInnerHTML={{
         __html: `

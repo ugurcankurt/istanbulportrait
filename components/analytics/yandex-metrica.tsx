@@ -44,7 +44,7 @@ export function YandexMetrica({
     <>
       <Script
         id="yandex-metrica"
-        strategy="afterInteractive"
+        strategy="lazyOnload"
         // biome-ignore lint/security/noDangerouslySetInnerHtml: Yandex Metrica requires inline script
         dangerouslySetInnerHTML={{
           __html: `

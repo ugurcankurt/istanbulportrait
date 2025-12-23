@@ -24,7 +24,10 @@ import { ThemeProvider } from "next-themes";
 import { Footer } from "@/components/footer";
 import { Navigation } from "@/components/navigation";
 import { Toaster } from "@/components/ui/sonner";
-import { WhatsAppButton } from "@/components/whatsapp-button";
+import dynamic from "next/dynamic";
+const WhatsAppButton = dynamic(
+  () => import("@/components/whatsapp-button").then((mod) => mod.WhatsAppButton)
+);
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -43,7 +46,6 @@ export const viewport = {
   ],
   width: "device-width",
   initialScale: 1,
-  maximumScale: 1,
 };
 
 export async function generateMetadata({
