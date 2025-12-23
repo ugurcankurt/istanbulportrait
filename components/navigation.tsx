@@ -1,6 +1,5 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { Globe, Menu } from "lucide-react";
 import Image from "next/image";
 import { useParams } from "next/navigation";
@@ -70,12 +69,7 @@ export function Navigation() {
   };
 
   return (
-    <motion.header
-      initial={{ opacity: 0, y: -20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6, ease: "easeOut" }}
-      className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60"
-    >
+    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 animate-fade-in-down">
       <div className="container mx-auto flex h-14 sm:h-16 items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Logo */}
         <Link href="/" className="flex items-center w-40 sm:w-48">
@@ -99,18 +93,15 @@ export function Navigation() {
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center space-x-4 lg:space-x-6 text-sm font-medium">
           {navItems.map((item, index) => (
-            <motion.div
+            <div
               key={item.href}
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.95 }}
+              className="animate-fade-in-down"
+              style={{ animationDelay: `${index * 100}ms` }}
             >
               <Link
                 href={item.href}
                 className={cn(
-                  "relative transition-colors hover:text-foreground/80",
+                  "relative transition-all duration-200 hover:text-foreground/80 hover:scale-110",
                   pathname === item.href
                     ? "text-foreground"
                     : "text-foreground/60",
@@ -118,14 +109,10 @@ export function Navigation() {
               >
                 {item.label}
                 {pathname === item.href && (
-                  <motion.div
-                    layoutId="activeNav"
-                    className="absolute -bottom-1 left-0 right-0 h-0.5 bg-primary"
-                    transition={{ type: "spring", stiffness: 380, damping: 30 }}
-                  />
+                  <div className="absolute -bottom-1 left-0 right-0 h-0.5 bg-primary transition-all duration-300" />
                 )}
               </Link>
-            </motion.div>
+            </div>
           ))}
         </nav>
 
@@ -133,18 +120,15 @@ export function Navigation() {
           {/* Language Switcher */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <motion.button
-                whileHover={{ scale: 1.1, rotate: 10 }}
-                whileTap={{ scale: 0.9 }}
-                transition={{ type: "spring", stiffness: 400, damping: 17 }}
+              <button
                 className={cn(
                   buttonVariants({ variant: "ghost", size: "sm" }),
-                  "h-8 w-8 px-0"
+                  "h-8 w-8 px-0 hover:scale-110 hover:rotate-12 transition-transform duration-200"
                 )}
                 aria-label="Change language"
               >
                 <Globe className="h-4 w-4" />
-              </motion.button>
+              </button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               {locales.map((loc) => (
@@ -166,24 +150,18 @@ export function Navigation() {
           {/* Mobile Menu */}
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
             <SheetTrigger asChild className="md:hidden">
-              <motion.button
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.9 }}
-                transition={{ type: "spring", stiffness: 400, damping: 17 }}
+              <button
                 className={cn(
                   buttonVariants({ variant: "ghost", size: "sm" }),
-                  "h-8 w-8 px-0 relative"
+                  "h-8 w-8 px-0 relative hover:scale-110 transition-transform duration-200"
                 )}
                 aria-label="Open menu"
               >
-                <motion.div
-                  animate={isOpen ? { rotate: 180 } : { rotate: 0 }}
-                  transition={{ duration: 0.3 }}
-                >
+                <div className={cn("transition-transform duration-300", isOpen && "rotate-180")}>
                   <Menu className="h-4 w-4" />
-                </motion.div>
+                </div>
                 <span className="sr-only">Open menu</span>
-              </motion.button>
+              </button>
             </SheetTrigger>
             <SheetContent side="right" className="w-80 p-0">
               <SheetHeader className="p-6 pb-4 bg-muted/30">
@@ -213,18 +191,15 @@ export function Navigation() {
 
               <nav className="flex flex-col p-6 space-y-2">
                 {navItems.map((item, index) => (
-                  <motion.div
+                  <div
                     key={item.href}
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.3, delay: index * 0.1 }}
-                    whileHover={{ scale: 1.02, x: 4 }}
-                    whileTap={{ scale: 0.98 }}
+                    className="animate-slide-in-right"
+                    style={{ animationDelay: `${index * 100}ms` }}
                   >
                     <Link
                       href={item.href}
                       className={cn(
-                        "flex items-center px-4 py-4 rounded-lg transition-all duration-200 group",
+                        "flex items-center px-4 py-4 rounded-lg transition-all duration-200 group hover:scale-[1.02] hover:translate-x-1",
                         pathname === item.href
                           ? "bg-primary text-primary-foreground shadow-sm"
                           : "hover:bg-muted/50",
@@ -235,13 +210,13 @@ export function Navigation() {
                         {item.label}
                       </span>
                     </Link>
-                  </motion.div>
+                  </div>
                 ))}
               </nav>
             </SheetContent>
           </Sheet>
         </div>
       </div>
-    </motion.header>
+    </header>
   );
 }

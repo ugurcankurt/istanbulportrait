@@ -1,6 +1,5 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { Clock, Mail, MapPin, Phone } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
@@ -14,14 +13,9 @@ export function ContactSection() {
   return (
     <section className="py-12 sm:py-16 lg:py-24 bg-gradient-to-b from-background to-muted/20">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 mx-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 mx-auto stagger-children">
           {/* Quick Booking CTA */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            whileHover={{ scale: 1.05 }}
-          >
+          <div className="hover-scale">
             <Card className="h-full flex flex-col">
               <CardHeader className="px-4 sm:px-5 lg:px-6 pt-4 sm:pt-5 lg:pt-6 pb-2">
                 <CardTitle className="text-lg sm:text-xl lg:text-2xl text-center lg:text-left">
@@ -75,15 +69,10 @@ export function ContactSection() {
                 </div>
               </CardContent>
             </Card>
-          </motion.div>
+          </div>
 
           {/* What to Expect & Additional Info */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-            whileHover={{ scale: 1.05 }}
-          >
+          <div className="hover-scale">
             <Card className="h-full flex flex-col">
               <CardHeader className="px-4 sm:px-5 lg:px-6 pt-4 sm:pt-5 lg:pt-6 pb-2">
                 <CardTitle className="text-lg sm:text-xl text-center lg:text-left">
@@ -133,15 +122,10 @@ export function ContactSection() {
                 </div>
               </CardContent>
             </Card>
-          </motion.div>
+          </div>
 
           {/* Contact Information */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.6 }}
-            whileHover={{ scale: 1.05 }}
-          >
+          <div className="hover-scale">
             <Card className="h-full flex flex-col">
               <CardHeader className="px-4 sm:px-5 lg:px-6 pt-4 sm:pt-5 lg:pt-6 pb-2">
                 <CardTitle className="text-lg sm:text-xl text-center lg:text-left">
@@ -206,7 +190,7 @@ export function ContactSection() {
                 </div>
               </CardContent>
             </Card>
-          </motion.div>
+          </div>
         </div>
       </div>
     </section>

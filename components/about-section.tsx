@@ -1,6 +1,5 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { Award, Camera, Heart, MapPin, Star, Users } from "lucide-react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
@@ -57,13 +56,7 @@ export function AboutSection() {
         {/* Main Content */}
         <div className="grid lg:grid-cols-2 gap-8 sm:gap-12 lg:gap-16 items-center mx-auto mb-12 sm:mb-16 lg:mb-20">
           {/* Image */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            whileHover={{ scale: 1.05 }}
-            className="relative"
-          >
+          <div className="relative animate-scale-in hover-scale">
             <div className="relative aspect-[4/5] rounded-2xl overflow-hidden">
               <Image
                 src="/istanbulportprat_ugur_cankurt.webp"
@@ -95,15 +88,10 @@ export function AboutSection() {
             <div className="absolute -bottom-2 sm:-bottom-4 -right-2 sm:-right-4 bg-primary text-primary-foreground p-3 sm:p-4 rounded-lg shadow-lg">
               <Camera className="w-6 h-6 sm:w-8 sm:h-8" />
             </div>
-          </motion.div>
+          </div>
 
           {/* Content */}
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-            className="space-y-4 sm:space-y-6"
-          >
+          <div className="space-y-4 sm:space-y-6 animate-fade-in-up animation-delay-200">
             <div className="space-y-3">
               <p className="text-sm sm:text-base lg:text-lg leading-relaxed">
                 {t("description")}
@@ -143,24 +131,13 @@ export function AboutSection() {
                 <Link href="/packages">{tui("view_my_work")}</Link>
               </Button>
             </div>
-          </motion.div>
+          </div>
         </div>
 
         {/* Stats */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.6 }}
-          className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 mx-auto mb-12 sm:mb-16 lg:mb-20"
-        >
-          {stats.map((stat, index) => (
-            <motion.div
-              key={stat.label}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.8 + index * 0.1 }}
-              whileHover={{ scale: 1.05 }}
-            >
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 mx-auto mb-12 sm:mb-16 lg:mb-20 stagger-children">
+          {stats.map((stat) => (
+            <div key={stat.label} className="hover-scale">
               <Card className="text-center p-4 sm:p-6 lg:p-8">
                 <CardContent className="p-0">
                   <div className="w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 mx-auto mb-3 sm:mb-4 rounded-full bg-primary/10 flex items-center justify-center">
@@ -174,30 +151,19 @@ export function AboutSection() {
                   </p>
                 </CardContent>
               </Card>
-            </motion.div>
+            </div>
           ))}
-        </motion.div>
+        </div>
 
         {/* Highlights */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 1.0 }}
-          className="mx-auto"
-        >
+        <div className="mx-auto animate-fade-in-up">
           <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-center mb-8 sm:mb-10 lg:mb-12">
             {taboutHighlights("title")}
           </h2>
 
-          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
-            {highlights.map((highlight, index) => (
-              <motion.div
-                key={highlight.title}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 1.2 + index * 0.1 }}
-                whileHover={{ scale: 1.05 }}
-              >
+          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 stagger-children">
+            {highlights.map((highlight) => (
+              <div key={highlight.title} className="hover-scale">
                 <Card className="text-center p-4 sm:p-5 lg:p-6">
                   <CardContent className="p-0">
                     <div className="w-10 h-10 sm:w-12 sm:h-12 mx-auto mb-3 sm:mb-4 rounded-full bg-primary/10 flex items-center justify-center">
@@ -211,20 +177,14 @@ export function AboutSection() {
                     </p>
                   </CardContent>
                 </Card>
-              </motion.div>
+              </div>
             ))}
           </div>
-        </motion.div>
+        </div>
 
         {/* CTA */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 1.4 }}
-          whileHover={{ scale: 1.02 }}
-          className="text-center mt-12 sm:mt-16 lg:mt-20"
-        >
-          <div className="bg-muted/30 rounded-lg sm:rounded-xl lg:rounded-2xl p-6 sm:p-8 lg:p-12 mx-auto">
+        <div className="text-center mt-12 sm:mt-16 lg:mt-20 animate-fade-in-up animation-delay-400">
+          <div className="bg-muted/30 rounded-lg sm:rounded-xl lg:rounded-2xl p-6 sm:p-8 lg:p-12 mx-auto hover-scale">
             <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold mb-3 sm:mb-4">
               {taboutCta("title")}
             </h2>
@@ -249,7 +209,7 @@ export function AboutSection() {
               </Button>
             </div>
           </div>
-        </motion.div>
+        </div>
       </div>
     </section>
   );

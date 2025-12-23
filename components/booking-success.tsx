@@ -1,6 +1,5 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { Calendar, CheckCircle, Clock, Mail, Phone } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useEffect } from "react";
@@ -51,28 +50,14 @@ export function BookingSuccess({
 
   return (
     <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-24 max-w-6xl">
-      <motion.div
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.6 }}
-      >
+      <div className="animate-scale-in">
         <Card className="shadow-lg">
           <CardHeader className="text-center pb-6 sm:pb-8">
-            <motion.div
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              transition={{
-                type: "spring",
-                stiffness: 260,
-                damping: 20,
-                delay: 0.2,
-              }}
-              className="mx-auto mb-4 sm:mb-6"
-            >
+            <div className="mx-auto mb-4 sm:mb-6 animate-scale-in animation-delay-200">
               <div className="w-16 h-16 sm:w-20 sm:h-20 bg-primary rounded-full flex items-center justify-center">
                 <CheckCircle className="w-8 h-8 sm:w-10 sm:h-10 text-primary-foreground" />
               </div>
-            </motion.div>
+            </div>
 
             <CardTitle className="text-2xl sm:text-3xl font-bold mb-3 sm:mb-4">
               {t("success.title")}
@@ -290,7 +275,7 @@ export function BookingSuccess({
             </div>
           </CardContent>
         </Card>
-      </motion.div>
+      </div>
     </div>
   );
 }

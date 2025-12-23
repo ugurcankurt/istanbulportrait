@@ -1,6 +1,5 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { Camera, Clock, MapPin, ArrowRight } from "lucide-react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
@@ -18,12 +17,7 @@ export function LocationCard({ location, index }: LocationCardProps) {
     const t = useTranslations("locations");
 
     return (
-        <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: index * 0.08 }}
-            className="h-full"
-        >
+        <div className="h-full animate-fade-in-up" style={{ animationDelay: `${index * 80}ms` }}>
             <Link
                 href={{
                     pathname: "/locations/[slug]" as const,
@@ -31,7 +25,7 @@ export function LocationCard({ location, index }: LocationCardProps) {
                 }}
                 className="block group h-full"
             >
-                <Card className="overflow-hidden h-full transition-all duration-300 hover:shadow-xl hover:shadow-primary/10 hover:border-primary/30 border-border/50 bg-card/80 backdrop-blur-sm py-0 gap-0">
+                <Card className="overflow-hidden h-full transition-all duration-300 hover:shadow-xl hover:shadow-primary/10 hover:border-primary/30 border-border/50 bg-card/80 backdrop-blur-sm py-0 gap-0 hover-scale">
                     {/* Image Container - More compact aspect ratio */}
                     <div className="relative aspect-[16/10] sm:aspect-[4/3] overflow-hidden">
                         <Image
@@ -99,7 +93,6 @@ export function LocationCard({ location, index }: LocationCardProps) {
                     </CardContent>
                 </Card>
             </Link>
-        </motion.div>
+        </div>
     );
 }
-

@@ -1,6 +1,5 @@
 "use client";
 
-import { AnimatePresence, motion } from "framer-motion";
 import { MessageCircle, X } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useCallback, useEffect, useState } from "react";
@@ -24,6 +23,7 @@ export function WhatsAppButton({
   const [mounted, setMounted] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [isDismissed, setIsDismissed] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
 
   // Intersection Observer for scroll-based animation
   const { ref, inView } = useInView({
@@ -66,6 +66,13 @@ export function WhatsAppButton({
     };
   }, [isChatOpen]);
 
+  // Handle visibility animation when in view
+  useEffect(() => {
+    if (inView) {
+      setIsVisible(true);
+    }
+  }, [inView]);
+
   const toggleChat = useCallback(() => {
     setIsChatOpen((prev) => {
       const newState = !prev;
@@ -86,14 +93,12 @@ export function WhatsAppButton({
         whatsappNumber={phoneNumber}
       />
 
-      <motion.div
+      <div
         ref={ref}
-        initial={{ opacity: 0, y: 20 }}
-        animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-        transition={{ duration: 0.5 }}
         dir="ltr"
         className={cn(
-          "fixed z-50 flex flex-col items-end gap-4",
+          "fixed z-50 flex flex-col items-end gap-4 transition-all duration-500",
+          isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5",
           mounted && isMobile ? "bottom-4 right-4" : "bottom-8 right-8",
           className,
         )}
@@ -101,60 +106,54 @@ export function WhatsAppButton({
         onMouseLeave={() => setIsHovered(false)}
       >
         {/* Chat Bubble Notification */}
-        <AnimatePresence>
-          {(showBubble || isHovered) && !isChatOpen && !isDismissed && (
-            <motion.div
-              initial={{ opacity: 0, x: 20, scale: 0.8 }}
-              animate={{ opacity: 1, x: 0, scale: 1 }}
-              exit={{ opacity: 0, x: 20, scale: 0.8 }}
-              className={cn(
-                "bg-popover text-popover-foreground",
-                "px-4 py-3 rounded-2xl rounded-tr-sm shadow-xl border border-border",
-                "flex items-start gap-3 max-w-[280px]",
-                "origin-bottom-right",
-                "cursor-pointer" // Make bubble clickable
-              )}
-              onClick={toggleChat}
+        {(showBubble || isHovered) && !isChatOpen && !isDismissed && (
+          <div
+            className={cn(
+              "bg-popover text-popover-foreground",
+              "px-4 py-3 rounded-2xl rounded-tr-sm shadow-xl border border-border",
+              "flex items-start gap-3 max-w-[280px]",
+              "origin-bottom-right",
+              "cursor-pointer",
+              "animate-scale-in"
+            )}
+            onClick={toggleChat}
+          >
+            <div className="relative shrink-0">
+              <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center text-green-600">
+                <MessageCircle size={20} fill="currentColor" />
+              </div>
+              <span className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-background rounded-full"></span>
+            </div>
+            <div
+              className="flex-1 min-w-0 text-left rtl:text-right"
+              dir={t("direction") === "rtl" ? "rtl" : "ltr"}
             >
-              <div className="relative shrink-0">
-                <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center text-green-600">
-                  <MessageCircle size={20} fill="currentColor" />
-                </div>
-                <span className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-background rounded-full"></span>
-              </div>
-              <div
-                className="flex-1 min-w-0 text-left rtl:text-right"
-                dir={t("direction") === "rtl" ? "rtl" : "ltr"}
-              >
-                <p className="text-sm font-semibold mb-0.5">
-                  {t("notification_title")}
-                </p>
-                <p className="text-xs text-muted-foreground leading-snug">
-                  {t("notification_message")}
-                </p>
-              </div>
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setShowBubble(false);
-                  setIsDismissed(true);
-                  localStorage.setItem("chat_bubble_dismissed", "true");
-                }}
-                className="p-3 -mr-2 -mt-2 text-muted-foreground hover:text-foreground hover:bg-muted/20 rounded-full transition-colors"
-                aria-label={t("close_notification")}
-              >
-                <X size={18} />
-              </button>
-            </motion.div>
-          )}
-        </AnimatePresence>
+              <p className="text-sm font-semibold mb-0.5">
+                {t("notification_title")}
+              </p>
+              <p className="text-xs text-muted-foreground leading-snug">
+                {t("notification_message")}
+              </p>
+            </div>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setShowBubble(false);
+                setIsDismissed(true);
+                localStorage.setItem("chat_bubble_dismissed", "true");
+              }}
+              className="p-3 -mr-2 -mt-2 text-muted-foreground hover:text-foreground hover:bg-muted/20 rounded-full transition-colors"
+              aria-label={t("close_notification")}
+            >
+              <X size={18} />
+            </button>
+          </div>
+        )}
 
         {/* Main Button */}
-        <motion.button
+        <button
           onClick={toggleChat}
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          className="relative group"
+          className="relative group hover:scale-105 active:scale-95 transition-transform duration-200"
         >
           {/* Pulse Effect */}
           {!isChatOpen && (
@@ -187,8 +186,8 @@ export function WhatsAppButton({
               </span>
             )}
           </div>
-        </motion.button>
-      </motion.div>
+        </button>
+      </div>
     </>
   );
 }

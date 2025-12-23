@@ -1,6 +1,5 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { Check, Clock, ExternalLink, Loader2, X } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
@@ -120,12 +119,7 @@ export function TurinvoicePayment({
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-      className="space-y-6"
-    >
+    <div className="space-y-6 animate-fade-in-up">
       {/* Status Alert */}
       <Alert
         variant={
@@ -232,6 +226,6 @@ export function TurinvoicePayment({
           🔒 {t("security_notice")}
         </p>
       </div>
-    </motion.div>
+    </div>
   );
 }

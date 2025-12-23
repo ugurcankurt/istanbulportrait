@@ -109,7 +109,6 @@ Uses React Hook Form with Zod resolvers:
 
 - **Tailwind CSS v4** with custom configuration
 - **Shadcn/UI** components (Radix-based primitives)
-- **Framer Motion** for animations
 - Theme support via `next-themes`
 
 ## Environment Variables

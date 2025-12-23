@@ -1,6 +1,5 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { Check, Clock, Image as ImageIcon, MapPin } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useEffect } from "react";
@@ -89,21 +88,18 @@ export function PackageDetails({
 
       <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-2 sm:gap-4 md:gap-6">
         {packages.map((pkg, index) => (
-          <motion.div
+          <div
             key={pkg.id}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: index * 0.1 }}
-            className="relative"
+            className="relative animate-fade-in-up"
+            style={{ animationDelay: `${index * 100}ms` }}
           >
             <Card
-              className={`h-full cursor-pointer transition-all duration-300 hover:shadow-lg flex flex-col ${
-                selectedPackage === pkg.id
+              className={`h-full cursor-pointer transition-all duration-300 hover:shadow-lg flex flex-col ${selectedPackage === pkg.id
                   ? "ring-2 ring-primary shadow-xl bg-gradient-to-b from-background to-primary/5"
                   : pkg.popular
                     ? "ring-2 ring-primary/50 shadow-lg bg-gradient-to-b from-background to-primary/5"
                     : "hover:shadow-md border-2 hover:border-primary/20"
-              }`}
+                }`}
               onClick={() => onPackageSelect(pkg.id)}
             >
               {pkg.popular && (
@@ -169,23 +165,19 @@ export function PackageDetails({
                 </div>
               </CardContent>
             </Card>
-          </motion.div>
+          </div>
         ))}
       </div>
 
       {selectedPackage && (
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-center"
-        >
+        <div className="text-center animate-fade-in-up">
           <p className="text-xs sm:text-sm text-muted-foreground mb-4">
             {tpackage("you_selected")}{" "}
             <span className="font-semibold text-primary">
               {packages.find((p) => p.id === selectedPackage)?.name}
             </span>
           </p>
-        </motion.div>
+        </div>
       )}
     </div>
   );

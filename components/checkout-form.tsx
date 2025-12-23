@@ -1,7 +1,6 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { motion } from "framer-motion";
 import {
   Check,
   Clock,
@@ -657,11 +656,7 @@ export function CheckoutForm() {
 
   return (
     <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-24 max-w-6xl">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8 }}
-      >
+      <div className="animate-fade-in-up">
         <Card className="border-0 shadow-xl">
           <CardHeader className="text-center p-6 sm:p-8 bg-gradient-to-r from-primary/5 via-background to-primary/5">
             <div className="flex items-center justify-center mb-4">
@@ -1060,7 +1055,7 @@ export function CheckoutForm() {
             </div>
           </CardContent>
         </Card>
-      </motion.div>
+      </div>
     </div>
   );
 }

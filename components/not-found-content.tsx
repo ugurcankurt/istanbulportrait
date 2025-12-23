@@ -1,6 +1,5 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { ArrowLeft, Camera, Home, MapPin } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -56,19 +55,9 @@ export function NotFoundContent({
 
       {/* Content */}
       <div className="relative z-10 container mx-auto px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16">
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="text-center max-w-xs sm:max-w-md md:max-w-lg lg:max-w-2xl xl:max-w-4xl mx-auto py-8 sm:py-12 md:py-16"
-        >
+        <div className="text-center max-w-xs sm:max-w-md md:max-w-lg lg:max-w-2xl xl:max-w-4xl mx-auto py-8 sm:py-12 md:py-16 animate-fade-in-up">
           {/* Logo Section */}
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1, duration: 0.5 }}
-            className="mb-6 sm:mb-8 md:mb-10"
-          >
+          <div className="mb-6 sm:mb-8 md:mb-10 animate-fade-in-down">
             <Link href={`/${locale}`} className="inline-block group">
               <div className="relative transition-transform duration-300 group-hover:scale-105">
                 <Image
@@ -81,69 +70,39 @@ export function NotFoundContent({
                 />
               </div>
             </Link>
-          </motion.div>
+          </div>
 
           {/* 404 Number */}
-          <motion.div
-            initial={{ scale: 0.8, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ delay: 0.2, duration: 0.5 }}
-            className="mb-4 sm:mb-6 md:mb-8"
-          >
+          <div className="mb-4 sm:mb-6 md:mb-8 animate-scale-in animation-delay-200">
             <h1 className="text-6xl sm:text-7xl md:text-8xl lg:text-9xl xl:text-[10rem] font-bold text-white/20 leading-none tracking-tighter">
               404
             </h1>
-          </motion.div>
+          </div>
 
           {/* Icon */}
-          <motion.div
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            transition={{ delay: 0.4, type: "spring", stiffness: 200 }}
-            className="mb-4 sm:mb-6 md:mb-8"
-          >
+          <div className="mb-4 sm:mb-6 md:mb-8 animate-scale-in animation-delay-300">
             <div className="mx-auto w-12 h-12 sm:w-16 sm:h-16 md:w-18 md:h-18 lg:w-20 lg:h-20 bg-primary/30 rounded-full flex items-center justify-center backdrop-blur-md border border-white/30 shadow-xl">
               <Camera className="w-6 h-6 sm:w-8 sm:h-8 md:w-9 md:h-9 lg:w-10 lg:h-10 text-white" />
             </div>
-          </motion.div>
+          </div>
 
           {/* Title */}
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.6, duration: 0.5 }}
-            className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-3 sm:mb-4 md:mb-6 leading-tight"
-          >
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-3 sm:mb-4 md:mb-6 leading-tight animate-fade-in-up animation-delay-400">
             {title}
-          </motion.h2>
+          </h2>
 
           {/* Subtitle */}
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.7, duration: 0.5 }}
-            className="text-base sm:text-lg md:text-xl lg:text-2xl text-white/90 mb-2 sm:mb-3 md:mb-4 font-medium"
-          >
+          <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-white/90 mb-2 sm:mb-3 md:mb-4 font-medium animate-fade-in-up animation-delay-500">
             {subtitle}
-          </motion.p>
+          </p>
 
           {/* Description */}
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.8, duration: 0.5 }}
-            className="text-sm sm:text-base md:text-lg text-white/70 mb-6 sm:mb-8 md:mb-10 max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg mx-auto leading-relaxed"
-          >
+          <p className="text-sm sm:text-base md:text-lg text-white/70 mb-6 sm:mb-8 md:mb-10 max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg mx-auto leading-relaxed animate-fade-in-up animation-delay-600">
             {description}
-          </motion.p>
+          </p>
 
           {/* Action Buttons */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1, duration: 0.5 }}
-            className="flex flex-col sm:flex-row gap-3 sm:gap-4 md:gap-6 justify-center items-center"
-          >
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 md:gap-6 justify-center items-center animate-fade-in-up animation-delay-700">
             <Button
               asChild
               size="lg"
@@ -176,15 +135,10 @@ export function NotFoundContent({
                 </span>
               </Link>
             </Button>
-          </motion.div>
+          </div>
 
           {/* Back Link */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 1.2, duration: 0.5 }}
-            className="mt-6 sm:mt-8 md:mt-10"
-          >
+          <div className="mt-6 sm:mt-8 md:mt-10 animate-fade-in animation-delay-800">
             <Button
               variant="ghost"
               size="default"
@@ -194,8 +148,8 @@ export function NotFoundContent({
               <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
               <span className="text-sm sm:text-base">{goBack}</span>
             </Button>
-          </motion.div>
-        </motion.div>
+          </div>
+        </div>
       </div>
 
       {/* Decorative Elements - Hidden on Mobile */}

@@ -3,7 +3,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
 import { ar, enUS, es, ru } from "date-fns/locale";
-import { motion } from "framer-motion";
 import {
   Calendar as CalendarIcon,
   Check,
@@ -359,12 +358,7 @@ export function BookingModal({
 
                             {/* Time Selection */}
                             {showTimeSelection && (
-                              <motion.div
-                                initial={{ opacity: 0, y: -10 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ duration: 0.3, ease: "easeOut" }}
-                                className="space-y-3"
-                              >
+                              <div className="space-y-3 animate-fade-in-up">
                                 <div className="flex items-center gap-2 text-sm text-muted-foreground justify-center">
                                   <div className="h-px bg-border flex-1" />
                                   <Clock className="w-4 h-4" />
@@ -404,7 +398,7 @@ export function BookingModal({
                                     </div>
                                   )}
                                 />
-                              </motion.div>
+                              </div>
                             )}
 
                             <FormMessage />

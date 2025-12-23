@@ -1,6 +1,5 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { Filter, Search, SlidersHorizontal } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
@@ -384,17 +383,14 @@ export function ToursPageContent({ locale }: ToursPageContentProps) {
 
       {/* Tours Grid - Widget Only */}
       {filteredTourIds.length > 0 ? (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="grid gap-4 sm:gap-6 lg:gap-8 md:grid-cols-2 lg:grid-cols-3"
+        <div
+          className="grid gap-4 sm:gap-6 lg:gap-8 md:grid-cols-2 lg:grid-cols-3 animate-fade-in"
         >
           {filteredTourIds.map((tourId, index) => (
-            <motion.div
+            <div
               key={tourId}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: index * 0.05 }}
+              className="animate-fade-in-up"
+              style={{ animationDelay: `${index * 50}ms` }}
             >
               <GetYourGuideWidget
                 tourId={tourId}
@@ -402,9 +398,9 @@ export function ToursPageContent({ locale }: ToursPageContentProps) {
                 variant="vertical"
                 className="min-h-[400px]"
               />
-            </motion.div>
+            </div>
           ))}
-        </motion.div>
+        </div>
       ) : (
         <div className="text-center py-12">
           <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">

@@ -2,7 +2,6 @@
 
 import { format } from "date-fns";
 import { ar, enUS, es, ru } from "date-fns/locale";
-import { motion } from "framer-motion";
 import { Calendar as CalendarIcon, Clock } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useState } from "react";
@@ -201,8 +200,8 @@ export function CustomerDetailsForm({
                               onSelect={(date) => {
                                 const dateString = date
                                   ? format(date, "yyyy-MM-dd", {
-                                      locale: dateFnsLocale,
-                                    })
+                                    locale: dateFnsLocale,
+                                  })
                                   : "";
                                 dateField.onChange(dateString);
                                 setShowTimeSelection(!!date);
@@ -252,12 +251,7 @@ export function CustomerDetailsForm({
 
                           {/* Time Selection - Appears below calendar */}
                           {showTimeSelection && (
-                            <motion.div
-                              initial={{ opacity: 0, y: -10 }}
-                              animate={{ opacity: 1, y: 0 }}
-                              transition={{ duration: 0.3, ease: "easeOut" }}
-                              className="space-y-3"
-                            >
+                            <div className="space-y-3 animate-fade-in">
                               <div className="flex items-center gap-2 text-sm text-muted-foreground justify-center">
                                 <div className="h-px bg-border flex-1" />
                                 <Clock className="w-4 h-4" />
@@ -295,7 +289,7 @@ export function CustomerDetailsForm({
                                   </div>
                                 )}
                               />
-                            </motion.div>
+                            </div>
                           )}
 
                           <FormMessage />
