@@ -753,6 +753,9 @@ export function generateEnhancedLocalBusinessSchema(
         worstRating: config.rating.worstRating || 1,
       },
     }),
+    ...(config.reviews && {
+      review: config.reviews,
+    }),
     // AI Search Enhancement
     knowsAbout: config.t
       ? config.t("knowsAbout")

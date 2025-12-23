@@ -14,7 +14,9 @@ import {
   generateEnhancedLocalBusinessSchema,
   generateOrganizationSchema,
   generatePersonSchema,
+  generateReviewsSchema,
   MultipleJsonLd,
+  type ReviewData,
 } from "@/lib/structured-data";
 
 export async function generateMetadata({
@@ -45,8 +47,9 @@ export default async function HomePage({
   const { locale } = await params;
   const tSchema = await getTranslations({ locale, namespace: "seo.schema" });
 
-  // Fetch aggregate rating for schema
+  // Fetch aggregate rating and reviews for schema
   const aggregateRating = await reviewsService.getAggregateRating();
+  const reviews = await reviewsService.fetchGoogleReviews();
 
   // Create schema configuration
   const schemaConfig = createSchemaConfig(locale, {
@@ -56,6 +59,22 @@ export default async function HomePage({
       reviewCount: aggregateRating.count,
     },
   });
+
+  // Generate review schemas if available
+  if (reviews && reviews.length > 0) {
+    const reviewsData: ReviewData[] = reviews.map((review) => ({
+      author: review.author?.name || "Anonymous",
+      rating: review.rating || 5,
+      reviewBody: review.text || "",
+      datePublished: review.date || new Date().toISOString(),
+    }));
+
+    // Add top 5 reviews to schema config
+    schemaConfig.reviews = generateReviewsSchema(
+      reviewsData.slice(0, 5),
+      schemaConfig
+    );
+  }
 
   // Generate structured data schemas with AI Search optimization
   const enhancedLocalBusinessSchema =

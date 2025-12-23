@@ -87,6 +87,7 @@ export interface SchemaConfig {
     bestRating?: number;
     worstRating?: number;
   };
+  reviews?: ReviewSchema[];
 }
 
 // Review data interface
