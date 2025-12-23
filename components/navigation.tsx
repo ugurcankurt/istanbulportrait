@@ -8,7 +8,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -133,20 +133,18 @@ export function Navigation() {
           {/* Language Switcher */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <motion.div
+              <motion.button
                 whileHover={{ scale: 1.1, rotate: 10 }}
                 whileTap={{ scale: 0.9 }}
                 transition={{ type: "spring", stiffness: 400, damping: 17 }}
+                className={cn(
+                  buttonVariants({ variant: "ghost", size: "sm" }),
+                  "h-8 w-8 px-0"
+                )}
+                aria-label="Change language"
               >
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="h-8 w-8 px-0"
-                  aria-label="Change language"
-                >
-                  <Globe className="h-4 w-4" />
-                </Button>
-              </motion.div>
+                <Globe className="h-4 w-4" />
+              </motion.button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               {locales.map((loc) => (
@@ -168,26 +166,24 @@ export function Navigation() {
           {/* Mobile Menu */}
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
             <SheetTrigger asChild className="md:hidden">
-              <motion.div
+              <motion.button
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
                 transition={{ type: "spring", stiffness: 400, damping: 17 }}
+                className={cn(
+                  buttonVariants({ variant: "ghost", size: "sm" }),
+                  "h-8 w-8 px-0 relative"
+                )}
+                aria-label="Open menu"
               >
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="h-8 w-8 px-0 relative"
-                  aria-label="Open menu"
+                <motion.div
+                  animate={isOpen ? { rotate: 180 } : { rotate: 0 }}
+                  transition={{ duration: 0.3 }}
                 >
-                  <motion.div
-                    animate={isOpen ? { rotate: 180 } : { rotate: 0 }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    <Menu className="h-4 w-4" />
-                  </motion.div>
-                  <span className="sr-only">Open menu</span>
-                </Button>
-              </motion.div>
+                  <Menu className="h-4 w-4" />
+                </motion.div>
+                <span className="sr-only">Open menu</span>
+              </motion.button>
             </SheetTrigger>
             <SheetContent side="right" className="w-80 p-0">
               <SheetHeader className="p-6 pb-4 bg-muted/30">

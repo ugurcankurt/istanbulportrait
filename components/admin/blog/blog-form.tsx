@@ -31,6 +31,7 @@ import { blogFormSchema } from "@/lib/validations/blog-validations";
 import { useBlogStore } from "@/stores/blog-store";
 import type { BlogFormData, BlogPostWithRelations } from "@/types/blog";
 import { MarkdownEditor } from "./markdown-editor";
+import { ImageUpload } from "./image-upload";
 
 interface BlogFormProps {
   initialData?: BlogPostWithRelations;
@@ -77,71 +78,71 @@ export function BlogForm({
     resolver: zodResolver(blogFormSchema),
     defaultValues: initialData
       ? {
-          slug: initialData.slug,
-          status: initialData.status,
-          featured_image: initialData.featured_image,
-          published_at: initialData.published_at,
-          meta_keywords: initialData.meta_keywords,
-          is_featured: initialData.is_featured,
-          translations: {
-            en: {
-              title: (initialData as any).translations?.en?.title || "",
-              excerpt: (initialData as any).translations?.en?.excerpt || "",
-              content: (initialData as any).translations?.en?.content || "",
-              meta_description:
-                (initialData as any).translations?.en?.meta_description || "",
-            },
-            ar: {
-              title: (initialData as any).translations?.ar?.title || "",
-              excerpt: (initialData as any).translations?.ar?.excerpt || "",
-              content: (initialData as any).translations?.ar?.content || "",
-              meta_description:
-                (initialData as any).translations?.ar?.meta_description || "",
-            },
-            ru: {
-              title: (initialData as any).translations?.ru?.title || "",
-              excerpt: (initialData as any).translations?.ru?.excerpt || "",
-              content: (initialData as any).translations?.ru?.content || "",
-              meta_description:
-                (initialData as any).translations?.ru?.meta_description || "",
-            },
-            es: {
-              title: (initialData as any).translations?.es?.title || "",
-              excerpt: (initialData as any).translations?.es?.excerpt || "",
-              content: (initialData as any).translations?.es?.content || "",
-              meta_description:
-                (initialData as any).translations?.es?.meta_description || "",
-            },
-            zh: {
-              title: (initialData as any).translations?.zh?.title || "",
-              excerpt: (initialData as any).translations?.zh?.excerpt || "",
-              content: (initialData as any).translations?.zh?.content || "",
-              meta_description:
-                (initialData as any).translations?.zh?.meta_description || "",
-            },
+        slug: initialData.slug,
+        status: initialData.status,
+        featured_image: initialData.featured_image,
+        published_at: initialData.published_at,
+        meta_keywords: initialData.meta_keywords,
+        is_featured: initialData.is_featured,
+        translations: {
+          en: {
+            title: (initialData as any).translations?.en?.title || "",
+            excerpt: (initialData as any).translations?.en?.excerpt || "",
+            content: (initialData as any).translations?.en?.content || "",
+            meta_description:
+              (initialData as any).translations?.en?.meta_description || "",
           },
-          category_ids:
-            (initialData as any).categories?.map((c: any) => c.category.id) ||
-            [],
-          tag_ids: (initialData as any).tags?.map((t: any) => t.tag.id) || [],
-        }
-      : {
-          slug: "",
-          status: "draft",
-          featured_image: null,
-          published_at: null,
-          meta_keywords: [],
-          is_featured: false,
-          translations: {
-            en: { title: "", excerpt: "", content: "", meta_description: "" },
-            ar: { title: "", excerpt: "", content: "", meta_description: "" },
-            ru: { title: "", excerpt: "", content: "", meta_description: "" },
-            es: { title: "", excerpt: "", content: "", meta_description: "" },
-            zh: { title: "", excerpt: "", content: "", meta_description: "" },
+          ar: {
+            title: (initialData as any).translations?.ar?.title || "",
+            excerpt: (initialData as any).translations?.ar?.excerpt || "",
+            content: (initialData as any).translations?.ar?.content || "",
+            meta_description:
+              (initialData as any).translations?.ar?.meta_description || "",
           },
-          category_ids: [],
-          tag_ids: [],
+          ru: {
+            title: (initialData as any).translations?.ru?.title || "",
+            excerpt: (initialData as any).translations?.ru?.excerpt || "",
+            content: (initialData as any).translations?.ru?.content || "",
+            meta_description:
+              (initialData as any).translations?.ru?.meta_description || "",
+          },
+          es: {
+            title: (initialData as any).translations?.es?.title || "",
+            excerpt: (initialData as any).translations?.es?.excerpt || "",
+            content: (initialData as any).translations?.es?.content || "",
+            meta_description:
+              (initialData as any).translations?.es?.meta_description || "",
+          },
+          zh: {
+            title: (initialData as any).translations?.zh?.title || "",
+            excerpt: (initialData as any).translations?.zh?.excerpt || "",
+            content: (initialData as any).translations?.zh?.content || "",
+            meta_description:
+              (initialData as any).translations?.zh?.meta_description || "",
+          },
         },
+        category_ids:
+          (initialData as any).categories?.map((c: any) => c.category.id) ||
+          [],
+        tag_ids: (initialData as any).tags?.map((t: any) => t.tag.id) || [],
+      }
+      : {
+        slug: "",
+        status: "draft",
+        featured_image: null,
+        published_at: null,
+        meta_keywords: [],
+        is_featured: false,
+        translations: {
+          en: { title: "", excerpt: "", content: "", meta_description: "" },
+          ar: { title: "", excerpt: "", content: "", meta_description: "" },
+          ru: { title: "", excerpt: "", content: "", meta_description: "" },
+          es: { title: "", excerpt: "", content: "", meta_description: "" },
+          zh: { title: "", excerpt: "", content: "", meta_description: "" },
+        },
+        category_ids: [],
+        tag_ids: [],
+      },
   });
 
   // Auto-generate slug from English title
@@ -250,16 +251,16 @@ export function BlogForm({
                 name="featured_image"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Featured Image URL</FormLabel>
+                    <FormLabel>Featured Image</FormLabel>
                     <FormControl>
-                      <Input
-                        {...field}
-                        value={field.value || ""}
-                        placeholder="https://example.com/image.jpg"
+                      <ImageUpload
+                        value={field.value}
+                        onChange={field.onChange}
+                        onRemove={() => field.onChange(null)}
                       />
                     </FormControl>
                     <FormDescription>
-                      Full URL to the featured image
+                      Upload the main image for this post. Auto-converted to WebP.
                     </FormDescription>
                     <FormMessage />
                   </FormItem>

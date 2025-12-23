@@ -3,6 +3,7 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import ReactMarkdown from "react-markdown";
+import rehypeRaw from "rehype-raw";
 import remarkGfm from "remark-gfm";
 import { BlogAuthor } from "@/components/blog-author";
 import { BlogSummary } from "@/components/blog-summary";
@@ -199,7 +200,10 @@ export default async function BlogPostPage({
 
           {/* Content */}
           <div className="prose prose-lg dark:prose-invert max-w-none">
-            <ReactMarkdown remarkPlugins={[remarkGfm]}>
+            <ReactMarkdown
+              remarkPlugins={[remarkGfm]}
+              rehypePlugins={[rehypeRaw]}
+            >
               {post.translation.content}
             </ReactMarkdown>
           </div>

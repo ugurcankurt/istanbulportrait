@@ -26,28 +26,7 @@ export function ReviewsClient({
 }: ReviewsClientProps) {
   const t = useTranslations("reviews");
 
-  // Responsive text truncation based on screen size
-  const getResponsiveText = (text: string) => {
-    // Server-side fallback - return original text
-    if (typeof window === "undefined") return text;
 
-    const screenWidth = window.innerWidth;
-    let maxLength = 150; // default
-
-    if (screenWidth < 640)
-      maxLength = 120; // mobile
-    else if (screenWidth < 1024)
-      maxLength = 140; // tablet
-    else maxLength = 160; // desktop
-
-    if (text.length <= maxLength) return text;
-
-    const truncated = text.substring(0, maxLength);
-    const lastSpace = truncated.lastIndexOf(" ");
-
-    if (lastSpace === -1) return truncated + "...";
-    return truncated.substring(0, lastSpace) + "...";
-  };
 
   const renderStars = (rating: number, size: "sm" | "md" | "lg" = "md") => {
     const sizeClasses = {
@@ -62,8 +41,8 @@ export function ReviewsClient({
           <Star
             key={star}
             className={`${sizeClasses[size]} ${star <= rating
-                ? "fill-yellow-400 text-yellow-400 drop-shadow-sm"
-                : "fill-gray-300 text-gray-300"
+              ? "fill-yellow-400 text-yellow-400 drop-shadow-sm"
+              : "fill-gray-300 text-gray-300"
               }`}
           />
         ))}
@@ -186,8 +165,8 @@ export function ReviewsClient({
                             {/* Quote */}
                             <blockquote className="text-sm leading-relaxed text-muted-foreground italic font-medium relative pl-4 min-h-[4rem] flex items-center">
                               <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-border" />
-                              <span className="relative z-10">
-                                "{getResponsiveText(review.text)}"
+                              <span className="relative z-10 line-clamp-4 md:line-clamp-5">
+                                "{review.text}"
                               </span>
                             </blockquote>
                           </div>
