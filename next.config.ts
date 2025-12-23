@@ -38,7 +38,7 @@ const nextConfig: NextConfig = {
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384, 512],
     qualities: [75, 85, 90, 95, 100],
-    unoptimized: false, // Ensure optimization is enabled
+    unoptimized: true, // Disable Vercel Image Optimization (using static WebP files)
   },
   experimental: {
     optimizePackageImports: ["lucide-react", "@radix-ui/react-icons"],
