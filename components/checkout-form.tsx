@@ -790,7 +790,7 @@ export function CheckoutForm() {
                     >
                       <div className="h-12 sm:h-14 flex items-center justify-center mb-2 relative w-full">
                         <Image
-                          src="/turinvoice_logo.png"
+                          src="/turinvoice_logo.webp"
                           alt="Turinvoice"
                           fill
                           className="object-contain"
@@ -949,7 +949,7 @@ export function CheckoutForm() {
                         >
                           <div className="h-14 sm:h-16 flex items-center justify-center mb-3">
                             <img
-                              src="/turinvoice_logo.png"
+                              src="/turinvoice_logo.webp"
                               alt="Turinvoice"
                               className="h-10 sm:h-12 w-auto max-w-full object-contain"
                             />

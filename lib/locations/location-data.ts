@@ -28,10 +28,10 @@ export const LOCATIONS: LocationData[] = [
         wikidataId: "Q181862",
         coordinates: { lat: 41.0256, lng: 28.9744 },
         images: {
-            hero: "/images/locations/galata-tower-hero.jpg",
+            hero: "/images/locations/galata-tower-hero.webp",
             gallery: [
-                "/images/locations/galata-tower-1.jpg",
-                "/images/locations/galata-tower-2.jpg",
+                "/images/locations/galata-tower-1.webp",
+                "/images/locations/galata-tower-2.webp",
             ],
         },
         bestTime: "sunset",
@@ -44,10 +44,10 @@ export const LOCATIONS: LocationData[] = [
         wikidataId: "Q2313872",
         coordinates: { lat: 41.0303, lng: 28.9481 },
         images: {
-            hero: "/images/locations/balat-hero.jpg",
+            hero: "/images/locations/balat-hero.webp",
             gallery: [
-                "/images/locations/balat-1.jpg",
-                "/images/locations/balat-2.jpg",
+                "/images/locations/balat-1.webp",
+                "/images/locations/balat-2.webp",
             ],
         },
         bestTime: "morning",
@@ -60,10 +60,10 @@ export const LOCATIONS: LocationData[] = [
         wikidataId: "Q1662306",
         coordinates: { lat: 41.0479, lng: 29.0273 },
         images: {
-            hero: "/images/locations/ortakoy-hero.jpg",
+            hero: "/images/locations/ortakoy-hero.webp",
             gallery: [
-                "/images/locations/ortakoy-1.jpg",
-                "/images/locations/ortakoy-2.jpg",
+                "/images/locations/ortakoy-1.webp",
+                "/images/locations/ortakoy-2.webp",
             ],
         },
         bestTime: "sunset",
@@ -76,10 +76,10 @@ export const LOCATIONS: LocationData[] = [
         wikidataId: "Q12506",
         coordinates: { lat: 41.0086, lng: 28.9802 },
         images: {
-            hero: "/images/locations/hagia-sophia-hero.jpg",
+            hero: "/images/locations/hagia-sophia-hero.webp",
             gallery: [
-                "/images/locations/hagia-sophia-1.jpg",
-                "/images/locations/hagia-sophia-2.jpg",
+                "/images/locations/hagia-sophia-1.webp",
+                "/images/locations/hagia-sophia-2.webp",
             ],
         },
         bestTime: "early_morning",
@@ -92,10 +92,10 @@ export const LOCATIONS: LocationData[] = [
         wikidataId: "Q194342",
         coordinates: { lat: 41.0054, lng: 28.9768 },
         images: {
-            hero: "/images/locations/blue-mosque-hero.jpg",
+            hero: "/images/locations/blue-mosque-hero.webp",
             gallery: [
-                "/images/locations/blue-mosque-1.jpg",
-                "/images/locations/blue-mosque-2.jpg",
+                "/images/locations/blue-mosque-1.webp",
+                "/images/locations/blue-mosque-2.webp",
             ],
         },
         bestTime: "sunrise",
@@ -108,10 +108,10 @@ export const LOCATIONS: LocationData[] = [
         wikidataId: "Q124089",
         coordinates: { lat: 41.04, lng: 29.01 },
         images: {
-            hero: "/images/locations/bosphorus-rooftop-hero.jpg",
+            hero: "/images/locations/bosphorus-rooftop-hero.webp",
             gallery: [
-                "/images/locations/bosphorus-rooftop-1.jpg",
-                "/images/locations/bosphorus-rooftop-2.jpg",
+                "/images/locations/bosphorus-rooftop-1.webp",
+                "/images/locations/bosphorus-rooftop-2.webp",
             ],
         },
         bestTime: "golden_hour",
@@ -124,10 +124,10 @@ export const LOCATIONS: LocationData[] = [
         wikidataId: "Q133458",
         coordinates: { lat: 41.0163, lng: 28.9641 },
         images: {
-            hero: "/images/locations/suleymaniye-hero.jpg",
+            hero: "/images/locations/suleymaniye-hero.webp",
             gallery: [
-                "/images/locations/suleymaniye-1.jpg",
-                "/images/locations/suleymaniye-2.jpg",
+                "/images/locations/suleymaniye-1.webp",
+                "/images/locations/suleymaniye-2.webp",
             ],
         },
         bestTime: "afternoon",
@@ -140,10 +140,10 @@ export const LOCATIONS: LocationData[] = [
         wikidataId: "Q6027749",
         coordinates: { lat: 41.024, lng: 28.974 },
         images: {
-            hero: "/images/locations/camondo-stairs-hero.jpg",
+            hero: "/images/locations/camondo-stairs-hero.webp",
             gallery: [
-                "/images/locations/camondo-stairs-1.jpg",
-                "/images/locations/camondo-stairs-2.jpg",
+                "/images/locations/camondo-stairs-1.webp",
+                "/images/locations/camondo-stairs-2.webp",
             ],
         },
         bestTime: "morning",
@@ -156,10 +156,10 @@ export const LOCATIONS: LocationData[] = [
         wikidataId: "Q81523",
         coordinates: { lat: 41.02, lng: 28.973 },
         images: {
-            hero: "/images/locations/galata-bridge-hero.jpg",
+            hero: "/images/locations/galata-bridge-hero.webp",
             gallery: [
-                "/images/locations/galata-bridge-1.jpg",
-                "/images/locations/galata-bridge-2.jpg",
+                "/images/locations/galata-bridge-1.webp",
+                "/images/locations/galata-bridge-2.webp",
             ],
         },
         bestTime: "sunset",

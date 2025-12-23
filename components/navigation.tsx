@@ -83,8 +83,8 @@ export function Navigation() {
             <Image
               src={
                 mounted && resolvedTheme === "dark"
-                  ? "/istanbulportrait_white_logo.png"
-                  : "/istanbulportrait_dark_logo.png"
+                  ? "/istanbulportrait_white_logo.webp"
+                  : "/istanbulportrait_dark_logo.webp"
               }
               alt="Photographer in Istanbul - Istanbul Photoshoot"
               fill
@@ -196,8 +196,8 @@ export function Navigation() {
                     <Image
                       src={
                         mounted && resolvedTheme === "dark"
-                          ? "/istanbulportrait_white_logo.png"
-                          : "/istanbulportrait_dark_logo.png"
+                          ? "/istanbulportrait_white_logo.webp"
+                          : "/istanbulportrait_dark_logo.webp"
                       }
                       alt="Best Istanbul photographer - Professional photography services"
                       fill

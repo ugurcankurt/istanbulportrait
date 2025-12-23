@@ -19,7 +19,7 @@ export const SEO_CONFIG = {
     name: "Istanbul Portrait",
     type: "ProfessionalService",
     url: "https://istanbulportrait.com",
-    logo: "https://istanbulportrait.com/istanbulportrait_white_logo.png",
+    logo: "https://istanbulportrait.com/istanbulportrait_white_logo.webp",
     foundingDate: "2017-01-01", // 8+ years experience
     numberOfEmployees: "1",
     awards: [
@@ -54,7 +54,7 @@ export const SEO_CONFIG = {
     type: "Person",
     jobTitle: "Professional Photographer",
     url: "https://istanbulportrait.com/about",
-    image: "https://istanbulportrait.com/istanbulportprat_ugur_cankurt.jpg",
+    image: "https://istanbulportrait.com/istanbulportprat_ugur_cankurt.webp",
     sameAs: ["https://www.instagram.com/istanbulportrait"],
   },
 
@@ -130,14 +130,14 @@ export const SEO_CONFIG = {
   },
 
   images: {
-    ogImage: "/og-image.jpg",
-    logo: "https://istanbulportrait.com/istanbulportrait_white_logo.png",
+    ogImage: "/og-image.webp",
+    logo: "https://istanbulportrait.com/istanbulportrait_white_logo.webp",
     favicon: "https://istanbulportrait.com/favicon.ico",
     gallery: [
-      "https://istanbulportrait.com/gallery/istanbul_photographer_1.jpg",
-      "https://istanbulportrait.com/gallery/istanbul_couple_photoshoot.jpg",
-      "https://istanbulportrait.com/gallery/istanbul_rooftop_photoshoot.jpg",
-      "https://istanbulportrait.com/gallery/couple_photoshoot_in_istanbul.jpg",
+      "https://istanbulportrait.com/gallery/istanbul_photographer_1.webp",
+      "https://istanbulportrait.com/gallery/istanbul_couple_photoshoot.webp",
+      "https://istanbulportrait.com/gallery/istanbul_rooftop_photoshoot.webp",
+      "https://istanbulportrait.com/gallery/couple_photoshoot_in_istanbul.webp",
     ],
   },
 

@@ -36,7 +36,7 @@ export function PackagesSection() {
       locations: t("essential.locations"),
       features: t.raw("essential.features") as string[],
       popular: false,
-      image: "/images/locations/galata-bridge-2.jpg",
+      image: "/images/locations/galata-bridge-2.webp",
     },
     {
       id: "premium",
@@ -47,7 +47,7 @@ export function PackagesSection() {
       locations: t("premium.locations"),
       features: t.raw("premium.features") as string[],
       popular: true,
-      image: "/gallery/istanbul_couple_photoshoot_1.jpg",
+      image: "/gallery/istanbul_couple_photoshoot_1.webp",
     },
     {
       id: "luxury",
@@ -58,7 +58,7 @@ export function PackagesSection() {
       locations: t("luxury.locations"),
       features: t.raw("luxury.features") as string[],
       popular: false,
-      image: "/gallery/istanbul_wedding_photographer_1.jpg",
+      image: "/gallery/istanbul_wedding_photographer_1.webp",
     },
     {
       id: "rooftop",
@@ -69,7 +69,7 @@ export function PackagesSection() {
       locations: t("rooftop.locations"),
       features: t.raw("rooftop.features") as string[],
       popular: false,
-      image: "/images/locations/bosphorus-rooftop-hero.jpg",
+      image: "/images/locations/bosphorus-rooftop-hero.webp",
     },
   ];
 

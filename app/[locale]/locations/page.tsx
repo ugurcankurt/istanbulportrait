@@ -36,7 +36,7 @@ export async function generateMetadata({
             siteName: SEO_CONFIG.organization.name,
             images: [
                 {
-                    url: `${baseUrl}/og-image.jpg`,
+                    url: `${baseUrl}/og-image.webp`,
                     width: 1200,
                     height: 630,
                     alt: t("title"),
@@ -49,7 +49,7 @@ export async function generateMetadata({
             card: "summary_large_image",
             title: t("title"),
             description: t("description"),
-            images: [`${baseUrl}/og-image.jpg`],
+            images: [`${baseUrl}/og-image.webp`],
         },
     };
 }

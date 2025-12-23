@@ -20,7 +20,7 @@ export function HeroSection() {
       {/* Background Image with Gradient Overlay */}
       <div className="absolute inset-0 z-0">
         <Image
-          src="/istanbul_photographer.jpg"
+          src="/istanbul_photographer.webp"
           alt="Professional Istanbul photographer capturing stunning portrait photography at Bosphorus - Award-winning photography services in Istanbul Turkey"
           fill
           className="object-cover"
@@ -32,7 +32,7 @@ export function HeroSection() {
           blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwA3gAA//9k="
           onError={(e) => {
             const target = e.target as HTMLImageElement;
-            target.src = "/istanbulportprat_ugur_cankurt.jpg";
+            target.src = "/istanbulportprat_ugur_cankurt.webp";
             target.onerror = () => {
               target.style.display = "none";
               const parent = target.closest(".relative");

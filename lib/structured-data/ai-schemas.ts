@@ -205,7 +205,7 @@ export function generateAILocalBusinessSchema(config: SchemaConfig) {
         image: [
             SEO_CONFIG.person.image,
             SEO_CONFIG.organization.logo,
-            `${baseUrl}/gallery/istanbul_photographer_1.jpg`,
+            `${baseUrl}/gallery/istanbul_photographer_1.webp`,
         ],
         logo: SEO_CONFIG.organization.logo,
         address: {

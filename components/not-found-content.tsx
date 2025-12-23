@@ -30,7 +30,7 @@ export function NotFoundContent({
       {/* Background Image */}
       <div className="absolute inset-0 z-0">
         <Image
-          src="/istanbul_photographer.jpg"
+          src="/istanbul_photographer.webp"
           alt="Istanbul photoshoot"
           fill
           className="object-cover"
@@ -39,7 +39,7 @@ export function NotFoundContent({
           sizes="100vw"
           onError={(e) => {
             const target = e.target as HTMLImageElement;
-            target.src = "/istanbulportprat_ugur_cankurt.jpg";
+            target.src = "/istanbulportprat_ugur_cankurt.webp";
             target.onerror = () => {
               target.style.display = "none";
               const parent = target.closest(".absolute");
@@ -72,7 +72,7 @@ export function NotFoundContent({
             <Link href={`/${locale}`} className="inline-block group">
               <div className="relative transition-transform duration-300 group-hover:scale-105">
                 <Image
-                  src="/istanbulportrait_white_logo.png"
+                  src="/istanbulportrait_white_logo.webp"
                   alt="Istanbul Photographer Logo"
                   width={200}
                   height={56}

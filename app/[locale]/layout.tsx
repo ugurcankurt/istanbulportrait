@@ -79,7 +79,7 @@ export async function generateMetadata({
       description: t("description"),
       images: [
         {
-          url: `${baseUrl}/og-image.jpg`,
+          url: `${baseUrl}/og-image.webp`,
           width: 1200,
           height: 630,
           alt: `${t("title")} | Professional Photography Services in Istanbul`,
@@ -98,7 +98,7 @@ export async function generateMetadata({
       description: t("description"),
       images: [
         {
-          url: `${baseUrl}/og-image.jpg`,
+          url: `${baseUrl}/og-image.webp`,
           alt: `${t("title")} - Professional Photography Services in Istanbul`,
         },
       ],
@@ -113,7 +113,7 @@ export async function generateMetadata({
           type: "image/x-icon",
         },
         {
-          url: "/icon1.png",
+          url: "/icon1.webp",
           sizes: "96x96",
           type: "image/png",
         },
@@ -125,7 +125,7 @@ export async function generateMetadata({
       ],
       apple: [
         {
-          url: "/apple-icon.png",
+          url: "/apple-icon.webp",
           sizes: "180x180",
           type: "image/png",
         },

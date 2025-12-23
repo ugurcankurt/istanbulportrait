@@ -311,7 +311,7 @@ export function ChatWidget({ isOpen, onClose, whatsappNumber }: ChatWidgetProps)
                         <div className="flex items-center gap-3">
                             <div className="relative">
                                 <div className="w-10 h-10 rounded-full border-2 border-primary-foreground/20 overflow-hidden shadow-inner">
-                                    <img src="/emily.png" alt="Emily" className="w-full h-full object-cover" />
+                                    <img src="/emily.webp" alt="Emily" className="w-full h-full object-cover" />
                                 </div>
                                 <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 border-2 border-primary rounded-full"></span>
                             </div>
@@ -335,7 +335,7 @@ export function ChatWidget({ isOpen, onClose, whatsappNumber }: ChatWidgetProps)
                         {messages.length === 0 && (
                             <div className="flex flex-col items-center justify-center h-full text-center px-6 animate-in fade-in zoom-in duration-300">
                                 <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mb-4 overflow-hidden shadow-sm border border-border">
-                                    <img src="/emily.png" alt="Emily" className="w-full h-full object-cover" />
+                                    <img src="/emily.webp" alt="Emily" className="w-full h-full object-cover" />
                                 </div>
                                 <h4 className="font-semibold text-lg mb-2">{t('welcome_title')}</h4>
                                 <p className="text-sm text-muted-foreground leading-relaxed max-w-[250px] mb-6">
@@ -378,7 +378,7 @@ export function ChatWidget({ isOpen, onClose, whatsappNumber }: ChatWidgetProps)
                                     <div
                                         className="w-8 h-8 rounded-full flex items-center justify-center shrink-0 bg-background border border-border shadow-sm overflow-hidden mt-1"
                                     >
-                                        <img src="/emily.png" alt="Emily" className="w-full h-full object-cover" />
+                                        <img src="/emily.webp" alt="Emily" className="w-full h-full object-cover" />
                                     </div>
                                 )}
                                 <div className={cn("flex flex-col gap-1", m.role === "user" ? "items-end" : "items-start")}>
@@ -417,7 +417,7 @@ export function ChatWidget({ isOpen, onClose, whatsappNumber }: ChatWidgetProps)
                         {isLoading && messages[messages.length - 1]?.role === "user" && (
                             <div className="flex gap-3 mr-auto max-w-[85%]">
                                 <div className="w-8 h-8 rounded-full bg-background border border-border shadow-sm flex items-center justify-center shrink-0 overflow-hidden">
-                                    <img src="/emily.png" alt="Emily" className="w-full h-full object-cover" />
+                                    <img src="/emily.webp" alt="Emily" className="w-full h-full object-cover" />
                                 </div>
                                 <div className="bg-background border border-border p-3.5 rounded-2xl rounded-tl-sm shadow-sm flex items-center gap-1">
                                     <span className="w-1.5 h-1.5 bg-primary/60 rounded-full animate-bounce [animation-delay:-0.3s]"></span>

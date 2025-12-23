@@ -66,7 +66,7 @@ export function AboutSection() {
           >
             <div className="relative aspect-[4/5] rounded-2xl overflow-hidden">
               <Image
-                src="/istanbulportprat_ugur_cankurt.jpg"
+                src="/istanbulportprat_ugur_cankurt.webp"
                 alt="Uğur Cankurt - Professional Istanbul Photographer with 8+ years experience in portrait, couple, and rooftop photography sessions"
                 fill
                 className="object-cover"
@@ -75,7 +75,7 @@ export function AboutSection() {
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 600px"
                 onError={(e) => {
                   const target = e.target as HTMLImageElement;
-                  target.src = "/istanbul_photographer.jpg";
+                  target.src = "/istanbul_photographer.webp";
                   target.onerror = () => {
                     target.style.display = "none";
                     const parent = target.closest(".relative");

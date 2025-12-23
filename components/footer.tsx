@@ -50,8 +50,8 @@ export function Footer() {
                 <Image
                   src={
                     mounted && resolvedTheme === "dark"
-                      ? "/istanbulportrait_white_logo.png"
-                      : "/istanbulportrait_dark_logo.png"
+                      ? "/istanbulportrait_white_logo.webp"
+                      : "/istanbulportrait_dark_logo.webp"
                   }
                   alt="Professional Istanbul photographer - Top photographer in Istanbul"
                   fill
