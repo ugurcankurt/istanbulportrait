@@ -41,7 +41,16 @@ const nextConfig: NextConfig = {
     unoptimized: true, // Disable Vercel Image Optimization (using static WebP files)
   },
   experimental: {
-    optimizePackageImports: ["lucide-react", "@radix-ui/react-icons"],
+    optimizePackageImports: [
+      "lucide-react",
+      "@radix-ui/react-icons",
+      "date-fns",
+      "react-day-picker",
+      "react-phone-number-input",
+      "recharts",
+      "@supabase/supabase-js",
+      "zod",
+    ],
   },
   turbopack: {
     rules: {
