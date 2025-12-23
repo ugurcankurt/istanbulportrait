@@ -42,8 +42,14 @@ export function WhatsAppButton({
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 768);
     };
+    let timeoutId: NodeJS.Timeout;
+    const handleResize = () => {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(checkMobile, 100);
+    };
+
     checkMobile();
-    window.addEventListener("resize", checkMobile);
+    window.addEventListener("resize", handleResize);
 
     // Show chat bubble after delay if chat is not open and not dismissed
     const timer = setTimeout(() => {
@@ -55,7 +61,7 @@ export function WhatsAppButton({
     }, 3000);
 
     return () => {
-      window.removeEventListener("resize", checkMobile);
+      window.removeEventListener("resize", handleResize);
       clearTimeout(timer);
     };
   }, [isChatOpen]);

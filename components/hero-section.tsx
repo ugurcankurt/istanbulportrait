@@ -1,6 +1,4 @@
 "use client";
-
-import { motion } from "framer-motion";
 import { ArrowRight, Camera, MapPin, Star } from "lucide-react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
@@ -49,12 +47,7 @@ export function HeroSection() {
       {/* Content Wrapper */}
       <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-20">
         <div className="max-w-5xl mx-auto text-center text-white">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
-            className="flex flex-col items-center"
-          >
+          <div className="flex flex-col items-center animate-fade-in-up">
             {/* Badge */}
             <Badge
               variant="secondary"
@@ -105,15 +98,10 @@ export function HeroSection() {
                 <Link href="/locations">{tui("book_your_session")}</Link>
               </Button>
             </div>
-          </motion.div>
+          </div>
 
           {/* Features Grid with Glassmorphism */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
-            className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-6 max-w-5xl mx-auto"
-          >
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-6 max-w-5xl mx-auto animate-fade-in-up animation-delay-300">
             {/* Feature 1 */}
             <Card className="bg-black/20 backdrop-blur-md border-white/10 text-white hover:bg-black/30 transition-all duration-300 hover:-translate-y-1 group">
               <CardContent className="p-3 sm:p-6 flex flex-col items-center text-center h-full">
@@ -173,7 +161,7 @@ export function HeroSection() {
                 </p>
               </CardContent>
             </Card>
-          </motion.div>
+          </div>
         </div>
       </div>
     </section>

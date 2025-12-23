@@ -1,6 +1,5 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
@@ -101,12 +100,7 @@ export function GallerySection() {
     <section className="py-8 sm:py-12 lg:py-16 bg-gradient-to-b from-background to-muted/20">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="text-center mb-8 sm:mb-12 lg:mb-16"
-        >
+        <div className="text-center mb-8 sm:mb-12 lg:mb-16 animate-fade-in-up">
           <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4 sm:mb-6">
             {t("title")}
           </h2>
@@ -116,24 +110,15 @@ export function GallerySection() {
           <p className="text-sm sm:text-base text-muted-foreground/80 max-w-4xl mx-auto px-4 mt-4">
             {t("intro")}
           </p>
-        </motion.div>
+        </div>
 
         {/* Gallery Grid */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-          className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 sm:gap-6 lg:gap-8 mx-auto"
-        >
-          {galleryImages.map((image, index) => (
-            <motion.div
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 sm:gap-6 lg:gap-8 mx-auto stagger-children">
+          {galleryImages.map((image) => (
+            <div
               key={image.id}
               id={`gallery-image-${image.id}`}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.4 + index * 0.1 }}
-              whileHover={{ scale: 1.05 }}
-              className="group relative aspect-square rounded-xl overflow-hidden cursor-pointer"
+              className="group relative aspect-square rounded-xl overflow-hidden cursor-pointer hover-scale"
             >
               <Dialog>
                 <DialogTrigger asChild>
@@ -175,9 +160,9 @@ export function GallerySection() {
                   </button>
                 </DialogTrigger>
               </Dialog>
-            </motion.div>
+            </div>
           ))}
-        </motion.div>
+        </div>
 
         {/* Lightbox Dialog */}
         <Dialog

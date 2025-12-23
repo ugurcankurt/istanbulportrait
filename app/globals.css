@@ -140,6 +140,7 @@
 }
 
 @layer utilities {
+
   /* Photography-specific utilities */
   .gradient-overlay {
     @apply absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent;
@@ -193,17 +194,17 @@
   }
 
   /* RTL Flexbox adjustments */
-  [dir="rtl"] .flex.items-center.space-x-2 > * + * {
+  [dir="rtl"] .flex.items-center.space-x-2>*+* {
     margin-left: 0;
     margin-right: 0.5rem;
   }
 
-  [dir="rtl"] .flex.items-center.space-x-4 > * + * {
+  [dir="rtl"] .flex.items-center.space-x-4>*+* {
     margin-left: 0;
     margin-right: 1rem;
   }
 
-  [dir="rtl"] .flex.items-center.space-x-6 > * + * {
+  [dir="rtl"] .flex.items-center.space-x-6>*+* {
     margin-left: 0;
     margin-right: 1.5rem;
   }
@@ -225,7 +226,7 @@
   }
 
   /* RTL Package cards and features */
-  [dir="rtl"] .flex.items-start.space-x-2\.5 > * + * {
+  [dir="rtl"] .flex.items-start.space-x-2\.5>*+* {
     margin-left: 0;
     margin-right: 0.625rem;
   }
@@ -322,6 +323,7 @@
 
 /* Smooth gradient animations */
 @keyframes gradientShift {
+
   0%,
   100% {
     background-position: 0% 50%;
@@ -387,4 +389,199 @@
 
 .drop-shadow-glow {
   filter: drop-shadow(0 0 8px rgba(37, 211, 102, 0.3));
+}
+
+/* ========================================
+   Performance Optimized Animations
+   Replaces Framer Motion for simple fade-ins
+   ======================================== */
+
+/* Base animation classes */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Animation utility classes */
+.animate-fade-in-up {
+  animation: fadeInUp 0.6s ease-out forwards;
+}
+
+.animate-fade-in-down {
+  animation: fadeInDown 0.6s ease-out forwards;
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+.animate-scale-in {
+  animation: scaleIn 0.5s ease-out forwards;
+}
+
+.animate-slide-in-left {
+  animation: slideInLeft 0.5s ease-out forwards;
+}
+
+.animate-slide-in-right {
+  animation: slideInRight 0.5s ease-out forwards;
+}
+
+/* Animation delay utilities */
+.animation-delay-100 {
+  animation-delay: 100ms;
+}
+
+.animation-delay-200 {
+  animation-delay: 200ms;
+}
+
+.animation-delay-300 {
+  animation-delay: 300ms;
+}
+
+.animation-delay-400 {
+  animation-delay: 400ms;
+}
+
+.animation-delay-500 {
+  animation-delay: 500ms;
+}
+
+.animation-delay-600 {
+  animation-delay: 600ms;
+}
+
+.animation-delay-700 {
+  animation-delay: 700ms;
+}
+
+.animation-delay-800 {
+  animation-delay: 800ms;
+}
+
+/* Start invisible for delayed animations */
+.animate-on-scroll {
+  opacity: 0;
+}
+
+/* Intersection Observer triggered class */
+.animate-on-scroll.is-visible {
+  opacity: 1;
+}
+
+/* Hover scale effect (replaces whileHover) */
+.hover-scale {
+  transition: transform 0.2s ease-out;
+}
+
+.hover-scale:hover {
+  transform: scale(1.05);
+}
+
+.hover-scale:active {
+  transform: scale(0.95);
+}
+
+/* Stagger children animation */
+.stagger-children>* {
+  opacity: 0;
+  animation: fadeInUp 0.5s ease-out forwards;
+}
+
+.stagger-children>*:nth-child(1) {
+  animation-delay: 0ms;
+}
+
+.stagger-children>*:nth-child(2) {
+  animation-delay: 100ms;
+}
+
+.stagger-children>*:nth-child(3) {
+  animation-delay: 200ms;
+}
+
+.stagger-children>*:nth-child(4) {
+  animation-delay: 300ms;
+}
+
+.stagger-children>*:nth-child(5) {
+  animation-delay: 400ms;
+}
+
+.stagger-children>*:nth-child(6) {
+  animation-delay: 500ms;
+}
+
+.stagger-children>*:nth-child(7) {
+  animation-delay: 600ms;
+}
+
+.stagger-children>*:nth-child(8) {
+  animation-delay: 700ms;
 }

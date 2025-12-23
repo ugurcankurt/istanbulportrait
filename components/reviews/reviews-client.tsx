@@ -1,6 +1,5 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { ExternalLink, Quote, Star } from "lucide-react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
@@ -25,8 +24,6 @@ export function ReviewsClient({
   aggregateRating,
 }: ReviewsClientProps) {
   const t = useTranslations("reviews");
-
-
 
   const renderStars = (rating: number, size: "sm" | "md" | "lg" = "md") => {
     const sizeClasses = {
@@ -71,12 +68,7 @@ export function ReviewsClient({
       <section className="py-8 sm:py-12 lg:py-16 bg-gradient-to-b from-background to-muted/20">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           {/* Header */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="text-center mb-8 sm:mb-12 lg:mb-16"
-          >
+          <div className="text-center mb-8 sm:mb-12 lg:mb-16 animate-fade-in-up">
             <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4 sm:mb-6">
               {t("title")}
             </h2>
@@ -90,15 +82,10 @@ export function ReviewsClient({
                 {renderStars(Math.round(aggregateRating.average), "lg")}
               </div>
             </div>
-          </motion.div>
+          </div>
 
           {/* Reviews Carousel */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="mx-auto"
-          >
+          <div className="mx-auto animate-fade-in-up animation-delay-200">
             <Carousel
               opts={{
                 align: "start",
@@ -112,11 +99,7 @@ export function ReviewsClient({
                     key={review.id || index}
                     className="pl-2 md:pl-4 md:basis-1/2 lg:basis-1/3"
                   >
-                    <motion.div
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.5, delay: 0.4 + index * 0.1 }}
-                    >
+                    <div className="h-full">
                       <Card className="h-full min-h-[280px] flex flex-col">
                         <CardHeader className="relative pb-4">
                           <div className="flex items-start justify-between">
@@ -172,7 +155,7 @@ export function ReviewsClient({
                           </div>
                         </CardContent>
                       </Card>
-                    </motion.div>
+                    </div>
                   </CarouselItem>
                 ))}
               </CarouselContent>
@@ -181,15 +164,10 @@ export function ReviewsClient({
               <CarouselPrevious className="-left-12 hidden sm:flex" />
               <CarouselNext className="-right-12 hidden sm:flex" />
             </Carousel>
-          </motion.div>
+          </div>
 
           {/* View All Reviews Button */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-            className="text-center mt-8 sm:mt-12 lg:mt-16"
-          >
+          <div className="text-center mt-8 sm:mt-12 lg:mt-16 animate-fade-in-up animation-delay-400">
             <Button variant="outline" size="lg" className="group" asChild>
               <a
                 href="https://maps.app.goo.gl/Q2v1FDMw5LJHBBCA9"
@@ -201,7 +179,7 @@ export function ReviewsClient({
                 <ExternalLink className="w-4 h-4 group-hover:translate-x-1 transition-all duration-300" />
               </a>
             </Button>
-          </motion.div>
+          </div>
         </div>
       </section>
     </>

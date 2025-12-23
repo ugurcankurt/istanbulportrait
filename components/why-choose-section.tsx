@@ -1,6 +1,5 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { Award, Camera, Clock } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Card, CardContent } from "@/components/ui/card";
@@ -30,12 +29,7 @@ export function WhyChooseSection() {
         <section className="py-8 sm:py-12 lg:py-16 bg-gradient-to-b from-muted/20 to-background">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8">
                 {/* Header */}
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.8 }}
-                    className="text-center mb-8 sm:mb-12 lg:mb-16"
-                >
+                <div className="text-center mb-8 sm:mb-12 lg:mb-16 animate-fade-in-up">
                     <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4 sm:mb-6">
                         {t("title")}
                     </h2>
@@ -45,23 +39,14 @@ export function WhyChooseSection() {
                     <p className="text-sm sm:text-base text-muted-foreground/80 max-w-4xl mx-auto px-4 mt-4">
                         {t("intro")}
                     </p>
-                </motion.div>
+                </div>
 
                 {/* Features Grid */}
-                <motion.div
-                    initial={{ opacity: 0, y: 30 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.8, delay: 0.2 }}
-                    className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 mx-auto"
-                >
+                <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 mx-auto stagger-children">
                     {features.map((feature, index) => (
-                        <motion.div
+                        <div
                             key={feature.title}
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.5, delay: 0.4 + index * 0.1 }}
-                            whileHover={{ scale: 1.05 }}
-                            className={index === 2 ? "col-span-2 lg:col-span-1" : ""}
+                            className={`hover-scale ${index === 2 ? "col-span-2 lg:col-span-1" : ""}`}
                         >
                             <Card className="text-center p-4 sm:p-5 lg:p-6 h-full">
                                 <CardContent className="p-0">
@@ -76,9 +61,9 @@ export function WhyChooseSection() {
                                     </p>
                                 </CardContent>
                             </Card>
-                        </motion.div>
+                        </div>
                     ))}
-                </motion.div>
+                </div>
             </div>
         </section>
     );

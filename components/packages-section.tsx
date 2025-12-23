@@ -1,7 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import { motion } from "framer-motion";
 import { Check, Clock, Image as ImageIcon, MapPin } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
@@ -104,28 +103,20 @@ export function PackagesSection() {
       <section className="py-8 sm:py-12 lg:py-16 bg-gradient-to-b from-background to-muted/20">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           {/* Package Options Section */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="mb-8 sm:mb-12"
-          >
+          <div className="mb-8 sm:mb-12 animate-fade-in-up">
             <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-center mb-4 sm:mb-6">
               {t("sections.available_packages")}
             </h2>
             <p className="text-sm sm:text-base text-muted-foreground text-center max-w-4xl mx-auto px-4">
               {t("sections.intro")}
             </p>
-          </motion.div>
+          </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8 mx-auto">
-            {packages.map((pkg, index) => (
-              <motion.div
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8 mx-auto stagger-children">
+            {packages.map((pkg) => (
+              <div
                 key={pkg.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: index * 0.1 }}
-                className="relative"
+                className="relative hover-scale"
               >
                 <Card
                   className={`h-full transition-all duration-300 hover:shadow-lg flex flex-col overflow-hidden p-0 gap-0 pt-0 ${pkg.popular ? "ring-2 ring-primary shadow-xl sm:scale-105 bg-gradient-to-b from-background to-primary/5" : "hover:shadow-md border-2 hover:border-primary/20"}`}
@@ -202,16 +193,11 @@ export function PackagesSection() {
                     </Button>
                   </CardFooter>
                 </Card>
-              </motion.div>
+              </div>
             ))}
           </div>
 
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-            className="mt-8 sm:mt-12 lg:mt-16 text-center"
-          >
+          <div className="mt-8 sm:mt-12 lg:mt-16 text-center animate-fade-in-up animation-delay-400">
             <div className="bg-primary rounded-lg p-4 sm:p-6 lg:p-8 max-w-6xl mx-auto">
               <h2 className="text-lg text-primary-foreground sm:text-xl lg:text-2xl font-bold mb-3 sm:mb-4">
                 {t("custom.title")}
@@ -228,7 +214,7 @@ export function PackagesSection() {
                 <Link href="/contact">{t("custom.button")}</Link>
               </Button>
             </div>
-          </motion.div>
+          </div>
         </div>
       </section>
 
