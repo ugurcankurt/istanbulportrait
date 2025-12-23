@@ -23,6 +23,7 @@ export function WhatsAppButton({
   const [isMobile, setIsMobile] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(false);
+  const [isDismissed, setIsDismissed] = useState(false);
 
   // Intersection Observer for scroll-based animation
   const { ref, inView } = useInView({
@@ -34,6 +35,10 @@ export function WhatsAppButton({
   // Detect mobile device and mount
   useEffect(() => {
     setMounted(true);
+    // Check dismissal state on mount
+    const dismissed = localStorage.getItem("chat_bubble_dismissed") === "true";
+    if (dismissed) setIsDismissed(true);
+
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 768);
     };
@@ -42,8 +47,9 @@ export function WhatsAppButton({
 
     // Show chat bubble after delay if chat is not open and not dismissed
     const timer = setTimeout(() => {
-      const isDismissed = localStorage.getItem("chat_bubble_dismissed");
-      if (!isChatOpen && !isDismissed) {
+      // Re-read storage/state to be sure
+      const currentlyDismissed = localStorage.getItem("chat_bubble_dismissed") === "true";
+      if (!isChatOpen && !currentlyDismissed) {
         setShowBubble(true);
       }
     }, 3000);
@@ -59,6 +65,7 @@ export function WhatsAppButton({
       const newState = !prev;
       if (newState) {
         localStorage.setItem("chat_bubble_dismissed", "true");
+        setIsDismissed(true);
       }
       return newState;
     });
@@ -89,7 +96,7 @@ export function WhatsAppButton({
       >
         {/* Chat Bubble Notification */}
         <AnimatePresence>
-          {(showBubble || isHovered) && !isChatOpen && (
+          {(showBubble || isHovered) && !isChatOpen && !isDismissed && (
             <motion.div
               initial={{ opacity: 0, x: 20, scale: 0.8 }}
               animate={{ opacity: 1, x: 0, scale: 1 }}
@@ -124,6 +131,7 @@ export function WhatsAppButton({
                 onClick={(e) => {
                   e.stopPropagation();
                   setShowBubble(false);
+                  setIsDismissed(true);
                   localStorage.setItem("chat_bubble_dismissed", "true");
                 }}
                 className="p-3 -mr-2 -mt-2 text-muted-foreground hover:text-foreground hover:bg-muted/20 rounded-full transition-colors"

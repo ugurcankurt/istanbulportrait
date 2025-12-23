@@ -14,7 +14,7 @@ export function ContactSection() {
   return (
     <section className="py-12 sm:py-16 lg:py-24 bg-gradient-to-b from-background to-muted/20">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 max-w-6xl mx-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 mx-auto">
           {/* Quick Booking CTA */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}

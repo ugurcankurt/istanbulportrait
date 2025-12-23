@@ -17,7 +17,7 @@ export function ToursCrossSellSection() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
-          className="max-w-6xl mx-auto text-center"
+          className="mx-auto text-center"
         >
           <div className="bg-primary rounded-lg p-4 sm:p-6 lg:p-8">
             <div className="flex items-center justify-center mb-3 sm:mb-4">

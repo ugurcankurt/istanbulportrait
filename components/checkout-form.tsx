@@ -947,11 +947,11 @@ export function CheckoutForm() {
                             }`}
                           onClick={() => setPaymentMethod("turinvoice")}
                         >
-                          <div className="h-12 sm:h-14 flex items-center justify-center mb-3">
+                          <div className="h-14 sm:h-16 flex items-center justify-center mb-3">
                             <img
                               src="/turinvoice_logo.png"
                               alt="Turinvoice"
-                              className="h-8 sm:h-18 w-auto max-w-full object-contain"
+                              className="h-10 sm:h-12 w-auto max-w-full object-contain"
                             />
                           </div>
                           <span className="font-medium text-sm text-center">

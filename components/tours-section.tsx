@@ -82,7 +82,7 @@ export function ToursSection({ locale, className = "" }: ToursSectionProps) {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
-            className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 max-w-6xl mx-auto"
+            className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 mx-auto"
           >
             {popularTours.map((tourId, index) => (
               <motion.div key={tourId} variants={itemVariants}>
@@ -157,7 +157,7 @@ export function ToursSection({ locale, className = "" }: ToursSectionProps) {
           transition={{ duration: 0.8, delay: 0.4 }}
           className="mt-8 sm:mt-12 lg:mt-16 text-center"
         >
-          <div className="bg-primary rounded-lg p-4 sm:p-6 lg:p-8 max-w-6xl mx-auto">
+          <div className="bg-primary rounded-lg p-4 sm:p-6 lg:p-8 mx-auto">
             <h2 className="text-lg text-primary-foreground sm:text-xl lg:text-2xl font-bold mb-3 sm:mb-4">
               {t("packageDealTitle")}
             </h2>

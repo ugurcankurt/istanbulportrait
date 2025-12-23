@@ -55,7 +55,7 @@ export function AboutSection() {
     <section className="py-12 sm:py-16 lg:py-24 bg-gradient-to-b from-background to-muted/20">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         {/* Main Content */}
-        <div className="grid lg:grid-cols-2 gap-8 sm:gap-12 lg:gap-16 items-center max-w-6xl mx-auto mb-12 sm:mb-16 lg:mb-20">
+        <div className="grid lg:grid-cols-2 gap-8 sm:gap-12 lg:gap-16 items-center mx-auto mb-12 sm:mb-16 lg:mb-20">
           {/* Image */}
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
@@ -151,7 +151,7 @@ export function AboutSection() {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.6 }}
-          className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 max-w-6xl mx-auto mb-12 sm:mb-16 lg:mb-20"
+          className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 mx-auto mb-12 sm:mb-16 lg:mb-20"
         >
           {stats.map((stat, index) => (
             <motion.div
@@ -183,13 +183,13 @@ export function AboutSection() {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 1.0 }}
-          className="max-w-6xl mx-auto"
+          className="mx-auto"
         >
           <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-center mb-8 sm:mb-10 lg:mb-12">
             {taboutHighlights("title")}
           </h2>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
+          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
             {highlights.map((highlight, index) => (
               <motion.div
                 key={highlight.title}
@@ -224,7 +224,7 @@ export function AboutSection() {
           whileHover={{ scale: 1.02 }}
           className="text-center mt-12 sm:mt-16 lg:mt-20"
         >
-          <div className="bg-muted/30 rounded-lg sm:rounded-xl lg:rounded-2xl p-6 sm:p-8 lg:p-12 max-w-6xl mx-auto">
+          <div className="bg-muted/30 rounded-lg sm:rounded-xl lg:rounded-2xl p-6 sm:p-8 lg:p-12 mx-auto">
             <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold mb-3 sm:mb-4">
               {taboutCta("title")}
             </h2>
@@ -237,7 +237,7 @@ export function AboutSection() {
                 size="sm"
                 className="sm:size-lg text-xs sm:text-sm"
               >
-                <Link href="/contact">{tui("book_your_session")}</Link>
+                <Link href="/locations">{tui("book_your_session")}</Link>
               </Button>
               <Button
                 asChild

@@ -61,11 +61,10 @@ export function ReviewsClient({
         {[1, 2, 3, 4, 5].map((star) => (
           <Star
             key={star}
-            className={`${sizeClasses[size]} ${
-              star <= rating
+            className={`${sizeClasses[size]} ${star <= rating
                 ? "fill-yellow-400 text-yellow-400 drop-shadow-sm"
                 : "fill-gray-300 text-gray-300"
-            }`}
+              }`}
           />
         ))}
       </div>
@@ -119,7 +118,7 @@ export function ReviewsClient({
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="max-w-6xl mx-auto"
+            className="mx-auto"
           >
             <Carousel
               opts={{

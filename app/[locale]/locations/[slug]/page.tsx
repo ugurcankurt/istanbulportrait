@@ -169,8 +169,8 @@ export default async function LocationDetailPage({
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-black/10" />
 
                     {/* Hero Content - Bottom */}
-                    <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-8 lg:p-12">
-                        <div className="container mx-auto max-w-7xl">
+                    <div className="absolute bottom-0 left-0 right-0 pb-6 sm:pb-8 lg:pb-12">
+                        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
                             <h1 className="text-2xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold text-white mb-3 sm:mb-4 drop-shadow-lg">
                                 {t(`items.${slug}.name`)}
                             </h1>
@@ -196,7 +196,7 @@ export default async function LocationDetailPage({
 
             {/* Content Section */}
             <section className="py-8 sm:py-12 lg:py-16">
-                <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
+                <div className="container mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="grid lg:grid-cols-3 gap-6 lg:gap-10">
 
                         {/* Main Content - Left/Center */}

@@ -251,7 +251,7 @@
     "payment_method": "Payment Method",
     "payment_methods": {
       "credit_card": "Credit/Debit Card",
-      "russian_banks": "MIR & SBP"
+      "russian_banks": "Оплата через СБП"
     },
     "turinvoice_description": "You will be redirected to Turinvoice secure payment page.",
     "turinvoice": {
@@ -354,10 +354,10 @@
     "lifestyle": "Lifestyle",
     "rooftop_shoots": "Rooftop Shoots",
     "view_my_work": "View My Work",
-    "book_your_session": "Book Your Session",
+    "book_your_session": "Check Locations",
     "view_packages": "View Packages",
     "packages_button": "Packages",
-    "book_package": "Book This Package",
+    "book_package": "Book Now",
     "back_to_home": "Back to Home",
     "selected": "Selected",
     "select_package": "Select Package",

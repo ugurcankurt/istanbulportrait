@@ -251,7 +251,7 @@
     "payment_method": "付款方式",
     "payment_methods": {
       "credit_card": "信用卡/借记卡",
-      "russian_banks": "MIR & SBP"
+      "russian_banks": "Оплата через СБП"
     },
     "turinvoice_description": "您将被重定向到Turinvoice安全付款页面。",
     "turinvoice": {
@@ -354,10 +354,10 @@
     "lifestyle": "生活方式",
     "rooftop_shoots": "屋顶拍摄",
     "view_my_work": "查看我的作品",
-    "book_your_session": "预订您的拍摄",
+    "book_your_session": "查看地点",
     "view_packages": "查看套餐",
     "packages_button": "套餐",
-    "book_package": "预订此套餐",
+    "book_package": "立即预订",
     "back_to_home": "返回首页",
     "selected": "已选择",
     "select_package": "选择套餐",

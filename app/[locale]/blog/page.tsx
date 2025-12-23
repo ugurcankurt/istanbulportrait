@@ -105,8 +105,8 @@ export default async function BlogPage({
       <BreadcrumbNav />
       <BlogHeroSection />
 
-      <div className="container mx-auto px-4 py-12">
-        <div className="max-w-6xl mx-auto">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="mx-auto">
           {/* Blog Grid */}
           {posts.length === 0 ? (
             <div className="text-center py-12">

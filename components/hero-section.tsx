@@ -102,7 +102,7 @@ export function HeroSection() {
                 className="w-full sm:w-auto min-w-[140px] h-12 font-semibold bg-transparent text-white border-white hover:bg-white/10 hover:text-white"
                 onClick={() => trackEvent("cta_click", "Hero", "Book Session")}
               >
-                <Link href="/packages">{tui("book_your_session")}</Link>
+                <Link href="/locations">{tui("book_your_session")}</Link>
               </Button>
             </div>
           </motion.div>
@@ -112,49 +112,64 @@ export function HeroSection() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
-            className="grid grid-cols-2 sm:grid-cols-3 gap-4 sm:gap-6 max-w-5xl mx-auto"
+            className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-6 max-w-5xl mx-auto"
           >
             {/* Feature 1 */}
             <Card className="bg-black/20 backdrop-blur-md border-white/10 text-white hover:bg-black/30 transition-all duration-300 hover:-translate-y-1 group">
-              <CardContent className="p-6 flex flex-col items-center text-center h-full">
-                <div className="w-12 h-12 mb-4 rounded-full bg-white/10 flex items-center justify-center group-hover:bg-white/20 transition-colors">
-                  <MapPin className="w-6 h-6 text-white" />
+              <CardContent className="p-3 sm:p-6 flex flex-col items-center text-center h-full">
+                <div className="w-8 h-8 sm:w-12 sm:h-12 mb-2 sm:mb-4 rounded-full bg-white/10 flex items-center justify-center group-hover:bg-white/20 transition-colors">
+                  <MapPin className="w-4 h-4 sm:w-6 sm:h-6 text-white" />
                 </div>
-                <span className="text-lg font-semibold mb-2 text-white block">
+                <span className="text-sm sm:text-lg font-semibold mb-1 sm:mb-2 text-white block">
                   {features("rooftop.title")}
                 </span>
-                <p className="text-sm text-white/70 leading-relaxed">
+                <p className="text-xs sm:text-sm text-white/70 leading-relaxed hidden sm:block">
                   {features("rooftop.description")}
+                </p>
+                <p className="text-[10px] text-white/70 leading-tight sm:hidden">
+                  {features("rooftop.description").length > 50
+                    ? features("rooftop.description").substring(0, 50) + "..."
+                    : features("rooftop.description")}
                 </p>
               </CardContent>
             </Card>
 
             {/* Feature 2 */}
             <Card className="bg-black/20 backdrop-blur-md border-white/10 text-white hover:bg-black/30 transition-all duration-300 hover:-translate-y-1 group">
-              <CardContent className="p-6 flex flex-col items-center text-center h-full">
-                <div className="w-12 h-12 mb-4 rounded-full bg-white/10 flex items-center justify-center group-hover:bg-white/20 transition-colors">
-                  <Star className="w-6 h-6 text-white" />
+              <CardContent className="p-3 sm:p-6 flex flex-col items-center text-center h-full">
+                <div className="w-8 h-8 sm:w-12 sm:h-12 mb-2 sm:mb-4 rounded-full bg-white/10 flex items-center justify-center group-hover:bg-white/20 transition-colors">
+                  <Star className="w-4 h-4 sm:w-6 sm:h-6 text-white" />
                 </div>
-                <span className="text-lg font-semibold mb-2 text-white block">
+                <span className="text-sm sm:text-lg font-semibold mb-1 sm:mb-2 text-white block">
                   {features("historic.title")}
                 </span>
-                <p className="text-sm text-white/70 leading-relaxed">
+                <p className="text-xs sm:text-sm text-white/70 leading-relaxed hidden sm:block">
                   {features("historic.description")}
+                </p>
+                <p className="text-[10px] text-white/70 leading-tight sm:hidden">
+                  {features("historic.description").length > 50
+                    ? features("historic.description").substring(0, 50) + "..."
+                    : features("historic.description")}
                 </p>
               </CardContent>
             </Card>
 
-            {/* Feature 3 */}
+            {/* Feature 3 - Full Width on Mobile */}
             <Card className="col-span-2 sm:col-span-1 bg-black/20 backdrop-blur-md border-white/10 text-white hover:bg-black/30 transition-all duration-300 hover:-translate-y-1 group">
-              <CardContent className="p-6 flex flex-col items-center text-center h-full">
-                <div className="w-12 h-12 mb-4 rounded-full bg-white/10 flex items-center justify-center group-hover:bg-white/20 transition-colors">
-                  <Camera className="w-6 h-6 text-white" />
+              <CardContent className="p-3 sm:p-6 flex flex-col items-center text-center h-full">
+                <div className="w-8 h-8 sm:w-12 sm:h-12 mb-2 sm:mb-4 rounded-full bg-white/10 flex items-center justify-center group-hover:bg-white/20 transition-colors">
+                  <Camera className="w-4 h-4 sm:w-6 sm:h-6 text-white" />
                 </div>
-                <span className="text-lg font-semibold mb-2 text-white block">
+                <span className="text-sm sm:text-lg font-semibold mb-1 sm:mb-2 text-white block">
                   {features("professional.title")}
                 </span>
-                <p className="text-sm text-white/70 leading-relaxed">
+                <p className="text-xs sm:text-sm text-white/70 leading-relaxed hidden sm:block">
                   {features("professional.description")}
+                </p>
+                <p className="text-[10px] text-white/70 leading-tight sm:hidden">
+                  {features("professional.description").length > 80
+                    ? features("professional.description").substring(0, 80) + "..."
+                    : features("professional.description")}
                 </p>
               </CardContent>
             </Card>

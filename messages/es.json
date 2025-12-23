@@ -251,7 +251,7 @@
     "payment_method": "Método de Pago",
     "payment_methods": {
       "credit_card": "Tarjeta de Crédito/Débito",
-      "russian_banks": "MIR & SBP"
+      "russian_banks": "Оплата через СБП"
     },
     "turinvoice_description": "Serás redirigido a la página de pago segura de Turinvoice.",
     "turinvoice": {
@@ -337,10 +337,10 @@
     "lifestyle": "Lifestyle",
     "rooftop_shoots": "Sesiones en Azoteas",
     "view_my_work": "Ver mi Trabajo",
-    "book_your_session": "Reserva tu Sesión",
+    "book_your_session": "Ver Ubicaciones",
     "view_packages": "Ver Paquetes",
     "packages_button": "Paquetes",
-    "book_package": "Reservar Este Paquete",
+    "book_package": "Reservar Ahora",
     "back_to_home": "Volver al Inicio",
     "selected": "Seleccionado",
     "select_package": "Seleccionar Paquete",

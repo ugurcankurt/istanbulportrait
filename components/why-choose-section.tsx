@@ -52,7 +52,7 @@ export function WhyChooseSection() {
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.8, delay: 0.2 }}
-                    className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 max-w-6xl mx-auto"
+                    className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 mx-auto"
                 >
                     {features.map((feature, index) => (
                         <motion.div
@@ -61,6 +61,7 @@ export function WhyChooseSection() {
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.5, delay: 0.4 + index * 0.1 }}
                             whileHover={{ scale: 1.05 }}
+                            className={index === 2 ? "col-span-2 lg:col-span-1" : ""}
                         >
                             <Card className="text-center p-4 sm:p-5 lg:p-6 h-full">
                                 <CardContent className="p-0">

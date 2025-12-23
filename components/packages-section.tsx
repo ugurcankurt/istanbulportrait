@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { Check, Clock, Image as ImageIcon, MapPin } from "lucide-react";
 import { useTranslations } from "next-intl";
@@ -35,6 +36,7 @@ export function PackagesSection() {
       locations: t("essential.locations"),
       features: t.raw("essential.features") as string[],
       popular: false,
+      image: "/images/locations/galata-bridge-2.jpg",
     },
     {
       id: "premium",
@@ -45,6 +47,7 @@ export function PackagesSection() {
       locations: t("premium.locations"),
       features: t.raw("premium.features") as string[],
       popular: true,
+      image: "/gallery/istanbul_couple_photoshoot_1.jpg",
     },
     {
       id: "luxury",
@@ -55,6 +58,7 @@ export function PackagesSection() {
       locations: t("luxury.locations"),
       features: t.raw("luxury.features") as string[],
       popular: false,
+      image: "/gallery/istanbul_wedding_photographer_1.jpg",
     },
     {
       id: "rooftop",
@@ -65,6 +69,7 @@ export function PackagesSection() {
       locations: t("rooftop.locations"),
       features: t.raw("rooftop.features") as string[],
       popular: false,
+      image: "/images/locations/bosphorus-rooftop-hero.jpg",
     },
   ];
 
@@ -113,7 +118,7 @@ export function PackagesSection() {
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8 max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8 mx-auto">
             {packages.map((pkg, index) => (
               <motion.div
                 key={pkg.id}
@@ -123,25 +128,36 @@ export function PackagesSection() {
                 className="relative"
               >
                 <Card
-                  className={`h-full transition-all duration-300 hover:shadow-lg flex flex-col ${pkg.popular ? "ring-2 ring-primary shadow-xl sm:scale-105 bg-gradient-to-b from-background to-primary/5" : "hover:shadow-md border-2 hover:border-primary/20"}`}
+                  className={`h-full transition-all duration-300 hover:shadow-lg flex flex-col overflow-hidden p-0 gap-0 pt-0 ${pkg.popular ? "ring-2 ring-primary shadow-xl sm:scale-105 bg-gradient-to-b from-background to-primary/5" : "hover:shadow-md border-2 hover:border-primary/20"}`}
                 >
+                  <div className="relative h-48 w-full overflow-hidden">
+                    <Image
+                      src={pkg.image}
+                      alt={pkg.name}
+                      fill
+                      className="object-cover transition-transform duration-500 hover:scale-110"
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    />
+                    <div className="absolute top-2 left-2 z-10 bg-primary text-primary-foreground px-3 py-1 rounded-md font-bold text-lg sm:text-xl shadow-lg border border-white/20">
+                      {pkg.price}
+                    </div>
+                  </div>
+
                   {pkg.popular && (
-                    <div className="absolute -top-2 sm:-top-4 left-1/2 transform -translate-x-1/2">
-                      <Badge className="bg-primary text-primary-foreground px-2 sm:px-4 py-1 text-xs sm:text-sm">
+                    <div className="absolute top-2 right-2 z-10">
+                      <Badge className="bg-primary text-primary-foreground px-2 sm:px-4 py-1 text-xs sm:text-sm shadow-md">
                         {tui("most_popular")}
                       </Badge>
                     </div>
                   )}
 
-                  <CardHeader className="text-center pb-3 sm:pb-6 px-3 sm:px-6">
-                    <h3 className="text-lg sm:text-xl font-bold mb-2 sm:mb-3">
+                  <CardHeader className="text-center pb-2 sm:pb-2 px-3 sm:px-4 pt-4">
+                    <h3 className="text-xl sm:text-2xl font-bold mb-1 sm:mb-2">
                       {pkg.name}
                     </h3>
-                    <div className="text-2xl sm:text-3xl font-bold text-primary mb-3 sm:mb-6">
-                      {pkg.price}
-                    </div>
 
-                    <div className="space-y-2 sm:space-y-3">
+
+                    <div className="flex flex-wrap justify-center gap-x-2 gap-y-1">
                       <div className="flex items-center justify-center space-x-2 rtl:space-x-reverse text-xs sm:text-sm">
                         <Clock className="w-3 h-3 sm:w-4 sm:h-4 text-muted-foreground" />
                         <span className="font-medium">{pkg.duration}</span>
@@ -155,10 +171,11 @@ export function PackagesSection() {
                         <span className="font-medium">{pkg.locations}</span>
                       </div>
                     </div>
+                    <div className="my-2 border-t border-border" />
                   </CardHeader>
 
-                  <CardContent className="flex-1 px-3 sm:px-6">
-                    <ul className="space-y-2 sm:space-y-2.5">
+                  <CardContent className="flex-1 px-3 sm:px-4">
+                    <ul className="space-y-1 sm:space-y-1.5">
                       {pkg.features.map((feature, featureIndex) => (
                         <li
                           key={featureIndex}
@@ -173,13 +190,13 @@ export function PackagesSection() {
                     </ul>
                   </CardContent>
 
-                  <CardFooter className="pt-3 sm:pt-4 px-3 sm:px-6">
+                  <CardFooter className="pt-2 sm:pt-2 px-3 sm:px-4 pb-4">
                     <Button
                       className="w-full"
                       size="sm"
                       onClick={() => handlePackageSelect(pkg.id as PackageId)}
                     >
-                      <span className="text-xs sm:text-sm font-medium">
+                      <span className="text-base sm:text-lg font-bold">
                         {tui("book_package")}
                       </span>
                     </Button>

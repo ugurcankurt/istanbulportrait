@@ -252,7 +252,7 @@
     "payment_method": "طريقة الدفع",
     "payment_methods": {
       "credit_card": "بطاقة ائتمان/خصم",
-      "russian_banks": "MIR & SBP"
+      "russian_banks": "Оплата через СБП"
     },
     "turinvoice_description": "سيتم إعادة توجيهك إلى صفحة الدفع الآمنة Turinvoice.",
     "turinvoice": {
@@ -338,10 +338,10 @@
     "lifestyle": "نمط الحياة",
     "rooftop_shoots": "تصوير الأسطح",
     "view_my_work": "شاهد أعمالي",
-    "book_your_session": "احجز جلستك",
+    "book_your_session": "تحقق من المواقع",
     "view_packages": "شاهد الحزم",
     "packages_button": "الحزم",
-    "book_package": "احجز هذه الحزمة",
+    "book_package": "احجز الآن",
     "back_to_home": "العودة للرئيسية",
     "selected": "مُحدد",
     "select_package": "اختر الحزمة",
