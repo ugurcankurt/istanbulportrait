@@ -116,7 +116,8 @@ export function PackagesSection() {
             {packages.map((pkg) => (
               <div
                 key={pkg.id}
-                className="relative hover-scale"
+                className="relative hover-scale cursor-pointer"
+                onClick={() => handlePackageSelect(pkg.id as PackageId)}
               >
                 <Card
                   className={`h-full transition-all duration-300 hover:shadow-lg flex flex-col overflow-hidden p-0 gap-0 pt-0 ${pkg.popular ? "ring-2 ring-primary shadow-xl sm:scale-105 bg-gradient-to-b from-background to-primary/5" : "hover:shadow-md border-2 hover:border-primary/20"}`}
@@ -185,7 +186,7 @@ export function PackagesSection() {
                     <Button
                       className="w-full"
                       size="sm"
-                      onClick={() => handlePackageSelect(pkg.id as PackageId)}
+                    // onClick is handled by the parent div
                     >
                       <span className="text-base sm:text-lg font-bold">
                         {tui("book_package")}
