@@ -7,7 +7,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -26,11 +26,14 @@ import { Link, usePathname, useRouter } from "@/i18n/routing";
 import { cn } from "@/lib/utils";
 
 const locales = [
-  { code: "en", name: "English", flag: "🇺🇸" },
+  { code: "en", name: "English", flag: "🇬🇧" },
   { code: "ar", name: "العربية", flag: "🇸🇦" },
   { code: "ru", name: "Русский", flag: "🇷🇺" },
   { code: "es", name: "Español", flag: "🇪🇸" },
   { code: "zh", name: "简体中文", flag: "🇨🇳" },
+  { code: "fr", name: "Français", flag: "🇫🇷" },
+  { code: "de", name: "Deutsch", flag: "🇩🇪" },
+  { code: "ro", name: "Română", flag: "🇷🇴" },
 ];
 
 export function Navigation() {
@@ -123,11 +126,17 @@ export function Navigation() {
               <button
                 className={cn(
                   buttonVariants({ variant: "ghost", size: "sm" }),
-                  "h-8 w-8 px-0 hover:scale-110 hover:rotate-12 transition-transform duration-200"
+                  "h-9 px-2 hover:scale-105 transition-transform duration-200 gap-2"
                 )}
                 aria-label="Change language"
               >
-                <Globe className="h-4 w-4" />
+                <span className="text-lg leading-none">
+                  {locales.find((l) => l.code === locale)?.flag || <Globe className="h-4 w-4" />}
+                </span>
+                <span className="text-xs font-medium uppercase hidden sm:inline-block">
+                  {locale}
+                </span>
+                <span className="sr-only">Change language</span>
               </button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">

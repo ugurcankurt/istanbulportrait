@@ -101,6 +101,8 @@ export default function EditBlogPostPage({
                 .translations?.ru?.title ||
               (currentPost as unknown as BlogPostWithAllTranslations)
                 .translations?.es?.title ||
+              (currentPost as unknown as BlogPostWithAllTranslations)
+                .translations?.fr?.title ||
               "Untitled Post"}
           </p>
         </div>

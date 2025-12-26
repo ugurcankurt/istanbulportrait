@@ -53,6 +53,9 @@ function CategoryDialog({
     ru: { name: "", description: "" },
     es: { name: "", description: "" },
     zh: { name: "", description: "" },
+    fr: { name: "", description: "" },
+    de: { name: "", description: "" },
+    ro: { name: "", description: "" },
   });
 
   // Reset form when dialog closes or category changes
@@ -92,6 +95,18 @@ function CategoryDialog({
                 name: data.category.translations?.zh?.name || "",
                 description: data.category.translations?.zh?.description || "",
               },
+              fr: {
+                name: data.category.translations?.fr?.name || "",
+                description: data.category.translations?.fr?.description || "",
+              },
+              de: {
+                name: data.category.translations?.de?.name || "",
+                description: data.category.translations?.de?.description || "",
+              },
+              ro: {
+                name: data.category.translations?.ro?.name || "",
+                description: data.category.translations?.ro?.description || "",
+              },
             });
           }
         } catch (error) {
@@ -113,6 +128,9 @@ function CategoryDialog({
         ru: { name: "", description: "" },
         es: { name: "", description: "" },
         zh: { name: "", description: "" },
+        fr: { name: "", description: "" },
+        de: { name: "", description: "" },
+        ro: { name: "", description: "" },
       });
     }
   }, [open, category]);
@@ -210,9 +228,11 @@ function CategoryDialog({
               <TabsTrigger value="ru">🇷🇺 RU</TabsTrigger>
               <TabsTrigger value="es">🇪🇸 ES</TabsTrigger>
               <TabsTrigger value="zh">🇨🇳 ZH</TabsTrigger>
+              <TabsTrigger value="fr">🇫🇷 FR</TabsTrigger>
+              <TabsTrigger value="de">🇩🇪 DE</TabsTrigger>
             </TabsList>
 
-            {(["en", "ar", "ru", "es", "zh"] as const).map((locale) => (
+            {(["en", "ar", "ru", "es", "zh", "fr", "de"] as const).map((locale) => (
               <TabsContent key={locale} value={locale} className="space-y-4">
                 <div>
                   <Label>Name</Label>

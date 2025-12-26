@@ -2,22 +2,14 @@
 
 import { useEffect, useRef } from "react";
 
+import { GETYOURGUIDE_LOCALE_MAP } from "@/types/getyourguide";
+
 interface GetYourGuideWidgetProps {
   tourId: string;
   locale: string;
   variant?: "vertical" | "horizontal" | "compact";
   className?: string;
 }
-
-// Locale mapping for GetYourGuide
-// Note: Arabic falls back to English as GetYourGuide doesn't support Arabic
-const LOCALE_MAP: Record<string, string> = {
-  en: "en-US",
-  es: "es-ES",
-  ru: "ru-RU",
-  ar: "en-US", // Fallback to English - GetYourGuide doesn't support Arabic
-  zh: "zh-CN", // Simplified Chinese
-};
 
 export function GetYourGuideWidget({
   tourId,
@@ -27,7 +19,7 @@ export function GetYourGuideWidget({
 }: GetYourGuideWidgetProps) {
   const widgetRef = useRef<HTMLDivElement>(null);
 
-  const gygLocale = LOCALE_MAP[locale] || "en-US";
+  const gygLocale = GETYOURGUIDE_LOCALE_MAP[locale] || "en-US";
 
   useEffect(() => {
     // Re-initialize GetYourGuide widget when props change

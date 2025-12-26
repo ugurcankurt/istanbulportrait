@@ -2,7 +2,7 @@ import { createNavigation } from "next-intl/navigation";
 import { defineRouting } from "next-intl/routing";
 
 export const routing = defineRouting({
-  locales: ["en", "ar", "ru", "es", "zh"],
+  locales: ["en", "ar", "ru", "es", "zh", "fr", "de", "ro"],
   defaultLocale: "en",
   localeDetection: true,
   // Disable automatic hreflang headers - we manage them in page metadata
@@ -16,6 +16,9 @@ export const routing = defineRouting({
       ru: "/pakety",
       es: "/paquetes",
       zh: "/taocan",
+      fr: "/forfaits",
+      de: "/pakete",
+      ro: "/pachete",
     },
     "/tours": {
       en: "/tours",
@@ -23,6 +26,9 @@ export const routing = defineRouting({
       ru: "/tury",
       es: "/tours",
       zh: "/lvyou",
+      fr: "/visites",
+      de: "/touren",
+      ro: "/tururi",
     },
     "/about": {
       en: "/about",
@@ -30,6 +36,9 @@ export const routing = defineRouting({
       ru: "/o-nas",
       es: "/acerca",
       zh: "/guanyu",
+      fr: "/a-propos",
+      de: "/ueber-uns",
+      ro: "/despre-noi",
     },
     "/contact": {
       en: "/contact",
@@ -37,6 +46,9 @@ export const routing = defineRouting({
       ru: "/kontakt",
       es: "/contacto",
       zh: "/lianxi",
+      fr: "/contact",
+      de: "/kontakt",
+      ro: "/contact",
     },
     "/checkout": {
       en: "/checkout",
@@ -44,6 +56,9 @@ export const routing = defineRouting({
       ru: "/oplata",
       es: "/pago",
       zh: "/jiesuan",
+      fr: "/paiement",
+      de: "/kasse",
+      ro: "/finalizare",
     },
     "/locations": {
       en: "/locations",
@@ -51,6 +66,9 @@ export const routing = defineRouting({
       ru: "/lokatsii",
       es: "/ubicaciones",
       zh: "/didian",
+      fr: "/lieux",
+      de: "/orte",
+      ro: "/locatii",
     },
     "/privacy": {
       en: "/privacy",
@@ -58,6 +76,9 @@ export const routing = defineRouting({
       ru: "/konfidentsialnost",
       es: "/privacidad",
       zh: "/yinsi",
+      fr: "/confidentialite",
+      de: "/datenschutz",
+      ro: "/confidentialitate",
     },
     "/blog": {
       en: "/blog",
@@ -65,6 +86,9 @@ export const routing = defineRouting({
       ru: "/blog",
       es: "/blog",
       zh: "/blog",
+      fr: "/blog",
+      de: "/blog",
+      ro: "/blog",
     },
     "/blog/[slug]": {
       en: "/blog/[slug]",
@@ -72,6 +96,9 @@ export const routing = defineRouting({
       ru: "/blog/[slug]",
       es: "/blog/[slug]",
       zh: "/blog/[slug]",
+      fr: "/blog/[slug]",
+      de: "/blog/[slug]",
+      ro: "/blog/[slug]",
     },
     "/locations/[slug]": {
       en: "/locations/[slug]",
@@ -79,6 +106,9 @@ export const routing = defineRouting({
       ru: "/lokatsii/[slug]",
       es: "/ubicaciones/[slug]",
       zh: "/didian/[slug]",
+      fr: "/lieux/[slug]",
+      de: "/orte/[slug]",
+      ro: "/locatii/[slug]",
     },
   },
 });

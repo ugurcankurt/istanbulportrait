@@ -45,6 +45,9 @@ const locales = [
   { value: "ru", label: "Русский 🇷🇺" },
   { value: "es", label: "Español 🇪🇸" },
   { value: "zh", label: "简体中文 🇨🇳" },
+  { value: "fr", label: "Français 🇫🇷" },
+  { value: "de", label: "Deutsch 🇩🇪" },
+  { value: "ro", label: "Română 🇷🇴" },
 ] as const;
 
 export function BlogForm({
@@ -53,7 +56,7 @@ export function BlogForm({
   isSubmitting,
 }: BlogFormProps) {
   const { categories, tags, fetchCategories, fetchTags } = useBlogStore();
-  const [activeTab, setActiveTab] = useState<"en" | "ar" | "ru" | "es" | "zh">(
+  const [activeTab, setActiveTab] = useState<"en" | "ar" | "ru" | "es" | "zh" | "fr" | "de" | "ro">(
     "en",
   );
   const [autoSlug, setAutoSlug] = useState(!initialData);
@@ -120,6 +123,20 @@ export function BlogForm({
             meta_description:
               (initialData as any).translations?.zh?.meta_description || "",
           },
+          fr: {
+            title: (initialData as any).translations?.fr?.title || "",
+            excerpt: (initialData as any).translations?.fr?.excerpt || "",
+            content: (initialData as any).translations?.fr?.content || "",
+            meta_description:
+              (initialData as any).translations?.fr?.meta_description || "",
+          },
+          de: {
+            title: (initialData as any).translations?.de?.title || "",
+            excerpt: (initialData as any).translations?.de?.excerpt || "",
+            content: (initialData as any).translations?.de?.content || "",
+            meta_description:
+              (initialData as any).translations?.de?.meta_description || "",
+          },
         },
         category_ids:
           (initialData as any).categories?.map((c: any) => c.category.id) ||
@@ -139,6 +156,8 @@ export function BlogForm({
           ru: { title: "", excerpt: "", content: "", meta_description: "" },
           es: { title: "", excerpt: "", content: "", meta_description: "" },
           zh: { title: "", excerpt: "", content: "", meta_description: "" },
+          fr: { title: "", excerpt: "", content: "", meta_description: "" },
+          de: { title: "", excerpt: "", content: "", meta_description: "" },
         },
         category_ids: [],
         tag_ids: [],

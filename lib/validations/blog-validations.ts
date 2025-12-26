@@ -9,7 +9,7 @@ import { z } from "zod";
 // LOCALE & STATUS ENUMS
 // =============================================
 
-export const localeSchema = z.enum(["en", "ar", "ru", "es"]);
+export const localeSchema = z.enum(["en", "ar", "ru", "es", "zh", "fr", "de", "ro"]);
 export const blogStatusSchema = z.enum(["draft", "published", "archived"]);
 
 // =============================================
@@ -58,6 +58,9 @@ export const blogFormSchema = z.object({
     ru: blogTranslationInputSchema,
     es: blogTranslationInputSchema,
     zh: blogTranslationInputSchema,
+    fr: blogTranslationInputSchema,
+    de: blogTranslationInputSchema,
+    ro: blogTranslationInputSchema,
   }),
   category_ids: z.array(z.string().uuid()).default([]),
   tag_ids: z.array(z.string().uuid()).default([]),
@@ -139,6 +142,48 @@ export const createBlogFormSchema = (t: any) =>
           .optional()
           .or(z.literal("")),
       }),
+      fr: z.object({
+        title: z.string().min(1, t("title_required")).max(200, t("title_max")),
+        excerpt: z
+          .string()
+          .max(500, t("excerpt_max"))
+          .optional()
+          .or(z.literal("")),
+        content: z.string().min(1, t("content_required")),
+        meta_description: z
+          .string()
+          .max(160, t("meta_description_max"))
+          .optional()
+          .or(z.literal("")),
+      }),
+      de: z.object({
+        title: z.string().min(1, t("title_required")).max(200, t("title_max")),
+        excerpt: z
+          .string()
+          .max(500, t("excerpt_max"))
+          .optional()
+          .or(z.literal("")),
+        content: z.string().min(1, t("content_required")),
+        meta_description: z
+          .string()
+          .max(160, t("meta_description_max"))
+          .optional()
+          .or(z.literal("")),
+      }),
+      ro: z.object({
+        title: z.string().min(1, t("title_required")).max(200, t("title_max")),
+        excerpt: z
+          .string()
+          .max(500, t("excerpt_max"))
+          .optional()
+          .or(z.literal("")),
+        content: z.string().min(1, t("content_required")),
+        meta_description: z
+          .string()
+          .max(160, t("meta_description_max"))
+          .optional()
+          .or(z.literal("")),
+      }),
     }),
     category_ids: z.array(z.string().uuid()).default([]),
     tag_ids: z.array(z.string().uuid()).default([]),
@@ -178,6 +223,9 @@ export const categoryFormSchema = z.object({
     ru: categoryTranslationInputSchema,
     es: categoryTranslationInputSchema,
     zh: categoryTranslationInputSchema,
+    fr: categoryTranslationInputSchema,
+    de: categoryTranslationInputSchema,
+    ro: categoryTranslationInputSchema,
   }),
 });
 
@@ -229,6 +277,30 @@ export const createCategoryFormSchema = (t: any) =>
           .optional()
           .or(z.literal("")),
       }),
+      fr: z.object({
+        name: z.string().min(1, t("name_required")).max(100, t("name_max")),
+        description: z
+          .string()
+          .max(500, t("description_max"))
+          .optional()
+          .or(z.literal("")),
+      }),
+      de: z.object({
+        name: z.string().min(1, t("name_required")).max(100, t("name_max")),
+        description: z
+          .string()
+          .max(500, t("description_max"))
+          .optional()
+          .or(z.literal("")),
+      }),
+      ro: z.object({
+        name: z.string().min(1, t("name_required")).max(100, t("name_max")),
+        description: z
+          .string()
+          .max(500, t("description_max"))
+          .optional()
+          .or(z.literal("")),
+      }),
     }),
   });
 
@@ -255,6 +327,9 @@ export const tagFormSchema = z.object({
     ru: tagTranslationInputSchema,
     es: tagTranslationInputSchema,
     zh: tagTranslationInputSchema,
+    fr: tagTranslationInputSchema,
+    de: tagTranslationInputSchema,
+    ro: tagTranslationInputSchema,
   }),
 });
 
@@ -278,6 +353,15 @@ export const createTagFormSchema = (t: any) =>
         name: z.string().min(1, t("name_required")).max(50, t("name_max")),
       }),
       es: z.object({
+        name: z.string().min(1, t("name_required")).max(50, t("name_max")),
+      }),
+      fr: z.object({
+        name: z.string().min(1, t("name_required")).max(50, t("name_max")),
+      }),
+      de: z.object({
+        name: z.string().min(1, t("name_required")).max(50, t("name_max")),
+      }),
+      ro: z.object({
         name: z.string().min(1, t("name_required")).max(50, t("name_max")),
       }),
     }),

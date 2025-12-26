@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
-import { ar, enUS, es, ru } from "date-fns/locale";
+import { ar, de, enUS, es, fr, ro, ru, zhCN } from "date-fns/locale";
 import {
   Calendar as CalendarIcon,
   Check,
@@ -76,6 +76,14 @@ const getDateFnsLocale = (locale: string) => {
       return es;
     case "ru":
       return ru;
+    case "fr":
+      return fr;
+    case "de":
+      return de;
+    case "zh":
+      return zhCN;
+    case "ro":
+      return ro;
     default:
       return enUS;
   }

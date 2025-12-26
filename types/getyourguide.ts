@@ -122,6 +122,9 @@ export const GETYOURGUIDE_LOCALE_MAP: Record<string, string> = {
   en: "en-US",
   es: "es-ES",
   ru: "ru-RU",
+  fr: "fr-FR",
+  de: "de-DE",
+  ro: "ro-RO",
   ar: "en-US", // Fallback to English - GetYourGuide doesn't support Arabic
   zh: "zh-CN", // Simplified Chinese
 };

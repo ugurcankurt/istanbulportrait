@@ -41,6 +41,9 @@ function TagDialog({
     ru: { name: "" },
     es: { name: "" },
     zh: { name: "" },
+    fr: { name: "" },
+    de: { name: "" },
+    ro: { name: "" },
   });
 
   // Reset form when dialog opens/closes or tag changes
@@ -60,6 +63,9 @@ function TagDialog({
               ru: { name: data.tag.translations?.ru?.name || "" },
               es: { name: data.tag.translations?.es?.name || "" },
               zh: { name: data.tag.translations?.zh?.name || "" },
+              fr: { name: data.tag.translations?.fr?.name || "" },
+              de: { name: data.tag.translations?.de?.name || "" },
+              ro: { name: data.tag.translations?.ro?.name || "" },
             });
           }
         } catch (error) {
@@ -78,6 +84,9 @@ function TagDialog({
         ru: { name: "" },
         es: { name: "" },
         zh: { name: "" },
+        fr: { name: "" },
+        de: { name: "" },
+        ro: { name: "" },
       });
     }
   }, [open, tag]);
@@ -133,9 +142,12 @@ function TagDialog({
               <TabsTrigger value="ru">🇷🇺 RU</TabsTrigger>
               <TabsTrigger value="es">🇪🇸 ES</TabsTrigger>
               <TabsTrigger value="zh">🇨🇳 ZH</TabsTrigger>
+              <TabsTrigger value="fr">🇫🇷 FR</TabsTrigger>
+              <TabsTrigger value="de">🇩🇪 DE</TabsTrigger>
+              <TabsTrigger value="ro">🇷🇴 RO</TabsTrigger>
             </TabsList>
 
-            {(["en", "ar", "ru", "es", "zh"] as const).map((locale) => (
+            {(["en", "ar", "ru", "es", "zh", "fr", "de", "ro"] as const).map((locale) => (
               <TabsContent key={locale} value={locale} className="space-y-4">
                 <div>
                   <Label>Name</Label>
