@@ -4,7 +4,6 @@ import { GallerySectionWithSchema } from "@/components/gallery-section-with-sche
 import { HeroSection } from "@/components/hero-section";
 import { PackagesSection } from "@/components/packages-section";
 import { ReviewsSection } from "@/components/reviews";
-import { ToursSection } from "@/components/tours-section";
 import { WhyChooseSection } from "@/components/why-choose-section";
 import { getLocalizedPaths } from "@/lib/localized-url";
 import { SEO_CONFIG } from "@/lib/seo-config";
@@ -98,7 +97,6 @@ export default async function HomePage({
         <GallerySectionWithSchema locale={locale} />
         <WhyChooseSection />
         <PackagesSection />
-        <ToursSection locale={locale} />
         <FAQSectionWithSchema locale={locale} />
         <ReviewsSection locale={locale} />
       </div>

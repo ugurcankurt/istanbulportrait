@@ -20,16 +20,6 @@ export const routing = defineRouting({
       de: "/pakete",
       ro: "/pachete",
     },
-    "/tours": {
-      en: "/tours",
-      ar: "/jawlat",
-      ru: "/tury",
-      es: "/tours",
-      zh: "/lvyou",
-      fr: "/visites",
-      de: "/touren",
-      ro: "/tururi",
-    },
     "/about": {
       en: "/about",
       ar: "/hawl",

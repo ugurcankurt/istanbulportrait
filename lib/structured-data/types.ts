@@ -52,10 +52,6 @@ export type WebSiteSchema = WithContext<WebSite>;
 
 // Helper schemas
 export type PostalAddressSchema = PostalAddress;
-
-// Tours and travel schemas
-export type TourSchema = WithContext<Product>;
-export type TourOfferSchema = Offer;
 export type ContactPointSchema = ContactPoint;
 export type OpeningHoursSchema = OpeningHoursSpecification;
 
@@ -115,27 +111,6 @@ export interface PackageData {
   included: string[];
   locations: number;
   photos: number;
-}
-
-// Tour data interface for Viator tours
-export interface TourData {
-  id: string;
-  name: string;
-  description: string;
-  price: number;
-  currency: string;
-  duration: string;
-  location: string;
-  rating: number;
-  reviewCount: number;
-  images: string[];
-  provider: string;
-  availability: string;
-  bookingUrl: string;
-  category?: string;
-  highlights?: string[];
-  includes?: string[];
-  cancellationPolicy?: string;
 }
 
 // Breadcrumb data interface

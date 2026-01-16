@@ -54,7 +54,6 @@ export function Navigation() {
   const navItems = [
     { href: "/" as const, label: t("home") },
     { href: "/packages" as const, label: t("packages") },
-    { href: "/tours" as const, label: t("tours") },
     { href: "/locations" as const, label: t("locations") },
     { href: "/blog" as const, label: t("blog") },
     { href: "/about" as const, label: t("about") },
