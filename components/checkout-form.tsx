@@ -38,7 +38,7 @@ import {
 import { fbPixel } from "@/lib/facebook";
 import { useIndexNow } from "@/lib/hooks/use-indexnow";
 import { getIyzicoErrorMessage } from "@/lib/iyzico-errors";
-import { formatPackagePricing } from "@/lib/pricing";
+import { getPackagePricing, formatPackagePricing } from "@/lib/pricing";
 import type {
   BookingFormData,
   PackageId,
@@ -173,7 +173,7 @@ export function CheckoutForm() {
   const packageInfo = selectedPackage
     ? {
       name: _tPackages(`${selectedPackage}.title`),
-      price: packagePrices[selectedPackage],
+      price: preFilledBookingData?.totalAmount || packagePrices[selectedPackage], // Use pre-calculated amount
       duration: _tPackages(`${selectedPackage}.duration`),
       photos: _tPackages(`${selectedPackage}.photos`),
       locations: _tPackages(`${selectedPackage}.locations`),
@@ -213,7 +213,7 @@ export function CheckoutForm() {
         body: JSON.stringify({
           paymentData,
           customerData: bookingData,
-          amount: packagePrices[selectedPackage],
+          amount: bookingData.totalAmount, // Use the amount from form data which includes discount
           packageId: selectedPackage,
           locale,
           eventId, // Pass Event ID to backend for CAPI
@@ -233,7 +233,7 @@ export function CheckoutForm() {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             ...bookingData,
-            totalAmount: packagePrices[selectedPackage], // Ensure totalAmount is correct and positive
+            totalAmount: bookingData.totalAmount, // Ensure totalAmount is correct
             paymentId: paymentResult.paymentId,
             conversationId: paymentResult.conversationId,
             providerResponse: paymentResult.providerResponse, // Pass full provider response
@@ -391,7 +391,7 @@ export function CheckoutForm() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           customerData: bookingData,
-          amount: packagePrices[selectedPackage],
+          amount: bookingData.totalAmount,
           packageId: selectedPackage,
           locale,
           eventId,
@@ -434,7 +434,7 @@ export function CheckoutForm() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...bookingData,
-          totalAmount: packagePrices[selectedPackage], // Ensure totalAmount is correct and positive
+          totalAmount: bookingData.totalAmount, // Ensure totalAmount is correct and positive
           paymentId: turinvoiceOrder.idOrder.toString(),
           conversationId: `turinvoice_${turinvoiceOrder.idOrder}`,
           provider: "turinvoice",
@@ -536,7 +536,12 @@ export function CheckoutForm() {
   }) => {
     if (!selectedPackage) return null;
 
-    const pricing = formatPackagePricing(selectedPackage, locale);
+    const pricing = formatPackagePricing(
+      selectedPackage,
+      locale,
+      undefined,
+      preFilledBookingData?.bookingDate // Pass the date to calculate discounts
+    );
 
     return (
       <div className="space-y-4">
@@ -563,7 +568,7 @@ export function CheckoutForm() {
             </div>
             <Badge
               variant="default"
-              className="bg-green-500/15 text-green-700 dark:text-green-400 border-green-500/20"
+              className="bg-success/15 text-success border-success/20"
             >
               {tui("selected")}
             </Badge>
@@ -603,6 +608,13 @@ export function CheckoutForm() {
               </span>
               <span>{pricing.basePrice}</span>
             </div>
+
+            {pricing.isDiscounted && (
+              <div className="flex justify-between items-center text-sm text-success font-medium">
+                <span>Seasonal Discount</span>
+                <span>-{pricing.discountAmount}</span>
+              </div>
+            )}
 
             {/* Tax Amount */}
             <div className="flex justify-between items-center text-sm">
@@ -672,15 +684,15 @@ export function CheckoutForm() {
             </p>
             <div className="flex items-center justify-center gap-4 mt-4 text-xs text-muted-foreground">
               <div className="flex items-center gap-1">
-                <span className="w-2 h-2 bg-green-500 rounded-full"></span>
+                <span className="w-2 h-2 bg-success rounded-full"></span>
                 {t("security.ssl_encrypted")}
               </div>
               <div className="flex items-center gap-1">
-                <span className="w-2 h-2 bg-green-500 rounded-full"></span>
+                <span className="w-2 h-2 bg-success rounded-full"></span>
                 {t("security.secure_payment")}
               </div>
               <div className="flex items-center gap-1">
-                <span className="w-2 h-2 bg-green-500 rounded-full"></span>
+                <span className="w-2 h-2 bg-success rounded-full"></span>
                 {t("security.pci_compliant")}
               </div>
             </div>

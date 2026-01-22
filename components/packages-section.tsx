@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { Check, Clock, Image as ImageIcon, MapPin } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { BookingModal } from "@/components/booking-modal";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -16,6 +16,8 @@ import {
 import { Link } from "@/i18n/routing";
 import { fbPixel } from "@/lib/facebook";
 import type { PackageId } from "@/lib/validations";
+import { packagePrices } from "@/lib/validations";
+import { calculateDiscountedPrice } from "@/lib/pricing";
 
 export function PackagesSection() {
   const t = useTranslations("packages");
@@ -25,52 +27,59 @@ export function PackagesSection() {
   const [selectedPackageForModal, setSelectedPackageForModal] =
     useState<PackageId | null>(null);
 
-  const packages = [
-    {
-      id: "essential",
-      name: t("essential.title"),
-      price: t("essential.price"),
-      duration: t("essential.duration"),
-      photos: t("essential.photos"),
-      locations: t("essential.locations"),
-      features: t.raw("essential.features") as string[],
-      popular: false,
-      image: "/images/locations/galata-bridge-2.webp",
-    },
-    {
-      id: "premium",
-      name: t("premium.title"),
-      price: t("premium.price"),
-      duration: t("premium.duration"),
-      photos: t("premium.photos"),
-      locations: t("premium.locations"),
-      features: t.raw("premium.features") as string[],
-      popular: true,
-      image: "/gallery/istanbul_couple_photoshoot_1.webp",
-    },
-    {
-      id: "luxury",
-      name: t("luxury.title"),
-      price: t("luxury.price"),
-      duration: t("luxury.duration"),
-      photos: t("luxury.photos"),
-      locations: t("luxury.locations"),
-      features: t.raw("luxury.features") as string[],
-      popular: false,
-      image: "/gallery/istanbul_wedding_photographer_1.webp",
-    },
-    {
-      id: "rooftop",
-      name: t("rooftop.title"),
-      price: t("rooftop.price"),
-      duration: t("rooftop.duration"),
-      photos: t("rooftop.photos"),
-      locations: t("rooftop.locations"),
-      features: t.raw("rooftop.features") as string[],
-      popular: false,
-      image: "/images/locations/bosphorus-rooftop-hero.webp",
-    },
-  ];
+  const packages = useMemo(() => {
+    const today = new Date();
+    return [
+      {
+        id: "essential",
+        name: t("essential.title"),
+        basePrice: packagePrices.essential,
+        pricing: calculateDiscountedPrice(packagePrices.essential, today),
+        duration: t("essential.duration"),
+        photos: t("essential.photos"),
+        locations: t("essential.locations"),
+        features: t.raw("essential.features") as string[],
+        popular: false,
+        image: "/images/locations/galata-bridge-2.webp",
+      },
+      {
+        id: "premium",
+        name: t("premium.title"),
+        basePrice: packagePrices.premium,
+        pricing: calculateDiscountedPrice(packagePrices.premium, today),
+        duration: t("premium.duration"),
+        photos: t("premium.photos"),
+        locations: t("premium.locations"),
+        features: t.raw("premium.features") as string[],
+        popular: true,
+        image: "/gallery/istanbul_couple_photoshoot_1.webp",
+      },
+      {
+        id: "luxury",
+        name: t("luxury.title"),
+        basePrice: packagePrices.luxury,
+        pricing: calculateDiscountedPrice(packagePrices.luxury, today),
+        duration: t("luxury.duration"),
+        photos: t("luxury.photos"),
+        locations: t("luxury.locations"),
+        features: t.raw("luxury.features") as string[],
+        popular: false,
+        image: "/gallery/istanbul_wedding_photographer_1.webp",
+      },
+      {
+        id: "rooftop",
+        name: t("rooftop.title"),
+        basePrice: packagePrices.rooftop,
+        pricing: calculateDiscountedPrice(packagePrices.rooftop, today),
+        duration: t("rooftop.duration"),
+        photos: t("rooftop.photos"),
+        locations: t("rooftop.locations"),
+        features: t.raw("rooftop.features") as string[],
+        popular: false,
+        image: "/images/locations/bosphorus-rooftop-hero.webp",
+      },
+    ];
+  }, [t]);
 
   // Track ViewContent events for Facebook Commerce Manager
   useEffect(() => {
@@ -81,7 +90,7 @@ export function PackagesSection() {
         content_ids: [pkg.id],
         content_name: pkg.name,
         content_category: "Photography Services",
-        value: parseFloat(pkg.price.replace(/[€$]/g, "")),
+        value: pkg.pricing.price,
         currency: "EUR",
         num_items: 1,
       });
@@ -130,18 +139,29 @@ export function PackagesSection() {
                       className="object-cover transition-transform duration-500 hover:scale-110"
                       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     />
-                    <div className="absolute top-2 left-2 z-10 bg-primary text-primary-foreground px-3 py-1 rounded-md font-bold text-lg sm:text-xl shadow-lg border border-white/20">
-                      {pkg.price}
+                    <div className="absolute top-2 left-2 z-10 bg-primary text-primary-foreground px-3 py-1 rounded-md font-bold text-lg sm:text-xl shadow-lg border border-white/20 flex flex-col items-center">
+                      <span className={pkg.pricing.isDiscounted ? "text-xs opacity-80 line-through mb-[-4px]" : ""}>
+                        €{pkg.basePrice}
+                      </span>
+                      {pkg.pricing.isDiscounted && (
+                        <span>€{pkg.pricing.price}</span>
+                      )}
                     </div>
                   </div>
 
-                  {pkg.popular && (
-                    <div className="absolute top-2 right-2 z-10">
+                  {/* Seasonal Discount Badge */}
+                  <div className="absolute top-2 right-2 z-10 flex flex-col gap-2 items-end">
+                    {pkg.popular && (
                       <Badge className="bg-primary text-primary-foreground px-2 sm:px-4 py-1 text-xs sm:text-sm shadow-md">
                         {tui("most_popular")}
                       </Badge>
-                    </div>
-                  )}
+                    )}
+                    {pkg.pricing.isDiscounted && (
+                      <Badge className="bg-sale text-sale-foreground px-2 py-0.5 text-[10px] sm:text-xs shadow-md animate-pulse border-0">
+                        -{Math.round(pkg.pricing.discountPercentage * 100)}% {t("winter_sale")}
+                      </Badge>
+                    )}
+                  </div>
 
                   <CardHeader className="text-center pb-2 sm:pb-2 px-3 sm:px-4 pt-4">
                     <h3 className="text-xl sm:text-2xl font-bold mb-1 sm:mb-2">

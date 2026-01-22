@@ -95,10 +95,10 @@ export function PackageDetails({
           >
             <Card
               className={`h-full cursor-pointer transition-all duration-300 hover:shadow-lg flex flex-col ${selectedPackage === pkg.id
-                  ? "ring-2 ring-primary shadow-xl bg-gradient-to-b from-background to-primary/5"
-                  : pkg.popular
-                    ? "ring-2 ring-primary/50 shadow-lg bg-gradient-to-b from-background to-primary/5"
-                    : "hover:shadow-md border-2 hover:border-primary/20"
+                ? "ring-2 ring-primary shadow-xl bg-gradient-to-b from-background to-primary/5"
+                : pkg.popular
+                  ? "ring-2 ring-primary/50 shadow-lg bg-gradient-to-b from-background to-primary/5"
+                  : "hover:shadow-md border-2 hover:border-primary/20"
                 }`}
               onClick={() => onPackageSelect(pkg.id)}
             >
@@ -109,6 +109,13 @@ export function PackageDetails({
                   </Badge>
                 </div>
               )}
+
+              {/* Seasonal Discount Badge */}
+              <div className="absolute -top-2 right-1/2 transform translate-x-1/2 mt-8 sm:mt-10 w-full flex justify-center">
+                <Badge className="bg-sale text-sale-foreground px-2 py-0.5 text-[10px] sm:text-xs">
+                  {t("winter_sale")}
+                </Badge>
+              </div>
 
               <CardHeader className="text-center pb-1 sm:pb-3 px-2 sm:px-4">
                 <CardTitle className="text-sm sm:text-lg font-bold mb-0.5 sm:mb-1">

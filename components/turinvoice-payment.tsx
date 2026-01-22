@@ -99,7 +99,7 @@ export function TurinvoicePayment({
       case "paying":
         return <Loader2 className="w-6 h-6 text-yellow-500 animate-spin" />;
       case "paid":
-        return <Check className="w-6 h-6 text-green-500" />;
+        return <Check className="w-6 h-6 text-success" />;
       case "timeout":
         return <X className="w-6 h-6 text-red-500" />;
     }
@@ -195,10 +195,10 @@ export function TurinvoicePayment({
       {/* Success Message */}
       {status === "paid" && (
         <div className="text-center space-y-2">
-          <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto">
-            <Check className="w-8 h-8 text-green-600" />
+          <div className="w-16 h-16 bg-success/15 rounded-full flex items-center justify-center mx-auto">
+            <Check className="w-8 h-8 text-success" />
           </div>
-          <p className="text-lg font-semibold text-green-600">
+          <p className="text-lg font-semibold text-success">
             {t("status_paid")}
           </p>
           <p className="text-sm text-muted-foreground">

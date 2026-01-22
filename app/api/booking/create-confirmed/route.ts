@@ -14,7 +14,8 @@ import {
 } from "@/lib/rate-limit";
 import { sendBookingConfirmation } from "@/lib/resend";
 import { supabaseAdmin } from "@/lib/supabase";
-import { bookingSchema } from "@/lib/validations";
+import { bookingSchema, packagePrices } from "@/lib/validations";
+import { calculateDiscountedPrice } from "@/lib/pricing";
 
 export async function POST(request: NextRequest) {
   const startTime = Date.now();
@@ -87,6 +88,32 @@ export async function POST(request: NextRequest) {
       notes,
       totalAmount,
     } = validationResult.data;
+
+    // Validate that the totalAmount matches the expected price
+    const basePrice = packagePrices[packageId as keyof typeof packagePrices];
+    let expectedPrice: number = basePrice;
+
+    // We check against the booking date for seasonal discounts
+    if (bookingDate) {
+      const { price } = calculateDiscountedPrice(basePrice, bookingDate);
+      expectedPrice = price;
+    }
+
+    if (Math.abs(totalAmount - expectedPrice) > 0.01) {
+      const amountError = new ValidationError("Booking amount mismatch");
+      logError(amountError, {
+        ip,
+        endpoint: "booking-confirmed",
+        receivedAmount: totalAmount,
+        expectedAmount: expectedPrice,
+        bookingDate
+      });
+
+      return NextResponse.json(
+        { error: sanitizeErrorForProduction(amountError) },
+        { status: 400 },
+      );
+    }
 
     try {
       // First create/update customer record
@@ -183,6 +210,12 @@ export async function POST(request: NextRequest) {
 
       // Send confirmation email
       try {
+        // Calculate discount details for email
+        const { originalPrice, discountAmount } = calculateDiscountedPrice(
+          packagePrices[packageId as keyof typeof packagePrices],
+          bookingDate,
+        );
+
         await sendBookingConfirmation({
           customerName,
           customerEmail,
@@ -190,6 +223,8 @@ export async function POST(request: NextRequest) {
           bookingDate,
           bookingTime,
           totalAmount,
+          originalAmount: originalPrice,
+          discountAmount: discountAmount,
           bookingId: booking.id,
         });
 

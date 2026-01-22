@@ -9,6 +9,8 @@ export interface BookingConfirmationData {
   bookingDate: string;
   bookingTime: string;
   totalAmount: number;
+  originalAmount?: number;
+  discountAmount?: number;
   bookingId: string;
 }
 
@@ -56,10 +58,25 @@ export const sendBookingConfirmation = async (
                 <td style="padding: 8px 0; border-bottom: 1px solid #eee;"><strong>Time:</strong></td>
                 <td style="padding: 8px 0; border-bottom: 1px solid #eee;">${data.bookingTime}</td>
               </tr>
-              <tr>
                 <td style="padding: 8px 0;"><strong>Total Amount:</strong></td>
-                <td style="padding: 8px 0; font-weight: bold; color: #2563eb;">€${data.totalAmount}</td>
+                <td style="padding: 8px 0; font-weight: bold; color: #2563eb;">
+                  ${data.originalAmount &&
+          data.originalAmount > data.totalAmount
+          ? `<span style="text-decoration: line-through; color: #666; font-weight: normal; font-size: 0.9em; margin-right: 8px;">€${data.originalAmount}</span>`
+          : ""
+        }
+                  €${data.totalAmount}
+                </td>
               </tr>
+              ${data.discountAmount && data.discountAmount > 0
+          ? `
+              <tr>
+                <td style="padding: 8px 0; color: #16a34a; font-size: 0.9em;"><strong>Seasonal Discount:</strong></td>
+                <td style="padding: 8px 0; color: #16a34a; font-size: 0.9em;">-€${data.discountAmount}</td>
+              </tr>
+              `
+          : ""
+        }
             </table>
           </div>
 

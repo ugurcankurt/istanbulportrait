@@ -13,6 +13,7 @@ import {
 } from "@/lib/rate-limit";
 import { turinvoiceCreateOrder } from "@/lib/turinvoice";
 import { packagePrices } from "@/lib/validations";
+import { calculateDiscountedPrice } from "@/lib/pricing";
 
 export async function POST(request: NextRequest) {
   const startTime = Date.now();
@@ -66,6 +67,51 @@ export async function POST(request: NextRequest) {
 
       return NextResponse.json(
         { error: sanitizeErrorForProduction(amountError) },
+        { status: 400 },
+      );
+    }
+
+    // Validate package exists
+    if (!(packageId in packagePrices)) {
+      const packageError = new ValidationError("Invalid package ID");
+      logError(packageError, {
+        ip,
+        endpoint: "turinvoice-payment",
+        packageId,
+      });
+
+      return NextResponse.json(
+        { error: sanitizeErrorForProduction(packageError) },
+        { status: 400 },
+      );
+    }
+
+    // Verify price matches package price (with discount if applicable)
+    const basePrice = packagePrices[packageId as keyof typeof packagePrices];
+    const bookingDate = customerData?.bookingDate;
+    let expectedPrice: number = basePrice;
+
+    if (bookingDate) {
+      const { price } = calculateDiscountedPrice(basePrice, bookingDate);
+      expectedPrice = price;
+    }
+
+    if (Math.abs(amount - expectedPrice) > 0.01) {
+      const priceError = new ValidationError(
+        "Amount does not match package price",
+      );
+      logError(priceError, {
+        ip,
+        endpoint: "turinvoice-payment",
+        providedAmount: amount,
+        expectedAmount: expectedPrice,
+        packageId,
+        bookingDate,
+        action: "price_validation",
+      });
+
+      return NextResponse.json(
+        { error: sanitizeErrorForProduction(priceError) },
         { status: 400 },
       );
     }

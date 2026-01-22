@@ -17,6 +17,7 @@ import {
   getClientIP,
 } from "@/lib/rate-limit";
 import type { PackageId } from "@/lib/validations";
+import { calculateDiscountedPrice } from "@/lib/pricing";
 
 export async function POST(request: NextRequest) {
   const startTime = Date.now();
@@ -79,7 +80,20 @@ export async function POST(request: NextRequest) {
     }
 
     // Validate that the provided amount matches the expected package total
-    if (Math.abs(amount - packagePricing.totalPrice) > 0.01) {
+    // We need to check if a date was provided in customerData to apply discounts
+    const bookingDate = customerData.bookingDate;
+    let expectedPrice = packagePricing.totalPrice;
+
+    if (bookingDate) {
+      const { price: discountedPrice } = calculateDiscountedPrice(packagePricing.originalPrice, bookingDate);
+      // We need to recalculate tax breakdown for validation if discounted
+      // But for simple total check, the discounted price + tax logic should match
+      // Ideally getPackagePricing should differ, but here we just need total
+      // Let's assume calculateDiscountedPrice returns the tax-inclusive price as per our logic
+      expectedPrice = discountedPrice;
+    }
+
+    if (Math.abs(amount - expectedPrice) > 0.01) {
       const priceError = new ValidationError(
         "Amount does not match package price",
       );
@@ -87,8 +101,9 @@ export async function POST(request: NextRequest) {
         ip,
         endpoint: "payment",
         providedAmount: amount,
-        expectedAmount: packagePricing.totalPrice,
+        expectedAmount: expectedPrice,
         packageId,
+        bookingDate,
         action: "price_validation",
       });
 

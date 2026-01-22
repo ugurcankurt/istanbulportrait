@@ -119,10 +119,10 @@ export function WhatsAppButton({
             onClick={toggleChat}
           >
             <div className="relative shrink-0">
-              <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center text-green-600">
+              <div className="w-10 h-10 rounded-full bg-success/15 flex items-center justify-center text-success">
                 <MessageCircle size={20} fill="currentColor" />
               </div>
-              <span className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-background rounded-full"></span>
+              <span className="absolute bottom-0 right-0 w-3 h-3 bg-success border-2 border-background rounded-full"></span>
             </div>
             <div
               className="flex-1 min-w-0 text-left rtl:text-right"
@@ -157,14 +157,14 @@ export function WhatsAppButton({
         >
           {/* Pulse Effect */}
           {!isChatOpen && (
-            <span className="absolute inset-0 rounded-full bg-[#25D366] opacity-20 animate-ping duration-[2000ms]"></span>
+            <span className="absolute inset-0 rounded-full bg-whatsapp opacity-20 animate-ping duration-[2000ms]"></span>
           )}
 
           {/* Button Container */}
           <div
             className={cn(
               "relative flex items-center justify-center rounded-full shadow-lg transition-all duration-300",
-              isChatOpen ? "bg-primary hover:bg-primary/90" : "bg-[#25D366] hover:bg-[#20ba5a]",
+              isChatOpen ? "bg-primary hover:bg-primary/90" : "bg-whatsapp hover:brightness-90",
               mounted && isMobile ? "w-14 h-14" : "w-16 h-16",
             )}
           >

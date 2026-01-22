@@ -119,7 +119,8 @@
     "sections": {
       "available_packages": "Paquetes de Fotógrafo en Estambul",
       "intro": "Elige tu paquete de fotografía perfecto con el experto fotógrafo de Estambul. Todas las sesiones incluyen edición profesional, acceso a azoteas premium y fotos en los lugares más emblemáticos de la ciudad. Como tu fotógrafo dedicado en Estambul, aseguro que cada momento sea capturado hermosamente."
-    }
+    },
+    "winter_sale": "Oferta de Invierno"
   },
   "about": {
     "title": "Acerca de Mí",
@@ -208,7 +209,7 @@
       "continue": "Continuar",
       "back": "Atrás",
       "cancel": "Cancelar",
-      "continue_to_payment": "Continuar al Pago",
+      "continue_to_payment": "Continuar con el Pago",
       "edit_details": "Editar Detalles",
       "complete_booking": "Completar Reserva",
       "pay_amount": "PAGAR {amount}",

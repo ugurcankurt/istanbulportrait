@@ -80,11 +80,16 @@ export function PaymentForm({
   }
 
   // Get pricing with tax breakdown
-  const packagePricing = formatPackagePricing(selectedPackage, locale);
+  const packagePricing = formatPackagePricing(
+    selectedPackage,
+    locale,
+    undefined,
+    bookingData.bookingDate,
+  );
 
   const packageInfo = {
     name: tPackages(`${selectedPackage}.title`),
-    price: packagePrices[selectedPackage],
+    price: bookingData.totalAmount || packagePrices[selectedPackage],
   };
 
   // Format card number with spaces
@@ -110,7 +115,7 @@ export function PaymentForm({
         <FieldGroup>
           <FieldSet>
             <FieldDescription className="flex items-center gap-2">
-              <ShieldCheck className="w-4 h-4 text-green-600" />
+              <ShieldCheck className="w-4 h-4 text-success" />
               {t("security.payment_secure_message")}
             </FieldDescription>
             <FieldGroup>

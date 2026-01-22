@@ -120,7 +120,8 @@
     "sections": {
       "available_packages": "伊斯坦布尔摄影师套餐",
       "intro": "与伊斯坦布尔专业摄影师一起选择您的完美摄影套餐。所有拍摄包括专业后期处理、高端屋顶拍摄权限以及在城市最具标志性的地点拍照。作为您的专属伊斯坦布尔摄影师，我确保每个精彩瞬间都被完美捕捉。"
-    }
+    },
+    "winter_sale": "冬季促销"
   },
   "about": {
     "title": "关于我",
@@ -209,7 +210,7 @@
       "continue": "继续",
       "back": "返回",
       "cancel": "取消",
-      "continue_to_payment": "继续付款",
+      "continue_to_payment": "进行结算",
       "edit_details": "编辑详情",
       "complete_booking": "完成预订",
       "pay_amount": "支付 {amount}",

@@ -17,7 +17,7 @@ export function LocationCard({ location, index }: LocationCardProps) {
     const t = useTranslations("locations");
 
     return (
-        <div className="h-full animate-fade-in-up" style={{ animationDelay: `${index * 80}ms` }}>
+        <div className="h-full cursor-pointer">
             <Link
                 href={{
                     pathname: "/locations/[slug]" as const,
@@ -25,14 +25,14 @@ export function LocationCard({ location, index }: LocationCardProps) {
                 }}
                 className="block group h-full"
             >
-                <Card className="overflow-hidden h-full transition-all duration-300 hover:shadow-xl hover:shadow-primary/10 hover:border-primary/30 border-border/50 bg-card/80 backdrop-blur-sm py-0 gap-0 hover-scale">
+                <Card className="overflow-hidden h-full transition-all duration-300 hover:shadow-lg border-border/50 bg-card/80 backdrop-blur-sm py-0 gap-0">
                     {/* Image Container - More compact aspect ratio */}
                     <div className="relative aspect-[16/10] sm:aspect-[4/3] overflow-hidden">
                         <Image
                             src={location.images.hero}
                             alt={t(`items.${location.slug}.name`)}
                             fill
-                            className="object-cover object-center group-hover:scale-110 transition-transform duration-700 ease-out"
+                            className="object-cover object-center transition-transform duration-500 hover:scale-110"
                             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                             priority={index < 4}
                         />

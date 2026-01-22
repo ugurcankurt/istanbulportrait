@@ -46,6 +46,7 @@ import { fbPixel } from "@/lib/facebook";
 import { cn } from "@/lib/utils";
 import type { BookingFormData, PackageId } from "@/lib/validations";
 import { createBookingSchema, packagePrices } from "@/lib/validations";
+import { getPackagePricing } from "@/lib/pricing";
 
 interface BookingModalProps {
   isOpen: boolean;
@@ -134,17 +135,39 @@ export function BookingModal({
   });
 
   // Update form values when selectedPackage changes
+  // Calculate pricing based on selected package and date
+  const [pricing, setPricing] = useState<{
+    totalPrice: number;
+    originalPrice: number;
+    isDiscounted: boolean;
+    discountPercentage: number;
+  } | null>(null);
+
+  // Update pricing when package or date changes
   useEffect(() => {
     if (selectedPackage) {
       form.setValue("packageId", selectedPackage);
-      form.setValue("totalAmount", packagePrices[selectedPackage]);
+      const dateValue = form.getValues("bookingDate");
+      const priceBreakdown = getPackagePricing(selectedPackage, undefined, dateValue);
+
+      setPricing({
+        totalPrice: priceBreakdown.totalPrice,
+        originalPrice: priceBreakdown.originalPrice,
+        isDiscounted: priceBreakdown.isDiscounted,
+        discountPercentage: priceBreakdown.appliedDiscountPercentage
+      });
+
+      form.setValue("totalAmount", priceBreakdown.totalPrice);
     }
-  }, [selectedPackage, form]);
+  }, [selectedPackage, form.watch("bookingDate"), form]); // Watch date changes
 
   const packageInfo = selectedPackage
     ? {
       name: tPackages(`${selectedPackage}.title`),
-      price: packagePrices[selectedPackage],
+      price: pricing?.totalPrice || packagePrices[selectedPackage],
+      originalPrice: pricing?.originalPrice || packagePrices[selectedPackage],
+      isDiscounted: pricing?.isDiscounted || false,
+      discountPercentage: pricing?.discountPercentage || 0,
       duration: tPackages(`${selectedPackage}.duration`),
       photos: tPackages(`${selectedPackage}.photos`),
       locations: tPackages(`${selectedPackage}.locations`),
@@ -182,7 +205,7 @@ export function BookingModal({
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
               ...data,
-              totalAmount: packagePrices[selectedPackage],
+              totalAmount: pricing?.totalPrice || packagePrices[selectedPackage],
               locale, // Send current locale
             }),
           });
@@ -496,9 +519,21 @@ export function BookingModal({
 
                 <div className="flex justify-between items-center">
                   <span className="font-semibold">{tui("total")}:</span>
-                  <span className="text-xl font-bold text-primary">
-                    €{packageInfo.price}
-                  </span>
+                  <div className="text-right">
+                    {packageInfo.isDiscounted && (
+                      <div className="text-sm text-muted-foreground line-through">
+                        €{packageInfo.originalPrice}
+                      </div>
+                    )}
+                    <span className="text-xl font-bold text-primary">
+                      €{packageInfo.price}
+                    </span>
+                    {packageInfo.isDiscounted && (
+                      <Badge variant="secondary" className="ml-2 bg-success/15 text-success text-xs font-medium border-0">
+                        -{packageInfo.discountPercentage * 100}% Season Deal
+                      </Badge>
+                    )}
+                  </div>
                 </div>
               </CardContent>
             </Card>

@@ -13,7 +13,8 @@ import {
     getClientIP,
 } from "@/lib/rate-limit";
 import { supabaseAdmin } from "@/lib/supabase";
-import { bookingSchema } from "@/lib/validations";
+import { bookingSchema, packagePrices } from "@/lib/validations";
+import { calculateDiscountedPrice } from "@/lib/pricing";
 import { z } from "zod";
 
 // Extended schema to include locale
@@ -87,7 +88,7 @@ export async function POST(request: NextRequest) {
                     booking_date: bookingDate,
                     booking_time: bookingTime,
                     status: "draft", // IMPORTANT: Draft status
-                    total_amount: totalAmount,
+                    total_amount: calculateDiscountedPrice(packagePrices[packageId as keyof typeof packagePrices], bookingDate).price,
                     notes: notes || null,
                     locale: locale, // Save language preference
                     abandoned_email_sent: false,

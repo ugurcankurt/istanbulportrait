@@ -306,12 +306,12 @@ export function ChatWidget({ isOpen, onClose, whatsappNumber }: ChatWidgetProps)
                             <div className="w-10 h-10 rounded-full border-2 border-primary-foreground/20 overflow-hidden shadow-inner">
                                 <img src="/emily.webp" alt="Emily" className="w-full h-full object-cover" />
                             </div>
-                            <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 border-2 border-primary rounded-full"></span>
+                            <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-success border-2 border-primary rounded-full"></span>
                         </div>
                         <div>
                             <h3 className="font-semibold text-sm text-white">Emily</h3>
                             <p className="text-[10px] text-primary-foreground/80 font-medium">
-                                {t("role")} • <span className="text-green-300">{t("online")}</span>
+                                {t("role")} • <span className="text-success font-medium">{t("online")}</span>
                             </p>
                         </div>
                     </div>

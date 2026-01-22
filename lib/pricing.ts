@@ -12,14 +12,97 @@ import {
 } from "./tax";
 import { type PackageId, packagePrices } from "./validations";
 
+export interface DiscountRule {
+  startMonth: number; // 0-based (0 = January)
+  endMonth: number;   // 0-based (11 = December)
+  discountPercentage: number; // 0.1 = 10%
+}
+
+export const SEASONAL_DISCOUNTS: DiscountRule[] = [
+  // Low season: November (10), December (11), January (0), February (1)
+  { startMonth: 10, endMonth: 11, discountPercentage: 0.33 },
+  { startMonth: 0, endMonth: 1, discountPercentage: 0.33 },
+];
+
 export interface PriceBreakdown extends TaxBreakdown {
   packageId: PackageId;
   displayName: string;
+  originalPrice: number;
+  discountAmount: number;
+  isDiscounted: boolean;
+  appliedDiscountPercentage: number;
 }
 
 export interface FormattedPriceBreakdown extends FormattedTaxBreakdown {
   packageId: PackageId;
   displayName: string;
+  originalPrice: string;
+  discountAmount: string;
+  isDiscounted: boolean;
+  appliedDiscountPercentage: number;
+}
+
+/**
+ * Calculate discounted price based on date
+ * @param basePrice - Original price
+ * @param date - Booking date to check against discount rules
+ * @returns Discounted price and applied percentage
+ */
+export function calculateDiscountedPrice(
+  basePrice: number,
+  date?: Date | string,
+): {
+  price: number;
+  originalPrice: number;
+  discountPercentage: number;
+  discountAmount: number;
+  isDiscounted: boolean;
+} {
+  if (!date) {
+    return {
+      price: basePrice,
+      originalPrice: basePrice,
+      discountPercentage: 0,
+      discountAmount: 0,
+      isDiscounted: false,
+    };
+  }
+
+  const checkDate = typeof date === "string" ? new Date(date) : date;
+  if (isNaN(checkDate.getTime())) {
+    return {
+      price: basePrice,
+      originalPrice: basePrice,
+      discountPercentage: 0,
+      discountAmount: 0,
+      isDiscounted: false,
+    };
+  }
+
+  const month = checkDate.getMonth();
+
+  const applicableRule = SEASONAL_DISCOUNTS.find(
+    (rule) => month >= rule.startMonth && month <= rule.endMonth,
+  );
+
+  if (applicableRule) {
+    const discountAmount = basePrice * applicableRule.discountPercentage;
+    return {
+      price: basePrice - discountAmount,
+      originalPrice: basePrice,
+      discountPercentage: applicableRule.discountPercentage,
+      discountAmount: discountAmount,
+      isDiscounted: true,
+    };
+  }
+
+  return {
+    price: basePrice,
+    originalPrice: basePrice,
+    discountPercentage: 0,
+    discountAmount: 0,
+    isDiscounted: false,
+  };
 }
 
 /**
@@ -27,19 +110,27 @@ export interface FormattedPriceBreakdown extends FormattedTaxBreakdown {
  * Current package prices are treated as tax-inclusive
  * @param packageId - Package identifier
  * @param taxRate - Tax rate (defaults to Turkey VAT)
+ * @param date - Optional date to apply seasonal discounts
  * @returns Complete price breakdown
  */
 export function getPackagePricing(
   packageId: PackageId,
   taxRate: number = TAX_RATES.TURKEY,
+  date?: Date | string
 ): PriceBreakdown {
-  const totalPrice = packagePrices[packageId];
+  const originalPrice = packagePrices[packageId];
+  const { price: totalPrice, discountPercentage } = calculateDiscountedPrice(originalPrice, date);
+
   const taxBreakdown = getTaxBreakdownFromTotal(totalPrice, taxRate);
 
   return {
     ...taxBreakdown,
     packageId,
     displayName: getPackageDisplayName(packageId),
+    originalPrice,
+    discountAmount: originalPrice - totalPrice,
+    isDiscounted: discountPercentage > 0,
+    appliedDiscountPercentage: discountPercentage
   };
 }
 
@@ -48,20 +139,31 @@ export function getPackagePricing(
  * @param packageId - Package identifier
  * @param locale - Locale for formatting
  * @param taxRate - Tax rate (defaults to Turkey VAT)
+ * @param date - Optional date to apply seasonal discounts
  * @returns Formatted price breakdown
  */
 export function formatPackagePricing(
   packageId: PackageId,
   locale: string = "en",
   taxRate: number = TAX_RATES.TURKEY,
+  date?: Date | string
 ): FormattedPriceBreakdown {
-  const breakdown = getPackagePricing(packageId, taxRate);
+  const breakdown = getPackagePricing(packageId, taxRate, date);
   const formatted = formatTaxBreakdown(breakdown, locale);
+
+  const formatter = new Intl.NumberFormat(locale, {
+    style: "currency",
+    currency: "EUR",
+  });
 
   return {
     ...formatted,
     packageId: breakdown.packageId,
     displayName: breakdown.displayName,
+    originalPrice: formatter.format(breakdown.originalPrice),
+    discountAmount: formatter.format(breakdown.discountAmount),
+    isDiscounted: breakdown.isDiscounted,
+    appliedDiscountPercentage: breakdown.appliedDiscountPercentage
   };
 }
 

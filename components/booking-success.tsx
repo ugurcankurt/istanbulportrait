@@ -100,9 +100,40 @@ export function BookingSuccess({
                   <span className="text-muted-foreground text-sm sm:text-base">
                     {tsuccess("amount_paid")}:
                   </span>
-                  <span className="font-bold text-sm sm:text-base">
-                    {formatCurrency(packageInfo.price, locale)}
-                  </span>
+                  <div className="flex flex-col items-end">
+                    {customerData?.bookingDate ? (
+                      (() => {
+                        const { price, originalPrice, isDiscounted } =
+                          // eslint-disable-next-line @typescript-eslint/no-var-requires
+                          require("@/lib/pricing").calculateDiscountedPrice(
+                            packagePrices[packageId],
+                            customerData.bookingDate,
+                          );
+
+                        if (isDiscounted) {
+                          return (
+                            <>
+                              <span className="text-xs text-muted-foreground line-through">
+                                {formatCurrency(originalPrice, locale)}
+                              </span>
+                              <span className="font-bold text-sm sm:text-base text-success">
+                                {formatCurrency(price, locale)}
+                              </span>
+                            </>
+                          );
+                        }
+                        return (
+                          <span className="font-bold text-sm sm:text-base">
+                            {formatCurrency(price, locale)}
+                          </span>
+                        );
+                      })()
+                    ) : (
+                      <span className="font-bold text-sm sm:text-base">
+                        {formatCurrency(packageInfo.price, locale)}
+                      </span>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
