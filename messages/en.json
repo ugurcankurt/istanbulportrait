@@ -1298,5 +1298,17 @@
     "checkout_nudge": "Hey! I noticed you're at the final step. Do you need any help completing your booking? 😊",
     "role": "Photography Assistant",
     "online": "Online"
+  },
+  "newsletter": {
+    "title": "Join Us",
+    "description": "Subscribe to our newsletter for exclusive photography tips, seasonal offers, and Istanbul travel guides.",
+    "name_placeholder": "Full Name",
+    "email_placeholder": "Email Address",
+    "button": "Subscribe",
+    "subscribing": "Subscribing...",
+    "success_title": "Welcome aboard!",
+    "success_message": "You've successfully subscribed to our newsletter.",
+    "error_message": "Something went wrong. Please try again.",
+    "close": "No thanks"
   }
 }

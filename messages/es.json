@@ -1267,5 +1267,17 @@
     "checkout_nudge": "¡Hola! He notado que estás en el último paso. ¿Necesitas ayuda para completar tu reserva? 😊",
     "role": "Asistente de Fotografía",
     "online": "En línea"
+  },
+  "newsletter": {
+    "title": "Únete a nosotros",
+    "description": "Suscríbete a nuestro boletín para recibir consejos exclusivos de fotografía, ofertas de temporada y guías de viaje de Estambul.",
+    "name_placeholder": "Nombre completo",
+    "email_placeholder": "Dirección de correo electrónico",
+    "button": "Suscribirse",
+    "subscribing": "Suscribiendo...",
+    "success_title": "¡Bienvenido a bordo!",
+    "success_message": "Te has suscrito correctamente a nuestro boletín.",
+    "error_message": "Algo salió mal. Por favor, inténtalo de nuevo.",
+    "close": "No, gracias"
   }
 }

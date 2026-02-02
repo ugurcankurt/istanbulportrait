@@ -12,7 +12,7 @@ import {
   createRateLimitError,
   getClientIP,
 } from "@/lib/rate-limit";
-import { sendBookingConfirmation } from "@/lib/resend";
+import { sendBookingConfirmation, addContactToAudience } from "@/lib/resend";
 import { supabaseAdmin } from "@/lib/supabase";
 import { bookingSchema, packagePrices } from "@/lib/validations";
 import { calculateDiscountedPrice } from "@/lib/pricing";
@@ -250,6 +250,19 @@ export async function POST(request: NextRequest) {
       } catch (emailError) {
         console.error("❌ Failed to send confirmation email:", emailError);
         // Don't fail the booking creation if email fails
+      }
+
+      // Add to Resend Audience (Newsletter/Marketing)
+      // Non-blocking: we don't await this or we catch errors internally
+      try {
+        const nameParts = customerName.split(" ");
+        const firstName = nameParts[0];
+        const lastName = nameParts.length > 1 ? nameParts.slice(1).join(" ") : "";
+
+        // Execute in background
+        addContactToAudience(customerEmail, firstName, lastName);
+      } catch (audienceError) {
+        console.error("Audience sync error:", audienceError);
       }
 
       return NextResponse.json({

@@ -1298,5 +1298,17 @@
     "checkout_nudge": "嘿！我注意到您在最后一步了。需要我帮您完成预订吗？😊",
     "role": "摄影助理",
     "online": "在线"
+  },
+  "newsletter": {
+    "title": "加入我们",
+    "description": "订阅我们的通讯，获取独家摄影技巧、季节性优惠和伊斯坦布尔旅游指南。",
+    "name_placeholder": "全名",
+    "email_placeholder": "电子邮件地址",
+    "button": "订阅",
+    "subscribing": "正在订阅...",
+    "success_title": "欢迎加入！",
+    "success_message": "您已成功订阅我们的通讯。",
+    "error_message": "出错了。请重试。",
+    "close": "不用了，谢谢"
   }
 }

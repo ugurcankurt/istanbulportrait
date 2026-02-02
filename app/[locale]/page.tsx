@@ -1,4 +1,5 @@
 import { getTranslations } from "next-intl/server";
+import { NewsletterPopup } from "@/components/newsletter-popup";
 import { FAQSectionWithSchema } from "@/components/faq-section-with-schema";
 import { GallerySectionWithSchema } from "@/components/gallery-section-with-schema";
 import { HeroSection } from "@/components/hero-section";
@@ -91,6 +92,7 @@ export default async function HomePage({
     <>
       {/* JSON-LD Structured Data */}
       <MultipleJsonLd schemas={schemas} />
+      <NewsletterPopup />
 
       <div className="overflow-hidden">
         <HeroSection />

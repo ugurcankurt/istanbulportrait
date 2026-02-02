@@ -1198,5 +1198,17 @@
     "checkout_nudge": "Hallo! Ich habe bemerkt, dass Sie beim letzten Schritt sind. Brauchen Sie Hilfe beim Abschluss Ihrer Buchung? 😊",
     "role": "Fotografie-Assistentin",
     "online": "Online"
+  },
+  "newsletter": {
+    "title": "Mach mit",
+    "description": "Abonnieren Sie unseren Newsletter für exklusive Fototipps, saisonale Angebote und Istanbul-Reiseführer.",
+    "name_placeholder": "Vollständiger Name",
+    "email_placeholder": "E-Mail-Adresse",
+    "button": "Abonnieren",
+    "subscribing": "Anmelden...",
+    "success_title": "Willkommen an Bord!",
+    "success_message": "Sie haben sich erfolgreich für unseren Newsletter angemeldet.",
+    "error_message": "Etwas ist schief gelaufen. Bitte versuchen Sie es erneut.",
+    "close": "Nein, danke"
   }
 }

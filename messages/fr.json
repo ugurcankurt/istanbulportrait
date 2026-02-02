@@ -1199,5 +1199,17 @@
     "checkout_nudge": "Hé ! J'ai remarqué que vous êtes à la dernière étape. Besoin d'aide ? 😊",
     "role": "Assistante Photographie",
     "online": "En Ligne"
+  },
+  "newsletter": {
+    "title": "Rejoignez-nous",
+    "description": "Abonnez-vous à notre newsletter pour des conseils photo exclusifs, des offres saisonnières et des guides de voyage sur Istanbul.",
+    "name_placeholder": "Nom complet",
+    "email_placeholder": "Adresse e-mail",
+    "button": "S'abonner",
+    "subscribing": "Inscription...",
+    "success_title": "Bienvenue à bord !",
+    "success_message": "Vous vous êtes abonné avec succès à notre newsletter.",
+    "error_message": "Une erreur s'est produite. Veuillez réessayer.",
+    "close": "Non merci"
   }
 }

@@ -99,3 +99,41 @@ export const sendBookingConfirmation = async (
     throw error;
   }
 };
+
+export const addContactToAudience = async (
+  email: string,
+  firstName: string,
+  lastName?: string,
+  audienceId: string = process.env.RESEND_AUDIENCE_ID || "",
+) => {
+  try {
+    if (
+      !process.env.RESEND_API_KEY ||
+      process.env.RESEND_API_KEY === "demo-resend-key"
+    ) {
+      console.warn("Resend API key missing, skipping contact creation");
+      return;
+    }
+
+    // Prepare contact data
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const contactData: any = {
+      email,
+      firstName,
+      lastName,
+      unsubscribed: false,
+    };
+
+    // Only add audienceId if it's explicitly provided/set in env
+    if (audienceId) {
+      contactData.audienceId = audienceId;
+    }
+
+    await resend.contacts.create(contactData);
+    console.log(`Successfully added contact ${email} to Resend Audience`);
+  } catch (error) {
+    // We log the error but don't throw it, as this is a non-critical background task
+    // Often fails if contact already exists, which is fine
+    console.error("Failed to add contact to Resend Audience:", error);
+  }
+};

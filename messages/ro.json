@@ -1305,5 +1305,17 @@
     "signin": "Conectare",
     "signout": "Deconectare",
     "protected": "Aceasta este o pagină protejată."
+  },
+  "newsletter": {
+    "title": "Alătură-te nouă",
+    "description": "Abonează-te la newsletter-ul nostru pentru sfaturi exclusive de fotografie, oferte sezoniere și ghiduri de călătorie pentru Istanbul.",
+    "name_placeholder": "Nume complet",
+    "email_placeholder": "Adresă de e-mail",
+    "button": "Abonează-te",
+    "subscribing": "Se abonează...",
+    "success_title": "Bun venit la bord!",
+    "success_message": "Te-ai abonat cu succes la newsletter-ul nostru.",
+    "error_message": "Ceva nu a mers bine. Vă rugăm să încercați din nou.",
+    "close": "Nu, mulțumesc"
   }
 }
