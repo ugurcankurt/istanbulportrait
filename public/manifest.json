@@ -4,9 +4,9 @@
   "description": "Professional portrait and couple photography sessions in Istanbul",
   "icons": [
     {
-      "src": "/icon1.png",
+      "src": "/icon1.webp",
       "sizes": "96x96",
-      "type": "image/png",
+      "type": "image/webp",
       "purpose": "any maskable"
     },
     {
@@ -16,9 +16,9 @@
       "purpose": "any maskable"
     },
     {
-      "src": "/apple-icon.png",
+      "src": "/apple-icon.webp",
       "sizes": "180x180",
-      "type": "image/png",
+      "type": "image/webp",
       "purpose": "any"
     },
     {

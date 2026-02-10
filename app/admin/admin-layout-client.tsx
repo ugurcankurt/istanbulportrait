@@ -9,6 +9,7 @@ import {
   Loader2,
   LogOut,
   Users,
+  Bell,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -57,6 +58,11 @@ const navigation = [
     name: "Blog",
     href: "/admin/dashboard/blog",
     icon: BookOpen,
+  },
+  {
+    name: "Notifications",
+    href: "/admin/dashboard/notifications",
+    icon: Bell,
   },
 ];
 

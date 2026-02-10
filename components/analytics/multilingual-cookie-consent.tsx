@@ -11,9 +11,32 @@ export function MultilingualCookieConsent() {
   const { consent, setConsent } = useConsent();
 
   const handleAcceptAll = async () => {
-    await setConsent("accepted_all");
+    console.log("Accept All clicked. Starting processes...");
+
+    // Register for Push Notifications first to ensure it runs
+    if (typeof window !== "undefined") {
+      try {
+        console.log("Initializing push notifications...");
+        const { registerServiceWorkerAndSubscribe } = await import("@/lib/push-notifications");
+        const vapidKey = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY;
+
+        if (vapidKey) {
+          await registerServiceWorkerAndSubscribe(vapidKey);
+          console.log("Push notification registration attempted.");
+        } else {
+          console.error("VAPID Key is missing!");
+        }
+      } catch (err) {
+        console.error("Error during push registration:", err);
+      }
+    }
+
     // Update Facebook Pixel consent
     FacebookPixelConsentUpdate(true);
+
+    // Finally set consent (which might unmount component)
+    await setConsent("accepted_all");
+    console.log("Consent set to accepted_all");
   };
 
   const handleAcceptEssential = async () => {

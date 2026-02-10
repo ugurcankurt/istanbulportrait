@@ -134,6 +134,14 @@ export async function generateMetadata({
       ],
     },
     manifest: "/manifest.json",
+    appleWebApp: {
+      capable: true,
+      statusBarStyle: "default",
+      title: "Istanbul Portrait",
+    },
+    formatDetection: {
+      telephone: false,
+    },
     other: {
       "yandex-verification": "326ca03cbdc0e2bf",
       "msvalidate.01": process.env.BING_WEBMASTER_KEY || "",
