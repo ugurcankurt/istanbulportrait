@@ -15,15 +15,14 @@ const supabase = createClient(
     process.env.SUPABASE_SERVICE_KEY!
 );
 
-webpush.setVapidDetails(
-    "mailto:ugurcankurt@gmail.com", // Replace with actual email
-    process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY!,
-    process.env.VAPID_PRIVATE_KEY!
-);
-
 export async function POST(request: Request) {
     try {
-
+        // Initialize VAPID at runtime, not module load time
+        webpush.setVapidDetails(
+            "mailto:ugurcankurt@gmail.com",
+            process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY!,
+            process.env.VAPID_PRIVATE_KEY!
+        );
 
         const body = await request.json();
 
