@@ -41,10 +41,15 @@ export function NewsletterPopup() {
     }, []);
 
     const handleClose = (open: boolean) => {
+        setIsOpen(open);
         if (!open) {
-            setIsOpen(false);
             localStorage.setItem("newsletter_dismissed", "true");
         }
+    };
+
+    const handleCloseClick = () => {
+        setIsOpen(false);
+        localStorage.setItem("newsletter_dismissed", "true");
     };
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -80,7 +85,7 @@ export function NewsletterPopup() {
 
     return (
         <Dialog open={isOpen} onOpenChange={handleClose}>
-            <DialogContent className="sm:max-w-md p-0 overflow-hidden border-none text-white">
+            <DialogContent className="sm:max-w-md p-0 overflow-hidden border-none text-white" showCloseButton={false}>
                 {/* Background Image */}
                 <div className="absolute inset-0 z-0">
                     <Image
@@ -154,7 +159,7 @@ export function NewsletterPopup() {
                                 type="button"
                                 variant="ghost"
                                 className="w-full h-auto py-2 text-gray-300 hover:text-white hover:bg-white/10"
-                                onClick={() => handleClose(false)}
+                                onClick={handleCloseClick}
                             >
                                 {t("close")}
                             </Button>
