@@ -5,7 +5,6 @@
   "nav": {
     "home": "Inicio",
     "packages": "Paquetes",
-    "tours": "Tours",
     "about": "Acerca",
     "contact": "Contacto",
     "blog": "Blog",
@@ -50,6 +49,7 @@
     "subtitle": "Elige el paquete perfecto para tu sesión fotográfica en Estambul",
     "sectionTitle": "Paquetes de Fotografía",
     "sectionDescription": "Elige el paquete perfecto para tu experiencia fotográfica en Estambul",
+    "per_person": "por persona",
     "essential": {
       "title": "Esencial",
       "price": "€150",
@@ -127,6 +127,7 @@
     "subtitle": "Fotógrafo profesional capturando la belleza de Estambul",
     "sectionTitle": "Acerca de Mí",
     "sectionDescription": "Descubre mi trayectoria como fotógrafo líder de Estambul y la pasión detrás de capturar tus momentos perfectos",
+    "per_person": "por persona",
     "description": "Con más de 8 años de experiencia en fotografía de retratos, me especializo en capturar la conexión única entre las personas y el magnífico telón de fondo de Estambul. Mi pasión radica en crear recuerdos atemporales que reflejen tanto la belleza de mis sujetos como el encanto histórico de esta ciudad increíble.",
     "experience": "Más de 8 años de experiencia",
     "sessions": "Más de 500 sesiones completadas",
@@ -136,6 +137,7 @@
     "title": "Ponte en Contacto",
     "sectionTitle": "Ponte en Contacto",
     "sectionDescription": "¿Listo para reservar tu sesión fotográfica en Estambul? Hablemos sobre tus necesidades fotográficas y creemos algo hermoso juntos",
+    "per_person": "por persona",
     "subtitle": "¿Listo para reservar tu sesión fotográfica en Estambul?",
     "cta_description": "¿Listo para capturar tus recuerdos en Estambul? Navega nuestros paquetes y reserva tu sesión directamente online.",
     "experience_description": "Más de 8 años de experiencia capturando la belleza de Estambul",
@@ -179,6 +181,7 @@
     },
     "steps": {
       "package": "Paquete",
+      "people_count": "Personas:",
       "details": "Detalles",
       "payment": "Pago",
       "confirmation": "Confirmación"
@@ -188,6 +191,7 @@
     "payment_details": "Detalles del Pago",
     "booking_details": "Detalles de la Reserva",
     "form": {
+      "people_count": "Número de personas",
       "name": "Nombre Completo",
       "email": "Dirección de Correo",
       "phone": "Número de Teléfono",
@@ -237,6 +241,7 @@
       "date": "Fecha:",
       "time": "Hora:",
       "package": "Paquete:",
+      "people_count": "Personas:",
       "total_amount": "Importe Total:"
     },
     "security": {
@@ -249,6 +254,11 @@
       "complete_description": "Completa tu reserva ingresando tu información de pago",
       "secure_no_fees": "Pago seguro • Sin comisiones ocultas"
     },
+    "people_count_title": "Número de personas",
+    "price_per_person": "Precio por persona",
+    "seasonal_discount_applied": "Descuento de temporada aplicado ({percentage}% DTO)",
+    "person": "persona",
+    "people": "personas",
     "payment_method": "Método de Pago",
     "payment_methods": {
       "credit_card": "Tarjeta de Crédito/Débito",
@@ -276,6 +286,7 @@
     }
   },
   "validation": {
+    "people_count_required": "Se requiere el número de personas para el paquete de azotea",
     "package_required": "La selección del paquete es obligatoria",
     "email_invalid": "Por favor, introduce una dirección de correo válida",
     "phone_invalid": "Por favor, introduce un número de teléfono válido",
@@ -408,7 +419,8 @@
     "bullet_gallery": "• Entrega de galería en línea",
     "bullet_retouching": "• Retoque profesional",
     "need_help": "¿Necesitas Ayuda?",
-    "help_description": "¿Preguntas sobre tu reserva? Contáctanos en cualquier momento."
+    "help_description": "¿Preguntas sobre tu reserva? Contáctanos en cualquier momento.",
+    "people_count": "Número de personas"
   },
   "success_messages": {
     "payment_successful": "¡Pago exitoso! Correo de confirmación enviado.",
@@ -638,7 +650,6 @@
     "home": "Inicio",
     "about": "Acerca",
     "packages": "Paquetes de Fotografía",
-    "tours": "Tours de Estambul",
     "contact": "Contacto",
     "checkout": "Pagar",
     "privacy": "Política de Privacidad",
@@ -928,80 +939,6 @@
     "homeButton": "Volver al Inicio",
     "packagesButton": "Ver Paquetes",
     "goBack": "Volver Atrás"
-  },
-  "tours": {
-    "sectionTitle": "Descubre los Tours de Estambul",
-    "sectionDescription": "Complementa tu sesión de fotos con experiencias cuidadosamente seleccionadas de Estambul. Explora los monumentos históricos de la ciudad, tesoros culturales y gemas ocultas a través de GetYourGuide.",
-    "crossSellMessage": "Complemento perfecto para tu sesión de fotos",
-    "viewAllTours": "Ver Todos los Tours",
-    "bookNow": "Reservar Ahora",
-    "fromPrice": "Desde",
-    "reviews": "reseñas",
-    "specialOffer": "Oferta Especial",
-    "likelyToSellOut": "Probable que se agote",
-    "highlights": "Destacados",
-    "errorTitle": "No se pueden cargar los tours",
-    "noToursTitle": "No hay tours disponibles",
-    "noToursDescription": "Actualmente estamos actualizando nuestra selección de tours. Por favor, vuelve a comprobar pronto.",
-    "packageDealTitle": "Paquetes de Fotografía + Tour",
-    "packageDealDescription": "Ahorra más cuando combines tu sesión de fotos con un tour guiado. Crea recuerdos duraderos con una experiencia completa de Estambul.",
-    "viewPackages": "Ver Paquetes de Fotos",
-    "customPackage": "Oferta de Paquete Personalizado",
-    "duration": "Duración",
-    "location": "Ubicación",
-    "supplier": "Operador de Tours",
-    "included": "Qué está incluido",
-    "notIncluded": "Qué no está incluido",
-    "additionalInfo": "Información Adicional",
-    "itinerary": "Itinerario",
-    "dayNumber": "Día {number}",
-    "loading": "Cargando tours...",
-    "error": "Error al cargar tours. Por favor, inténtalo de nuevo más tarde.",
-    "searchPlaceholder": "Buscar tours...",
-    "categories": {
-      "historical": "Histórico y Cultural",
-      "photography": "Tours de Fotografía",
-      "food": "Comida y Culinario",
-      "cruises": "Cruceros por el Bósforo",
-      "walking": "Tours a Pie",
-      "private": "Tours Privados",
-      "cultural": "Cultural y Artes",
-      "adventure": "Aventura y Turismo",
-      "all": "Todos los Tours"
-    },
-    "filters": {
-      "category": "Categoría",
-      "duration": "Duración",
-      "price": "Rango de Precio",
-      "rating": "Valoración",
-      "sortBy": "Ordenar Por",
-      "priceAsc": "Precio (Bajo a Alto)",
-      "priceDesc": "Precio (Alto a Bajo)",
-      "ratingDesc": "Mayor Valoración",
-      "ratingAsc": "Menor Valoración",
-      "clearFilters": "Limpiar Todos los Filtros"
-    },
-    "crossSell": {
-      "title": "Completa tu Experiencia en Estambul",
-      "subtitle": "Añade un tour a tu sesión de fotos",
-      "description": "Descubre la belleza de Estambul desde detrás del objetivo y como explorador. Nuestras combinaciones de foto + tour ofrecen la manera perfecta de experimentar la ciudad.",
-      "photoTour": "Sesión de Fotos + Tour",
-      "savings": "Ahorra hasta 20%",
-      "benefits": [
-        "Sesión de fotografía profesional",
-        "Tour guiado con experto local",
-        "Descuento de paquete combinado",
-        "Coordinación perfecta de experiencia"
-      ]
-    },
-    "seo": {
-      "title": "Tours de Estambul | Fotografía + Tours | Fotógrafo de Estambul",
-      "description": "Descubre Estambul con tours guiados perfectos para entusiastas de la fotografía. Combina tu sesión de fotos con experiencias culturales y exploración de la ciudad."
-    },
-    "meta": {
-      "tourDetails": "Detalles del Tour para {tourName}",
-      "tourBooking": "Reservar {tourName} - Tour de Estambul"
-    }
   },
   "locations": {
     "title": "Ubicaciones de Fotografía en Estambul",

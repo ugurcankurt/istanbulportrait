@@ -85,6 +85,7 @@ export function PaymentForm({
     locale,
     undefined,
     bookingData.bookingDate,
+    selectedPackage === "rooftop" ? bookingData.peopleCount : undefined
   );
 
   const packageInfo = {

@@ -9,6 +9,7 @@ import {
   Clock,
   Image as ImageIcon,
   MapPin,
+  Users,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
@@ -39,6 +40,13 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
 import { trackLead } from "@/lib/analytics";
@@ -104,6 +112,7 @@ export function BookingModal({
   const tValidation = useTranslations("validation");
 
   const [showTimeSelection, setShowTimeSelection] = useState(false);
+  const [peopleCount, setPeopleCount] = useState<number>(1);
 
   // Get the appropriate date-fns locale
   const dateFnsLocale = getDateFnsLocale(locale);
@@ -131,6 +140,7 @@ export function BookingModal({
       bookingTime: "",
       notes: "",
       totalAmount: 0,
+      peopleCount: 1,
     },
   });
 
@@ -148,7 +158,11 @@ export function BookingModal({
     if (selectedPackage) {
       form.setValue("packageId", selectedPackage);
       const dateValue = form.getValues("bookingDate");
-      const priceBreakdown = getPackagePricing(selectedPackage, undefined, dateValue);
+
+      // Use people count for rooftop, undefined for others
+      const count = selectedPackage === "rooftop" ? peopleCount : undefined;
+
+      const priceBreakdown = getPackagePricing(selectedPackage, undefined, dateValue, count);
 
       setPricing({
         totalPrice: priceBreakdown.totalPrice,
@@ -158,8 +172,13 @@ export function BookingModal({
       });
 
       form.setValue("totalAmount", priceBreakdown.totalPrice);
+
+      // Set peopleCount for rooftop
+      if (selectedPackage === "rooftop") {
+        form.setValue("peopleCount", peopleCount);
+      }
     }
-  }, [selectedPackage, form.watch("bookingDate"), form]); // Watch date changes
+  }, [selectedPackage, peopleCount, form.watch("bookingDate"), form]); // Watch date and peopleCount changes
 
   const packageInfo = selectedPackage
     ? {
@@ -339,6 +358,80 @@ export function BookingModal({
                     />
                   </CardContent>
                 </Card>
+
+                {/* People Count Selector - Only for Rooftop Package */}
+                {selectedPackage === "rooftop" && (
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="text-lg flex items-center gap-2">
+                        <Users className="w-5 h-5 text-primary" />
+                        {t("people_count_title")}
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                      <FormField
+                        control={form.control}
+                        name="peopleCount"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>{t("form.people_count")}</FormLabel>
+                            <Select
+                              value={peopleCount.toString()}
+                              onValueChange={(value) => {
+                                const count = parseInt(value);
+                                setPeopleCount(count);
+                                field.onChange(count);
+                              }}
+                            >
+                              <FormControl>
+                                <SelectTrigger className="w-full">
+                                  <SelectValue />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                {Array.from({ length: 10 }, (_, i) => i + 1).map((num) => (
+                                  <SelectItem key={num} value={num.toString()}>
+                                    {num} {num === 1 ? t("person") : t("people")}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      {/* Price breakdown */}
+                      {pricing && (
+                        <div className="p-3 bg-muted/30 rounded-lg space-y-2">
+                          <div className="flex justify-between text-sm">
+                            <span className="text-muted-foreground">
+                              {t("price_per_person")}
+                            </span>
+                            <span className="font-medium">
+                              €{(pricing.totalPrice / peopleCount).toFixed(2)}
+                            </span>
+                          </div>
+                          <div className="flex justify-between text-sm font-semibold text-primary">
+                            <span>
+                              {peopleCount} × {t("person")}
+                            </span>
+                            <span>
+                              €{pricing.totalPrice.toFixed(2)}
+                            </span>
+                          </div>
+                          {pricing.isDiscounted && (
+                            <div className="pt-2 border-t text-xs text-muted-foreground">
+                              {t("seasonal_discount_applied", {
+                                percentage: Math.round(pricing.discountPercentage * 100)
+                              })}
+                            </div>
+                          )}
+                        </div>
+                      )}
+                    </CardContent>
+                  </Card>
+                )}
 
                 <Card>
                   <CardHeader>

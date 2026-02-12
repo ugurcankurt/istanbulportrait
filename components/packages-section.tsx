@@ -146,6 +146,11 @@ export function PackagesSection() {
                       {pkg.pricing.isDiscounted && (
                         <span>€{pkg.pricing.price}</span>
                       )}
+                      {pkg.id === "rooftop" && (
+                        <span className="text-[10px] sm:text-xs font-normal opacity-90 -mt-1">
+                          {t("per_person")}
+                        </span>
+                      )}
                     </div>
                   </div>
 

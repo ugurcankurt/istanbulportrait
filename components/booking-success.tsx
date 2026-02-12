@@ -1,6 +1,6 @@
 "use client";
 
-import { Calendar, CheckCircle, Clock, Mail, Phone } from "lucide-react";
+import { Calendar, CheckCircle, Clock, Mail, Phone, Users, Wallet } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useEffect } from "react";
 import { Badge } from "@/components/ui/badge";
@@ -12,17 +12,20 @@ import { trackPurchase } from "@/lib/analytics";
 import { formatCurrency, localizeNumerals } from "@/lib/utils";
 import type { BookingFormData, PackageId } from "@/lib/validations";
 import { packagePrices } from "@/lib/validations";
+import { calculateDiscountedPrice } from "@/lib/pricing";
 
 interface BookingSuccessProps {
   bookingId: string;
   packageId: PackageId;
   customerData?: BookingFormData;
+  confirmedBooking?: any;
 }
 
 export function BookingSuccess({
   bookingId,
   packageId,
   customerData,
+  confirmedBooking,
 }: BookingSuccessProps) {
   const locale = useLocale();
   const t = useTranslations("checkout");
@@ -36,17 +39,23 @@ export function BookingSuccess({
     price: packagePrices[packageId],
   };
 
+  // Determine the effective data (prefer confirmedBooking from API)
+  const peopleCount = confirmedBooking?.peopleCount || customerData?.peopleCount;
+
+  // Use the confirmed booking ID from API if available
+  const displayBookingId = confirmedBooking?.id || bookingId;
+
   // Track successful booking conversion
   useEffect(() => {
     // Track GA4 Enhanced Ecommerce purchase event
-    trackPurchase(bookingId, packageId, packageInfo.name, packageInfo.price);
+    trackPurchase(displayBookingId, packageId, packageInfo.name, packageInfo.price);
 
     // Track Facebook CAPI Purchase event (Server-Action)
     // We import dynamically or use the function if available
     import("@/app/actions/marketing-actions").then(({ reportPurchaseToFacebook }) => {
-      reportPurchaseToFacebook(bookingId);
+      reportPurchaseToFacebook(displayBookingId);
     });
-  }, [bookingId, packageId, packageInfo.name, packageInfo.price]);
+  }, [displayBookingId, packageId, packageInfo.name, packageInfo.price]);
 
   return (
     <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-24 max-w-6xl">
@@ -83,7 +92,7 @@ export function BookingSuccess({
                     {tsuccess("booking_id")}:
                   </span>
                   <Badge variant="secondary" className="font-mono text-xs">
-                    {bookingId.slice(0, 8).toUpperCase()}
+                    {displayBookingId.slice(0, 8).toUpperCase()}
                   </Badge>
                 </div>
 
@@ -157,7 +166,7 @@ export function BookingSuccess({
                         {tsuccess("customer_name")}:
                       </span>
                       <span className="font-semibold text-sm sm:text-base">
-                        {customerData.customerName}
+                        {confirmedBooking?.customerName || customerData.customerName}
                       </span>
                     </div>
 
@@ -166,7 +175,7 @@ export function BookingSuccess({
                         {tsuccess("customer_email")}:
                       </span>
                       <span className="font-semibold text-sm sm:text-base">
-                        {customerData.customerEmail}
+                        {confirmedBooking?.customerEmail || customerData.customerEmail}
                       </span>
                     </div>
 
@@ -175,7 +184,7 @@ export function BookingSuccess({
                         {tsuccess("customer_phone")}:
                       </span>
                       <span className="font-semibold text-sm sm:text-base">
-                        {customerData.customerPhone}
+                        {confirmedBooking?.customerPhone || customerData.customerPhone}
                       </span>
                     </div>
 
@@ -184,7 +193,7 @@ export function BookingSuccess({
                         {tsuccess("booking_date")}:
                       </span>
                       <span className="font-semibold text-sm sm:text-base">
-                        {customerData.bookingDate}
+                        {confirmedBooking?.bookingDate || customerData.bookingDate}
                       </span>
                     </div>
 
@@ -193,9 +202,20 @@ export function BookingSuccess({
                         {tsuccess("booking_time")}:
                       </span>
                       <span className="font-semibold text-sm sm:text-base">
-                        {customerData.bookingTime}
+                        {confirmedBooking?.bookingTime || customerData.bookingTime}
                       </span>
                     </div>
+
+                    {peopleCount && peopleCount > 0 && (
+                      <div className="flex justify-between items-center">
+                        <span className="text-muted-foreground text-sm sm:text-base">
+                          {tsuccess("people_count")}:
+                        </span>
+                        <span className="font-semibold text-sm sm:text-base">
+                          {peopleCount} {peopleCount === 1 ? t("person") : t("people")}
+                        </span>
+                      </div>
+                    )}
 
                     {customerData.notes && (
                       <div className="flex justify-between items-start">

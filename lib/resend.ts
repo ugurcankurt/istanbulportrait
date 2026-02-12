@@ -12,6 +12,7 @@ export interface BookingConfirmationData {
   originalAmount?: number;
   discountAmount?: number;
   bookingId: string;
+  peopleCount?: number;
 }
 
 export const sendBookingConfirmation = async (
@@ -50,6 +51,15 @@ export const sendBookingConfirmation = async (
                 <td style="padding: 8px 0; border-bottom: 1px solid #eee;"><strong>Package:</strong></td>
                 <td style="padding: 8px 0; border-bottom: 1px solid #eee;">${data.packageName}</td>
               </tr>
+              ${data.peopleCount && data.peopleCount > 1
+          ? `
+              <tr>
+                <td style="padding: 8px 0; border-bottom: 1px solid #eee;"><strong>Number of People:</strong></td>
+                <td style="padding: 8px 0; border-bottom: 1px solid #eee;">${data.peopleCount}</td>
+              </tr>
+              `
+          : ""
+        }
               <tr>
                 <td style="padding: 8px 0; border-bottom: 1px solid #eee;"><strong>Date:</strong></td>
                 <td style="padding: 8px 0; border-bottom: 1px solid #eee;">${data.bookingDate}</td>

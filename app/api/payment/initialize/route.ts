@@ -82,17 +82,22 @@ export async function POST(request: NextRequest) {
     // Validate that the provided amount matches the expected package total
     // We need to check if a date was provided in customerData to apply discounts
     const bookingDate = customerData.bookingDate;
+    const peopleCount = customerData.peopleCount; // Get people count from request
+
     let expectedPrice = packagePricing.totalPrice;
 
+    // Base price calculation with date-based discount
     if (bookingDate) {
       const { price: discountedPrice } = calculateDiscountedPrice(packagePricing.originalPrice, bookingDate);
-      // We need to recalculate tax breakdown for validation if discounted
-      // But for simple total check, the discounted price + tax logic should match
-      // Ideally getPackagePricing should differ, but here we just need total
-      // Let's assume calculateDiscountedPrice returns the tax-inclusive price as per our logic
       expectedPrice = discountedPrice;
     }
 
+    // Apply people count multiplier for rooftop package
+    if (packageId === "rooftop" && peopleCount && typeof peopleCount === "number" && peopleCount >= 1) {
+      expectedPrice = expectedPrice * peopleCount;
+    }
+
+    // Allow for small rounding differences (0.01)
     if (Math.abs(amount - expectedPrice) > 0.01) {
       const priceError = new ValidationError(
         "Amount does not match package price",
@@ -104,6 +109,7 @@ export async function POST(request: NextRequest) {
         expectedAmount: expectedPrice,
         packageId,
         bookingDate,
+        peopleCount,
         action: "price_validation",
       });
 

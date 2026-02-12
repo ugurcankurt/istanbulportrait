@@ -7,7 +7,6 @@
     "packages": "Pachete",
     "about": "Despre Noi",
     "contact": "Contact",
-    "tours": "Tururi",
     "blog": "Blog",
     "locations": "Locații"
   },
@@ -51,6 +50,7 @@
     "subtitle": "Alege pachetul perfect pentru ședința ta foto în Istanbul",
     "sectionTitle": "Pachete Foto",
     "sectionDescription": "Alege pachetul perfect pentru experiența ta foto în Istanbul",
+    "per_person": "de persoană",
     "essential": {
       "title": "Esențial",
       "price": "€150",
@@ -128,6 +128,7 @@
     "subtitle": "Fotograf de top în Istanbul care surprinde frumusețea orașului",
     "sectionTitle": "Despre Mine",
     "sectionDescription": "Descoperă călătoria mea ca fotograf principal în Istanbul și pasiunea din spatele surprinderii momentelor tale perfecte",
+    "per_person": "de persoană",
     "description": "Cu peste 8 ani de experiență ca fotograf profesionist în Istanbul, mă specializez în surprinderea conexiunii unice dintre oameni și fundalul magnific al Istanbulului. Ca fotograf principal în Istanbul, pasiunea mea constă în crearea de amintiri atemporale care reflectă atât frumusețea subiecților mei, cât și farmecul istoric al acestui oraș incredibil.",
     "experience": "8+ Ani de Experiență",
     "sessions": "500+ Sesiuni Finalizate",
@@ -138,6 +139,7 @@
     "subtitle": "Ești gata să rezervi ședința ta foto în Istanbul?",
     "sectionTitle": "Intră în Legătură",
     "sectionDescription": "Ești gata să rezervi ședința ta foto în Istanbul? Hai să discutăm nevoile tale fotografice și să creăm ceva frumos împreună",
+    "per_person": "de persoană",
     "cta_description": "Ești gata să îți surprinzi amintirile în Istanbul? Răsfoiește pachetele noastre și rezervă sesiunea direct online.",
     "experience_description": "8+ ani de experiență în surprinderea frumuseții Istanbulului",
     "premium_locations": "Locații Premium",
@@ -180,6 +182,7 @@
     },
     "steps": {
       "package": "Pachet",
+      "people_count": "Persoane:",
       "details": "Detalii",
       "payment": "Plată",
       "confirmation": "Confirmare"
@@ -189,6 +192,7 @@
     "payment_details": "Detalii Plată",
     "booking_details": "Detalii Rezervare",
     "form": {
+      "people_count": "Număr de persoane",
       "name": "Nume Complet",
       "email": "Adresă Email",
       "phone": "Număr de Telefon",
@@ -237,6 +241,7 @@
       "date": "Data:",
       "time": "Ora:",
       "package": "Pachet:",
+      "people_count": "Persoane:",
       "total_amount": "Sumă Totală:"
     },
     "security": {
@@ -249,6 +254,11 @@
       "complete_description": "Finalizează rezervarea introducând informațiile de plată",
       "secure_no_fees": "Plată securizată • Fără taxe ascunse"
     },
+    "people_count_title": "Număr de persoane",
+    "price_per_person": "Preț de persoană",
+    "seasonal_discount_applied": "Reducere sezonieră aplicată (-{percentage}%)",
+    "person": "persoană",
+    "people": "persoane",
     "payment_method": "Metodă de Plată",
     "payment_methods": {
       "credit_card": "Card Credit/Debit",
@@ -293,6 +303,7 @@
     "terms_of_service": "Termeni și Condiții"
   },
   "validation": {
+    "people_count_required": "Numărul de persoane este necesar pentru pachetul pe acoperiș",
     "package_required": "Selectarea pachetului este obligatorie",
     "email_invalid": "Te rugăm să introduci o adresă de email validă",
     "phone_invalid": "Te rugăm să introduci un număr de telefon valid",
@@ -412,7 +423,6 @@
     "home": "Acasă",
     "about": "Despre",
     "packages": "Pachete Foto",
-    "tours": "Tururi Istanbul",
     "contact": "Contact",
     "checkout": "Finalizare",
     "privacy": "Politică de Confidențialitate",
@@ -466,7 +476,8 @@
     "bullet_gallery": "• Livrare galerie online",
     "bullet_retouching": "• Retușare profesională",
     "need_help": "Ai Nevoie de Ajutor?",
-    "help_description": "Întrebări despre rezervarea ta? Contactează-ne oricând."
+    "help_description": "Întrebări despre rezervarea ta? Contactează-ne oricând.",
+    "people_count": "Număr de persoane"
   },
   "package_selection": {
     "choose_package": "Alege Pachetul Tău",
@@ -1172,104 +1183,6 @@
     "checkout_nudge": "Hei! Am observat că ești la pasul final. Ai nevoie de ajutor pentru a finaliza rezervarea? 😊",
     "role": "Asistent Fotografie",
     "online": "Online"
-  },
-  "tours": {
-    "sectionTitle": "Descoperă Tururile Istanbul",
-    "title": "Tururi & Activități în Istanbul",
-    "subtitle": "Descoperă cele mai bune experiențe din Istanbul",
-    "sectionDescription": "Completează sesiunea foto cu experiențe alese cu grijă în Istanbul. Explorează reperele istorice ale orașului, comorile culturale și bijuteriile ascunse prin GetYourGuide.",
-    "crossSellMessage": "Adăugare perfectă la sesiunea ta foto",
-    "viewAllTours": "Vezi Toate Tururile",
-    "bookNow": "Rezervă Acum",
-    "fromPrice": "De la",
-    "reviews": "recenzii",
-    "specialOffer": "Ofertă Specială",
-    "likelyToSellOut": "Probabil Se Va Epuiza",
-    "highlights": "Puncte de Interes",
-    "errorTitle": "Nu s-au Putut Încărca Tururile",
-    "noToursTitle": "Nu Sunt Tururi Disponibile",
-    "noToursDescription": "Actualizăm selecția de tururi. Te rugăm să revii curând.",
-    "packageDealTitle": "Pachete Fotografie + Tur",
-    "packageDealDescription": "Economisește mai mult când combini sesiunea foto cu un tur ghidat. Creează amintiri de neuitat cu o experiență completă în Istanbul.",
-    "viewPackages": "Vezi Pachetele Foto",
-    "customPackage": "Pachet Personalizat",
-    "duration": "Durată",
-    "location": "Locație",
-    "supplier": "Operator Turist",
-    "included": "Ce Este Inclus",
-    "notIncluded": "Ce Nu Este Inclus",
-    "additionalInfo": "Informații Suplimentare",
-    "itinerary": "Itinerar",
-    "dayNumber": "Ziua {number}",
-    "loading": "Se încarcă tururile...",
-    "error": "Nu s-au putut încărca tururile. Te rugăm să încerci din nou.",
-    "searchPlaceholder": "Caută tururi...",
-    "categories": {
-      "historical": "Istoric & Cultural",
-      "photography": "Tururi Foto",
-      "food": "Culinar & Mâncare",
-      "cruises": "Croaziere Bosfor",
-      "walking": "Tururi Pietonale",
-      "private": "Tururi Private",
-      "cultural": "Cultural & Artă",
-      "adventure": "Aventură & Vizitare",
-      "all": "Toate Tururile"
-    },
-    "filters": {
-      "category": "Categorie",
-      "duration": "Durată",
-      "price": "Interval Preț",
-      "rating": "Rating",
-      "sortBy": "Sortează După",
-      "priceAsc": "Preț (Mic la Mare)",
-      "priceDesc": "Preț (Mare la Mic)",
-      "ratingDesc": "Cele Mai Bine Cotate",
-      "ratingAsc": "Cele Mai Puțin Cotate",
-      "clearFilters": "Șterge Toate Filtrele"
-    },
-    "detail": {
-      "backToTours": "← Înapoi la Tururi",
-      "aboutThisTour": "Despre Acest Tur",
-      "tourFeatures": "Caracteristici Tur",
-      "confirmationType": "Tip Confirmare",
-      "tourType": "Tip Tur",
-      "bookThisTour": "Rezervă Acest Tur",
-      "perPerson": "pe persoană",
-      "bookOnViator": "Rezervă pe Viator",
-      "bookingDisclaimer": "Vei fi redirecționat către Viator pentru a finaliza rezervarea",
-      "addPhotography": "Adaugă Fotografie Profesională",
-      "addPhotographyDescription": "Surprinde amintirile din tur cu o ședință foto profesională",
-      "viewPhotoPackages": "Vezi Pachetele Foto",
-      "relatedTours": "Alte Tururi Care Ți-ar Plăcea",
-      "relatedToursDescription": "Descoperă alte experiențe uimitoare în Istanbul"
-    },
-    "crossSell": {
-      "title": "Completează Experiența Istanbul",
-      "subtitle": "Adaugă un tur la sesiunea foto",
-      "description": "Descoperă frumusețea Istanbulului din spatele obiectivului și ca explorator. Combinațiile noastre foto + tur oferă modul perfect de a experimenta orașul.",
-      "photoTour": "Sesiune Foto + Tur",
-      "savings": "Economisești până la 20%",
-      "benefits": [
-        "Sesiune foto profesională",
-        "Tur ghidat cu expert local",
-        "Reducere pachet combinat",
-        "Coordonare perfectă experiență"
-      ]
-    },
-    "widget": {
-      "loading": "Se încarcă tururile GetYourGuide...",
-      "error": "Nu s-a putut încărca widget-ul. Se afișează informații statice.",
-      "poweredBy": "Oferit de GetYourGuide",
-      "bookingRedirect": "Vei fi redirecționat către GetYourGuide pentru a finaliza rezervarea"
-    },
-    "seo": {
-      "title": "Fotografie + Tururi | Istanbul Photographer",
-      "description": "Descoperă Istanbulul cu tururi ghidate perfecte pentru entuziaștii de fotografie. Combină sesiunea foto cu experiențe culturale și explorarea orașului."
-    },
-    "meta": {
-      "tourDetails": "Detalii Tur pentru {tourName}",
-      "tourBooking": "Rezervă {tourName} - Tur Istanbul"
-    }
   },
   "blog": {
     "title": "Blog Fotografie",

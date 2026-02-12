@@ -1,7 +1,8 @@
 import { z } from "zod";
 
 // Static schemas (original)
-export const bookingSchema = z.object({
+// Static schemas (original)
+export const baseBookingSchema = z.object({
   packageId: z.string().min(1, "validation.package_required"),
   customerName: z.string().min(2, "validation.name_min"),
   customerEmail: z.string().email({ message: "validation.email_invalid" }),
@@ -10,7 +11,22 @@ export const bookingSchema = z.object({
   bookingTime: z.string().min(1, "validation.time_required"),
   notes: z.string().optional(),
   totalAmount: z.number().positive("validation.amount_positive"),
+  peopleCount: z.number().int().min(1).max(10).optional(),
 });
+
+export const bookingSchema = baseBookingSchema.refine(
+  (data) => {
+    // Rooftop package requires peopleCount
+    if (data.packageId === "rooftop") {
+      return data.peopleCount !== undefined && data.peopleCount >= 1 && data.peopleCount <= 10;
+    }
+    return true;
+  },
+  {
+    message: "validation.people_count_required",
+    path: ["peopleCount"],
+  }
+);
 
 export const paymentSchema = z.object({
   cardHolderName: z.string().min(2, "validation.cardholder_required"),
@@ -40,7 +56,20 @@ export const createBookingSchema = (t: any) =>
     bookingTime: z.string().min(1, t("time_required")),
     notes: z.string().optional(),
     totalAmount: z.number().positive(t("amount_positive")),
-  });
+    peopleCount: z.number().int().min(1).max(10).optional(),
+  }).refine(
+    (data) => {
+      // Rooftop package requires peopleCount
+      if (data.packageId === "rooftop") {
+        return data.peopleCount !== undefined && data.peopleCount >= 1 && data.peopleCount <= 10;
+      }
+      return true;
+    },
+    {
+      message: t("people_count_required"),
+      path: ["peopleCount"],
+    }
+  );
 
 export const createPaymentSchema = (t: any) =>
   z.object({

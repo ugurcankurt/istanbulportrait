@@ -7,7 +7,6 @@
     "packages": "Packages",
     "about": "About",
     "contact": "Contact",
-    "tours": "Tours",
     "blog": "Blog",
     "locations": "Locations"
   },
@@ -51,6 +50,7 @@
     "subtitle": "Choose the perfect package for your Istanbul photoshoot",
     "sectionTitle": "Photography Packages",
     "sectionDescription": "Choose the perfect package for your Istanbul photoshoot experience",
+    "per_person": "per person",
     "essential": {
       "title": "Essential",
       "price": "€150",
@@ -189,6 +189,7 @@
     "payment_details": "Payment Details",
     "booking_details": "Booking Details",
     "form": {
+      "people_count": "Number of People",
       "name": "Full Name",
       "email": "Email Address",
       "phone": "Phone Number",
@@ -237,6 +238,7 @@
       "date": "Date:",
       "time": "Time:",
       "package": "Package:",
+      "people_count": "People:",
       "total_amount": "Total Amount:"
     },
     "security": {
@@ -249,6 +251,11 @@
       "complete_description": "Complete your booking by entering your payment information",
       "secure_no_fees": "Secure payment • No hidden fees"
     },
+    "people_count_title": "Number of People",
+    "price_per_person": "Price per person",
+    "seasonal_discount_applied": "Seasonal discount applied ({percentage}% OFF)",
+    "person": "person",
+    "people": "people",
     "payment_method": "Payment Method",
     "payment_methods": {
       "credit_card": "Credit/Debit Card",
@@ -293,6 +300,7 @@
     "terms_of_service": "Terms of Service"
   },
   "validation": {
+    "people_count_required": "People count is required for rooftop package",
     "package_required": "Package selection is required",
     "email_invalid": "Please enter a valid email address",
     "phone_invalid": "Please enter a valid phone number",
@@ -412,7 +420,6 @@
     "home": "Home",
     "about": "About",
     "packages": "Photography Packages",
-    "tours": "Istanbul Tours",
     "contact": "Contact",
     "checkout": "Checkout",
     "privacy": "Privacy Policy",
@@ -466,7 +473,8 @@
     "bullet_gallery": "• Online gallery delivery",
     "bullet_retouching": "• Professional retouching",
     "need_help": "Need Help?",
-    "help_description": "Questions about your booking? Contact us anytime."
+    "help_description": "Questions about your booking? Contact us anytime.",
+    "people_count": "Number of People"
   },
   "package_selection": {
     "choose_package": "Choose Your Package",
@@ -907,102 +915,6 @@
     "homeButton": "Return Home",
     "packagesButton": "View Packages",
     "goBack": "Go Back"
-  },
-  "tours": {
-    "sectionTitle": "Discover Istanbul Tours",
-    "sectionDescription": "Complement your photo session with carefully curated Istanbul experiences. Explore the city's historic landmarks, cultural treasures, and hidden gems through GetYourGuide.",
-    "crossSellMessage": "Perfect addition to your photo session",
-    "viewAllTours": "View All Tours",
-    "bookNow": "Book Now",
-    "fromPrice": "From",
-    "reviews": "reviews",
-    "specialOffer": "Special Offer",
-    "likelyToSellOut": "Likely to Sell Out",
-    "highlights": "Highlights",
-    "errorTitle": "Unable to Load Tours",
-    "noToursTitle": "No Tours Available",
-    "noToursDescription": "We're currently updating our tour selection. Please check back soon.",
-    "widget": {
-      "loading": "Loading GetYourGuide tours...",
-      "error": "Unable to load tour widget. Showing static information.",
-      "poweredBy": "Powered by GetYourGuide",
-      "bookingRedirect": "You'll be redirected to GetYourGuide to complete your booking"
-    },
-    "packageDealTitle": "Photography + Tour Packages",
-    "packageDealDescription": "Save more when you combine your photo session with a guided tour. Create lasting memories with a complete Istanbul experience.",
-    "viewPackages": "View Photo Packages",
-    "customPackage": "Custom Package Deal",
-    "duration": "Duration",
-    "location": "Location",
-    "supplier": "Tour Operator",
-    "included": "What's Included",
-    "notIncluded": "What's Not Included",
-    "additionalInfo": "Additional Information",
-    "itinerary": "Itinerary",
-    "dayNumber": "Day {number}",
-    "loading": "Loading tours...",
-    "error": "Failed to load tours. Please try again later.",
-    "searchPlaceholder": "Search tours...",
-    "categories": {
-      "historical": "Historical & Cultural",
-      "photography": "Photography Tours",
-      "food": "Food & Culinary",
-      "cruises": "Bosphorus Cruises",
-      "walking": "Walking Tours",
-      "private": "Private Tours",
-      "cultural": "Cultural & Arts",
-      "adventure": "Adventure & Sightseeing",
-      "all": "All Tours"
-    },
-    "filters": {
-      "category": "Category",
-      "duration": "Duration",
-      "price": "Price Range",
-      "rating": "Rating",
-      "sortBy": "Sort By",
-      "priceAsc": "Price (Low to High)",
-      "priceDesc": "Price (High to Low)",
-      "ratingDesc": "Highest Rated",
-      "ratingAsc": "Lowest Rated",
-      "clearFilters": "Clear All Filters"
-    },
-    "detail": {
-      "backToTours": "← Back to Tours",
-      "aboutThisTour": "About This Tour",
-      "tourFeatures": "Tour Features",
-      "confirmationType": "Confirmation Type",
-      "tourType": "Tour Type",
-      "bookThisTour": "Book This Tour",
-      "perPerson": "per person",
-      "bookOnViator": "Book on Viator",
-      "bookingDisclaimer": "You'll be redirected to Viator to complete your booking",
-      "addPhotography": "Add Professional Photography",
-      "addPhotographyDescription": "Capture your tour memories with a professional photoshoot session",
-      "viewPhotoPackages": "View Photo Packages",
-      "relatedTours": "More Tours You Might Like",
-      "relatedToursDescription": "Discover other amazing Istanbul experiences"
-    },
-    "crossSell": {
-      "title": "Complete Your Istanbul Experience",
-      "subtitle": "Add a tour to your photo session",
-      "description": "Discover Istanbul's beauty from behind the lens and as an explorer. Our photo + tour combinations offer the perfect way to experience the city.",
-      "photoTour": "Photo Session + Tour",
-      "savings": "Save up to 20%",
-      "benefits": [
-        "Professional photography session",
-        "Guided tour with local expert",
-        "Combined package discount",
-        "Seamless experience coordination"
-      ]
-    },
-    "seo": {
-      "title": "Photography + Tours | Istanbul Photographer",
-      "description": "Discover Istanbul with guided tours perfect for photography enthusiasts. Combine your photo session with cultural experiences and city exploration."
-    },
-    "meta": {
-      "tourDetails": "Tour Details for {tourName}",
-      "tourBooking": "Book {tourName} - Istanbul Tour"
-    }
   },
   "blog": {
     "title": "Photography Blog",

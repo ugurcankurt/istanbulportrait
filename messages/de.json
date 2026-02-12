@@ -7,7 +7,6 @@
     "packages": "Pakete",
     "about": "Über uns",
     "contact": "Kontakt",
-    "tours": "Touren",
     "blog": "Blog",
     "locations": "Orte"
   },
@@ -51,6 +50,7 @@
     "subtitle": "Wählen Sie das perfekte Paket für Ihr Istanbul-Fotoshooting",
     "sectionTitle": "Fotografie-Pakete",
     "sectionDescription": "Wählen Sie das perfekte Paket für Ihr Istanbul-Fotoshooting-Erlebnis",
+    "per_person": "pro Person",
     "essential": {
       "title": "Essential",
       "price": "€150",
@@ -128,6 +128,7 @@
     "subtitle": "Top-Fotograf in Istanbul, der die Schönheit der Stadt einfängt",
     "sectionTitle": "Über mich",
     "sectionDescription": "Entdecken Sie meine Reise als Istanbuls führender Fotograf und die Leidenschaft, Ihre perfekten Momente festzuhalten",
+    "per_person": "pro Person",
     "description": "Mit über 8 Jahren Erfahrung als professioneller Fotograf in Istanbul habe ich mich darauf spezialisiert, die einzigartige Verbindung zwischen Menschen und Istanbuls großartiger Kulisse einzufangen. Als führender Istanbul-Fotograf liegt meine Leidenschaft darin, zeitlose Erinnerungen zu schaffen, die sowohl die Schönheit meiner Motive als auch den historischen Charme dieser unglaublichen Stadt widerspiegeln.",
     "experience": "8+ Jahre Erfahrung",
     "sessions": "500+ Sitzungen abgeschlossen",
@@ -138,6 +139,7 @@
     "subtitle": "Bereit, Ihr Istanbul-Fotoshooting zu buchen?",
     "sectionTitle": "Kontakt aufnehmen",
     "sectionDescription": "Bereit, Ihr Istanbul-Fotoshooting zu buchen? Lassen Sie uns Ihre Fotowünsche besprechen und gemeinsam etwas Schönes schaffen",
+    "per_person": "pro Person",
     "cta_description": "Bereit, Ihre Erinnerungen in Istanbul festzuhalten? Stöbern Sie in unseren Paketen und buchen Sie Ihre Sitzung direkt online.",
     "experience_description": "8+ Jahre Erfahrung im Einfangen der Schönheit Istanbuls",
     "premium_locations": "Premium-Orte",
@@ -180,6 +182,7 @@
     },
     "steps": {
       "package": "Paket",
+      "people_count": "Personen:",
       "details": "Details",
       "payment": "Zahlung",
       "confirmation": "Bestätigung"
@@ -189,6 +192,7 @@
     "payment_details": "Zahlungsdetails",
     "booking_details": "Buchungsdetails",
     "form": {
+      "people_count": "Anzahl der Personen",
       "name": "Vollständiger Name",
       "email": "E-Mail-Adresse",
       "phone": "Telefonnummer",
@@ -237,6 +241,7 @@
       "date": "Datum:",
       "time": "Zeit:",
       "package": "Paket:",
+      "people_count": "Personen:",
       "total_amount": "Gesamtbetrag:"
     },
     "security": {
@@ -249,6 +254,11 @@
       "complete_description": "Schließen Sie Ihre Buchung ab, indem Sie Ihre Zahlungsinformationen eingeben",
       "secure_no_fees": "Sichere Bezahlung • Keine versteckten Gebühren"
     },
+    "people_count_title": "Anzahl der Personen",
+    "price_per_person": "Preis pro Person",
+    "seasonal_discount_applied": "Saisonrabatt angewendet ({percentage}% RABATT)",
+    "person": "Person",
+    "people": "Personen",
     "payment_method": "Zahlungsmethode",
     "payment_methods": {
       "credit_card": "Kredit-/Debitkarte",
@@ -293,6 +303,7 @@
     "terms_of_service": "Nutzungsbedingungen"
   },
   "validation": {
+    "people_count_required": "Personenanzahl für das Dachterrassen-Paket erforderlich",
     "package_required": "Paketauswahl ist erforderlich",
     "email_invalid": "Bitte geben Sie eine gültige E-Mail-Adresse ein",
     "phone_invalid": "Bitte geben Sie eine gültige Telefonnummer ein",
@@ -412,7 +423,6 @@
     "home": "Startseite",
     "about": "Über uns",
     "packages": "Fotografie-Pakete",
-    "tours": "Istanbul Touren",
     "contact": "Kontakt",
     "checkout": "Kasse",
     "privacy": "Datenschutzerklärung",
@@ -466,7 +476,8 @@
     "bullet_gallery": "• Online-Galerie Lieferung",
     "bullet_retouching": "• Professionelle Retusche",
     "need_help": "Brauchen Sie Hilfe?",
-    "help_description": "Fragen zu Ihrer Buchung? Kontaktieren Sie uns jederzeit."
+    "help_description": "Fragen zu Ihrer Buchung? Kontaktieren Sie uns jederzeit.",
+    "people_count": "Anzahl der Personen"
   },
   "package_selection": {
     "choose_package": "Wählen Sie Ihr Paket",
@@ -807,102 +818,6 @@
     "homeButton": "Zurück zur Startseite",
     "packagesButton": "Pakete ansehen",
     "goBack": "Zurück"
-  },
-  "tours": {
-    "sectionTitle": "Entdecken Sie Istanbul Touren",
-    "sectionDescription": "Ergänzen Sie Ihre Fotositzung mit sorgfältig ausgewählten Istanbul-Erlebnissen. Entdecken Sie die historischen Wahrzeichen, kulturellen Schätze und versteckten Juwelen der Stadt über GetYourGuide.",
-    "crossSellMessage": "Perfekte Ergänzung zu Ihrer Fotositzung",
-    "viewAllTours": "Alle Touren ansehen",
-    "bookNow": "Jetzt buchen",
-    "fromPrice": "Ab",
-    "reviews": "Bewertungen",
-    "specialOffer": "Sonderangebot",
-    "likelyToSellOut": "Wahrscheinlich ausverkauft",
-    "highlights": "Highlights",
-    "errorTitle": "Touren können nicht geladen werden",
-    "noToursTitle": "Keine Touren verfügbar",
-    "noToursDescription": "Wir aktualisieren derzeit unsere Tourenauswahl. Bitte schauen Sie bald wieder vorbei.",
-    "widget": {
-      "loading": "Lade GetYourGuide Touren...",
-      "error": "Touren-Widget kann nicht geladen werden. Zeige statische Informationen.",
-      "poweredBy": "Unterstützt von GetYourGuide",
-      "bookingRedirect": "Sie werden zu GetYourGuide weitergeleitet, um Ihre Buchung abzuschließen"
-    },
-    "packageDealTitle": "Fotografie + Touren Pakete",
-    "packageDealDescription": "Sparen Sie mehr, wenn Sie Ihre Fotositzung mit einer geführten Tour kombinieren. Schaffen Sie bleibende Erinnerungen mit einem kompletten Istanbul-Erlebnis.",
-    "viewPackages": "Foto-Pakete ansehen",
-    "customPackage": "Individuelles Paketangebot",
-    "duration": "Dauer",
-    "location": "Ort",
-    "supplier": "Reiseveranstalter",
-    "included": "Was ist enthalten",
-    "notIncluded": "Was ist nicht enthalten",
-    "additionalInfo": "Zusätzliche Informationen",
-    "itinerary": "Reiseplan",
-    "dayNumber": "Tag {number}",
-    "loading": "Lade Touren...",
-    "error": "Fehler beim Laden der Touren. Bitte versuchen Sie es später erneut.",
-    "searchPlaceholder": "Touren suchen...",
-    "categories": {
-      "historical": "Historisch & Kulturell",
-      "photography": "Fotografie-Touren",
-      "food": "Essen & Kulinarisch",
-      "cruises": "Bosporus-Kreuzfahrten",
-      "walking": "Wanderungen",
-      "private": "Private Touren",
-      "cultural": "Kultur & Kunst",
-      "adventure": "Abenteuer & Sightseeing",
-      "all": "Alle Touren"
-    },
-    "filters": {
-      "category": "Kategorie",
-      "duration": "Dauer",
-      "price": "Preisspanne",
-      "rating": "Bewertung",
-      "sortBy": "Sortieren nach",
-      "priceAsc": "Preis (Niedrig bis Hoch)",
-      "priceDesc": "Preis (Hoch bis Niedrig)",
-      "ratingDesc": "Höchste Bewertung",
-      "ratingAsc": "Niedrigste Bewertung",
-      "clearFilters": "Alle Filter löschen"
-    },
-    "detail": {
-      "backToTours": "← Zurück zu Touren",
-      "aboutThisTour": "Über diese Tour",
-      "tourFeatures": "Tour-Funktionen",
-      "confirmationType": "Bestätigungstyp",
-      "tourType": "Tour-Typ",
-      "bookThisTour": "Diese Tour buchen",
-      "perPerson": "pro Person",
-      "bookOnViator": "Auf Viator buchen",
-      "bookingDisclaimer": "Sie werden zu Viator weitergeleitet, um Ihre Buchung abzuschließen",
-      "addPhotography": "Professionelle Fotografie hinzufügen",
-      "addPhotographyDescription": "Halten Sie Ihre Tour-Erinnerungen mit einer professionellen Fotosession fest",
-      "viewPhotoPackages": "Foto-Pakete ansehen",
-      "relatedTours": "Weitere Touren, die Ihnen gefallen könnten",
-      "relatedToursDescription": "Entdecken Sie weitere erstaunliche Istanbul-Erlebnisse"
-    },
-    "crossSell": {
-      "title": "Vervollständigen Sie Ihr Istanbul-Erlebnis",
-      "subtitle": "Fügen Sie eine Tour zu Ihrer Fotosession hinzu",
-      "description": "Entdecken Sie die Schönheit Istanbuls hinter der Linse und als Entdecker. Unsere Foto + Tour Kombinationen bieten den perfekten Weg, die Stadt zu erleben.",
-      "photoTour": "Fotosession + Tour",
-      "savings": "Sparen Sie bis zu 20%",
-      "benefits": [
-        "Professionelle Fotosession",
-        "Geführte Tour mit lokalem Experten",
-        "Kombipaket-Rabatt",
-        "Nahtlose Erlebniskoordination"
-      ]
-    },
-    "seo": {
-      "title": "Fotografie + Touren | Istanbul Fotograf",
-      "description": "Entdecken Sie Istanbul mit geführten Touren, perfekt für Fotografie-Enthusiasten. Kombinieren Sie Ihre Fotosession mit kulturellen Erlebnissen und Stadterkundungen."
-    },
-    "meta": {
-      "tourDetails": "Tourdetails für {tourName}",
-      "tourBooking": "Buche {tourName} - Istanbul Tour"
-    }
   },
   "blog": {
     "title": "Fotografie Blog",

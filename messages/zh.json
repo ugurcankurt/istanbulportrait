@@ -7,7 +7,6 @@
     "packages": "套餐",
     "about": "关于",
     "contact": "联系",
-    "tours": "旅游",
     "blog": "博客",
     "locations": "地点"
   },
@@ -51,6 +50,7 @@
     "subtitle": "为您的伊斯坦布尔拍摄选择完美套餐",
     "sectionTitle": "摄影套餐",
     "sectionDescription": "为您的伊斯坦布尔拍摄体验选择完美套餐",
+    "per_person": "每人",
     "essential": {
       "title": "基础套餐",
       "price": "€150",
@@ -128,6 +128,7 @@
     "subtitle": "伊斯坦布尔顶级摄影师，捕捉城市之美",
     "sectionTitle": "关于我",
     "sectionDescription": "了解我作为伊斯坦布尔首席摄影师的历程，以及捕捉您完美瞬间背后的热情",
+    "per_person": "每人",
     "description": "作为一名在伊斯坦布尔拥有8年以上经验的专业摄影师，我专注于捕捉人与伊斯坦布尔壮丽背景之间的独特联系。作为伊斯坦布尔领先的摄影师，我的热情在于创造永恒的回忆，既反映拍摄对象的美丽，又体现这座令人难以置信的城市的历史魅力。",
     "experience": "8年以上经验",
     "sessions": "完成500+次拍摄",
@@ -138,6 +139,7 @@
     "subtitle": "准备预订您的伊斯坦布尔拍摄？",
     "sectionTitle": "联系我们",
     "sectionDescription": "准备预订您的伊斯坦布尔拍摄？让我们讨论您的摄影需求，共同创造美好作品",
+    "per_person": "每人",
     "cta_description": "准备在伊斯坦布尔留下您的回忆？浏览我们的套餐，直接在线预订。",
     "experience_description": "8年以上捕捉伊斯坦布尔之美的经验",
     "premium_locations": "高级地点",
@@ -180,6 +182,7 @@
     },
     "steps": {
       "package": "套餐",
+      "people_count": "人数：",
       "details": "详情",
       "payment": "付款",
       "confirmation": "确认"
@@ -189,6 +192,7 @@
     "payment_details": "付款详情",
     "booking_details": "预订详情",
     "form": {
+      "people_count": "人数",
       "name": "全名",
       "email": "电子邮件地址",
       "phone": "电话号码",
@@ -237,6 +241,7 @@
       "date": "日期：",
       "time": "时间：",
       "package": "套餐：",
+      "people_count": "人数：",
       "total_amount": "总金额："
     },
     "security": {
@@ -249,6 +254,11 @@
       "complete_description": "输入您的付款信息完成预订",
       "secure_no_fees": "安全付款 • 无隐藏费用"
     },
+    "people_count_title": "人数",
+    "price_per_person": "每人价格",
+    "seasonal_discount_applied": "已享季节性折扣（优惠{percentage}%）",
+    "person": "人",
+    "people": "人",
     "payment_method": "付款方式",
     "payment_methods": {
       "credit_card": "信用卡/借记卡",
@@ -293,6 +303,7 @@
     "terms_of_service": "服务条款"
   },
   "validation": {
+    "people_count_required": "屋顶套餐需选择人数",
     "package_required": "必须选择套餐",
     "email_invalid": "请输入有效的电子邮件地址",
     "phone_invalid": "请输入有效的电话号码",
@@ -412,7 +423,6 @@
     "home": "首页",
     "about": "关于",
     "packages": "摄影套餐",
-    "tours": "伊斯坦布尔旅游",
     "contact": "联系",
     "checkout": "结算",
     "privacy": "隐私政策",
@@ -466,7 +476,8 @@
     "bullet_gallery": "• 在线相册交付",
     "bullet_retouching": "• 专业修图",
     "need_help": "需要帮助？",
-    "help_description": "对您的预订有疑问？随时联系我们。"
+    "help_description": "对您的预订有疑问？随时联系我们。",
+    "people_count": "人数"
   },
   "package_selection": {
     "choose_package": "选择您的套餐",
@@ -907,102 +918,6 @@
     "homeButton": "返回首页",
     "packagesButton": "查看套餐",
     "goBack": "返回"
-  },
-  "tours": {
-    "sectionTitle": "探索伊斯坦布尔旅游",
-    "sectionDescription": "用精心策划的伊斯坦布尔体验补充您的照片拍摄。通过GetYourGuide探索城市的历史地标、文化宝藏和隐秘美景。",
-    "crossSellMessage": "您照片拍摄的完美补充",
-    "viewAllTours": "查看所有旅游",
-    "bookNow": "立即预订",
-    "fromPrice": "从",
-    "reviews": "评论",
-    "specialOffer": "特别优惠",
-    "likelyToSellOut": "可能售罄",
-    "highlights": "亮点",
-    "errorTitle": "无法加载旅游",
-    "noToursTitle": "暂无旅游",
-    "noToursDescription": "我们目前正在更新我们的旅游选择。请稍后查看。",
-    "widget": {
-      "loading": "加载GetYourGuide旅游中...",
-      "error": "无法加载旅游小部件。显示静态信息。",
-      "poweredBy": "由GetYourGuide提供支持",
-      "bookingRedirect": "您将被重定向到GetYourGuide完成预订"
-    },
-    "packageDealTitle": "摄影+旅游套餐",
-    "packageDealDescription": "将您的照片拍摄与导游旅游结合时节省更多。创造一个完整伊斯坦布尔体验的持久回忆。",
-    "viewPackages": "查看照片套餐",
-    "customPackage": "定制套餐优惠",
-    "duration": "时长",
-    "location": "地点",
-    "supplier": "旅游运营商",
-    "included": "包含内容",
-    "notIncluded": "不包含内容",
-    "additionalInfo": "附加信息",
-    "itinerary": "行程",
-    "dayNumber": "第{number}天",
-    "loading": "加载旅游中...",
-    "error": "加载旅游失败。请稍后重试。",
-    "searchPlaceholder": "搜索旅游...",
-    "categories": {
-      "historical": "历史与文化",
-      "photography": "摄影旅游",
-      "food": "美食与烹饪",
-      "cruises": "博斯普鲁斯游船",
-      "walking": "步行旅游",
-      "private": "私人旅游",
-      "cultural": "文化与艺术",
-      "adventure": "冒险与观光",
-      "all": "所有旅游"
-    },
-    "filters": {
-      "category": "类别",
-      "duration": "时长",
-      "price": "价格范围",
-      "rating": "评分",
-      "sortBy": "排序方式",
-      "priceAsc": "价格（低到高）",
-      "priceDesc": "价格（高到低）",
-      "ratingDesc": "最高评分",
-      "ratingAsc": "最低评分",
-      "clearFilters": "清除所有筛选"
-    },
-    "detail": {
-      "backToTours": "← 返回旅游",
-      "aboutThisTour": "关于此旅游",
-      "tourFeatures": "旅游特色",
-      "confirmationType": "确认类型",
-      "tourType": "旅游类型",
-      "bookThisTour": "预订此旅游",
-      "perPerson": "每人",
-      "bookOnViator": "在Viator上预订",
-      "bookingDisclaimer": "您将被重定向到Viator完成预订",
-      "addPhotography": "添加专业摄影",
-      "addPhotographyDescription": "用专业摄影服务捕捉您的旅游回忆",
-      "viewPhotoPackages": "查看照片套餐",
-      "relatedTours": "您可能喜欢的更多旅游",
-      "relatedToursDescription": "探索其他令人惊叹的伊斯坦布尔体验"
-    },
-    "crossSell": {
-      "title": "完成您的伊斯坦布尔体验",
-      "subtitle": "为您的照片拍摄添加旅游",
-      "description": "从镜头后和探险者的角度探索伊斯坦布尔之美。我们的照片+旅游组合提供了体验这座城市的完美方式。",
-      "photoTour": "照片拍摄+旅游",
-      "savings": "节省高达20%",
-      "benefits": [
-        "专业摄影服务",
-        "本地专家导游旅游",
-        "组合套餐折扣",
-        "无缝体验协调"
-      ]
-    },
-    "seo": {
-      "title": "伊斯坦布尔旅游 | 摄影+旅游 | 伊斯坦布尔摄影师",
-      "description": "探索适合摄影爱好者的伊斯坦布尔导游旅游。将您的照片拍摄与文化体验和城市探索相结合。"
-    },
-    "meta": {
-      "tourDetails": "{tourName}的旅游详情",
-      "tourBooking": "预订{tourName} - 伊斯坦布尔旅游"
-    }
   },
   "blog": {
     "title": "摄影博客",

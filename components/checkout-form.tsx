@@ -81,6 +81,8 @@ export function CheckoutForm() {
     exchangeRate: number;
   } | null>(null);
 
+  const [confirmedBooking, setConfirmedBooking] = useState<any>(null);
+
   // Unique Event ID for Facebook Deduplication (Purchase Event)
   const [eventId, setEventId] = useState<string>("");
 
@@ -249,6 +251,7 @@ export function CheckoutForm() {
         const bookingResult = await bookingResponse.json();
 
         setBookingId(bookingResult.booking.id);
+        setConfirmedBooking(bookingResult.booking);
         setShowSuccess(true);
         toast.success(t("success.payment_successful"));
 
@@ -450,6 +453,7 @@ export function CheckoutForm() {
       const bookingResult = await bookingResponse.json();
 
       setBookingId(bookingResult.booking.id);
+      setConfirmedBooking(bookingResult.booking);
       setShowSuccess(true);
       toast.success(t("success.payment_successful"));
 
@@ -524,6 +528,14 @@ export function CheckoutForm() {
           <span className="text-muted-foreground">{t("labels.package")}</span>
           <span className="font-medium">{packageInfo?.name}</span>
         </div>
+        {selectedPackage === "rooftop" && preFilledBookingData?.peopleCount && (
+          <div className="flex justify-between">
+            <span className="text-muted-foreground">{t("labels.people_count")}</span>
+            <span className="font-medium">
+              {preFilledBookingData.peopleCount} {preFilledBookingData.peopleCount === 1 ? t("person") : t("people")}
+            </span>
+          </div>
+        )}
       </div>
     </div>
   );
@@ -540,7 +552,8 @@ export function CheckoutForm() {
       selectedPackage,
       locale,
       undefined,
-      preFilledBookingData?.bookingDate // Pass the date to calculate discounts
+      preFilledBookingData?.bookingDate, // Pass the date to calculate discounts
+      selectedPackage === "rooftop" ? preFilledBookingData?.peopleCount : undefined
     );
 
     return (
@@ -601,28 +614,25 @@ export function CheckoutForm() {
         {/* Price Breakdown with Tax */}
         <div className="bg-muted/50 rounded-lg p-4">
           <div className="space-y-2">
-            {/* Base Price */}
+            {/* Subtotal: Show original price */}
             <div className="flex justify-between items-center text-sm">
               <span className="text-muted-foreground">
                 {translations("subtotal")}
+                {selectedPackage === "rooftop" && preFilledBookingData?.peopleCount && (
+                  <span className="text-xs block text-muted-foreground/80">
+                    ({preFilledBookingData.peopleCount} {preFilledBookingData.peopleCount === 1 ? t("person") : t("people")})
+                  </span>
+                )}
               </span>
-              <span>{pricing.basePrice}</span>
+              <span>{pricing.originalPrice}</span>
             </div>
 
             {pricing.isDiscounted && (
               <div className="flex justify-between items-center text-sm text-success font-medium">
-                <span>Seasonal Discount</span>
+                <span>{t("seasonal_discount_applied", { percentage: (pricing.appliedDiscountPercentage * 100).toFixed(0) })}</span>
                 <span>-{pricing.discountAmount}</span>
               </div>
             )}
-
-            {/* Tax Amount */}
-            <div className="flex justify-between items-center text-sm">
-              <span className="text-muted-foreground">
-                {translations("tax_rate", { rate: pricing.taxRatePercentage })}
-              </span>
-              <span>{pricing.taxAmount}</span>
-            </div>
 
             <Separator className="my-2" />
 
@@ -637,7 +647,7 @@ export function CheckoutForm() {
             </div>
           </div>
           <p className="text-xs text-muted-foreground mt-2 text-center">
-            {translations("tax_inclusive")} • {t("payment.secure_no_fees")}
+            {translations("tax_inclusive")} ({pricing.taxAmount} {translations("vat")}) • {t("payment.secure_no_fees")}
           </p>
         </div>
       </div>
@@ -650,6 +660,7 @@ export function CheckoutForm() {
         bookingId={bookingId}
         packageId={selectedPackage}
         customerData={preFilledBookingData || undefined}
+        confirmedBooking={confirmedBooking}
       />
     );
   }

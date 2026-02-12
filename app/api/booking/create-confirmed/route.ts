@@ -87,6 +87,7 @@ export async function POST(request: NextRequest) {
       bookingTime,
       notes,
       totalAmount,
+      peopleCount,
     } = validationResult.data;
 
     // Validate that the totalAmount matches the expected price
@@ -97,6 +98,11 @@ export async function POST(request: NextRequest) {
     if (bookingDate) {
       const { price } = calculateDiscountedPrice(basePrice, bookingDate);
       expectedPrice = price;
+    }
+
+    // For rooftop package, multiply by people count
+    if (packageId === "rooftop" && peopleCount) {
+      expectedPrice = expectedPrice * peopleCount;
     }
 
     if (Math.abs(totalAmount - expectedPrice) > 0.01) {
@@ -152,6 +158,7 @@ export async function POST(request: NextRequest) {
             user_phone: customerPhone,
             booking_date: bookingDate,
             booking_time: bookingTime,
+            people_count: packageId === "rooftop" ? peopleCount : null, // Only for rooftop
           })
           .eq("id", bookingId)
           .select()
@@ -175,6 +182,7 @@ export async function POST(request: NextRequest) {
             status: "confirmed", // Directly confirmed since payment succeeded
             total_amount: totalAmount,
             notes: notes || null,
+            people_count: packageId === "rooftop" ? peopleCount : null, // Only for rooftop
           })
           .select()
           .single();
@@ -216,6 +224,14 @@ export async function POST(request: NextRequest) {
           bookingDate,
         );
 
+        let emailOriginalPrice = originalPrice;
+        let emailDiscountAmount = discountAmount;
+
+        if (packageId === "rooftop" && peopleCount && peopleCount > 1) {
+          emailOriginalPrice = originalPrice * peopleCount;
+          emailDiscountAmount = discountAmount * peopleCount;
+        }
+
         await sendBookingConfirmation({
           customerName,
           customerEmail,
@@ -223,9 +239,10 @@ export async function POST(request: NextRequest) {
           bookingDate,
           bookingTime,
           totalAmount,
-          originalAmount: originalPrice,
-          discountAmount: discountAmount,
+          originalAmount: emailOriginalPrice,
+          discountAmount: emailDiscountAmount,
           bookingId: booking.id,
+          peopleCount: peopleCount,
         });
 
         // Track Facebook CAPI Purchase
@@ -272,11 +289,13 @@ export async function POST(request: NextRequest) {
           packageId: booking.package_id,
           customerName: booking.user_name,
           customerEmail: booking.user_email,
+          customerPhone: booking.user_phone,
           bookingDate: booking.booking_date,
           bookingTime: booking.booking_time,
           totalAmount: booking.total_amount,
           status: booking.status,
           paymentId,
+          peopleCount: booking.people_count,
         },
       });
     } catch (supabaseError: unknown) {

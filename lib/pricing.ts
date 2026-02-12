@@ -111,14 +111,40 @@ export function calculateDiscountedPrice(
  * @param packageId - Package identifier
  * @param taxRate - Tax rate (defaults to Turkey VAT)
  * @param date - Optional date to apply seasonal discounts
+ * @param peopleCount - Number of people (for rooftop package per-person pricing)
  * @returns Complete price breakdown
  */
 export function getPackagePricing(
   packageId: PackageId,
   taxRate: number = TAX_RATES.TURKEY,
-  date?: Date | string
+  date?: Date | string,
+  peopleCount?: number
 ): PriceBreakdown {
   const originalPrice = packagePrices[packageId];
+
+  // Special handling for rooftop package with per-person pricing
+  if (packageId === "rooftop" && peopleCount && peopleCount >= 1) {
+    // Apply seasonal discount to per-person price first
+    const { price: discountedPerPerson, discountPercentage } = calculateDiscountedPrice(originalPrice, date);
+
+    // Calculate total based on people count
+    const originalTotal = originalPrice * peopleCount;
+    const discountedTotal = discountedPerPerson * peopleCount;
+
+    const taxBreakdown = getTaxBreakdownFromTotal(discountedTotal, taxRate);
+
+    return {
+      ...taxBreakdown,
+      packageId,
+      displayName: getPackageDisplayName(packageId),
+      originalPrice: originalTotal,
+      discountAmount: originalTotal - discountedTotal,
+      isDiscounted: discountPercentage > 0,
+      appliedDiscountPercentage: discountPercentage
+    };
+  }
+
+  // Standard pricing for other packages
   const { price: totalPrice, discountPercentage } = calculateDiscountedPrice(originalPrice, date);
 
   const taxBreakdown = getTaxBreakdownFromTotal(totalPrice, taxRate);
@@ -140,15 +166,17 @@ export function getPackagePricing(
  * @param locale - Locale for formatting
  * @param taxRate - Tax rate (defaults to Turkey VAT)
  * @param date - Optional date to apply seasonal discounts
+ * @param peopleCount - Number of people (for rooftop package per-person pricing)
  * @returns Formatted price breakdown
  */
 export function formatPackagePricing(
   packageId: PackageId,
   locale: string = "en",
   taxRate: number = TAX_RATES.TURKEY,
-  date?: Date | string
+  date?: Date | string,
+  peopleCount?: number
 ): FormattedPriceBreakdown {
-  const breakdown = getPackagePricing(packageId, taxRate, date);
+  const breakdown = getPackagePricing(packageId, taxRate, date, peopleCount);
   const formatted = formatTaxBreakdown(breakdown, locale);
 
   const formatter = new Intl.NumberFormat(locale, {

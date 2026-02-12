@@ -13,14 +13,26 @@ import {
     getClientIP,
 } from "@/lib/rate-limit";
 import { supabaseAdmin } from "@/lib/supabase";
-import { bookingSchema, packagePrices } from "@/lib/validations";
+import { baseBookingSchema, packagePrices } from "@/lib/validations";
 import { calculateDiscountedPrice } from "@/lib/pricing";
 import { z } from "zod";
 
 // Extended schema to include locale
-const draftSchema = bookingSchema.extend({
+const draftSchema = baseBookingSchema.extend({
     locale: z.string().default("en"),
-});
+}).refine(
+    (data) => {
+        // Rooftop package requires peopleCount
+        if (data.packageId === "rooftop") {
+            return data.peopleCount !== undefined && data.peopleCount >= 1 && data.peopleCount <= 10;
+        }
+        return true;
+    },
+    {
+        message: "validation.people_count_required",
+        path: ["peopleCount"],
+    }
+);
 
 export async function POST(request: NextRequest) {
     const startTime = Date.now();
@@ -58,6 +70,7 @@ export async function POST(request: NextRequest) {
             notes,
             totalAmount,
             locale,
+            peopleCount,
         } = validationResult.data;
 
         try {
@@ -88,10 +101,14 @@ export async function POST(request: NextRequest) {
                     booking_date: bookingDate,
                     booking_time: bookingTime,
                     status: "draft", // IMPORTANT: Draft status
-                    total_amount: calculateDiscountedPrice(packagePrices[packageId as keyof typeof packagePrices], bookingDate).price,
+                    total_amount:
+                        packageId === "rooftop" && peopleCount && peopleCount > 1
+                            ? calculateDiscountedPrice(packagePrices[packageId as keyof typeof packagePrices], bookingDate).price * peopleCount
+                            : calculateDiscountedPrice(packagePrices[packageId as keyof typeof packagePrices], bookingDate).price,
                     notes: notes || null,
                     locale: locale, // Save language preference
                     abandoned_email_sent: false,
+                    people_count: packageId === "rooftop" ? peopleCount : null, // Only for rooftop
                 })
                 .select()
                 .single();
