@@ -268,7 +268,7 @@
     },
     "people_count_title": "عدد الأشخاص",
     "price_per_person": "السعر لكل شخص",
-    "seasonal_discount_applied": "تم تطبيق خصم موسمي ({percentage}% خصم)",
+    "seasonal_discount_applied": "تخفيض ({percentage}% خصم)",
     "person": "شخص",
     "people": "أشخاص",
     "payment_method": "طريقة الدفع",

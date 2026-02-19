@@ -121,7 +121,7 @@
       "available_packages": "伊斯坦布尔摄影师套餐",
       "intro": "与伊斯坦布尔专业摄影师一起选择您的完美摄影套餐。所有拍摄包括专业后期处理以及在城市最具标志性的地点拍照。作为您的专属伊斯坦布尔摄影师，我确保每个精彩瞬间都被完美捕捉。"
     },
-    "winter_sale": "冬季促销",
+    "winter_sale": "特卖",
     "ui": {
       "duration": "时长",
       "photos": "照片",
@@ -267,7 +267,7 @@
     },
     "people_count_title": "人数",
     "price_per_person": "每人价格",
-    "seasonal_discount_applied": "已享季节性折扣（优惠{percentage}%）",
+    "seasonal_discount_applied": "特卖（优惠{percentage}%)",
     "person": "人",
     "people": "人",
     "payment_method": "付款方式",

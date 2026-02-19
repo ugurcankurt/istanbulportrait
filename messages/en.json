@@ -264,7 +264,7 @@
     },
     "people_count_title": "Number of People",
     "price_per_person": "Price per person",
-    "seasonal_discount_applied": "Seasonal discount applied ({percentage}% OFF)",
+    "seasonal_discount_applied": "Sale ({percentage}% OFF)",
     "person": "person",
     "people": "people",
     "payment_method": "Payment Method",

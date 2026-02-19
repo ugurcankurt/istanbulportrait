@@ -121,7 +121,7 @@
       "available_packages": "Forfaits Photographe Istanbul",
       "intro": "Choisissez votre forfait photo idéal avec l'expert photographe d'Istanbul. Toutes les séances incluent une retouche professionnelle et des photos dans les lieux les plus emblématiques de la ville."
     },
-    "winter_sale": "Soldes d'Hiver",
+    "winter_sale": "Soldes",
     "ui": {
       "duration": "Durée",
       "photos": "Photos",
@@ -267,7 +267,7 @@
     },
     "people_count_title": "Nombre de personnes",
     "price_per_person": "Prix par personne",
-    "seasonal_discount_applied": "Remise saisonnière appliquée (-{percentage}%)",
+    "seasonal_discount_applied": "Soldes (-{percentage}%)",
     "person": "personne",
     "people": "personnes",
     "payment_method": "Méthode de Paiement",

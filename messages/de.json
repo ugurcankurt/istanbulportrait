@@ -121,7 +121,7 @@
       "available_packages": "Istanbul Fotograf Pakete",
       "intro": "Wählen Sie Ihr perfektes Fotografie-Paket mit Istanbuls Experten-Fotograf. Alle Sitzungen beinhalten professionelle Bearbeitung und Fotos an den ikonischsten Orten der Stadt. Als Ihr engagierter Istanbul-Fotograf sorge ich dafür, dass jeder Moment wunderschön festgehalten wird."
     },
-    "winter_sale": "Winterschlussverkauf",
+    "winter_sale": "Sale",
     "ui": {
       "duration": "Dauer",
       "photos": "Fotos",
@@ -267,7 +267,7 @@
     },
     "people_count_title": "Anzahl der Personen",
     "price_per_person": "Preis pro Person",
-    "seasonal_discount_applied": "Saisonrabatt angewendet ({percentage}% RABATT)",
+    "seasonal_discount_applied": "Sale ({percentage}% RABATT)",
     "person": "Person",
     "people": "Personen",
     "payment_method": "Zahlungsmethode",

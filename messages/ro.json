@@ -121,7 +121,7 @@
       "available_packages": "Pachete Fotograf Istanbul",
       "intro": "Alege pachetul foto perfect cu fotograful expert din Istanbul. Toate sesiunile includ editare profesională și fotografii în cele mai emblematice locații ale orașului. Ca fotograful tău dedicat în Istanbul, mă asigur că fiecare moment este surprins frumos."
     },
-    "winter_sale": "Reduceri de Iarnă",
+    "winter_sale": "Reduceri",
     "ui": {
       "duration": "Durată",
       "photos": "Fotografii",
@@ -267,7 +267,7 @@
     },
     "people_count_title": "Număr de persoane",
     "price_per_person": "Preț de persoană",
-    "seasonal_discount_applied": "Reducere sezonieră aplicată (-{percentage}%)",
+    "seasonal_discount_applied": "Reduceri (-{percentage}%)",
     "person": "persoană",
     "people": "persoane",
     "payment_method": "Metodă de Plată",
