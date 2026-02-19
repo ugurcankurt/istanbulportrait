@@ -19,9 +19,8 @@ export interface DiscountRule {
 }
 
 export const SEASONAL_DISCOUNTS: DiscountRule[] = [
-  // Low season: November (10), December (11), January (0), February (1)
-  { startMonth: 10, endMonth: 11, discountPercentage: 0.33 },
-  { startMonth: 0, endMonth: 1, discountPercentage: 0.33 },
+  // Low season: January (0), February (1), March (2), April (3)
+  { startMonth: 0, endMonth: 3, discountPercentage: 0.33 },
 ];
 
 export const DEPOSIT_PERCENTAGE = 0.30;
