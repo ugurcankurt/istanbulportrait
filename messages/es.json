@@ -57,12 +57,12 @@
       "photos": "15 Fotos Editadas",
       "locations": "1 Ubicación",
       "features": [
-        "Fotógrafo profesional",
         "Sesión fotográfica de 30 minutos",
         "15 fotos editadas de alta resolución",
         "Entrega en galería online",
         "Retoque básico incluido"
-      ]
+      ],
+      "intro": "Perfecto para retratos rápidos y profesionales. Incluye una sesión de 30 minutos en una ubicación icónica con 15 fotos bellamente editadas. Ideal para viajeros solos o parejas que desean recuerdos de alta calidad sin un compromiso largo."
     },
     "premium": {
       "title": "Premium",
@@ -72,13 +72,13 @@
       "locations": "2 Ubicaciones",
       "popular": true,
       "features": [
-        "Fotógrafo profesional",
         "Sesión fotográfica de 1.5 horas",
         "40 fotos editadas de alta resolución",
         "2 ubicaciones diferentes",
         "Retoque avanzado",
         "Vista previa el mismo día"
-      ]
+      ],
+      "intro": "Nuestra opción más popular para una experiencia completa en Estambul. Disfruta de una sesión de 1.5 horas en dos ubicaciones distintas con 40 fotos editadas. Perfecto para capturar diversos fondos y ambientes."
     },
     "luxury": {
       "title": "Lujo",
@@ -87,14 +87,14 @@
       "photos": "80 Fotos Editadas",
       "locations": "3 Ubicaciones",
       "features": [
-        "Fotógrafo profesional",
         "Sesión fotográfica de 2.5 horas",
         "80 fotos editadas de alta resolución",
         "3 ubicaciones premium",
         "Retoque profesional",
         "Vista previa el mismo día",
         "Consultoría de estilo"
-      ]
+      ],
+      "intro": "La experiencia de fotografía VIP definitiva. Un recorrido completo de 2.5 horas por tres ubicaciones premium con 80 fotos editadas, asesoramiento de estilo profesional y retoque avanzado. Perfecto para bodas, compromisos o aquellos que lo quieren todo."
     },
     "rooftop": {
       "title": "Sesión en Azotea",
@@ -103,13 +103,13 @@
       "photos": "20 Fotos Editadas",
       "locations": "Estudio en Azotea",
       "features": [
-        "Fotógrafo profesional",
         "20 fotos editadas de alta resolución",
         "1 vestido largo moderno o vestido tradicional",
         "2 videos cortos para móvil",
         "Tarifa del estudio en azotea incluida",
         "Retoque profesional"
-      ]
+      ],
+      "intro": "Una sesión exclusiva en nuestro estudio privado en la azotea con impresionantes vistas al Bósforo. Incluye la famosa opción de 'Vestido Volador', videos para redes y retoque profesional para una experiencia verdaderamente mágica."
     },
     "custom": {
       "title": "¿Necesitas un Paquete Personalizado?",
@@ -118,9 +118,17 @@
     },
     "sections": {
       "available_packages": "Paquetes de Fotógrafo en Estambul",
-      "intro": "Elige tu paquete de fotografía perfecto con el experto fotógrafo de Estambul. Todas las sesiones incluyen edición profesional, acceso a azoteas premium y fotos en los lugares más emblemáticos de la ciudad. Como tu fotógrafo dedicado en Estambul, aseguro que cada momento sea capturado hermosamente."
+      "intro": "Elige tu paquete de fotografía perfecto con el experto fotógrafo de Estambul. Todas las sesiones incluyen edición profesional y fotos en los lugares más emblemáticos de la ciudad. Como tu fotógrafo dedicado en Estambul, aseguro que cada momento sea capturado hermosamente."
     },
-    "winter_sale": "Oferta de Invierno"
+    "winter_sale": "Oferta de Invierno",
+    "ui": {
+      "duration": "Duración",
+      "photos": "Fotos",
+      "locations": "Ubicaciones",
+      "professional_photographer": "Fotógrafo Profesional",
+      "what_to_expect": "Qué Esperar",
+      "payment_desc": "Se requiere pago seguro en línea para reservar su sesión"
+    }
   },
   "about": {
     "title": "Acerca de Mí",
@@ -242,7 +250,10 @@
       "time": "Hora:",
       "package": "Paquete:",
       "people_count": "Personas:",
-      "total_amount": "Importe Total:"
+      "total_amount": "Importe Total:",
+      "deposit_amount": "Monto del depósito:",
+      "remaining_cash": "Efectivo restante:",
+      "payment_terms_notice": "Condiciones de pago: 30% de depósito en línea, 70% en efectivo el día de la sesión de fotos."
     },
     "security": {
       "ssl_encrypted": "Encriptado SSL",
@@ -448,13 +459,33 @@
       "SYSTEM_ERROR": "Error del Sistema"
     },
     "codes": {
-      "10012": {
-        "message": "Ocurrió un error durante el proceso de pago, por favor contacte con su banco",
-        "suggestion": "Este es un error relacionado con la tarjeta. Se recomienda que el titular de la tarjeta contacte con su banco"
+      "5": {
+        "message": "La transacción fue rechazada",
+        "suggestion": "Por favor, contacte con su banco o pruebe un método de pago diferente"
+      },
+      "14": {
+        "message": "El número de tarjeta ingresado es inválido",
+        "suggestion": "Por favor, verifique el número de su tarjeta e inténtelo de nuevo"
+      },
+      "51": {
+        "message": "Fondos insuficientes en su tarjeta",
+        "suggestion": "Por favor, verifique su saldo o use un método de pago diferente"
+      },
+      "54": {
+        "message": "Su tarjeta ha expirado",
+        "suggestion": "Por favor, use una tarjeta diferente o contacte con su banco"
       },
       "10005": {
         "message": "Su banco ha rechazado esta transacción",
         "suggestion": "Por favor, contacte con su banco o pruebe un método de pago diferente"
+      },
+      "10012": {
+        "message": "Ocurrió un error durante el proceso de pago, por favor contacte con su banco",
+        "suggestion": "Este es un error relacionado con la tarjeta. Se recomienda que el titular de la tarjeta contacte con su banco"
+      },
+      "10034": {
+        "message": "Transacción marcada como potencialmente fraudulenta",
+        "suggestion": "Por favor, contacte con su banco para verificar esta transacción"
       },
       "10051": {
         "message": "Su tarjeta no tiene fondos suficientes para esta transacción",
@@ -508,10 +539,6 @@
         "message": "Fondos insuficientes en su cuenta",
         "suggestion": "Por favor, verifique el saldo de su cuenta o pruebe un método de pago diferente"
       },
-      "10034": {
-        "message": "Transacción marcada como potencialmente fraudulenta",
-        "suggestion": "Por favor, contacte con su banco para verificar esta transacción"
-      },
       "10208": {
         "message": "Ocurrió un error del sistema durante el procesamiento del pago",
         "suggestion": "Por favor, inténtelo de nuevo más tarde o contacte con atención al cliente"
@@ -524,21 +551,9 @@
         "message": "Ocurrió un error de conexión de red",
         "suggestion": "Por favor, verifique su conexión a internet e inténtelo de nuevo"
       },
-      "5": {
-        "message": "La transacción fue rechazada",
-        "suggestion": "Por favor, contacte con su banco o pruebe un método de pago diferente"
-      },
-      "14": {
-        "message": "El número de tarjeta ingresado es inválido",
-        "suggestion": "Por favor, verifique el número de su tarjeta e inténtelo de nuevo"
-      },
-      "51": {
-        "message": "Fondos insuficientes en su tarjeta",
-        "suggestion": "Por favor, verifique su saldo o use un método de pago diferente"
-      },
-      "54": {
-        "message": "Su tarjeta ha expirado",
-        "suggestion": "Por favor, use una tarjeta diferente o contacte con su banco"
+      "10235": {
+        "message": "Las tarjetas American Express no son aceptadas para pagos en Turquía",
+        "suggestion": "Por favor, use una tarjeta Visa o Mastercard para el pago"
       },
       "DEMO_INVALID_CARD": {
         "message": "Por favor, use la tarjeta de prueba para pagos de demostración",
@@ -547,10 +562,6 @@
       "INVALID_REQUEST": {
         "message": "La información de pago está incompleta",
         "suggestion": "Por favor, verifique todos los detalles de pago e inténtelo de nuevo"
-      },
-      "10235": {
-        "message": "Las tarjetas American Express no son aceptadas para pagos en Turquía",
-        "suggestion": "Por favor, use una tarjeta Visa o Mastercard para el pago"
       }
     },
     "common_suggestions": {

@@ -58,12 +58,12 @@
       "photos": "15 Bearbeitete Fotos",
       "locations": "1 Ort",
       "features": [
-        "Professioneller Fotograf",
         "30 Minuten Fotoshooting",
         "15 hochauflösende bearbeitete Fotos",
         "Online-Galerie Lieferung",
         "Grundlegende Retusche inklusive"
-      ]
+      ],
+      "intro": "Perfekt für schnelle, professionelle Porträts. Beinhaltet eine 30-minütige Sitzung an einem ikonischen Ort mit 15 wunderschön bearbeiteten Fotos. Ideal für Alleinreisende oder Paare, die hochwertige Erinnerungen ohne lange Verpflichtung wünschen."
     },
     "premium": {
       "title": "Premium",
@@ -73,13 +73,13 @@
       "locations": "2 Orte",
       "popular": true,
       "features": [
-        "Professioneller Fotograf",
         "1,5 Stunden Fotoshooting",
         "40 hochauflösende bearbeitete Fotos",
         "2 verschiedene Orte",
         "Erweiterte Retusche",
         "Vorschau am selben Tag"
-      ]
+      ],
+      "intro": "Unsere beliebteste Wahl für ein komplettes Istanbul-Erlebnis. Genießen Sie eine 1,5-stündige Sitzung an zwei verschiedenen Orten mit 40 bearbeiteten Fotos. Perfekt, um vielfältige Hintergründe und Stimmungen einzufangen."
     },
     "luxury": {
       "title": "Luxury",
@@ -88,14 +88,14 @@
       "photos": "80 Bearbeitete Fotos",
       "locations": "3 Orte",
       "features": [
-        "Professioneller Fotograf",
         "2,5 Stunden Fotoshooting",
         "80 hochauflösende bearbeitete Fotos",
         "3 Premium-Orte",
         "Professionelle Retusche",
         "Vorschau am selben Tag",
         "Styling-Beratung"
-      ]
+      ],
+      "intro": "Das ultimative VIP-Fotografie-Erlebnis. Eine umfassende 2,5-stündige Tour an 3 Premium-Standorten mit 80 bearbeiteten Fotos, professioneller Styling-Beratung und fortgeschrittener Retusche. Perfekt für Hochzeiten, Verlobungen oder alle, die alles wollen."
     },
     "rooftop": {
       "title": "Dachterrasse-Fotoshooting",
@@ -104,13 +104,13 @@
       "photos": "20 Bearbeitete Fotos",
       "locations": "Dachterrasse Studio",
       "features": [
-        "Professioneller Fotograf",
         "20 hochauflösende bearbeitete Fotos",
         "1 modernes Kleid mit langer Schleppe oder traditionelles Kleid",
         "2 mobile Reels Videos",
         "Dachterrasse Studio Gebühr inklusive",
         "Professionelle Retusche"
-      ]
+      ],
+      "intro": "Eine exklusive Sitzung in unserem privaten Dachstudio mit atemberaubendem Blick auf den Bosporus. Beinhaltet die berühmte Option 'Fliegendes Kleid', Video-Reels und professionelle Retusche für ein wahrlich magisches Erlebnis."
     },
     "custom": {
       "title": "Benötigen Sie ein individuelles Paket?",
@@ -119,9 +119,17 @@
     },
     "sections": {
       "available_packages": "Istanbul Fotograf Pakete",
-      "intro": "Wählen Sie Ihr perfektes Fotografie-Paket mit Istanbuls Experten-Fotograf. Alle Sitzungen beinhalten professionelle Bearbeitung, Premium-Dachterrassenzugang und Fotos an den ikonischsten Orten der Stadt. Als Ihr engagierter Istanbul-Fotograf sorge ich dafür, dass jeder Moment wunderschön festgehalten wird."
+      "intro": "Wählen Sie Ihr perfektes Fotografie-Paket mit Istanbuls Experten-Fotograf. Alle Sitzungen beinhalten professionelle Bearbeitung und Fotos an den ikonischsten Orten der Stadt. Als Ihr engagierter Istanbul-Fotograf sorge ich dafür, dass jeder Moment wunderschön festgehalten wird."
     },
-    "winter_sale": "Winterschlussverkauf"
+    "winter_sale": "Winterschlussverkauf",
+    "ui": {
+      "duration": "Dauer",
+      "photos": "Fotos",
+      "locations": "Orte",
+      "professional_photographer": "Professioneller Fotograf",
+      "what_to_expect": "Was Sie erwartet",
+      "payment_desc": "Sichere Online-Zahlung erforderlich, um Ihre Sitzung zu buchen"
+    }
   },
   "about": {
     "title": "Über mich",
@@ -242,7 +250,10 @@
       "time": "Zeit:",
       "package": "Paket:",
       "people_count": "Personen:",
-      "total_amount": "Gesamtbetrag:"
+      "total_amount": "Gesamtbetrag:",
+      "deposit_amount": "Anzahlungsbetrag:",
+      "remaining_cash": "Restbetrag (Bar):",
+      "payment_terms_notice": "Zahlungsbedingungen: 30% Anzahlung online, 70% in bar am Tag des Fotoshootings."
     },
     "security": {
       "ssl_encrypted": "SSL Verschlüsselt",

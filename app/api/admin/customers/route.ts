@@ -17,6 +17,10 @@ interface Booking {
   total_amount: number;
   created_at: string;
   user_email: string;
+  payments?: {
+    amount: number;
+    status: string;
+  }[];
 }
 
 interface Customer {
@@ -31,7 +35,9 @@ interface Customer {
 interface CustomerWithStats extends Customer {
   bookings_count: number;
   confirmed_bookings: number;
-  total_spent: number;
+  total_value: number; // Total value of confirmed bookings (package prices)
+  total_paid: number; // Actual amount paid (deposits)
+  outstanding_balance: number; // Remaining to be paid
   last_booking_date: string | null;
   last_booking_status: string | null;
 }
@@ -75,7 +81,13 @@ export async function GET(request: NextRequest) {
               booking_time,
               status,
               total_amount,
-              created_at
+              status,
+              total_amount,
+              created_at,
+              payments (
+                amount,
+                status
+              )
             )
           `,
           { count: "exact" },
@@ -149,8 +161,13 @@ export async function GET(request: NextRequest) {
               booking_time,
               status,
               total_amount,
+              total_amount,
               created_at,
-              user_email
+              user_email,
+              payments (
+                amount,
+                status
+              )
             `)
             .in("user_email", customerEmails);
 
@@ -181,24 +198,38 @@ export async function GET(request: NextRequest) {
           const confirmedBookings = bookings.filter(
             (b) => b.status === "confirmed",
           );
-          const totalSpent = confirmedBookings.reduce(
+
+          // Calculate financials for confirmed bookings only
+          const totalValue = confirmedBookings.reduce(
             (sum, b) => sum + b.total_amount,
             0,
           );
+
+          // Calculate total paid (sum of successful payments for confirmed bookings)
+          const totalPaid = confirmedBookings.reduce((sum, b) => {
+            const bookingPayments = b.payments || [];
+            const successfulPayments = bookingPayments
+              .filter((p) => p.status === "success")
+              .reduce((pSum, p) => pSum + p.amount, 0);
+            return sum + successfulPayments;
+          }, 0);
+
           const lastBooking =
             bookings.length > 0
               ? bookings.sort(
-                  (a, b) =>
-                    new Date(b.created_at).getTime() -
-                    new Date(a.created_at).getTime(),
-                )[0]
+                (a, b) =>
+                  new Date(b.created_at).getTime() -
+                  new Date(a.created_at).getTime(),
+              )[0]
               : null;
 
           return {
             ...customer,
             bookings_count: bookings.length,
             confirmed_bookings: confirmedBookings.length,
-            total_spent: totalSpent,
+            total_value: totalValue,
+            total_paid: totalPaid,
+            outstanding_balance: totalValue - totalPaid,
             last_booking_date: lastBooking?.created_at || null,
             last_booking_status: lastBooking?.status || null,
           };
@@ -244,7 +275,7 @@ export async function GET(request: NextRequest) {
       {
         status:
           error instanceof Error &&
-          error.message.includes("Admin access required")
+            error.message.includes("Admin access required")
             ? 403
             : 500,
       },

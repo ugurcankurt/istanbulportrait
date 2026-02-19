@@ -126,99 +126,105 @@ export function PackagesSection() {
               <div
                 key={pkg.id}
                 className="relative hover-scale cursor-pointer"
-                onClick={() => handlePackageSelect(pkg.id as PackageId)}
               >
-                <Card
-                  className={`h-full transition-all duration-300 hover:shadow-lg flex flex-col overflow-hidden p-0 gap-0 pt-0 ${pkg.popular ? "ring-2 ring-primary shadow-xl sm:scale-105 bg-gradient-to-b from-background to-primary/5" : "hover:shadow-md border-2 hover:border-primary/20"}`}
+                <Link
+                  href={{
+                    pathname: "/packages/[slug]",
+                    params: { slug: pkg.id },
+                  }}
                 >
-                  <div className="relative h-48 w-full overflow-hidden">
-                    <Image
-                      src={pkg.image}
-                      alt={pkg.name}
-                      fill
-                      className="object-cover transition-transform duration-500 hover:scale-110"
-                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                    />
-                    <div className="absolute top-2 left-2 z-10 bg-primary text-primary-foreground px-3 py-1 rounded-md font-bold text-lg sm:text-xl shadow-lg border border-white/20 flex flex-col items-center">
-                      <span className={pkg.pricing.isDiscounted ? "text-xs opacity-80 line-through mb-[-4px]" : ""}>
-                        €{pkg.basePrice}
-                      </span>
-                      {pkg.pricing.isDiscounted && (
-                        <span>€{pkg.pricing.price}</span>
-                      )}
-                      {pkg.id === "rooftop" && (
-                        <span className="text-[10px] sm:text-xs font-normal opacity-90 -mt-1">
-                          {t("per_person")}
+                  <Card
+                    className={`h-full transition-all duration-300 hover:shadow-lg flex flex-col overflow-hidden p-0 gap-0 pt-0 ${pkg.popular ? "ring-2 ring-primary shadow-xl sm:scale-105 bg-gradient-to-b from-background to-primary/5" : "hover:shadow-md border-2 hover:border-primary/20"}`}
+                  >
+                    <div className="relative h-48 w-full overflow-hidden">
+                      <Image
+                        src={pkg.image}
+                        alt={pkg.name}
+                        fill
+                        className="object-cover transition-transform duration-500 hover:scale-110"
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                      />
+                      <div className="absolute top-2 left-2 z-10 bg-primary text-primary-foreground px-3 py-1 rounded-md font-bold text-lg sm:text-xl shadow-lg border border-white/20 flex flex-col items-center">
+                        <span className={pkg.pricing.isDiscounted ? "text-xs opacity-80 line-through mb-[-4px]" : ""}>
+                          €{pkg.basePrice}
                         </span>
+                        {pkg.pricing.isDiscounted && (
+                          <span>€{pkg.pricing.price}</span>
+                        )}
+                        {pkg.id === "rooftop" && (
+                          <span className="text-[10px] sm:text-xs font-normal opacity-90 -mt-1">
+                            {t("per_person")}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Seasonal Discount Badge */}
+                    <div className="absolute top-2 right-2 z-10 flex flex-col gap-2 items-end">
+                      {pkg.popular && (
+                        <Badge className="bg-primary text-primary-foreground px-2 sm:px-4 py-1 text-xs sm:text-sm shadow-md">
+                          {tui("most_popular")}
+                        </Badge>
+                      )}
+                      {pkg.pricing.isDiscounted && (
+                        <Badge className="bg-sale text-sale-foreground px-2 py-0.5 text-[10px] sm:text-xs shadow-md animate-pulse border-0">
+                          -{Math.round(pkg.pricing.discountPercentage * 100)}% {t("winter_sale")}
+                        </Badge>
                       )}
                     </div>
-                  </div>
 
-                  {/* Seasonal Discount Badge */}
-                  <div className="absolute top-2 right-2 z-10 flex flex-col gap-2 items-end">
-                    {pkg.popular && (
-                      <Badge className="bg-primary text-primary-foreground px-2 sm:px-4 py-1 text-xs sm:text-sm shadow-md">
-                        {tui("most_popular")}
-                      </Badge>
-                    )}
-                    {pkg.pricing.isDiscounted && (
-                      <Badge className="bg-sale text-sale-foreground px-2 py-0.5 text-[10px] sm:text-xs shadow-md animate-pulse border-0">
-                        -{Math.round(pkg.pricing.discountPercentage * 100)}% {t("winter_sale")}
-                      </Badge>
-                    )}
-                  </div>
-
-                  <CardHeader className="text-center pb-2 sm:pb-2 px-3 sm:px-4 pt-4">
-                    <h3 className="text-xl sm:text-2xl font-bold mb-1 sm:mb-2">
-                      {pkg.name}
-                    </h3>
+                    <CardHeader className="text-center pb-2 sm:pb-2 px-3 sm:px-4 pt-4">
+                      <h3 className="text-xl sm:text-2xl font-bold mb-1 sm:mb-2">
+                        {pkg.name}
+                      </h3>
 
 
-                    <div className="flex flex-wrap justify-center gap-x-2 gap-y-1">
-                      <div className="flex items-center justify-center space-x-2 rtl:space-x-reverse text-xs sm:text-sm">
-                        <Clock className="w-3 h-3 sm:w-4 sm:h-4 text-muted-foreground" />
-                        <span className="font-medium">{pkg.duration}</span>
+                      <div className="flex flex-wrap justify-center gap-x-2 gap-y-1">
+                        <div className="flex items-center justify-center space-x-2 rtl:space-x-reverse text-xs sm:text-sm">
+                          <Clock className="w-3 h-3 sm:w-4 sm:h-4 text-muted-foreground" />
+                          <span className="font-medium">{pkg.duration}</span>
+                        </div>
+                        <div className="flex items-center justify-center space-x-2 rtl:space-x-reverse text-xs sm:text-sm">
+                          <ImageIcon className="w-3 h-3 sm:w-4 sm:h-4 text-muted-foreground" />
+                          <span className="font-medium">{pkg.photos}</span>
+                        </div>
+                        <div className="flex items-center justify-center space-x-2 rtl:space-x-reverse text-xs sm:text-sm">
+                          <MapPin className="w-3 h-3 sm:w-4 sm:h-4 text-muted-foreground" />
+                          <span className="font-medium">{pkg.locations}</span>
+                        </div>
                       </div>
-                      <div className="flex items-center justify-center space-x-2 rtl:space-x-reverse text-xs sm:text-sm">
-                        <ImageIcon className="w-3 h-3 sm:w-4 sm:h-4 text-muted-foreground" />
-                        <span className="font-medium">{pkg.photos}</span>
-                      </div>
-                      <div className="flex items-center justify-center space-x-2 rtl:space-x-reverse text-xs sm:text-sm">
-                        <MapPin className="w-3 h-3 sm:w-4 sm:h-4 text-muted-foreground" />
-                        <span className="font-medium">{pkg.locations}</span>
-                      </div>
-                    </div>
-                    <div className="my-2 border-t border-border" />
-                  </CardHeader>
+                      <div className="my-2 border-t border-border" />
+                    </CardHeader>
 
-                  <CardContent className="flex-1 px-3 sm:px-4">
-                    <ul className="space-y-1 sm:space-y-1.5">
-                      {pkg.features.map((feature, featureIndex) => (
-                        <li
-                          key={featureIndex}
-                          className="flex items-start space-x-2 sm:space-x-2.5 rtl:space-x-reverse"
-                        >
-                          <Check className="w-3 h-3 sm:w-4 sm:h-4 text-primary mt-0.5 flex-shrink-0" />
-                          <span className="text-xs sm:text-sm leading-relaxed">
-                            {feature}
-                          </span>
-                        </li>
-                      ))}
-                    </ul>
-                  </CardContent>
+                    <CardContent className="flex-1 px-3 sm:px-4">
+                      <ul className="space-y-1 sm:space-y-1.5">
+                        {pkg.features.map((feature, featureIndex) => (
+                          <li
+                            key={featureIndex}
+                            className="flex items-start space-x-2 sm:space-x-2.5 rtl:space-x-reverse"
+                          >
+                            <Check className="w-3 h-3 sm:w-4 sm:h-4 text-primary mt-0.5 flex-shrink-0" />
+                            <span className="text-xs sm:text-sm leading-relaxed">
+                              {feature}
+                            </span>
+                          </li>
+                        ))}
+                      </ul>
+                    </CardContent>
 
-                  <CardFooter className="pt-2 sm:pt-2 px-3 sm:px-4 pb-4">
-                    <Button
-                      className="w-full"
-                      size="sm"
-                    // onClick is handled by the parent div
-                    >
-                      <span className="text-base sm:text-lg font-bold">
-                        {tui("book_package")}
-                      </span>
-                    </Button>
-                  </CardFooter>
-                </Card>
+                    <CardFooter className="pt-2 sm:pt-2 px-3 sm:px-4 pb-4">
+                      <Button
+                        className="w-full"
+                        size="sm"
+                      // onClick is handled by the parent div
+                      >
+                        <span className="text-base sm:text-lg font-bold">
+                          {tui("book_package")}
+                        </span>
+                      </Button>
+                    </CardFooter>
+                  </Card>
+                </Link>
               </div>
             ))}
           </div>

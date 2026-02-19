@@ -24,6 +24,8 @@ export const SEASONAL_DISCOUNTS: DiscountRule[] = [
   { startMonth: 0, endMonth: 1, discountPercentage: 0.33 },
 ];
 
+export const DEPOSIT_PERCENTAGE = 0.30;
+
 export interface PriceBreakdown extends TaxBreakdown {
   packageId: PackageId;
   displayName: string;
@@ -31,6 +33,8 @@ export interface PriceBreakdown extends TaxBreakdown {
   discountAmount: number;
   isDiscounted: boolean;
   appliedDiscountPercentage: number;
+  depositAmount: number;
+  remainingAmount: number;
 }
 
 export interface FormattedPriceBreakdown extends FormattedTaxBreakdown {
@@ -40,6 +44,8 @@ export interface FormattedPriceBreakdown extends FormattedTaxBreakdown {
   discountAmount: string;
   isDiscounted: boolean;
   appliedDiscountPercentage: number;
+  depositAmount: string;
+  remainingAmount: string;
 }
 
 /**
@@ -133,6 +139,10 @@ export function getPackagePricing(
 
     const taxBreakdown = getTaxBreakdownFromTotal(discountedTotal, taxRate);
 
+    // Calculate deposit and remaining
+    const depositAmount = Math.round(discountedTotal * DEPOSIT_PERCENTAGE * 100) / 100;
+    const remainingAmount = Math.round((discountedTotal - depositAmount) * 100) / 100;
+
     return {
       ...taxBreakdown,
       packageId,
@@ -140,7 +150,9 @@ export function getPackagePricing(
       originalPrice: originalTotal,
       discountAmount: originalTotal - discountedTotal,
       isDiscounted: discountPercentage > 0,
-      appliedDiscountPercentage: discountPercentage
+      appliedDiscountPercentage: discountPercentage,
+      depositAmount,
+      remainingAmount
     };
   }
 
@@ -149,6 +161,10 @@ export function getPackagePricing(
 
   const taxBreakdown = getTaxBreakdownFromTotal(totalPrice, taxRate);
 
+  // Calculate deposit and remaining
+  const depositAmount = Math.round(totalPrice * DEPOSIT_PERCENTAGE * 100) / 100;
+  const remainingAmount = Math.round((totalPrice - depositAmount) * 100) / 100;
+
   return {
     ...taxBreakdown,
     packageId,
@@ -156,7 +172,9 @@ export function getPackagePricing(
     originalPrice,
     discountAmount: originalPrice - totalPrice,
     isDiscounted: discountPercentage > 0,
-    appliedDiscountPercentage: discountPercentage
+    appliedDiscountPercentage: discountPercentage,
+    depositAmount,
+    remainingAmount
   };
 }
 
@@ -191,7 +209,9 @@ export function formatPackagePricing(
     originalPrice: formatter.format(breakdown.originalPrice),
     discountAmount: formatter.format(breakdown.discountAmount),
     isDiscounted: breakdown.isDiscounted,
-    appliedDiscountPercentage: breakdown.appliedDiscountPercentage
+    appliedDiscountPercentage: breakdown.appliedDiscountPercentage,
+    depositAmount: formatter.format(breakdown.depositAmount),
+    remainingAmount: formatter.format(breakdown.remainingAmount)
   };
 }
 

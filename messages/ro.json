@@ -58,12 +58,12 @@
       "photos": "15 Fotografii Editate",
       "locations": "1 Locație",
       "features": [
-        "Fotograf profesionist",
         "Ședință foto de 30 de minute",
         "15 fotografii editate la rezoluție înaltă",
         "Livrare galerie online",
         "Retușare de bază inclusă"
-      ]
+      ],
+      "intro": "Perfect pentru portrete rapide și profesionale. Include o sesiune de 30 de minute într-o locație emblematică, cu 15 fotografii editate frumos. Ideal pentru călătorii singuri sau cuplurile care doresc amintiri de înaltă calitate fără un angajament lung."
     },
     "premium": {
       "title": "Premium",
@@ -73,13 +73,13 @@
       "locations": "2 Locații",
       "popular": true,
       "features": [
-        "Fotograf profesionist",
         "Ședință foto de 1.5 ore",
         "40 fotografii editate la rezoluție înaltă",
         "2 locații diferite",
         "Retușare avansată",
         "Previzualizare în aceeași zi"
-      ]
+      ],
+      "intro": "Cea mai populară alegere a noastră pentru o experiență completă în Istanbul. Bucură-te de o sesiune de 1,5 ore în două locații distincte cu 40 de fotografii editate. Perfect pentru a surprinde fundaluri și stări diverse."
     },
     "luxury": {
       "title": "Luxury",
@@ -88,14 +88,14 @@
       "photos": "80 Fotografii Editate",
       "locations": "3 Locații",
       "features": [
-        "Fotograf profesionist",
         "Ședință foto de 2.5 ore",
         "80 fotografii editate la rezoluție înaltă",
         "3 locații premium",
         "Retușare profesională",
         "Previzualizare în aceeași zi",
         "Consultanță de stil"
-      ]
+      ],
+      "intro": "Experiența supremă de fotografie VIP. Un tur complet de 2,5 ore în 3 locații premium cu 80 de fotografii editate, sfaturi profesionale de stil și retușare avansată. Perfect pentru nunți, logodne sau cei care vor totul."
     },
     "rooftop": {
       "title": "Ședință Foto pe Acoperiș",
@@ -104,13 +104,13 @@
       "photos": "20 Fotografii Editate",
       "locations": "Studio pe Acoperiș",
       "features": [
-        "Fotograf profesionist",
         "20 fotografii editate la rezoluție înaltă",
         "1 rochie lungă modernă sau rochie tradițională",
         "2 videoclipuri mobile reels",
         "Taxa studioului pe acoperiș inclusă",
         "Retușare profesională"
-      ]
+      ],
+      "intro": "O sesiune exclusivă în studioul nostru privat de pe acoperiș, cu vederi uluitoare la Bosfor. Include celebra opțiune 'Rochie Zburătoare', videoclipuri reels și retușare profesională pentru o experiență cu adevărat magică."
     },
     "custom": {
       "title": "Ai nevoie de un Pachet Personalizat?",
@@ -119,9 +119,17 @@
     },
     "sections": {
       "available_packages": "Pachete Fotograf Istanbul",
-      "intro": "Alege pachetul foto perfect cu fotograful expert din Istanbul. Toate sesiunile includ editare profesională, acces premium pe acoperiș și fotografii în cele mai emblematice locații ale orașului. Ca fotograful tău dedicat în Istanbul, mă asigur că fiecare moment este surprins frumos."
+      "intro": "Alege pachetul foto perfect cu fotograful expert din Istanbul. Toate sesiunile includ editare profesională și fotografii în cele mai emblematice locații ale orașului. Ca fotograful tău dedicat în Istanbul, mă asigur că fiecare moment este surprins frumos."
     },
-    "winter_sale": "Reduceri de Iarnă"
+    "winter_sale": "Reduceri de Iarnă",
+    "ui": {
+      "duration": "Durată",
+      "photos": "Fotografii",
+      "locations": "Locații",
+      "professional_photographer": "Fotograf Profesionist",
+      "what_to_expect": "La ce să te aștepți",
+      "payment_desc": "Plata online securizată este necesară pentru a rezerva sesiunea"
+    }
   },
   "about": {
     "title": "Despre Mine",
@@ -242,7 +250,10 @@
       "time": "Ora:",
       "package": "Pachet:",
       "people_count": "Persoane:",
-      "total_amount": "Sumă Totală:"
+      "total_amount": "Sumă Totală:",
+      "deposit_amount": "Sumă depozit:",
+      "remaining_cash": "Numerar rămas:",
+      "payment_terms_notice": "Termeni de plată: 30% depozit online, 70% numerar în ziua ședinței foto."
     },
     "security": {
       "ssl_encrypted": "Criptat SSL",
@@ -523,13 +534,33 @@
       "SYSTEM_ERROR": "Eroare Sistem"
     },
     "codes": {
-      "10012": {
-        "message": "A apărut o eroare în timpul procesului de plată, te rugăm să contactezi banca",
-        "suggestion": "Aceasta este o eroare legată de card. Se recomandă ca titularul cardului să contacteze banca"
+      "5": {
+        "message": "Tranzacția a fost refuzată",
+        "suggestion": "Te rugăm să contactezi banca sau să încerci o altă metodă de plată"
+      },
+      "14": {
+        "message": "Numărul de card introdus este invalid",
+        "suggestion": "Te rugăm să verifici numărul cardului și să încerci din nou"
+      },
+      "51": {
+        "message": "Fonduri insuficiente pe cardul tău",
+        "suggestion": "Te rugăm să verifici soldul sau să folosești o altă metodă de plată"
+      },
+      "54": {
+        "message": "Cardul tău a expirat",
+        "suggestion": "Te rugăm să folosești un alt card sau să contactezi banca"
       },
       "10005": {
         "message": "Banca ta a refuzat această tranzacție",
         "suggestion": "Te rugăm să contactezi banca sau să încerci o altă metodă de plată"
+      },
+      "10012": {
+        "message": "A apărut o eroare în timpul procesului de plată, te rugăm să contactezi banca",
+        "suggestion": "Aceasta este o eroare legată de card. Se recomandă ca titularul cardului să contacteze banca"
+      },
+      "10034": {
+        "message": "Tranzacție marcată ca potențial frauduloasă",
+        "suggestion": "Te rugăm să contactezi banca pentru a verifica această tranzacție"
       },
       "10051": {
         "message": "Cardul tău nu are fonduri suficiente pentru această tranzacție",
@@ -583,10 +614,6 @@
         "message": "Fonduri insuficiente în contul tău",
         "suggestion": "Te rugăm să verifici soldul contului sau să încerci o altă metodă de plată"
       },
-      "10034": {
-        "message": "Tranzacție marcată ca potențial frauduloasă",
-        "suggestion": "Te rugăm să contactezi banca pentru a verifica această tranzacție"
-      },
       "10208": {
         "message": "A apărut o eroare de sistem în timpul procesării plății",
         "suggestion": "Te rugăm să încerci din nou mai târziu sau să contactezi suportul clienți"
@@ -599,21 +626,9 @@
         "message": "A apărut o eroare de conexiune la rețea",
         "suggestion": "Te rugăm să verifici conexiunea la internet și să încerci din nou"
       },
-      "5": {
-        "message": "Tranzacția a fost refuzată",
-        "suggestion": "Te rugăm să contactezi banca sau să încerci o altă metodă de plată"
-      },
-      "14": {
-        "message": "Numărul de card introdus este invalid",
-        "suggestion": "Te rugăm să verifici numărul cardului și să încerci din nou"
-      },
-      "51": {
-        "message": "Fonduri insuficiente pe cardul tău",
-        "suggestion": "Te rugăm să verifici soldul sau să folosești o altă metodă de plată"
-      },
-      "54": {
-        "message": "Cardul tău a expirat",
-        "suggestion": "Te rugăm să folosești un alt card sau să contactezi banca"
+      "10235": {
+        "message": "Cardurile American Express nu sunt acceptate pentru plăți în Turcia",
+        "suggestion": "Te rugăm să folosești un card Visa sau Mastercard pentru plată"
       },
       "DEMO_INVALID_CARD": {
         "message": "Te rugăm să folosești cardul de test pentru plăți demo",
@@ -622,10 +637,6 @@
       "INVALID_REQUEST": {
         "message": "Informațiile de plată sunt incomplete",
         "suggestion": "Te rugăm să verifici toate detaliile plății și să încerci din nou"
-      },
-      "10235": {
-        "message": "Cardurile American Express nu sunt acceptate pentru plăți în Turcia",
-        "suggestion": "Te rugăm să folosești un card Visa sau Mastercard pentru plată"
       }
     },
     "common_suggestions": {

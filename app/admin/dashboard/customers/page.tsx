@@ -56,7 +56,7 @@ function CustomerDetailsDialog({ customer }: { customer: Customer }) {
   const formatCurrency = (amount: number) => `€${amount.toLocaleString()}`;
   const averageSpent =
     customer.confirmed_bookings > 0
-      ? customer.total_spent / customer.confirmed_bookings
+      ? customer.total_value / customer.confirmed_bookings
       : 0;
 
   return (
@@ -122,21 +122,27 @@ function CustomerDetailsDialog({ customer }: { customer: Customer }) {
                     </span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-sm">Confirmed Bookings:</span>
+                    <span className="text-sm">Confirmed:</span>
                     <span className="text-sm font-medium">
                       {customer.confirmed_bookings}
                     </span>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-sm">Total Spent:</span>
+                  <div className="flex justify-between border-t pt-2 mt-2">
+                    <span className="text-sm">Total Value:</span>
                     <span className="text-sm font-medium">
-                      {formatCurrency(customer.total_spent)}
+                      {formatCurrency(customer.total_value)}
                     </span>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-sm">Average per Booking:</span>
+                  <div className="flex justify-between text-success">
+                    <span className="text-sm">Total Paid (Deposit):</span>
                     <span className="text-sm font-medium">
-                      {formatCurrency(averageSpent)}
+                      {formatCurrency(customer.total_paid)}
+                    </span>
+                  </div>
+                  <div className="flex justify-between text-destructive">
+                    <span className="text-sm">Outstanding:</span>
+                    <span className="text-sm font-medium">
+                      {formatCurrency(customer.outstanding_balance)}
                     </span>
                   </div>
                 </div>
@@ -207,6 +213,16 @@ function CustomerDetailsDialog({ customer }: { customer: Customer }) {
                       <p className="font-medium">
                         {formatCurrency(booking.total_amount)}
                       </p>
+                      {booking.payments && booking.payments.length > 0 && (
+                        <p className="text-xs text-success">
+                          Paid:{" "}
+                          {formatCurrency(
+                            booking.payments
+                              .filter((p) => p.status === "success")
+                              .reduce((sum, p) => sum + p.amount, 0)
+                          )}
+                        </p>
+                      )}
                     </div>
                   </div>
                 ))}
@@ -431,7 +447,9 @@ export default function CustomersPage() {
                   <TableHead>Customer</TableHead>
                   <TableHead>Contact</TableHead>
                   <TableHead>Bookings</TableHead>
-                  <TableHead>Total Spent</TableHead>
+                  <TableHead>Total Value</TableHead>
+                  <TableHead>Paid</TableHead>
+                  <TableHead>Remaining</TableHead>
                   <TableHead>Last Booking</TableHead>
                   <TableHead>Type</TableHead>
                   <TableHead className="w-[50px]"></TableHead>
@@ -470,7 +488,13 @@ export default function CustomersPage() {
                       </div>
                     </TableCell>
                     <TableCell className="font-medium">
-                      {formatCurrency(customer.total_spent)}
+                      {formatCurrency(customer.total_value)}
+                    </TableCell>
+                    <TableCell className="text-success">
+                      {formatCurrency(customer.total_paid)}
+                    </TableCell>
+                    <TableCell className="text-destructive font-medium">
+                      {formatCurrency(customer.outstanding_balance)}
                     </TableCell>
                     <TableCell>
                       {customer.last_booking_date ? (

@@ -14,8 +14,8 @@ import {
 } from "@/lib/rate-limit";
 import { sendBookingConfirmation, addContactToAudience } from "@/lib/resend";
 import { supabaseAdmin } from "@/lib/supabase";
-import { bookingSchema, packagePrices } from "@/lib/validations";
-import { calculateDiscountedPrice } from "@/lib/pricing";
+import { bookingSchema, packagePrices, PackageId } from "@/lib/validations";
+import { calculateDiscountedPrice, getPackagePricing } from "@/lib/pricing";
 
 export async function POST(request: NextRequest) {
   const startTime = Date.now();
@@ -95,23 +95,25 @@ export async function POST(request: NextRequest) {
     let expectedPrice: number = basePrice;
 
     // We check against the booking date for seasonal discounts
-    if (bookingDate) {
-      const { price } = calculateDiscountedPrice(basePrice, bookingDate);
-      expectedPrice = price;
-    }
+    const packagePricing = getPackagePricing(
+      packageId as PackageId,
+      undefined,
+      bookingDate,
+      peopleCount
+    );
 
-    // For rooftop package, multiply by people count
-    if (packageId === "rooftop" && peopleCount) {
-      expectedPrice = expectedPrice * peopleCount;
-    }
+    const expectedTotal = packagePricing.totalPrice;
+    // We also need deposit amount for payment record
+    const depositAmount = packagePricing.depositAmount;
+    const remainingAmount = packagePricing.remainingAmount;
 
-    if (Math.abs(totalAmount - expectedPrice) > 0.01) {
+    if (Math.abs(totalAmount - expectedTotal) > 0.01) {
       const amountError = new ValidationError("Booking amount mismatch");
       logError(amountError, {
         ip,
         endpoint: "booking-confirmed",
         receivedAmount: totalAmount,
-        expectedAmount: expectedPrice,
+        expectedAmount: expectedTotal,
         bookingDate
       });
 
@@ -201,7 +203,7 @@ export async function POST(request: NextRequest) {
           payment_id: paymentId,
           conversation_id: conversationId,
           status: "success",
-          amount: totalAmount,
+          amount: depositAmount, // Record the DEPOSIT amount, not total
           currency: "EUR",
           provider: body.provider || "iyzico",
           provider_response: body.providerResponse || {}, // Save the raw response
@@ -243,6 +245,9 @@ export async function POST(request: NextRequest) {
           discountAmount: emailDiscountAmount,
           bookingId: booking.id,
           peopleCount: peopleCount,
+          depositAmount,
+          remainingAmount,
+          // content below will use these to display breakdown
         });
 
         // Track Facebook CAPI Purchase

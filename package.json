@@ -61,6 +61,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
+    "crypto-js": "^4.2.0",
     "date-fns": "^4.1.0",
     "dotenv": "^17.2.1",
     "easymde": "^2.20.0",
@@ -99,6 +100,7 @@
   "devDependencies": {
     "@biomejs/biome": "2.2.0",
     "@tailwindcss/postcss": "^4",
+    "@types/crypto-js": "^4.2.2",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
@@ -110,5 +112,5 @@
     "tw-animate-css": "^1.3.7",
     "typescript": "^5"
   },
-  "packageManager": "pnpm@10.28.2+sha256.afa99b0b4b3d11c1dad2b472f9318ae2c78673829749ded527f89f09071479a7"
+  "packageManager": "pnpm@10.30.0+sha256.fde3cebbd4ed0d6d140b1983743bf575cdd4b15e4d5e5b257425152dce5b1b6a"
 }

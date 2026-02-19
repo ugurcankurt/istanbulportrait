@@ -145,6 +145,38 @@ function BookingDetailsDialog({ booking }: { booking: Booking }) {
             </div>
           )}
 
+          <div className="grid grid-cols-3 gap-4 p-3 bg-muted/20 rounded-lg border">
+            <div>
+              <Label className="text-xs font-medium text-muted-foreground uppercase">
+                Total
+              </Label>
+              <p className="text-lg font-bold">€{booking.total_amount}</p>
+            </div>
+            <div>
+              <Label className="text-xs font-medium text-muted-foreground uppercase">
+                Paid (Deposit)
+              </Label>
+              <p className="text-lg font-bold text-success">
+                €
+                {booking.payments
+                  ?.filter((p) => p.status === "success")
+                  .reduce((sum, p) => sum + p.amount, 0) || 0}
+              </p>
+            </div>
+            <div>
+              <Label className="text-xs font-medium text-muted-foreground uppercase">
+                Remaining
+              </Label>
+              <p className="text-lg font-bold text-destructive">
+                €
+                {booking.total_amount -
+                  (booking.payments
+                    ?.filter((p) => p.status === "success")
+                    .reduce((sum, p) => sum + p.amount, 0) || 0)}
+              </p>
+            </div>
+          </div>
+
           {booking.payments && booking.payments.length > 0 && (
             <div>
               <Label className="text-sm font-medium">Payments</Label>
@@ -440,7 +472,9 @@ export default function BookingsPage() {
                   <TableHead>Package</TableHead>
                   <TableHead>Session Date</TableHead>
                   <TableHead>Status</TableHead>
-                  <TableHead>Amount</TableHead>
+                  <TableHead>Total</TableHead>
+                  <TableHead>Paid</TableHead>
+                  <TableHead>Remaining</TableHead>
                   <TableHead>Created</TableHead>
                   <TableHead className="w-[50px]"></TableHead>
                 </TableRow>
@@ -472,6 +506,21 @@ export default function BookingsPage() {
                     </TableCell>
                     <TableCell className="font-medium">
                       {formatCurrency(booking.total_amount)}
+                    </TableCell>
+                    <TableCell className="text-success">
+                      {formatCurrency(
+                        booking.payments
+                          ?.filter((p) => p.status === "success")
+                          .reduce((sum, p) => sum + p.amount, 0) || 0
+                      )}
+                    </TableCell>
+                    <TableCell className="text-destructive font-medium">
+                      {formatCurrency(
+                        booking.total_amount -
+                        (booking.payments
+                          ?.filter((p) => p.status === "success")
+                          .reduce((sum, p) => sum + p.amount, 0) || 0)
+                      )}
                     </TableCell>
                     <TableCell className="text-sm text-muted-foreground">
                       {new Date(booking.created_at).toLocaleDateString()}

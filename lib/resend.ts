@@ -13,6 +13,8 @@ export interface BookingConfirmationData {
   discountAmount?: number;
   bookingId: string;
   peopleCount?: number;
+  depositAmount?: number;
+  remainingAmount?: number;
 }
 
 export const sendBookingConfirmation = async (
@@ -88,6 +90,34 @@ export const sendBookingConfirmation = async (
           : ""
         }
             </table>
+            
+            <div style="margin-top: 15px; border-top: 1px dashed #eee; padding-top: 15px;">
+              <table style="width: 100%; border-collapse: collapse;">
+                 ${data.depositAmount
+          ? `
+                <tr>
+                  <td style="padding: 8px 0; color: #059669;"><strong>Deposit Paid (30%):</strong></td>
+                  <td style="padding: 8px 0; color: #059669; font-weight: bold;">€${data.depositAmount}</td>
+                </tr>
+                `
+          : ""
+        }
+                 ${data.remainingAmount
+          ? `
+                <tr>
+                  <td style="padding: 8px 0; color: #b91c1c;"><strong>Remaining Balance (Cash):</strong></td>
+                  <td style="padding: 8px 0; color: #b91c1c; font-weight: bold;">€${data.remainingAmount}</td>
+                </tr>
+                <tr>
+                  <td colspan="2" style="padding: 8px 0; font-size: 0.85em; color: #666; font-style: italic;">
+                    * Please pay the remaining balance in cash on the day of your photoshoot.
+                  </td>
+                </tr>
+                `
+          : ""
+        }
+              </table>
+            </div>
           </div>
 
           <div style="background: #dbeafe; padding: 15px; border-radius: 8px; margin: 20px 0;">

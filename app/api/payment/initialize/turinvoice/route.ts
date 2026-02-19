@@ -12,8 +12,8 @@ import {
   getClientIP,
 } from "@/lib/rate-limit";
 import { turinvoiceCreateOrder } from "@/lib/turinvoice";
-import { packagePrices } from "@/lib/validations";
-import { calculateDiscountedPrice } from "@/lib/pricing";
+import { packagePrices, PackageId } from "@/lib/validations";
+import { getPackagePricing } from "@/lib/pricing";
 
 export async function POST(request: NextRequest) {
   const startTime = Date.now();
@@ -86,19 +86,24 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Verify price matches package price (with discount if applicable)
-    const basePrice = packagePrices[packageId as keyof typeof packagePrices];
+    // Verify price matches package DEPOSIT price
     const bookingDate = customerData?.bookingDate;
-    let expectedPrice: number = basePrice;
+    // We generally expect peopleCount in customerData for rooftop, but it might not be there if not required or passed differently.
+    // However, for correct pricing, we need it. Checking if it's in customerData.
+    const peopleCount = customerData?.peopleCount;
 
-    if (bookingDate) {
-      const { price } = calculateDiscountedPrice(basePrice, bookingDate);
-      expectedPrice = price;
-    }
+    const packagePricing = getPackagePricing(
+      packageId as PackageId,
+      undefined,
+      bookingDate,
+      peopleCount
+    );
+
+    const expectedPrice = packagePricing.depositAmount;
 
     if (Math.abs(amount - expectedPrice) > 0.01) {
       const priceError = new ValidationError(
-        "Amount does not match package price",
+        "Amount does not match required deposit amount",
       );
       logError(priceError, {
         ip,

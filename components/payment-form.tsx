@@ -316,7 +316,7 @@ export function PaymentForm({
                 <div className="flex items-center gap-2">
                   <ShieldCheck className="w-4 h-4" />
                   {t("buttons.pay_amount", {
-                    amount: packagePricing.totalPrice,
+                    amount: packagePricing.depositAmount,
                   })}
                 </div>
               )}

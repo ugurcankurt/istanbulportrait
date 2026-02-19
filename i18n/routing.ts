@@ -20,6 +20,16 @@ export const routing = defineRouting({
       de: "/pakete",
       ro: "/pachete",
     },
+    "/packages/[slug]": {
+      en: "/packages/[slug]",
+      ar: "/hazm/[slug]",
+      ru: "/pakety/[slug]",
+      es: "/paquetes/[slug]",
+      zh: "/taocan/[slug]",
+      fr: "/forfaits/[slug]",
+      de: "/pakete/[slug]",
+      ro: "/pachete/[slug]",
+    },
     "/about": {
       en: "/about",
       ar: "/hawl",

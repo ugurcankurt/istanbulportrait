@@ -60,47 +60,25 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Get package pricing with tax breakdown
-    const packagePricing = getPackagePricing(packageId as PackageId);
-
-    // Validate amount matches expected package price (tax-inclusive)
-    if (typeof amount !== "number" || amount <= 0 || amount > 10000) {
-      const amountError = new ValidationError("Invalid payment amount");
-      logError(amountError, {
-        ip,
-        endpoint: "payment",
-        amount,
-        action: "amount_validation",
-      });
-
-      return NextResponse.json(
-        { error: sanitizeErrorForProduction(amountError) },
-        { status: 400 },
-      );
-    }
-
-    // Validate that the provided amount matches the expected package total
-    // We need to check if a date was provided in customerData to apply discounts
+    // Get package pricing with all details including date and people count
+    // to correctly calculate discounts and DEPOSIT amount
     const bookingDate = customerData.bookingDate;
-    const peopleCount = customerData.peopleCount; // Get people count from request
+    const peopleCount = customerData.peopleCount;
 
-    let expectedPrice = packagePricing.totalPrice;
+    const packagePricing = getPackagePricing(
+      packageId as PackageId,
+      undefined,
+      bookingDate,
+      peopleCount
+    );
 
-    // Base price calculation with date-based discount
-    if (bookingDate) {
-      const { price: discountedPrice } = calculateDiscountedPrice(packagePricing.originalPrice, bookingDate);
-      expectedPrice = discountedPrice;
-    }
-
-    // Apply people count multiplier for rooftop package
-    if (packageId === "rooftop" && peopleCount && typeof peopleCount === "number" && peopleCount >= 1) {
-      expectedPrice = expectedPrice * peopleCount;
-    }
+    // Expected amount is now the DEPOSIT AMOUNT, not total price
+    const expectedPrice = packagePricing.depositAmount;
 
     // Allow for small rounding differences (0.01)
     if (Math.abs(amount - expectedPrice) > 0.01) {
       const priceError = new ValidationError(
-        "Amount does not match package price",
+        "Amount does not match required deposit amount",
       );
       logError(priceError, {
         ip,

@@ -58,12 +58,12 @@
       "photos": "15 Photos Retouchées",
       "locations": "1 Lieu",
       "features": [
-        "Photographe professionnel",
         "Séance photo de 30 minutes",
         "15 photos haute résolution retouchées",
         "Galerie en ligne",
         "Retouche de base incluse"
-      ]
+      ],
+      "intro": "Parfait pour des portraits rapides et professionnels. Comprend une séance de 30 minutes dans un lieu emblématique avec 15 photos magnifiquement retouchées. Idéal pour les voyageurs en solo ou les couples souhaitant des souvenirs de haute qualité sans engagement long."
     },
     "premium": {
       "title": "Premium",
@@ -73,13 +73,13 @@
       "locations": "2 Lieux",
       "popular": true,
       "features": [
-        "Photographe professionnel",
         "Séance photo de 1,5 heure",
         "40 photos haute résolution retouchées",
         "2 lieux différents",
         "Retouche avancée",
         "Aperçu le jour même"
-      ]
+      ],
+      "intro": "Notre choix le plus populaire pour une expérience complète à Istanbul. Profitez d'une séance d'une heure et demie dans deux lieux distincts avec 40 photos retouchées. Parfait pour capturer des décors et des ambiances variés."
     },
     "luxury": {
       "title": "Luxe",
@@ -88,14 +88,14 @@
       "photos": "80 Photos Retouchées",
       "locations": "3 Lieux",
       "features": [
-        "Photographe professionnel",
         "Séance photo de 2,5 heures",
         "80 photos haute résolution retouchées",
         "3 lieux premium",
         "Retouche professionnelle",
         "Aperçu le jour même",
         "Consultation de style"
-      ]
+      ],
+      "intro": "L'expérience photo VIP ultime. Une visite complète de 2,5 heures dans 3 lieux haut de gamme avec 80 photos retouchées, des conseils de style professionnels et des retouches avancées. Parfait pour les mariages, les fiançailles ou ceux qui veulent tout."
     },
     "rooftop": {
       "title": "Séance Photo sur Toit",
@@ -104,13 +104,13 @@
       "photos": "20 Photos Retouchées",
       "locations": "Studio Toit",
       "features": [
-        "Photographe professionnel",
         "20 photos haute résolution retouchées",
         "1 robe longue moderne ou robe traditionnelle",
         "2 vidéos réels mobiles",
         "Frais de studio sur toit inclus",
         "Retouche professionnelle"
-      ]
+      ],
+      "intro": "Une séance exclusive dans notre studio privé sur le toit avec une vue imprenable sur le Bosphore. Comprend la célèbre option 'Robe Volante', des vidéos réels et des retouches professionnelles pour une expérience vraiment magique."
     },
     "custom": {
       "title": "Besoin d'un Forfait Personnalisé ?",
@@ -119,9 +119,17 @@
     },
     "sections": {
       "available_packages": "Forfaits Photographe Istanbul",
-      "intro": "Choisissez votre forfait photo idéal avec l'expert photographe d'Istanbul. Toutes les séances incluent une retouche professionnelle, un accès premium aux toits et des photos dans les lieux les plus emblématiques de la ville."
+      "intro": "Choisissez votre forfait photo idéal avec l'expert photographe d'Istanbul. Toutes les séances incluent une retouche professionnelle et des photos dans les lieux les plus emblématiques de la ville."
     },
-    "winter_sale": "Soldes d'Hiver"
+    "winter_sale": "Soldes d'Hiver",
+    "ui": {
+      "duration": "Durée",
+      "photos": "Photos",
+      "locations": "Lieux",
+      "professional_photographer": "Photographe Professionnel",
+      "what_to_expect": "À quoi s'attendre",
+      "payment_desc": "Paiement en ligne sécurisé requis pour réserver votre séance"
+    }
   },
   "about": {
     "title": "À Propos de Moi",
@@ -242,7 +250,10 @@
       "time": "Heure :",
       "package": "Forfait :",
       "people_count": "Personnes :",
-      "total_amount": "Montant Total :"
+      "total_amount": "Montant Total :",
+      "deposit_amount": "Montant du dépôt :",
+      "remaining_cash": "Solde en espèces :",
+      "payment_terms_notice": "Conditions de paiement : 30 % d'acompte en ligne, 70 % en espèces le jour de la séance photo."
     },
     "security": {
       "ssl_encrypted": "Crypté SSL",

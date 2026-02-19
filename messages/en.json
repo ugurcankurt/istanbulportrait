@@ -58,12 +58,12 @@
       "photos": "15 Edited Photos",
       "locations": "1 Location",
       "features": [
-        "Professional photographer",
         "30 minute photoshoot",
         "15 high-resolution edited photos",
         "Online gallery delivery",
         "Basic retouching included"
-      ]
+      ],
+      "intro": "Perfect for quick, professional portraits. Includes a 30-minute session at one iconic location with 15 beautifully edited photos. Ideal for solo travelers or couples wanting high-quality memories without a long commitment."
     },
     "premium": {
       "title": "Premium",
@@ -73,13 +73,13 @@
       "locations": "2 Locations",
       "popular": true,
       "features": [
-        "Professional photographer",
         "1.5 hour photoshoot",
         "40 high-resolution edited photos",
         "2 different locations",
         "Advanced retouching",
         "Same day preview"
-      ]
+      ],
+      "intro": "Our most popular choice for a complete Istanbul experience. Enjoy a 1.5-hour session at two distinct locations with 40 edited photos. Perfect for capturing diverse backdrops and moods."
     },
     "luxury": {
       "title": "Luxury",
@@ -88,14 +88,14 @@
       "photos": "80 Edited Photos",
       "locations": "3 Locations",
       "features": [
-        "Professional photographer",
         "2.5 hour photoshoot",
         "80 high-resolution edited photos",
         "3 premium locations",
         "Professional retouching",
         "Same day preview",
         "Styling consultation"
-      ]
+      ],
+      "intro": "The ultimate VIP photography experience. A comprehensive 2.5-hour tour across 3 premium locations with 80 edited photos, professional styling advice, and advanced retouching. Perfect for weddings, engagements, or those who want it all."
     },
     "rooftop": {
       "title": "Rooftop Photoshoot",
@@ -104,13 +104,13 @@
       "photos": "20 Edited Photos",
       "locations": "Rooftop Studio",
       "features": [
-        "Professional photographer",
         "20 high-resolution edited photos",
         "1 modern long tail dress or traditional dress",
         "2 mobile reels video",
         "Rooftop studio fee includes",
         "Professional retouching"
-      ]
+      ],
+      "intro": "An exclusive session in our private rooftop studio with breathtaking Bosphorus views. Includes the famous 'Flying Dress' option, video reels, and professional retouching for a truly magical experience."
     },
     "custom": {
       "title": "Need a Custom Package?",
@@ -119,9 +119,17 @@
     },
     "sections": {
       "available_packages": "Istanbul Photographer Packages",
-      "intro": "Choose your perfect photography package with Istanbul's expert photographer. All sessions include professional editing, premium rooftop access, and photos at the city's most iconic locations. As your dedicated Istanbul photographer, I ensure every moment is captured beautifully."
+      "intro": "Choose your perfect photography package with Istanbul's expert photographer. All sessions include professional editing and photos at the city's most iconic locations. As your dedicated Istanbul photographer, I ensure every moment is captured beautifully."
     },
-    "winter_sale": "Winter Sale"
+    "winter_sale": "Winter Sale",
+    "ui": {
+      "duration": "Duration",
+      "photos": "Photos",
+      "locations": "Locations",
+      "professional_photographer": "Professional Photographer",
+      "what_to_expect": "What to Expect",
+      "payment_desc": "Secure online payment required to book your session"
+    }
   },
   "about": {
     "title": "About Me",
@@ -239,7 +247,10 @@
       "time": "Time:",
       "package": "Package:",
       "people_count": "People:",
-      "total_amount": "Total Amount:"
+      "total_amount": "Total Amount:",
+      "deposit_amount": "Deposit Amount:",
+      "remaining_cash": "Remaining Cash:",
+      "payment_terms_notice": "Payment Terms: 30% deposit online, 70% in cash on the day of the photoshoot."
     },
     "security": {
       "ssl_encrypted": "SSL Encrypted",
@@ -520,13 +531,33 @@
       "SYSTEM_ERROR": "System Error"
     },
     "codes": {
-      "10012": {
-        "message": "An error occurred during the payment process, please contact your bank",
-        "suggestion": "This is a card-related error. It is recommended that the cardholder contacts their bank"
+      "5": {
+        "message": "Transaction was declined",
+        "suggestion": "Please contact your bank or try a different payment method"
+      },
+      "14": {
+        "message": "The card number you entered is invalid",
+        "suggestion": "Please check your card number and try again"
+      },
+      "51": {
+        "message": "Insufficient funds on your card",
+        "suggestion": "Please check your balance or use a different payment method"
+      },
+      "54": {
+        "message": "Your card has expired",
+        "suggestion": "Please use a different card or contact your bank"
       },
       "10005": {
         "message": "Your bank has declined this transaction",
         "suggestion": "Please contact your bank or try a different payment method"
+      },
+      "10012": {
+        "message": "An error occurred during the payment process, please contact your bank",
+        "suggestion": "This is a card-related error. It is recommended that the cardholder contacts their bank"
+      },
+      "10034": {
+        "message": "Transaction flagged as potentially fraudulent",
+        "suggestion": "Please contact your bank to verify this transaction"
       },
       "10051": {
         "message": "Your card doesn't have sufficient funds for this transaction",
@@ -580,10 +611,6 @@
         "message": "Insufficient funds in your account",
         "suggestion": "Please check your account balance or try a different payment method"
       },
-      "10034": {
-        "message": "Transaction flagged as potentially fraudulent",
-        "suggestion": "Please contact your bank to verify this transaction"
-      },
       "10208": {
         "message": "A system error occurred during payment processing",
         "suggestion": "Please try again later or contact customer support"
@@ -596,21 +623,9 @@
         "message": "Network connection error occurred",
         "suggestion": "Please check your internet connection and try again"
       },
-      "5": {
-        "message": "Transaction was declined",
-        "suggestion": "Please contact your bank or try a different payment method"
-      },
-      "14": {
-        "message": "The card number you entered is invalid",
-        "suggestion": "Please check your card number and try again"
-      },
-      "51": {
-        "message": "Insufficient funds on your card",
-        "suggestion": "Please check your balance or use a different payment method"
-      },
-      "54": {
-        "message": "Your card has expired",
-        "suggestion": "Please use a different card or contact your bank"
+      "10235": {
+        "message": "American Express cards are not accepted for payments in Turkey",
+        "suggestion": "Please use a Visa or Mastercard for payment"
       },
       "DEMO_INVALID_CARD": {
         "message": "Please use the test card for demo payments",
@@ -619,10 +634,6 @@
       "INVALID_REQUEST": {
         "message": "Payment information is incomplete",
         "suggestion": "Please check all payment details and try again"
-      },
-      "10235": {
-        "message": "American Express cards are not accepted for payments in Turkey",
-        "suggestion": "Please use a Visa or Mastercard for payment"
       }
     },
     "common_suggestions": {

@@ -1,4 +1,4 @@
-import crypto from "crypto";
+import SHA256 from "crypto-js/sha256";
 
 // Facebook/Meta Pixel Configuration
 export const FACEBOOK_PIXEL_ID = process.env.NEXT_PUBLIC_FACEBOOK_PIXEL_ID;
@@ -13,7 +13,7 @@ export function hashCustomerData(value: string): string {
   const normalized = value.toLowerCase().trim();
 
   // Create SHA256 hash
-  return crypto.createHash("sha256").update(normalized).digest("hex");
+  return SHA256(normalized).toString();
 }
 
 // Phone number normalization and hashing

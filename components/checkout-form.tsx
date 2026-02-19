@@ -44,6 +44,7 @@ import type {
   PackageId,
   PaymentFormData,
 } from "@/lib/validations";
+import { formatCurrency } from "@/lib/utils";
 import {
   createBookingSchema,
   createPaymentSchema,
@@ -89,6 +90,16 @@ export function CheckoutForm() {
   // IndexNow integration for automatic URL submission
   const { notifyBookingCreated } = useIndexNow();
   const { trackPurchase: trackYandexPurchase } = useYandexMetrica();
+
+  // Calculate pricing for display in the main component
+  const pricing = selectedPackage
+    ? getPackagePricing(
+      selectedPackage,
+      undefined,
+      preFilledBookingData?.bookingDate,
+      selectedPackage === "rooftop" ? preFilledBookingData?.peopleCount : undefined
+    )
+    : null;
 
   // Create schemas with translations
   const bookingSchemaWithTranslations = createBookingSchema(tValidation);
@@ -207,6 +218,14 @@ export function CheckoutForm() {
     // Track add payment info event
     trackAddPaymentInfo(selectedPackage, packageInfo.name, packageInfo.price);
 
+    // Calculate pricing to get deposit amount
+    const pricing = getPackagePricing(
+      selectedPackage,
+      undefined,
+      bookingData.bookingDate,
+      selectedPackage === "rooftop" ? bookingData.peopleCount : undefined
+    );
+
     try {
       // Step 1: Initialize payment FIRST (no booking creation yet)
       const paymentResponse = await fetch("/api/payment/initialize", {
@@ -215,7 +234,7 @@ export function CheckoutForm() {
         body: JSON.stringify({
           paymentData,
           customerData: bookingData,
-          amount: bookingData.totalAmount, // Use the amount from form data which includes discount
+          amount: pricing.depositAmount, // CHARGE ONLY DEPOSIT
           packageId: selectedPackage,
           locale,
           eventId, // Pass Event ID to backend for CAPI
@@ -388,13 +407,21 @@ export function CheckoutForm() {
     setIsLoading(true);
     const bookingData = bookingForm.getValues();
 
+    // Calculate pricing to get deposit amount
+    const pricing = getPackagePricing(
+      selectedPackage,
+      undefined,
+      bookingData.bookingDate,
+      selectedPackage === "rooftop" ? bookingData.peopleCount : undefined
+    );
+
     try {
       const response = await fetch("/api/payment/initialize/turinvoice", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           customerData: bookingData,
-          amount: bookingData.totalAmount,
+          amount: pricing.depositAmount, // CHARGE ONLY DEPOSIT
           packageId: selectedPackage,
           locale,
           eventId,
@@ -645,9 +672,25 @@ export function CheckoutForm() {
                 {pricing.totalPrice}
               </span>
             </div>
+
+            <div className="bg-primary/5 p-3 rounded-md mt-4 border border-primary/20">
+              <div className="flex justify-between items-center font-bold text-primary">
+                <span>{t("labels.deposit_amount")} (30%)</span>
+                <span>{pricing.depositAmount}</span>
+              </div>
+              <p className="text-xs text-muted-foreground mt-1">
+                {t("payment.secure_no_fees")}
+              </p>
+            </div>
+
+            <div className="flex justify-between items-center text-sm text-muted-foreground px-3">
+              <span>{t("labels.remaining_cash")} (70%)</span>
+              <span>{pricing.remainingAmount}</span>
+            </div>
+
           </div>
           <p className="text-xs text-muted-foreground mt-2 text-center">
-            {translations("tax_inclusive")} ({pricing.taxAmount} {translations("vat")}) • {t("payment.secure_no_fees")}
+            {translations("tax_inclusive")} ({pricing.taxAmount} {translations("vat")})
           </p>
         </div>
       </div>
@@ -874,7 +917,9 @@ export function CheckoutForm() {
                                 {t("buttons.processing")}
                               </>
                             ) : (
-                              t("buttons.pay_with_turinvoice")
+                              t("buttons.pay_amount", {
+                                amount: pricing ? formatCurrency(pricing.depositAmount, locale) : ""
+                              })
                             )}
                           </Button>
                         </div>
@@ -1032,7 +1077,9 @@ export function CheckoutForm() {
                                     {t("buttons.processing")}
                                   </>
                                 ) : (
-                                  t("buttons.pay_with_turinvoice")
+                                  t("buttons.pay_amount", {
+                                    amount: pricing ? formatCurrency(pricing.depositAmount, locale) : ""
+                                  })
                                 )}
                               </Button>
                             </div>

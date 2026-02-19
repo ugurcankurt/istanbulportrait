@@ -10,6 +10,7 @@ import {
   Image as ImageIcon,
   MapPin,
   Users,
+  Info,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
@@ -151,6 +152,8 @@ export function BookingModal({
     originalPrice: number;
     isDiscounted: boolean;
     discountPercentage: number;
+    depositAmount: number;
+    remainingAmount: number;
   } | null>(null);
 
   // Update pricing when package or date changes
@@ -168,10 +171,12 @@ export function BookingModal({
         totalPrice: priceBreakdown.totalPrice,
         originalPrice: priceBreakdown.originalPrice,
         isDiscounted: priceBreakdown.isDiscounted,
-        discountPercentage: priceBreakdown.appliedDiscountPercentage
+        discountPercentage: priceBreakdown.appliedDiscountPercentage,
+        depositAmount: priceBreakdown.depositAmount,
+        remainingAmount: priceBreakdown.remainingAmount,
       });
 
-      form.setValue("totalAmount", priceBreakdown.totalPrice);
+      form.setValue("totalAmount", priceBreakdown.totalPrice); // Full price is stored in form
 
       // Set peopleCount for rooftop
       if (selectedPackage === "rooftop") {
@@ -187,6 +192,8 @@ export function BookingModal({
       originalPrice: pricing?.originalPrice || packagePrices[selectedPackage],
       isDiscounted: pricing?.isDiscounted || false,
       discountPercentage: pricing?.discountPercentage || 0,
+      depositAmount: pricing?.depositAmount || 0,
+      remainingAmount: pricing?.remainingAmount || 0,
       duration: tPackages(`${selectedPackage}.duration`),
       photos: tPackages(`${selectedPackage}.photos`),
       locations: tPackages(`${selectedPackage}.locations`),
@@ -427,6 +434,18 @@ export function BookingModal({
                               })}
                             </div>
                           )}
+
+                          {/* Deposit Breakdown */}
+                          <div className="pt-2 border-t mt-2 space-y-1">
+                            <div className="flex justify-between text-xs sm:text-sm font-medium text-emerald-600">
+                              <span>{t("labels.deposit_amount")} (30%)</span>
+                              <span>€{(pricing.totalPrice * 0.30).toFixed(2)}</span>
+                            </div>
+                            <div className="flex justify-between text-xs sm:text-sm text-muted-foreground">
+                              <span>{t("labels.remaining_cash")} (70%)</span>
+                              <span>€{(pricing.totalPrice * 0.70).toFixed(2)}</span>
+                            </div>
+                          </div>
                         </div>
                       )}
                     </CardContent>
@@ -611,7 +630,7 @@ export function BookingModal({
                 <Separator />
 
                 <div className="flex justify-between items-center">
-                  <span className="font-semibold">{tui("total")}:</span>
+                  <span className="font-semibold">{t("labels.total_amount")}</span>
                   <div className="text-right">
                     {packageInfo.isDiscounted && (
                       <div className="text-sm text-muted-foreground line-through">
@@ -627,6 +646,30 @@ export function BookingModal({
                       </Badge>
                     )}
                   </div>
+                </div>
+
+                <div className="mt-3 space-y-2">
+                  <div className="flex justify-between items-center p-2 bg-primary/5 rounded border border-primary/10">
+                    <span className="font-medium text-primary text-sm">{t("labels.deposit_amount")} (30%)</span>
+                    <span className="font-bold text-primary">
+                      €{packageInfo.depositAmount}
+                    </span>
+                  </div>
+
+                  <div className="flex justify-between items-center px-2 text-sm text-muted-foreground">
+                    <span>{t("labels.remaining_cash")} (70%)</span>
+                    <span>
+                      €{packageInfo.remainingAmount}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Payment Terms Notice */}
+                <div className="mt-4 p-3 bg-blue-50/50 border border-blue-100 rounded-lg flex gap-3 text-sm text-blue-900">
+                  <Info className="w-4 h-4 flex-shrink-0 mt-0.5" />
+                  <p className="leading-tight">
+                    {t("labels.payment_terms_notice")}
+                  </p>
                 </div>
               </CardContent>
             </Card>

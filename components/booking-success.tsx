@@ -12,7 +12,7 @@ import { trackPurchase } from "@/lib/analytics";
 import { formatCurrency, localizeNumerals } from "@/lib/utils";
 import type { BookingFormData, PackageId } from "@/lib/validations";
 import { packagePrices } from "@/lib/validations";
-import { calculateDiscountedPrice } from "@/lib/pricing";
+import { getPackagePricing } from "@/lib/pricing";
 
 interface BookingSuccessProps {
   bookingId: string;
@@ -105,44 +105,56 @@ export function BookingSuccess({
                   </span>
                 </div>
 
-                <div className="flex justify-between items-center">
-                  <span className="text-muted-foreground text-sm sm:text-base">
-                    {tsuccess("amount_paid")}:
-                  </span>
-                  <div className="flex flex-col items-end">
-                    {customerData?.bookingDate ? (
-                      (() => {
-                        const { price, originalPrice, isDiscounted } =
-                          // eslint-disable-next-line @typescript-eslint/no-var-requires
-                          require("@/lib/pricing").calculateDiscountedPrice(
-                            packagePrices[packageId],
-                            customerData.bookingDate,
-                          );
+                <div className="flex flex-col gap-2 w-full pt-2">
+                  {(() => {
+                    const pricing = getPackagePricing(
+                      packageId,
+                      undefined,
+                      customerData?.bookingDate,
+                      peopleCount
+                    );
 
-                        if (isDiscounted) {
-                          return (
-                            <>
-                              <span className="text-xs text-muted-foreground line-through">
-                                {formatCurrency(originalPrice, locale)}
-                              </span>
-                              <span className="font-bold text-sm sm:text-base text-success">
-                                {formatCurrency(price, locale)}
-                              </span>
-                            </>
-                          );
-                        }
-                        return (
-                          <span className="font-bold text-sm sm:text-base">
-                            {formatCurrency(price, locale)}
+                    return (
+                      <div className="space-y-2 w-full">
+                        {/* Total Amount */}
+                        <div className="flex justify-between items-center">
+                          <span className="text-muted-foreground text-sm sm:text-base">
+                            {t("labels.total_amount")}:
                           </span>
-                        );
-                      })()
-                    ) : (
-                      <span className="font-bold text-sm sm:text-base">
-                        {formatCurrency(packageInfo.price, locale)}
-                      </span>
-                    )}
-                  </div>
+                          <div className="flex flex-col items-end">
+                            {pricing.isDiscounted && (
+                              <span className="text-xs text-muted-foreground line-through">
+                                {formatCurrency(pricing.originalPrice, locale)}
+                              </span>
+                            )}
+                            <span className="font-bold text-sm sm:text-base">
+                              {formatCurrency(pricing.totalPrice, locale)}
+                            </span>
+                          </div>
+                        </div>
+
+                        {/* Deposit Paid */}
+                        <div className="flex justify-between items-center p-2 bg-success/10 rounded border border-success/20">
+                          <span className="font-medium text-success text-sm sm:text-base">
+                            {t("labels.deposit_amount")} (30%):
+                          </span>
+                          <span className="font-bold text-success text-sm sm:text-base">
+                            {formatCurrency(pricing.depositAmount, locale)}
+                          </span>
+                        </div>
+
+                        {/* Remaining Balance */}
+                        <div className="flex justify-between items-center px-2">
+                          <span className="text-muted-foreground text-sm sm:text-base">
+                            {t("labels.remaining_cash")} (70%):
+                          </span>
+                          <span className="font-semibold text-sm sm:text-base">
+                            {formatCurrency(pricing.remainingAmount, locale)}
+                          </span>
+                        </div>
+                      </div>
+                    );
+                  })()}
                 </div>
               </div>
             </div>

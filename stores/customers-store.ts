@@ -9,6 +9,10 @@ export interface CustomerBooking {
   status: string;
   total_amount: number;
   created_at: string;
+  payments?: {
+    amount: number;
+    status: string;
+  }[];
 }
 
 export interface Customer {
@@ -21,7 +25,9 @@ export interface Customer {
   bookings: CustomerBooking[];
   bookings_count: number;
   confirmed_bookings: number;
-  total_spent: number;
+  total_value: number; // Total value of confirmed bookings
+  total_paid: number; // Actual amount paid
+  outstanding_balance: number; // Remaining to be paid
   last_booking_date: string | null;
   last_booking_status: string | null;
 }
@@ -153,19 +159,26 @@ export const useCustomersStore = create<CustomersState>()(
           ) as Customer[];
           const paginationData =
             (data as { pagination: unknown }).pagination &&
-            typeof (data as { pagination: unknown }).pagination === "object"
+              typeof (data as { pagination: unknown }).pagination === "object"
               ? {
-                  ...initialPagination,
-                  ...(data as { pagination: Pagination }).pagination,
-                }
+                ...initialPagination,
+                ...(data as { pagination: Pagination }).pagination,
+              }
               : { ...initialPagination, page };
 
           // Calculate stats
           const totalCustomers = paginationData.total || 0;
           const totalRevenue = customersData.reduce(
             (sum: number, customer: Customer) => {
-              const spent = customer.total_spent || 0;
-              return sum + (typeof spent === "number" ? spent : 0);
+              const value = customer.total_value || 0;
+              return sum + (typeof value === "number" ? value : 0);
+            },
+            0,
+          );
+          const totalPaid = customersData.reduce(
+            (sum: number, customer: Customer) => {
+              const paid = customer.total_paid || 0;
+              return sum + (typeof paid === "number" ? paid : 0);
             },
             0,
           );
@@ -179,7 +192,8 @@ export const useCustomersStore = create<CustomersState>()(
 
           const stats = {
             totalCustomers,
-            totalRevenue,
+            totalRevenue, // This is total booking value
+            totalPaid, // New stat: total actual cash flow
             avgRevenuePerCustomer,
             repeatCustomers,
             repeatCustomerRate,
