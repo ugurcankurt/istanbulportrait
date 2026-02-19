@@ -2,13 +2,11 @@
 
 import { Calendar, CheckCircle, Clock, Mail, Phone, Users, Wallet } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
-import { useEffect } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Link } from "@/i18n/routing";
-import { trackPurchase } from "@/lib/analytics";
 import { formatCurrency, localizeNumerals } from "@/lib/utils";
 import type { BookingFormData, PackageId } from "@/lib/validations";
 import { packagePrices } from "@/lib/validations";
@@ -44,18 +42,6 @@ export function BookingSuccess({
 
   // Use the confirmed booking ID from API if available
   const displayBookingId = confirmedBooking?.id || bookingId;
-
-  // Track successful booking conversion
-  useEffect(() => {
-    // Track GA4 Enhanced Ecommerce purchase event
-    trackPurchase(displayBookingId, packageId, packageInfo.name, packageInfo.price);
-
-    // Track Facebook CAPI Purchase event (Server-Action)
-    // We import dynamically or use the function if available
-    import("@/app/actions/marketing-actions").then(({ reportPurchaseToFacebook }) => {
-      reportPurchaseToFacebook(displayBookingId);
-    });
-  }, [displayBookingId, packageId, packageInfo.name, packageInfo.price]);
 
   return (
     <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-24 max-w-6xl">
