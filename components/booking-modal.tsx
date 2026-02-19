@@ -11,6 +11,7 @@ import {
   MapPin,
   Users,
   Info,
+  Loader2,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
@@ -114,6 +115,7 @@ export function BookingModal({
 
   const [showTimeSelection, setShowTimeSelection] = useState(false);
   const [peopleCount, setPeopleCount] = useState<number>(1);
+  const [isNavigating, setIsNavigating] = useState(false);
 
   // Get the appropriate date-fns locale
   const dateFnsLocale = getDateFnsLocale(locale);
@@ -255,23 +257,24 @@ export function BookingModal({
 
         // Navigate to checkout page
         try {
+          setIsNavigating(true);
           router.push(`/checkout?package=${selectedPackage}`);
-
-          // Close modal
-          onClose();
+          // Don't close modal here to allow spinner to show during redirect
         } catch (error) {
-          // Navigation error
+          setIsNavigating(false);
         }
       }
     },
     (errors) => {
       // Form validation errors
+      console.error(errors);
     },
   );
 
   const handleClose = () => {
     form.reset();
     setShowTimeSelection(false);
+    setIsNavigating(false);
     onClose();
   };
 
@@ -682,10 +685,19 @@ export function BookingModal({
             variant="outline"
             onClick={handleClose}
             className="h-12 px-6"
+            disabled={isNavigating || form.formState.isSubmitting}
           >
             {t("buttons.cancel")}
           </Button>
-          <Button type="submit" className="h-12 px-8" onClick={handleSubmit}>
+          <Button 
+            type="submit" 
+            className="h-12 px-8" 
+            onClick={handleSubmit}
+            disabled={isNavigating || form.formState.isSubmitting}
+          >
+            {(isNavigating || form.formState.isSubmitting) && (
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            )}
             {t("buttons.continue_to_payment")}
           </Button>
         </DialogFooter>
