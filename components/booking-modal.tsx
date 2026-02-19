@@ -642,7 +642,7 @@ export function BookingModal({
                     </span>
                     {packageInfo.isDiscounted && (
                       <Badge variant="secondary" className="ml-2 bg-success/15 text-success text-xs font-medium border-0">
-                        -{packageInfo.discountPercentage * 100}% {t("winter_sale")}
+                        -{packageInfo.discountPercentage * 100}% {tPackages("winter_sale")}
                       </Badge>
                     )}
                   </div>
