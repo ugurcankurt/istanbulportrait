@@ -374,6 +374,12 @@
       "photography_locations": "Ubicaciones de Fotografía",
       "checkout": "Checkout",
       "locations": "Ubicaciones"
+    },
+    "instagram_feed": {
+      "title": "Síguenos en Instagram",
+      "visit_profile": "Visitar Perfil",
+      "api_error": "Conexión API faltante",
+      "error_msg": "No se pudo cargar el feed de Instagram."
     }
   },
   "about_cta": {

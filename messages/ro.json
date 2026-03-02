@@ -395,6 +395,12 @@
       "photography_locations": "Locații Foto",
       "checkout": "Finalizare",
       "locations": "Locații"
+    },
+    "instagram_feed": {
+      "title": "Urmărește pe Instagram",
+      "visit_profile": "Vizitați Profilul",
+      "api_error": "Conexiune API Lipsă",
+      "error_msg": "Nu s-a putut încărca fluxul de Instagram."
     }
   },
   "about_cta": {

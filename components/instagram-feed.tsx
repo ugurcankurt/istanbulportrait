@@ -49,7 +49,7 @@ export function InstagramFeed() {
                     setPosts(filteredPosts.slice(0, 6)); // Ensure we only ever show exactly 6
                 }
             } catch (err: any) {
-                setError(err.message || "Instagram akışı yüklenemedi.");
+                setError(err.message || tui("instagram_feed.error_msg"));
             } finally {
                 setLoading(false);
             }
@@ -68,7 +68,7 @@ export function InstagramFeed() {
                         </div>
                     </div>
                     <h2 className="text-3xl sm:text-4xl font-bold mb-3 tracking-tight">
-                        Follow on Instagram
+                        {tui("instagram_feed.title")}
                     </h2>
                     <a
                         href="https://instagram.com/istanbulportrait"
@@ -81,7 +81,7 @@ export function InstagramFeed() {
                 </div>
 
                 {loading ? (
-                    <div className="grid grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-4 max-w-5xl mx-auto">
+                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2 sm:gap-4">
                         {[...Array(6)].map((_, i) => (
                             <Skeleton key={i} className="aspect-square w-full rounded-xl" />
                         ))}
@@ -90,12 +90,12 @@ export function InstagramFeed() {
                     <div className="flex flex-col items-center justify-center p-8 bg-destructive/10 border border-destructive/20 rounded-xl max-w-2xl mx-auto text-center gap-4">
                         <AlertCircle className="h-10 w-10 text-destructive" />
                         <div>
-                            <h3 className="text-lg font-semibold text-destructive mb-1">API Bağlantısı Eksik</h3>
+                            <h3 className="text-lg font-semibold text-destructive mb-1">{tui("instagram_feed.api_error")}</h3>
                             <p className="text-sm text-balance text-muted-foreground">{error}</p>
                         </div>
                     </div>
                 ) : (
-                    <div className="grid grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-4 max-w-5xl mx-auto">
+                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2 sm:gap-4">
                         {posts.map((post, i) => (
                             <a
                                 key={post.id}
@@ -129,7 +129,7 @@ export function InstagramFeed() {
                 <div className="mt-10 text-center">
                     <Button asChild variant="outline" className="rounded-full px-8">
                         <a href="https://instagram.com/istanbulportrait" target="_blank" rel="noopener noreferrer">
-                            Visit Profile
+                            {tui("instagram_feed.visit_profile")}
                         </a>
                     </Button>
                 </div>

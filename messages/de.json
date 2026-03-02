@@ -395,6 +395,12 @@
       "photography_locations": "Fotografie-Orte",
       "checkout": "Kasse",
       "locations": "Orte"
+    },
+    "instagram_feed": {
+      "title": "Folgen Sie auf Instagram",
+      "visit_profile": "Profil Besuchen",
+      "api_error": "API-Verbindung fehlt",
+      "error_msg": "Instagram-Feed konnte nicht geladen werden."
     }
   },
   "about_cta": {

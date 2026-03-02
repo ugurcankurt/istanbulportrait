@@ -395,6 +395,12 @@
       "photography_locations": "Lieux de Photographie",
       "checkout": "Paiement",
       "locations": "Lieux"
+    },
+    "instagram_feed": {
+      "title": "Suivre sur Instagram",
+      "visit_profile": "Visiter le Profil",
+      "api_error": "Connexion API Manquante",
+      "error_msg": "Impossible de charger le flux Instagram."
     }
   },
   "about_cta": {

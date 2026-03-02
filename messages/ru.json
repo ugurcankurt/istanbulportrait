@@ -375,6 +375,12 @@
       "photography_locations": "Места для Фотосессий",
       "checkout": "Оформление",
       "locations": "Локации"
+    },
+    "instagram_feed": {
+      "title": "Подписаться в Instagram",
+      "visit_profile": "Посетить профиль",
+      "api_error": "Отсутствует подключение к API",
+      "error_msg": "Не удалось загрузить ленту Instagram."
     }
   },
   "about_cta": {

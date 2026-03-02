@@ -375,6 +375,12 @@
       "photography_locations": "مواقع التصوير",
       "checkout": "الدفع",
       "locations": "المواقع"
+    },
+    "instagram_feed": {
+      "title": "تابعنا على إنستغرام",
+      "visit_profile": "زيارة الملف الشخصي",
+      "api_error": "اتصال API مفقود",
+      "error_msg": "تعذر تحميل موجز إنستغرام."
     }
   },
   "about_cta": {

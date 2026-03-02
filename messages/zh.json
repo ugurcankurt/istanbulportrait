@@ -395,6 +395,12 @@
       "photography_locations": "摄影地点",
       "checkout": "结算",
       "locations": "地点"
+    },
+    "instagram_feed": {
+      "title": "在 Instagram 上关注",
+      "visit_profile": "访问主页",
+      "api_error": "API 连接缺失",
+      "error_msg": "无法加载 Instagram 动态。"
     }
   },
   "about_cta": {
