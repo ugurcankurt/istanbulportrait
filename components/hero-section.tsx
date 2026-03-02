@@ -14,7 +14,7 @@ export function HeroSection() {
   const tui = useTranslations("ui");
 
   return (
-    <section className="relative min-h-[80vh] overflow-hidden flex items-center justify-center">
+    <section className="relative min-h-[60vh] sm:min-h-[80vh] overflow-hidden flex items-center justify-center">
       {/* Background Image with Gradient Overlay */}
       <div className="absolute inset-0 z-0">
         <Image
