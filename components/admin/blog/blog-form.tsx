@@ -586,7 +586,7 @@ export function BlogForm({
                         <FormLabel>Content ({locale.label})</FormLabel>
                         <FormControl>
                           <MarkdownEditor
-                            value={field.value}
+                            value={field.value || ""}
                             onChange={field.onChange}
                             placeholder="Write your blog post content in Markdown..."
                           />

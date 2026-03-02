@@ -143,10 +143,10 @@ export interface BlogTagWithTranslation extends BlogTag {
 // =============================================
 
 export interface BlogTranslationInput {
-  title: string;
-  excerpt: string;
-  content: string;
-  meta_description: string;
+  title?: string;
+  excerpt?: string;
+  content?: string;
+  meta_description?: string;
 }
 
 export interface BlogFormData {
@@ -166,12 +166,12 @@ export interface CategoryFormData {
   icon?: string | null;
   color: string;
   sort_order: number;
-  translations: Record<Locale, { name: string; description?: string }>;
+  translations: Record<Locale, { name?: string; description?: string }>;
 }
 
 export interface TagFormData {
   slug: string;
-  translations: Record<Locale, { name: string }>;
+  translations: Record<Locale, { name?: string }>;
 }
 
 // =============================================
