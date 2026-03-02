@@ -1,10 +1,10 @@
 "use client";
 
+import { MessageCircle } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
 import { cn } from "@/lib/utils";
-import Image from "next/image";
 
 interface WhatsAppButtonProps {
   phoneNumber: string;
@@ -83,12 +83,11 @@ export function WhatsAppButton({
             mounted && isMobile ? "w-14 h-14" : "w-16 h-16",
           )}
         >
-          <Image
-            src="/whatsapp-logo.svg"
-            alt="WhatsApp"
-            width={mounted && isMobile ? 32 : 36}
-            height={mounted && isMobile ? 32 : 36}
-            className="text-white"
+          <MessageCircle
+            className={cn(
+              "text-white fill-white",
+              mounted && isMobile ? "w-7 h-7" : "w-8 h-8",
+            )}
           />
           {/* Notification Badge */}
           <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white ring-2 ring-background">
