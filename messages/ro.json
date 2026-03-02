@@ -1,0 +1,1232 @@
+{
+  "payment_banner": {
+    "message": "Plată Securizată"
+  },
+  "nav": {
+    "home": "Acasă",
+    "packages": "Pachete",
+    "about": "Despre Noi",
+    "contact": "Contact",
+    "blog": "Blog",
+    "locations": "Locații"
+  },
+  "whatsapp": {
+    "button": "WhatsApp",
+    "tooltip": "Vorbește cu noi pe WhatsApp",
+    "message": "Bună! Aș dori informații despre ședințele foto în Istanbul.",
+    "notification_title": "Bună! 👋",
+    "notification_message": "Ai nevoie de ajutor cu rezervarea?",
+    "close_notification": "Închide notificarea",
+    "direction": "ltr"
+  },
+  "hero": {
+    "title": "Fotograf Istanbul | Fotografie Profesională în Istanbul",
+    "subtitle": "Fotograf expert în Istanbul pentru sesiuni profesionale de portret, nuntă și cuplu",
+    "description": "De Ce Să Alegi Serviciile Noastre Foto în Istanbul",
+    "cta": "Rezervă Sesiunea Ta",
+    "learnMore": "Află Mai Multe"
+  },
+  "features": {
+    "rooftop": {
+      "title": "Sesiuni pe Acoperiș",
+      "description": "Vederi uimitoare ale Bosforului și ale orizontului Istanbulului"
+    },
+    "historic": {
+      "title": "Locații Istorice",
+      "description": "Hagia Sophia, Moscheea Albastră și repere emblematice"
+    },
+    "professional": {
+      "title": "Calitate Foto Profesională",
+      "description": "Cel mai bun fotograf din Istanbul cu echipament de top și post-procesare expertă"
+    }
+  },
+  "gallery": {
+    "title": "Portofoliu Fotografie Istanbul",
+    "subtitle": "Descoperă frumusețea Istanbulului prin obiectivul nostru. Răsfoiește colecția noastră de sesiuni foto de portret, cuplu și lifestyle.",
+    "intro": "Explorează fotografii uimitoare surprinse de fotograful tău profesionist din Istanbul. Portofoliul nostru prezintă ședințe foto de cuplu, sesiuni pe acoperiș și fotografie de portret în cele mai emblematice locații din Istanbul, inclusiv Bosfor, Turnul Galata și istoricul Sultanahmet."
+  },
+  "packages": {
+    "title": "Pachete Foto",
+    "subtitle": "Alege pachetul perfect pentru ședința ta foto în Istanbul",
+    "sectionTitle": "Pachete Foto",
+    "sectionDescription": "Alege pachetul perfect pentru experiența ta foto în Istanbul",
+    "per_person": "de persoană",
+    "essential": {
+      "title": "Esențial",
+      "price": "€150",
+      "duration": "30 Minute",
+      "photos": "15 Fotografii Editate",
+      "locations": "1 Locație",
+      "features": [
+        "Ședință foto de 30 de minute",
+        "15 fotografii editate la rezoluție înaltă",
+        "Livrare galerie online",
+        "Retușare de bază inclusă"
+      ],
+      "intro": "Perfect pentru portrete rapide și profesionale. Include o sesiune de 30 de minute într-o locație emblematică, cu 15 fotografii editate frumos. Ideal pentru călătorii singuri sau cuplurile care doresc amintiri de înaltă calitate fără un angajament lung."
+    },
+    "premium": {
+      "title": "Premium",
+      "price": "€280",
+      "duration": "1.5 Ore",
+      "photos": "40 Fotografii Editate",
+      "locations": "2 Locații",
+      "popular": true,
+      "features": [
+        "Ședință foto de 1.5 ore",
+        "40 fotografii editate la rezoluție înaltă",
+        "2 locații diferite",
+        "Retușare avansată",
+        "Previzualizare în aceeași zi"
+      ],
+      "intro": "Cea mai populară alegere a noastră pentru o experiență completă în Istanbul. Bucură-te de o sesiune de 1,5 ore în două locații distincte cu 40 de fotografii editate. Perfect pentru a surprinde fundaluri și stări diverse."
+    },
+    "luxury": {
+      "title": "Luxury",
+      "price": "€450",
+      "duration": "2.5 Ore",
+      "photos": "80 Fotografii Editate",
+      "locations": "3 Locații",
+      "features": [
+        "Ședință foto de 2.5 ore",
+        "80 fotografii editate la rezoluție înaltă",
+        "3 locații premium",
+        "Retușare profesională",
+        "Previzualizare în aceeași zi",
+        "Consultanță de stil"
+      ],
+      "intro": "Experiența supremă de fotografie VIP. Un tur complet de 2,5 ore în 3 locații premium cu 80 de fotografii editate, sfaturi profesionale de stil și retușare avansată. Perfect pentru nunți, logodne sau cei care vor totul."
+    },
+    "rooftop": {
+      "title": "Ședință Foto pe Acoperiș",
+      "price": "€150",
+      "duration": "De Persoană",
+      "photos": "20 Fotografii Editate",
+      "locations": "Studio pe Acoperiș",
+      "features": [
+        "20 fotografii editate la rezoluție înaltă",
+        "1 rochie lungă modernă sau rochie tradițională",
+        "2 videoclipuri mobile reels",
+        "Taxa studioului pe acoperiș inclusă",
+        "Retușare profesională"
+      ],
+      "intro": "O sesiune exclusivă în studioul nostru privat de pe acoperiș, cu vederi uluitoare la Bosfor. Include celebra opțiune 'Rochie Zburătoare', videoclipuri reels și retușare profesională pentru o experiență cu adevărat magică."
+    },
+    "custom": {
+      "title": "Ai nevoie de un Pachet Personalizat?",
+      "description": "Fiecare ședință foto este unică. Hai să discutăm nevoile tale specifice și să creăm un pachet personalizat care se potrivește perfect viziunii și bugetului tău.",
+      "button": "Obține Ofertă Personalizată"
+    },
+    "sections": {
+      "available_packages": "Pachete Fotograf Istanbul",
+      "intro": "Alege pachetul foto perfect cu fotograful expert din Istanbul. Toate sesiunile includ editare profesională și fotografii în cele mai emblematice locații ale orașului. Ca fotograful tău dedicat în Istanbul, mă asigur că fiecare moment este surprins frumos."
+    },
+    "winter_sale": "Reduceri",
+    "ui": {
+      "duration": "Durată",
+      "photos": "Fotografii",
+      "locations": "Locații",
+      "professional_photographer": "Fotograf Profesionist",
+      "what_to_expect": "La ce să te aștepți",
+      "payment_desc": "Plata online securizată este necesară pentru a rezerva sesiunea"
+    }
+  },
+  "about": {
+    "title": "Despre Mine",
+    "subtitle": "Fotograf de top în Istanbul care surprinde frumusețea orașului",
+    "sectionTitle": "Despre Mine",
+    "sectionDescription": "Descoperă călătoria mea ca fotograf principal în Istanbul și pasiunea din spatele surprinderii momentelor tale perfecte",
+    "per_person": "de persoană",
+    "description": "Cu peste 8 ani de experiență ca fotograf profesionist în Istanbul, mă specializez în surprinderea conexiunii unice dintre oameni și fundalul magnific al Istanbulului. Ca fotograf principal în Istanbul, pasiunea mea constă în crearea de amintiri atemporale care reflectă atât frumusețea subiecților mei, cât și farmecul istoric al acestui oraș incredibil.",
+    "experience": "8+ Ani de Experiență",
+    "sessions": "500+ Sesiuni Finalizate",
+    "clients": "Clienți Fericiți în Întreaga Lume"
+  },
+  "contact": {
+    "title": "Contactează-ne",
+    "subtitle": "Ești gata să rezervi ședința ta foto în Istanbul?",
+    "sectionTitle": "Intră în Legătură",
+    "sectionDescription": "Ești gata să rezervi ședința ta foto în Istanbul? Hai să discutăm nevoile tale fotografice și să creăm ceva frumos împreună",
+    "per_person": "de persoană",
+    "cta_description": "Ești gata să îți surprinzi amintirile în Istanbul? Răsfoiește pachetele noastre și rezervă sesiunea direct online.",
+    "experience_description": "8+ ani de experiență în surprinderea frumuseții Istanbulului",
+    "premium_locations": "Locații Premium",
+    "locations_description": "Acoperișuri, repere istorice și bijuterii ascunse",
+    "professional_quality": "Calitate Profesională",
+    "quality_description": "Fotografii editate la rezoluție înaltă livrate digital",
+    "form": {
+      "name": "Nume Complet",
+      "email": "Adresă Email",
+      "phone": "Număr de Telefon",
+      "date": "Data Preferată",
+      "package": "Selectează Pachet",
+      "message": "Mesaj",
+      "submit": "Trimite Mesaj",
+      "success": "Mulțumim! Te vom contacta în curând.",
+      "error": "Ceva nu a mers bine. Te rugăm să încerci din nou."
+    },
+    "info": {
+      "location": "Süleymaniye, Siyavuş Paşa Sk. No:24/2, 34116 Fatih/İstanbul, Türkiye",
+      "email": "info@istanbulportrait.com",
+      "phone": "+90 536 709 37 24",
+      "hours": "Disponibil 7 zile pe săptămână"
+    }
+  },
+  "checkout": {
+    "title": "Rezervă Sesiunea Ta",
+    "description": "Finalizează rezervarea pentru experiența perfectă de ședință foto în Istanbul",
+    "seo": {
+      "title": "Check-out | Rezervă Sesiunea Ta Foto în Istanbul",
+      "description": "Finalizează rezervarea foto în Istanbul în siguranță. Pachete foto profesionale cu confirmare instantanee și opțiuni flexibile de plată."
+    },
+    "payment_description": "Verifică detaliile rezervării și finalizează plata",
+    "booking_summary": "Rezumat Rezervare",
+    "modal_description": "Completează detaliile pentru a rezerva",
+    "booking": {
+      "review_details": "Verifică informațiile rezervării tale"
+    },
+    "package": {
+      "selected_details": "Detaliile pachetului foto selectat"
+    },
+    "steps": {
+      "package": "Pachet",
+      "people_count": "Persoane:",
+      "details": "Detalii",
+      "payment": "Plată",
+      "confirmation": "Confirmare"
+    },
+    "package_summary": "Rezumat Pachet",
+    "customer_details": "Detalii Client",
+    "payment_details": "Detalii Plată",
+    "booking_details": "Detalii Rezervare",
+    "form": {
+      "people_count": "Număr de persoane",
+      "name": "Nume Complet",
+      "email": "Adresă Email",
+      "phone": "Număr de Telefon",
+      "date": "Selectează Data",
+      "date_time": "Selectează Data și Ora",
+      "time": "Selectează Ora",
+      "select_time": "Selectează Ora",
+      "notes": "Cereri Speciale (Opțional)",
+      "card_holder": "Nume Deținător Card",
+      "card_number": "Număr Card",
+      "expire_month": "LL",
+      "expire_year": "AA",
+      "cvc": "CVC",
+      "terms": "Sunt de acord cu termenii și condițiile",
+      "month_short": "LL",
+      "year_short": "AA"
+    },
+    "buttons": {
+      "continue": "Continuă",
+      "back": "Înapoi",
+      "cancel": "Anulează",
+      "continue_to_payment": "Continuați la plată",
+      "edit_details": "Editează Detalii",
+      "complete_booking": "Finalizează Rezervarea",
+      "pay_amount": "PLĂTEȘTE {amount}",
+      "processing": "Se procesează...",
+      "book_another": "Rezervă Altă Sesiune",
+      "pay_with_turinvoice": "Plătește cu Turinvoice"
+    },
+    "success": {
+      "title": "Rezervare Confirmată!",
+      "message": "Mulțumim pentru rezervarea cu Istanbul Photographer. Confirmarea rezervării a fost trimisă pe emailul tău.",
+      "booking_id": "ID Rezervare",
+      "payment_successful": "Plată reușită! Email de confirmare trimis."
+    },
+    "error": {
+      "generic": "Ceva nu a mers bine. Te rugăm să încerci din nou.",
+      "payment_failed": "Plata a eșuat. Te rugăm să verifici detaliile cardului și să încerci din nou.",
+      "booking_failed": "Nu s-a putut crea rezervarea. Te rugăm să încerci din nou."
+    },
+    "included_features": "Caracteristici Incluse",
+    "more_features": "mai multe caracteristici",
+    "loading_booking": "Se încarcă detaliile rezervării...",
+    "labels": {
+      "customer": "Client:",
+      "date": "Data:",
+      "time": "Ora:",
+      "package": "Pachet:",
+      "people_count": "Persoane:",
+      "total_amount": "Sumă Totală:",
+      "deposit_amount": "Sumă depozit:",
+      "remaining_cash": "Numerar rămas:",
+      "payment_terms_notice": "Termeni de plată: 30% depozit online, 70% numerar în ziua ședinței foto."
+    },
+    "security": {
+      "ssl_encrypted": "Criptat SSL",
+      "secure_payment": "Plată Securizată",
+      "pci_compliant": "Conform PCI",
+      "payment_secure_message": "Plată Securizată • Criptat SSL • Conform PCI"
+    },
+    "payment": {
+      "complete_description": "Finalizează rezervarea introducând informațiile de plată",
+      "secure_no_fees": "Plată securizată • Fără taxe ascunse"
+    },
+    "people_count_title": "Număr de persoane",
+    "price_per_person": "Preț de persoană",
+    "seasonal_discount_applied": "Reduceri (-{percentage}%)",
+    "person": "persoană",
+    "people": "persoane",
+    "payment_method": "Metodă de Plată",
+    "payment_methods": {
+      "credit_card": "Card Credit/Debit",
+      "russian_banks": "Metodă alternativă"
+    },
+    "turinvoice_description": "Vei fi redirecționat către pagina securizată de plată Turinvoice.",
+    "turinvoice": {
+      "title": "Plată Turinvoice",
+      "status_new": "Se inițializează...",
+      "time_remaining": "Timp Rămas",
+      "amount_label": "Sumă",
+      "exchange_rate": "Curs Valutar",
+      "instruction_1": "Te rugăm să finalizezi plata pe pagina deschisă.",
+      "open_payment_page": "Deschide Pagina de Plată",
+      "instruction_2": "Nu închide această fereastră până când plata nu este confirmată.",
+      "security_notice": "Plată Securizată prin Turinvoice",
+      "status_paying": "Se așteaptă plata...",
+      "status_paid": "Plată Reușită!",
+      "status_timeout": "Plata a Expirat",
+      "success_message": "Plata ta a fost confirmată.",
+      "redirect_message": "Se redirecționează...",
+      "timeout_message": "Sesiunea de plată a expirat.",
+      "timeout_desc": "Te rugăm să încerci din nou pentru a reporni procesul de plată.",
+      "try_again": "Încearcă Din Nou"
+    }
+  },
+  "footer": {
+    "description": "Fotoraf principal în Istanbul pentru fotografie profesională de portret. Surprindem momentele tale speciale cu cele mai emblematice fundaluri ale orașului.",
+    "quickLinks": "Link-uri Rapide",
+    "services": "Servicii",
+    "followUs": "Urmărește-ne",
+    "copyright": "© 2025 istanbulportrait.com | Toate drepturile rezervate.",
+    "service_items": {
+      "portrait": "Fotografie Portret",
+      "couples": "Sesiuni Cuplu",
+      "rooftop": "Ședințe Foto pe Acoperiș",
+      "historic": "Ședințe în Locații Istorice",
+      "lifestyle": "Fotografie Lifestyle",
+      "historic_shoots": "Ședințe în Locații Istorice"
+    },
+    "privacy_policy": "Politică de Confidențialitate",
+    "terms_of_service": "Termeni și Condiții"
+  },
+  "validation": {
+    "people_count_required": "Numărul de persoane este necesar pentru pachetul pe acoperiș",
+    "package_required": "Selectarea pachetului este obligatorie",
+    "email_invalid": "Te rugăm să introduci o adresă de email validă",
+    "phone_invalid": "Te rugăm să introduci un număr de telefon valid",
+    "date_required": "Te rugăm să selectezi o dată",
+    "time_required": "Te rugăm să selectezi o oră",
+    "amount_positive": "Suma totală trebuie să fie pozitivă",
+    "cardholder_required": "Numele deținătorului cardului este obligatoriu",
+    "card_number_required": "Numărul cardului este obligatoriu",
+    "month_required": "Luna este obligatorie",
+    "year_required": "Anul este obligatoriu",
+    "cvc_required": "CVC trebuie să aibă 3 cifre",
+    "name_min": "Numele trebuie să aibă cel puțin 2 caractere",
+    "phone_min": "Numărul de telefon trebuie să aibă cel puțin 10 cifre",
+    "message_min": "Mesajul trebuie să aibă cel puțin 10 caractere",
+    "card_number_invalid": "Numărul cardului trebuie să aibă 13-19 cifre",
+    "preferred_date_required": "Te rugăm să selectezi o dată preferată",
+    "package_selection_required": "Te rugăm să selectezi un pachet",
+    "phone_required": "Numărul de telefon este obligatoriu"
+  },
+  "placeholders": {
+    "full_name": "Nume Complet",
+    "email": "ion@exemplu.com",
+    "phone": "+40 700 000 000",
+    "select_package": "Selectează un pachet",
+    "tell_us_vision": "Spune-ne despre viziunea ta pentru ședința foto...",
+    "test_card": "5528790000000008 (Folosește acest card de test pentru plată demo reușită)",
+    "enter_full_name": "Introdu numele tău complet",
+    "enter_email": "Introdu email-ul tău",
+    "phone_number": "+40 755 123 45 67",
+    "pick_date": "Alege o dată",
+    "select_time": "Selectează ora",
+    "special_requests": "Orice cereri speciale sau notițe despre ședința ta foto...",
+    "card_holder": "NUME COMPLET",
+    "card_number": "XXXX XXXX XXXX XXXX",
+    "expire_mm": "LL",
+    "expire_yy": "AA",
+    "cvc_placeholder": "XXX"
+  },
+  "ui": {
+    "custom_package": "Pachet Personalizat",
+    "language": "Limbă",
+    "send_message": "Trimite-ne un mesaj",
+    "contact_information": "Informații Contact",
+    "cookie_settings": "Setări Cookie",
+    "location": "Locație",
+    "email": "Email",
+    "phone": "Telefon",
+    "availability": "Disponibilitate",
+    "what_to_expect": "La Ce Să Te Aștepți",
+    "response_time": "Timp Răspuns",
+    "booking_process": "Proces Rezervare",
+    "payment": "Plată",
+    "response_time_desc": "Răspundem de obicei solicitărilor în 24 de ore.",
+    "booking_process_desc": "După solicitarea ta, vom programa o consultație pentru a discuta viziunea ta și a finaliza detaliile.",
+    "payment_desc": "Plata integrală este necesară online la momentul rezervării pentru a asigura data.",
+    "professional_photographer": "Fotograf profesionist",
+    "professional_photographer_in_istanbul": "Fotograf profesionist în Istanbul",
+    "portrait_photography": "Fotografie Portret",
+    "couple_sessions": "Sesiuni Cuplu",
+    "lifestyle": "Lifestyle",
+    "rooftop_shoots": "Ședințe Foto pe Acoperiș",
+    "view_my_work": "Vezi Lucrările Mele",
+    "book_your_session": "Verifică Locații",
+    "view_packages": "Vezi Pachete",
+    "packages_button": "Pachete",
+    "book_package": "Rezervă Acum",
+    "back_to_home": "Înapoi Acasă",
+    "selected": "Selectat",
+    "select_package": "Selectează Pachet",
+    "total": "Total",
+    "contact": "Contact",
+    "most_popular": "Cel Mai Popular",
+    "tryAgain": "Încearcă Din Nou",
+    "loading": "Se încarcă...",
+    "error": "Eroare",
+    "retry": "Reîncearcă",
+    "breadcrumbs": {
+      "photography_locations": "Locații Foto",
+      "checkout": "Finalizare",
+      "locations": "Locații"
+    }
+  },
+  "about_cta": {
+    "title": "Ești Gata Să Creezi Ceva Frumos?",
+    "description": "Hai să surprindem povestea ta pe fundalul uimitor al Istanbulului."
+  },
+  "api_errors": {
+    "rate_limit": "Prea multe cereri. Te rugăm să încerci din nou mai târziu.",
+    "payment_rate_limit": "Prea multe încercări de plată. Te rugăm să încerci din nou mai târziu.",
+    "invalid_data": "Datele cererii sunt invalide",
+    "missing_payment_data": "Lipsesc datele de plată necesare",
+    "invalid_amount": "Sumă de plată invalidă",
+    "booking_not_found": "Rezervarea nu a fost găsită. Te rugăm să creezi mai întâi o rezervare.",
+    "invalid_package_price": "Preț pachet invalid",
+    "duplicate_booking": "O rezervare similară a fost creată recent. Te rugăm să verifici email-ul sau să aștepți câteva minute.",
+    "booking_config_error": "Nu se poate procesa rezervarea. Te rugăm să verifici configurația Supabase.",
+    "internal_error": "Eroare internă server",
+    "payment_processing_failed": "Procesarea plății a eșuat. Te rugăm să încerci din nou mai târziu.",
+    "unknown_error": "Eroare necunoscută"
+  },
+  "breadcrumb": {
+    "home": "Acasă",
+    "about": "Despre",
+    "packages": "Pachete Foto",
+    "contact": "Contact",
+    "checkout": "Finalizare",
+    "privacy": "Politică de Confidențialitate",
+    "blog": "Blog",
+    "locations": "Locații Foto"
+  },
+  "structured_data": {
+    "website_name": "Istanbul Photographer",
+    "service_type": "Servicii Foto",
+    "address_locality": "Istanbul",
+    "address_country": "TR",
+    "city_name": "Istanbul",
+    "offer_catalog_name": "Servicii Foto",
+    "portrait_photography": "Fotografie Portret",
+    "portrait_photography_desc": "Sesiuni profesionale de fotografie portret",
+    "rooftop_photoshoot": "Ședință Foto pe Acoperiș",
+    "rooftop_photoshoot_desc": "Sesiuni foto pe acoperiș cu vedere la Istanbul",
+    "couple_photography": "Fotografie de Cuplu",
+    "couple_photography_desc": "Sesiuni foto romantice de cuplu",
+    "service_name": "Servicii Profesionale de Fotografie în Istanbul",
+    "service_description": "Sesiuni profesionale de fotografie portret și lifestyle în Istanbul, cu vederi de pe acoperiș și repere istorice",
+    "languages": {
+      "english": "Engleză",
+      "arabic": "Arabă",
+      "russian": "Rusă",
+      "spanish": "Spaniolă"
+    }
+  },
+  "success": {
+    "booking_details": "Detalii Rezervare",
+    "booking_id": "ID Rezervare",
+    "customer_details": "Informații Client",
+    "package_label": "Pachet",
+    "amount_paid": "Sumă Plătită",
+    "booking_date": "Dată",
+    "booking_time": "Oră",
+    "customer_name": "Nume",
+    "customer_email": "Email",
+    "customer_phone": "Telefon",
+    "notes": "Cereri Speciale",
+    "whats_next": "Ce Urmează?",
+    "confirmation_email": "Email de Confirmare Trimis",
+    "email_description": "Verifică inbox-ul pentru informații detaliate despre rezervare",
+    "pre_session_contact": "Contact Pre-Sesiune",
+    "contact_description": "Te vom contacta cu 24 de ore înainte de sesiune pentru a confirma detaliile",
+    "photo_delivery": "Livrare Foto",
+    "delivery_description": "Fotografiile tale editate vor fi livrate în 5-7 zile lucrătoare",
+    "have_questions": "Ai Întrebări?",
+    "bullet_professional": "• Fotograf profesionist inclus",
+    "bullet_photos": "• Fotografii editate la rezoluție înaltă",
+    "bullet_gallery": "• Livrare galerie online",
+    "bullet_retouching": "• Retușare profesională",
+    "need_help": "Ai Nevoie de Ajutor?",
+    "help_description": "Întrebări despre rezervarea ta? Contactează-ne oricând.",
+    "people_count": "Număr de persoane"
+  },
+  "package_selection": {
+    "choose_package": "Alege Pachetul Tău",
+    "select_description": "Selectează pachetul foto care se potrivește cel mai bine nevoilor tale",
+    "you_selected": "Ai selectat:"
+  },
+  "payment": {
+    "secure_powered": "Plată securizată oferită de Iyzico",
+    "security_description": "Informațiile tale de plată sunt securizate și criptate. Folosim criptare SSL standard în industrie pentru a proteja datele tale.",
+    "order_summary": "Rezumat Comandă",
+    "booking_summary": "Rezumat Rezervare",
+    "includes_fees": "Include toate taxele și impozitele",
+    "secure_payment": "Plată Securizată",
+    "iyzico_description": "Plata ta este procesată securizat prin Iyzico, furnizorul de plăți lider din Turcia.",
+    "name_label": "Nume:",
+    "email_label": "Email:",
+    "date_label": "Dată:",
+    "time_label": "Oră:"
+  },
+  "success_messages": {
+    "payment_successful": "Plată reușită! Email de confirmare trimis.",
+    "booking_created": "Rezervare creată cu succes!"
+  },
+  "error_messages": {
+    "payment_failed": "Plata a eșuat",
+    "booking_failed": "Crearea rezervării a eșuat",
+    "payment_init_failed": "Inițializarea plății a eșuat"
+  },
+  "iyzico_errors": {
+    "fallback_message": "Plata a eșuat. Te rugăm să încerci din nou sau să contactezi suportul.",
+    "fallback_suggestion": "Te rugăm să verifici detaliile plății și să încerci din nou",
+    "categories": {
+      "bank": "Eroare Bancă",
+      "validation": "Eroare Validare",
+      "general": "Eroare Plată",
+      "system": "Eroare Sistem",
+      "demo": "Mod Demo",
+      "unknown": "Eroare Necunoscută",
+      "INVALID_TRANSACTION": "Tranzacție Invalidă",
+      "INVALID_CARD": "Card Invalid",
+      "NOT_SUFFICIENT_FUNDS": "Fonduri Insuficiente",
+      "CONTACT_BANK": "Contactează Banca",
+      "SYSTEM_ERROR": "Eroare Sistem"
+    },
+    "codes": {
+      "5": {
+        "message": "Tranzacția a fost refuzată",
+        "suggestion": "Te rugăm să contactezi banca sau să încerci o altă metodă de plată"
+      },
+      "14": {
+        "message": "Numărul de card introdus este invalid",
+        "suggestion": "Te rugăm să verifici numărul cardului și să încerci din nou"
+      },
+      "51": {
+        "message": "Fonduri insuficiente pe cardul tău",
+        "suggestion": "Te rugăm să verifici soldul sau să folosești o altă metodă de plată"
+      },
+      "54": {
+        "message": "Cardul tău a expirat",
+        "suggestion": "Te rugăm să folosești un alt card sau să contactezi banca"
+      },
+      "10005": {
+        "message": "Banca ta a refuzat această tranzacție",
+        "suggestion": "Te rugăm să contactezi banca sau să încerci o altă metodă de plată"
+      },
+      "10012": {
+        "message": "A apărut o eroare în timpul procesului de plată, te rugăm să contactezi banca",
+        "suggestion": "Aceasta este o eroare legată de card. Se recomandă ca titularul cardului să contacteze banca"
+      },
+      "10034": {
+        "message": "Tranzacție marcată ca potențial frauduloasă",
+        "suggestion": "Te rugăm să contactezi banca pentru a verifica această tranzacție"
+      },
+      "10051": {
+        "message": "Cardul tău nu are fonduri suficiente pentru această tranzacție",
+        "suggestion": "Te rugăm să verifici soldul cardului sau să încerci o altă metodă de plată"
+      },
+      "10054": {
+        "message": "Cardul tău a expirat",
+        "suggestion": "Te rugăm să folosești un alt card sau să contactezi banca pentru unul nou"
+      },
+      "10057": {
+        "message": "Acest tip de tranzacție nu este permis pentru cardul tău",
+        "suggestion": "Te rugăm să contactezi banca pentru a activa acest tip de tranzacție"
+      },
+      "10058": {
+        "message": "Tranzacție nepermisă la acest comerciant",
+        "suggestion": "Te rugăm să încerci o altă metodă de plată"
+      },
+      "10059": {
+        "message": "Tranzacție marcată din motive de securitate",
+        "suggestion": "Te rugăm să contactezi banca pentru a verifica și autoriza această tranzacție"
+      },
+      "10084": {
+        "message": "Autorizarea tranzacției a expirat",
+        "suggestion": "Te rugăm să începi procesul de plată din nou"
+      },
+      "10093": {
+        "message": "Cardul tău nu este activat pentru tranzacții online",
+        "suggestion": "Te rugăm să contactezi banca pentru a activa plățile online pentru cardul tău"
+      },
+      "10096": {
+        "message": "Sistemul de plată este temporar indisponibil",
+        "suggestion": "Te rugăm să încerci din nou în câteva minute"
+      },
+      "10201": {
+        "message": "Numărul de card introdus este invalid",
+        "suggestion": "Te rugăm să verifici numărul cardului și să încerci din nou"
+      },
+      "10202": {
+        "message": "Cardul tău a expirat",
+        "suggestion": "Te rugăm să folosești un alt card sau să contactezi banca pentru reînnoire"
+      },
+      "10204": {
+        "message": "Codul de securitate (CVC) este incorect",
+        "suggestion": "Te rugăm să verifici codul de securitate de 3 cifre de pe spatele cardului"
+      },
+      "10206": {
+        "message": "Data de expirare a cardului este incorectă",
+        "suggestion": "Te rugăm să verifici data de expirare de pe card (format LL/AA)"
+      },
+      "10207": {
+        "message": "Fonduri insuficiente în contul tău",
+        "suggestion": "Te rugăm să verifici soldul contului sau să încerci o altă metodă de plată"
+      },
+      "10208": {
+        "message": "A apărut o eroare de sistem în timpul procesării plății",
+        "suggestion": "Te rugăm să încerci din nou mai târziu sau să contactezi suportul clienți"
+      },
+      "10209": {
+        "message": "Tranzacția a expirat",
+        "suggestion": "Te rugăm să încerci plata din nou"
+      },
+      "10210": {
+        "message": "A apărut o eroare de conexiune la rețea",
+        "suggestion": "Te rugăm să verifici conexiunea la internet și să încerci din nou"
+      },
+      "10235": {
+        "message": "Cardurile American Express nu sunt acceptate pentru plăți în Turcia",
+        "suggestion": "Te rugăm să folosești un card Visa sau Mastercard pentru plată"
+      },
+      "DEMO_INVALID_CARD": {
+        "message": "Te rugăm să folosești cardul de test pentru plăți demo",
+        "suggestion": "Folosește numărul cardului: 5528790000000008"
+      },
+      "INVALID_REQUEST": {
+        "message": "Informațiile de plată sunt incomplete",
+        "suggestion": "Te rugăm să verifici toate detaliile plății și să încerci din nou"
+      }
+    },
+    "common_suggestions": {
+      "contact_bank": "Te rugăm să contactezi banca",
+      "try_different_card": "Te rugăm să încerci o altă metodă de plată",
+      "check_details": "Te rugăm să verifici detaliile plății",
+      "try_again_later": "Te rugăm să încerci din nou mai târziu"
+    }
+  },
+  "faq": {
+    "title": "Întrebări Frecvente",
+    "subtitle": "Tot ce trebuie să știi despre sesiunile profesionale de fotografie în Istanbul",
+    "section_title": "Întrebări Frecvente Fotografie Istanbul",
+    "questions": {
+      "best-istanbul-photographer": {
+        "question": "Ce te face cel mai bun fotograf din Istanbul?",
+        "answer": "Cu peste 8 ani de experiență și peste 500 de sesiuni foto reușite, sunt specializat în surprinderea frumuseții unice a Istanbulului. Cunoștințele mele locale profunde despre cele mai fotogenice locații ale orașului, de la acoperișuri cu vedere la Bosfor până la repere istorice, asigură rezultate excepționale de fiecare dată."
+      },
+      "photoshoot-locations": {
+        "question": "Ce locații recomanzi pentru ședințele foto în Istanbul?",
+        "answer": "Ofer sesiuni în locații premium pe acoperiș cu vederi uimitoare la Bosfor, zone istorice precum Sultanahmet (Moscheea Albastră, Hagia Sophia), împrejurimile Turnului Galata, Moscheea Ortaköy și bijuterii ascunse prin oraș. Fiecare locație este aleasă pentru caracterul său unic și calitățile fotogenice."
+      },
+      "session-duration": {
+        "question": "Cât durează o ședință foto în Istanbul?",
+        "answer": "Durata sesiunilor variază în funcție de pachet: Esențial (30 minute), Premium (1.5 ore), Luxury (2.5 ore) și sesiuni personalizate pe acoperiș. Acest lucru permite timp suficient pentru multiple ipostaze, schimbări de ținută și surprinderea cadrelor perfecte în locațiile alese."
+      },
+      "best-time-photoshoot": {
+        "question": "Care este cel mai bun moment al zilei pentru ședințe foto în Istanbul?",
+        "answer": "Ora de Aur (1 oră înainte de apus) oferă cea mai măgulitoare lumină și vederi uimitoare ale orașului. Pentru sesiunile pe acoperiș, momentul apusului oferă reflexii magice ale Bosforului. Sesiunile de dimineață (8-10 AM) sunt perfecte pentru mai puține aglomerații în locațiile istorice."
+      },
+      "photo-delivery": {
+        "question": "Cât de repede voi primi fotografiile editate?",
+        "answer": "Pachetele Premium și Luxury includ previzualizare în aceeași zi (5-10 fotografii de previzualizare). Galeriile complete cu fotografii editate profesional, la rezoluție înaltă, sunt livrate în 5-7 zile lucrătoare prin galerie online securizată cu opțiuni de descărcare."
+      },
+      "weather-backup": {
+        "question": "Ce se întâmplă dacă condițiile meteo sunt nefavorabile?",
+        "answer": "Monitorizez vremea îndeaproape și ofer locații alternative acoperite pentru zilele ploioase. Sesiunile pe acoperiș pot fi reprogramate fără costuri suplimentare. Locațiile interioare și zonele istorice acoperite asigură desfășurarea sesiunii indiferent de vreme."
+      },
+      "couple-vs-individual": {
+        "question": "Fotografiezi atât cupluri cât și persoane individuale?",
+        "answer": "Absolut! Mă specializez în fotografie de cuplu, portrete individuale, sesiuni lifestyle și fotografie de nuntă. Fiecare sesiune este adaptată nevoilor tale specifice, fie că sunt fotografii romantice de cuplu sau portrete profesionale individuale."
+      },
+      "booking-advance": {
+        "question": "Cu cât timp înainte ar trebui să rezerv ședința foto în Istanbul?",
+        "answer": "Recomand rezervarea cu 2-3 săptămâni în avans, în special în timpul sezoanelor turistice de vârf (primăvara și toamna). Acest lucru asigură disponibilitatea pentru data și ora preferată și permite planificarea adecvată pentru permisele de locație dacă este necesar."
+      },
+      "cost-breakdown": {
+        "question": "Ce include costul ședinței foto din Istanbul?",
+        "answer": "Toate pachetele includ fotograful profesionist Uğur Cankurt, consultanță, editare foto la rezoluție înaltă, livrare galerie online și retușare de bază. Esențial €150 (15 fotografii), Premium €280 (40 fotografii), Luxury €450 (80 fotografii). Fără taxe ascunse."
+      },
+      "booking-process": {
+        "question": "Cum rezerv rapid un fotograf în Istanbul?",
+        "answer": "Rezervă instant pe istanbulportrait.com, WhatsApp +905367093724 sau Instagram @istanbulportrait. Rezervarea în avans este recomandată pentru sesiunile la apus și în weekend. Rezervările în aceeași zi sunt posibile în funcție de disponibilitate."
+      },
+      "location-recommendations": {
+        "question": "Care sunt cele mai fotogenice locații din Istanbul?",
+        "answer": "Locațiile de top includ împrejurimile Turnului Galata, vederi la malul Bosforului, Sultanahmet Istoric (zona Moscheii Albastre), Moscheea Ortaköy și locații exclusive pe acoperiș. Fiecare pachet include 1-3 locații premium în funcție de selecție."
+      },
+      "timing-advice": {
+        "question": "Când este cel mai bun moment pentru fotografie în Istanbul?",
+        "answer": "Ora de Aur (1 oră înainte de apus) oferă cea mai bună lumină și vederi uimitoare ale orașului. Vara: 18-19, Iarna: 16-17. Sesiunile de dimineață (8-10 AM) sunt ideale pentru mai puțină aglomerație la siturile istorice. Evitați lumina aspră de la amiază (11-15)."
+      }
+    }
+  },
+  "seo": {
+    "home": {
+      "title": "Fotograf Istanbul | Ședințe Foto Profesionale în Istanbul",
+      "description": "Rezervă ședința ta foto în Istanbul cu un fotograf expert. Ședință foto profesională în Istanbul în locații emblematice. Livrare în aceeași zi. De la €150.",
+      "keywords": "fotograf istanbul, fotograf profesionist istanbul, ședință foto istanbul, fotograf portret istanbul, fotografie cuplu istanbul, fotografie lifestyle istanbul, ședință foto acoperiș istanbul, servicii fotografie istanbul, cel mai bun fotograf istanbul, sesiune fotografie istanbul, fotografie turism istanbul, fotografii profesionale istanbul"
+    },
+    "schema": {
+      "knowsAbout": "Fotografie Istanbul, Fotografie Portret, Fotografie Cuplu, Fotografie Bosfor, Fotografie Turnul Galata, Fotografie Sultanahmet, Tehnici Fotografie Profesională, Fotografie Turism, Fotografie Nuntă",
+      "skills": "Fotografie Portret, Fotografie Lifestyle, Fotografie Cuplu, Fotografie Turism, Fotografie Acoperiș",
+      "serviceType": "Serviciu Fotografie",
+      "slogan": "Surprindem Povestea Ta în Istanbul",
+      "jobTitle": "Fotograf Profesionist",
+      "occupationLocation": "Istanbul, Turcia",
+      "offerDescription": "Fotograf profesionist Uğur Cankurt cu peste 8 ani de experiență. Include consultanță, editare și livrare digitală.",
+      "areaServed": "Istanbul",
+      "galleryDescription": "Galerie de fotografie profesională prezentând {name} în Istanbul",
+      "creditText": "Fotografie de {name}",
+      "howtoCamera": "Cameră Profesională",
+      "howtoLighting": "Echipament Iluminare",
+      "faqTitle": "Întrebări Frecvente despre {topic}"
+    },
+    "packages": {
+      "title": "Pachete Ședințe Foto Istanbul | Fotograf în Istanbul",
+      "description": "Pachete ședințe foto profesionale în Istanbul. Alege fotograful tău din Istanbul pentru sesiuni pe acoperiș, locații istorice și editare premium. Începând de la €150."
+    },
+    "about": {
+      "title": "Despre Fotograful Tău din Istanbul | Ședință Foto în Istanbul",
+      "description": "Cunoaște fotograful tău profesionist din Istanbul cu peste 8 ani de experiență. Specializat în sesiuni foto Istanbul pentru portrete, cupluri și fotografie lifestyle."
+    },
+    "contact": {
+      "title": "Rezervă Ședința Ta Foto în Istanbul | Fotograf în Istanbul",
+      "description": "Ești gata să rezervi ședința ta foto în Istanbul? Contactează fotograful tău profesionist din Istanbul pentru sesiuni foto memorabile. Disponibil 7 zile pe săptămână."
+    }
+  },
+  "cookies": {
+    "banner": {
+      "title": "Folosim cookie-uri pentru a îmbunătăți experiența ta și a analiza traficul nostru.",
+      "description": "Cookie-urile esențiale sunt necesare pentru funcționalitatea de bază a site-ului. Cookie-urile analitice ne ajută să îmbunătățim serviciile noastre.",
+      "privacy_link": "Află mai multe în Politica noastră de Confidențialitate"
+    },
+    "buttons": {
+      "accept_all": "Acceptă Tot",
+      "essential_only": "Doar Esențiale",
+      "decline_all": "Refuză Tot"
+    }
+  },
+  "privacy": {
+    "title": "Politică de Confidențialitate",
+    "subtitle": "Cum colectăm, folosim și protejăm informațiile tale personale",
+    "seo": {
+      "title": "Politică de Confidențialitate | Istanbul Photographer",
+      "description": "Află cum Istanbul Photographer colectează, folosește și protejează informațiile tale personale. Politică de confidențialitate conformă GDPR."
+    },
+    "information_collection": {
+      "title": "Informații pe care le Colectăm",
+      "description": "Colectăm informații pe care ni le oferi direct atunci când utilizezi serviciile noastre de fotografie:",
+      "items": {
+        "personal": "Informații personale (nume, email, număr de telefon)",
+        "contact": "Preferințe de contact și istoric comunicare",
+        "booking": "Detalii rezervare și cerințe sesiune",
+        "payment": "Informații plată (procesate securizat prin Iyzico)"
+      }
+    },
+    "cookies": {
+      "title": "Cookie-uri și Urmărire",
+      "description": "Folosim diferite tipuri de cookie-uri pentru a îmbunătăți experiența ta:",
+      "essential": {
+        "title": "Cookie-uri Esențiale",
+        "description": "Necesar pentru funcționalitatea de bază a site-ului și nu pot fi dezactivate."
+      },
+      "analytics": {
+        "title": "Cookie-uri Analitice",
+        "description": "Ne ajută să înțelegem cum interacționează vizitatorii cu site-ul nostru folosind Google Analytics."
+      },
+      "marketing": {
+        "title": "Cookie-uri Marketing",
+        "description": "Folosite pentru a livra reclame relevante și a urmări eficacitatea campaniilor."
+      },
+      "table": {
+        "title": "Informații Detaliate Cookie",
+        "columns": {
+          "name": "Nume Cookie",
+          "purpose": "Scop",
+          "type": "Tip",
+          "duration": "Durată",
+          "provider": "Furnizor"
+        },
+        "types": {
+          "essential": "Esențial",
+          "analytics": "Analitic",
+          "marketing": "Marketing"
+        },
+        "providers": {
+          "first_party": "Istanbul Portrait (Propriu)",
+          "google": "Google Analytics",
+          "yandex": "Yandex Metrica",
+          "microsoft": "Microsoft Clarity",
+          "facebook": "Facebook"
+        },
+        "essential": {
+          "user_consent": {
+            "purpose": "Stochează preferințele tale de consimțământ cookie",
+            "duration": "12 luni"
+          }
+        },
+        "analytics": {
+          "ga": {
+            "purpose": "Distinge utilizatorii unici și sesiunile",
+            "duration": "2 ani"
+          },
+          "gid": {
+            "purpose": "Distinge utilizatorii pentru 24 de ore",
+            "duration": "24 ore"
+          },
+          "gat": {
+            "purpose": "Limitează rata cererilor către Google Analytics",
+            "duration": "1 minut"
+          },
+          "ym_uid": {
+            "purpose": "Identificator utilizator Yandex Metrica",
+            "duration": "1 an"
+          },
+          "ym_d": {
+            "purpose": "Data sesiunii Yandex Metrica",
+            "duration": "1 an"
+          },
+          "clck": {
+            "purpose": "Identificator utilizator Microsoft Clarity",
+            "duration": "1 an"
+          },
+          "clsk": {
+            "purpose": "Identificator sesiune Microsoft Clarity",
+            "duration": "1 zi"
+          }
+        },
+        "marketing": {
+          "fbp": {
+            "purpose": "Identificator browser Facebook Pixel",
+            "duration": "3 luni"
+          },
+          "fbc": {
+            "purpose": "Identificator clic Facebook Pixel",
+            "duration": "3 luni"
+          }
+        }
+      },
+      "expiration_note": "Alegerea ta de consimțământ este stocată timp de 12 luni. După această perioadă, ți se va cere să oferi consimțământul din nou.",
+      "withdrawal_note": "Poți schimba preferințele cookie oricând făcând clic pe butonul 'Setări Cookie' din subsolul acestui site."
+    },
+    "data_use": {
+      "title": "Cum Folosim Datele Tale",
+      "items": {
+        "booking": "Procesăm și gestionăm rezervările tale de fotografie",
+        "communication": "Comunicăm cu tine despre serviciile noastre",
+        "improvement": "Îmbunătățim site-ul și calitatea serviciilor noastre",
+        "marketing": "Trimitem materiale promoționale (cu consimțământul tău)",
+        "legal": "Respectăm obligațiile legale și rezolvăm disputele"
+      }
+    },
+    "image_license": {
+      "title": "Licență Imagine și Drepturi de Utilizare",
+      "description": "Când rezervi o ședință foto cu Istanbul Portrait, ți se acordă drepturi specifice pentru imaginile tale.",
+      "rights": "Ai drepturi complete de utilizare personală. Poți imprima, distribui pe rețele sociale și folosi fotografiile pentru orice scop necomercial.",
+      "usage": "Pentru solicitări de utilizare comercială, te rugăm să ne contactezi direct pentru a discuta opțiunile de licențiere."
+    },
+    "your_rights": {
+      "title": "Drepturile Tale (GDPR)",
+      "items": {
+        "access": "Dreptul de a accesa datele tale personale",
+        "rectification": "Dreptul de a corecta datele inexacte",
+        "erasure": "Dreptul de a solicita ștergerea datelor tale",
+        "portability": "Dreptul la portabilitatea datelor",
+        "objection": "Dreptul de a te opune procesării datelor"
+      }
+    },
+    "contact": {
+      "title": "Contactează-ne",
+      "description": "Dacă ai întrebări despre această politică de confidențialitate sau datele tale personale:",
+      "email_label": "Email:",
+      "updated_label": "Ultima actualizare:",
+      "updated_date": "Ianuarie 2025"
+    }
+  },
+  "reviews": {
+    "title": "Ce Spun Clienții Despre Fotograful Lor din Istanbul",
+    "subtitle": "Recenzii reale de la clienți mulțumiți care ne-au ales pentru experiența lor foto în Istanbul",
+    "total_reviews": "recenzii",
+    "view_all": "Vezi toate recenziile pe Google",
+    "loading": "Se încarcă recenziile...",
+    "error": "Nu s-au putut încărca recenziile în acest moment"
+  },
+  "pricing": {
+    "base_price": "Preț de Bază",
+    "tax_rate": "TVA ({rate}%)",
+    "tax_amount": "Sumă TVA",
+    "total_price": "Preț Total",
+    "tax_inclusive": "TVA Inclus",
+    "price_breakdown": "Defalcare Preț",
+    "subtotal": "Subtotal",
+    "vat": "TVA",
+    "final_total": "Total Final"
+  },
+  "notfound": {
+    "title": "Pagină Negăsită",
+    "subtitle": "Ups! Această sesiune foto pare să lipsească",
+    "description": "Pagina pe care o cauți nu există. Poate dorești să explorezi pachetele noastre foto sau să te întorci acasă pentru a descoperi frumusețea fotografiei în Istanbul.",
+    "homeButton": "Înapoi Acasă",
+    "packagesButton": "Vezi Pachete",
+    "goBack": "Înapoi"
+  },
+  "locations": {
+    "title": "Locații Foto Istanbul",
+    "subtitle": "Descoperă cele mai fotogenice locuri din Istanbul pentru ședința ta foto profesională",
+    "intro": "Explorează cele mai uimitoare locații foto din Istanbul cu fotograful tău profesionist. De la repere istorice la acoperișuri ascunse, fiecare locație oferă fundaluri unice pentru fotografii de neuitat.",
+    "viewPhotos": "Vezi Fotografii",
+    "aboutLocation": "Despre Această Locație",
+    "photographyTips": "Sfaturi Foto",
+    "gallery": "Galerie Foto",
+    "nearbyLocations": "Locații Apropiate",
+    "bestTimeToVisit": "Cel Mai Bun Moment de Vizitat",
+    "locationInfo": "Informații Locație",
+    "viewOnMap": "Vezi pe Google Maps →",
+    "bookPhotoshoot": "Rezervă o Ședință Foto Aici",
+    "bookPhotoshootDescription": "Surprinde amintirile tale în această locație uimitoare cu un fotograf profesionist.",
+    "viewPackages": "Vezi Pachete",
+    "seo": {
+      "title": "Locații Foto Istanbul | Cele Mai Bune Locuri Foto în Istanbul",
+      "description": "Descoperă cele mai bune locații foto din Istanbul. De la Turnul Galata la acoperișuri cu vedere la Bosfor, găsește fundalul perfect pentru ședința ta foto profesională."
+    },
+    "tags": {
+      "historic": "Istoric",
+      "iconic": "Iconic",
+      "rooftop": "Acoperiș",
+      "couple": "Cupluri",
+      "colorful": "Colorat",
+      "instagram": "Demn de Instagram",
+      "solo": "Solo",
+      "bosphorus": "Bosfor",
+      "mosque": "Moschee",
+      "bridge": "Pod",
+      "romantic": "Romantic",
+      "unesco": "UNESCO",
+      "architecture": "Arhitectură",
+      "panoramic": "Panoramic",
+      "premium": "Premium",
+      "market": "Piață",
+      "culture": "Cultural"
+    },
+    "bestTime": {
+      "sunset": "Apus",
+      "morning": "Dimineață",
+      "early_morning": "Dimineață Devreme",
+      "sunrise": "Răsărit",
+      "golden_hour": "Ora de Aur",
+      "afternoon": "După-amiază"
+    },
+    "bestTimeDescription": {
+      "sunset": "Surprinde lumină aurie uimitoare și siluete dramatice",
+      "morning": "Aglomerații mai puține și lumină naturală blândă",
+      "early_morning": "Cea mai bună lumină și turiști minimi",
+      "sunrise": "Atmosferă magică cu culori calde",
+      "golden_hour": "Lumină perfectă pentru fotografii romantice",
+      "afternoon": "Excelent pentru zone interioare și acoperite"
+    },
+    "items": {
+      "galata-tower": {
+        "name": "Turnul Galata",
+        "shortDescription": "Turn medieval din piatră cu vederi panoramice ale Istanbulului și Bosforului",
+        "description": "Turnul Galata este unul dintre cele mai iconice repere ale Istanbulului, oferind vederi uimitoare la 360 de grade ale orașului. Construit în 1348 de genovezi, acest turn medieval din piatră are o înălțime de 67 de metri și a devenit un simbol al Istanbulului.",
+        "address": "Galata, Bereketzade, 34421 Beyoğlu/Istanbul",
+        "seoTitle": "Fotografie la Turnul Galata | Fotograf Istanbul la Galata",
+        "seoDescription": "Ședință foto profesională la Turnul Galata, reperul medieval iconic al Istanbulului. Vederi panoramice uimitoare și străzi cu pavaj pentru fotografii de neuitat."
+      },
+      "balat": {
+        "name": "Balat",
+        "shortDescription": "Cartier istoric colorat cu case vibrante și farmec autentic Istanbul",
+        "description": "Balat este unul dintre cele mai vechi și colorate cartiere ale Istanbulului, cunoscut pentru casele sale viu pictate, străzile înguste și atmosfera autentică. Acest district listat UNESCO oferă oportunități nesfârșite de fotografie.",
+        "address": "Balat, 34087 Fatih/Istanbul",
+        "seoTitle": "Fotografie Balat | Locație Colorată Ședință Foto Istanbul",
+        "seoDescription": "Surprinde fotografii uimitoare în străzile colorate din Balat. Fotografie profesională în cel mai demn de Instagram cartier din Istanbul cu case vibrante."
+      },
+      "ortakoy": {
+        "name": "Ortaköy",
+        "shortDescription": "Faleza fermecătoare a Bosforului cu moschee iconică și vederi la pod",
+        "description": "Ortaköy este un cartier pitoresc pe malul european al Bosforului, faimos pentru moscheea sa elegantă și vederile uimitoare ale Podului Bosfor. Zona de pe malul apei oferă oportunități foto perfecte.",
+        "address": "Ortaköy, 34347 Beşiktaş/Istanbul",
+        "seoTitle": "Fotografie Ortaköy | Ședință Foto Podul Bosfor Istanbul",
+        "seoDescription": "Fotografie profesională la Ortaköy cu vederi la Podul Bosfor. Surprinde moscheea iconică și malul apei în ședința ta foto în Istanbul."
+      },
+      "hagia-sophia": {
+        "name": "Hagia Sophia",
+        "shortDescription": "Capodoperă bizantină Patrimoniul Mondial UNESCO, simbol al Istanbulului",
+        "description": "Hagia Sophia este una dintre cele mai mari realizări arhitecturale ale lumii și cel mai faimos reper al Istanbulului. Construită în 537 d.Hr. ca catedrală, acest sit Patrimoniu Mondial UNESCO prezintă arhitectură bizantină uimitoare.",
+        "address": "Sultan Ahmet, Ayasofya Meydanı No:1, 34122 Fatih/Istanbul",
+        "seoTitle": "Fotografie Hagia Sophia | Ședință Foto Patrimoniu UNESCO Istanbul",
+        "seoDescription": "Ședință foto profesională la Hagia Sophia, situl Patrimoniu Mondial UNESCO al Istanbulului. Surprinde arhitectura bizantină și măreția istorică."
+      },
+      "blue-mosque": {
+        "name": "Moscheea Albastră",
+        "shortDescription": "Moschee otomană magnifică cu șase minarete și arhitectură impresionantă",
+        "description": "Moscheea Sultan Ahmed, cunoscută popular ca Moscheea Albastră, este o capodoperă a arhitecturii otomane construită între 1609-1616. Faimoasă pentru cele șase minarete și plăcile albastre de İznik, moscheea oferă oportunități foto spectaculoase.",
+        "address": "Sultan Ahmet, Atmeydanı Cd. No:7, 34122 Fatih/Istanbul",
+        "seoTitle": "Fotografie Moscheea Albastră | Ședință Foto Moscheea Sultan Ahmed Istanbul",
+        "seoDescription": "Fotografie profesională la Moscheea Albastră, cea mai magnifică moschee otomană din Istanbul. Surprinde șase minarete și arhitectură uimitoare."
+      },
+      "bosphorus-rooftop": {
+        "name": "Acoperiș Bosfor",
+        "shortDescription": "Locații exclusive pe acoperiș cu vederi panoramice la Bosfor și oraș",
+        "description": "Experimentează Istanbulul de sus la locațiile noastre exclusive de fotografie pe acoperiș. Aceste locații premium oferă vederi de 360 de grade fără egal la Bosfor, Turnul Galata și orizontul iconic al Istanbulului.",
+        "address": "Diverse Locații pe Acoperiș, Istanbul",
+        "seoTitle": "Fotografie pe Acoperiș Istanbul | Ședință Foto cu Vedere la Bosfor",
+        "seoDescription": "Fotografie exclusivă pe acoperiș cu vederi panoramice la Bosfor. Sesiuni cu rochie zburătoare și ședințe foto la apus în locații premium pe acoperiș în Istanbul."
+      },
+      "suleymaniye": {
+        "name": "Moscheea Süleymaniye",
+        "shortDescription": "Moschee otomană imperială cu vederi uimitoare de pe terasă la Cornul de Aur",
+        "description": "Moscheea Süleymaniye, construită de legendarul arhitect Mimar Sinan pentru Sultanul Süleyman Magnificul, este considerată cel mai bun exemplu de arhitectură imperială otomană. Complexul moscheii oferă vederi uimitoare de pe terasă.",
+        "address": "Süleymaniye, Prof. Sıddık Sami Onar Cd. No:1, 34116 Fatih/Istanbul",
+        "seoTitle": "Fotografie Moscheea Süleymaniye | Vedere Cornul de Aur Istanbul",
+        "seoDescription": "Ședință foto profesională la Moscheea Süleymaniye cu vederi la Cornul de Aur. Arhitectură imperială otomană și fotografii panoramice pe terasă în Istanbul."
+      },
+      "camondo-stairs": {
+        "name": "Scările Camondo",
+        "shortDescription": "Scară elegantă Art Nouveau care conectează Karaköy cu Turnul Galata",
+        "description": "Scările Camondo (Kamondo Merdivenleri) sunt un exemplu uimitor de arhitectură Art Nouveau în inima districtului Karaköy din Istanbul. Construite la începutul anilor 1870, aceste scări elegante hexagonale conectează districtul bancar cu cartierul Galata.",
+        "address": "Kemeraltı Caddesi, Karaköy, 34421 Beyoğlu/Istanbul",
+        "seoTitle": "Fotografie Scările Camondo | Ședință Foto Bijuterie Ascunsă Istanbul",
+        "seoDescription": "Fotografie profesională la iconicele Scări Camondo din Istanbul. Arhitectură Art Nouveau și tipare geometrice uimitoare pentru fotografii unice."
+      },
+      "galata-bridge": {
+        "name": "Podul Galata",
+        "shortDescription": "Pod istoric care traversează Cornul de Aur cu vederi uimitoare la moschei",
+        "description": "Podul Galata (Galata Köprüsü) este unul dintre cele mai iconice repere ale Istanbulului, conectând peninsula istorică cu districtul modern Beyoğlu peste Cornul de Aur. Podul oferă oportunități foto spectaculoase.",
+        "address": "Podul Galata, Eminönü-Karaköy, Istanbul",
+        "seoTitle": "Fotografie Podul Galata | Ședință Foto Cornul de Aur Istanbul",
+        "seoDescription": "Fotografie profesională la Podul Galata cu vederi uimitoare la Cornul de Aur. Surprinde orizontul iconic cu moschei și atmosferă autentică din Istanbul."
+      }
+    },
+    "tips": {
+      "golden_hour": {
+        "title": "Magia Orei de Aur",
+        "description": "Sosește cu 1 oră înainte de apus pentru cele mai bune condiții de lumină"
+      },
+      "rooftop_view": {
+        "title": "Perspectivă de pe Acoperiș",
+        "description": "Surprinde vederi panoramice ale orașului cu orizontul ca fundal"
+      },
+      "cobblestone_streets": {
+        "title": "Străzi cu Pavaj",
+        "description": "Folosește străzile fermecătoare pentru atmosfera autentică Istanbul"
+      },
+      "colorful_houses": {
+        "title": "Case Colorate",
+        "description": "Fațadele vibrante creează fundaluri perfecte pentru Instagram"
+      },
+      "narrow_streets": {
+        "title": "Străzi Înguste",
+        "description": "Explorează alei ascunse pentru fotografii unice și intime"
+      },
+      "local_cafes": {
+        "title": "Cafenele Locale",
+        "description": "Oprește-te la cafenele tradiționale pentru fotografie lifestyle"
+      },
+      "mosque_bridge": {
+        "title": "Moschee & Pod",
+        "description": "Încadrează moscheea cu Podul Bosfor în fundal"
+      },
+      "bosphorus_view": {
+        "title": "Vederi Bosfor",
+        "description": "Surprinde cea mai fotogenică apă iconică"
+      },
+      "street_food": {
+        "title": "Scena Mâncării Stradale",
+        "description": "Include standurile locale de kumpir și gofre pentru fotografii lifestyle"
+      },
+      "exterior_shots": {
+        "title": "Arhitectură Exterioară",
+        "description": "Arhitectura bizantină oferă fundaluri uimitoare"
+      },
+      "fountain_reflection": {
+        "title": "Reflexii Fântână",
+        "description": "Folosește fântâna din curte pentru fotografii creative cu reflexii"
+      },
+      "sultanahmet_square": {
+        "title": "Piața Sultanahmet",
+        "description": "Spațiu larg deschis perfect pentru fotografii de modă full-body"
+      },
+      "six_minarets": {
+        "title": "Șase Minarete",
+        "description": "Surprinde silueta unică a singurei moschei cu șase minarete"
+      },
+      "courtyard": {
+        "title": "Cadru de Curte",
+        "description": "Curtea interioară oferă oportunități foto pașnice"
+      },
+      "garden_view": {
+        "title": "Vederi Grădină",
+        "description": "Grădini frumoase cu moscheea ca fundal"
+      },
+      "panoramic_view": {
+        "title": "Vederi Panoramice",
+        "description": "Vederi de 360 de grade ale orizontului iconic al Istanbulului"
+      },
+      "flying_dress": {
+        "title": "Rochie Zburătoare",
+        "description": "Perfect pentru fotografie dramatică cu rochie fluturândă"
+      },
+      "sunset_silhouette": {
+        "title": "Siluete la Apus",
+        "description": "Creează siluete dramatice împotriva cerului la apus"
+      },
+      "terrace_view": {
+        "title": "Vederi de pe Terasă",
+        "description": "Priveliști uimitoare peste Cornul de Aur"
+      },
+      "golden_horn": {
+        "title": "Cornul de Aur",
+        "description": "Surprinde apa istorică de sus"
+      },
+      "ottoman_architecture": {
+        "title": "Arhitectură Otomană",
+        "description": "Capodoperă a arhitecturii imperiale otomane"
+      },
+      "colorful_lamps": {
+        "title": "Lămpi Colorate",
+        "description": "Lămpile turcești iconice creează iluminare magică"
+      },
+      "narrow_alleys": {
+        "title": "Alei Acoperite",
+        "description": "Pasaje istorice acoperite cu atmosferă unică"
+      },
+      "local_vendors": {
+        "title": "Vânzători Locali",
+        "description": "Scene autentice cu meșteri tradiționali"
+      },
+      "art_nouveau": {
+        "title": "Design Art Nouveau",
+        "description": "Detalii arhitecturale uimitoare de la începutul secolului 20"
+      },
+      "symmetry": {
+        "title": "Simetrie Perfectă",
+        "description": "Scările hexagonale creează tipare geometrice fascinante"
+      },
+      "spiral_view": {
+        "title": "Vedere Spirală",
+        "description": "Privește în sus sau în jos pentru perspective spiralate dramatice"
+      },
+      "golden_horn_view": {
+        "title": "Priveliște Cornul de Aur",
+        "description": "Vederi uimitoare ale apei istorice și moscheilor"
+      },
+      "fishermen": {
+        "title": "Pescari Locali",
+        "description": "Surprinde scene autentice ale culturii tradiționale de pescuit"
+      },
+      "mosque_skyline": {
+        "title": "Orizontul Moscheilor",
+        "description": "Multiple moschei istorice creează o siluetă uimitoare"
+      }
+    }
+  },
+  "chat_widget": {
+    "header_title": "Emily",
+    "header_subtitle": "Online • Asistent Fotografie",
+    "welcome_title": "Bună! 👋",
+    "welcome_message": "Sunt Emily, aici să te ajut să planifici ședința foto perfectă în Istanbul.",
+    "input_placeholder": "Mesaj către Emily...",
+    "whatsapp_fallback": "Treci pe WhatsApp pentru suport urgent",
+    "redirecting": "Perfect! Te redirecționez către pagina de checkout acum. Te rugăm să completezi detaliile de plată acolo pentru a-ți asigura locul! 💳✨",
+    "connection_error": "Scuze, am probleme de conectare. Te rugăm să încerci din nou sau să folosești WhatsApp.",
+    "bot_avatar_alt": "Emily",
+    "checkout_nudge": "Hei! Am observat că ești la pasul final. Ai nevoie de ajutor pentru a finaliza rezervarea? 😊",
+    "role": "Asistent Fotografie",
+    "online": "Online"
+  },
+  "blog": {
+    "title": "Blog Fotografie",
+    "subtitle": "Sfaturi, ghiduri și povești din Istanbul",
+    "read_more": "Citește Mai Mult",
+    "reading_time": "{minutes} min de citit",
+    "published_on": "Publicat {date}",
+    "by_author": "de {author}",
+    "categories": "Categorii",
+    "tags": "Etichete",
+    "related_posts": "Articole Similare",
+    "recent_posts": "Articole Recente",
+    "no_posts": "Nu au fost găsite articole",
+    "search": "Caută în blog...",
+    "all_categories": "Toate Categoriile",
+    "featured": "Recomandat",
+    "meta": {
+      "title": "Blog Fotografie | Sfaturi & Ghiduri Istanbul Portrait",
+      "description": "Explorează sfaturi de fotografie Istanbul, ghiduri de locații și povești din culise"
+    },
+    "author": {
+      "about_title": "Despre Autor",
+      "name": "Istanbul Photographer",
+      "bio": "Fotograf profesionist specializat în fotografie de portret, cuplu și lifestyle în Istanbul. Cu peste 8 ani de experiență, surprinzând amintiri atemporale pe fundalurile cele mai emblematice ale orașului.",
+      "follow": "Urmărește pe Instagram"
+    },
+    "summary": {
+      "title": "Idei Cheie",
+      "ai_overview": "Prezentare Generală AI"
+    }
+  },
+  "auth": {
+    "signin": "Conectare",
+    "signout": "Deconectare",
+    "protected": "Aceasta este o pagină protejată."
+  },
+  "newsletter": {
+    "title": "Alătură-te nouă",
+    "description": "Abonează-te la newsletter-ul nostru pentru sfaturi exclusive de fotografie, oferte sezoniere și ghiduri de călătorie pentru Istanbul.",
+    "name_placeholder": "Nume complet",
+    "email_placeholder": "Adresă de e-mail",
+    "button": "Abonează-te",
+    "subscribing": "Se abonează...",
+    "success_title": "Bun venit la bord!",
+    "success_message": "Te-ai abonat cu succes la newsletter-ul nostru.",
+    "error_message": "Ceva nu a mers bine. Vă rugăm să încercați din nou.",
+    "close": "Nu, mulțumesc"
+  },
+  "iosInstallPrompt": {
+    "title": "Obține notificări și instalează",
+    "description": "Adaugă acest site pe iPhone-ul tău pentru a permite notificări și a te bucura de o experiență pe ecran complet.",
+    "step1": "Atinge butonul Distribuie de mai jos.",
+    "step2": "Derulează în jos și selectează 'Adaugă pe ecranul principal'."
+  },
+  "about_highlights": {
+    "title": "De ce să mă alegeți",
+    "professional": {
+      "title": "Calitate profesională",
+      "description": "Echipamente de înaltă calitate și post-procesare expertă pentru fiecare fotografie."
+    },
+    "local": {
+      "title": "Expertiză locală",
+      "description": "Cunoștințe aprofundate despre cele mai bune locații din Istanbul și orele optime de iluminare."
+    },
+    "personal": {
+      "title": "Experiență personalizată",
+      "description": "Sesiuni personalizate adaptate stilului și preferințelor dumneavoastră unice."
+    }
+  }
+}

@@ -1,0 +1,1227 @@
+{
+  "payment_banner": {
+    "message": "安全支付"
+  },
+  "nav": {
+    "home": "首页",
+    "packages": "套餐",
+    "about": "关于",
+    "contact": "联系",
+    "blog": "博客",
+    "locations": "地点"
+  },
+  "whatsapp": {
+    "button": "WhatsApp",
+    "tooltip": "通过WhatsApp与我们聊天",
+    "message": "您好！我对预订伊斯坦布尔的摄影服务感兴趣。能提供更多信息吗？",
+    "notification_title": "获取即时帮助",
+    "notification_message": "有疑问？直接通过WhatsApp与我们聊天，快速获得回复！",
+    "close_notification": "关闭通知",
+    "direction": "ltr"
+  },
+  "hero": {
+    "title": "伊斯坦布尔摄影师 | 伊斯坦布尔专业摄影",
+    "subtitle": "伊斯坦布尔专业人像、婚礼和情侣摄影专家",
+    "description": "为什么选择我们的伊斯坦布尔摄影服务",
+    "cta": "预订摄影",
+    "learnMore": "了解更多"
+  },
+  "features": {
+    "rooftop": {
+      "title": "屋顶拍摄",
+      "description": "博斯普鲁斯海峡和伊斯坦布尔天际线的绝美景观"
+    },
+    "historic": {
+      "title": "历史名胜",
+      "description": "圣索菲亚大教堂、蓝色清真寺和标志性地标"
+    },
+    "professional": {
+      "title": "专业摄影品质",
+      "description": "伊斯坦布尔最佳摄影师，配备高端设备和专业后期处理"
+    }
+  },
+  "gallery": {
+    "title": "伊斯坦布尔摄影作品集",
+    "subtitle": "通过我们的镜头探索伊斯坦布尔之美。浏览我们的人像、情侣和生活方式摄影作品集。",
+    "intro": "探索由您的专业伊斯坦布尔摄影师拍摄的精彩照片。我们的作品集展示了情侣写真、屋顶拍摄以及在伊斯坦布尔最具标志性的地点（包括博斯普鲁斯海峡、加拉塔塔和历史悠久的苏丹艾哈迈德）进行的人像摄影。"
+  },
+  "packages": {
+    "title": "摄影套餐",
+    "subtitle": "为您的伊斯坦布尔拍摄选择完美套餐",
+    "sectionTitle": "摄影套餐",
+    "sectionDescription": "为您的伊斯坦布尔拍摄体验选择完美套餐",
+    "per_person": "每人",
+    "essential": {
+      "title": "基础套餐",
+      "price": "€150",
+      "duration": "30分钟",
+      "photos": "15张精修照片",
+      "locations": "1个地点",
+      "features": [
+        "30分钟拍摄",
+        "15张高清精修照片",
+        "在线相册交付",
+        "包含基础修图"
+      ],
+      "intro": "非常适合快速、专业的肖像摄影。包括在一个标志性地点进行的30分钟拍摄，提供15张精美修饰的照片。非常适合想要高质量回忆但不想花费太多时间的独行旅客或情侣。"
+    },
+    "premium": {
+      "title": "高级套餐",
+      "price": "€280",
+      "duration": "1.5小时",
+      "photos": "40张精修照片",
+      "locations": "2个地点",
+      "popular": true,
+      "features": [
+        "1.5小时拍摄",
+        "40张高清精修照片",
+        "2个不同地点",
+        "高级修图",
+        "当天预览"
+      ],
+      "intro": "这是我们最受欢迎的选择，为您提供完整的伊斯坦布尔体验。享受在两个不同地点进行的1.5小时拍摄，提供40张修饰照片。非常适合捕捉多样的背景和氛围。"
+    },
+    "luxury": {
+      "title": "豪华套餐",
+      "price": "€450",
+      "duration": "2.5小时",
+      "photos": "80张精修照片",
+      "locations": "3个地点",
+      "features": [
+        "2.5小时拍摄",
+        "80张高清精修照片",
+        "3个高级地点",
+        "专业修图",
+        "当天预览",
+        "造型咨询"
+      ],
+      "intro": "终极VIP摄影体验。在3个高级地点进行2.5小时的全面拍摄，提供80张修饰照片、专业造型建议和高级修图。非常适合婚礼、订婚或想要拥有一切的人。"
+    },
+    "rooftop": {
+      "title": "屋顶拍摄",
+      "price": "€150",
+      "duration": "每人",
+      "photos": "20张精修照片",
+      "locations": "屋顶工作室",
+      "features": [
+        "20张高清精修照片",
+        "1套现代拖尾裙或传统服装",
+        "2段手机短视频",
+        "包含屋顶工作室费用",
+        "专业修图"
+      ],
+      "intro": "在我们拥有迷人博斯普鲁斯海峡景色的私人屋顶工作室进行的独家拍摄。包括著名的“飞天裙”选项、视频短片和专业修图，为您带来真正神奇的体验。"
+    },
+    "custom": {
+      "title": "需要定制套餐？",
+      "description": "每次拍摄都是独特的。让我们讨论您的具体需求，创建完全符合您愿景和预算的定制套餐。",
+      "button": "获取定制报价"
+    },
+    "sections": {
+      "available_packages": "伊斯坦布尔摄影师套餐",
+      "intro": "与伊斯坦布尔专业摄影师一起选择您的完美摄影套餐。所有拍摄包括专业后期处理以及在城市最具标志性的地点拍照。作为您的专属伊斯坦布尔摄影师，我确保每个精彩瞬间都被完美捕捉。"
+    },
+    "winter_sale": "特卖",
+    "ui": {
+      "duration": "时长",
+      "photos": "照片",
+      "locations": "地点",
+      "professional_photographer": "专业摄影师",
+      "what_to_expect": "期待什么",
+      "payment_desc": "预订您的拍摄需要安全的在线支付"
+    }
+  },
+  "about": {
+    "title": "关于我",
+    "subtitle": "伊斯坦布尔顶级摄影师，捕捉城市之美",
+    "sectionTitle": "关于我",
+    "sectionDescription": "了解我作为伊斯坦布尔首席摄影师的历程，以及捕捉您完美瞬间背后的热情",
+    "per_person": "每人",
+    "description": "作为一名在伊斯坦布尔拥有8年以上经验的专业摄影师，我专注于捕捉人与伊斯坦布尔壮丽背景之间的独特联系。作为伊斯坦布尔领先的摄影师，我的热情在于创造永恒的回忆，既反映拍摄对象的美丽，又体现这座令人难以置信的城市的历史魅力。",
+    "experience": "8年以上经验",
+    "sessions": "完成500+次拍摄",
+    "clients": "全球满意客户"
+  },
+  "contact": {
+    "title": "联系我们",
+    "subtitle": "准备预订您的伊斯坦布尔拍摄？",
+    "sectionTitle": "联系我们",
+    "sectionDescription": "准备预订您的伊斯坦布尔拍摄？让我们讨论您的摄影需求，共同创造美好作品",
+    "per_person": "每人",
+    "cta_description": "准备在伊斯坦布尔留下您的回忆？浏览我们的套餐，直接在线预订。",
+    "experience_description": "8年以上捕捉伊斯坦布尔之美的经验",
+    "premium_locations": "高级地点",
+    "locations_description": "屋顶、历史地标和隐秘美景",
+    "professional_quality": "专业品质",
+    "quality_description": "数字交付高清精修照片",
+    "form": {
+      "name": "全名",
+      "email": "电子邮件地址",
+      "phone": "电话号码",
+      "date": "首选日期",
+      "package": "选择套餐",
+      "message": "留言",
+      "submit": "发送消息",
+      "success": "谢谢！我们会尽快回复您。",
+      "error": "出了点问题，请重试。"
+    },
+    "info": {
+      "location": "Süleymaniye, Siyavuş Paşa Sk. No:24/2, 34116 Fatih/İstanbul, Türkiye",
+      "email": "info@istanbulportrait.com",
+      "phone": "+90 536 709 37 24",
+      "hours": "每周7天可预约"
+    }
+  },
+  "checkout": {
+    "title": "预订您的拍摄",
+    "description": "完成预订，享受完美的伊斯坦布尔拍摄体验",
+    "seo": {
+      "title": "结算 | 预订您的伊斯坦布尔摄影服务",
+      "description": "安全完成您的伊斯坦布尔摄影预订。专业拍摄套餐，即时确认和灵活付款选项。"
+    },
+    "payment_description": "查看您的预订详情并完成付款",
+    "booking_summary": "预订摘要",
+    "modal_description": "填写您的详细信息进行预订",
+    "booking": {
+      "review_details": "查看您的预订信息"
+    },
+    "package": {
+      "selected_details": "您选择的摄影套餐详情"
+    },
+    "steps": {
+      "package": "套餐",
+      "people_count": "人数：",
+      "details": "详情",
+      "payment": "付款",
+      "confirmation": "确认"
+    },
+    "package_summary": "套餐摘要",
+    "customer_details": "客户详情",
+    "payment_details": "付款详情",
+    "booking_details": "预订详情",
+    "form": {
+      "people_count": "人数",
+      "name": "全名",
+      "email": "电子邮件地址",
+      "phone": "电话号码",
+      "date": "选择日期",
+      "date_time": "选择日期和时间",
+      "time": "选择时间",
+      "select_time": "选择时间",
+      "notes": "特殊要求（可选）",
+      "card_holder": "持卡人姓名",
+      "card_number": "卡号",
+      "expire_month": "月",
+      "expire_year": "年",
+      "cvc": "安全码",
+      "terms": "我同意条款和条件",
+      "month_short": "月",
+      "year_short": "年"
+    },
+    "buttons": {
+      "continue": "继续",
+      "back": "返回",
+      "cancel": "取消",
+      "continue_to_payment": "进行结算",
+      "edit_details": "编辑详情",
+      "complete_booking": "完成预订",
+      "pay_amount": "支付 {amount}",
+      "processing": "处理中...",
+      "book_another": "预订另一次拍摄",
+      "pay_with_turinvoice": "使用Turinvoice支付"
+    },
+    "success": {
+      "title": "预订已确认！",
+      "message": "感谢您预订伊斯坦布尔摄影师。您的预订确认已发送到您的电子邮件。",
+      "booking_id": "预订ID",
+      "payment_successful": "付款成功！确认邮件已发送。"
+    },
+    "error": {
+      "generic": "出了点问题，请重试。",
+      "payment_failed": "付款失败。请检查您的卡详情并重试。",
+      "booking_failed": "创建预订失败。请重试。"
+    },
+    "included_features": "包含功能",
+    "more_features": "更多功能",
+    "loading_booking": "加载预订详情...",
+    "labels": {
+      "customer": "客户：",
+      "date": "日期：",
+      "time": "时间：",
+      "package": "套餐：",
+      "people_count": "人数：",
+      "total_amount": "总金额：",
+      "deposit_amount": "定金金额：",
+      "remaining_cash": "剩余现金：",
+      "payment_terms_notice": "付款条款：在线支付30%定金，拍摄当天支付70%现金。"
+    },
+    "security": {
+      "ssl_encrypted": "SSL加密",
+      "secure_payment": "安全付款",
+      "pci_compliant": "PCI合规",
+      "payment_secure_message": "安全付款 • SSL加密 • PCI合规"
+    },
+    "payment": {
+      "complete_description": "输入您的付款信息完成预订",
+      "secure_no_fees": "安全付款 • 无隐藏费用"
+    },
+    "people_count_title": "人数",
+    "price_per_person": "每人价格",
+    "seasonal_discount_applied": "特卖（优惠{percentage}%)",
+    "person": "人",
+    "people": "人",
+    "payment_method": "付款方式",
+    "payment_methods": {
+      "credit_card": "信用卡/借记卡",
+      "russian_banks": "Оплата через СБП"
+    },
+    "turinvoice_description": "您将被重定向到Turinvoice安全付款页面。",
+    "turinvoice": {
+      "title": "Turinvoice付款",
+      "status_new": "初始化中...",
+      "time_remaining": "剩余时间",
+      "amount_label": "金额",
+      "exchange_rate": "汇率",
+      "instruction_1": "请在打开的页面上完成付款。",
+      "open_payment_page": "打开付款页面",
+      "instruction_2": "在确认付款之前，请勿关闭此窗口。",
+      "security_notice": "通过Turinvoice安全付款",
+      "status_paying": "等待付款中...",
+      "status_paid": "付款成功！",
+      "status_timeout": "付款超时",
+      "success_message": "您的付款已确认。",
+      "redirect_message": "重定向中...",
+      "timeout_message": "付款会话已过期。",
+      "timeout_desc": "请重试以重新启动付款流程。",
+      "try_again": "重试"
+    }
+  },
+  "footer": {
+    "description": "伊斯坦布尔领先的专业人像摄影师。以城市最具标志性的背景捕捉您的特殊时刻。",
+    "quickLinks": "快速链接",
+    "services": "服务",
+    "followUs": "关注我们",
+    "copyright": "© 2025 istanbulportrait.com | 版权所有。",
+    "service_items": {
+      "portrait": "人像摄影",
+      "couples": "情侣拍摄",
+      "rooftop": "屋顶拍摄",
+      "historic": "历史地点拍摄",
+      "lifestyle": "生活方式摄影",
+      "historic_shoots": "历史地点拍摄"
+    },
+    "privacy_policy": "隐私政策",
+    "terms_of_service": "服务条款"
+  },
+  "validation": {
+    "people_count_required": "屋顶套餐需选择人数",
+    "package_required": "必须选择套餐",
+    "email_invalid": "请输入有效的电子邮件地址",
+    "phone_invalid": "请输入有效的电话号码",
+    "date_required": "请选择日期",
+    "time_required": "请选择时间",
+    "amount_positive": "总金额必须为正数",
+    "cardholder_required": "持卡人姓名必填",
+    "card_number_required": "卡号必填",
+    "month_required": "月份必填",
+    "year_required": "年份必填",
+    "cvc_required": "安全码必须为3位数字",
+    "name_min": "姓名至少需要2个字符",
+    "phone_min": "电话号码至少需要10位数字",
+    "message_min": "留言至少需要10个字符",
+    "card_number_invalid": "卡号必须为13-19位数字",
+    "preferred_date_required": "请选择首选日期",
+    "package_selection_required": "请选择套餐",
+    "phone_required": "电话号码必填"
+  },
+  "placeholders": {
+    "full_name": "全名",
+    "email": "john@example.com",
+    "phone": "+90 536 709 37 24",
+    "select_package": "选择套餐",
+    "tell_us_vision": "告诉我们您对拍摄的愿景...",
+    "test_card": "5528790000000008（使用此测试卡进行成功的演示付款）",
+    "enter_full_name": "输入您的全名",
+    "enter_email": "输入您的电子邮件",
+    "phone_number": "+90 555 123 45 67",
+    "pick_date": "选择日期",
+    "select_time": "选择时间",
+    "special_requests": "关于您拍摄的任何特殊要求或说明...",
+    "card_holder": "全名",
+    "card_number": "XXXX XXXX XXXX XXXX",
+    "expire_mm": "月",
+    "expire_yy": "年",
+    "cvc_placeholder": "XXX"
+  },
+  "ui": {
+    "custom_package": "定制套餐",
+    "language": "语言",
+    "send_message": "发送消息",
+    "contact_information": "联系信息",
+    "cookie_settings": "Cookie设置",
+    "location": "地点",
+    "email": "电子邮件",
+    "phone": "电话",
+    "availability": "可预约时间",
+    "what_to_expect": "期待什么",
+    "response_time": "响应时间",
+    "booking_process": "预订流程",
+    "payment": "付款",
+    "response_time_desc": "我们通常在24小时内回复咨询。",
+    "booking_process_desc": "咨询后，我们将安排咨询会议讨论您的愿景并确定细节。",
+    "payment_desc": "预订时需要在线全额付款以确保您的日期。",
+    "professional_photographer": "专业摄影师",
+    "professional_photographer_in_istanbul": "伊斯坦布尔专业摄影师",
+    "portrait_photography": "人像摄影",
+    "couple_sessions": "情侣拍摄",
+    "lifestyle": "生活方式",
+    "rooftop_shoots": "屋顶拍摄",
+    "view_my_work": "查看我的作品",
+    "book_your_session": "查看地点",
+    "view_packages": "查看套餐",
+    "packages_button": "套餐",
+    "book_package": "立即预订",
+    "back_to_home": "返回首页",
+    "selected": "已选择",
+    "select_package": "选择套餐",
+    "total": "总计",
+    "contact": "联系",
+    "most_popular": "最受欢迎",
+    "tryAgain": "重试",
+    "loading": "加载中...",
+    "error": "错误",
+    "retry": "重试",
+    "breadcrumbs": {
+      "photography_locations": "摄影地点",
+      "checkout": "结算",
+      "locations": "地点"
+    }
+  },
+  "about_cta": {
+    "title": "准备创造美好作品？",
+    "description": "让我们以伊斯坦布尔令人惊叹的背景捕捉您的故事。"
+  },
+  "api_errors": {
+    "rate_limit": "请求过多。请稍后重试。",
+    "payment_rate_limit": "付款尝试过多。请稍后重试。",
+    "invalid_data": "无效的请求数据",
+    "missing_payment_data": "缺少必需的付款数据",
+    "invalid_amount": "无效的付款金额",
+    "booking_not_found": "未找到预订。请先创建预订。",
+    "invalid_package_price": "无效的套餐价格",
+    "duplicate_booking": "最近已创建类似预订。请检查您的电子邮件或等待几分钟。",
+    "booking_config_error": "无法处理预订。请检查您的Supabase配置。",
+    "internal_error": "内部服务器错误",
+    "payment_processing_failed": "付款处理失败。请稍后重试。",
+    "unknown_error": "未知错误"
+  },
+  "breadcrumb": {
+    "home": "首页",
+    "about": "关于",
+    "packages": "摄影套餐",
+    "contact": "联系",
+    "checkout": "结算",
+    "privacy": "隐私政策",
+    "blog": "博客",
+    "locations": "摄影地点"
+  },
+  "structured_data": {
+    "website_name": "伊斯坦布尔摄影师",
+    "service_type": "摄影服务",
+    "address_locality": "伊斯坦布尔",
+    "address_country": "TR",
+    "city_name": "伊斯坦布尔",
+    "offer_catalog_name": "摄影服务",
+    "portrait_photography": "人像摄影",
+    "portrait_photography_desc": "专业人像摄影服务",
+    "rooftop_photoshoot": "屋顶拍摄",
+    "rooftop_photoshoot_desc": "带伊斯坦布尔景观的屋顶摄影服务",
+    "couple_photography": "情侣摄影",
+    "couple_photography_desc": "浪漫情侣摄影服务",
+    "service_name": "伊斯坦布尔专业摄影服务",
+    "service_description": "伊斯坦布尔专业人像和生活方式摄影服务，包括屋顶景观和历史地标",
+    "languages": {
+      "english": "英语",
+      "arabic": "阿拉伯语",
+      "russian": "俄语",
+      "spanish": "西班牙语"
+    }
+  },
+  "success": {
+    "booking_details": "预订详情",
+    "booking_id": "预订ID",
+    "customer_details": "客户信息",
+    "package_label": "套餐",
+    "amount_paid": "已支付金额",
+    "booking_date": "日期",
+    "booking_time": "时间",
+    "customer_name": "姓名",
+    "customer_email": "电子邮件",
+    "customer_phone": "电话",
+    "notes": "特殊要求",
+    "whats_next": "接下来？",
+    "confirmation_email": "已发送确认邮件",
+    "email_description": "查看您的收件箱获取详细预订信息",
+    "pre_session_contact": "拍摄前联系",
+    "contact_description": "我们将在拍摄前24小时联系您确认详情",
+    "photo_delivery": "照片交付",
+    "delivery_description": "您的精修照片将在5-7个工作日内交付",
+    "have_questions": "有疑问？",
+    "bullet_professional": "• 包含专业摄影师",
+    "bullet_photos": "• 高清精修照片",
+    "bullet_gallery": "• 在线相册交付",
+    "bullet_retouching": "• 专业修图",
+    "need_help": "需要帮助？",
+    "help_description": "对您的预订有疑问？随时联系我们。",
+    "people_count": "人数"
+  },
+  "package_selection": {
+    "choose_package": "选择您的套餐",
+    "select_description": "选择最适合您需求的摄影套餐",
+    "you_selected": "您选择了："
+  },
+  "payment": {
+    "secure_powered": "由Iyzico提供安全付款",
+    "security_description": "您的付款信息是安全和加密的。我们使用行业标准SSL加密来保护您的数据。",
+    "order_summary": "订单摘要",
+    "booking_summary": "预订摘要",
+    "includes_fees": "包含所有税费",
+    "secure_payment": "安全付款",
+    "iyzico_description": "您的付款通过土耳其领先的付款提供商Iyzico安全处理。",
+    "name_label": "姓名：",
+    "email_label": "电子邮件：",
+    "date_label": "日期：",
+    "time_label": "时间："
+  },
+  "success_messages": {
+    "payment_successful": "付款成功！确认邮件已发送。",
+    "booking_created": "预订创建成功！"
+  },
+  "error_messages": {
+    "payment_failed": "付款失败",
+    "booking_failed": "创建预订失败",
+    "payment_init_failed": "付款初始化失败"
+  },
+  "iyzico_errors": {
+    "fallback_message": "付款失败。请重试或联系支持。",
+    "fallback_suggestion": "请检查您的付款详情并重试",
+    "categories": {
+      "bank": "银行错误",
+      "validation": "验证错误",
+      "general": "付款错误",
+      "system": "系统错误",
+      "demo": "演示模式",
+      "unknown": "未知错误",
+      "INVALID_TRANSACTION": "无效交易",
+      "INVALID_CARD": "无效卡",
+      "NOT_SUFFICIENT_FUNDS": "余额不足",
+      "CONTACT_BANK": "联系银行",
+      "SYSTEM_ERROR": "系统错误"
+    },
+    "codes": {
+      "5": {
+        "message": "交易被拒绝",
+        "suggestion": "请联系您的银行或尝试其他付款方式"
+      },
+      "14": {
+        "message": "您输入的卡号无效",
+        "suggestion": "请检查您的卡号并重试"
+      },
+      "51": {
+        "message": "您的卡余额不足",
+        "suggestion": "请检查您的余额或使用其他付款方式"
+      },
+      "54": {
+        "message": "您的卡已过期",
+        "suggestion": "请使用其他卡或联系您的银行"
+      },
+      "10005": {
+        "message": "您的银行拒绝了此交易",
+        "suggestion": "请联系您的银行或尝试其他付款方式"
+      },
+      "10012": {
+        "message": "付款过程中发生错误，请联系您的银行",
+        "suggestion": "这是与卡相关的错误。建议持卡人联系银行"
+      },
+      "10034": {
+        "message": "交易被标记为潜在欺诈",
+        "suggestion": "请联系您的银行验证此交易"
+      },
+      "10051": {
+        "message": "您的卡余额不足以完成此交易",
+        "suggestion": "请检查您的卡余额或尝试其他付款方式"
+      },
+      "10054": {
+        "message": "您的卡已过期",
+        "suggestion": "请使用其他卡或联系您的银行申请新卡"
+      },
+      "10057": {
+        "message": "您的卡不允许进行此类交易",
+        "suggestion": "请联系您的银行启用此交易类型"
+      },
+      "10058": {
+        "message": "此商户不允许进行交易",
+        "suggestion": "请尝试其他付款方式"
+      },
+      "10059": {
+        "message": "出于安全原因标记的交易",
+        "suggestion": "请联系您的银行验证并授权此交易"
+      },
+      "10084": {
+        "message": "交易授权已过期",
+        "suggestion": "请重新开始付款流程"
+      },
+      "10093": {
+        "message": "您的卡未启用在线交易",
+        "suggestion": "请联系您的银行为您的卡启用在线付款"
+      },
+      "10096": {
+        "message": "付款系统暂时关闭",
+        "suggestion": "请几分钟后重试"
+      },
+      "10201": {
+        "message": "您输入的卡号无效",
+        "suggestion": "请检查您的卡号并重试"
+      },
+      "10202": {
+        "message": "您的卡已过期",
+        "suggestion": "请使用其他卡或联系您的银行续卡"
+      },
+      "10204": {
+        "message": "安全码（CVC）不正确",
+        "suggestion": "请检查卡背面的3位安全码"
+      },
+      "10206": {
+        "message": "卡到期日期不正确",
+        "suggestion": "请检查您卡上的到期日期（MM/YY格式）"
+      },
+      "10207": {
+        "message": "您的账户余额不足",
+        "suggestion": "请检查您的账户余额或尝试其他付款方式"
+      },
+      "10208": {
+        "message": "付款处理过程中发生系统错误",
+        "suggestion": "请稍后重试或联系客户支持"
+      },
+      "10209": {
+        "message": "交易超时",
+        "suggestion": "请重新尝试付款"
+      },
+      "10210": {
+        "message": "发生网络连接错误",
+        "suggestion": "请检查您的网络连接并重试"
+      },
+      "10235": {
+        "message": "土耳其不接受美国运通卡付款",
+        "suggestion": "请使用Visa或Mastercard付款"
+      },
+      "DEMO_INVALID_CARD": {
+        "message": "请使用测试卡进行演示付款",
+        "suggestion": "使用卡号：5528790000000008"
+      },
+      "INVALID_REQUEST": {
+        "message": "付款信息不完整",
+        "suggestion": "请检查所有付款详情并重试"
+      }
+    },
+    "common_suggestions": {
+      "contact_bank": "请联系您的银行",
+      "try_different_card": "请尝试其他付款方式",
+      "check_details": "请检查您的付款详情",
+      "try_again_later": "请稍后重试"
+    }
+  },
+  "faq": {
+    "title": "常见问题",
+    "subtitle": "关于伊斯坦布尔专业摄影服务您需要了解的一切",
+    "section_title": "伊斯坦布尔摄影常见问题",
+    "questions": {
+      "best-istanbul-photographer": {
+        "question": "是什么让您成为最好的伊斯坦布尔摄影师？",
+        "answer": "拥有8年以上经验和500多次成功摄影服务，我专注于捕捉伊斯坦布尔的独特之美。我对这座城市最上镜地点的深入本地知识，从俯瞰博斯普鲁斯海峡的屋顶场地到历史地标，确保每次都能取得卓越成果。"
+      },
+      "photoshoot-locations": {
+        "question": "您推荐哪些伊斯坦布尔拍摄地点？",
+        "answer": "我提供在俯瞰博斯普鲁斯海峡绝美景观的高级屋顶场地、苏丹艾哈迈德等历史区域（蓝色清真寺、圣索菲亚大教堂）、加拉塔塔周边、奥塔科伊清真寺以及全市隐秘美景的拍摄服务。每个地点都因其独特特色和上镜特质而被选中。"
+      },
+      "session-duration": {
+        "question": "伊斯坦布尔摄影服务需要多长时间？",
+        "answer": "拍摄时长因套餐而异：基础套餐（30分钟）、高级套餐（1.5小时）、豪华套餐（2.5小时）和定制屋顶拍摄。这样就有充足的时间进行多种姿势、更换服装，并在您选择的地点捕捉完美镜头。"
+      },
+      "best-time-photoshoot": {
+        "question": "一天中伊斯坦布尔拍摄的最佳时间是什么时候？",
+        "answer": "黄金时段（日落前1小时）提供最讨人喜欢的光线和令人惊叹的城市景观。对于屋顶拍摄，日落时分提供神奇的博斯普鲁斯海峡倒影。早晨拍摄（上午8-10点）非常适合在历史地点人少的时候。"
+      },
+      "photo-delivery": {
+        "question": "我多快能收到精修照片？",
+        "answer": "高级和豪华套餐包含当天预览（5-10张预览照片）。完整的专业精修高清照片相册将在5-7个工作日内通过安全在线相册交付，并提供下载选项。"
+      },
+      "weather-backup": {
+        "question": "如果天气状况不佳会怎么样？",
+        "answer": "我密切关注天气并为雨天提供有遮蔽的地点替代方案。屋顶拍摄可以免费重新安排。室内场地和有遮蔽的历史区域确保无论天气如何，您的拍摄都能进行。"
+      },
+      "couple-vs-individual": {
+        "question": "您同时拍摄情侣和个人吗？",
+        "answer": "当然！我专注于情侣摄影、个人肖像、生活方式拍摄和婚礼摄影。每次拍摄都根据您的具体需求量身定制，无论是浪漫情侣照还是专业个人肖像。"
+      },
+      "booking-advance": {
+        "question": "我应该提前多久预订伊斯坦布尔拍摄？",
+        "answer": "我建议提前2-3周预订，尤其是在旅游旺季（春秋季）。这可以确保您首选日期和时间的可用性，并在需要时留出适当的时间来规划地点许可。"
+      },
+      "cost-breakdown": {
+        "question": "伊斯坦布尔摄影服务费用包括什么？",
+        "answer": "所有套餐包括专业摄影师Uğur Cankurt、咨询、高清照片编辑、在线相册交付和基础修图。基础套餐€150（15张照片）、高级套餐€280（40张照片）、豪华套餐€450（80张照片）。无隐藏费用。"
+      },
+      "booking-process": {
+        "question": "如何快速预订伊斯坦布尔摄影师？",
+        "answer": "在istanbulportrait.com即时预订，WhatsApp +905367093724，或Instagram @istanbulportrait。建议提前预订日落拍摄和周末。当天预订视可用性而定。"
+      },
+      "location-recommendations": {
+        "question": "伊斯坦布尔最上镜的地点有哪些？",
+        "answer": "顶级地点包括加拉塔塔周边、博斯普鲁斯海峡滨水景观、历史苏丹艾哈迈德（蓝色清真寺区域）、奥塔科伊清真寺和独家屋顶场地。每个套餐根据选择包含1-3个高级地点。"
+      },
+      "timing-advice": {
+        "question": "伊斯坦布尔摄影的最佳时间是什么时候？",
+        "answer": "黄金时段（日落前1小时）提供最佳光线和令人惊叹的城市景观。夏季：下午6-7点，冬季：下午4-5点。早晨拍摄（上午8-10点）非常适合历史景点人少的时候。避免正午刺眼光线（上午11点-下午3点）。"
+      }
+    }
+  },
+  "seo": {
+    "home": {
+      "title": "伊斯坦布尔拍摄 | 伊斯坦布尔专业摄影师",
+      "description": "与伊斯坦布尔专业摄影师预订您的伊斯坦布尔拍摄。在标志性地点进行专业拍摄。当天交付。从€150起。",
+      "keywords": "伊斯坦布尔摄影师, 伊斯坦布尔专业摄影师, 伊斯坦布尔旅拍, 伊斯坦布尔人像摄影师, 伊斯坦布尔情侣摄影, 伊斯坦布尔生活方式摄影, 伊斯坦布尔天台摄影, 伊斯坦布尔摄影服务, 伊斯坦布尔最好的摄影师, 伊斯坦布尔摄影, 伊斯坦布尔旅游摄影, 伊斯坦布尔专业照片"
+    },
+    "schema": {
+      "knowsAbout": "伊斯坦布尔摄影, 人像摄影, 情侣摄影, 博斯普鲁斯海峡摄影, 加拉塔塔摄影, 苏丹艾哈迈德摄影, 专业摄影技术, 旅游摄影, 婚礼摄影",
+      "skills": "人像摄影, 生活方式摄影, 情侣摄影, 旅游摄影, 天台摄影",
+      "serviceType": "摄影服务",
+      "slogan": "捕捉您的伊斯坦布尔故事",
+      "jobTitle": "专业摄影师",
+      "occupationLocation": "土耳其伊斯坦布尔",
+      "offerDescription": "拥有8年以上经验的专业摄影师Uğur Cankurt。包括咨询、编辑和数字交付。",
+      "areaServed": "伊斯坦布尔",
+      "galleryDescription": "展示伊斯坦布尔{name}的专业摄影画廊",
+      "creditText": "摄影：{name}",
+      "howtoCamera": "专业相机",
+      "howtoLighting": "照明设备",
+      "faqTitle": "关于{topic}的常见问题"
+    },
+    "packages": {
+      "title": "伊斯坦布尔拍摄套餐 | 伊斯坦布尔摄影师",
+      "description": "伊斯坦布尔专业拍摄套餐。选择您的伊斯坦布尔摄影师进行屋顶拍摄、历史地点和高级编辑。从€150起。"
+    },
+    "about": {
+      "title": "关于您的伊斯坦布尔摄影师 | 伊斯坦布尔拍摄",
+      "description": "认识您拥有8年以上经验的伊斯坦布尔专业摄影师。专注于伊斯坦布尔人像、情侣和生活方式摄影服务。"
+    },
+    "contact": {
+      "title": "预订您的伊斯坦布尔拍摄 | 伊斯坦布尔摄影师",
+      "description": "准备预订您的伊斯坦布尔拍摄？联系您的专业伊斯坦布尔摄影师进行难忘的照片拍摄。每周7天可预约。"
+    }
+  },
+  "cookies": {
+    "banner": {
+      "title": "我们使用cookies来增强您的体验并分析我们的流量。",
+      "description": "基本cookies是基本网站功能所必需的。分析cookies帮助我们改进服务。",
+      "privacy_link": "在我们的隐私政策中了解更多"
+    },
+    "buttons": {
+      "accept_all": "接受全部",
+      "essential_only": "仅基本",
+      "decline_all": "拒绝全部"
+    }
+  },
+  "privacy": {
+    "title": "隐私政策",
+    "subtitle": "我们如何收集、使用和保护您的个人信息",
+    "seo": {
+      "title": "隐私政策 | 伊斯坦布尔摄影师",
+      "description": "了解伊斯坦布尔摄影师如何收集、使用和保护您的个人信息。符合GDPR的隐私政策。"
+    },
+    "information_collection": {
+      "title": "我们收集的信息",
+      "description": "当您使用我们的摄影服务时，我们会收集您直接提供给我们的信息：",
+      "items": {
+        "personal": "个人信息（姓名、电子邮件、电话号码）",
+        "contact": "联系偏好和通信历史",
+        "booking": "预订详情和拍摄要求",
+        "payment": "付款信息（通过Iyzico安全处理）"
+      }
+    },
+    "cookies": {
+      "title": "Cookies和跟踪",
+      "description": "我们使用不同类型的cookies来增强您的体验：",
+      "essential": {
+        "title": "基本Cookies",
+        "description": "基本网站功能所必需，无法禁用。"
+      },
+      "analytics": {
+        "title": "分析Cookies",
+        "description": "帮助我们了解访客如何使用Google Analytics与我们的网站互动。"
+      },
+      "marketing": {
+        "title": "营销Cookies",
+        "description": "用于提供相关广告并跟踪营销活动效果。"
+      },
+      "table": {
+        "title": "详细的 Cookie 信息",
+        "columns": {
+          "name": "Cookie 名称",
+          "purpose": "用途",
+          "type": "类型",
+          "duration": "持续时间",
+          "provider": "提供商"
+        },
+        "types": {
+          "essential": "必要",
+          "analytics": "分析",
+          "marketing": "营销"
+        },
+        "providers": {
+          "first_party": "Istanbul Portrait (第一方)",
+          "google": "Google Analytics",
+          "yandex": "Yandex Metrica",
+          "microsoft": "Microsoft Clarity",
+          "facebook": "Facebook"
+        },
+        "essential": {
+          "user_consent": {
+            "purpose": "存储您的 Cookie 同意偏好",
+            "duration": "12 个月"
+          }
+        },
+        "analytics": {
+          "ga": {
+            "purpose": "区分独立用户和会话",
+            "duration": "2 年"
+          },
+          "gid": {
+            "purpose": "区分用户 24 小时",
+            "duration": "24 小时"
+          },
+          "gat": {
+            "purpose": "限制 Google Analytics 的请求速率",
+            "duration": "1 分钟"
+          },
+          "ym_uid": {
+            "purpose": "Yandex Metrica 用户标识符",
+            "duration": "1 年"
+          },
+          "ym_d": {
+            "purpose": "Yandex Metrica 会话日期",
+            "duration": "1 年"
+          },
+          "clck": {
+            "purpose": "Microsoft Clarity 用户标识符",
+            "duration": "1 年"
+          },
+          "clsk": {
+            "purpose": "Microsoft Clarity 会话标识符",
+            "duration": "1 天"
+          }
+        },
+        "marketing": {
+          "fbp": {
+            "purpose": "Facebook Pixel 浏览器标识符",
+            "duration": "3 个月"
+          },
+          "fbc": {
+            "purpose": "Facebook Pixel 点击标识符",
+            "duration": "3 个月"
+          }
+        }
+      },
+      "expiration_note": "您的同意选择将保存 12 个月。在此期限之后，我们将再次要求您提供同意。",
+      "withdrawal_note": "您可以随时点击本网站页脚的“Cookie 设置”按钮更改您的 Cookie 首选项。"
+    },
+    "data_use": {
+      "title": "我们如何使用您的数据",
+      "items": {
+        "booking": "处理和管理您的摄影预订",
+        "communication": "与您沟通我们的服务",
+        "improvement": "改进我们的网站和服务质量",
+        "marketing": "发送促销材料（经您同意）",
+        "legal": "遵守法律义务并解决争议"
+      }
+    },
+    "image_license": {
+      "title": "图片许可与使用权",
+      "description": "当您在 Istanbul Portrait 预订拍摄时，您将被授予特定的图片使用权。",
+      "rights": "您拥有完全的个人使用权。您可以打印、在社交媒体上分享以及用于任何非商业目的。",
+      "usage": "如需商业用途，请直接联系我们讨论许可选项。"
+    },
+    "your_rights": {
+      "title": "您的权利（GDPR）",
+      "items": {
+        "access": "访问您个人数据的权利",
+        "rectification": "更正不准确数据的权利",
+        "erasure": "请求删除您数据的权利",
+        "portability": "数据可移植性权利",
+        "objection": "反对数据处理的权利"
+      }
+    },
+    "contact": {
+      "title": "联系我们",
+      "description": "如果您对此隐私政策或您的个人数据有疑问：",
+      "email_label": "电子邮件：",
+      "updated_label": "最后更新：",
+      "updated_date": "2025年1月"
+    }
+  },
+  "reviews": {
+    "title": "客户对伊斯坦布尔摄影师的评价",
+    "subtitle": "来自满意客户的真实评论，他们选择我们进行伊斯坦布尔摄影体验",
+    "total_reviews": "评论",
+    "view_all": "在Google上查看所有评论",
+    "loading": "加载评论中...",
+    "error": "目前无法加载评论"
+  },
+  "pricing": {
+    "base_price": "基础价格",
+    "tax_rate": "增值税（{rate}%）",
+    "tax_amount": "增值税金额",
+    "total_price": "总价",
+    "tax_inclusive": "含税",
+    "price_breakdown": "价格明细",
+    "subtotal": "小计",
+    "vat": "增值税",
+    "final_total": "最终总计"
+  },
+  "notfound": {
+    "title": "页面未找到",
+    "subtitle": "哎呀！这个摄影服务似乎不见了",
+    "description": "您正在寻找的页面不存在。也许您想探索我们的摄影套餐或返回首页发现伊斯坦布尔摄影之美。",
+    "homeButton": "返回首页",
+    "packagesButton": "查看套餐",
+    "goBack": "返回"
+  },
+  "blog": {
+    "title": "摄影博客",
+    "subtitle": "来自伊斯坦布尔的技巧、指南和故事",
+    "read_more": "阅读更多",
+    "reading_time": "{minutes}分钟阅读",
+    "published_on": "发布于{date}",
+    "by_author": "作者{author}",
+    "categories": "类别",
+    "tags": "标签",
+    "related_posts": "相关文章",
+    "recent_posts": "最近文章",
+    "no_posts": "未找到博客文章",
+    "search": "搜索博客...",
+    "all_categories": "所有类别",
+    "featured": "精选",
+    "meta": {
+      "title": "摄影博客 | 伊斯坦布尔肖像技巧与指南",
+      "description": "探索伊斯坦布尔摄影技巧、地点指南和幕后故事"
+    },
+    "author": {
+      "about_title": "关于作者",
+      "name": "伊斯坦布尔摄影师",
+      "bio": "伊斯坦布尔专业摄影师，擅长人像、情侣和生活方式摄影。拥有超过8年的经验，在城市最具标志性的背景下捕捉永恒的记忆。",
+      "follow": "在 Instagram 上关注"
+    },
+    "summary": {
+      "title": "关键要点",
+      "ai_overview": "AI 概览"
+    }
+  },
+  "locations": {
+    "title": "伊斯坦布尔摄影地点",
+    "subtitle": "发现伊斯坦布尔最适合专业摄影的上镜地点",
+    "intro": "与您的专业摄影师一起探索伊斯坦布尔最令人惊叹的摄影地点。从历史地标到隐秘屋顶，每个地点都提供独特的背景，让您拍摄难忘的照片。",
+    "viewPhotos": "查看照片",
+    "aboutLocation": "关于这个地点",
+    "photographyTips": "摄影技巧",
+    "gallery": "照片画廊",
+    "nearbyLocations": "附近地点",
+    "bestTimeToVisit": "最佳访问时间",
+    "locationInfo": "地点信息",
+    "viewOnMap": "在谷歌地图查看 →",
+    "bookPhotoshoot": "在此预订摄影",
+    "bookPhotoshootDescription": "与专业摄影师一起在这个令人惊叹的地点捕捉您的回忆。",
+    "viewPackages": "查看套餐",
+    "seo": {
+      "title": "伊斯坦布尔摄影地点 | 伊斯坦布尔最佳拍照地点",
+      "description": "发现伊斯坦布尔最佳摄影地点。从加拉塔塔到博斯普鲁斯海峡屋顶，为您的专业摄影找到完美背景。"
+    },
+    "tags": {
+      "historic": "历史",
+      "iconic": "标志性",
+      "rooftop": "屋顶",
+      "couple": "情侣",
+      "colorful": "多彩",
+      "instagram": "网红打卡",
+      "solo": "个人",
+      "bosphorus": "博斯普鲁斯海峡",
+      "mosque": "清真寺",
+      "bridge": "桥梁",
+      "romantic": "浪漫",
+      "unesco": "联合国教科文组织",
+      "architecture": "建筑",
+      "panoramic": "全景",
+      "premium": "高端",
+      "market": "市场",
+      "culture": "文化"
+    },
+    "bestTime": {
+      "sunset": "日落",
+      "morning": "早晨",
+      "early_morning": "清晨",
+      "sunrise": "日出",
+      "golden_hour": "黄金时段",
+      "afternoon": "下午"
+    },
+    "bestTimeDescription": {
+      "sunset": "捕捉令人惊叹的金色光线和戏剧性剪影",
+      "morning": "人少，自然光柔和",
+      "early_morning": "最佳光线，游客最少",
+      "sunrise": "温暖色调的魔幻氛围",
+      "golden_hour": "浪漫照片的完美光线",
+      "afternoon": "适合室内和遮蔽区域"
+    },
+    "tips": {
+      "golden_hour": {
+        "title": "黄金时段魔力",
+        "description": "在日落前1小时到达以获得最佳光线条件"
+      },
+      "rooftop_view": {
+        "title": "屋顶视角",
+        "description": "以城市天际线为背景捕捉全景城市景观"
+      },
+      "cobblestone_streets": {
+        "title": "鹅卵石街道",
+        "description": "利用迷人的街道营造真实的伊斯坦布尔氛围"
+      },
+      "colorful_houses": {
+        "title": "彩色房屋",
+        "description": "充满活力的外墙为Instagram创造完美背景"
+      },
+      "narrow_streets": {
+        "title": "狭窄街道",
+        "description": "探索隐藏的小巷获得独特而亲密的镜头"
+      },
+      "local_cafes": {
+        "title": "当地咖啡馆",
+        "description": "在传统咖啡馆停留进行生活方式摄影"
+      },
+      "mosque_bridge": {
+        "title": "清真寺与桥梁",
+        "description": "以博斯普鲁斯大桥为背景构图清真寺"
+      },
+      "bosphorus_view": {
+        "title": "博斯普鲁斯海峡景观",
+        "description": "在最上镜的时刻捕捉标志性海峡"
+      },
+      "street_food": {
+        "title": "街头美食场景",
+        "description": "加入当地烤土豆和华夫饼摊位进行生活方式拍摄"
+      },
+      "exterior_shots": {
+        "title": "外部建筑",
+        "description": "拜占庭建筑提供令人惊叹的背景"
+      },
+      "fountain_reflection": {
+        "title": "喷泉倒影",
+        "description": "利用庭院喷泉进行创意倒影拍摄"
+      },
+      "sultanahmet_square": {
+        "title": "苏丹艾哈迈德广场",
+        "description": "宽敞的开放空间非常适合全身时尚拍摄"
+      },
+      "six_minarets": {
+        "title": "六座宣礼塔",
+        "description": "捕捉唯一六塔清真寺的独特剪影"
+      },
+      "courtyard": {
+        "title": "庭院设置",
+        "description": "内庭院提供宁静的拍摄机会"
+      },
+      "garden_view": {
+        "title": "花园景观",
+        "description": "以清真寺为背景的美丽花园"
+      },
+      "panoramic_view": {
+        "title": "全景视野",
+        "description": "伊斯坦布尔标志性天际线的360度全景"
+      },
+      "flying_dress": {
+        "title": "飞裙",
+        "description": "非常适合戏剧性飘逸裙装摄影"
+      },
+      "sunset_silhouette": {
+        "title": "日落剪影",
+        "description": "在日落天空下创造戏剧性剪影"
+      },
+      "terrace_view": {
+        "title": "露台景观",
+        "description": "金角湾上方的壮丽全景"
+      },
+      "golden_horn": {
+        "title": "金角湾",
+        "description": "从高处捕捉历史水道"
+      },
+      "ottoman_architecture": {
+        "title": "奥斯曼建筑",
+        "description": "奥斯曼帝国建筑杰作"
+      },
+      "colorful_lamps": {
+        "title": "彩色灯饰",
+        "description": "标志性土耳其灯饰营造魔幻光影"
+      },
+      "narrow_alleys": {
+        "title": "有顶小巷",
+        "description": "独特氛围的历史有顶通道"
+      },
+      "local_vendors": {
+        "title": "当地摊贩",
+        "description": "传统工匠的真实场景"
+      },
+      "art_nouveau": {
+        "title": "新艺术设计",
+        "description": "令人惊叹的20世纪初建筑细节"
+      },
+      "symmetry": {
+        "title": "完美对称",
+        "description": "六角形楼梯创造出迷人的几何图案"
+      },
+      "spiral_view": {
+        "title": "螺旋视角",
+        "description": "仰视或俯视获得戯剧性的螺旋透视效果"
+      },
+      "golden_horn_view": {
+        "title": "金角湾视角",
+        "description": "令人惊叹的历史水道和清真寺景观"
+      },
+      "fishermen": {
+        "title": "当地渔民",
+        "description": "捕捉传统渔业文化的真实场景"
+      },
+      "mosque_skyline": {
+        "title": "清真寺天际线",
+        "description": "多座历史清真寺创造出令人惊叹的剑影"
+      }
+    },
+    "items": {
+      "galata-tower": {
+        "name": "加拉塔塔",
+        "shortDescription": "中世纪石塔，可俯瞰伊斯坦布尔和博斯普鲁斯海峡全景",
+        "description": "加拉塔塔是伊斯坦布尔最具标志性的地标之一，提供令人惊叹的360度城市全景。这座中世纪石塔由热那亚人于1348年建造，高67米，已成为伊斯坦布尔的象征。周围的加拉塔社区拥有迷人的鹅卵石街道、历史建筑和舒适的咖啡馆，非常适合生活方式摄影。",
+        "address": "加拉塔，贝雷凯特扎德，34421 贝伊奥卢/伊斯坦布尔",
+        "seoTitle": "加拉塔塔摄影 | 伊斯坦布尔加拉塔摄影师",
+        "seoDescription": "在伊斯坦布尔标志性中世纪地标加拉塔塔进行专业摄影。令人惊叹的全景和鹅卵石街道，拍摄难忘照片。"
+      },
+      "balat": {
+        "name": "巴拉特",
+        "shortDescription": "色彩缤纷的历史街区，充满活力的房屋和真实的伊斯坦布尔魅力",
+        "description": "巴拉特是伊斯坦布尔最古老、最多彩的社区之一，以其充满活力的彩色房屋、狭窄街道和真实氛围而闻名。这个联合国教科文组织列名区提供无尽的摄影机会，拥有彩虹色外墙、复古商店和传统咖啡馆。",
+        "address": "巴拉特，34087 法提赫/伊斯坦布尔",
+        "seoTitle": "巴拉特摄影 | 伊斯坦布尔多彩摄影地点",
+        "seoDescription": "在巴拉特多彩街道上拍摄令人惊叹的照片。伊斯坦布尔最具Instagram风格社区的专业摄影。"
+      },
+      "ortakoy": {
+        "name": "奥塔科伊",
+        "shortDescription": "迷人的博斯普鲁斯海滨，拥有标志性清真寺和桥梁景观",
+        "description": "奥塔科伊是博斯普鲁斯海峡欧洲海岸上的一个风景如画的社区，以其优雅的清真寺和壮观的博斯普鲁斯大桥景观而闻名。海滨区域提供完美的拍摄机会，标志性清真寺与大桥交相辉映。",
+        "address": "奥塔科伊，34347 贝西克塔什/伊斯坦布尔",
+        "seoTitle": "奥塔科伊摄影 | 博斯普鲁斯大桥伊斯坦布尔摄影",
+        "seoDescription": "在奥塔科伊进行专业摄影，欣赏博斯普鲁斯大桥景观。捕捉标志性清真寺和海滨。"
+      },
+      "hagia-sophia": {
+        "name": "圣索菲亚大教堂",
+        "shortDescription": "联合国教科文组织世界遗产拜占庭杰作，伊斯坦布尔的象征",
+        "description": "圣索菲亚大教堂是世界上最伟大的建筑成就之一，也是伊斯坦布尔最著名的地标。建于公元537年作为大教堂，这座联合国教科文组织世界遗产展示了令人惊叹的拜占庭建筑，拥有巨大的圆顶和精美的马赛克。",
+        "address": "苏丹艾哈迈德，圣索菲亚广场1号，34122 法提赫/伊斯坦布尔",
+        "seoTitle": "圣索菲亚大教堂摄影 | 伊斯坦布尔联合国教科文组织遗产摄影",
+        "seoDescription": "在伊斯坦布尔联合国教科文组织世界遗产圣索菲亚大教堂进行专业摄影。捕捉拜占庭建筑和历史辉煌。"
+      },
+      "blue-mosque": {
+        "name": "蓝色清真寺",
+        "shortDescription": "壮丽的奥斯曼清真寺，拥有六座宣礼塔和令人惊叹的建筑",
+        "description": "苏丹艾哈迈德清真寺，俗称蓝色清真寺，是1609-1616年间建造的奥斯曼建筑杰作。以其六座宣礼塔和蓝色伊兹尼克瓷砖而闻名，这座清真寺提供壮观的摄影机会。",
+        "address": "苏丹艾哈迈德，马场大街7号，34122 法提赫/伊斯坦布尔",
+        "seoTitle": "蓝色清真寺摄影 | 苏丹艾哈迈德清真寺伊斯坦布尔摄影",
+        "seoDescription": "在伊斯坦布尔最壮丽的奥斯曼清真寺蓝色清真寺进行专业摄影。捕捉六座宣礼塔和令人惊叹的建筑。"
+      },
+      "bosphorus-rooftop": {
+        "name": "博斯普鲁斯海峡屋顶",
+        "shortDescription": "独家屋顶场地，拥有博斯普鲁斯海峡和城市全景",
+        "description": "在我们独家的屋顶摄影地点从高处体验伊斯坦布尔。这些高端场地提供无与伦比的360度博斯普鲁斯海峡、加拉塔塔和伊斯坦布尔标志性天际线全景。非常适合飞裙摄影、日落拍摄和浪漫情侣摄影。",
+        "address": "伊斯坦布尔各屋顶地点",
+        "seoTitle": "伊斯坦布尔屋顶摄影 | 博斯普鲁斯海峡景观摄影",
+        "seoDescription": "在博斯普鲁斯海峡全景下进行独家屋顶摄影。飞裙拍摄和日落摄影在伊斯坦布尔高端屋顶场地。"
+      },
+      "suleymaniye": {
+        "name": "苏莱曼尼耶清真寺",
+        "shortDescription": "奥斯曼帝国清真寺，拥有金角湾壮丽露台景观",
+        "description": "苏莱曼尼耶清真寺由传奇建筑师米马尔·希南为苏莱曼大帝建造，被认为是奥斯曼帝国建筑的最佳典范。清真寺建筑群提供俯瞰金角湾的壮丽露台景观，为摄影提供宁静的氛围。",
+        "address": "苏莱曼尼耶，西迪克·萨米·奥纳尔教授街1号，34116 法提赫/伊斯坦布尔",
+        "seoTitle": "苏莱曼尼耶清真寺摄影 | 金角湾伊斯坦布尔摄影",
+        "seoDescription": "在苏莱曼尼耶清真寺进行专业摄影，欣赏金角湾景观。奥斯曼帝国建筑和全景露台照片。"
+      },
+      "camondo-stairs": {
+        "name": "卡蒙多楼梯",
+        "shortDescription": "连接卡拉科伊和加拉塔塔的优雅新艺术楼梯",
+        "description": "卡蒙多楼梯（Kamondo Merdivenleri）是伍斯坦布尔卡拉科伊区中心一座令人惊叹的新艺术建筑典范。这座优雅的六角形楼梯由富有的卡蒙多银行家族于19世纪70年代初期建造，将银行区与加拉塔社区连接起来。独特的几何设计和历史特色使其成为伊斯坦布尔最受欢迎的隐藏宝石之一。",
+        "address": "凯马拉尔塔大街，卡拉科伊，34421 贝伊奥卢/伊斯坦布尔",
+        "seoTitle": "卡蒙多楼梯摄影 | 伊斯坦布尔隐藏宝石摄影",
+        "seoDescription": "在伊斯坦布尔标志性的卡蒙多楼梯进行专业摄影。新艺术建筑和令人惊叹的几何图案，拍摄独特照片。"
+      },
+      "galata-bridge": {
+        "name": "加拉塔大桥",
+        "shortDescription": "横跨金角湾的历史名桥，拥有令人惊叹的清真寺景观",
+        "description": "加拉塔大桥（Galata Köprüsü）是伊斯坦布尔最标志性的地标之一，跨越金角湾连接历史半岛和现代贝伊奥卢区。这座桥提供壮观的摄影机会，可以欣赏到苏莱曼尼耶、埃米尼诺妓和耶尼清真寺的景观，形成令人惊叹的天际线。桥上传统渔民的身影为任何摄影增添了真实的特色。",
+        "address": "加拉塔大桥，埃米尼诺妓-卡拉科伊，伊斯坦布尔",
+        "seoTitle": "加拉塔大桥摄影 | 金角湾伊斯坦布尔摄影",
+        "seoDescription": "在加拉塔大桥进行专业摄影，欣赏金角湾壮丽景观。捕捉标志性清真寺天际线和真实氛围。"
+      }
+    }
+  },
+  "chat_widget": {
+    "header_title": "Emily",
+    "header_subtitle": "在线 • 摄影助理",
+    "welcome_title": "您好！👋",
+    "welcome_message": "我是Emily，在这里帮您策划完美的伊斯坦布尔拍摄。",
+    "input_placeholder": "给Emily发消息...",
+    "whatsapp_fallback": "切换到WhatsApp获取紧急支持",
+    "redirecting": "太棒了！我现在将您重定向到付款页面。请在那里完成付款信息以锁定您的预订！💳✨",
+    "connection_error": "抱歉，连接出现问题。请重试或使用WhatsApp。",
+    "bot_avatar_alt": "Emily",
+    "checkout_nudge": "嘿！我注意到您在最后一步了。需要我帮您完成预订吗？😊",
+    "role": "摄影助理",
+    "online": "在线"
+  },
+  "newsletter": {
+    "title": "加入我们",
+    "description": "订阅我们的通讯，获取独家摄影技巧、季节性优惠和伊斯坦布尔旅游指南。",
+    "name_placeholder": "全名",
+    "email_placeholder": "电子邮件地址",
+    "button": "订阅",
+    "subscribing": "正在订阅...",
+    "success_title": "欢迎加入！",
+    "success_message": "您已成功订阅我们的通讯。",
+    "error_message": "出错了。请重试。",
+    "close": "不用了，谢谢"
+  },
+  "iosInstallPrompt": {
+    "title": "获取通知并安装应用",
+    "description": "将此网站添加到您的iPhone以允许通知并享受全屏体验。",
+    "step1": "点击下方的“分享”按钮。",
+    "step2": "向下滚动并选择“添加到主屏幕”。"
+  },
+  "about_highlights": {
+    "title": "为什么选择我",
+    "professional": {
+      "title": "专业品质",
+      "description": "每张照片均使用高端设备和专业后期处理。"
+    },
+    "local": {
+      "title": "本地专业知识",
+      "description": "深入了解伊斯坦布尔的最佳拍摄地点和最佳光照时间。"
+    },
+    "personal": {
+      "title": "个性化体验",
+      "description": "根据您的独特风格和喜好量身定制的拍摄环节。"
+    }
+  }
+}

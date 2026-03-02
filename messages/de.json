@@ -1,0 +1,1127 @@
+{
+  "payment_banner": {
+    "message": "Sichere Bezahlung"
+  },
+  "nav": {
+    "home": "Startseite",
+    "packages": "Pakete",
+    "about": "Über uns",
+    "contact": "Kontakt",
+    "blog": "Blog",
+    "locations": "Orte"
+  },
+  "whatsapp": {
+    "button": "WhatsApp",
+    "tooltip": "Chatten Sie mit uns auf WhatsApp",
+    "message": "Hallo! I würde gerne Informationen über Fotoshootings in Istanbul erhalten.",
+    "notification_title": "Hallo! 👋",
+    "notification_message": "Brauchen Sie Hilfe bei Ihrer Buchung?",
+    "close_notification": "Benachrichtigung schließen",
+    "direction": "ltr"
+  },
+  "hero": {
+    "title": "Istanbul Fotograf | Professionelle Fotografie in Istanbul",
+    "subtitle": "Experte für professionelle Porträt-, Hochzeits- und Paarfotografie in Istanbul",
+    "description": "Warum Sie unsere Istanbul Fotografie-Dienste wählen sollten",
+    "cta": "Sitzung buchen",
+    "learnMore": "Mehr erfahren"
+  },
+  "features": {
+    "rooftop": {
+      "title": "Dachterrasse-Sessions",
+      "description": "Atemberaubende Aussicht auf den Bosporus und die Skyline von Istanbul"
+    },
+    "historic": {
+      "title": "Historische Orte",
+      "description": "Hagia Sophia, Blaue Moschee und ikonische Wahrzeichen"
+    },
+    "professional": {
+      "title": "Professionelle Fotoqualität",
+      "description": "Bester Fotograf in Istanbul mit High-End-Ausrüstung und fachkundiger Nachbearbeitung"
+    }
+  },
+  "gallery": {
+    "title": "Istanbul Fotografie Portfolio",
+    "subtitle": "Entdecken Sie die Schönheit Istanbuls durch unser Objektiv. Stöbern Sie durch unsere Sammlung von Porträt-, Paar- und Lifestyle-Fotografiesitzungen.",
+    "intro": "Entdecken Sie atemberaubende Fotografie, aufgenommen von Ihrem professionellen Istanbul-Fotografen. Unser Portfolio umfasst Paarshootings, Dachterrasse-Sessions und Porträtfotografie an den ikonischsten Orten Istanbuls, einschließlich Bosporus, Galataturm und dem historischen Sultanahmet."
+  },
+  "packages": {
+    "title": "Fotografie-Pakete",
+    "subtitle": "Wählen Sie das perfekte Paket für Ihr Istanbul-Fotoshooting",
+    "sectionTitle": "Fotografie-Pakete",
+    "sectionDescription": "Wählen Sie das perfekte Paket für Ihr Istanbul-Fotoshooting-Erlebnis",
+    "per_person": "pro Person",
+    "essential": {
+      "title": "Essential",
+      "price": "€150",
+      "duration": "30 Minuten",
+      "photos": "15 Bearbeitete Fotos",
+      "locations": "1 Ort",
+      "features": [
+        "30 Minuten Fotoshooting",
+        "15 hochauflösende bearbeitete Fotos",
+        "Online-Galerie Lieferung",
+        "Grundlegende Retusche inklusive"
+      ],
+      "intro": "Perfekt für schnelle, professionelle Porträts. Beinhaltet eine 30-minütige Sitzung an einem ikonischen Ort mit 15 wunderschön bearbeiteten Fotos. Ideal für Alleinreisende oder Paare, die hochwertige Erinnerungen ohne lange Verpflichtung wünschen."
+    },
+    "premium": {
+      "title": "Premium",
+      "price": "€280",
+      "duration": "1,5 Stunden",
+      "photos": "40 Bearbeitete Fotos",
+      "locations": "2 Orte",
+      "popular": true,
+      "features": [
+        "1,5 Stunden Fotoshooting",
+        "40 hochauflösende bearbeitete Fotos",
+        "2 verschiedene Orte",
+        "Erweiterte Retusche",
+        "Vorschau am selben Tag"
+      ],
+      "intro": "Unsere beliebteste Wahl für ein komplettes Istanbul-Erlebnis. Genießen Sie eine 1,5-stündige Sitzung an zwei verschiedenen Orten mit 40 bearbeiteten Fotos. Perfekt, um vielfältige Hintergründe und Stimmungen einzufangen."
+    },
+    "luxury": {
+      "title": "Luxury",
+      "price": "€450",
+      "duration": "2,5 Stunden",
+      "photos": "80 Bearbeitete Fotos",
+      "locations": "3 Orte",
+      "features": [
+        "2,5 Stunden Fotoshooting",
+        "80 hochauflösende bearbeitete Fotos",
+        "3 Premium-Orte",
+        "Professionelle Retusche",
+        "Vorschau am selben Tag",
+        "Styling-Beratung"
+      ],
+      "intro": "Das ultimative VIP-Fotografie-Erlebnis. Eine umfassende 2,5-stündige Tour an 3 Premium-Standorten mit 80 bearbeiteten Fotos, professioneller Styling-Beratung und fortgeschrittener Retusche. Perfekt für Hochzeiten, Verlobungen oder alle, die alles wollen."
+    },
+    "rooftop": {
+      "title": "Dachterrasse-Fotoshooting",
+      "price": "€150",
+      "duration": "Pro Person",
+      "photos": "20 Bearbeitete Fotos",
+      "locations": "Dachterrasse Studio",
+      "features": [
+        "20 hochauflösende bearbeitete Fotos",
+        "1 modernes Kleid mit langer Schleppe oder traditionelles Kleid",
+        "2 mobile Reels Videos",
+        "Dachterrasse Studio Gebühr inklusive",
+        "Professionelle Retusche"
+      ],
+      "intro": "Eine exklusive Sitzung in unserem privaten Dachstudio mit atemberaubendem Blick auf den Bosporus. Beinhaltet die berühmte Option 'Fliegendes Kleid', Video-Reels und professionelle Retusche für ein wahrlich magisches Erlebnis."
+    },
+    "custom": {
+      "title": "Benötigen Sie ein individuelles Paket?",
+      "description": "Jedes Fotoshooting ist einzigartig. Lassen Sie uns Ihre spezifischen Bedürfnisse besprechen und ein individuelles Paket erstellen, das perfekt zu Ihrer Vision und Ihrem Budget passt.",
+      "button": "Individuelles Angebot anfordern"
+    },
+    "sections": {
+      "available_packages": "Istanbul Fotograf Pakete",
+      "intro": "Wählen Sie Ihr perfektes Fotografie-Paket mit Istanbuls Experten-Fotograf. Alle Sitzungen beinhalten professionelle Bearbeitung und Fotos an den ikonischsten Orten der Stadt. Als Ihr engagierter Istanbul-Fotograf sorge ich dafür, dass jeder Moment wunderschön festgehalten wird."
+    },
+    "winter_sale": "Sale",
+    "ui": {
+      "duration": "Dauer",
+      "photos": "Fotos",
+      "locations": "Orte",
+      "professional_photographer": "Professioneller Fotograf",
+      "what_to_expect": "Was Sie erwartet",
+      "payment_desc": "Sichere Online-Zahlung erforderlich, um Ihre Sitzung zu buchen"
+    }
+  },
+  "about": {
+    "title": "Über mich",
+    "subtitle": "Top-Fotograf in Istanbul, der die Schönheit der Stadt einfängt",
+    "sectionTitle": "Über mich",
+    "sectionDescription": "Entdecken Sie meine Reise als Istanbuls führender Fotograf und die Leidenschaft, Ihre perfekten Momente festzuhalten",
+    "per_person": "pro Person",
+    "description": "Mit über 8 Jahren Erfahrung als professioneller Fotograf in Istanbul habe ich mich darauf spezialisiert, die einzigartige Verbindung zwischen Menschen und Istanbuls großartiger Kulisse einzufangen. Als führender Istanbul-Fotograf liegt meine Leidenschaft darin, zeitlose Erinnerungen zu schaffen, die sowohl die Schönheit meiner Motive als auch den historischen Charme dieser unglaublichen Stadt widerspiegeln.",
+    "experience": "8+ Jahre Erfahrung",
+    "sessions": "500+ Sitzungen abgeschlossen",
+    "clients": "Glückliche Kunden weltweit"
+  },
+  "contact": {
+    "title": "Kontakt aufnehmen",
+    "subtitle": "Bereit, Ihr Istanbul-Fotoshooting zu buchen?",
+    "sectionTitle": "Kontakt aufnehmen",
+    "sectionDescription": "Bereit, Ihr Istanbul-Fotoshooting zu buchen? Lassen Sie uns Ihre Fotowünsche besprechen und gemeinsam etwas Schönes schaffen",
+    "per_person": "pro Person",
+    "cta_description": "Bereit, Ihre Erinnerungen in Istanbul festzuhalten? Stöbern Sie in unseren Paketen und buchen Sie Ihre Sitzung direkt online.",
+    "experience_description": "8+ Jahre Erfahrung im Einfangen der Schönheit Istanbuls",
+    "premium_locations": "Premium-Orte",
+    "locations_description": "Dachterrassen, historische Wahrzeichen und versteckte Juwelen",
+    "professional_quality": "Professionelle Qualität",
+    "quality_description": "Hochauflösende bearbeitete Fotos digital geliefert",
+    "form": {
+      "name": "Vollständiger Name",
+      "email": "E-Mail-Adresse",
+      "phone": "Telefonnummer",
+      "date": "Bevorzugtes Datum",
+      "package": "Paket auswählen",
+      "message": "Nachricht",
+      "submit": "Nachricht senden",
+      "success": "Danke! Wir melden uns bald bei Ihnen.",
+      "error": "Etwas ist schief gelaufen. Bitte versuchen Sie es erneut."
+    },
+    "info": {
+      "location": "Süleymaniye, Siyavuş Paşa Sk. No:24/2, 34116 Fatih/İstanbul, Türkiye",
+      "email": "info@istanbulportrait.com",
+      "phone": "+90 536 709 37 24",
+      "hours": "Verfügbar 7 Tage die Woche"
+    }
+  },
+  "checkout": {
+    "title": "Sitzung buchen",
+    "description": "Schließen Sie Ihre Buchung für das perfekte Istanbul-Fotoshooting-Erlebnis ab",
+    "seo": {
+      "title": "Kasse | Buchen Sie Ihre Istanbul Fotografie-Sitzung",
+      "description": "Schließen Sie Ihre Istanbul-Fotografie-Buchung sicher ab. Professionelle Fotoshooting-Pakete mit sofortiger Bestätigung und flexiblen Zahlungsoptionen."
+    },
+    "payment_description": "Überprüfen Sie Ihre Buchungsdetails und schließen Sie die Zahlung ab",
+    "booking_summary": "Buchungszusammenfassung",
+    "modal_description": "Geben Sie Ihre Details ein, um zu buchen",
+    "booking": {
+      "review_details": "Überprüfen Sie Ihre Buchungsinformationen"
+    },
+    "package": {
+      "selected_details": "Details Ihres ausgewählten Fotografie-Pakets"
+    },
+    "steps": {
+      "package": "Paket",
+      "people_count": "Personen:",
+      "details": "Details",
+      "payment": "Zahlung",
+      "confirmation": "Bestätigung"
+    },
+    "package_summary": "Paketzusammenfassung",
+    "customer_details": "Kundendetails",
+    "payment_details": "Zahlungsdetails",
+    "booking_details": "Buchungsdetails",
+    "form": {
+      "people_count": "Anzahl der Personen",
+      "name": "Vollständiger Name",
+      "email": "E-Mail-Adresse",
+      "phone": "Telefonnummer",
+      "date": "Datum auswählen",
+      "date_time": "Datum & Zeit auswählen",
+      "time": "Zeit auswählen",
+      "select_time": "Zeit auswählen",
+      "notes": "Besondere Wünsche (Optional)",
+      "card_holder": "Karteninhaber",
+      "card_number": "Kartennummer",
+      "expire_month": "MM",
+      "expire_year": "JJ",
+      "cvc": "CVC",
+      "terms": "Ich stimme den Allgemeinen Geschäftsbedingungen zu",
+      "month_short": "MM",
+      "year_short": "JJ"
+    },
+    "buttons": {
+      "continue": "Weiter",
+      "back": "Zurück",
+      "cancel": "Abbrechen",
+      "continue_to_payment": "Weiter zur Kasse",
+      "edit_details": "Details bearbeiten",
+      "complete_booking": "Buchung abschließen",
+      "pay_amount": "{amount} ZAHLEN",
+      "processing": "Verarbeitung...",
+      "book_another": "Eine weitere Sitzung buchen",
+      "pay_with_turinvoice": "Mit Turinvoice bezahlen"
+    },
+    "success": {
+      "title": "Buchung bestätigt!",
+      "message": "Danke für Ihre Buchung bei Istanbul Photographer. Ihre Buchungsbestätigung wurde an Ihre E-Mail gesendet.",
+      "booking_id": "Buchungs-ID",
+      "payment_successful": "Zahlung erfolgreich! Bestätigungs-E-Mail gesendet."
+    },
+    "error": {
+      "generic": "Etwas ist schief gelaufen. Bitte versuchen Sie es erneut.",
+      "payment_failed": "Zahlung fehlgeschlagen. Bitte überprüfen Sie Ihre Kartendaten und versuchen Sie es erneut.",
+      "booking_failed": "Buchung konnte nicht erstellt werden. Bitte versuchen Sie es erneut."
+    },
+    "included_features": "Enthaltene Funktionen",
+    "more_features": "weitere Funktionen",
+    "loading_booking": "Lade Buchungsdetails...",
+    "labels": {
+      "customer": "Kunde:",
+      "date": "Datum:",
+      "time": "Zeit:",
+      "package": "Paket:",
+      "people_count": "Personen:",
+      "total_amount": "Gesamtbetrag:",
+      "deposit_amount": "Anzahlungsbetrag:",
+      "remaining_cash": "Restbetrag (Bar):",
+      "payment_terms_notice": "Zahlungsbedingungen: 30% Anzahlung online, 70% in bar am Tag des Fotoshootings."
+    },
+    "security": {
+      "ssl_encrypted": "SSL Verschlüsselt",
+      "secure_payment": "Sichere Bezahlung",
+      "pci_compliant": "PCI Konform",
+      "payment_secure_message": "Sichere Bezahlung • SSL Verschlüsselt • PCI Konform"
+    },
+    "payment": {
+      "complete_description": "Schließen Sie Ihre Buchung ab, indem Sie Ihre Zahlungsinformationen eingeben",
+      "secure_no_fees": "Sichere Bezahlung • Keine versteckten Gebühren"
+    },
+    "people_count_title": "Anzahl der Personen",
+    "price_per_person": "Preis pro Person",
+    "seasonal_discount_applied": "Sale ({percentage}% RABATT)",
+    "person": "Person",
+    "people": "Personen",
+    "payment_method": "Zahlungsmethode",
+    "payment_methods": {
+      "credit_card": "Kredit-/Debitkarte",
+      "russian_banks": "Оплата через СБП"
+    },
+    "turinvoice_description": "Sie werden zur sicheren Zahlungsseite von Turinvoice weitergeleitet.",
+    "turinvoice": {
+      "title": "Turinvoice Zahlung",
+      "status_new": "Initialisierung...",
+      "time_remaining": "Verbleibende Zeit",
+      "amount_label": "Betrag",
+      "exchange_rate": "Wechselkurs",
+      "instruction_1": "Bitte schließen Sie Ihre Zahlung auf der geöffneten Seite ab.",
+      "open_payment_page": "Zahlungsseite öffnen",
+      "instruction_2": "Schließen Sie dieses Fenster nicht, bis die Zahlung bestätigt ist.",
+      "security_notice": "Sichere Zahlung über Turinvoice",
+      "status_paying": "Warte auf Zahlung...",
+      "status_paid": "Zahlung erfolgreich!",
+      "status_timeout": "Zeitüberschreitung der Zahlung",
+      "success_message": "Ihre Zahlung wurde bestätigt.",
+      "redirect_message": "Weiterleitung...",
+      "timeout_message": "Die Zahlungssitzung ist abgelaufen.",
+      "timeout_desc": "Bitte versuchen Sie es erneut, um den Zahlungsvorgang neu zu starten.",
+      "try_again": "Erneut versuchen"
+    }
+  },
+  "footer": {
+    "description": "Führender Fotograf in Istanbul für professionelle Porträtfotografie. Erfassen Sie Ihre besonderen Momente vor den ikonischsten Kulissen der Stadt.",
+    "quickLinks": "Schnelllinks",
+    "services": "Dienstleistungen",
+    "followUs": "Folgen Sie uns",
+    "copyright": "© 2025 istanbulportrait.com | Alle Rechte vorbehalten.",
+    "service_items": {
+      "portrait": "Porträtfotografie",
+      "couples": "Paar-Sessions",
+      "rooftop": "Dachterrasse-Fotoshootings",
+      "historic": "Fotoshootings an historischen Orten",
+      "lifestyle": "Lifestyle-Fotografie",
+      "historic_shoots": "Fotoshootings an historischen Orten"
+    },
+    "privacy_policy": "Datenschutzerklärung",
+    "terms_of_service": "Nutzungsbedingungen"
+  },
+  "validation": {
+    "people_count_required": "Personenanzahl für das Dachterrassen-Paket erforderlich",
+    "package_required": "Paketauswahl ist erforderlich",
+    "email_invalid": "Bitte geben Sie eine gültige E-Mail-Adresse ein",
+    "phone_invalid": "Bitte geben Sie eine gültige Telefonnummer ein",
+    "date_required": "Bitte wählen Sie ein Datum",
+    "time_required": "Bitte wählen Sie eine Zeit",
+    "amount_positive": "Gesamtbetrag muss positiv sein",
+    "cardholder_required": "Karteninhaber-Name ist erforderlich",
+    "card_number_required": "Kartennummer ist erforderlich",
+    "month_required": "Monat ist erforderlich",
+    "year_required": "Jahr ist erforderlich",
+    "cvc_required": "CVC muss 3 Ziffern haben",
+    "name_min": "Name muss mindestens 2 Zeichen lang sein",
+    "phone_min": "Telefonnummer muss mindestens 10 Ziffern haben",
+    "message_min": "Nachricht muss mindestens 10 Zeichen lang sein",
+    "card_number_invalid": "Kartennummer muss 13-19 Ziffern haben",
+    "preferred_date_required": "Bitte wählen Sie ein bevorzugtes Datum",
+    "package_selection_required": "Bitte wählen Sie ein Paket",
+    "phone_required": "Telefonnummer ist erforderlich"
+  },
+  "placeholders": {
+    "full_name": "Vollständiger Name",
+    "email": "max@beispiel.de",
+    "phone": "+90 536 709 37 24",
+    "select_package": "Wählen Sie ein Paket",
+    "tell_us_vision": "Erzählen Sie uns von Ihrer Vision für das Fotoshooting...",
+    "test_card": "5528790000000008 (Verwenden Sie diese Testkarte für eine erfolgreiche Demozahlung)",
+    "enter_full_name": "Geben Sie Ihren vollständigen Namen ein",
+    "enter_email": "Geben Sie Ihre E-Mail ein",
+    "phone_number": "+90 555 123 45 67",
+    "pick_date": "Wählen Sie ein Datum",
+    "select_time": "Zeit auswählen",
+    "special_requests": "Besondere Wünsche oder Notizen über Ihr Fotoshooting...",
+    "card_holder": "VOLLSTÄNDIGER NAME",
+    "card_number": "XXXX XXXX XXXX XXXX",
+    "expire_mm": "MM",
+    "expire_yy": "JJ",
+    "cvc_placeholder": "XXX"
+  },
+  "ui": {
+    "custom_package": "Individuelles Paket",
+    "language": "Sprache",
+    "send_message": "Senden Sie uns eine Nachricht",
+    "contact_information": "Kontaktinformationen",
+    "cookie_settings": "Cookie-Einstellungen",
+    "location": "Ort",
+    "email": "E-Mail",
+    "phone": "Telefon",
+    "availability": "Verfügbarkeit",
+    "what_to_expect": "Was Sie erwartet",
+    "response_time": "Reaktionszeit",
+    "booking_process": "Buchungsprozess",
+    "payment": "Zahlung",
+    "response_time_desc": "Wir antworten in der Regel innerhalb von 24 Stunden auf Anfragen.",
+    "booking_process_desc": "Nach Ihrer Anfrage vereinbaren wir ein Beratungsgespräch, um Ihre Vision zu besprechen und Details festzulegen.",
+    "payment_desc": "Volle Zahlung online bei Buchung erforderlich, um Ihren Termin zu sichern.",
+    "professional_photographer": "Professioneller Fotograf",
+    "professional_photographer_in_istanbul": "Professioneller Fotograf in Istanbul",
+    "portrait_photography": "Porträtfotografie",
+    "couple_sessions": "Paar-Sessions",
+    "lifestyle": "Lifestyle",
+    "rooftop_shoots": "Dachterrasse-Shootings",
+    "view_my_work": "Meine Arbeit ansehen",
+    "book_your_session": "Orte prüfen",
+    "view_packages": "Pakete ansehen",
+    "packages_button": "Pakete",
+    "book_package": "Jetzt buchen",
+    "back_to_home": "Zurück zur Startseite",
+    "selected": "Ausgewählt",
+    "select_package": "Paket auswählen",
+    "total": "Gesamt",
+    "contact": "Kontakt",
+    "most_popular": "Beliebteste",
+    "tryAgain": "Erneut versuchen",
+    "loading": "Laden...",
+    "error": "Fehler",
+    "retry": "Wiederholen",
+    "breadcrumbs": {
+      "photography_locations": "Fotografie-Orte",
+      "checkout": "Kasse",
+      "locations": "Orte"
+    }
+  },
+  "about_cta": {
+    "title": "Bereit, etwas Schönes zu schaffen?",
+    "description": "Lassen Sie uns Ihre Geschichte vor der atemberaubenden Kulisse Istanbuls festhalten."
+  },
+  "api_errors": {
+    "rate_limit": "Zu viele Anfragen. Bitte versuchen Sie es später erneut.",
+    "payment_rate_limit": "Zu viele Zahlungsversuche. Bitte versuchen Sie es später erneut.",
+    "invalid_data": "Ungültige Anfragedaten",
+    "missing_payment_data": "Fehlende erforderliche Zahlungsdaten",
+    "invalid_amount": "Ungültiger Zahlungsbetrag",
+    "booking_not_found": "Buchung nicht gefunden. Bitte erstellen Sie zuerst eine Buchung.",
+    "invalid_package_price": "Ungültiger Paketpreis",
+    "duplicate_booking": "Eine ähnliche Buchung wurde kürzlich erstellt. Bitte überprüfen Sie Ihre E-Mail oder warten Sie einige Minuten.",
+    "booking_config_error": "Buchung konnte nicht verarbeitet werden. Bitte überprüfen Sie Ihre Supabase-Konfiguration.",
+    "internal_error": "Interner Serverfehler",
+    "payment_processing_failed": "Zahlungsbearbeitung fehlgeschlagen. Bitte versuchen Sie es später erneut.",
+    "unknown_error": "Unbekannter Fehler"
+  },
+  "breadcrumb": {
+    "home": "Startseite",
+    "about": "Über uns",
+    "packages": "Fotografie-Pakete",
+    "contact": "Kontakt",
+    "checkout": "Kasse",
+    "privacy": "Datenschutzerklärung",
+    "blog": "Blog",
+    "locations": "Fotografie-Orte"
+  },
+  "structured_data": {
+    "website_name": "Istanbul Fotograf",
+    "service_type": "Fotografie-Dienstleistungen",
+    "address_locality": "Istanbul",
+    "address_country": "TR",
+    "city_name": "Istanbul",
+    "offer_catalog_name": "Fotografie-Dienstleistungen",
+    "portrait_photography": "Porträtfotografie",
+    "portrait_photography_desc": "Professionelle Porträtfotografie-Sitzungen",
+    "rooftop_photoshoot": "Dachterrasse-Fotoshooting",
+    "rooftop_photoshoot_desc": "Dachterrasse-Fotografie-Sitzungen mit Istanbul-Blick",
+    "couple_photography": "Paarfotografie",
+    "couple_photography_desc": "Romantische Paarfotografie-Sitzungen",
+    "service_name": "Professionelle Fotografie-Dienstleistungen in Istanbul",
+    "service_description": "Professionelle Porträt- und Lifestyle-Fotografie-Sitzungen in Istanbul mit Dachterrassenblick und historischen Wahrzeichen",
+    "languages": {
+      "english": "Englisch",
+      "arabic": "Arabisch",
+      "russian": "Russisch",
+      "spanish": "Spanisch"
+    }
+  },
+  "success": {
+    "booking_details": "Buchungsdetails",
+    "booking_id": "Buchungs-ID",
+    "customer_details": "Kundeninformationen",
+    "package_label": "Paket",
+    "amount_paid": "Bezahlter Betrag",
+    "booking_date": "Datum",
+    "booking_time": "Zeit",
+    "customer_name": "Name",
+    "customer_email": "E-Mail",
+    "customer_phone": "Telefon",
+    "notes": "Besondere Wünsche",
+    "whats_next": "Was kommt als Nächstes?",
+    "confirmation_email": "Bestätigungs-E-Mail gesendet",
+    "email_description": "Überprüfen Sie Ihren Posteingang für detaillierte Buchungsinformationen",
+    "pre_session_contact": "Kontakt vor der Sitzung",
+    "contact_description": "Wir kontaktieren Sie 24 Stunden vor Ihrer Sitzung, um Details zu bestätigen",
+    "photo_delivery": "Fotolieferung",
+    "delivery_description": "Ihre bearbeiteten Fotos werden innerhalb von 5-7 Werktagen geliefert",
+    "have_questions": "Haben Sie Fragen?",
+    "bullet_professional": "• Professioneller Fotograf inklusive",
+    "bullet_photos": "• Hochauflösende bearbeitete Fotos",
+    "bullet_gallery": "• Online-Galerie Lieferung",
+    "bullet_retouching": "• Professionelle Retusche",
+    "need_help": "Brauchen Sie Hilfe?",
+    "help_description": "Fragen zu Ihrer Buchung? Kontaktieren Sie uns jederzeit.",
+    "people_count": "Anzahl der Personen"
+  },
+  "package_selection": {
+    "choose_package": "Wählen Sie Ihr Paket",
+    "select_description": "Wählen Sie das Fotografie-Paket, das am besten zu Ihren Bedürfnissen passt",
+    "you_selected": "Sie haben ausgewählt:"
+  },
+  "payment": {
+    "secure_powered": "Sichere Zahlung unterstützt von Iyzico",
+    "security_description": "Ihre Zahlungsinformationen sind sicher und verschlüsselt. Wir verwenden branchenübliche SSL-Verschlüsselung, um Ihre Daten zu schützen.",
+    "order_summary": "Bestellzusammenfassung",
+    "booking_summary": "Buchungszusammenfassung",
+    "includes_fees": "Beinhaltet alle Steuern und Gebühren",
+    "secure_payment": "Sichere Bezahlung",
+    "iyzico_description": "Ihre Zahlung wird sicher über Iyzico, den führenden Zahlungsanbieter der Türkei, abgewickelt.",
+    "name_label": "Name:",
+    "email_label": "E-Mail:",
+    "date_label": "Datum:",
+    "time_label": "Zeit:"
+  },
+  "success_messages": {
+    "payment_successful": "Zahlung erfolgreich! Bestätigungs-E-Mail gesendet.",
+    "booking_created": "Buchung erfolgreich erstellt!"
+  },
+  "error_messages": {
+    "payment_failed": "Zahlung fehlgeschlagen",
+    "booking_failed": "Buchung konnte nicht erstellt werden",
+    "payment_init_failed": "Zahlungsinitialisierung fehlgeschlagen"
+  },
+  "iyzico_errors": {
+    "fallback_message": "Zahlung fehlgeschlagen. Bitte versuchen Sie es erneut oder kontaktieren Sie den Support.",
+    "fallback_suggestion": "Bitte überprüfen Sie Ihre Zahlungsdetails und versuchen Sie es erneut",
+    "categories": {
+      "bank": "Bankfehler",
+      "validation": "Validierungsfehler",
+      "general": "Zahlungsfehler",
+      "system": "Systemfehler",
+      "demo": "Demo-Modus",
+      "unknown": "Unbekannter Fehler",
+      "INVALID_TRANSACTION": "Ungültige Transaktion",
+      "INVALID_CARD": "Ungültige Karte",
+      "NOT_SUFFICIENT_FUNDS": "Unzureichende Deckung",
+      "CONTACT_BANK": "Bank kontaktieren",
+      "SYSTEM_ERROR": "Systemfehler"
+    },
+    "codes": {
+      "10012": {
+        "message": "Ein Fehler ist während des Zahlungsvorgangs aufgetreten, bitte kontaktieren Sie Ihre Bank",
+        "suggestion": "Dies ist ein kartenbezogener Fehler. Es wird empfohlen, dass der Karteninhaber seine Bank kontaktiert"
+      }
+    },
+    "common_suggestions": {
+      "contact_bank": "Bitte kontaktieren Sie Ihre Bank",
+      "try_different_card": "Bitte versuchen Sie eine andere Zahlungsmethode",
+      "check_details": "Bitte überprüfen Sie Ihre Zahlungsdetails",
+      "try_again_later": "Bitte versuchen Sie es später erneut"
+    }
+  },
+  "faq": {
+    "title": "Häufig gestellte Fragen",
+    "subtitle": "Alles, was Sie über professionelle Fotoshootings in Istanbul wissen müssen",
+    "section_title": "Istanbul Fotografie FAQs",
+    "questions": {
+      "best-istanbul-photographer": {
+        "question": "Was macht Sie zum besten Istanbul-Fotografen?",
+        "answer": "Mit 8+ Jahren Erfahrung und über 500 erfolgreichen Fotoshootings habe ich mich darauf spezialisiert, Istanbuls einzigartige Schönheit einzufangen. Meine tiefe Ortskenntnis der fotogensten Orte der Stadt, von Dachterrassen mit Bosporus-Blick bis zu historischen Wahrzeichen, garantiert jedes Mal außergewöhnliche Ergebnisse."
+      },
+      "photoshoot-locations": {
+        "question": "Welche Orte empfehlen Sie für Istanbul-Fotoshootings?",
+        "answer": "Ich biete Sitzungen an Premium-Dachterrassen mit atemberaubendem Bosporus-Blick, historischen Gebieten wie Sultanahmet (Blaue Moschee, Hagia Sophia), Galataturm-Umgebung, Ortaköy-Moschee und versteckten Juwelen in der ganzen Stadt an."
+      },
+      "session-duration": {
+        "question": "Wie lange dauert ein Istanbul-Fotoshooting?",
+        "answer": "Die Sitzungsdauer variiert je nach Paket: Essential (30 Minuten), Premium (1,5 Stunden), Luxury (2,5 Stunden) und individuelle Dachterrassen-Sitzungen."
+      },
+      "best-time-photoshoot": {
+        "question": "Was ist die beste Tageszeit für Istanbul-Fotoshootings?",
+        "answer": "Die Goldene Stunde (1 Stunde vor Sonnenuntergang) bietet das schmeichelhafteste Licht und atemberaubende Stadtansichten. Für Dachterrassen-Sitzungen bietet der Sonnenuntergang magische Bosporus-Reflexionen. Morgensitzungen (8-10 Uhr) sind perfekt für weniger Menschenmengen an historischen Orten."
+      },
+      "photo-delivery": {
+        "question": "Wie schnell erhalte ich meine bearbeiteten Fotos?",
+        "answer": "Premium- und Luxury-Pakete beinhalten eine Vorschau am selben Tag (5-10 Vorschaufotos). Vollständige Galerien mit professionell bearbeiteten, hochauflösenden Fotos werden innerhalb von 5-7 Werktagen über eine sichere Online-Galerie mit Download-Optionen geliefert."
+      },
+      "weather-backup": {
+        "question": "Was passiert bei schlechtem Wetter?",
+        "answer": "Ich beobachte das Wetter genau und biete überdachte Alternativstandorte für Regentage an. Dachterrassen-Sitzungen können ohne Aufpreis verschoben werden. Innenräume und überdachte historische Bereiche garantieren, dass Ihre Sitzung unabhängig vom Wetter stattfindet."
+      },
+      "couple-vs-individual": {
+        "question": "Fotografieren Sie sowohl Paare als auch Einzelpersonen?",
+        "answer": "Absolut! Ich bin spezialisiert auf Paarfotografie, Einzelporträts, Lifestyle-Sitzungen und Hochzeitsfotografie. Jede Sitzung wird auf Ihre spezifischen Bedürfnisse zugeschnitten, egal ob romantische Paarfotos oder professionelle Einzelporträts."
+      },
+      "booking-advance": {
+        "question": "Wie lange im Voraus sollte ich mein Istanbul-Fotoshooting buchen?",
+        "answer": "Ich empfehle eine Buchung 2-3 Wochen im Voraus, besonders während der touristischen Hochsaison (Frühling und Herbst). Dies sichert die Verfügbarkeit für Ihr bevorzugtes Datum und Zeitfenster und ermöglicht eine ordnungsgemäße Planung für Standortgenehmigungen, falls erforderlich."
+      },
+      "cost-breakdown": {
+        "question": "Was ist in den Kosten für das Istanbul-Fotoshooting enthalten?",
+        "answer": "Alle Pakete beinhalten den professionellen Fotografen Uğur Cankurt, Beratung, hochauflösende Bildbearbeitung, Lieferung der Online-Galerie und grundlegende Retusche. Essential €150 (15 Fotos), Premium €280 (40 Fotos), Luxury €450 (80 Fotos). Keine versteckten Gebühren."
+      },
+      "booking-process": {
+        "question": "Wie buche ich schnell einen Istanbul-Fotografen?",
+        "answer": "Buchen Sie sofort auf istanbulportrait.com, WhatsApp +905367093724 oder Instagram @istanbulportrait. Vorausbuchung empfohlen für Sonnenuntergangs-Sitzungen und Wochenenden. Buchungen am selben Tag sind je nach Verfügbarkeit möglich."
+      },
+      "location-recommendations": {
+        "question": "Was sind die fotogensten Orte in Istanbul?",
+        "answer": "Zu den Top-Standorten gehören die Umgebung des Galataturms, Bosporus-Uferpromenaden, das historische Sultanahmet (Blaue Moschee), die Ortaköy-Moschee und exklusive Dachterrassen. Jedes Paket enthält 1-3 Premium-Standorte nach Wahl."
+      },
+      "timing-advice": {
+        "question": "Wann ist die beste Zeit für Istanbul-Fotografie?",
+        "answer": "Die Goldene Stunde (1 Stunde vor Sonnenuntergang) bietet das beste Licht und atemberaubende Stadtansichten. Sommer: 18-19 Uhr, Winter: 16-17 Uhr. Morgensitzungen (8-10 Uhr) sind ideal für weniger Menschenmengen an historischen Stätten. Vermeiden Sie das grelle Licht am Mittag (11-15 Uhr)."
+      }
+    }
+  },
+  "seo": {
+    "home": {
+      "title": "Istanbul Fotograf | Professionelle Fotoshootings in Istanbul",
+      "description": "Buchen Sie Ihr Istanbul-Fotoshooting mit einem erfahrenen Fotografen in Istanbul. Professionelles Fotoshooting in Istanbul an ikonischen Orten. Lieferung am selben Tag. Ab €150.",
+      "keywords": "istanbul fotograf, professioneller fotograf istanbul, istanbul fotoshooting, porträtfotograf istanbul, paarfotografie istanbul, lifestyle fotografie istanbul, dachterrasse fotoshooting istanbul, fotografiedienste istanbul, bester fotograf istanbul, istanbul fotografie sitzung, tourismus fotografie istanbul, professionelle fotos istanbul"
+    },
+    "schema": {
+      "knowsAbout": "Istanbul Fotografie, Porträtfotografie, Paarfotografie, Bosporus Fotografie, Galataturm Fotografie, Sultanahmet Fotografie, Professionelle Fototechniken, Tourismus Fotografie, Hochzeitsfotografie",
+      "skills": "Porträtfotografie, Lifestyle-Fotografie, Paarfotografie, Tourismus Fotografie, Dachterrasse Fotografie",
+      "serviceType": "Fotografie-Dienstleistung",
+      "slogan": "Ihre Istanbul-Geschichte festhalten",
+      "jobTitle": "Professioneller Fotograf",
+      "occupationLocation": "Istanbul, Türkei",
+      "offerDescription": "Professioneller Fotograf Uğur Cankurt mit 8+ Jahren Erfahrung. Beinhaltet Beratung, Bearbeitung und digitale Lieferung.",
+      "areaServed": "Istanbul",
+      "galleryDescription": "Professionelle Fotogalerie, die {name} in Istanbul zeigt",
+      "creditText": "Fotografie von {name}",
+      "howtoCamera": "Professionelle Kamera",
+      "howtoLighting": "Beleuchtungsausrüstung",
+      "faqTitle": "Häufig gestellte Fragen zu {topic}"
+    },
+    "packages": {
+      "title": "Istanbul Fotoshooting Pakete | Fotograf in Istanbul",
+      "description": "Professionelle Fotoshooting-Pakete in Istanbul. Wählen Sie Ihren Istanbul-Fotografen für Dachterrassen-Sitzungen, historische Orte und Premium-Bearbeitung. Ab €150."
+    },
+    "about": {
+      "title": "Über Ihren Istanbul Fotograf | Fotoshooting in Istanbul",
+      "description": "Treffen Sie Ihren professionellen Fotografen in Istanbul mit 8+ Jahren Erfahrung. Spezialisiert auf Istanbul-Fotoshootings für Porträts, Paare und Lifestyle-Fotografie."
+    },
+    "contact": {
+      "title": "Buchen Sie Ihr Istanbul Fotoshooting | Fotograf in Istanbul",
+      "description": "Bereit, Ihr Fotoshooting in Istanbul zu buchen? Kontaktieren Sie Ihren professionellen Istanbul-Fotografen für unvergessliche Fotositzungen. Verfügbar 7 Tage die Woche."
+    }
+  },
+  "cookies": {
+    "banner": {
+      "title": "Wir verwenden Cookies, um Ihre Erfahrung zu verbessern und unseren Verkehr zu analysieren.",
+      "description": "Essenzielle Cookies sind für die grundlegende Website-Funktionalität erforderlich. Analyse-Cookies helfen uns, unsere Dienste zu verbessern.",
+      "privacy_link": "Mehr erfahren in unserer Datenschutzerklärung"
+    },
+    "buttons": {
+      "accept_all": "Alle akzeptieren",
+      "essential_only": "Nur essenzielle",
+      "decline_all": "Alle ablehnen"
+    }
+  },
+  "privacy": {
+    "title": "Datenschutzerklärung",
+    "subtitle": "Wie wir Ihre persönlichen Daten sammeln, verwenden und schützen",
+    "seo": {
+      "title": "Datenschutzerklärung | Istanbul Fotograf",
+      "description": "Erfahren Sie, wie Istanbul Portrait Ihre persönlichen Daten sammelt, verwendet und schützt. DSGVO-konforme Datenschutzerklärung."
+    },
+    "information_collection": {
+      "title": "Informationen, die wir sammeln",
+      "description": "Wir sammeln Informationen, die Sie uns direkt bereitstellen, wenn Sie unsere Fotografie-Dienste nutzen:",
+      "items": {
+        "personal": "Persönliche Daten (Name, E-Mail, Telefonnummer)",
+        "contact": "Kontaktpräferenzen und Kommunikationsverlauf",
+        "booking": "Buchungsdetails und Sitzungsanforderungen",
+        "payment": "Zahlungsinformationen (sicher verarbeitet durch Iyzico)"
+      }
+    },
+    "cookies": {
+      "title": "Cookies und Tracking",
+      "description": "Wir verwenden verschiedene Arten von Cookies, um Ihre Erfahrung zu verbessern:",
+      "essential": {
+        "title": "Essenzielle Cookies",
+        "description": "Erforderlich für grundlegende Website-Funktionalität und können nicht deaktiviert werden."
+      },
+      "analytics": {
+        "title": "Analyse-Cookies",
+        "description": "Helfen uns zu verstehen, wie Besucher mit unserer Website interagieren, mithilfe von Google Analytics."
+      },
+      "marketing": {
+        "title": "Marketing-Cookies",
+        "description": "Werden verwendet, um relevante Werbung bereitzustellen und die Kampagneneffektivität zu verfolgen."
+      },
+      "table": {
+        "title": "Detaillierte Cookie-Informationen",
+        "columns": {
+          "name": "Cookie-Name",
+          "purpose": "Zweck",
+          "type": "Typ",
+          "duration": "Dauer",
+          "provider": "Anbieter"
+        },
+        "types": {
+          "essential": "Essenziell",
+          "analytics": "Analyse",
+          "marketing": "Marketing"
+        },
+        "providers": {
+          "first_party": "Istanbul Portrait (Erstanbieter)",
+          "google": "Google Analytics",
+          "yandex": "Yandex Metrica",
+          "microsoft": "Microsoft Clarity",
+          "facebook": "Facebook"
+        },
+        "essential": {
+          "user_consent": {
+            "purpose": "Speichert Ihre Cookie-Einwilligungspräferenzen",
+            "duration": "12 Monate"
+          }
+        },
+        "analytics": {
+          "ga": {
+            "purpose": "Unterscheidet eindeutige Benutzer und Sitzungen",
+            "duration": "2 Jahre"
+          },
+          "gid": {
+            "purpose": "Unterscheidet Benutzer für 24 Stunden",
+            "duration": "24 Stunden"
+          },
+          "gat": {
+            "purpose": "Drosselt die Anfragerate an Google Analytics",
+            "duration": "1 Minute"
+          },
+          "ym_uid": {
+            "purpose": "Yandex Metrica Benutzerkennung",
+            "duration": "1 Jahr"
+          },
+          "ym_d": {
+            "purpose": "Yandex Metrica Sitzungsdatum",
+            "duration": "1 Jahr"
+          },
+          "clck": {
+            "purpose": "Microsoft Clarity Benutzerkennung",
+            "duration": "1 Jahr"
+          },
+          "clsk": {
+            "purpose": "Microsoft Clarity Sitzungskennung",
+            "duration": "1 Tag"
+          }
+        },
+        "marketing": {
+          "fbp": {
+            "purpose": "Facebook Pixel Browser-Kennung",
+            "duration": "3 Monate"
+          },
+          "fbc": {
+            "purpose": "Facebook Pixel Klick-Kennung",
+            "duration": "3 Monate"
+          }
+        }
+      },
+      "expiration_note": "Ihre Einwilligungswahl wird für 12 Monate gespeichert. Nach diesem Zeitraum werden Sie erneut um Einwilligung gebeten.",
+      "withdrawal_note": "Sie können Ihre Cookie-Präferenzen jederzeit ändern, indem Sie auf die Schaltfläche 'Cookie-Einstellungen' in der Fußzeile dieser Website klicken."
+    },
+    "data_use": {
+      "title": "Wie wir Ihre Daten verwenden",
+      "items": {
+        "booking": "Verarbeitung und Verwaltung Ihrer Fotografie-Buchungen",
+        "communication": "Kommunikation mit Ihnen über unsere Dienstleistungen",
+        "improvement": "Verbesserung unserer Website und Servicequalität",
+        "marketing": "Senden von Werbematerialien (mit Ihrer Einwilligung)",
+        "legal": "Einhaltung gesetzlicher Verpflichtungen und Beilegung von Streitigkeiten"
+      }
+    },
+    "image_license": {
+      "title": "Bildlizenz & Nutzungsrechte",
+      "description": "Wenn Sie ein Fotoshooting bei Istanbul Portrait buchen, erhalten Sie bestimmte Rechte an Ihren Bildern.",
+      "rights": "Sie haben volle persönliche Nutzungsrechte. Sie können die Fotos drucken, in sozialen Medien teilen und für jeden nicht-kommerziellen Zweck verwenden.",
+      "usage": "Für kommerzielle Nutzungsanfragen kontaktieren Sie uns bitte direkt, um Lizenzoptionen zu besprechen."
+    },
+    "your_rights": {
+      "title": "Ihre Rechte (DSGVO)",
+      "items": {
+        "access": "Recht auf Auskunft über Ihre personenbezogenen Daten",
+        "rectification": "Recht auf Berichtigung unrichtiger Daten",
+        "erasure": "Recht auf Löschung Ihrer Daten",
+        "portability": "Recht auf Datenübertragbarkeit",
+        "objection": "Recht auf Widerspruch gegen die Datenverarbeitung"
+      }
+    },
+    "contact": {
+      "title": "Kontaktieren Sie uns",
+      "description": "Wenn Sie Fragen zu dieser Datenschutzerklärung oder Ihren persönlichen Daten haben:",
+      "email_label": "E-Mail:",
+      "updated_label": "Zuletzt aktualisiert:",
+      "updated_date": "Januar 2025"
+    }
+  },
+  "reviews": {
+    "title": "Was Kunden über ihren Istanbul-Fotografen sagen",
+    "subtitle": "Echte Bewertungen von zufriedenen Fotografie-Kunden, die uns für ihr Istanbul-Fotoshooting-Erlebnis gewählt haben",
+    "total_reviews": "Bewertungen",
+    "view_all": "Alle Bewertungen auf Google ansehen",
+    "loading": "Lade Bewertungen...",
+    "error": "Bewertungen können derzeit nicht geladen werden"
+  },
+  "pricing": {
+    "base_price": "Grundpreis",
+    "tax_rate": "MwSt ({rate}%)",
+    "tax_amount": "MwSt Betrag",
+    "total_price": "Gesamtpreis",
+    "tax_inclusive": "Inklusive Steuern",
+    "price_breakdown": "Preisaufschlüsselung",
+    "subtotal": "Zwischensumme",
+    "vat": "MwSt",
+    "final_total": "Endbetrag"
+  },
+  "notfound": {
+    "title": "Seite nicht gefunden",
+    "subtitle": "Hoppla! Diese Fotografie-Sitzung scheint zu fehlen",
+    "description": "Die Seite, die Sie suchen, existiert nicht. Vielleicht möchten Sie unsere Fotografie-Pakete erkunden oder zur Startseite zurückkehren, um die Schönheit der Istanbul-Fotografie zu entdecken.",
+    "homeButton": "Zurück zur Startseite",
+    "packagesButton": "Pakete ansehen",
+    "goBack": "Zurück"
+  },
+  "blog": {
+    "title": "Fotografie Blog",
+    "subtitle": "Tipps, Anleitungen und Geschichten aus Istanbul",
+    "read_more": "Weiterlesen",
+    "reading_time": "{minutes} Min. Lesezeit",
+    "published_on": "Veröffentlicht am {date}",
+    "by_author": "von {author}",
+    "categories": "Kategorien",
+    "tags": "Tags",
+    "related_posts": "Ähnliche Beiträge",
+    "recent_posts": "Neueste Beiträge",
+    "no_posts": "Keine Blogbeiträge gefunden",
+    "search": "Blog durchsuchen...",
+    "all_categories": "Alle Kategorien",
+    "featured": "Hervorgehoben",
+    "meta": {
+      "title": "Fotografie Blog | Istanbul Portrait Tipps & Anleitungen",
+      "description": "Entdecken Sie Istanbul Fotografie-Tipps, Ort-Guides und Geschichten hinter den Kulissen"
+    },
+    "author": {
+      "about_title": "Über den Autor",
+      "name": "Istanbul Fotograf",
+      "bio": "Professioneller Fotograf, spezialisiert auf Porträt-, Paar- und Lifestyle-Fotografie in Istanbul. Mit über 8 Jahren Erfahrung, fängt zeitlose Erinnerungen vor den ikonischsten Kulissen der Stadt ein.",
+      "follow": "Folgen Sie auf Instagram"
+    },
+    "summary": {
+      "title": "Wichtigste Erkenntnisse",
+      "ai_overview": "KI-Übersicht"
+    }
+  },
+  "locations": {
+    "title": "Istanbul Fotografie Orte",
+    "subtitle": "Entdecken Sie die fotogensten Orte in Istanbul für Ihr professionelles Fotoshooting",
+    "intro": "Entdecken Sie Istanbuls atemberaubendste Fotografie-Orte mit Ihrem professionellen Fotografen. Von historischen Wahrzeichen bis zu versteckten Dachterrassen bietet jeder Ort einzigartige Kulissen für unvergessliche Fotos.",
+    "viewPhotos": "Fotos ansehen",
+    "aboutLocation": "Über diesen Ort",
+    "photographyTips": "Fotografie-Tipps",
+    "gallery": "Fotogalerie",
+    "nearbyLocations": "Orte in der Nähe",
+    "bestTimeToVisit": "Beste Zeit für einen Besuch",
+    "locationInfo": "Ort-Informationen",
+    "viewOnMap": "Auf Google Maps ansehen →",
+    "bookPhotoshoot": "Fotoshooting hier buchen",
+    "bookPhotoshootDescription": "Halten Sie Ihre Erinnerungen an diesem atemberaubenden Ort mit einem professionellen Fotografen fest.",
+    "viewPackages": "Pakete ansehen",
+    "seo": {
+      "title": "Istanbul Fotografie Orte | Beste Fotospots in Istanbul",
+      "description": "Entdecken Sie die besten Fotografie-Orte in Istanbul. Vom Galataturm bis zu Bosporus-Dachterrassen finden Sie die perfekte Kulisse für Ihr professionelles Fotoshooting."
+    },
+    "tags": {
+      "historic": "Historisch",
+      "iconic": "Ikonisch",
+      "rooftop": "Dachterrasse",
+      "couple": "Paare",
+      "colorful": "Bunt",
+      "instagram": "Instagram-würdig",
+      "solo": "Solo",
+      "bosphorus": "Bosporus",
+      "mosque": "Moschee",
+      "bridge": "Brücke",
+      "romantic": "Romantisch",
+      "unesco": "UNESCO",
+      "architecture": "Architektur",
+      "panoramic": "Panorama",
+      "premium": "Premium",
+      "market": "Markt",
+      "culture": "Kulturell"
+    },
+    "bestTime": {
+      "sunset": "Sonnenuntergang",
+      "morning": "Morgen",
+      "early_morning": "Früher Morgen",
+      "sunrise": "Sonnenaufgang",
+      "golden_hour": "Goldene Stunde",
+      "afternoon": "Nachmittag"
+    },
+    "bestTimeDescription": {
+      "sunset": "Fangen Sie atemberaubendes goldenes Licht und dramatische Silhouetten ein",
+      "morning": "Weniger Menschenmengen und weiches natürliches Licht",
+      "early_morning": "Bestes Licht und minimale Touristen",
+      "sunrise": "Magische Atmosphäre mit warmen Farben",
+      "golden_hour": "Perfektes Licht für romantische Fotos",
+      "afternoon": "Großartig für Innenräume und überdachte Bereiche"
+    },
+    "tips": {
+      "golden_hour": {
+        "title": "Magie der Goldenen Stunde",
+        "description": "Kommen Sie 1 Stunde vor Sonnenuntergang an, um die besten Lichtverhältnisse zu haben"
+      },
+      "rooftop_view": {
+        "title": "Dachterrassen-Perspektive",
+        "description": "Fangen Sie Panoramablicke auf die Stadt mit der Skyline als Hintergrund ein"
+      },
+      "cobblestone_streets": {
+        "title": "Kopfsteinpflasterstraßen",
+        "description": "Nutzen Sie die charmanten Straßen für authentische Istanbul-Atmosphäre"
+      },
+      "colorful_houses": {
+        "title": "Bunte Häuser",
+        "description": "Die lebendigen Fassaden schaffen perfekte Instagram-würdige Hintergründe"
+      },
+      "narrow_streets": {
+        "title": "Enge Gassen",
+        "description": "Erkunden Sie versteckte Gassen für einzigartige und intime Aufnahmen"
+      },
+      "local_cafes": {
+        "title": "Lokale Cafés",
+        "description": "Halten Sie an traditionellen Cafés für Lifestyle-Fotografie an"
+      },
+      "mosque_bridge": {
+        "title": "Moschee & Brücke",
+        "description": "Rahmen Sie die Moschee mit der Bosporus-Brücke im Hintergrund ein"
+      },
+      "bosphorus_view": {
+        "title": "Bosporus-Blicke",
+        "description": "Fangen Sie die ikonische Wasserstraße von ihrer fotogensten Seite ein"
+      },
+      "street_food": {
+        "title": "Street Food Szene",
+        "description": "Beziehen Sie lokale Kumpir- und Waffelstände für Lifestyle-Aufnahmen ein"
+      },
+      "exterior_shots": {
+        "title": "Außenarchitektur",
+        "description": "Die byzantinische Architektur bietet atemberaubende Hintergründe"
+      },
+      "fountain_reflection": {
+        "title": "Brunnen-Reflexionen",
+        "description": "Nutzen Sie den Innenhofbrunnen für kreative Reflexionsaufnahmen"
+      },
+      "sultanahmet_square": {
+        "title": "Sultanahmet-Platz",
+        "description": "Großer offener Raum, perfekt für Ganzkörper-Modeaufnahmen"
+      },
+      "six_minarets": {
+        "title": "Sechs Minarette",
+        "description": "Fangen Sie die einzigartige Silhouette der einzigen Moschee mit sechs Minaretten ein"
+      },
+      "courtyard": {
+        "title": "Innenhof-Einstellung",
+        "description": "Der Innenhof bietet friedliche Fotomöglichkeiten"
+      },
+      "garden_view": {
+        "title": "Gartenblicke",
+        "description": "Schöne Gärten mit Moschee-Hintergrund"
+      },
+      "panoramic_view": {
+        "title": "Panoramablicke",
+        "description": "360-Grad-Blicke auf Istanbuls ikonische Skyline"
+      },
+      "flying_dress": {
+        "title": "Fliegendes Kleid",
+        "description": "Perfekt für dramatische Fotografie mit fließenden Kleidern"
+      },
+      "sunset_silhouette": {
+        "title": "Sonnenuntergangs-Silhouetten",
+        "description": "Erstellen Sie dramatische Silhouetten gegen den Sonnenuntergangshimmel"
+      },
+      "terrace_view": {
+        "title": "Terrassenblicke",
+        "description": "Atemberaubende Aussichten über das Goldene Horn"
+      },
+      "golden_horn": {
+        "title": "Goldenes Horn",
+        "description": "Fangen Sie die historische Wasserstraße von oben ein"
+      },
+      "ottoman_architecture": {
+        "title": "Osmanische Architektur",
+        "description": "Meisterwerk der osmanischen imperialen Architektur"
+      },
+      "colorful_lamps": {
+        "title": "Bunte Lampen",
+        "description": "Ikonische türkische Lampen schaffen magische Beleuchtung"
+      },
+      "narrow_alleys": {
+        "title": "Überdachte Gassen",
+        "description": "Historische überdachte Passagen mit einzigartiger Atmosphäre"
+      },
+      "local_vendors": {
+        "title": "Lokale Verkäufer",
+        "description": "Authentische Szenen mit traditionellen Handwerkern"
+      },
+      "art_nouveau": {
+        "title": "Art Nouveau Design",
+        "description": "Atemberaubende architektonische Details des frühen 20. Jahrhunderts"
+      },
+      "symmetry": {
+        "title": "Perfekte Symmetrie",
+        "description": "Die hexagonalen Treppen schaffen faszinierende geometrische Muster"
+      },
+      "spiral_view": {
+        "title": "Spiralblick",
+        "description": "Schauen Sie nach oben oder unten für dramatische Spiralperspektiven"
+      },
+      "golden_horn_view": {
+        "title": "Goldenes Horn Ausblick",
+        "description": "Atemberaubende Ausblicke auf die historische Wasserstraße und Moscheen"
+      },
+      "fishermen": {
+        "title": "Lokale Fischer",
+        "description": "Fangen Sie authentische Szenen der traditionellen Fischereikultur ein"
+      },
+      "mosque_skyline": {
+        "title": "Moschee-Skyline",
+        "description": "Mehrere historische Moscheen schaffen eine atemberaubende Silhouette"
+      }
+    },
+    "items": {
+      "galata-tower": {
+        "name": "Galataturm",
+        "shortDescription": "Mittelalterlicher Steinturm mit Panoramablick auf Istanbul und den Bosporus",
+        "description": "Der Galataturm ist eines der ikonischsten Wahrzeichen Istanbuls und bietet atemberaubende 360-Grad-Blicke auf die Stadt. 1348 von den Genuesen erbaut, ist dieser 67 Meter hohe mittelalterliche Steinturm zu einem Symbol Istanbuls geworden. Das umliegende Viertel Galata bietet charmante Kopfsteinpflasterstraßen, historische Gebäude und gemütliche Cafés, die perfekt für Lifestyle-Fotografie sind.",
+        "address": "Galata, Bereketzade, 34421 Beyoğlu/Istanbul",
+        "seoTitle": "Galataturm Fotografie | Istanbul Fotograf am Galata",
+        "seoDescription": "Professionelles Fotoshooting am Galataturm, Istanbuls ikonischem mittelalterlichen Wahrzeichen. Atemberaubende Panoramablicke und Kopfsteinpflasterstraßen für unvergessliche Fotos."
+      },
+      "balat": {
+        "name": "Balat",
+        "shortDescription": "Buntes historisches Viertel mit lebendigen Häusern und authentischem Istanbul-Charme",
+        "description": "Balat ist eines der ältesten und buntesten Viertel Istanbuls, bekannt für seine lebendigen bemalten Häuser, engen Gassen und authentische Atmosphäre. Dieser UNESCO-gelistete Bezirk bietet endlose Fotomöglichkeiten mit seinen regenbogenfarbenen Fassaden, Vintage-Läden und traditionellen Cafés. Der einzigartige Charakter des Viertels macht es perfekt für Instagram-würdige Aufnahmen.",
+        "address": "Balat, 34087 Fatih/Istanbul",
+        "seoTitle": "Balat Fotografie | Bunter Istanbul Fotoshooting Ort",
+        "seoDescription": "Fangen Sie atemberaubende Fotos in Balats bunten Straßen ein. Professionelle Fotografie in Istanbuls Instagram-würdigstem Viertel mit lebendigen Häusern."
+      },
+      "ortakoy": {
+        "name": "Ortaköy",
+        "shortDescription": "Charmante Bosporus-Uferpromenade mit ikonischen Moschee- und Brückenblicken",
+        "description": "Ortaköy ist ein malerisches Viertel am europäischen Ufer des Bosporus, berühmt für seine elegante Moschee und atemberaubende Blicke auf die Bosporus-Brücke. Der Uferbereich bietet perfekte Fotomöglichkeiten mit der ikonischen Moschee, eingerahmt von der Brücke. Die lebendige Atmosphäre mit Street-Food-Verkäufern und Cafés verleiht jedem Fotoshooting Charakter.",
+        "address": "Ortaköy, 34347 Beşiktaş/Istanbul",
+        "seoTitle": "Ortaköy Fotografie | Bosporus-Brücke Istanbul Fotoshooting",
+        "seoDescription": "Professionelle Fotografie in Ortaköy mit Blick auf die Bosporus-Brücke. Fangen Sie die ikonische Moschee und die Uferpromenade in Ihrem Istanbul-Fotoshooting ein."
+      },
+      "hagia-sophia": {
+        "name": "Hagia Sophia",
+        "shortDescription": "UNESCO-Weltkulturerbe byzantinisches Meisterwerk, Symbol von Istanbul",
+        "description": "Die Hagia Sophia ist eine der größten architektonischen Errungenschaften der Welt und Istanbuls berühmtestes Wahrzeichen. 537 n. Chr. als Kathedrale erbaut, zeigt dieses UNESCO-Weltkulturerbe atemberaubende byzantinische Architektur mit seiner massiven Kuppel und komplexen Mosaiken. Das Äußere bietet großartige Fotomöglichkeiten, besonders zur Goldenen Stunde, wenn die alten Mauern warm leuchten.",
+        "address": "Sultan Ahmet, Ayasofya Meydanı No:1, 34122 Fatih/Istanbul",
+        "seoTitle": "Hagia Sophia Fotografie | Istanbul UNESCO-Erbe Fotoshooting",
+        "seoDescription": "Professionelles Fotoshooting an der Hagia Sophia, Istanbuls UNESCO-Weltkulturerbe. Fangen Sie byzantinische Architektur und historische Pracht ein."
+      },
+      "blue-mosque": {
+        "name": "Blaue Moschee",
+        "shortDescription": "Prächtige osmanische Moschee mit sechs Minaretten und atemberaubender Architektur",
+        "description": "Die Sultan-Ahmed-Moschee, im Volksmund als Blaue Moschee bekannt, ist ein Meisterwerk der osmanischen Architektur, das zwischen 1609 und 1616 erbaut wurde. Berühmt für ihre sechs Minarette und blauen İznik-Fliesen, bietet die Moschee spektakuläre Fotomöglichkeiten. Der Innenhof und die umliegenden Gärten bieten wunderschöne Kulissen für Fotografie, besonders bei Sonnenaufgang, wenn das Licht weich ist und nur wenige Menschen unterwegs sind.",
+        "address": "Sultan Ahmet, Atmeydanı Cd. No:7, 34122 Fatih/Istanbul",
+        "seoTitle": "Blaue Moschee Fotografie | Sultan Ahmed Moschee Istanbul Fotoshooting",
+        "seoDescription": "Professionelle Fotografie an der Blauen Moschee, Istanbuls prächtigster osmanischer Moschee. Fangen Sie sechs Minarette und atemberaubende Architektur ein."
+      },
+      "bosphorus-rooftop": {
+        "name": "Bosporus Dachterrasse",
+        "shortDescription": "Exklusive Dachterrassen-Locations mit Panoramablick auf Bosporus und Stadt",
+        "description": "Erleben Sie Istanbul von oben an unseren exklusiven Dachterrassen-Fotolocations. Diese Premium-Locations bieten unvergleichliche 360-Grad-Blicke auf den Bosporus, den Galataturm und Istanbuls ikonische Skyline. Perfekt für Fotografie mit fliegenden Kleidern, Sonnenuntergangs-Sessions und romantische Paarshootings. Die dramatische Kulisse schafft Bilder in Magazinqualität.",
+        "address": "Verschiedene Dachterrassen-Standorte, Istanbul",
+        "seoTitle": "Dachterrasse Fotografie Istanbul | Bosporus-Blick Fotoshooting",
+        "seoDescription": "Exklusive Dachterrassen-Fotografie mit Panoramablick auf den Bosporus. Fliegende Kleider Sessions und Sonnenuntergangs-Shootings an Istanbuls Premium-Dacht Locations."
+      },
+      "suleymaniye": {
+        "name": "Süleymaniye-Moschee",
+        "shortDescription": "Imperiale osmanische Moschee mit atemberaubendem Terrassenblick auf das Goldene Horn",
+        "description": "Die Süleymaniye-Moschee, erbaut vom legendären Architekten Mimar Sinan für Sultan Süleyman den Prächtigen, gilt als das schönste Beispiel osmanischer imperialer Architektur. Der Moscheekomplex bietet atemberaubende Terrassenblicke über das Goldene Horn und bietet eine friedliche Atmosphäre für Fotografie. Die Gärten und Innenhöfe bieten mehrere einzigartige Fotoeinstellungen.",
+        "address": "Süleymaniye, Prof. Sıddık Sami Onar Cd. No:1, 34116 Fatih/Istanbul",
+        "seoTitle": "Süleymaniye-Moschee Fotografie | Goldenes Horn Blick Istanbul",
+        "seoDescription": "Professionelles Fotoshooting an der Süleymaniye-Moschee mit Blick auf das Goldene Horn. Osmanische imperiale Architektur und Panoramaterrassenfotos in Istanbul."
+      },
+      "camondo-stairs": {
+        "name": "Camondo-Treppe",
+        "shortDescription": "Elegante Art-Nouveau-Treppe, die Karaköy mit dem Galataturm verbindet",
+        "description": "Die Camondo-Treppe (Kamondo Merdivenleri) ist ein atemberaubendes Beispiel für Art-Nouveau-Architektur im Herzen von Istanbuls Karaköy-Viertel. In den frühen 1870er Jahren von der reichen Bankiersfamilie Camondo erbaut, verbinden diese eleganten hexagonalen Treppen das Bankenviertel mit dem Galata-Viertel. Das einzigartige geometrische Design und der historische Charakter machen sie zu einem der meistfotografierten versteckten Juwelen Istanbuls.",
+        "address": "Kemeraltı Caddesi, Karaköy, 34421 Beyoğlu/Istanbul",
+        "seoTitle": "Camondo-Treppe Fotografie | Istanbul Verstecktes Juwel Fotoshooting",
+        "seoDescription": "Professionelle Fotografie an der ikonischen Camondo-Treppe in Istanbul. Art-Nouveau-Architektur und atemberaubende geometrische Muster für einzigartige Fotos."
+      },
+      "galata-bridge": {
+        "name": "Galatabrücke",
+        "shortDescription": "Historische Brücke, die das Goldene Horn überspannt, mit atemberaubenden Moscheeblicken",
+        "description": "Die Galatabrücke (Galata Köprüsü) ist eines der ikonischsten Wahrzeichen Istanbuls und verbindet die historische Halbinsel mit dem modernen Beyoğlu-Viertel über das Goldene Horn. Die Brücke bietet spektakuläre Fotomöglichkeiten mit Blicken auf die Süleymaniye-, Eminönü- und Neue Moschee, die eine atemberaubende Skyline schaffen. Die traditionellen Fischer, die die Brücke säumen, verleihen jedem Fotoshooting authentischen Charakter.",
+        "address": "Galata-Brücke, Eminönü-Karaköy, Istanbul",
+        "seoTitle": "Galatabrücke Fotografie | Goldenes Horn Istanbul Fotoshooting",
+        "seoDescription": "Professionelle Fotografie an der Galatabrücke mit atemberaubenden Blicken auf das Goldene Horn. Fangen Sie Istanbuls ikonische Moschee-Skyline und authentische Atmosphäre ein."
+      }
+    }
+  },
+  "chat_widget": {
+    "header_title": "Emily",
+    "header_subtitle": "Online • Fotografie-Assistentin",
+    "welcome_title": "Hallo! 👋",
+    "welcome_message": "Ich bin Emily, hier, um Ihnen zu helfen, das perfekte Fotoshooting in Istanbul zu planen.",
+    "input_placeholder": "Nachricht an Emily...",
+    "whatsapp_fallback": "Wechseln Sie zu WhatsApp für dringende Unterstützung",
+    "redirecting": "Perfekt! Ich leite Sie jetzt zur Kassenseite weiter. Bitte füllen Sie dort Ihre Zahlungsdaten aus, um Ihren Platz zu sichern! 💳✨",
+    "connection_error": "Entschuldigung, ich habe Verbindungsprobleme. Bitte versuchen Sie es erneut oder nutzen Sie WhatsApp.",
+    "bot_avatar_alt": "Emily",
+    "checkout_nudge": "Hallo! Ich habe bemerkt, dass Sie beim letzten Schritt sind. Brauchen Sie Hilfe beim Abschluss Ihrer Buchung? 😊",
+    "role": "Fotografie-Assistentin",
+    "online": "Online"
+  },
+  "newsletter": {
+    "title": "Mach mit",
+    "description": "Abonnieren Sie unseren Newsletter für exklusive Fototipps, saisonale Angebote und Istanbul-Reiseführer.",
+    "name_placeholder": "Vollständiger Name",
+    "email_placeholder": "E-Mail-Adresse",
+    "button": "Abonnieren",
+    "subscribing": "Anmelden...",
+    "success_title": "Willkommen an Bord!",
+    "success_message": "Sie haben sich erfolgreich für unseren Newsletter angemeldet.",
+    "error_message": "Etwas ist schief gelaufen. Bitte versuchen Sie es erneut.",
+    "close": "Nein, danke"
+  },
+  "iosInstallPrompt": {
+    "title": "Benachrichtigungen erhalten & App installieren",
+    "description": "Fügen Sie diese Website zu Ihrem iPhone hinzu, um Benachrichtigungen zuzulassen und ein Vollbild-Erlebnis zu genießen.",
+    "step1": "Tippen Sie unten auf die Schaltfläche Teilen.",
+    "step2": "Scrollen Sie nach unten und wählen Sie 'Zum Home-Bildschirm'."
+  },
+  "about_highlights": {
+    "title": "Warum mich wählen",
+    "professional": {
+      "title": "Professionelle Qualität",
+      "description": "High-End-Ausrüstung und fachmännische Nachbearbeitung für jedes Foto."
+    },
+    "local": {
+      "title": "Lokale Expertise",
+      "description": "Tiefes Wissen über Istanbuls beste Orte und optimale Beleuchtungszeiten."
+    },
+    "personal": {
+      "title": "Persönliche Erfahrung",
+      "description": "Maßgeschneiderte Sitzungen, die auf Ihren einzigartigen Stil und Ihre Vorlieben zugeschnitten sind."
+    }
+  }
+}
