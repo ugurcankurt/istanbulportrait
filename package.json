@@ -112,5 +112,5 @@
     "tw-animate-css": "^1.3.7",
     "typescript": "^5"
   },
-  "packageManager": "pnpm@10.30.3+sha256.ff0a72140f6a6d66c0b284f6c9560aff605518e28c29aeac25fb262b74331588"
+  "packageManager": "pnpm@10.31.0+sha256.6f61ced1a27558d13cdf52008f2bb302a03638ff09dd236562a97f0ac59d37c3"
 }

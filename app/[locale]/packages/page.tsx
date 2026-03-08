@@ -78,24 +78,24 @@ export default async function PackagesPage({
       price: Number(offer.price),
       currency: offer.priceCurrency,
       duration:
-        offer.name === "Essential Package"
+        offer.name === "Classic Istanbul Portrait"
           ? "30 minutes"
-          : offer.name === "Premium Package"
+          : offer.name === "Istanbul Discovery Photoshoot"
             ? "1.5 hours"
             : "2.5 hours",
       included: offer.description.split(" with ")[1]?.split(" at ") || [],
       locations:
-        offer.name === "Essential Package"
+        offer.name === "Classic Istanbul Portrait"
           ? 1
-          : offer.name === "Premium Package"
+          : offer.name === "Istanbul Discovery Photoshoot"
             ? 2
             : 3,
       photos:
-        offer.name === "Essential Package"
+        offer.name === "Classic Istanbul Portrait"
           ? 15
-          : offer.name === "Premium Package"
+          : offer.name === "Istanbul Discovery Photoshoot"
             ? 40
-            : offer.name === "Luxury Package"
+            : offer.name === "Bosphorus Luxury Collection"
               ? 80
               : 20,
     }),

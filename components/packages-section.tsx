@@ -18,6 +18,7 @@ import { fbPixel } from "@/lib/facebook";
 import type { PackageId } from "@/lib/validations";
 import { packagePrices } from "@/lib/validations";
 import { calculateDiscountedPrice } from "@/lib/pricing";
+import { getAliasFromPackageId } from "@/lib/packages-data";
 
 export function PackagesSection() {
   const t = useTranslations("packages");
@@ -130,7 +131,7 @@ export function PackagesSection() {
                 <Link
                   href={{
                     pathname: "/packages/[slug]",
-                    params: { slug: pkg.id },
+                    params: { slug: getAliasFromPackageId(pkg.id as PackageId) },
                   }}
                 >
                   <Card

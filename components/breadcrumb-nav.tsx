@@ -19,6 +19,7 @@ import {
   generateBreadcrumbListSchema,
   JsonLd,
 } from "@/lib/structured-data";
+import { getPackageIdFromAlias } from "@/lib/packages-data";
 
 interface BreadcrumbNavProps {
   className?: string;
@@ -28,6 +29,7 @@ export function BreadcrumbNav({ className }: BreadcrumbNavProps) {
   const pathname = usePathname();
   const locale = useLocale();
   const t = useTranslations("breadcrumb");
+  const tPackages = useTranslations("packages");
 
   // Remove locale from pathname and decode URL-encoded characters
   let pathWithoutLocale = pathname.replace(/^\/[a-z]{2}/, "") || "/";
@@ -63,6 +65,18 @@ export function BreadcrumbNav({ className }: BreadcrumbNavProps) {
 
   // Helper function to get known translations
   const getKnownTranslation = (key: string): string | null => {
+    // Check if it's a package alias or slug
+    const packageId = getPackageIdFromAlias(key) || key;
+    const packageSlugs = ["essential", "premium", "luxury", "rooftop"];
+
+    if (packageSlugs.includes(packageId)) {
+      try {
+        return tPackages(`${packageId}.title` as any);
+      } catch (error) {
+        return null; // Let it fallback below
+      }
+    }
+
     const knownKeys = [
       "about",
       "packages",
@@ -70,6 +84,7 @@ export function BreadcrumbNav({ className }: BreadcrumbNavProps) {
       "checkout",
       "privacy",
       "locations",
+      "blog",
     ];
     if (knownKeys.includes(key)) {
       try {

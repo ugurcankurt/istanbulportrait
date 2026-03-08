@@ -52,7 +52,7 @@
     "sectionDescription": "Choose the perfect package for your Istanbul photoshoot experience",
     "per_person": "per person",
     "essential": {
-      "title": "Essential",
+      "title": "Classic Istanbul Portrait",
       "price": "€150",
       "duration": "30 Minutes",
       "photos": "15 Edited Photos",
@@ -66,7 +66,7 @@
       "intro": "Perfect for quick, professional portraits. Includes a 30-minute session at one iconic location with 15 beautifully edited photos. Ideal for solo travelers or couples wanting high-quality memories without a long commitment."
     },
     "premium": {
-      "title": "Premium",
+      "title": "Istanbul Discovery Photoshoot",
       "price": "€280",
       "duration": "1.5 Hours",
       "photos": "40 Edited Photos",
@@ -82,7 +82,7 @@
       "intro": "Our most popular choice for a complete Istanbul experience. Enjoy a 1.5-hour session at two distinct locations with 40 edited photos. Perfect for capturing diverse backdrops and moods."
     },
     "luxury": {
-      "title": "Luxury",
+      "title": "Bosphorus Luxury Collection",
       "price": "€450",
       "duration": "2.5 Hours",
       "photos": "80 Edited Photos",
@@ -98,7 +98,7 @@
       "intro": "The ultimate VIP photography experience. A comprehensive 2.5-hour tour across 3 premium locations with 80 edited photos, professional styling advice, and advanced retouching. Perfect for weddings, engagements, or those who want it all."
     },
     "rooftop": {
-      "title": "Rooftop Photoshoot",
+      "title": "Flying Dress Rooftop",
       "price": "€150",
       "duration": "Per Person",
       "photos": "20 Edited Photos",

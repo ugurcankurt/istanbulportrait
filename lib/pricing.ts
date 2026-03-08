@@ -221,10 +221,10 @@ export function formatPackagePricing(
  */
 function getPackageDisplayName(packageId: PackageId): string {
   const displayNames = {
-    essential: "Essential Package",
-    premium: "Premium Package",
-    luxury: "Luxury Package",
-    rooftop: "Rooftop Package",
+    essential: "Classic Istanbul Portrait",
+    premium: "Istanbul Discovery Photoshoot",
+    luxury: "Bosphorus Luxury Collection",
+    rooftop: "Flying Dress Rooftop",
   };
 
   return displayNames[packageId];

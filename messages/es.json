@@ -51,7 +51,7 @@
     "sectionDescription": "Elige el paquete perfecto para tu experiencia fotográfica en Estambul",
     "per_person": "por persona",
     "essential": {
-      "title": "Esencial",
+      "title": "Retrato Clásico de Estambul",
       "price": "€150",
       "duration": "30 Minutos",
       "photos": "15 Fotos Editadas",
@@ -65,7 +65,7 @@
       "intro": "Perfecto para retratos rápidos y profesionales. Incluye una sesión de 30 minutos en una ubicación icónica con 15 fotos bellamente editadas. Ideal para viajeros solos o parejas que desean recuerdos de alta calidad sin un compromiso largo."
     },
     "premium": {
-      "title": "Premium",
+      "title": "Sesión de Descubrimiento de Estambul",
       "price": "€280",
       "duration": "1.5 Horas",
       "photos": "40 Fotos Editadas",
@@ -81,7 +81,7 @@
       "intro": "Nuestra opción más popular para una experiencia completa en Estambul. Disfruta de una sesión de 1.5 horas en dos ubicaciones distintas con 40 fotos editadas. Perfecto para capturar diversos fondos y ambientes."
     },
     "luxury": {
-      "title": "Lujo",
+      "title": "Colección de Lujo del Bósforo",
       "price": "€450",
       "duration": "2.5 Horas",
       "photos": "80 Fotos Editadas",
@@ -97,7 +97,7 @@
       "intro": "La experiencia de fotografía VIP definitiva. Un recorrido completo de 2.5 horas por tres ubicaciones premium con 80 fotos editadas, asesoramiento de estilo profesional y retoque avanzado. Perfecto para bodas, compromisos o aquellos que lo quieren todo."
     },
     "rooftop": {
-      "title": "Sesión en Azotea",
+      "title": "Vestido Volador en Azotea",
       "price": "€150",
       "duration": "Por Persona",
       "photos": "20 Fotos Editadas",

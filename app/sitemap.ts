@@ -2,6 +2,7 @@ import type { MetadataRoute } from "next";
 import { routing } from "@/i18n/routing";
 import { getAllPublishedSlugsWithDates } from "@/lib/blog/blog-service";
 import { getAllLocationSlugs } from "@/lib/locations/location-data";
+import { PACKAGE_ALIASES } from "@/lib/packages-data";
 
 /**
  * SEO-Optimized Sitemap for Istanbul Portrait
@@ -161,6 +162,41 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         lastModified: staticPagesLastMod,
         changeFrequency: "monthly",
         priority: 0.75,
+        alternates: {
+          languages,
+        },
+      });
+    }
+  }
+
+  // Generate package detail pages sitemap entries
+  const packageSlugs = Object.values(PACKAGE_ALIASES);
+  for (const slug of packageSlugs) {
+    for (const locale of routing.locales) {
+      const packagesPathConfig = routing.pathnames["/packages"];
+      const packagesPath =
+        typeof packagesPathConfig === "object" && locale in packagesPathConfig
+          ? packagesPathConfig[locale as keyof typeof packagesPathConfig]
+          : "/packages";
+
+      // Build language alternates for packages with x-default
+      const languages: Record<string, string> = {};
+      routing.locales.forEach((l) => {
+        const pp =
+          typeof packagesPathConfig === "object" && l in packagesPathConfig
+            ? packagesPathConfig[l as keyof typeof packagesPathConfig]
+            : "/packages";
+        languages[l] = `${baseUrl}/${l}${pp}/${slug}`;
+      });
+
+      // Add x-default pointing to English version
+      languages["x-default"] = languages["en"];
+
+      sitemapEntries.push({
+        url: `${baseUrl}/${locale}${packagesPath}/${slug}`,
+        lastModified: staticPagesLastMod, // Usually these map 1:1 to static code configurations
+        changeFrequency: "monthly",
+        priority: 0.8,
         alternates: {
           languages,
         },

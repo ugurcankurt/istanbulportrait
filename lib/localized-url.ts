@@ -97,7 +97,7 @@ export function getPackageLocalizedPaths(
   // Get localized package path for each locale
   const getLocalizedPackagePath = (locale: string): string => {
     if (typeof packagePathConfig === "object" && locale in packagePathConfig) {
-      // Replace [slug] with actual slug
+      // Replace [slug] with actual slug alias
       return packagePathConfig[locale as keyof typeof packagePathConfig].replace(
         "[slug]",
         slug,

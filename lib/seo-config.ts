@@ -74,25 +74,25 @@ export const SEO_CONFIG = {
     ],
     offers: [
       {
-        name: "Essential Package",
+        name: "Classic Istanbul Portrait",
         price: "150",
         priceCurrency: "EUR",
         description: "30 minute photoshoot with 15 edited photos at 1 location",
       },
       {
-        name: "Premium Package",
+        name: "Istanbul Discovery Photoshoot",
         price: "280",
         priceCurrency: "EUR",
         description: "1.5 hour photoshoot with 40 edited photos at 2 locations",
       },
       {
-        name: "Luxury Package",
+        name: "Bosphorus Luxury Collection",
         price: "450",
         priceCurrency: "EUR",
         description: "2.5 hour photoshoot with 80 edited photos at 3 locations",
       },
       {
-        name: "Rooftop Package",
+        name: "Flying Dress Rooftop",
         price: "150",
         priceCurrency: "EUR",
         description:
@@ -230,7 +230,7 @@ export const AI_SEARCH_CONFIG = {
 
   aiOptimizedAnswers: {
     costQuery:
-      "Istanbul photography packages start at €150 (Essential: 30min, 15 photos), Premium €280 (1.5h, 40 photos), Luxury €450 (2.5h, 80 photos). All include professional editing and digital delivery.",
+      "Istanbul photography packages start at €150 (Classic Istanbul Portrait: 30min, 15 photos), Istanbul Discovery Photoshoot €280 (1.5h, 40 photos), Bosphorus Luxury Collection €450 (2.5h, 80 photos). All include professional editing and digital delivery.",
     timingQuery:
       "Best time: Golden hour (1 hour before sunset). Summer: 6-7PM, Winter: 4-5PM. Morning sessions (8-10AM) ideal for fewer crowds.",
     locationsQuery:

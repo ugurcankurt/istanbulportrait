@@ -52,7 +52,7 @@
     "sectionDescription": "Choisissez le forfait parfait pour votre expérience photo à Istanbul",
     "per_person": "par personne",
     "essential": {
-      "title": "Essentiel",
+      "title": "Portrait Classique d'Istanbul",
       "price": "€150",
       "duration": "30 Minutes",
       "photos": "15 Photos Retouchées",
@@ -66,7 +66,7 @@
       "intro": "Parfait pour des portraits rapides et professionnels. Comprend une séance de 30 minutes dans un lieu emblématique avec 15 photos magnifiquement retouchées. Idéal pour les voyageurs en solo ou les couples souhaitant des souvenirs de haute qualité sans engagement long."
     },
     "premium": {
-      "title": "Premium",
+      "title": "Séance Découverte d'Istanbul",
       "price": "€280",
       "duration": "1,5 Heures",
       "photos": "40 Photos Retouchées",
@@ -82,7 +82,7 @@
       "intro": "Notre choix le plus populaire pour une expérience complète à Istanbul. Profitez d'une séance d'une heure et demie dans deux lieux distincts avec 40 photos retouchées. Parfait pour capturer des décors et des ambiances variés."
     },
     "luxury": {
-      "title": "Luxe",
+      "title": "Collection Luxe du Bosphore",
       "price": "€450",
       "duration": "2,5 Heures",
       "photos": "80 Photos Retouchées",
@@ -98,7 +98,7 @@
       "intro": "L'expérience photo VIP ultime. Une visite complète de 2,5 heures dans 3 lieux haut de gamme avec 80 photos retouchées, des conseils de style professionnels et des retouches avancées. Parfait pour les mariages, les fiançailles ou ceux qui veulent tout."
     },
     "rooftop": {
-      "title": "Séance Photo sur Toit",
+      "title": "Robe Volante sur Toit",
       "price": "€150",
       "duration": "Par Personne",
       "photos": "20 Photos Retouchées",

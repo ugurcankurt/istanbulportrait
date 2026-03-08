@@ -5,6 +5,22 @@ export interface PackageData {
     gallery: string[];
 }
 
+export const PACKAGE_ALIASES: Record<PackageId, string> = {
+    essential: "classic-istanbul-portrait",
+    premium: "istanbul-discovery-photoshoot",
+    luxury: "bosphorus-luxury-collection",
+    rooftop: "flying-dress-rooftop",
+};
+
+export function getPackageIdFromAlias(alias: string): PackageId | null {
+    const entry = Object.entries(PACKAGE_ALIASES).find(([_, v]) => v === alias);
+    return entry ? (entry[0] as PackageId) : null;
+}
+
+export function getAliasFromPackageId(id: PackageId): string {
+    return PACKAGE_ALIASES[id];
+}
+
 export const PACKAGES_DATA: Record<PackageId, PackageData> = {
     essential: {
         id: "essential",

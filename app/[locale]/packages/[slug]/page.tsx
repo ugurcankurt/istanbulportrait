@@ -4,8 +4,8 @@ import { BreadcrumbNav } from "@/components/breadcrumb-nav";
 import { PackageDetails } from "@/components/package-details";
 import { SEO_CONFIG } from "@/lib/seo-config";
 import { getPackageLocalizedPaths, getPackageOpenGraphUrl } from "@/lib/localized-url";
-import { PackageId, packagePrices } from "@/lib/validations";
-import { PACKAGES_DATA } from "@/lib/packages-data";
+import { PackageId } from "@/lib/validations";
+import { PACKAGES_DATA, getPackageIdFromAlias, PACKAGE_ALIASES } from "@/lib/packages-data";
 
 interface PackagePageProps {
     params: Promise<{
@@ -14,13 +14,24 @@ interface PackagePageProps {
     }>;
 }
 
-// Map slugs to package IDs (assuming 1:1 mapping for now)
-// In a real i18n scenario, we might need a more complex mapping
+// Map slugs to package IDs (using alias dictionary)
 function getPackageIdFromSlug(slug: string): PackageId | null {
-    if (slug in packagePrices) {
+    // Attempt to map via alias first
+    const mappedId = getPackageIdFromAlias(slug);
+    if (mappedId) return mappedId;
+
+    // Fallback: If someone visits the old 'essential' ID directly, map it too
+    // so old links don't immediately break.
+    if (slug in PACKAGES_DATA) {
         return slug as PackageId;
     }
     return null;
+}
+
+export async function generateStaticParams() {
+    return Object.values(PACKAGE_ALIASES).map((slug) => ({
+        slug,
+    }));
 }
 
 export async function generateMetadata({ params }: PackagePageProps) {
