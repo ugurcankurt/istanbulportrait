@@ -6,6 +6,7 @@ import { SEO_CONFIG } from "@/lib/seo-config";
 import { getPackageLocalizedPaths, getPackageOpenGraphUrl } from "@/lib/localized-url";
 import { PackageId } from "@/lib/validations";
 import { PACKAGES_DATA, getPackageIdFromAlias, PACKAGE_ALIASES } from "@/lib/packages-data";
+import { routing } from "@/i18n/routing";
 
 interface PackagePageProps {
     params: Promise<{
@@ -29,9 +30,12 @@ function getPackageIdFromSlug(slug: string): PackageId | null {
 }
 
 export async function generateStaticParams() {
-    return Object.values(PACKAGE_ALIASES).map((slug) => ({
-        slug,
-    }));
+    return routing.locales.flatMap((locale) =>
+        Object.values(PACKAGE_ALIASES).map((slug) => ({
+            locale,
+            slug,
+        }))
+    );
 }
 
 export async function generateMetadata({ params }: PackagePageProps) {
