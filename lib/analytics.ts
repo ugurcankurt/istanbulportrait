@@ -139,7 +139,11 @@ export function trackViewItem(
   itemName: string,
   value?: number,
   currency: string = "EUR",
+  eventId?: string,
 ) {
+  // Generate event_id for Pixel/CAPI deduplication if not provided
+  const resolvedEventId = eventId || (typeof crypto !== "undefined" ? crypto.randomUUID() : undefined);
+
   if (typeof window !== "undefined" && window.gtag) {
     window.gtag("event", "view_item", {
       currency: currency,
@@ -157,13 +161,15 @@ export function trackViewItem(
   }
 
   // Facebook Pixel — ViewContent (client-side)
-  trackFacebookEvent("ViewContent", {
-    content_ids: [itemId],
-    content_type: "product",
-    content_name: itemName,
-    value: value,
-    currency: "EUR",
-  });
+  if (typeof window !== "undefined" && window.fbq) {
+    window.fbq("track", "ViewContent", {
+      content_ids: [itemId],
+      content_type: "product",
+      content_name: itemName,
+      value: value,
+      currency: "EUR",
+    }, resolvedEventId ? { eventID: resolvedEventId } : undefined);
+  }
 
   // Facebook CAPI — ViewContent (server-side, Safari-proof)
   if (typeof window !== "undefined") {
@@ -172,6 +178,7 @@ export function trackViewItem(
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         event_name: "ViewContent",
+        event_id: resolvedEventId,
         package_id: itemId,
         amount: value,
         custom_data: { content_name: itemName },
@@ -245,7 +252,11 @@ export function trackAddPaymentInfo(
   value: number,
   paymentType: string = "credit_card",
   currency: string = "EUR",
+  eventId?: string,
 ) {
+  // Generate event_id for Pixel/CAPI deduplication if not provided
+  const resolvedEventId = eventId || (typeof crypto !== "undefined" ? crypto.randomUUID() : undefined);
+
   if (typeof window !== "undefined" && window.gtag) {
     window.gtag("event", "add_payment_info", {
       currency: currency,
@@ -264,13 +275,15 @@ export function trackAddPaymentInfo(
   }
 
   // Facebook Pixel — AddPaymentInfo (client-side)
-  trackFacebookEvent("AddPaymentInfo", {
-    content_ids: [packageId],
-    content_name: packageName,
-    content_type: "product",
-    value: value,
-    currency: "EUR",
-  });
+  if (typeof window !== "undefined" && window.fbq) {
+    window.fbq("track", "AddPaymentInfo", {
+      content_ids: [packageId],
+      content_name: packageName,
+      content_type: "product",
+      value: value,
+      currency: "EUR",
+    }, resolvedEventId ? { eventID: resolvedEventId } : undefined);
+  }
 
   // Facebook CAPI — AddPaymentInfo (server-side, Safari-proof)
   if (typeof window !== "undefined") {
@@ -279,6 +292,7 @@ export function trackAddPaymentInfo(
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         event_name: "AddPaymentInfo",
+        event_id: resolvedEventId,
         package_id: packageId,
         amount: value,
         custom_data: { content_name: packageName, payment_type: paymentType },

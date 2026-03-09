@@ -495,12 +495,15 @@ export function BookingModal({
 
                                 // Schedule event — AEM Priority 8
                                 if (date && selectedPackage && typeof window !== "undefined") {
+                                  // Generate event_id for Pixel/CAPI deduplication
+                                  const scheduleEventId = typeof crypto !== "undefined" ? crypto.randomUUID() : undefined;
+
                                   if (window.fbq) {
                                     window.fbq("track", "Schedule", {
                                       content_ids: [selectedPackage],
                                       content_name: packageInfo?.name,
                                       content_category: "Photography Session",
-                                    });
+                                    }, scheduleEventId ? { eventID: scheduleEventId } : undefined);
                                   }
                                   if (window.gtag) {
                                     window.gtag("event", "schedule", {
@@ -514,6 +517,7 @@ export function BookingModal({
                                     headers: { "Content-Type": "application/json" },
                                     body: JSON.stringify({
                                       event_name: "Schedule",
+                                      event_id: scheduleEventId,
                                       package_id: selectedPackage,
                                       custom_data: {
                                         content_name: packageInfo?.name,

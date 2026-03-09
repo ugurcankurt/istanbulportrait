@@ -215,8 +215,8 @@ export function CheckoutForm() {
     // Get booking data once at the beginning - outside try block
     const bookingData = bookingForm.getValues();
 
-    // Track add payment info event
-    trackAddPaymentInfo(selectedPackage, packageInfo.name, packageInfo.price);
+    // Track add payment info event (with event_id for Pixel/CAPI deduplication)
+    trackAddPaymentInfo(selectedPackage, packageInfo.name, packageInfo.price, "credit_card", "EUR", eventId);
 
     // Calculate pricing to get deposit amount
     const pricing = getPackagePricing(

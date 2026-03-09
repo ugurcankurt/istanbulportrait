@@ -8,12 +8,15 @@ import { Link } from "@/i18n/routing";
 
 function trackContactEvent(method: string) {
   if (typeof window !== "undefined") {
+    // Generate unique event_id for Pixel/CAPI deduplication
+    const eventId = typeof crypto !== "undefined" ? crypto.randomUUID() : undefined;
+
     // Facebook Contact event — AEM Priority 7
     if (window.fbq) {
       window.fbq("track", "Contact", {
         content_name: method,
         content_category: "Photography Inquiry",
-      });
+      }, eventId ? { eventID: eventId } : undefined);
     }
     // GA4
     if (window.gtag) {
@@ -28,6 +31,7 @@ function trackContactEvent(method: string) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         event_name: "Contact",
+        event_id: eventId,
         package_id: "general",
         custom_data: { contact_method: method },
       }),

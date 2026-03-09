@@ -77,12 +77,15 @@ export function WhatsAppButton({
         className="relative group hover:scale-105 active:scale-95 transition-transform duration-200 block"
         aria-label={t("tooltip")}
         onClick={() => {
+          // Generate unique event_id for Pixel/CAPI deduplication
+          const eventId = typeof crypto !== "undefined" ? crypto.randomUUID() : undefined;
+
           // Facebook Contact event — AEM Priority 7
           if (typeof window !== "undefined" && window.fbq) {
             window.fbq("track", "Contact", {
               content_name: "WhatsApp",
               content_category: "Photography Inquiry",
-            });
+            }, eventId ? { eventID: eventId } : undefined);
           }
           // GA4 contact event
           if (typeof window !== "undefined" && window.gtag) {
@@ -97,6 +100,7 @@ export function WhatsAppButton({
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
               event_name: "Contact",
+              event_id: eventId,
               package_id: "general",
               custom_data: { contact_method: "WhatsApp" },
             }),

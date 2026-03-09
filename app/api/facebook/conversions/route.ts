@@ -30,6 +30,7 @@ const facebookConversionSchema = z.object({
     "Schedule",
     "PageView",
   ]),
+  event_id: z.string().optional(), // For deduplication with Pixel
   customer_email: z
     .string()
     .email({ message: "Invalid email format" })
@@ -92,6 +93,7 @@ export async function POST(request: NextRequest) {
 
     const {
       event_name,
+      event_id,
       customer_email,
       customer_phone,
       package_id,
@@ -121,6 +123,7 @@ export async function POST(request: NextRequest) {
     const conversionEvent: FacebookConversionEvent = {
       event_name,
       event_time: Math.floor(Date.now() / 1000),
+      event_id: event_id, // Top-level field — Meta uses this for Pixel deduplication
       action_source: "system_generated",
       user_data,
       custom_data: {
