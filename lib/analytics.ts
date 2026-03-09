@@ -167,7 +167,7 @@ export function trackViewItem(
   });
 }
 
-// Track begin checkout event (GA4 Enhanced Ecommerce)
+// Track begin checkout event (GA4 Enhanced Ecommerce + Facebook Pixel + CAPI)
 export function trackBeginCheckout(
   packageId: string,
   packageName: string,
@@ -191,7 +191,7 @@ export function trackBeginCheckout(
     });
   }
 
-  // Also track for Facebook
+  // Facebook Pixel — InitiateCheckout (client-side)
   trackFacebookEvent(
     "InitiateCheckout",
     {
@@ -203,9 +203,29 @@ export function trackBeginCheckout(
     },
     eventId,
   );
+
+  // Facebook CAPI — InitiateCheckout (server-side, Safari-proof)
+  // Fire-and-forget via our existing /api/facebook/conversions endpoint
+  if (typeof window !== "undefined") {
+    fetch("/api/facebook/conversions", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        event_name: "InitiateCheckout",
+        package_id: packageId,
+        amount: value,
+        custom_data: {
+          content_name: packageName,
+          event_id: eventId,
+        },
+      }),
+    }).catch(() => {
+      // Non-blocking — pixel already fired above
+    });
+  }
 }
 
-// Track add payment info event (GA4 Enhanced Ecommerce)
+// Track add payment info event (GA4 Enhanced Ecommerce + Facebook)
 export function trackAddPaymentInfo(
   packageId: string,
   packageName: string,
@@ -229,6 +249,15 @@ export function trackAddPaymentInfo(
       ],
     });
   }
+
+  // Facebook AddPaymentInfo — AEM Priority 4
+  trackFacebookEvent("AddPaymentInfo", {
+    content_ids: [packageId],
+    content_name: packageName,
+    content_type: "product",
+    value: value,
+    currency: "EUR",
+  });
 }
 
 // Track lead generation event (GA4)

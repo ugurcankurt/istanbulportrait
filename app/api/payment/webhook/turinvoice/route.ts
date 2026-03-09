@@ -128,6 +128,28 @@ export async function POST(request: NextRequest) {
             action: "email_send",
           });
         }
+
+        // Facebook CAPI — Purchase event (server-side, Safari-proof)
+        // eventId is not available from webhook, but CAPI still captures the conversion
+        try {
+          const booking = payment.bookings;
+          if (booking) {
+            const { trackFacebookPurchase } = await import("@/lib/facebook");
+            await trackFacebookPurchase(
+              booking.user_email,
+              booking.user_phone || "",
+              booking.package_id,
+              body.amount,
+              booking.id, // Transaction ID for deduplication
+            );
+          }
+        } catch (facebookError) {
+          // Non-blocking: don't fail webhook if CAPI fails
+          logError(facebookError, {
+            endpoint: "turinvoice-webhook",
+            action: "facebook_capi",
+          });
+        }
       }
 
       return NextResponse.json({
