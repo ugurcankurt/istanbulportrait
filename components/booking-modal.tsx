@@ -508,6 +508,19 @@ export function BookingModal({
                                       event_label: selectedPackage,
                                     });
                                   }
+                                  // CAPI — Schedule server-side
+                                  fetch("/api/facebook/conversions", {
+                                    method: "POST",
+                                    headers: { "Content-Type": "application/json" },
+                                    body: JSON.stringify({
+                                      event_name: "Schedule",
+                                      package_id: selectedPackage,
+                                      custom_data: {
+                                        content_name: packageInfo?.name,
+                                        scheduled_date: format(date, "yyyy-MM-dd"),
+                                      },
+                                    }),
+                                  }).catch(() => { });
                                 }
                               }}
                               disabled={(date) =>

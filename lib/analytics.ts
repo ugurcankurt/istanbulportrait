@@ -133,8 +133,7 @@ export function trackFacebookEvent(
   }
 }
 
-// Track view item events (GA4 Enhanced Ecommerce)
-// Note: We don't usually deduplicate ViewContent, but adding support is fine
+// Track view item events (GA4 Enhanced Ecommerce + Facebook Pixel + CAPI)
 export function trackViewItem(
   itemId: string,
   itemName: string,
@@ -157,7 +156,7 @@ export function trackViewItem(
     });
   }
 
-  // Also track for Facebook
+  // Facebook Pixel — ViewContent (client-side)
   trackFacebookEvent("ViewContent", {
     content_ids: [itemId],
     content_type: "product",
@@ -165,6 +164,20 @@ export function trackViewItem(
     value: value,
     currency: "EUR",
   });
+
+  // Facebook CAPI — ViewContent (server-side, Safari-proof)
+  if (typeof window !== "undefined") {
+    fetch("/api/facebook/conversions", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        event_name: "ViewContent",
+        package_id: itemId,
+        amount: value,
+        custom_data: { content_name: itemName },
+      }),
+    }).catch(() => { });
+  }
 }
 
 // Track begin checkout event (GA4 Enhanced Ecommerce + Facebook Pixel + CAPI)
@@ -250,7 +263,7 @@ export function trackAddPaymentInfo(
     });
   }
 
-  // Facebook AddPaymentInfo — AEM Priority 4
+  // Facebook Pixel — AddPaymentInfo (client-side)
   trackFacebookEvent("AddPaymentInfo", {
     content_ids: [packageId],
     content_name: packageName,
@@ -258,6 +271,20 @@ export function trackAddPaymentInfo(
     value: value,
     currency: "EUR",
   });
+
+  // Facebook CAPI — AddPaymentInfo (server-side, Safari-proof)
+  if (typeof window !== "undefined") {
+    fetch("/api/facebook/conversions", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        event_name: "AddPaymentInfo",
+        package_id: packageId,
+        amount: value,
+        custom_data: { content_name: packageName, payment_type: paymentType },
+      }),
+    }).catch(() => { });
+  }
 }
 
 // Track lead generation event (GA4)

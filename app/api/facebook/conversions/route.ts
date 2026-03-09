@@ -20,14 +20,23 @@ import {
 
 // Validation schema for Facebook conversion events
 const facebookConversionSchema = z.object({
-  event_name: z.enum(["Lead", "Purchase", "ViewContent", "InitiateCheckout"]),
+  event_name: z.enum([
+    "Lead",
+    "Purchase",
+    "ViewContent",
+    "InitiateCheckout",
+    "AddPaymentInfo",
+    "Contact",
+    "Schedule",
+    "PageView",
+  ]),
   customer_email: z
     .string()
     .email({ message: "Invalid email format" })
     .optional(),
   customer_phone: z.string().optional(),
   package_id: z.string().min(1),
-  amount: z.number().positive(),
+  amount: z.number().optional(),
   transaction_id: z.string().optional(),
   lead_id: z.number().optional(),
   custom_data: z.record(z.string(), z.unknown()).optional(),

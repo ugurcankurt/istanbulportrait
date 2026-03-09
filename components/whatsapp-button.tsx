@@ -91,6 +91,16 @@ export function WhatsAppButton({
               event_label: "WhatsApp",
             });
           }
+          // CAPI — Contact server-side
+          fetch("/api/facebook/conversions", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              event_name: "Contact",
+              package_id: "general",
+              custom_data: { contact_method: "WhatsApp" },
+            }),
+          }).catch(() => { });
         }}
       >
         <div
