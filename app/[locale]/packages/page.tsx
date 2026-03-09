@@ -53,8 +53,7 @@ export async function generateMetadata({
       "product:availability": "in stock",
       "product:price:currency": "EUR",
       "product:google_product_category":
-        "Arts & Entertainment > Hobbies & Creative Arts > Photography",
-      "og:type": "product.group",
+        "Arts & Entertainment > Hobbies & Creative Arts > Photography"
     },
   };
 }

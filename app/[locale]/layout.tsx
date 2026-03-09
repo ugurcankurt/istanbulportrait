@@ -85,7 +85,7 @@ export async function generateMetadata({
           width: 1200,
           height: 630,
           alt: `${t("title")} | Professional Photography Services in Istanbul`,
-          type: "image/jpeg",
+          type: "image/webp"
         },
       ],
       locale: locale,
@@ -210,10 +210,12 @@ export default async function LocaleLayout({
                 {/* Analytics - Google Tag loads on all pages (Advanced Consent Mode) */}
                 <GoogleTag />
 
+                {/* Facebook Pixel — loads on all pages, consent managed internally via fbq('consent','revoke/grant') */}
+                <FacebookPixel />
+
                 {/* Analytics - Only load after user consent */}
                 <ConsentGate consent="accepted_all">
                   <GoogleAnalytics />
-                  <FacebookPixel />
                   <YandexMetrica />
                   <MicrosoftClarity />
                 </ConsentGate>

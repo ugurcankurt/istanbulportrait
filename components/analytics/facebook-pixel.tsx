@@ -4,20 +4,31 @@ import { usePathname, useSearchParams } from "next/navigation";
 import Script from "next/script";
 import { useEffect } from "react";
 import { FACEBOOK_PIXEL_ID } from "@/lib/facebook";
-
-
+import { useConsent } from "@/contexts/consent-context";
 
 export function FacebookPixel() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const { consent } = useConsent();
 
+  // Sync Meta Consent Mode whenever user makes a choice
+  // Must run AFTER fbq is initialized (afterInteractive Script has loaded)
+  useEffect(() => {
+    if (typeof window === "undefined" || !window.fbq) return;
+
+    if (consent === "accepted_all") {
+      // Full consent — allow personalized ads & tracking
+      window.fbq("consent", "grant");
+    } else {
+      // 'essential_only' or null (not yet chosen) — revoke ad tracking
+      window.fbq("consent", "revoke");
+    }
+  }, [consent]);
+
+  // Track PageView on every route change
   // biome-ignore lint/correctness/useExhaustiveDependencies: Track page views on route change
   useEffect(() => {
     if (!FACEBOOK_PIXEL_ID) return;
-
-    // Track page views on route changes
-    // const url = pathname + searchParams.toString();
-
     if (typeof window !== "undefined" && window.fbq) {
       window.fbq("track", "PageView");
     }
@@ -31,6 +42,7 @@ export function FacebookPixel() {
   return (
     <>
       {/* Facebook Pixel Base Code */}
+      {/* Loads on all pages. Default consent is 'revoke' until user accepts. */}
       <Script
         id="facebook-pixel"
         strategy="afterInteractive"
@@ -45,59 +57,49 @@ export function FacebookPixel() {
             t.src=v;s=b.getElementsByTagName(e)[0];
             s.parentNode.insertBefore(t,s)}(window, document,'script',
             'https://connect.facebook.net/en_US/fbevents.js');
-            
+
+            // Meta Consent Mode — default: revoked (GDPR / ePrivacy compliant)
+            // fbq('consent', 'grant') will be called by React after user accepts
+            fbq('consent', 'revoke');
+
             fbq('init', '${FACEBOOK_PIXEL_ID}');
-            
+
             // CCPA Compliance: Limited Data Use (LDU) for California
-            // 0, 0 means no geographic restriction - applies to all users
-            // For California-only: use 1, 1000
             fbq('dataProcessingOptions', ['LDU'], 0, 0);
-            
+
             fbq('track', 'PageView');
-            
-            // Track Core Web Vitals for Facebook
+
+            // Core Web Vitals for Facebook ad quality scoring
             function trackWebVitals() {
               try {
-                // Import and track Core Web Vitals
-                import('web-vitals').then(({ getCLS, getFCP, getLCP, getTTFB, onINP }) => {
-                  // Track key metrics that affect Facebook ad performance
+                import('web-vitals').then(({ getCLS, getFCP, getLCP, onINP }) => {
                   getLCP((metric) => {
                     fbq('trackCustom', 'WebVital_LCP', {
                       value: Math.round(metric.value),
                       rating: metric.rating
                     });
                   });
-
                   getFCP((metric) => {
                     fbq('trackCustom', 'WebVital_FCP', {
                       value: Math.round(metric.value),
                       rating: metric.rating
                     });
                   });
-
-                  // Track INP (replaced FID in 2024 Core Web Vitals)
                   onINP((metric) => {
                     fbq('trackCustom', 'WebVital_INP', {
                       value: Math.round(metric.value),
                       rating: metric.rating
                     });
                   });
-
                   getCLS((metric) => {
                     fbq('trackCustom', 'WebVital_CLS', {
-                      value: Math.round(metric.value * 1000), // CLS is very small, multiply for better reporting
+                      value: Math.round(metric.value * 1000),
                       rating: metric.rating
                     });
                   });
-                }).catch(() => {
-                  // Web Vitals library failed to load
-                });
-              } catch (error) {
-                // Web Vitals tracking failed
-              }
+                }).catch(() => {});
+              } catch (_) {}
             }
-            
-            // Initialize Web Vitals tracking
             trackWebVitals();
           `,
         }}
@@ -118,11 +120,12 @@ export function FacebookPixel() {
   );
 }
 
-// Cookie Consent Integration
+/**
+ * @deprecated Consent is now managed automatically inside <FacebookPixel /> via useConsent().
+ * Kept for backwards compatibility — safe to call but no longer needed.
+ */
 export function FacebookPixelConsentUpdate(consentGranted: boolean) {
   if (typeof window === "undefined" || !window.fbq) return;
-
-  // Update Facebook Pixel consent
   if (consentGranted) {
     window.fbq("consent", "grant");
   } else {

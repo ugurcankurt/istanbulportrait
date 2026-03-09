@@ -79,6 +79,15 @@ export function ConsentProvider({ children }: { children: React.ReactNode }) {
             });
           }
         }
+
+        // Update Meta (Facebook) Pixel consent mode
+        if (typeof window !== "undefined" && window.fbq) {
+          if (choice === "accepted_all") {
+            window.fbq("consent", "grant");
+          } else {
+            window.fbq("consent", "revoke");
+          }
+        }
       } else {
         // Clear the cookie if consent is withdrawn
         await clearConsentCookie();
@@ -91,6 +100,11 @@ export function ConsentProvider({ children }: { children: React.ReactNode }) {
             ad_user_data: "denied",
             ad_personalization: "denied",
           });
+        }
+
+        // Revoke Meta Pixel consent
+        if (typeof window !== "undefined" && window.fbq) {
+          window.fbq("consent", "revoke");
         }
       }
     } catch (error) {
