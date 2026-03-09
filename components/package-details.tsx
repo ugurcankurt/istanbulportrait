@@ -1,7 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { BookingModal } from "@/components/booking-modal";
 import { PackageGallery } from "@/components/package-gallery";
 import { Button } from "@/components/ui/button";
@@ -11,6 +11,7 @@ import { Check, Clock, Image as ImageIcon, MapPin, Star } from "lucide-react";
 import { PackageId, packagePrices } from "@/lib/validations";
 import { calculateDiscountedPrice } from "@/lib/pricing";
 import { PACKAGES_DATA } from "@/lib/packages-data";
+import { trackViewItem } from "@/lib/analytics";
 
 interface PackageDetailsProps {
   packageId: PackageId;
@@ -32,6 +33,12 @@ export function PackageDetails({ packageId }: PackageDetailsProps) {
 
   const features = t.raw(`${packageId}.features`) as string[];
   const packageName = t(`${packageId}.title`);
+
+  // ViewContent — AEM Priority 5: fire when user views package detail
+  // biome-ignore lint/correctness/useExhaustiveDependencies: fire once on mount
+  useEffect(() => {
+    trackViewItem(packageId, packageName, pricing.isDiscounted ? pricing.price : basePrice);
+  }, [packageId]);
 
   return (
     <div className="container mx-auto px-4 py-6 lg:py-8">

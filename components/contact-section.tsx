@@ -6,6 +6,25 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Link } from "@/i18n/routing";
 
+function trackContactEvent(method: string) {
+  if (typeof window !== "undefined") {
+    // Facebook Contact event — AEM Priority 7
+    if (window.fbq) {
+      window.fbq("track", "Contact", {
+        content_name: method,
+        content_category: "Photography Inquiry",
+      });
+    }
+    // GA4
+    if (window.gtag) {
+      window.gtag("event", "contact", {
+        event_category: "Engagement",
+        event_label: method,
+      });
+    }
+  }
+}
+
 export function ContactSection() {
   const t = useTranslations("contact");
   const tui = useTranslations("ui");
@@ -155,6 +174,7 @@ export function ContactSection() {
                       <a
                         href={`mailto:${t("info.email")}`}
                         className="text-muted-foreground hover:text-primary transition-colors text-xs sm:text-sm break-all"
+                        onClick={() => trackContactEvent("Email")}
                       >
                         {t("info.email")}
                       </a>
@@ -170,6 +190,7 @@ export function ContactSection() {
                       <a
                         href={`tel:${t("info.phone")}`}
                         className="text-muted-foreground hover:text-primary transition-colors text-xs sm:text-sm phone-number"
+                        onClick={() => trackContactEvent("Phone")}
                       >
                         {t("info.phone")}
                       </a>

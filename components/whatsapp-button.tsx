@@ -76,6 +76,22 @@ export function WhatsAppButton({
         rel="noopener noreferrer"
         className="relative group hover:scale-105 active:scale-95 transition-transform duration-200 block"
         aria-label={t("tooltip")}
+        onClick={() => {
+          // Facebook Contact event — AEM Priority 7
+          if (typeof window !== "undefined" && window.fbq) {
+            window.fbq("track", "Contact", {
+              content_name: "WhatsApp",
+              content_category: "Photography Inquiry",
+            });
+          }
+          // GA4 contact event
+          if (typeof window !== "undefined" && window.gtag) {
+            window.gtag("event", "contact", {
+              event_category: "Engagement",
+              event_label: "WhatsApp",
+            });
+          }
+        }}
       >
         <div
           className={cn(

@@ -492,6 +492,23 @@ export function BookingModal({
                                   : "";
                                 dateField.onChange(dateString);
                                 setShowTimeSelection(!!date);
+
+                                // Schedule event — AEM Priority 8
+                                if (date && selectedPackage && typeof window !== "undefined") {
+                                  if (window.fbq) {
+                                    window.fbq("track", "Schedule", {
+                                      content_ids: [selectedPackage],
+                                      content_name: packageInfo?.name,
+                                      content_category: "Photography Session",
+                                    });
+                                  }
+                                  if (window.gtag) {
+                                    window.gtag("event", "schedule", {
+                                      event_category: "Booking",
+                                      event_label: selectedPackage,
+                                    });
+                                  }
+                                }
                               }}
                               disabled={(date) =>
                                 date < new Date() ||
@@ -689,9 +706,9 @@ export function BookingModal({
           >
             {t("buttons.cancel")}
           </Button>
-          <Button 
-            type="submit" 
-            className="h-12 px-8" 
+          <Button
+            type="submit"
+            className="h-12 px-8"
             onClick={handleSubmit}
             disabled={isNavigating || form.formState.isSubmitting}
           >
