@@ -285,16 +285,18 @@ export function CheckoutForm() {
         }
 
         // Track successful payment conversion with Enhanced Ecommerce
+        // Use bookingResult.booking.totalAmount — the actual discounted total, not base price
+        const actualTotal = bookingResult.booking.totalAmount;
         trackPaymentEvent(
           selectedPackage,
-          packagePrices[selectedPackage],
+          actualTotal,
           "success",
         );
         trackPurchase(
           bookingResult.booking.id,
           selectedPackage,
           packageInfo.name,
-          packagePrices[selectedPackage],
+          actualTotal,
           "EUR",
           undefined,
           eventId,
@@ -303,7 +305,7 @@ export function CheckoutForm() {
         // Track Facebook Purchase
         fbPixel.trackPurchase(
           selectedPackage,
-          packagePrices[selectedPackage],
+          actualTotal,
           bookingResult.booking.id,
           eventId,
         );
@@ -313,7 +315,7 @@ export function CheckoutForm() {
             email: bookingData.customerEmail,
             phone: bookingData.customerPhone,
             packageId: selectedPackage,
-            amount: packagePrices[selectedPackage],
+            amount: actualTotal,
             transactionId: bookingResult.booking.id,
           },
           eventId,
@@ -323,7 +325,7 @@ export function CheckoutForm() {
         trackYandexPurchase(
           bookingResult.booking.id,
           selectedPackage,
-          packagePrices[selectedPackage],
+          actualTotal,
         );
 
         // Trigger Chatbot Success Message
@@ -493,16 +495,18 @@ export function CheckoutForm() {
       }
 
       // Track successful payment
+      // Use bookingResult.booking.totalAmount — the actual discounted total, not base price
+      const actualTotal = bookingResult.booking.totalAmount;
       trackPaymentEvent(
         selectedPackage,
-        packagePrices[selectedPackage],
+        actualTotal,
         "success",
       );
       trackPurchase(
         bookingResult.booking.id,
         selectedPackage,
         packageInfo.name,
-        packagePrices[selectedPackage],
+        actualTotal,
         "EUR",
         undefined,
         eventId,
@@ -510,7 +514,7 @@ export function CheckoutForm() {
 
       fbPixel.trackPurchase(
         selectedPackage,
-        packagePrices[selectedPackage],
+        actualTotal,
         bookingResult.booking.id,
         eventId,
       );
@@ -519,7 +523,7 @@ export function CheckoutForm() {
       trackYandexPurchase(
         bookingResult.booking.id,
         selectedPackage,
-        packagePrices[selectedPackage],
+        actualTotal,
       );
     } catch (error) {
       console.error("Booking creation error:", error);
