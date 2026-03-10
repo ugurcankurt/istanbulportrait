@@ -131,21 +131,27 @@ async function handleSync(request: NextRequest) {
         // ── 3. Send in batches of 50 ─────────────────────────────────────────────
         let sentCount = 0;
         let failedCount = 0;
-        const results: { batch: number; success: boolean; count: number }[] = [];
+        const results: { batch: number; success: boolean; count: number; error?: string }[] = [];
 
         for (let i = 0; i < events.length; i += BATCH_SIZE) {
             const batch = events.slice(i, i + BATCH_SIZE);
             const batchNumber = Math.floor(i / BATCH_SIZE) + 1;
 
-            const success = await sendToFacebookConversionsAPI(batch);
+            const result = await sendToFacebookConversionsAPI(batch);
+            const batchOk = result === true;
 
-            if (success) {
+            if (batchOk) {
                 sentCount += batch.length;
             } else {
                 failedCount += batch.length;
             }
 
-            results.push({ batch: batchNumber, success, count: batch.length });
+            results.push({
+                batch: batchNumber,
+                success: batchOk,
+                count: batch.length,
+                error: batchOk ? undefined : String(result),
+            });
 
             // Small delay between batches to avoid rate limiting
             if (i + BATCH_SIZE < events.length) {
@@ -154,6 +160,7 @@ async function handleSync(request: NextRequest) {
         }
 
         // ── 4. Return results ─────────────────────────────────────────────────────
+        const firstError = results.find((r) => r.error)?.error;
         return NextResponse.json({
             success: failedCount === 0,
             message: `CRM sync complete: ${sentCount} events sent, ${failedCount} failed`,
@@ -162,6 +169,7 @@ async function handleSync(request: NextRequest) {
             failed: failedCount,
             batches: results,
             action_source: "crm",
+            ...(firstError && { error_detail: firstError }),
         });
     } catch (error) {
         logError(error instanceof Error ? error : new Error("Unknown error"), {

@@ -65,14 +65,14 @@ export interface FacebookConversionEvent {
 }
 
 // Send event to Facebook Conversions API
+// Returns true on success, or error string on failure
 export async function sendToFacebookConversionsAPI(
   events: FacebookConversionEvent[],
-): Promise<boolean> {
+): Promise<boolean | string> {
   if (!FACEBOOK_ACCESS_TOKEN || !FACEBOOK_DATASET_ID) {
-    console.error(
-      "Facebook Conversions API: Missing access token or dataset ID",
-    );
-    return false;
+    const msg = "Facebook Conversions API: Missing FACEBOOK_ACCESS_TOKEN or FACEBOOK_DATASET_ID env vars";
+    console.error(msg);
+    return msg;
   }
 
   try {
@@ -93,14 +93,16 @@ export async function sendToFacebookConversionsAPI(
     const result = await response.json();
 
     if (!response.ok) {
-      console.error("Facebook Conversions API Error:", result);
-      return false;
+      const errMsg = result?.error?.message || JSON.stringify(result);
+      console.error("Facebook Conversions API Error:", errMsg);
+      return errMsg; // Return the actual FB error message
     }
 
     return true;
   } catch (error) {
-    console.error("Facebook Conversions API Network Error:", error);
-    return false;
+    const errMsg = error instanceof Error ? error.message : "Network error";
+    console.error("Facebook Conversions API Network Error:", errMsg);
+    return errMsg;
   }
 }
 
