@@ -304,3 +304,56 @@ export const trackFacebookPurchase = async (
 
   return { success };
 };
+
+/**
+ * Tracks a Meta CRM Lead event — fires automatically on every confirmed booking.
+ *
+ * Per Meta's CRM integration spec:
+ * - action_source: "system_generated"
+ * - custom_data.event_source: "crm"
+ * - custom_data.lead_event_source: CRM name
+ * - user_data.lead_id: 15-17 digit stable ID
+ *
+ * Non-blocking: always resolves, never throws.
+ */
+export const trackMetaCRMLeadEvent = async (
+  customerEmail: string,
+  customerPhone: string,
+  bookingId: string,
+  eventId?: string,
+): Promise<void> => {
+  try {
+    // Derive a stable 15-digit lead_id from bookingId
+    const leadId =
+      (Math.abs(
+        bookingId
+          .split("")
+          .reduce((acc, ch) => acc + ch.charCodeAt(0), 100000000000000),
+      ) %
+        900000000000000) +
+      100000000000000;
+
+    const cleanId = bookingId.replace(/[^a-zA-Z0-9_-]/g, "_");
+
+    const event: FacebookConversionEvent = {
+      event_name: "Lead",
+      event_time: Math.floor(Date.now() / 1000),
+      event_id: eventId || `crm_auto_${cleanId}_${Date.now()}`,
+      action_source: "system_generated",
+      user_data: {
+        em: customerEmail ? [hashCustomerData(customerEmail)] : [],
+        ph: customerPhone ? [hashPhoneNumber(customerPhone)] : [],
+        lead_id: leadId,
+      },
+      custom_data: {
+        event_source: "crm",
+        lead_event_source: "Istanbul Portrait CRM",
+      },
+    };
+
+    await sendToFacebookConversionsAPI([event]);
+  } catch (err) {
+    // Non-blocking: log error but never throw
+    console.error("[Meta CRM] trackMetaCRMLeadEvent failed:", err);
+  }
+};

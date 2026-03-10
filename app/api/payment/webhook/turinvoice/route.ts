@@ -150,6 +150,24 @@ export async function POST(request: NextRequest) {
             action: "facebook_capi",
           });
         }
+
+        // ── Meta CRM Lead Event (auto-fires on every confirmed booking) ──
+        try {
+          const booking = payment.bookings;
+          if (booking) {
+            const { trackMetaCRMLeadEvent } = await import("@/lib/facebook");
+            await trackMetaCRMLeadEvent(
+              booking.user_email,
+              booking.user_phone || "",
+              booking.id,
+            );
+          }
+        } catch (crmError) {
+          logError(crmError, {
+            endpoint: "turinvoice-webhook",
+            action: "meta_crm_lead",
+          });
+        }
       }
 
       return NextResponse.json({

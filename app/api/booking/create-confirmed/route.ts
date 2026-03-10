@@ -268,6 +268,20 @@ export async function POST(request: NextRequest) {
             console.error("Facebook CAPI Error:", facebookError);
             // Non-blocking error
           }
+
+          // ── Meta CRM Lead Event (auto-fires on every confirmed booking) ──
+          try {
+            const { trackMetaCRMLeadEvent } = await import("@/lib/facebook");
+            await trackMetaCRMLeadEvent(
+              customerEmail,
+              customerPhone,
+              booking.id,
+              body.eventId ? `crm_${body.eventId}` : undefined,
+            );
+          } catch (crmError) {
+            console.error("Meta CRM Lead Event Error:", crmError);
+            // Non-blocking error
+          }
         }
       } catch (emailError) {
         console.error("❌ Failed to send confirmation email:", emailError);
