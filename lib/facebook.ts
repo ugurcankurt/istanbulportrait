@@ -44,7 +44,7 @@ export interface FacebookConversionEvent {
   event_name: string;
   event_time: number;
   event_id?: string; // Critical for deduplication
-  action_source: "system_generated" | "website" | "crm";
+  action_source: "system_generated" | "website";
   user_data: {
     em?: string[]; // hashed email
     ph?: string[]; // hashed phone
@@ -227,7 +227,7 @@ export const trackFacebookLead = async (
     event_name: "Lead",
     event_time: Math.floor(Date.now() / 1000),
     event_id: eventId,
-    action_source: "crm", // CRM-originated event — Meta requires this for booking system events
+    action_source: "system_generated",
     user_data: {
       em: customerEmail ? [hashCustomerData(customerEmail)] : [],
       ph: customerPhone ? [hashPhoneNumber(customerPhone)] : [],
@@ -273,7 +273,7 @@ export const trackFacebookPurchase = async (
     event_name: "Purchase",
     event_time: Math.floor(Date.now() / 1000),
     event_id: eventId,
-    action_source: "crm", // CRM-originated event — Meta requires this for booking system events
+    action_source: "system_generated",
     user_data: {
       em: customerEmail ? [hashCustomerData(customerEmail)] : [],
       ph: customerPhone ? [hashPhoneNumber(customerPhone)] : [],

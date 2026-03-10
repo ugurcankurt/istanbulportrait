@@ -124,7 +124,7 @@ export async function POST(request: NextRequest) {
       event_name,
       event_time: Math.floor(Date.now() / 1000),
       event_id: event_id, // Top-level field — Meta uses this for Pixel deduplication
-      action_source: "crm", // CRM-originated event (booking system)
+      action_source: "system_generated",
       user_data,
       custom_data: {
         event_source: "crm",

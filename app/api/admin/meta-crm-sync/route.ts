@@ -95,7 +95,7 @@ async function handleSync(request: NextRequest) {
                 total: bookings.length,
                 preview: (bookings as BookingRecord[]).slice(0, 3).map((b) => ({
                     event_name: "Purchase",
-                    action_source: "crm",
+                    action_source: "system_generated",
                     booking_id: b.id,
                     package_id: b.package_id,
                     amount: b.total_amount,
@@ -112,7 +112,7 @@ async function handleSync(request: NextRequest) {
             // Use original booking time (not now) — tells Meta when purchase happened
             event_time: Math.floor(new Date(booking.created_at).getTime() / 1000),
             event_id: `crm-sync-${booking.id}`, // Stable deduplication ID
-            action_source: "crm",
+            action_source: "system_generated",
             user_data: {
                 em: booking.user_email ? [hashCustomerData(booking.user_email)] : [],
                 ph: booking.user_phone ? [hashPhoneNumber(booking.user_phone)] : [],
@@ -168,7 +168,7 @@ async function handleSync(request: NextRequest) {
             sent: sentCount,
             failed: failedCount,
             batches: results,
-            action_source: "crm",
+            action_source: "system_generated",
             ...(firstError && { error_detail: firstError }),
         });
     } catch (error) {
