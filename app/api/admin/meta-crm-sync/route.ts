@@ -118,13 +118,12 @@ async function handleSync(request: NextRequest) {
                 ph: booking.user_phone ? [hashPhoneNumber(booking.user_phone)] : [],
             },
             custom_data: {
-                event_source: "crm",
-                lead_event_source: "Istanbul Portrait CRM",
+                // Only standard Meta CAPI fields for Purchase
                 content_ids: [booking.package_id],
-                content_type: "photography_package",
+                content_type: "product",          // Must be "product" or "product_group"
                 value: booking.total_amount,
                 currency: "EUR",
-                transaction_id: booking.id, // Booking UUID as transaction ID
+                transaction_id: booking.id,        // order_id alias
             },
         }));
 
