@@ -282,6 +282,21 @@ export async function POST(request: NextRequest) {
             console.error("Meta CRM Lead Event Error:", crmError);
             // Non-blocking error
           }
+
+          // ── GA4 Measurement Protocol (server-side, 100% reliable) ──
+          try {
+            const { trackGA4ServerPurchase, PACKAGE_DISPLAY_NAMES } = await import("@/lib/ga4-server");
+            await trackGA4ServerPurchase(
+              booking.id,
+              packageId,
+              PACKAGE_DISPLAY_NAMES[packageId] || packageId,
+              totalAmount,
+              "EUR",
+            );
+          } catch (ga4Error) {
+            console.error("GA4 Measurement Protocol Error:", ga4Error);
+            // Non-blocking error
+          }
         }
       } catch (emailError) {
         console.error("❌ Failed to send confirmation email:", emailError);

@@ -168,6 +168,26 @@ export async function POST(request: NextRequest) {
             action: "meta_crm_lead",
           });
         }
+
+        // ── GA4 Measurement Protocol (server-side, 100% reliable) ──
+        try {
+          const booking = payment.bookings;
+          if (booking) {
+            const { trackGA4ServerPurchase, PACKAGE_DISPLAY_NAMES } = await import("@/lib/ga4-server");
+            await trackGA4ServerPurchase(
+              booking.id,
+              booking.package_id,
+              PACKAGE_DISPLAY_NAMES[booking.package_id] || booking.package_id,
+              booking.total_amount,
+              "EUR",
+            );
+          }
+        } catch (ga4Error) {
+          logError(ga4Error, {
+            endpoint: "turinvoice-webhook",
+            action: "ga4_measurement_protocol",
+          });
+        }
       }
 
       return NextResponse.json({
