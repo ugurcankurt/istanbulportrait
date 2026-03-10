@@ -93,9 +93,10 @@ export async function sendToFacebookConversionsAPI(
     const result = await response.json();
 
     if (!response.ok) {
-      const errMsg = result?.error?.message || JSON.stringify(result);
-      console.error("Facebook Conversions API Error:", errMsg);
-      return errMsg; // Return the actual FB error message
+      // Return full error object for debugging
+      const errDetail = JSON.stringify(result?.error || result);
+      console.error("Facebook Conversions API Error:", errDetail);
+      return errDetail;
     }
 
     return true;

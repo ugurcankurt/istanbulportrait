@@ -107,25 +107,32 @@ async function handleSync(request: NextRequest) {
         }
 
         // ── 2. Build CRM Purchase events ─────────────────────────────────────────
-        const events: FacebookConversionEvent[] = (bookings as BookingRecord[]).map((booking) => ({
-            event_name: "Purchase",
-            // Use original booking time (not now) — tells Meta when purchase happened
-            event_time: Math.floor(new Date(booking.created_at).getTime() / 1000),
-            event_id: `crm-sync-${booking.id}`, // Stable deduplication ID
-            action_source: "system_generated",
-            user_data: {
-                em: booking.user_email ? [hashCustomerData(booking.user_email)] : [],
-                ph: booking.user_phone ? [hashPhoneNumber(booking.user_phone)] : [],
-            },
-            custom_data: {
-                // Only standard Meta CAPI fields for Purchase
-                content_ids: [booking.package_id],
-                content_type: "product",          // Must be "product" or "product_group"
-                value: booking.total_amount,
-                currency: "EUR",
-                transaction_id: booking.id,        // order_id alias
-            },
-        }));
+        const sevenDaysAgo = Math.floor(Date.now() / 1000) - 7 * 24 * 60 * 60;
+        const events: FacebookConversionEvent[] = (bookings as BookingRecord[]).map((booking) => {
+            // Sanitize booking ID — remove non-alphanumeric chars for Meta compatibility
+            const cleanId = booking.id.replace(/[^a-zA-Z0-9_-]/g, "_");
+            // Meta only accepts events within 7 days; clamp older events to 7 days ago
+            const rawTime = Math.floor(new Date(booking.created_at).getTime() / 1000);
+            const eventTime = rawTime < sevenDaysAgo ? sevenDaysAgo : rawTime;
+
+            return {
+                event_name: "Purchase",
+                event_time: eventTime,
+                event_id: `crmv2_${cleanId}`,
+                action_source: "system_generated",
+                user_data: {
+                    em: booking.user_email ? [hashCustomerData(booking.user_email)] : [],
+                    ph: booking.user_phone ? [hashPhoneNumber(booking.user_phone)] : [],
+                },
+                custom_data: {
+                    content_ids: [booking.package_id],
+                    content_type: "product",
+                    value: booking.total_amount,
+                    currency: "EUR",
+                    transaction_id: cleanId,
+                },
+            };
+        });
 
         // ── 3. Send in batches of 50 ─────────────────────────────────────────────
         let sentCount = 0;
