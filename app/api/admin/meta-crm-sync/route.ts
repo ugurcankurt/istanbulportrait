@@ -106,30 +106,36 @@ async function handleSync(request: NextRequest) {
             });
         }
 
-        // ── 2. Build CRM Purchase events ─────────────────────────────────────────
+        // ── 2. Build CRM Lead events per Meta spec ───────────────────────────────
+        // Ref: https://developers.facebook.com/docs/marketing-api/conversions-api/crm-events
+        // event_name MUST be "Lead" for CRM integration
+        // event_source + lead_event_source MUST be in custom_data
+        // lead_id (15-17 digit number) MUST be in user_data
         const sevenDaysAgo = Math.floor(Date.now() / 1000) - 7 * 24 * 60 * 60;
+
         const events: FacebookConversionEvent[] = (bookings as BookingRecord[]).map((booking) => {
-            // Sanitize booking ID — remove non-alphanumeric chars for Meta compatibility
             const cleanId = booking.id.replace(/[^a-zA-Z0-9_-]/g, "_");
-            // Meta only accepts events within 7 days; clamp older events to 7 days ago
             const rawTime = Math.floor(new Date(booking.created_at).getTime() / 1000);
             const eventTime = rawTime < sevenDaysAgo ? sevenDaysAgo : rawTime;
 
+            // Generate a stable 15-digit lead_id from booking ID characters
+            const leadId = Math.abs(
+                booking.id.split("").reduce((acc, ch) => acc + ch.charCodeAt(0), 100000000000000)
+            ) % 900000000000000 + 100000000000000;
+
             return {
-                event_name: "Purchase",
+                event_name: "Lead",          // REQUIRED: must be "Lead" for CRM events
                 event_time: eventTime,
-                event_id: `crmv2_${cleanId}`,
-                action_source: "system_generated",
+                event_id: `crmv3_${cleanId}`,
+                action_source: "system_generated", // REQUIRED for CRM
                 user_data: {
                     em: booking.user_email ? [hashCustomerData(booking.user_email)] : [],
                     ph: booking.user_phone ? [hashPhoneNumber(booking.user_phone)] : [],
+                    lead_id: leadId,         // RECOMMENDED: 15-17 digit lead tracking code
                 },
                 custom_data: {
-                    content_ids: [booking.package_id],
-                    content_type: "product",
-                    value: booking.total_amount,
-                    currency: "EUR",
-                    transaction_id: cleanId,
+                    event_source: "crm",                        // REQUIRED
+                    lead_event_source: "Istanbul Portrait CRM", // REQUIRED: CRM name
                 },
             };
         });
