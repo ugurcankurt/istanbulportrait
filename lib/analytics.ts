@@ -338,5 +338,31 @@ export function trackLead(
   );
 }
 
+// Track view item list event (GA4 Enhanced Ecommerce — funnel step 1)
+export function trackViewItemList(
+  items: Array<{
+    id: string;
+    name: string;
+    price: number;
+  }>,
+  listId: string = "packages",
+  listName: string = "Photography Packages",
+) {
+  if (typeof window !== "undefined" && window.gtag) {
+    window.gtag("event", "view_item_list", {
+      item_list_id: listId,
+      item_list_name: listName,
+      items: items.map((item, index) => ({
+        item_id: item.id,
+        item_name: item.name,
+        item_category: "Photography Package",
+        price: item.price,
+        quantity: 1,
+        index: index + 1,
+      })),
+    });
+  }
+}
+
 // Generic event function (alias for trackEvent)
 export const event = trackEvent;

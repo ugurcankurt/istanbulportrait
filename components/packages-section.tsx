@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/card";
 import { Link } from "@/i18n/routing";
 import { fbPixel } from "@/lib/facebook";
+import { trackViewItemList } from "@/lib/analytics";
 import type { PackageId } from "@/lib/validations";
 import { packagePrices } from "@/lib/validations";
 import { calculateDiscountedPrice } from "@/lib/pricing";
@@ -82,9 +83,18 @@ export function PackagesSection() {
     ];
   }, [t]);
 
-  // Track ViewContent events for Facebook Commerce Manager
+  // Track view_item_list (GA4 funnel step 1) + ViewContent (Meta Pixel)
   useEffect(() => {
-    // Track each package as a service for Facebook Commerce
+    // GA4 Enhanced Ecommerce — view_item_list
+    trackViewItemList(
+      packages.map((pkg) => ({
+        id: pkg.id,
+        name: pkg.name,
+        price: pkg.pricing.price,
+      })),
+    );
+
+    // Meta Pixel — ViewContent for each package
     packages.forEach((pkg) => {
       fbPixel.track("ViewContent", {
         content_type: "service",
