@@ -43,7 +43,15 @@ interface BookingRecord {
     status: string;
 }
 
+// GET = browser-friendly; POST = fetch-friendly. Both do the same thing.
+export async function GET(request: NextRequest) {
+    return handleSync(request);
+}
 export async function POST(request: NextRequest) {
+    return handleSync(request);
+}
+
+async function handleSync(request: NextRequest) {
     try {
         await requireServerAdmin();
 
