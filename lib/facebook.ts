@@ -77,7 +77,7 @@ export async function sendToFacebookConversionsAPI(
 
   try {
     const response = await fetch(
-      `https://graph.facebook.com/v19.0/${FACEBOOK_DATASET_ID}/events`,
+      `https://graph.facebook.com/v25.0/${FACEBOOK_DATASET_ID}/events`,
       {
         method: "POST",
         headers: {
