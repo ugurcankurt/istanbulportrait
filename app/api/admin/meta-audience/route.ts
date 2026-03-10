@@ -53,7 +53,7 @@ export async function GET(request: NextRequest) {
       1,
       parseInt(searchParams.get("min_bookings") || "1", 10),
     );
-    const statusFilter = searchParams.get("status") || "confirmed";
+    const statusFilter = searchParams.get("status") || "all"; // default: tüm rezervasyonlar
 
     const supabase = await createServerAdminClient();
 
