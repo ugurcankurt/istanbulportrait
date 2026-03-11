@@ -10,6 +10,24 @@
     "blog": "Blog",
     "locations": "Orte"
   },
+  "cart": {
+    "title": "Mein Warenkorb",
+    "item_selected": "1 Buchung ausgewählt",
+    "empty": "Ihr Warenkorb ist leer",
+    "empty_desc": "Wählen Sie ein Fotografie-Paket, um zu beginnen",
+    "go_to_packages": "Zu den Paketen",
+    "photo_package": "Fotografie-Paket",
+    "remove": "Entfernen",
+    "date": "Datum",
+    "time": "Uhrzeit",
+    "people": "Personen",
+    "person_count": "{count} Personen",
+    "customer": "Kunde",
+    "total": "Gesamt",
+    "deposit_now": "Jetzt zahlen (30%)",
+    "checkout": "Zur Kasse",
+    "secure_deposit": "Sichere Zahlung · Anzahlung: €{amount}"
+  },
   "whatsapp": {
     "button": "WhatsApp",
     "tooltip": "Chatten Sie mit uns auf WhatsApp",

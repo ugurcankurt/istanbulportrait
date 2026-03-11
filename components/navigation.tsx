@@ -24,6 +24,7 @@ import {
 } from "@/components/ui/sheet";
 import { Link, usePathname, useRouter } from "@/i18n/routing";
 import { cn } from "@/lib/utils";
+import { CartIcon } from "@/components/cart-icon";
 
 const locales = [
   { code: "en", name: "English", flag: "🇬🇧" },
@@ -118,7 +119,10 @@ export function Navigation() {
           ))}
         </nav>
 
-        <div className="flex items-center space-x-4">
+        <div className="flex items-center space-x-2">
+          {/* Cart Icon */}
+          <CartIcon />
+
           {/* Language Switcher */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>

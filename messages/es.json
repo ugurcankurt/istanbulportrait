@@ -10,6 +10,24 @@
     "blog": "Blog",
     "locations": "Ubicaciones"
   },
+  "cart": {
+    "title": "Mi Carrito",
+    "item_selected": "1 reserva seleccionada",
+    "empty": "Tu carrito está vacío",
+    "empty_desc": "Selecciona un paquete fotográfico para comenzar",
+    "go_to_packages": "Ver Paquetes",
+    "photo_package": "Paquete Fotográfico",
+    "remove": "Eliminar",
+    "date": "Fecha",
+    "time": "Hora",
+    "people": "Personas",
+    "person_count": "{count} personas",
+    "customer": "Cliente",
+    "total": "Total",
+    "deposit_now": "Pagar ahora (30%)",
+    "checkout": "Proceder al pago",
+    "secure_deposit": "Pago seguro · Depósito: €{amount}"
+  },
   "whatsapp": {
     "tooltip": "Chatea con nosotros en WhatsApp",
     "message": "¡Hola! Me gustaría obtener información sobre sesiones de fotos en Estambul.",

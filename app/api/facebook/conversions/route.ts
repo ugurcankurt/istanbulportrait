@@ -104,7 +104,10 @@ export async function POST(request: NextRequest) {
     } = validationResult.data;
 
     // Prepare user data with hashed customer information
-    const user_data: FacebookConversionEvent["user_data"] = {};
+    const user_data: FacebookConversionEvent["user_data"] = {
+      client_ip_address: ip,
+      client_user_agent: request.headers.get("user-agent") || undefined,
+    };
 
     if (customer_email) {
       user_data.em = [hashCustomerData(customer_email)];

@@ -10,6 +10,24 @@
     "blog": "博客",
     "locations": "地点"
   },
+  "cart": {
+    "title": "我的购物车",
+    "item_selected": "已选择1个预订",
+    "empty": "您的购物车为空",
+    "empty_desc": "选择一个摄影套餐开始",
+    "go_to_packages": "查看套餐",
+    "photo_package": "摄影套餐",
+    "remove": "删除",
+    "date": "日期",
+    "time": "时间",
+    "people": "人数",
+    "person_count": "{count}人",
+    "customer": "客户",
+    "total": "总计",
+    "deposit_now": "立即支付（30%）",
+    "checkout": "去结算",
+    "secure_deposit": "安全支付 · 定金：€{amount}"
+  },
   "whatsapp": {
     "button": "WhatsApp",
     "tooltip": "通过WhatsApp与我们聊天",

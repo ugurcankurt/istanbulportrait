@@ -10,6 +10,24 @@
     "blog": "Blog",
     "locations": "Locations"
   },
+  "cart": {
+    "title": "My Cart",
+    "item_selected": "1 booking selected",
+    "empty": "Your cart is empty",
+    "empty_desc": "Select a photography package to get started",
+    "go_to_packages": "Browse Packages",
+    "photo_package": "Photo Package",
+    "remove": "Remove",
+    "date": "Date",
+    "time": "Time",
+    "people": "People",
+    "person_count": "{count} people",
+    "customer": "Customer",
+    "total": "Total",
+    "deposit_now": "Pay now (30%)",
+    "checkout": "Proceed to Checkout",
+    "secure_deposit": "Secure payment · Deposit: €{amount}"
+  },
   "whatsapp": {
     "button": "WhatsApp",
     "tooltip": "Chat with us on WhatsApp",

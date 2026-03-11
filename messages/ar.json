@@ -10,6 +10,24 @@
     "blog": "المدونة",
     "locations": "المواقع"
   },
+  "cart": {
+    "title": "سلة التسوق",
+    "item_selected": "١ حجز محدد",
+    "empty": "سلة التسوق فارغة",
+    "empty_desc": "اختر حزمة تصوير للبدء",
+    "go_to_packages": "تصفح الحزم",
+    "photo_package": "حزمة تصوير",
+    "remove": "إزالة",
+    "date": "التاريخ",
+    "time": "الوقت",
+    "people": "الأشخاص",
+    "person_count": "{count} أشخاص",
+    "customer": "العميل",
+    "total": "الإجمالي",
+    "deposit_now": "الدفع الآن (30%)",
+    "checkout": "المتابعة للدفع",
+    "secure_deposit": "دفع آمن · وديعة: €{amount}"
+  },
   "whatsapp": {
     "button": "واتساب",
     "tooltip": "تواصل معنا على واتساب",

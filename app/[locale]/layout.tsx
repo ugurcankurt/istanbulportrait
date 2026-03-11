@@ -28,6 +28,9 @@ import dynamic from "next/dynamic";
 const WhatsAppButton = dynamic(
   () => import("@/components/whatsapp-button").then((mod) => mod.WhatsAppButton)
 );
+const CartSheet = dynamic(
+  () => import("@/components/cart-sheet").then((mod) => mod.CartSheet)
+);
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -233,6 +236,7 @@ export default async function LocaleLayout({
               <Toaster />
               <MultilingualCookieConsent />
               <WhatsAppButton phoneNumber="+905367093724" />
+              <CartSheet />
             </NextIntlClientProvider >
           </ConsentProvider >
         </ThemeProvider >

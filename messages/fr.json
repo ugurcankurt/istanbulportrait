@@ -10,6 +10,24 @@
     "blog": "Blog",
     "locations": "Lieux"
   },
+  "cart": {
+    "title": "Mon Panier",
+    "item_selected": "1 réservation sélectionnée",
+    "empty": "Votre panier est vide",
+    "empty_desc": "Sélectionnez un forfait photo pour commencer",
+    "go_to_packages": "Voir les Forfaits",
+    "photo_package": "Forfait Photographie",
+    "remove": "Supprimer",
+    "date": "Date",
+    "time": "Heure",
+    "people": "Personnes",
+    "person_count": "{count} personnes",
+    "customer": "Client",
+    "total": "Total",
+    "deposit_now": "Payer maintenant (30%)",
+    "checkout": "Procéder au paiement",
+    "secure_deposit": "Paiement sécurisé · Acompte : €{amount}"
+  },
   "whatsapp": {
     "button": "WhatsApp",
     "tooltip": "Discutez avec nous sur WhatsApp",

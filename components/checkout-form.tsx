@@ -45,12 +45,9 @@ import type {
   PaymentFormData,
 } from "@/lib/validations";
 import { formatCurrency } from "@/lib/utils";
-import {
-  createBookingSchema,
-  createPaymentSchema,
-  packagePrices,
-} from "@/lib/validations";
+import { createBookingSchema, createPaymentSchema, packagePrices } from "@/lib/validations";
 import { useYandexMetrica } from "@/components/analytics/yandex-metrica";
+import { useCartStore } from "@/stores/cart-store";
 
 export function CheckoutForm() {
   const searchParams = useSearchParams();
@@ -130,6 +127,8 @@ export function CheckoutForm() {
     },
   });
 
+  const { item: cartItem, clearCart } = useCartStore();
+
   // Initialize with package from URL params or load from sessionStorage
   useEffect(() => {
     // Generate Event ID only once on mount
@@ -163,8 +162,6 @@ export function CheckoutForm() {
           );
         });
 
-
-
         // Fallback: If URL didn't have package, but Session does, use that
         if (!effectivePackageId && bookingData.packageId && bookingData.packageId in packagePrices) {
           effectivePackageId = bookingData.packageId as PackageId;
@@ -173,15 +170,40 @@ export function CheckoutForm() {
       } catch (error) {
         console.error("Error loading booking data from sessionStorage:", error);
       }
+    } else if (cartItem && (!effectivePackageId || cartItem.packageId === effectivePackageId)) {
+      // FALLBACK: Load from Cart Store (localStorage) if sessionStorage is empty/cleared on reload
+      const recoveredData: BookingFormData = {
+        packageId: cartItem.packageId,
+        customerName: cartItem.customerName,
+        customerEmail: cartItem.customerEmail,
+        customerPhone: cartItem.customerPhone,
+        bookingDate: cartItem.bookingDate,
+        bookingTime: cartItem.bookingTime,
+        notes: cartItem.notes || "",
+        totalAmount: cartItem.price,
+        peopleCount: cartItem.peopleCount || 1,
+      };
+
+      setPreFilledBookingData(recoveredData);
+      Object.keys(recoveredData).forEach((key) => {
+        bookingForm.setValue(
+          key as keyof BookingFormData,
+          recoveredData[key as keyof BookingFormData]
+        );
+      });
+
+      if (!effectivePackageId) {
+        effectivePackageId = cartItem.packageId as PackageId;
+      }
     }
 
     if (effectivePackageId) {
       setSelectedPackage(effectivePackageId);
     } else {
       // If no valid package found in URL or Session, redirect
-      router.push("/packages");
+      router.push(`/${locale}/packages`);
     }
-  }, [searchParams, bookingForm, router, eventId]);
+  }, [searchParams, bookingForm, router, eventId, cartItem, locale]);
 
   const packageInfo = selectedPackage
     ? {
@@ -276,6 +298,9 @@ export function CheckoutForm() {
 
         // Clear booking data from sessionStorage
         sessionStorage.removeItem("bookingData");
+
+        // Clear persistent cart to prevent item resurfacing
+        clearCart();
 
         // Notify search engines about new booking (IndexNow)
         try {
@@ -487,6 +512,7 @@ export function CheckoutForm() {
       toast.success(t("success.payment_successful"));
 
       sessionStorage.removeItem("bookingData");
+      clearCart();
 
       try {
         await notifyBookingCreated(bookingResult.booking.id);

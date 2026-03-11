@@ -57,6 +57,7 @@ import { cn } from "@/lib/utils";
 import type { BookingFormData, PackageId } from "@/lib/validations";
 import { createBookingSchema, packagePrices } from "@/lib/validations";
 import { getPackagePricing } from "@/lib/pricing";
+import { useCartStore } from "@/stores/cart-store";
 
 interface BookingModalProps {
   isOpen: boolean;
@@ -124,6 +125,7 @@ export function BookingModal({
   const bookingSchemaWithTranslations = createBookingSchema(tValidation);
   const { trackBookingStart, trackPackageView } = useYandexMetrica();
   const [step, setStep] = useState<"details" | "summary">("details");
+  const { addToCart } = useCartStore();
 
   // Track package view when modal opens
   useEffect(() => {
@@ -225,44 +227,48 @@ export function BookingModal({
         // Track InitiateCheckout with Facebook Pixel
         fbPixel.trackInitiateCheckout(selectedPackage, packageInfo.price, eventId);
 
-        // --- NEW: Save Draft Booking to Supabase (Background) ---
+        // Save data to sessionStorage (checkout-form reads this)
         try {
-          // Wait for draft creation to get the booking ID
           const draftResponse = await fetch("/api/booking/create-draft", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
               ...data,
               totalAmount: pricing?.totalPrice || packagePrices[selectedPackage],
-              locale, // Send current locale
+              locale,
             }),
           });
 
           const draftResult = await draftResponse.json();
-          if (draftResult.bookingId) {
-            // Add bookingId to the data stored in session
-            const bookingDataWithId = {
-              ...data,
-              bookingId: draftResult.bookingId,
-            };
-            sessionStorage.setItem("bookingData", JSON.stringify(bookingDataWithId));
-          } else {
-            sessionStorage.setItem("bookingData", JSON.stringify(data));
-          }
+          const bookingDataToStore = draftResult.bookingId
+            ? { ...data, bookingId: draftResult.bookingId }
+            : data;
+          sessionStorage.setItem("bookingData", JSON.stringify(bookingDataToStore));
         } catch (e) {
-          // Ignore draft errors to not block checkout, just store form data
           console.error("Draft creation error:", e);
           sessionStorage.setItem("bookingData", JSON.stringify(data));
         }
 
-        // Navigate to checkout page
-        try {
-          setIsNavigating(true);
-          router.push(`/checkout?package=${selectedPackage}`);
-          // Don't close modal here to allow spinner to show during redirect
-        } catch (error) {
-          setIsNavigating(false);
-        }
+        // Add to cart — opens cart sheet automatically
+        addToCart({
+          packageId: selectedPackage,
+          packageName: packageInfo.name,
+          price: pricing?.totalPrice || packagePrices[selectedPackage],
+          depositAmount: pricing?.depositAmount || packagePrices[selectedPackage] * 0.3,
+          currency: "EUR",
+          bookingDate: data.bookingDate,
+          bookingTime: data.bookingTime,
+          customerName: data.customerName,
+          customerEmail: data.customerEmail,
+          customerPhone: data.customerPhone,
+          notes: data.notes,
+          peopleCount: data.peopleCount,
+        });
+
+        // Close booking modal
+        onClose();
+        form.reset();
+        setIsNavigating(false);
       }
     },
     (errors) => {

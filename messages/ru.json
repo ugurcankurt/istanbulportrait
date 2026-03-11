@@ -10,6 +10,24 @@
     "blog": "Блог",
     "locations": "Локации"
   },
+  "cart": {
+    "title": "Моя корзина",
+    "item_selected": "1 бронирование выбрано",
+    "empty": "Ваша корзина пуста",
+    "empty_desc": "Выберите пакет фотосъёмки, чтобы начать",
+    "go_to_packages": "К пакетам",
+    "photo_package": "Пакет фотосъёмки",
+    "remove": "Удалить",
+    "date": "Дата",
+    "time": "Время",
+    "people": "Количество человек",
+    "person_count": "{count} человек",
+    "customer": "Клиент",
+    "total": "Итого",
+    "deposit_now": "Оплатить сейчас (30%)",
+    "checkout": "Перейти к оплате",
+    "secure_deposit": "Безопасный платёж · Депозит: €{amount}"
+  },
   "whatsapp": {
     "button": "WhatsApp",
     "tooltip": "Чат с нами в WhatsApp",

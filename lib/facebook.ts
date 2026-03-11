@@ -52,6 +52,8 @@ export interface FacebookConversionEvent {
     fbc?: string; // Facebook click ID
     fbp?: string; // Facebook browser ID
     external_id?: string[]; // Unique external ID (hashed)
+    client_ip_address?: string; // Required when em/ph is missing
+    client_user_agent?: string; // Required when em/ph is missing
   };
   custom_data?: {
     event_source?: "crm" | "website";

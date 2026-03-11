@@ -10,6 +10,24 @@
     "blog": "Blog",
     "locations": "Locații"
   },
+  "cart": {
+    "title": "Coșul Meu",
+    "item_selected": "1 rezervare selectată",
+    "empty": "Coșul tău este gol",
+    "empty_desc": "Selectează un pachet foto pentru a începe",
+    "go_to_packages": "Vezi Pachetele",
+    "photo_package": "Pachet Foto",
+    "remove": "Elimină",
+    "date": "Dată",
+    "time": "Oră",
+    "people": "Persoane",
+    "person_count": "{count} persoane",
+    "customer": "Client",
+    "total": "Total",
+    "deposit_now": "Plătește acum (30%)",
+    "checkout": "Finalizează comanda",
+    "secure_deposit": "Plată securizată · Depozit: €{amount}"
+  },
   "whatsapp": {
     "button": "WhatsApp",
     "tooltip": "Vorbește cu noi pe WhatsApp",
