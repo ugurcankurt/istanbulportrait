@@ -150,6 +150,93 @@ const EMAIL_TEMPLATES: Record<string, { subject: string; text: string; html: (na
         </div>
       </div>
     `
+  },
+  de: {
+    subject: "Ihr Fotoshooting in Istanbul wartet! 📸",
+    text: "Hallo, uns ist aufgefallen, dass Sie Ihre Buchung nicht abgeschlossen haben. Verpassen Sie nicht die Chance, Ihre Erinnerungen an Istanbul festzuhalten!",
+    html: (name, url) => `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+        <h1 style="color: #333; text-align: center; margin-bottom: 30px;">Buchung abschließen</h1>
+        
+        <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0;">
+          <h2 style="color: #333; margin-top: 0; font-size: 20px;">Hallo ${name},</h2>
+          <p style="color: #555; line-height: 1.5;">Uns ist aufgefallen, dass Sie eine Buchung bei <strong>Istanbul Portrait</strong> begonnen, aber nicht abgeschlossen haben.</p>
+          <p style="color: #555; line-height: 1.5;">Ihr Termin ist noch für kurze Zeit reserviert. Verpassen Sie nicht die Gelegenheit, Ihre schönsten Momente in Istanbul festzuhalten!</p>
+        </div>
+
+        <div style="text-align: center; margin: 30px 0;">
+           <a href="${url}" style="background-color: #000; color: #fff; padding: 16px 32px; text-decoration: none; border-radius: 6px; font-weight: bold; display: inline-block; font-size: 18px; text-transform: uppercase;">Meine Buchung abschließen</a>
+        </div>
+
+        <div style="background: #dbeafe; padding: 15px; border-radius: 8px; margin: 20px 0;">
+          <h4 style="color: #1e40af; margin-top: 0; margin-bottom: 8px;">Warum jetzt buchen?</h4>
+          <p style="margin: 0; color: #1e40af; font-size: 14px;">Die Termine sind schnell vergeben, besonders zum Sonnenuntergang. Sichern Sie sich jetzt Ihre Wunschzeit.</p>
+        </div>
+
+        <div style="text-align: center; margin: 30px 0; border-top: 1px solid #eee; padding-top: 20px;">
+          <p style="color: #666; font-size: 14px; margin-bottom: 5px;">Haben Sie Fragen? Kontaktieren Sie uns unter <a href="mailto:info@istanbulportrait.com" style="color: #2563eb; text-decoration: none;">info@istanbulportrait.com</a></p>
+          <p style="color: #999; font-size: 12px;">Istanbul Photographer<br/>Istanbul, Turkey</p>
+        </div>
+      </div>
+    `
+  },
+  fr: {
+    subject: "Votre séance photo à Istanbul vous attend ! 📸",
+    text: "Bonjour, nous avons remarqué que vous n'avez pas terminé votre réservation. Ne manquez pas l'occasion d'immortaliser vos souvenirs d'Istanbul !",
+    html: (name, url) => `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+        <h1 style="color: #333; text-align: center; margin-bottom: 30px;">Terminez votre réservation</h1>
+        
+        <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0;">
+          <h2 style="color: #333; margin-top: 0; font-size: 20px;">Bonjour ${name},</h2>
+          <p style="color: #555; line-height: 1.5;">Nous avons remarqué que vous avez commencé une réservation avec <strong>Istanbul Portrait</strong> mais que vous ne l'avez pas terminée.</p>
+          <p style="color: #555; line-height: 1.5;">Votre créneau de séance est encore réservé pour un temps limité. Ne manquez pas l'occasion d'immortaliser vos meilleurs souvenirs à Istanbul !</p>
+        </div>
+
+        <div style="text-align: center; margin: 30px 0;">
+           <a href="${url}" style="background-color: #000; color: #fff; padding: 16px 32px; text-decoration: none; border-radius: 6px; font-weight: bold; display: inline-block; font-size: 18px; text-transform: uppercase;">Terminer ma réservation</a>
+        </div>
+
+        <div style="background: #dbeafe; padding: 15px; border-radius: 8px; margin: 20px 0;">
+          <h4 style="color: #1e40af; margin-top: 0; margin-bottom: 8px;">Pourquoi réserver maintenant ?</h4>
+          <p style="margin: 0; color: #1e40af; font-size: 14px;">Les places se remplissent rapidement, surtout pour les séances au coucher du soleil. Sécurisez votre créneau préféré dès maintenant.</p>
+        </div>
+
+        <div style="text-align: center; margin: 30px 0; border-top: 1px solid #eee; padding-top: 20px;">
+          <p style="color: #666; font-size: 14px; margin-bottom: 5px;">Vous avez des questions ? Contactez-nous à <a href="mailto:info@istanbulportrait.com" style="color: #2563eb; text-decoration: none;">info@istanbulportrait.com</a></p>
+          <p style="color: #999; font-size: 12px;">Istanbul Photographer<br/>Istanbul, Turkey</p>
+        </div>
+      </div>
+    `
+  },
+  ro: {
+    subject: "Ședința ta foto în Istanbul te așteaptă! 📸",
+    text: "Bună, am observat că nu ai finalizat rezervarea. Nu rata șansa de a-ți surprinde amintirile din Istanbul!",
+    html: (name, url) => `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+        <h1 style="color: #333; text-align: center; margin-bottom: 30px;">Finalizează rezervarea</h1>
+        
+        <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0;">
+          <h2 style="color: #333; margin-top: 0; font-size: 20px;">Bună ${name},</h2>
+          <p style="color: #555; line-height: 1.5;">Am observat că ai început o rezervare pentru o ședință foto cu <strong>Istanbul Portrait</strong>, dar nu ai finalizat-o.</p>
+          <p style="color: #555; line-height: 1.5;">Locul tău este încă rezervat pentru o perioadă limitată. Nu rata șansa de a-ți surprinde cele mai frumoase amintiri în Istanbul!</p>
+        </div>
+
+        <div style="text-align: center; margin: 30px 0;">
+           <a href="${url}" style="background-color: #000; color: #fff; padding: 16px 32px; text-decoration: none; border-radius: 6px; font-weight: bold; display: inline-block; font-size: 18px; text-transform: uppercase;">Finalizează rezervarea mea</a>
+        </div>
+
+        <div style="background: #dbeafe; padding: 15px; border-radius: 8px; margin: 20px 0;">
+          <h4 style="color: #1e40af; margin-top: 0; margin-bottom: 8px;">De ce să rezervi acum?</h4>
+          <p style="margin: 0; color: #1e40af; font-size: 14px;">Locurile se ocupă rapid, în special pentru ședințele la apus. Asigură-ți acum timpul preferat.</p>
+        </div>
+
+        <div style="text-align: center; margin: 30px 0; border-top: 1px solid #eee; padding-top: 20px;">
+          <p style="color: #666; font-size: 14px; margin-bottom: 5px;">Ai întrebări? Contactează-ne la <a href="mailto:info@istanbulportrait.com" style="color: #2563eb; text-decoration: none;">info@istanbulportrait.com</a></p>
+          <p style="color: #999; font-size: 12px;">Istanbul Photographer<br/>Istanbul, Turkey</p>
+        </div>
+      </div>
+    `
   }
 };
 
@@ -203,7 +290,8 @@ export async function GET(request: Request) {
       const locale = draft.locale && EMAIL_TEMPLATES[draft.locale] ? draft.locale : "en";
       const template = EMAIL_TEMPLATES[locale] || EMAIL_TEMPLATES["en"];
       // Reconstruct checkout URL to deep link directly to the specific package
-      const checkoutUrl = `${process.env.NEXT_PUBLIC_APP_URL}/${locale}/packages`;
+      const baseUrl = process.env.NEXT_PUBLIC_APP_URL?.includes('localhost') ? 'https://istanbulportrait.com' : (process.env.NEXT_PUBLIC_APP_URL || 'https://istanbulportrait.com');
+      const checkoutUrl = `${baseUrl}/${locale}/packages`;
 
       const { data: emailData, error: emailError } = await resend.emails.send({
         from: "Istanbul Portrait <info@istanbulportrait.com>",

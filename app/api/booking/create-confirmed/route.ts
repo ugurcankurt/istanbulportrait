@@ -39,7 +39,7 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { paymentId, conversationId, ...bookingData } = body;
+    const { paymentId, conversationId, locale, ...bookingData } = body;
 
     // Validate the request body (exclude paymentId fields from validation)
     const validationResult = bookingSchema.safeParse(bookingData);
@@ -247,6 +247,7 @@ export async function POST(request: NextRequest) {
           peopleCount: peopleCount,
           depositAmount,
           remainingAmount,
+          locale: locale || "en",
           // content below will use these to display breakdown
         });
 

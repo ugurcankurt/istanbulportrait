@@ -282,6 +282,7 @@ export function CheckoutForm() {
             providerResponse: paymentResult.providerResponse, // Pass full provider response
             eventId, // Required for CAPI Deduplication
             bookingId: bookingId || undefined, // Pass existing booking ID to avoid duplication
+            locale, // Pass locale for email language
           }),
         });
 
@@ -497,6 +498,7 @@ export function CheckoutForm() {
           provider: "turinvoice",
           eventId, // Required for CAPI Deduplication
           bookingId: bookingId || undefined, // Pass existing booking ID to avoid duplication
+          locale, // Pass locale for email language
         }),
       });
 

@@ -424,7 +424,15 @@
     "time_label": "Время:"
   },
   "success": {
+    "booking_id": "ID бронирования",
     "booking_details": "Детали бронирования",
+    "customer_details": "Информация о клиенте",
+    "customer_name": "Имя",
+    "customer_email": "Электронная почта",
+    "customer_phone": "Телефон",
+    "booking_date": "Дата",
+    "booking_time": "Время",
+    "notes": "Особые пожелания",
     "package_label": "Пакет",
     "amount_paid": "Сумма к оплате",
     "whats_next": "Что дальше?",

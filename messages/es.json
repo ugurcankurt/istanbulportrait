@@ -423,7 +423,15 @@
     "time_label": "Hora:"
   },
   "success": {
+    "booking_id": "ID de Reserva",
     "booking_details": "Detalles de la Reserva",
+    "customer_details": "Información del Cliente",
+    "customer_name": "Nombre",
+    "customer_email": "Correo Electrónico",
+    "customer_phone": "Teléfono",
+    "booking_date": "Fecha",
+    "booking_time": "Hora",
+    "notes": "Peticiones Especiales",
     "package_label": "Paquete",
     "amount_paid": "Monto Pagado",
     "whats_next": "¿Qué sigue?",
