@@ -2,10 +2,10 @@ import { convertCurrency } from "./currency";
 import fs from "fs";
 import path from "path";
 import { cache } from "react";
-import { 
-    type ProdigiProduct, 
-    autoCategorize, 
-    calculatePriceWithMargin 
+import {
+    type ProdigiProduct,
+    autoCategorize,
+    calculatePriceWithMargin
 } from "./prodigi-shared";
 
 export { type ProdigiProduct, PRINTS_CATEGORIES } from "./prodigi-shared";
@@ -106,7 +106,7 @@ async function getQuoteForSku(sku: string, attributes?: Record<string, string>):
             const amount = parseFloat(itemInfo.unitCost.amount);
             const currency = itemInfo.unitCost.currency;
             const cost = await convertCurrency(amount, currency, "EUR");
-            
+
             quoteCacheFull.set(cacheKey, { cost, timestamp: Date.now() });
             return cost;
         }
@@ -125,16 +125,16 @@ async function getQuoteForSku(sku: string, attributes?: Record<string, string>):
 export function getProductImageUrls(sku: string): string[] {
     const urls: string[] = [];
     const publicDir = path.join(process.cwd(), "public");
-    
+
     // Check for both lowercase and uppercase variations to be safe
     const baseNames = [sku.toLowerCase(), sku.toUpperCase()];
-    
+
     for (let i = 1; i <= 10; i++) {
         let found = false;
         for (const base of baseNames) {
             const relPath = `/products/${base}-${i}.webp`;
             const fullPath = path.join(publicDir, relPath);
-            
+
             if (fs.existsSync(fullPath)) {
                 urls.push(relPath);
                 found = true;
@@ -283,7 +283,33 @@ export async function getProdigiCatalog(): Promise<ProdigiProduct[]> {
     }
 
     const allowedSkus = [
-        "GLOBAL-FRA-CAN-16X20"
+        "GLOBAL-FRA-CAN-16X20",
+        "GLOBAL-SLIMCAN-16X20",
+        "GLOBAL-MOU-ACRY-24X36",
+        "GLOBAL-FRA-ALU-10X10",
+        "GLOBAL-FRA-ALU-18X24",
+        "GLOBAL-FRA-ALU-24X36",
+        "GLOBAL-BOXM-MOTH-8X12",
+        "GLOBAL-BOXM-MOTH-18X24",
+        "GLOBAL-BOXM-MOTH-12X12",
+        "GLOBAL-TECH-IP14-TCB-CS-G",
+        "GLOBAL-TECH-IP14-TCB-CS-M",
+        "GLOBAL-TECH-IP14PM-TCB-CS-G",
+        "GLOBAL-TECH-IP14PM-TCB-CS-M",
+        "GLOBAL-TECH-IP15PM-TCB-CS-G",
+        "GLOBAL-TECH-IP15PM-TCB-CS-M",
+        "GLOBAL-TECH-IP16-TCB-CS-G",
+        "GLOBAL-TECH-IP16-TCB-CS-M",
+        "GLOBAL-TECH-IP16PR-TCB-CS-G",
+        "GLOBAL-TECH-IP16PR-TCB-CS-M",
+        "GLOBAL-TECH-IP17PR-TCB-CS-G",
+        "GLOBAL-TECH-IP17PR-TCB-CS-M",
+        "GLOBAL-TECH-IP17PM-TCB-CS-G",
+        "GLOBAL-TECH-IP17PM-TCB-CS-M",
+        "GLOBAL-TECH-IP17-TCB-CS-G",
+        "GLOBAL-TECH-IP17-TCB-CS-M",
+        "GLOBAL-TECH-IP17A-TCB-CS-G",
+        "GLOBAL-TECH-IP17A-TCB-CS-M",
     ];
 
     try {
@@ -319,7 +345,7 @@ export async function createProdigiOrder(orderData: any) {
             throw new Error(data.message || "Failed to create order on Prodigi.");
         }
 
-        return data; 
+        return data;
     } catch (error) {
         console.error("Error creating Prodigi order:", error);
         throw error;
@@ -376,7 +402,7 @@ export async function getProdigiOrder(orderId: string) {
             return null;
         }
 
-        return data.order || data; 
+        return data.order || data;
     } catch (error) {
         console.error(`Error fetching Prodigi order ${orderId}:`, error);
         return null;

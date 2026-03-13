@@ -5,13 +5,13 @@ import { useTranslations } from "next-intl";
 
 export function FloatingGlobalBadge() {
   const t = useTranslations("prints");
-  
+
   // Get the translated text
-  const text = t("worldwide_shipping_badge") || "GLOBAL DELIVERY";
-  
+  const text = t("worldwide_shipping_badge");
+
   // Repeat the text to fill the circular path completely
   const repeatedText = `${text} • ${text} • ${text} • `;
-  
+
   return (
     <div className="fixed top-20 sm:top-24 left-2 sm:left-8 z-40 pointer-events-none select-none">
       <div className="relative w-20 h-20 sm:w-28 sm:h-28 flex items-center justify-center">
@@ -28,7 +28,7 @@ export function FloatingGlobalBadge() {
                 d="M 50, 50 m -35, 0 a 35,35 0 1,1 70,0 a 35,35 0 1,1 -70,0"
               />
             </defs>
-            <text className="text-[5.5px] sm:text-[6.5px] font-black fill-primary tracking-[0.18em] uppercase">
+            <text className="text-[5.5px] sm:text-[6.5px] font-black fill-primary tracking-[0.28em] uppercase">
               <textPath xlinkHref="#circlePath" startOffset="0%">
                 {repeatedText}
               </textPath>

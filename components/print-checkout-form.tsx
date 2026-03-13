@@ -8,7 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
-import { Loader2, Trash2, MapPin, CreditCard, ShieldCheck } from "lucide-react";
+import { Loader2, Trash2, MapPin, CreditCard, ShieldCheck, Minus, Plus } from "lucide-react";
 import { Country, State } from "country-state-city";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
@@ -487,8 +487,27 @@ export function PrintCheckoutForm() {
                                                     </div>
                                                     <div className="flex-1">
                                                         <h4 className="font-medium text-sm line-clamp-2">{item.name}</h4>
-                                                        <p className="text-xs text-muted-foreground mt-1">{t("qty")}: {item.quantity}</p>
                                                         <div className="flex items-center justify-between mt-2">
+                                                            <div className="flex items-center border rounded-md h-7 px-1 bg-background">
+                                                                <button
+                                                                    type="button"
+                                                                    onClick={() => updatePrintQuantity(item.id, item.quantity - 1)}
+                                                                    disabled={item.quantity <= 1}
+                                                                    className="p-1 hover:text-primary disabled:opacity-30 transition-colors"
+                                                                >
+                                                                    <Minus className="h-3 w-3" />
+                                                                </button>
+                                                                <span className="w-8 text-center text-xs font-bold tabular-nums">
+                                                                    {item.quantity}
+                                                                </span>
+                                                                <button
+                                                                    type="button"
+                                                                    onClick={() => updatePrintQuantity(item.id, item.quantity + 1)}
+                                                                    className="p-1 hover:text-primary transition-colors"
+                                                                >
+                                                                    <Plus className="h-3 w-3" />
+                                                                </button>
+                                                            </div>
                                                             <span className="font-bold text-primary">€{(item.price * item.quantity).toFixed(2)}</span>
                                                             <Button variant="ghost" size="icon" className="h-6 w-6 text-destructive shrink-0" onClick={() => removePrintFromCart(item.id)} aria-label={t("remove_item")}>
                                                                 <Trash2 className="w-4 h-4" />

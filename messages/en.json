@@ -1298,6 +1298,8 @@
     "terms_agreement": "I accept the terms and conditions and privacy policy.",
     "order_summary": "Order Summary",
     "qty": "Qty",
+    "increase_quantity": "Increase quantity",
+    "decrease_quantity": "Decrease quantity",
     "shipping_method": "Shipping Method",
     "calculating_rates": "Calculating rates...",
     "enter_address_for_options": "Enter address to see options",

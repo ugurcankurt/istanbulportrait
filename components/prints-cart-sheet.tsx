@@ -1,6 +1,6 @@
 "use client";
 
-import { ShoppingBag, Trash2, ArrowRight } from "lucide-react";
+import { ShoppingBag, Trash2, ArrowRight, Minus, Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import { usePrintsCartStore } from "@/stores/prints-cart-store";
@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/sheet";
 
 export function PrintsCartSheet() {
-    const { items, isCartOpen, setCartOpen, removePrintFromCart, getTotalPrice } = usePrintsCartStore();
+    const { items, isCartOpen, setCartOpen, updatePrintQuantity, removePrintFromCart, getTotalPrice } = usePrintsCartStore();
     const router = useRouter();
     const locale = useLocale();
     const t = useTranslations("prints");
@@ -66,8 +66,27 @@ export function PrintsCartSheet() {
                                             </div>
                                         )}
 
-                                        <p className="text-xs text-muted-foreground mt-1">{t("qty")}: {item.quantity}</p>
                                         <div className="flex items-center justify-between mt-1">
+                                            <div className="flex items-center border rounded-md h-7 px-1 bg-background shadow-sm">
+                                                <button
+                                                    onClick={() => updatePrintQuantity(item.id, item.quantity - 1)}
+                                                    disabled={item.quantity <= 1}
+                                                    className="p-1 hover:text-primary disabled:opacity-30 transition-colors"
+                                                    aria-label={t("decrease_quantity")}
+                                                >
+                                                    <Minus className="h-3 w-3" />
+                                                </button>
+                                                <span className="w-8 text-center text-xs font-bold tabular-nums">
+                                                    {item.quantity}
+                                                </span>
+                                                <button
+                                                    onClick={() => updatePrintQuantity(item.id, item.quantity + 1)}
+                                                    className="p-1 hover:text-primary transition-colors"
+                                                    aria-label={t("increase_quantity")}
+                                                >
+                                                    <Plus className="h-3 w-3" />
+                                                </button>
+                                            </div>
                                             <span className="font-bold text-primary">€{(item.price * item.quantity).toFixed(2)}</span>
                                         </div>
                                     </div>
