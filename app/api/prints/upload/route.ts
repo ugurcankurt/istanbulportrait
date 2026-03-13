@@ -3,37 +3,37 @@ import { supabaseAdmin } from "@/lib/supabase";
 
 export async function POST(request: Request) {
     try {
-        const formData = await request.formData();
-        const file = formData.get("file") as File | null;
+        const { fileName, fileType } = await request.json();
 
-        if (!file) {
-            return NextResponse.json({ error: "No file provided" }, { status: 400 });
+        if (!fileName || !fileType) {
+            return NextResponse.json({ error: "File name and type are required" }, { status: 400 });
         }
 
-        const buffer = await file.arrayBuffer();
-        
         // Generate a secure, unique filename to prevent collisions and guessable URLs
         const uniqueId = crypto.randomUUID();
-        const extension = file.name.split('.').pop() || 'jpg';
-        const fileName = `${uniqueId}.${extension}`;
+        const extension = fileName.split('.').pop() || 'jpg';
+        const path = `${uniqueId}.${extension}`;
 
+        // Create a signed upload URL (valid for 60 seconds)
         const { data, error } = await supabaseAdmin.storage
             .from("print-uploads")
-            .upload(fileName, buffer, {
-                contentType: file.type,
-                upsert: false,
-            });
+            .createSignedUploadUrl(path);
 
         if (error) {
-            console.error("Supabase storage error:", error);
-            return NextResponse.json({ error: "Failed to upload to storage." }, { status: 500 });
+            console.error("Supabase signed URL error:", error);
+            return NextResponse.json({ error: "Failed to generate upload URL." }, { status: 500 });
         }
 
         const { data: publicUrlData } = supabaseAdmin.storage
             .from("print-uploads")
-            .getPublicUrl(fileName);
+            .getPublicUrl(path);
 
-        return NextResponse.json({ url: publicUrlData.publicUrl });
+        return NextResponse.json({ 
+            signedUrl: data.signedUrl, 
+            path: path,
+            token: data.token,
+            publicUrl: publicUrlData.publicUrl 
+        });
     } catch (error) {
         console.error("Upload route error:", error);
         return NextResponse.json({ error: "Internal server error" }, { status: 500 });

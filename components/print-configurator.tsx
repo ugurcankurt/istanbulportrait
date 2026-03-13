@@ -98,22 +98,38 @@ export function PrintConfigurator({ product }: PrintConfiguratorProps) {
         setIsUploading(true);
 
         try {
-            // 1. Upload to Supabase via our secure API route
-            const formData = new FormData();
-            formData.append("file", file);
-
-            const uploadRes = await fetch("/api/prints/upload", {
+            // 1. Get signed upload URL from our API
+            const urlRes = await fetch("/api/prints/upload", {
                 method: "POST",
-                body: formData,
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    fileName: file.name,
+                    fileType: file.type
+                }),
+            });
+
+            if (!urlRes.ok) {
+                throw new Error("Failed to get upload URL");
+            }
+
+            const { signedUrl, publicUrl } = await urlRes.json();
+
+            // 2. Upload directly to Supabase Storage using the signed URL
+            // We use PUT as required by Supabase for signed upload URLs
+            const uploadRes = await fetch(signedUrl, {
+                method: "PUT",
+                body: file,
+                headers: {
+                    "Content-Type": file.type,
+                },
             });
 
             if (!uploadRes.ok) {
+                console.error("Direct upload failed:", await uploadRes.text());
                 throw new Error(t("upload_failed_toast"));
             }
 
-            const { url: uploadUrl } = await uploadRes.json();
-
-            // 2. Add to Zustand Cart
+            // 3. Add to Zustand Cart
             addPrintToCart({
                 productId: product.sku,
                 sku: product.sku,
@@ -121,7 +137,7 @@ export function PrintConfigurator({ product }: PrintConfiguratorProps) {
                 price: product.pricing?.eur || 0,
                 currency: "EUR",
                 quantity: 1,
-                uploadUrl: uploadUrl,
+                uploadUrl: publicUrl,
                 attributes: selectedAttributes,
             });
 
