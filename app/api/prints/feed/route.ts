@@ -33,6 +33,10 @@ export async function GET(req: NextRequest) {
         googleCategory = "Home &amp; Garden > Decor > Artwork > Posters, Prints, &amp; Visual Artwork";
       }
 
+      // Derive item_group_id for Meta variant grouping
+      // Extracts base SKU by removing common variant suffixes like -G, -M, etc.
+      const itemGroupId = p.sku.replace(/-[A-Z0-9]$|-[A-Z0-9]{2}$/, "");
+
       return `
     <item>
       <g:id>${p.sku}</g:id>
@@ -40,12 +44,14 @@ export async function GET(req: NextRequest) {
       <g:description><![CDATA[Order a custom ${p.description}. Upload your photo and get it printed with high quality. Worldwide shipping available.]]></g:description>
       <g:link>${link}</g:link>
       <g:checkout_link_template>${baseUrl}/${locale}/prints/checkout?sku={id}</g:checkout_link_template>
+      <g:item_group_id>${itemGroupId}</g:item_group_id>
       <g:image_link>${imageLink}</g:image_link>
       <g:condition>new</g:condition>
       <g:availability>in stock</g:availability>
       <g:price>${p.pricing?.eur?.toFixed(2) || "0.00"} EUR</g:price>
       <g:brand>${SEO_CONFIG.organization.name}</g:brand>
       <g:google_product_category>${googleCategory}</g:google_product_category>
+      <g:fb_product_category>${googleCategory}</g:fb_product_category>
       <g:identifier_exists>no</g:identifier_exists>
       <g:shipping>
         <g:country>TR</g:country>
