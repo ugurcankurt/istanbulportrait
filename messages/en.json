@@ -8,7 +8,8 @@
     "about": "About",
     "contact": "Contact",
     "blog": "Blog",
-    "locations": "Locations"
+    "locations": "Locations",
+    "prints": "Print Shop"
   },
   "cart": {
     "title": "My Cart",
@@ -59,7 +60,7 @@
     }
   },
   "gallery": {
-    "title": "Istanbul Photography Portfolio",
+    "title": "Portfolio",
     "subtitle": "Discover the beauty of Istanbul through our lens. Browse through our collection of portrait, couple, and lifestyle photography sessions.",
     "intro": "Explore stunning photography captured by your professional Istanbul photographer. Our portfolio showcases couple photoshoots, rooftop sessions, and portrait photography across Istanbul's most iconic locations including the Bosphorus, Galata Tower, and historic Sultanahmet."
   },
@@ -136,8 +137,8 @@
       "button": "Get Custom Quote"
     },
     "sections": {
-      "available_packages": "Istanbul Photographer Packages",
-      "intro": "Choose your perfect photography package with Istanbul's expert photographer. All sessions include professional editing and photos at the city's most iconic locations. As your dedicated Istanbul photographer, I ensure every moment is captured beautifully."
+      "available_packages": "Photoshoot Packages",
+      "intro": "Choose your perfect photoshoot package with Istanbul's expert photographer. All sessions include professional editing and photos at the city's most iconic locations. As your dedicated Istanbul photographer, I ensure every moment is captured beautifully."
     },
     "winter_sale": "Sale",
     "ui": {
@@ -444,7 +445,8 @@
     "checkout": "Checkout",
     "privacy": "Privacy Policy",
     "blog": "Blog",
-    "locations": "Photography Locations"
+    "locations": "Photography Locations",
+    "prints": "Print Shop"
   },
   "structured_data": {
     "website_name": "Istanbul Photographer",
@@ -655,7 +657,7 @@
   "faq": {
     "title": "Frequently Asked Questions",
     "subtitle": "Everything you need to know about professional photography sessions in Istanbul",
-    "section_title": "Istanbul Photography FAQs",
+    "section_title": "Istanbul Photographer FAQs",
     "questions": {
       "best-istanbul-photographer": {
         "question": "What makes you the best Istanbul photographer?",
@@ -891,7 +893,7 @@
     }
   },
   "reviews": {
-    "title": "What Clients Say About Their Istanbul Photographer",
+    "title": "What Clients Say About Us",
     "subtitle": "Real reviews from satisfied photography clients who chose us for their Istanbul photoshoot experience",
     "total_reviews": "reviews",
     "view_all": "View all reviews on Google",
@@ -1244,5 +1246,90 @@
       "title": "Personalized Experience",
       "description": "Customized sessions tailored to your unique style and preferences."
     }
+  },
+  "prints": {
+    "title": "Print Shop",
+    "subtitle": "Transform your digital memories into premium physical art shipped globally.",
+    "upload_photo": "Upload Photo",
+    "min_dpi": "Min 200 DPI Required",
+    "worldwide_shipping": "Worldwide Shipping",
+    "worldwide_shipping_badge": "GLOBAL DELIVERY",
+    "worldwide_shipping_desc": "Premium physical art delivered to your doorstep, anywhere in the world.",
+    "add_to_cart": "Add to Cart",
+    "shipping_details": "Shipping Details",
+    "billing_address": "Shipping Address",
+    "complete_order": "Complete Print Order",
+    "empty_cart": "Your print cart is empty.",
+    "checkout": "Checkout",
+    "success_title": "Order Confirmed!",
+    "success_message": "Thank you for your order. Your prints are being prepared and will be shipped shortly.",
+    "order_id": "Order ID",
+    "delivery_status": "Delivery Status",
+    "delivery_description": "Your prints are being prepared. You will receive a tracking number via email once your order has been dispatched.",
+    "confirmation_email": "Confirmation Email Sent",
+    "email_description": "Check your inbox for detailed order information",
+    "back_to_shop": "Back to Shop",
+    "checkout_title": "Secure Checkout",
+    "payment_description": "Your high quality prints are just a few steps away. Securely complete your order below.",
+    "ssl_encrypted": "SSL Encrypted",
+    "premium_quality": "Premium Quality",
+    "premium_quality_desc": "Professional grade papers and finishes for lasting art.",
+    "secure_payment": "Secure Payment",
+    "secure_payment_desc": "Safe and encrypted checkout processing.",
+    "pci_compliant": "PCI Compliant",
+    "first_name": "First Name",
+    "last_name": "Last Name",
+    "email_address": "Email Address",
+    "address_line_2": "Address Line 2 (Optional)",
+    "country": "Country",
+    "select_country": "Select a country",
+    "state_province": "State / Province",
+    "select_state": "Select a state / province",
+    "city": "City",
+    "enter_city": "Enter your city",
+    "postal_code": "Postal/Zip Code",
+    "payment_details": "Payment Details",
+    "secure_ssl_payment": "Secure SSL Encrypted Payment",
+    "card_holder": "Card Holder Name",
+    "card_number": "Card Number",
+    "month": "Month",
+    "year": "Year",
+    "cvc": "CVC",
+    "terms_agreement": "I accept the terms and conditions and privacy policy.",
+    "order_summary": "Order Summary",
+    "qty": "Qty",
+    "shipping_method": "Shipping Method",
+    "calculating_rates": "Calculating rates...",
+    "enter_address_for_options": "Enter address to see options",
+    "subtotal": "Subtotal",
+    "shipping_tax": "Shipping (Inc. Tax)",
+    "taxes": "Taxes",
+    "total": "Total",
+    "processing": "Processing...",
+    "browse_prints": "Browse Prints",
+    "quality_description": "To ensure the best quality, your image must be at least 200 DPI for this print size. (Max 20MB, JPG/PNG)",
+    "change_image": "Change Image",
+    "drag_drop": "Click or drag image here",
+    "product_options": "Product Options",
+    "select_option": "Select {option}",
+    "quality_approved": "Print Quality Approved",
+    "low_resolution": "Image Resolution Too Low",
+    "uploading": "Uploading...",
+    "est_dpi": "Estimated ~{dpi} DPI",
+    "view_cart": "View Print Cart",
+    "cart_title": "Prints Cart",
+    "items_in_cart": "{count} items in cart",
+    "shop_cart_title": "Print Shop Cart",
+    "art_description": "Create physical art from your digital memories.",
+    "remove_item": "Remove item",
+    "quality_approved_msg": "Quality Approved! {dpiMsg}",
+    "low_res_msg": "Low resolution ({dpiMsg}). {minDpi} for a sharp print.",
+    "order_success_toast": "Order placed successfully! Your prints are on their way.",
+    "select_shipping_toast": "Please select a shipping method.",
+    "accept_terms_toast": "You must accept the terms and conditions.",
+    "fill_payment_toast": "Please fill in all payment details.",
+    "upload_failed_toast": "Failed to upload image",
+    "add_to_cart_success": "Add to Cart - Success!",
+    "add_to_cart_failed": "Failed to add to cart. Please try again."
   }
 }

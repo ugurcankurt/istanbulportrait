@@ -10,6 +10,7 @@ import {
   LogOut,
   Users,
   Bell,
+  ShoppingBag,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -48,6 +49,11 @@ const navigation = [
     name: "Customers",
     href: "/admin/dashboard/customers",
     icon: Users,
+  },
+  {
+    name: "Print Orders",
+    href: "/admin/dashboard/print-orders",
+    icon: ShoppingBag,
   },
   {
     name: "Payments",

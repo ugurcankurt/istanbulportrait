@@ -20,6 +20,8 @@ import type {
   OrganizationSchema,
   PackageData,
   PersonSchema,
+  ProductData,
+  ProductSchema,
   ReviewData,
   ReviewSchema,
   SchemaConfig,
@@ -694,5 +696,62 @@ export function generateEnhancedLocalBusinessSchema(
         },
       },
     ],
+  };
+}
+
+/**
+ * Generate Product schema for Google Shopping and Merchant Center
+ */
+export function generateProductSchema(
+  productData: ProductData,
+  config: SchemaConfig,
+): ProductSchema {
+  const { baseUrl } = config;
+
+  return {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    "@id": `${baseUrl}/prints/${productData.sku.toLowerCase()}`,
+    name: productData.name,
+    description: productData.description,
+    image: productData.image.startsWith("http") ? productData.image : `${baseUrl}${productData.image}`,
+    sku: productData.sku,
+    brand: {
+      "@type": "Brand",
+      name: productData.brand || SEO_CONFIG.organization.name,
+    },
+    offers: {
+      "@type": "Offer",
+      url: productData.url.startsWith("http") ? productData.url : `${baseUrl}${productData.url}`,
+      priceCurrency: productData.currency,
+      price: productData.price.toFixed(2),
+      availability: productData.availability,
+      itemCondition: productData.condition === "new" ? "https://schema.org/NewCondition" : "https://schema.org/NewCondition",
+      priceValidUntil: new Date(new Date().setFullYear(new Date().getFullYear() + 1)).toISOString(),
+      seller: {
+        "@type": "Organization",
+        name: SEO_CONFIG.organization.name,
+      },
+      shippingDetails: {
+        "@type": "OfferShippingDetails",
+        shippingRate: {
+          "@type": "MonetaryAmount",
+          value: "0",
+          currency: productData.currency,
+        },
+        shippingDestination: {
+          "@type": "DefinedRegion",
+          addressCountry: "TR",
+        },
+      },
+      hasMerchantReturnPolicy: {
+        "@type": "MerchantReturnPolicy",
+        applicableCountry: "TR",
+        returnPolicyCategory: "https://schema.org/MerchantReturnFiniteReturnWindow",
+        merchantReturnDays: 14,
+        returnMethod: "https://schema.org/ReturnByMail",
+        returnFees: "https://schema.org/FreeReturn",
+      },
+    },
   };
 }

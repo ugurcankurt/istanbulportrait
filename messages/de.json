@@ -8,7 +8,8 @@
     "about": "Über uns",
     "contact": "Kontakt",
     "blog": "Blog",
-    "locations": "Orte"
+    "locations": "Orte",
+    "prints": "Druckshop"
   },
   "cart": {
     "title": "Mein Warenkorb",
@@ -447,7 +448,8 @@
     "checkout": "Kasse",
     "privacy": "Datenschutzerklärung",
     "blog": "Blog",
-    "locations": "Fotografie-Orte"
+    "locations": "Fotografie-Orte",
+    "prints": "Druckshop"
   },
   "structured_data": {
     "website_name": "Istanbul Fotograf",
@@ -546,6 +548,106 @@
       "10012": {
         "message": "Ein Fehler ist während des Zahlungsvorgangs aufgetreten, bitte kontaktieren Sie Ihre Bank",
         "suggestion": "Dies ist ein kartenbezogener Fehler. Es wird empfohlen, dass der Karteninhaber seine Bank kontaktiert"
+      },
+      "10005": {
+        "message": "Ihre Bank hat diese Transaktion abgelehnt",
+        "suggestion": "Bitte kontaktieren Sie Ihre Bank oder versuchen Sie eine andere Zahlungsmethode"
+      },
+      "10034": {
+        "message": "Transaktion als potenziell betrügerisch markiert",
+        "suggestion": "Bitte kontaktieren Sie Ihre Bank zur Verifizierung"
+      },
+      "10051": {
+        "message": "Nicht genügend Guthaben auf der Karte",
+        "suggestion": "Bitte prüfen Sie Ihr Guthaben oder nutzen Sie ein anderes Zahlungsmittel"
+      },
+      "10054": {
+        "message": "Ihre Karte ist abgelaufen",
+        "suggestion": "Bitte nutzen Sie eine andere Karte oder kontaktieren Sie Ihre Bank"
+      },
+      "10057": {
+        "message": "Diese Transaktionsart ist für Ihre Karte nicht zulässig",
+        "suggestion": "Bitte kontaktieren Sie Ihre Bank, um diese Transaktionsart freizuschalten"
+      },
+      "10058": {
+        "message": "Transaktion bei diesem Händler nicht gestattet",
+        "suggestion": "Bitte versuchen Sie eine andere Zahlungsmethode"
+      },
+      "10059": {
+        "message": "Transaktion aus Sicherheitsgründen abgelehnt",
+        "suggestion": "Bitte kontaktieren Sie Ihre Bank zur Freigabe"
+      },
+      "10084": {
+        "message": "Autorisierung der Transaktion abgelaufen",
+        "suggestion": "Bitte starten Sie den Zahlungsvorgang erneut"
+      },
+      "10093": {
+        "message": "Ihre Karte ist nicht für Online-Transaktionen freigeschaltet",
+        "suggestion": "Bitte kontaktieren Sie Ihre Bank zur Freischaltung"
+      },
+      "10096": {
+        "message": "Zahlungssystem vorübergehend nicht erreichbar",
+        "suggestion": "Bitte versuchen Sie es in wenigen Minuten erneut"
+      },
+      "10201": {
+        "message": "Die eingegebene Kartennummer ist ungültig",
+        "suggestion": "Bitte prüfen Sie Ihre Kartennummer und versuchen Sie es erneut"
+      },
+      "10202": {
+        "message": "Ihre Karte ist abgelaufen",
+        "suggestion": "Bitte verwenden Sie eine andere Karte"
+      },
+      "10204": {
+        "message": "Sicherheitscode (CVC) ist falsch",
+        "suggestion": "Bitte prüfen Sie den 3-stelligen Code auf der Rückseite"
+      },
+      "10206": {
+        "message": "Ablaufdatum der Karte ist falsch",
+        "suggestion": "Bitte prüfen Sie das Ablaufdatum (MM/JJ)"
+      },
+      "10207": {
+        "message": "Nicht genügend Guthaben auf Ihrem Konto",
+        "suggestion": "Bitte prüfen Sie Ihr Konto oder nutzen Sie ein anderes Zahlungsmittel"
+      },
+      "10208": {
+        "message": "Systemfehler bei der Zahlungsabwicklung",
+        "suggestion": "Bitte versuchen Sie es später erneut oder kontaktieren Sie den Support"
+      },
+      "10209": {
+        "message": "Zeitüberschreitung der Transaktion",
+        "suggestion": "Bitte versuchen Sie die Zahlung erneut"
+      },
+      "10210": {
+        "message": "Netzwerkverbindung fehlgeschlagen",
+        "suggestion": "Bitte prüfen Sie Ihre Internetverbindung und versuchen Sie es erneut"
+      },
+      "10235": {
+        "message": "American Express Karten werden für Zahlungen in der Türkei nicht akzeptiert",
+        "suggestion": "Bitte verwenden Sie Visa oder Mastercard"
+      },
+      "14": {
+        "message": "Die eingegebene Kartennummer ist ungültig",
+        "suggestion": "Bitte prüfen Sie Ihre Kartennummer"
+      },
+      "5": {
+        "message": "Transaktion abgelehnt",
+        "suggestion": "Bitte kontaktieren Sie Ihre Bank"
+      },
+      "51": {
+        "message": "Nicht genügend Guthaben auf Ihrer Karte",
+        "suggestion": "Bitte prüfen Sie Ihr Guthaben"
+      },
+      "54": {
+        "message": "Ihre Karte ist abgelaufen",
+        "suggestion": "Bitte verwenden Sie eine andere Karte"
+      },
+      "DEMO_INVALID_CARD": {
+        "message": "Bitte verwenden Sie die Testkarte für Demo-Zahlungen",
+        "suggestion": "Kartennummer: 5528790000000008"
+      },
+      "INVALID_REQUEST": {
+        "message": "Zahlungsinformationen sind unvollständig",
+        "suggestion": "Bitte prüfen Sie alle Details"
       }
     },
     "common_suggestions": {
@@ -1147,5 +1249,90 @@
       "title": "Persönliche Erfahrung",
       "description": "Maßgeschneiderte Sitzungen, die auf Ihren einzigartigen Stil und Ihre Vorlieben zugeschnitten sind."
     }
+  },
+  "prints": {
+    "title": "Druckshop",
+    "subtitle": "Verwandeln Sie digitale Erinnerungen in erstklassige physische Kunst.",
+    "upload_photo": "Foto hochladen",
+    "min_dpi": "Mindestens 200 DPI",
+    "worldwide_shipping": "Weltweiter Versand",
+    "worldwide_shipping_badge": "WELTWEITE LIEFERUNG",
+    "worldwide_shipping_desc": "Hochwertige physische Kunst, die weltweit an Ihre Haustür geliefert wird.",
+    "add_to_cart": "In den Warenkorb",
+    "shipping_details": "Versanddetails",
+    "billing_address": "Lieferadresse",
+    "complete_order": "Bestellung abschließen",
+    "empty_cart": "Ihr Warenkorb ist leer.",
+    "checkout": "Kasse",
+    "success_title": "Bestellung bestätigt!",
+    "success_message": "Vielen Dank für Ihre Bestellung. Ihre Drucke werden gerade vorbereitet und in Kürze versandt.",
+    "order_id": "Bestell-ID",
+    "delivery_status": "Lieferstatus",
+    "delivery_description": "Ihre Drucke werden gerade vorbereitet. Sie erhalten eine Tracking-Nummer per E-Mail, sobald Ihre Bestellung versandt wurde.",
+    "confirmation_email": "Bestätigungs-E-Mail gesendet",
+    "email_description": "Überprüfen Sie Ihren Posteingang für detaillierte Bestellinformationen",
+    "back_to_shop": "Zurück zum Shop",
+    "checkout_title": "Sicherer Checkout",
+    "payment_description": "Ihre hochwertigen Drucke sind nur noch wenige Schritte entfernt. Schließen Sie Ihre Bestellung unten sicher ab.",
+    "accept_terms_toast": "Sie müssen den Allgemeinen Geschäftsbedingungen zustimmen.",
+    "add_to_cart_failed": "Fehler beim Hinzufügen zum Warenkorb. Bitte erneut versuchen.",
+    "add_to_cart_success": "Erfolgreich zum Warenkorb hinzugefügt!",
+    "address_line_2": "Adresszeile 2 (Optional)",
+    "art_description": "Erstellen Sie physische Kunst aus Ihren digitalen Erinnerungen.",
+    "browse_prints": "Prints durchsuchen",
+    "calculating_rates": "Versandkosten werden berechnet...",
+    "card_holder": "Karteninhaber",
+    "card_number": "Kartennummer",
+    "cart_title": "Prints Warenkorb",
+    "change_image": "Bild ändern",
+    "city": "Stadt",
+    "country": "Land",
+    "cvc": "CVC",
+    "drag_drop": "Klicken oder Bild hierher ziehen",
+    "email_address": "E-Mail-Adresse",
+    "enter_address_for_options": "Adresse eingeben, um Optionen zu sehen",
+    "enter_city": "Stadt eingeben",
+    "est_dpi": "Geschätzt ~{dpi} DPI",
+    "fill_payment_toast": "Bitte füllen Sie alle Zahlungsdetails aus.",
+    "first_name": "Vorname",
+    "items_in_cart": "{count} Artikel im Warenkorb",
+    "last_name": "Nachname",
+    "low_res_msg": "Niedrige Auflösung ({dpiMsg}). {minDpi} für scharfen Druck empfohlen.",
+    "low_resolution": "Bildauflösung zu niedrig",
+    "month": "Monat",
+    "order_success_toast": "Bestellung erfolgreich aufgegeben! Ihre Prints sind unterwegs.",
+    "order_summary": "Bestellübersicht",
+    "payment_details": "Zahlungsdetails",
+    "pci_compliant": "PCI-konform",
+    "postal_code": "Postleitzahl",
+    "processing": "Wird verarbeitet...",
+    "product_options": "Produktoptionen",
+    "qty": "Menge",
+    "quality_approved": "Druckqualität bestätigt",
+    "quality_approved_msg": "Qualität bestätigt! {dpiMsg}",
+    "quality_description": "Für beste Qualität muss Ihr Bild mindestens 200 DPI für diese Größe haben. (Max 20MB, JPG/PNG)",
+    "remove_item": "Artikel entfernen",
+    "premium_quality": "Premium-Qualität",
+    "premium_quality_desc": "Professionelle Papiere und Oberflächen für dauerhafte Kunst.",
+    "secure_payment": "Sichere Zahlung",
+    "secure_payment_desc": "Sichere und verschlüsselte Kassenabwicklung.",
+    "secure_ssl_payment": "Sichere SSL-verschlüsselte Zahlung",
+    "select_country": "Land auswählen",
+    "select_option": "{option} auswählen",
+    "select_shipping_toast": "Bitte Versandart wählen.",
+    "select_state": "Bundesland auswählen",
+    "shipping_method": "Versandart",
+    "shipping_tax": "Versand (inkl. MwSt.)",
+    "shop_cart_title": "Print-Shop Warenkorb",
+    "ssl_encrypted": "SSL-verschlüsselt",
+    "state_province": "Bundesland",
+    "subtotal": "Zwischensumme",
+    "taxes": "Steuern",
+    "terms_agreement": "Ich akzeptiere die AGB und die Datenschutzbestimmungen.",
+    "total": "Gesamtbetrag",
+    "upload_failed_toast": "Bild-Upload fehlgeschlagen",
+    "uploading": "Ladevorgang...",
+    "view_cart": "Warenkorb anzeigen",
+    "year": "Jahr"
   }
 }

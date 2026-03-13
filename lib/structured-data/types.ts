@@ -113,6 +113,22 @@ export interface PackageData {
   photos: number;
 }
 
+// Product data interface (for Google Shopping)
+export interface ProductData {
+  id: string;
+  sku: string;
+  name: string;
+  description: string;
+  image: string;
+  price: number;
+  currency: string;
+  availability: "https://schema.org/InStock" | "https://schema.org/OutOfStock" | "https://schema.org/PreOrder";
+  url: string;
+  category?: string;
+  brand?: string;
+  condition?: string;
+}
+
 // Breadcrumb data interface
 export interface BreadcrumbData {
   name: string;

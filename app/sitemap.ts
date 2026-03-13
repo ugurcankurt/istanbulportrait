@@ -3,6 +3,7 @@ import { routing } from "@/i18n/routing";
 import { getAllPublishedSlugsWithDates } from "@/lib/blog/blog-service";
 import { getAllLocationSlugs } from "@/lib/locations/location-data";
 import { PACKAGE_ALIASES } from "@/lib/packages-data";
+import { getProdigiCatalog } from "@/lib/prodigi";
 
 /**
  * SEO-Optimized Sitemap for Istanbul Portrait
@@ -29,6 +30,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     "/privacy",
     "/blog",
     "/locations",
+    "/prints",
   ];
 
   const sitemapEntries: MetadataRoute.Sitemap = [];
@@ -58,6 +60,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       } else if (route === "/privacy") {
         changeFrequency = "monthly";
         priority = 0.3;
+      } else if (route === "/prints") {
+        changeFrequency = "weekly";
+        priority = 0.85;
       }
 
       // Get localized path for current locale
@@ -197,6 +202,39 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         lastModified: staticPagesLastMod, // Usually these map 1:1 to static code configurations
         changeFrequency: "monthly",
         priority: 0.8,
+        alternates: {
+          languages,
+        },
+      });
+    }
+  }
+
+  // Generate individual print product sitemap entries
+  const printProducts = await getProdigiCatalog();
+  for (const product of printProducts) {
+    for (const locale of routing.locales) {
+      const printsPathConfig = routing.pathnames["/prints"];
+      const printsPath =
+        typeof printsPathConfig === "object" && locale in printsPathConfig
+          ? printsPathConfig[locale as keyof typeof printsPathConfig]
+          : "/prints";
+
+      const languages: Record<string, string> = {};
+      routing.locales.forEach((l) => {
+        const lp =
+          typeof printsPathConfig === "object" && l in printsPathConfig
+            ? printsPathConfig[l as keyof typeof printsPathConfig]
+            : "/prints";
+        languages[l] = `${baseUrl}/${l}${lp}/${product.sku.toLowerCase()}`;
+      });
+
+      languages["x-default"] = languages["en"];
+
+      sitemapEntries.push({
+        url: `${baseUrl}/${locale}${printsPath}/${product.sku.toLowerCase()}`,
+        lastModified: staticPagesLastMod,
+        changeFrequency: "monthly",
+        priority: 0.7,
         alternates: {
           languages,
         },

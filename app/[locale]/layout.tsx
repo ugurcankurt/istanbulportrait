@@ -31,6 +31,9 @@ const WhatsAppButton = dynamic(
 const CartSheet = dynamic(
   () => import("@/components/cart-sheet").then((mod) => mod.CartSheet)
 );
+const PrintsCartSheet = dynamic(
+  () => import("@/components/prints-cart-sheet").then((mod) => mod.PrintsCartSheet)
+);
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -225,18 +228,12 @@ export default async function LocaleLayout({
 
                 <CoreWebVitals />
                 <Footer />
-
-                {/* GetYourGuide Analytics */}
-                <Script
-                  src="https://widget.getyourguide.com/dist/pa.umd.production.min.js"
-                  strategy="lazyOnload"
-                  data-gyg-partner-id="S6XXHTA"
-                />
               </div >
               <Toaster />
               <MultilingualCookieConsent />
               <WhatsAppButton phoneNumber="+905367093724" />
               <CartSheet />
+              <PrintsCartSheet />
             </NextIntlClientProvider >
           </ConsentProvider >
         </ThemeProvider >

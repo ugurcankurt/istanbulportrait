@@ -5,8 +5,13 @@ interface GA4Item {
   item_id: string;
   item_name: string;
   item_category?: string;
+  item_brand?: string;
+  item_variant?: string;
+  item_list_id?: string;
+  item_list_name?: string;
   price: number;
   quantity: number;
+  index?: number;
 }
 
 // GA4 Event Parameters

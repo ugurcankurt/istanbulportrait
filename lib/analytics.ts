@@ -344,6 +344,7 @@ export function trackViewItemList(
     id: string;
     name: string;
     price: number;
+    category?: string;
   }>,
   listId: string = "packages",
   listName: string = "Photography Packages",
@@ -355,10 +356,89 @@ export function trackViewItemList(
       items: items.map((item, index) => ({
         item_id: item.id,
         item_name: item.name,
-        item_category: "Photography Package",
+        item_category: item.category || "Photography Package",
         price: item.price,
         quantity: 1,
         index: index + 1,
+      })),
+    });
+  }
+}
+
+// Print Specific Tracking Functions //
+
+export function trackPrintViewItem(
+  sku: string,
+  name: string,
+  category: string,
+  price: number,
+  currency: string = "EUR"
+) {
+  if (typeof window !== "undefined" && window.gtag) {
+    window.gtag("event", "view_item", {
+      currency: currency,
+      value: price,
+      items: [
+        {
+          item_id: sku,
+          item_name: name,
+          item_category: "Print",
+          item_variant: category,
+          price: price,
+          quantity: 1,
+        },
+      ],
+    });
+  }
+}
+
+export function trackPrintAddToCart(
+  sku: string,
+  name: string,
+  category: string,
+  price: number,
+  currency: string = "EUR"
+) {
+  if (typeof window !== "undefined" && window.gtag) {
+    window.gtag("event", "add_to_cart", {
+      currency: currency,
+      value: price,
+      items: [
+        {
+          item_id: sku,
+          item_name: name,
+          item_category: "Print",
+          item_variant: category,
+          price: price,
+          quantity: 1,
+        },
+      ],
+    });
+  }
+}
+
+export function trackPrintBeginCheckout(
+  items: Array<{
+    sku: string;
+    name: string;
+    category: string;
+    price: number;
+    quantity: number;
+  }>,
+  totalValue: number,
+  currency: string = "EUR"
+) {
+  if (typeof window !== "undefined" && window.gtag) {
+    window.gtag("event", "begin_checkout", {
+      currency: currency,
+      value: totalValue,
+      items: items.map(item => ({
+        item_id: item.sku,
+        item_name: item.name,
+        item_category: "Print",
+        item_variant: item.category,
+        price: item.price,
+        quantity: item.quantity,
       })),
     });
   }

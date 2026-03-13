@@ -29,6 +29,7 @@ export {
 } from "./ai-schemas";
 // Components
 export { JsonLd, MultipleJsonLd } from "./json-ld";
+export type { ProductData } from "./types";
 // Types
 export type {
   AggregateRatingSchema,

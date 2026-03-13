@@ -1,13 +1,13 @@
 "use client";
 
-import { Globe, Menu } from "lucide-react";
+import { Globe, Menu, ShoppingBag, BookImage, Sparkles } from "lucide-react";
 import Image from "next/image";
 import { useParams } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
-import { buttonVariants } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -25,6 +25,7 @@ import {
 import { Link, usePathname, useRouter } from "@/i18n/routing";
 import { cn } from "@/lib/utils";
 import { CartIcon } from "@/components/cart-icon";
+import { PrintsCartIcon } from "@/components/prints-cart-icon";
 
 const locales = [
   { code: "en", name: "English", flag: "🇬🇧" },
@@ -102,7 +103,7 @@ export function Navigation() {
               style={{ animationDelay: `${index * 100}ms` }}
             >
               <Link
-                href={item.href}
+                href={item.href as any}
                 className={cn(
                   "relative transition-all duration-200 hover:text-foreground/80 hover:scale-110",
                   pathname === item.href
@@ -120,8 +121,22 @@ export function Navigation() {
         </nav>
 
         <div className="flex items-center space-x-2">
-          {/* Cart Icon */}
+          {/* Print Shop Prominent Button (Desktop) */}
+          <Link href="/prints" className="hidden md:flex items-center group">
+            <Button
+              variant="default"
+              size="sm"
+              className="bg-primary/90 hover:bg-primary text-primary-foreground font-bold shadow-md hover:shadow-lg transition-all duration-300 gap-2 px-4 h-9 animate-pulse-subtle group-hover:scale-105"
+            >
+              <BookImage className="w-4 h-4 group-hover:rotate-12 transition-transform duration-300" />
+              <span>{t("prints")}</span>
+              <Sparkles className="w-3 h-3 text-yellow-300 animate-pulse" />
+            </Button>
+          </Link>
+
+          {/* Cart Icons */}
           <CartIcon />
+          <PrintsCartIcon />
 
           {/* Language Switcher */}
           <DropdownMenu>
@@ -202,6 +217,26 @@ export function Navigation() {
               </SheetHeader>
 
               <nav className="flex flex-col p-6 space-y-2">
+                {/* Print Shop Prominent Button (Mobile) */}
+                <div className="mb-4 animate-fade-in-down">
+                  <Link
+                    href="/prints"
+                    className="flex items-center justify-between p-4 rounded-xl bg-primary text-primary-foreground shadow-lg hover:shadow-xl transition-all duration-300 group"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="p-2 bg-white/20 rounded-lg group-hover:rotate-12 transition-transform duration-300">
+                        <ShoppingBag className="w-5 h-5" />
+                      </div>
+                      <div className="flex flex-col">
+                        <span className="text-lg font-bold leading-none">{t("prints")}</span>
+                        <span className="text-xs text-primary-foreground/70 mt-1">Global Shipping Available</span>
+                      </div>
+                    </div>
+                    <Sparkles className="w-5 h-5 text-yellow-300 animate-pulse" />
+                  </Link>
+                </div>
+
                 {navItems.map((item, index) => (
                   <div
                     key={item.href}

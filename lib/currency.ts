@@ -1,3 +1,5 @@
+import { cache } from "react";
+
 /**
  * Currency Exchange Rate Utility
  *
@@ -7,7 +9,7 @@
 
 // In-memory cache for exchange rates
 interface ExchangeRateCache {
-    rate: number;
+    rates: Record<string, number>;
     timestamp: number;
 }
 
@@ -15,97 +17,98 @@ const rateCache: Map<string, ExchangeRateCache> = new Map();
 const CACHE_DURATION_MS = 60 * 60 * 1000; // 1 hour cache
 
 /**
- * Get EUR to TRY exchange rate from free API
- * Uses ExchangeRate-API open access endpoint (no key required)
- * @returns Current EUR to TRY exchange rate
+ * Get all exchange rates for a given base currency
+ * Wrapped in cache() for request deduplication.
  */
-export async function getEURtoTRYRate(): Promise<number> {
-    const cacheKey = "EUR_TRY";
-    const cached = rateCache.get(cacheKey);
+export const getRatesForBase = cache(async (base: string = "EUR"): Promise<Record<string, number>> => {
+    const cached = rateCache.get(base);
 
-    // Return cached rate if still valid
     if (cached && Date.now() - cached.timestamp < CACHE_DURATION_MS) {
-        return cached.rate;
+        return cached.rates;
     }
 
     try {
-        // Primary API: ExchangeRate-API (free, no key required)
         const response = await fetch(
-            "https://open.er-api.com/v6/latest/EUR",
+            `https://open.er-api.com/v6/latest/${base.toUpperCase()}`,
             {
                 method: "GET",
-                headers: {
-                    Accept: "application/json",
-                },
-                // Add timeout using AbortController
+                headers: { Accept: "application/json" },
+                next: { revalidate: 3600 }, // Share cache across users for 1 hour
                 signal: AbortSignal.timeout(5000),
             },
         );
 
-        if (!response.ok) {
-            throw new Error(`Exchange rate API error: ${response.status}`);
-        }
-
+        if (!response.ok) throw new Error(`Exchange rate API error: ${response.status}`);
         const data = await response.json();
 
-        if (data.result !== "success" || !data.rates?.TRY) {
+        if (data.result !== "success" || !data.rates) {
             throw new Error("Invalid response from exchange rate API");
         }
 
-        const rate = data.rates.TRY;
-
-        // Cache the rate
-        rateCache.set(cacheKey, {
-            rate,
+        rateCache.set(base, {
+            rates: data.rates,
             timestamp: Date.now(),
         });
 
-        return rate;
+        return data.rates;
     } catch (error) {
-        console.error("[Currency] Failed to fetch exchange rate:", error);
-
-        // Return cached rate even if expired, as fallback
-        if (cached) {
-            return cached.rate;
-        }
-
-        // Ultimate fallback: approximate rate (should be updated periodically)
-        // As of December 2024, EUR/TRY is around 36-37
-        const fallbackRate = 36.5;
-        return fallbackRate;
+        console.error(`[Currency] Failed to fetch rates for ${base}:`, error);
+        if (cached) return cached.rates;
+        
+        // Final fallback: identity or common defaults
+        return base.toUpperCase() === "EUR" ? { "TRY": 36.5, "GBP": 0.84, "USD": 1.05 } : { [base]: 1.0 };
     }
+});
+
+/**
+ * Convert an amount between any two currencies dynamically
+ */
+export async function convertCurrency(amount: number, from: string, to: string = "EUR"): Promise<number> {
+    if (from.toUpperCase() === to.toUpperCase()) return amount;
+    
+    const rates = await getRatesForBase(from);
+    const rate = rates[to.toUpperCase()];
+    
+    if (!rate) {
+        // If direct rate not found, try via EUR as bridge
+        const eurRates = await getRatesForBase("EUR");
+        const fromToEur = 1 / (eurRates[from.toUpperCase()] || 1);
+        const eurToTarget = eurRates[to.toUpperCase()] || 1;
+        return amount * fromToEur * eurToTarget;
+    }
+    
+    return amount * rate;
+}
+
+/**
+ * Get EUR to TRY exchange rate (for backward compatibility)
+ */
+export async function getEURtoTRYRate(): Promise<number> {
+    const rates = await getRatesForBase("EUR");
+    return rates["TRY"] || 36.5;
 }
 
 /**
  * Convert EUR amount to TRY
  * Adds 1 EUR buffer to account for exchange rate fluctuations
- * @param amountEUR Amount in EUR
- * @returns Amount in TRY (rounded to 2 decimal places)
  */
 export async function convertEURtoTRY(amountEUR: number): Promise<number> {
     const rate = await getEURtoTRYRate();
-
-    // Add 1 EUR buffer to cover exchange rate differences
     const amountWithBuffer = amountEUR + 1;
     const amountTRY = amountWithBuffer * rate;
-
-    // Round to 2 decimal places
     return Math.round(amountTRY * 100) / 100;
 }
 
 /**
  * Format currency for display
- * @param amount Amount
- * @param currency Currency code (EUR, TRY, etc.)
- * @returns Formatted currency string
  */
 export function formatCurrency(
     amount: number,
-    currency: "EUR" | "TRY" | string,
+    currency: string,
 ): string {
     const formatter = new Intl.NumberFormat("tr-TR", {
         style: "currency",
-        currency,
+        currency: currency.toUpperCase(),
         minimumFractionDigits: 2,
         maximumFractionDigits: 2,
     });
