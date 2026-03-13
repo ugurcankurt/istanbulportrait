@@ -37,7 +37,7 @@ export function PrintCheckoutForm() {
         city: "",
         stateOrCounty: "",
         postalOrZipCode: "",
-        countryCode: "TR", // default
+        countryCode: "US", // default
         phone: "",
     });
 
@@ -290,7 +290,7 @@ export function PrintCheckoutForm() {
                                                 <PhoneInput
                                                     value={shippingDetails.phone}
                                                     onChange={val => setShippingDetails({ ...shippingDetails, phone: val as string })}
-                                                    defaultCountry="GB"
+                                                    defaultCountry="US"
                                                     placeholder={t("phone_number")}
                                                     className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background placeholder:text-muted-foreground focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                                                 />
@@ -384,7 +384,7 @@ export function PrintCheckoutForm() {
                                                 <Input
                                                     required
                                                     className="uppercase"
-                                                    placeholder="JANE DOE"
+                                                    placeholder="Card Holder Name"
                                                     value={paymentDetails.cardHolderName}
                                                     onChange={e => setPaymentDetails({ ...paymentDetails, cardHolderName: e.target.value })}
                                                     form="print-checkout-form"
