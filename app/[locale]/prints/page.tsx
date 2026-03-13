@@ -69,7 +69,7 @@ export default async function PrintsPage({ params, searchParams }: PrintsPagePro
                             <CategoryFilter />
                         </div>
 
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 animate-fade-in-up">
+                        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 animate-fade-in-up">
                             {products.length > 0 ? (
                                 products.map((product) => {
                                     // Load from our local /public/products folder based on SKU

@@ -56,7 +56,8 @@ export async function POST(request: Request) {
                     postalOrZipCode: shipping.postalOrZipCode,
                     countryCode: shipping.countryCode.length === 2 ? shipping.countryCode.toUpperCase() : "TR",
                     townOrCity: shipping.city,
-                }
+                },
+                phoneNumber: shipping.phone
             },
             items: prodigiItems,
         };
@@ -69,7 +70,7 @@ export async function POST(request: Request) {
             const { error } = await supabaseAdmin.from("print_orders").insert({
                 customer_name: `${shipping.firstName} ${shipping.lastName}`.trim(),
                 customer_email: shipping.email,
-                customer_phone: null, // Not currently collected in print checkout form
+                customer_phone: shipping.phone || null,
                 shipping_line1: shipping.addressLine1,
                 shipping_line2: shipping.addressLine2 || null,
                 shipping_postal_code: shipping.postalOrZipCode,

@@ -1331,6 +1331,7 @@
     "first_name": "الاسم الأول",
     "last_name": "الاسم الأخير",
     "email_address": "البريد الإلكتروني",
+    "phone_number": "رقم الهاتف",
     "address_line_2": "العنوان السطر 2 (اختياري)",
     "country": "البلد",
     "select_country": "اختر بلداً",

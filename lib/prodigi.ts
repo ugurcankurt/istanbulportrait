@@ -2,6 +2,7 @@ import { convertCurrency } from "./currency";
 import fs from "fs";
 import path from "path";
 import { cache } from "react";
+import { unstable_cache } from "next/cache";
 import {
     type ProdigiProduct,
     autoCategorize,
@@ -64,7 +65,8 @@ async function getQuoteForSku(sku: string, attributes?: Record<string, string>):
         const response = await fetch(`${baseUrl}/Quotes`, {
             method: 'POST',
             headers: getHeaders(),
-            body: JSON.stringify(quoteRequest)
+            body: JSON.stringify(quoteRequest),
+            next: { revalidate: 86400 } // Cache quotes for 24 hours
         });
 
         const data = await response.json();
@@ -274,54 +276,70 @@ export const getProdigiProduct = cache(async (sku: string): Promise<ProdigiProdu
 });
 
 /**
- * Fetches a list of products. 
+ * Fetches a list of products.
+ * Uses unstable_cache to cache the entire catalog for 24 hours.
  */
-export async function getProdigiCatalog(): Promise<ProdigiProduct[]> {
-    if (!process.env.PRODIGI_API_KEY) {
-        console.warn("PRODIGI_API_KEY is not defined.");
-        return [];
-    }
+export const getProdigiCatalog = unstable_cache(
+    async (): Promise<ProdigiProduct[]> => {
+        if (!process.env.PRODIGI_API_KEY) {
+            console.warn("PRODIGI_API_KEY is not defined.");
+            return [];
+        }
 
-    const allowedSkus = [
-        "GLOBAL-FRA-CAN-16X20",
-        "GLOBAL-SLIMCAN-16X20",
-        "GLOBAL-MOU-ACRY-24X36",
-        "GLOBAL-FRA-ALU-10X10",
-        "GLOBAL-FRA-ALU-18X24",
-        "GLOBAL-FRA-ALU-24X36",
-        "GLOBAL-BOXM-MOTH-8X12",
-        "GLOBAL-BOXM-MOTH-18X24",
-        "GLOBAL-BOXM-MOTH-12X12",
-        "GLOBAL-TECH-IP14-TCB-CS-G",
-        "GLOBAL-TECH-IP14-TCB-CS-M",
-        "GLOBAL-TECH-IP14PM-TCB-CS-G",
-        "GLOBAL-TECH-IP14PM-TCB-CS-M",
-        "GLOBAL-TECH-IP15PM-TCB-CS-G",
-        "GLOBAL-TECH-IP15PM-TCB-CS-M",
-        "GLOBAL-TECH-IP16-TCB-CS-G",
-        "GLOBAL-TECH-IP16-TCB-CS-M",
-        "GLOBAL-TECH-IP16PR-TCB-CS-G",
-        "GLOBAL-TECH-IP16PR-TCB-CS-M",
-        "GLOBAL-TECH-IP17PR-TCB-CS-G",
-        "GLOBAL-TECH-IP17PR-TCB-CS-M",
-        "GLOBAL-TECH-IP17PM-TCB-CS-G",
-        "GLOBAL-TECH-IP17PM-TCB-CS-M",
-        "GLOBAL-TECH-IP17-TCB-CS-G",
-        "GLOBAL-TECH-IP17-TCB-CS-M",
-        "GLOBAL-TECH-IP17A-TCB-CS-G",
-        "GLOBAL-TECH-IP17A-TCB-CS-M",
-    ];
+        const allowedSkus = [
+            "GLOBAL-FRA-CAN-16X20",
+            "GLOBAL-SLIMCAN-16X20",
+            "GLOBAL-MOU-ACRY-24X36",
+            "GLOBAL-FRA-ALU-10X10",
+            "GLOBAL-FRA-ALU-18X24",
+            "GLOBAL-FRA-ALU-24X36",
+            "GLOBAL-BOXM-MOTH-8X12",
+            "GLOBAL-BOXM-MOTH-18X24",
+            "GLOBAL-BOXM-MOTH-12X12",
+            "BOOK-FE-A4-L-LF-G",
+            "BOOK-FE-11_7-SQ-LF-G",
+            "BOOK-FE-8_3-SQ-LF-G",
+            "GLOBAL-MOU-PRISM-8X8-TRANS",
+            "XMAS-GLASS-SQ",
+            "GLOBAL-PLWCASE-TAUPE-30X22-STD",
+            "GLOBAL-MUG-MAGIC-B",
+            "H-COAST-6PK",
+            "GLOBAL-TECH-IP14-TCB-CS-G",
+            "GLOBAL-TECH-IP14-TCB-CS-M",
+            "GLOBAL-TECH-IP14PM-TCB-CS-G",
+            "GLOBAL-TECH-IP14PM-TCB-CS-M",
+            "GLOBAL-TECH-IP15PM-TCB-CS-G",
+            "GLOBAL-TECH-IP15PM-TCB-CS-M",
+            "GLOBAL-TECH-IP16-TCB-CS-G",
+            "GLOBAL-TECH-IP16-TCB-CS-M",
+            "GLOBAL-TECH-IP16PR-TCB-CS-G",
+            "GLOBAL-TECH-IP16PR-TCB-CS-M",
+            "GLOBAL-TECH-IP17PR-TCB-CS-G",
+            "GLOBAL-TECH-IP17PR-TCB-CS-M",
+            "GLOBAL-TECH-IP17PM-TCB-CS-G",
+            "GLOBAL-TECH-IP17PM-TCB-CS-M",
+            "GLOBAL-TECH-IP17-TCB-CS-G",
+            "GLOBAL-TECH-IP17-TCB-CS-M",
+            "GLOBAL-TECH-IP17A-TCB-CS-G",
+            "GLOBAL-TECH-IP17A-TCB-CS-M",
+        ];
 
-    try {
-        const productsPromises = allowedSkus.map(sku => getProdigiProduct(sku));
-        const productsResults = await Promise.all(productsPromises);
-        const products = productsResults.filter((p): p is ProdigiProduct => p !== null);
-        return products;
-    } catch (error) {
-        console.error("Error fetching Prodigi product catalog concurrently:", error);
-        return [];
-    }
-}
+        try {
+            if (process.env.NODE_ENV === "development") {
+                console.log("[Prodigi] Fetching catalog (Cache miss or revalidation)");
+            }
+            const productsPromises = allowedSkus.map(sku => getProdigiProduct(sku));
+            const productsResults = await Promise.all(productsPromises);
+            const products = productsResults.filter((p): p is ProdigiProduct => p !== null);
+            return products;
+        } catch (error) {
+            console.error("Error fetching Prodigi product catalog concurrently:", error);
+            return [];
+        }
+    },
+    ["prodigi-catalog-all"],
+    { revalidate: 86400, tags: ["prodigi-catalog"] }
+);
 
 /**
  * Create a new order via Prodigi API.

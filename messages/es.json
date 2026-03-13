@@ -1294,6 +1294,7 @@
     "cvc": "CVC",
     "drag_drop": "Haz clic o arrastra la imagen aquí",
     "email_address": "Correo electrónico",
+    "phone_number": "Número de teléfono",
     "enter_address_for_options": "Introduce la dirección para ver opciones",
     "enter_city": "Introduce tu ciudad",
     "est_dpi": "Estimado ~{dpi} DPI",

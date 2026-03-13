@@ -54,7 +54,7 @@ export const getRatesForBase = cache(async (base: string = "EUR"): Promise<Recor
     } catch (error) {
         console.error(`[Currency] Failed to fetch rates for ${base}:`, error);
         if (cached) return cached.rates;
-        
+
         // Final fallback: identity or common defaults
         return base.toUpperCase() === "EUR" ? { "TRY": 36.5, "GBP": 0.84, "USD": 1.05 } : { [base]: 1.0 };
     }
@@ -65,10 +65,10 @@ export const getRatesForBase = cache(async (base: string = "EUR"): Promise<Recor
  */
 export async function convertCurrency(amount: number, from: string, to: string = "EUR"): Promise<number> {
     if (from.toUpperCase() === to.toUpperCase()) return amount;
-    
+
     const rates = await getRatesForBase(from);
     const rate = rates[to.toUpperCase()];
-    
+
     if (!rate) {
         // If direct rate not found, try via EUR as bridge
         const eurRates = await getRatesForBase("EUR");
@@ -76,7 +76,7 @@ export async function convertCurrency(amount: number, from: string, to: string =
         const eurToTarget = eurRates[to.toUpperCase()] || 1;
         return amount * fromToEur * eurToTarget;
     }
-    
+
     return amount * rate;
 }
 

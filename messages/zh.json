@@ -1290,6 +1290,7 @@
     "cvc": "CVC",
     "drag_drop": "点击或将图片拖动到此处",
     "email_address": "电子邮件地址",
+    "phone_number": "电话号码",
     "enter_address_for_options": "输入地址以查看选项",
     "enter_city": "输入您的城市",
     "est_dpi": "预计 ~{dpi} DPI",

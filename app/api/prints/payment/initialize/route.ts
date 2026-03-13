@@ -127,7 +127,7 @@ export async function POST(request: NextRequest) {
         id: `buyer_${conversationId}`,
         name: shippingDetails.firstName || "Customer",
         surname: shippingDetails.lastName || "User",
-        gsmNumber: "+905555555555", // default if not collected
+        gsmNumber: shippingDetails.phone || "+905555555555", // Fallback if somehow missing
         email: shippingDetails.email,
         identityNumber: process.env.IYZICO_IDENTITY_NUMBER || "11111111111",
         registrationAddress: shippingDetails.addressLine1 || "Istanbul",

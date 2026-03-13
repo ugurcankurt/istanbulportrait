@@ -13,6 +13,8 @@ import { Country, State } from "country-state-city";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
+import PhoneInput from "react-phone-number-input";
+import "react-phone-number-input/style.css";
 import { trackPrintBeginCheckout } from "@/lib/analytics";
 
 export function PrintCheckoutForm() {
@@ -36,6 +38,7 @@ export function PrintCheckoutForm() {
         stateOrCounty: "",
         postalOrZipCode: "",
         countryCode: "TR", // default
+        phone: "",
     });
 
     const [paymentDetails, setPaymentDetails] = useState({
@@ -281,6 +284,16 @@ export function PrintCheckoutForm() {
                                             <div className="space-y-2">
                                                 <label className="text-sm font-medium">{t("email_address")}</label>
                                                 <Input type="email" required value={shippingDetails.email} onChange={e => setShippingDetails({ ...shippingDetails, email: e.target.value })} />
+                                            </div>
+                                            <div className="space-y-2">
+                                                <label className="text-sm font-medium">{t("phone_number")}</label>
+                                                <PhoneInput
+                                                    value={shippingDetails.phone}
+                                                    onChange={val => setShippingDetails({ ...shippingDetails, phone: val as string })}
+                                                    defaultCountry="TR"
+                                                    placeholder={t("phone_number")}
+                                                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background placeholder:text-muted-foreground focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                                                />
                                             </div>
                                             <div className="space-y-2">
                                                 <label className="text-sm font-medium">{t("billing_address")}</label>
