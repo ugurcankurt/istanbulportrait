@@ -48,7 +48,7 @@ async function getQuoteForSku(sku: string, attributes?: Record<string, string>):
 
     try {
         const quoteRequest: any = {
-            destinationCountryCode: "TR", // Default destination for pricing reference
+            destinationCountryCode: "GB", // Using GB as default destination for pricing reference to ensure maximum availability in Sandbox
             items: [
                 {
                     sku: sku,
@@ -62,6 +62,10 @@ async function getQuoteForSku(sku: string, attributes?: Record<string, string>):
             quoteRequest.items[0].attributes = attributes;
         }
 
+        if (process.env.NODE_ENV === "development") {
+            console.log(`[Prodigi Quote Debug] Sending request for ${sku}:`, JSON.stringify(quoteRequest));
+        }
+
         const response = await fetch(`${baseUrl}/Quotes`, {
             method: 'POST',
             headers: getHeaders(),
@@ -70,6 +74,10 @@ async function getQuoteForSku(sku: string, attributes?: Record<string, string>):
         });
 
         const data = await response.json();
+
+        if (process.env.NODE_ENV === "development") {
+            console.log(`[Prodigi Quote Debug] Response for ${sku}:`, JSON.stringify(data));
+        }
 
         if (!response.ok) {
             // If missing attributes, try to resolve once from the error response
@@ -96,8 +104,9 @@ async function getQuoteForSku(sku: string, attributes?: Record<string, string>):
                 }
             }
 
-            console.error(`[Prodigi] Quote failed for ${sku}: ${response.status}`, JSON.stringify(data));
-            return 0;
+            const errorMsg = `[Prodigi] Quote failed for ${sku} (${response.status}): ${JSON.stringify(data)}`;
+            console.error(errorMsg);
+            throw new Error(errorMsg);
         }
 
         // Extract cost from the first quote option
@@ -246,7 +255,12 @@ export const getProdigiProduct = cache(async (sku: string): Promise<ProdigiProdu
                 });
             }
 
-            costEur = await getQuoteForSku(sku, defaultAttributes);
+            try {
+                costEur = await getQuoteForSku(sku, defaultAttributes);
+            } catch (err) {
+                console.error(`[Prodigi] Final quote fallback failed for ${sku}:`, err);
+                costEur = 0;
+            }
         }
 
         if (process.env.NODE_ENV === "development") {

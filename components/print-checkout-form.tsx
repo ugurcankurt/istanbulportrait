@@ -22,7 +22,7 @@ export function PrintCheckoutForm() {
     const t = useTranslations("prints");
     const router = useRouter();
     const { items, getTotalPrice, updatePrintQuantity, removePrintFromCart, clearPrintsCart } = usePrintsCartStore();
-    
+
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [shippingOptions, setShippingOptions] = useState<any[]>([]);
     const [selectedMethodIndex, setSelectedMethodIndex] = useState<number | null>(null);
@@ -119,7 +119,7 @@ export function PrintCheckoutForm() {
 
     const handleCheckout = async (e: React.FormEvent) => {
         e.preventDefault();
-        
+
         if (items.length === 0) {
             toast.error(t("empty_cart"));
             return;
@@ -144,12 +144,12 @@ export function PrintCheckoutForm() {
 
         const selectedOption = shippingOptions[selectedMethodIndex!];
         const cartTotal = getTotalPrice();
-        
+
         // Calculate tax based on retail prices (including markup)
         // using the effective rate from Prodigi
         const retailShipping = selectedOption.shippingCost + selectedOption.shippingTax;
         const retailTax = (cartTotal + selectedOption.shippingCost) * selectedOption.effectiveTaxRate;
-        
+
         const finalTotal = cartTotal + selectedOption.shippingCost + retailTax;
 
         try {
@@ -200,7 +200,7 @@ export function PrintCheckoutForm() {
             toast.success(t("order_success_toast"));
             clearPrintsCart();
             router.push(`/${locale}/prints/checkout/success?orderId=${result.order?.id || result.order?.order?.id || 'success'}`);
-            
+
         } catch (error: any) {
             console.error("Checkout Error:", error);
             toast.error(error.message || "Something went wrong.");
@@ -222,7 +222,7 @@ export function PrintCheckoutForm() {
 
     const cartTotal = getTotalPrice();
     const selectedOption = selectedMethodIndex !== null ? shippingOptions[selectedMethodIndex] : null;
-    
+
     // Calculate display totals
     const retailTax = selectedOption ? (cartTotal + selectedOption.shippingCost) * selectedOption.effectiveTaxRate : 0;
     const finalTotal = cartTotal + (selectedOption?.shippingCost || 0) + retailTax;
@@ -290,7 +290,7 @@ export function PrintCheckoutForm() {
                                                 <PhoneInput
                                                     value={shippingDetails.phone}
                                                     onChange={val => setShippingDetails({ ...shippingDetails, phone: val as string })}
-                                                    defaultCountry="TR"
+                                                    defaultCountry="GB"
                                                     placeholder={t("phone_number")}
                                                     className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background placeholder:text-muted-foreground focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                                                 />
