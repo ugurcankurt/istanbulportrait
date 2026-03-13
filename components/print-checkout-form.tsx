@@ -20,9 +20,11 @@ import { trackPrintBeginCheckout } from "@/lib/analytics";
 interface PrintCheckoutFormProps {
     sku?: string;
     initialProduct?: any;
+    quantity?: number;
+    coupon?: string;
 }
 
-export function PrintCheckoutForm({ sku, initialProduct }: PrintCheckoutFormProps) {
+export function PrintCheckoutForm({ sku, initialProduct, quantity = 1, coupon }: PrintCheckoutFormProps) {
     const locale = useLocale();
     const t = useTranslations("prints");
     const router = useRouter();
@@ -37,13 +39,19 @@ export function PrintCheckoutForm({ sku, initialProduct }: PrintCheckoutFormProp
                 name: initialProduct.description,
                 price: initialProduct.pricing?.eur || 0,
                 currency: "EUR",
-                quantity: 1,
+                quantity: quantity,
                 uploadUrl: "", // Draft state: requires upload in checkout
                 attributes: {}, // default
             });
+            
+            if (coupon) {
+                // Future: Apply coupon logic if we have a coupon store/system
+                toast.success(t("discount_applied") || `Coupon ${coupon} applied`);
+            }
+            
             toast.info(t("upload_photo"));
         }
-    }, [sku, initialProduct, addPrintToCart, items.length, t]);
+    }, [sku, initialProduct, addPrintToCart, items.length, t, quantity, coupon]);
 
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isUploading, setIsUploading] = useState<string | null>(null); // Track which item is uploading by ID

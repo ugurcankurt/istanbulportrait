@@ -10,7 +10,7 @@ import { SEO_CONFIG } from "@/lib/seo-config";
 
 interface PrintCheckoutPageProps {
     params: Promise<{ locale: string }>;
-    searchParams: Promise<{ sku?: string }>;
+    searchParams: Promise<{ sku?: string; products?: string; coupon?: string }>;
 }
 
 export async function generateMetadata({ params }: PrintCheckoutPageProps) {
@@ -60,18 +60,30 @@ function PrintCheckoutSkeleton() {
 }
 
 export default async function PrintCheckoutPage({ searchParams }: PrintCheckoutPageProps) {
-    const { sku } = await searchParams;
+    const { sku, products, coupon } = await searchParams;
     let initialProduct = null;
+    let finalSku = sku;
+    let quantity = 1;
 
-    if (sku) {
-        initialProduct = await getProdigiProduct(sku.toUpperCase());
+    // Handle Meta products format: ?products=sku1:qty1,sku2:qty2
+    if (products) {
+        const firstProduct = products.split(",")[0];
+        if (firstProduct) {
+            const [id, qty] = firstProduct.split(":");
+            finalSku = id;
+            if (qty) quantity = parseInt(qty, 10);
+        }
+    }
+
+    if (finalSku) {
+        initialProduct = await getProdigiProduct(finalSku.toUpperCase());
     }
 
     return (
         <div className="min-h-screen bg-gradient-to-b from-background to-muted/20">
             <BreadcrumbNav />
             <Suspense fallback={<PrintCheckoutSkeleton />}>
-                <PrintCheckoutForm sku={sku} initialProduct={initialProduct} />
+                <PrintCheckoutForm sku={finalSku} initialProduct={initialProduct} quantity={quantity} coupon={coupon} />
             </Suspense>
         </div>
     );
