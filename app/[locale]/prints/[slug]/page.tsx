@@ -5,6 +5,7 @@ import { getProdigiProduct } from "@/lib/prodigi";
 import { PrintConfigurator } from "@/components/print-configurator";
 import { Badge } from "@/components/ui/badge";
 import { Check } from "lucide-react";
+import { SEO_CONFIG } from "@/lib/seo-config";
 import { PackageGallery } from "@/components/package-gallery";
 import { JsonLd } from "@/lib/structured-data";
 import { PrintViewTracker } from "@/components/analytics/print-view-tracker";
@@ -57,7 +58,8 @@ export default async function PrintDetailsPage({ params }: PrintDetailsPageProps
         price: product.pricing?.eur || 0,
         currency: "EUR",
         availability: "https://schema.org/InStock" as const,
-        url: `/${locale}/prints/${slug}`,
+        url: `${SEO_CONFIG.site.url}/${locale}/prints/${slug}`,
+        checkoutPageURLTemplate: `${SEO_CONFIG.site.url}/${locale}/prints/checkout?sku={id}`,
         category: product.category,
         brand: "Istanbul Portrait",
         condition: "new"

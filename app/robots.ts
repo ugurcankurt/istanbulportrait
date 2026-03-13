@@ -17,6 +17,10 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ["/admin/"],
       },
       {
+        userAgent: "Google-Storebot",
+        allow: ["/"],
+      },
+      {
         userAgent: "YandexBot",
         crawlDelay: 2,
       },
