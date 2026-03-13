@@ -24,13 +24,13 @@ export async function GET(req: NextRequest) {
         : `${baseUrl}/products/${p.sku.toLowerCase()}-1.webp`;
       
       // Better Google Product Category detection based on our auto-categorization
-      let googleCategory = "Arts & Entertainment > Hobbies & Creative Arts > Arts & Crafts > Art Prints";
+      let googleCategory = "Arts &amp; Entertainment > Hobbies &amp; Creative Arts > Arts &amp; Crafts > Art Prints";
       if (p.category === "Technology") {
         googleCategory = "Electronics > Communications > Telephony > Mobile Phone Accessories > Mobile Phone Cases";
       } else if (p.category === "Home & living") {
-        googleCategory = "Home & Garden > Decor";
+        googleCategory = "Home &amp; Garden > Decor";
       } else if (p.category === "Wall art") {
-        googleCategory = "Home & Garden > Decor > Artwork > Posters, Prints, & Visual Artwork";
+        googleCategory = "Home &amp; Garden > Decor > Artwork > Posters, Prints, &amp; Visual Artwork";
       }
 
       return `
