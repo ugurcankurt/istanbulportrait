@@ -4,11 +4,13 @@ import { BreadcrumbNav } from "@/components/breadcrumb-nav";
 import { PrintCheckoutForm } from "@/components/print-checkout-form";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { getProdigiProduct } from "@/lib/prodigi";
 import { getLocalizedPaths } from "@/lib/localized-url";
 import { SEO_CONFIG } from "@/lib/seo-config";
 
 interface PrintCheckoutPageProps {
     params: Promise<{ locale: string }>;
+    searchParams: Promise<{ sku?: string }>;
 }
 
 export async function generateMetadata({ params }: PrintCheckoutPageProps) {
@@ -57,12 +59,19 @@ function PrintCheckoutSkeleton() {
     );
 }
 
-export default function PrintCheckoutPage() {
+export default async function PrintCheckoutPage({ searchParams }: PrintCheckoutPageProps) {
+    const { sku } = await searchParams;
+    let initialProduct = null;
+
+    if (sku) {
+        initialProduct = await getProdigiProduct(sku.toUpperCase());
+    }
+
     return (
         <div className="min-h-screen bg-gradient-to-b from-background to-muted/20">
             <BreadcrumbNav />
             <Suspense fallback={<PrintCheckoutSkeleton />}>
-                <PrintCheckoutForm />
+                <PrintCheckoutForm sku={sku} initialProduct={initialProduct} />
             </Suspense>
         </div>
     );

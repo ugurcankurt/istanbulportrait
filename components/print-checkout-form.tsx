@@ -8,7 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
-import { Loader2, Trash2, MapPin, CreditCard, ShieldCheck, Minus, Plus } from "lucide-react";
+import { Loader2, Trash2, MapPin, CreditCard, ShieldCheck, Minus, Plus, UploadCloud } from "lucide-react";
 import { Country, State } from "country-state-city";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
@@ -17,13 +17,36 @@ import PhoneInput from "react-phone-number-input";
 import "react-phone-number-input/style.css";
 import { trackPrintBeginCheckout } from "@/lib/analytics";
 
-export function PrintCheckoutForm() {
+interface PrintCheckoutFormProps {
+    sku?: string;
+    initialProduct?: any;
+}
+
+export function PrintCheckoutForm({ sku, initialProduct }: PrintCheckoutFormProps) {
     const locale = useLocale();
     const t = useTranslations("prints");
     const router = useRouter();
-    const { items, getTotalPrice, updatePrintQuantity, removePrintFromCart, clearPrintsCart } = usePrintsCartStore();
+    const { items, getTotalPrice, updatePrintQuantity, removePrintFromCart, clearPrintsCart, addPrintToCart } = usePrintsCartStore();
+
+    // Auto-add product if SKU is provided and it's not in cart
+    useEffect(() => {
+        if (sku && initialProduct && items.length === 0) {
+            addPrintToCart({
+                productId: initialProduct.sku,
+                sku: initialProduct.sku,
+                name: initialProduct.description,
+                price: initialProduct.pricing?.eur || 0,
+                currency: "EUR",
+                quantity: 1,
+                uploadUrl: "", // Draft state: requires upload in checkout
+                attributes: {}, // default
+            });
+            toast.info(t("upload_photo"));
+        }
+    }, [sku, initialProduct, addPrintToCart, items.length, t]);
 
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [isUploading, setIsUploading] = useState<string | null>(null); // Track which item is uploading by ID
     const [shippingOptions, setShippingOptions] = useState<any[]>([]);
     const [selectedMethodIndex, setSelectedMethodIndex] = useState<number | null>(null);
     const [isCalculatingShipping, setIsCalculatingShipping] = useState(false);
@@ -137,6 +160,11 @@ export function PrintCheckoutForm() {
 
         if (!paymentDetails.cardHolderName || !paymentDetails.cardNumber || !paymentDetails.expireMonth || !paymentDetails.expireYear || !paymentDetails.cvc) {
             toast.error(t("fill_payment_toast"));
+            return;
+        }
+
+        if (items.some(item => !item.uploadUrl)) {
+            toast.error(t("upload_photo"));
             return;
         }
 
@@ -500,32 +528,78 @@ export function PrintCheckoutForm() {
                                                     </div>
                                                     <div className="flex-1">
                                                         <h4 className="font-medium text-sm line-clamp-2">{item.name}</h4>
-                                                        <div className="flex items-center justify-between mt-2">
-                                                            <div className="flex items-center border rounded-md h-7 px-1 bg-background">
-                                                                <button
-                                                                    type="button"
-                                                                    onClick={() => updatePrintQuantity(item.id, item.quantity - 1)}
-                                                                    disabled={item.quantity <= 1}
-                                                                    className="p-1 hover:text-primary disabled:opacity-30 transition-colors"
-                                                                >
-                                                                    <Minus className="h-3 w-3" />
-                                                                </button>
-                                                                <span className="w-8 text-center text-xs font-bold tabular-nums">
-                                                                    {item.quantity}
-                                                                </span>
-                                                                <button
-                                                                    type="button"
-                                                                    onClick={() => updatePrintQuantity(item.id, item.quantity + 1)}
-                                                                    className="p-1 hover:text-primary transition-colors"
-                                                                >
-                                                                    <Plus className="h-3 w-3" />
-                                                                </button>
+                                                        {!item.uploadUrl ? (
+                                                            <div className="mt-2">
+                                                                <Label className="text-[10px] text-destructive font-bold uppercase mb-1 block">
+                                                                    {t("upload_photo")}
+                                                                </Label>
+                                                                <div className="relative border-2 border-dashed border-primary/20 rounded-lg p-3 text-center hover:bg-primary/5 transition-colors cursor-pointer group">
+                                                                    <input
+                                                                        type="file"
+                                                                        accept="image/jpeg, image/png"
+                                                                        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+                                                                        onChange={async (e) => {
+                                                                            const file = e.target.files?.[0];
+                                                                            if (!file) return;
+                                                                            setIsUploading(item.id);
+                                                                            try {
+                                                                                const urlRes = await fetch("/api/prints/upload", {
+                                                                                    method: "POST",
+                                                                                    headers: { "Content-Type": "application/json" },
+                                                                                    body: JSON.stringify({ fileName: file.name, fileType: file.type }),
+                                                                                });
+                                                                                const { signedUrl, publicUrl } = await urlRes.json();
+                                                                                await fetch(signedUrl, { method: "PUT", body: file, headers: { "Content-Type": file.type } });
+
+                                                                                // Update the item in cart with the uploaded URL
+                                                                                const updatedItems = items.map(it => it.id === item.id ? { ...it, uploadUrl: publicUrl } : it);
+                                                                                usePrintsCartStore.setState({ items: updatedItems });
+                                                                                toast.success(t("quality_approved"));
+                                                                            } catch (err) {
+                                                                                toast.error(t("upload_failed_toast"));
+                                                                            } finally {
+                                                                                setIsUploading(null);
+                                                                            }
+                                                                        }}
+                                                                    />
+                                                                    {isUploading === item.id ? (
+                                                                        <Loader2 className="w-5 h-5 animate-spin mx-auto text-primary" />
+                                                                    ) : (
+                                                                        <div className="flex flex-col items-center">
+                                                                            <UploadCloud className="w-5 h-5 text-primary mb-1 group-hover:scale-110 transition-transform" />
+                                                                            <span className="text-[10px] font-medium">{t("drag_drop")}</span>
+                                                                        </div>
+                                                                    )}
+                                                                </div>
                                                             </div>
-                                                            <span className="font-bold text-primary">€{(item.price * item.quantity).toFixed(2)}</span>
-                                                            <Button variant="ghost" size="icon" className="h-6 w-6 text-destructive shrink-0" onClick={() => removePrintFromCart(item.id)} aria-label={t("remove_item")}>
-                                                                <Trash2 className="w-4 h-4" />
-                                                            </Button>
-                                                        </div>
+                                                        ) : (
+                                                            <div className="flex items-center justify-between mt-2">
+                                                                <div className="flex items-center border rounded-md h-7 px-1 bg-background">
+                                                                    <button
+                                                                        type="button"
+                                                                        onClick={() => updatePrintQuantity(item.id, item.quantity - 1)}
+                                                                        disabled={item.quantity <= 1}
+                                                                        className="p-1 hover:text-primary disabled:opacity-30 transition-colors"
+                                                                    >
+                                                                        <Minus className="h-3 w-3" />
+                                                                    </button>
+                                                                    <span className="w-8 text-center text-xs font-bold tabular-nums">
+                                                                        {item.quantity}
+                                                                    </span>
+                                                                    <button
+                                                                        type="button"
+                                                                        onClick={() => updatePrintQuantity(item.id, item.quantity + 1)}
+                                                                        className="p-1 hover:text-primary transition-colors"
+                                                                    >
+                                                                        <Plus className="h-3 w-3" />
+                                                                    </button>
+                                                                </div>
+                                                                <span className="font-bold text-primary">€{(item.price * item.quantity).toFixed(2)}</span>
+                                                                <Button variant="ghost" size="icon" className="h-6 w-6 text-destructive shrink-0" onClick={() => removePrintFromCart(item.id)} aria-label={t("remove_item")}>
+                                                                    <Trash2 className="w-4 h-4" />
+                                                                </Button>
+                                                            </div>
+                                                        )}
                                                     </div>
                                                 </div>
                                             ))}
@@ -591,7 +665,7 @@ export function PrintCheckoutForm() {
                                             type="submit"
                                             form="print-checkout-form"
                                             className="w-full h-12 text-base font-semibold mt-6"
-                                            disabled={isSubmitting || isCalculatingShipping || selectedMethodIndex === null}
+                                            disabled={isSubmitting || isCalculatingShipping || selectedMethodIndex === null || items.some(it => !it.uploadUrl) || isUploading !== null}
                                         >
                                             {isSubmitting ? <Loader2 className="w-5 h-5 animate-spin mr-2" /> : null}
                                             {isSubmitting ? t("processing") : t("complete_order")}

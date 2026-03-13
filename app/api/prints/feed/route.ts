@@ -39,6 +39,7 @@ export async function GET(req: NextRequest) {
       <g:title><![CDATA[${p.description}]]></g:title>
       <g:description><![CDATA[Order a custom ${p.description}. Upload your photo and get it printed with high quality. Worldwide shipping available.]]></g:description>
       <g:link>${link}</g:link>
+      <g:checkout_link_template>${baseUrl}/${locale}/prints/checkout?sku={id}</g:checkout_link_template>
       <g:image_link>${imageLink}</g:image_link>
       <g:condition>new</g:condition>
       <g:availability>in stock</g:availability>
