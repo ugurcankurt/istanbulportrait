@@ -7,7 +7,6 @@ import { getMessages, getTranslations } from "next-intl/server";
 import { CoreWebVitals } from "@/components/analytics/core-web-vitals";
 import { FacebookPixel } from "@/components/analytics/facebook-pixel";
 import { GoogleAnalytics } from "@/components/analytics/google-analytics";
-import { GoogleTag } from "@/components/analytics/google-tag";
 import { MicrosoftClarity } from "@/components/analytics/microsoft-clarity";
 import { MultilingualCookieConsent } from "@/components/analytics/multilingual-cookie-consent";
 import { YandexMetrica } from "@/components/analytics/yandex-metrica";
@@ -212,9 +211,6 @@ export default async function LocaleLayout({
                 {/* PaymentBanner removed as per user request */}
                 <Navigation />
                 <main className="flex-1">{children}</main>
-
-                {/* Analytics - Google Tag loads on all pages (Advanced Consent Mode) */}
-                <GoogleTag />
 
                 {/* Facebook Pixel — loads on all pages, consent managed internally via fbq('consent','revoke/grant') */}
                 <FacebookPixel />
