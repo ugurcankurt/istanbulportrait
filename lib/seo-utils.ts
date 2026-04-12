@@ -37,6 +37,20 @@ export function generateSeoTitle(title: string | null | undefined, locale: strin
 }
 
 /**
+ * Optimizes an image URL for SEO (OpenGraph & Schema) by passing it through Next.js Image Optimization.
+ * Resizes the image to a standardized width to improve crawlability and social sharing performance.
+ */
+export function optimizeSeoImage(imageUrl: string | null | undefined, width: 1200 | 1080 | 1920 = 1200): string {
+  if (!imageUrl) return "";
+  if (imageUrl.startsWith("/")) return `https://istanbulphotosession.com.tr${imageUrl}`;
+  if (!imageUrl.startsWith("http")) return imageUrl;
+  
+  // Uses Next.js built-in optimizer for allowed remote patterns
+  // 1200 is configured in next.config.ts deviceSizes
+  return `https://istanbulphotosession.com.tr/_next/image?url=${encodeURIComponent(imageUrl)}&w=${width}&q=80`;
+}
+
+/**
  * Base open graph constructor helping out dynamic layouts.
  */
 export function constructOpenGraph(
@@ -46,6 +60,8 @@ export function constructOpenGraph(
   siteName: string,
   locale: string
 ) {
+  const optimizedUrl = optimizeSeoImage(imageUrl, 1200);
+
   return {
     title,
     description,
@@ -53,7 +69,7 @@ export function constructOpenGraph(
     siteName: siteName || title,
     images: [
       {
-        url: imageUrl,
+        url: optimizedUrl,
         width: 1200,
         height: 630,
         alt: title,
@@ -69,11 +85,13 @@ export function constructOpenGraph(
 // ----------------------------------------------------
 
 export function buildLocalBusinessSchema(settings: SiteSettings) {
+  const imageUrl = optimizeSeoImage(settings.logo_url || settings.default_og_image_url, 1200);
+
   return {
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
     name: settings.organization_name || settings.site_name,
-    image: settings.logo_url || settings.default_og_image_url,
+    image: imageUrl,
     "@id": "https://istanbulphotosession.com.tr",
     url: "https://istanbulphotosession.com.tr",
     telephone: settings.contact_phone || settings.whatsapp_number,
@@ -132,7 +150,7 @@ export function buildProductSchema({
     "@context": "https://schema.org/",
     "@type": "Product",
     name,
-    image,
+    image: image ? optimizeSeoImage(image, 1200) : undefined,
     description,
     offers: {
       "@type": "Offer",
@@ -176,7 +194,7 @@ export function buildArticleSchema({
     "@context": "https://schema.org",
     "@type": "Article",
     headline: title,
-    image: [image],
+    image: image ? [optimizeSeoImage(image, 1200)] : [],
     datePublished,
     dateModified,
     author: [

@@ -112,9 +112,9 @@ export function ResumeViewingCard({
             {thero("resume_title")}
           </h1>
         ) : (
-          <h2 className="text-2xl sm:text-3xl md:text-5xl font-bold text-white drop-shadow-lg text-center tracking-tight">
+          <div className="text-2xl sm:text-3xl md:text-5xl font-bold text-white drop-shadow-lg text-center tracking-tight">
             {thero("resume_title")}
-          </h2>
+          </div>
         )
       )}
 
@@ -182,9 +182,9 @@ export function ResumeViewingCard({
                       </div>
                       <CardHeader className="flex-1 flex flex-col justify-between p-0 py-1 pr-2 uppercase-none">
                         <div className="space-y-1">
-                          <h3 className="text-sm sm:text-lg font-bold leading-tight group-hover:text-primary transition-colors line-clamp-2 text-slate-900">
+                          <div className="text-sm sm:text-lg font-bold leading-tight group-hover:text-primary transition-colors line-clamp-2 text-slate-900">
                             {locName}
-                          </h3>
+                          </div>
 
                           <div className="flex items-center gap-2 text-[10px] sm:text-xs text-slate-500 font-medium">
                             <div className="flex items-center gap-1">

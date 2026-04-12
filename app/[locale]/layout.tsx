@@ -18,6 +18,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { Metadata } from "next";
 import { SchemaInjector } from "@/components/schema-injector";
 import { buildLocalBusinessSchema, constructOpenGraph } from "@/lib/seo-utils";
+import { routing } from "@/i18n/routing";
 
 const WhatsAppButton = dynamic(() =>
   import("@/components/whatsapp-button").then((mod) => mod.WhatsAppButton),
@@ -73,6 +74,11 @@ export async function generateMetadata({
   const desc = settingsService.resolveTranslatable(settings.site_description, locale);
   const ogImage = settings.default_og_image_url || "";
 
+  const languages: Record<string, string> = {};
+  routing.locales.forEach((loc) => {
+    languages[loc] = `/${loc}`;
+  });
+
   return {
     metadataBase: new URL("https://istanbulphotosession.com.tr"),
     title: {
@@ -82,10 +88,7 @@ export async function generateMetadata({
     description: desc,
     alternates: {
       canonical: "./",
-      languages: {
-        en: "/en",
-        tr: "/tr"
-      }
+      languages: languages
     },
     openGraph: constructOpenGraph(title, desc, ogImage, title, locale),
     twitter: {

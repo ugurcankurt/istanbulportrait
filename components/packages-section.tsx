@@ -92,7 +92,7 @@ export function PackagesSection({ header, customCtaHeader, aggregateRating, dbPa
     });
   };
 
-  const renderPackageCard = (pkg: any) => (
+  const renderPackageCard = (pkg: any, asHeading: boolean = true) => (
     <div
       className="relative cursor-pointer h-full"
       onClick={() => handlePackageClick(pkg)}
@@ -156,9 +156,15 @@ export function PackagesSection({ header, customCtaHeader, aggregateRating, dbPa
           </div>
 
           <CardHeader className="text-left pb-2 sm:pb-2 px-3 sm:px-4 pt-4">
-            <h3 className="text-xl sm:text-xl font-bold mb-1 sm:mb-2">
-              {pkg.name}
-            </h3>
+            {asHeading ? (
+              <h3 className="text-xl sm:text-xl font-bold mb-1 sm:mb-2">
+                {pkg.name}
+              </h3>
+            ) : (
+              <div className="text-xl sm:text-xl font-bold mb-1 sm:mb-2">
+                {pkg.name}
+              </div>
+            )}
 
             {/* Review Rating */}
             {aggregateRating && (
@@ -222,7 +228,7 @@ export function PackagesSection({ header, customCtaHeader, aggregateRating, dbPa
                 {packages.map((pkg) => (
                   <CarouselItem key={pkg.id} className="ps-4 basis-[78%]">
                     <div className="h-full px-0.5"> {/* Extra tiny padding for ring/shadow */}
-                      {renderPackageCard(pkg)}
+                      {renderPackageCard(pkg, false)}
                     </div>
                   </CarouselItem>
                 ))}
@@ -234,7 +240,7 @@ export function PackagesSection({ header, customCtaHeader, aggregateRating, dbPa
           <div className="hidden sm:grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8 mx-auto">
             {packages.map((pkg) => (
               <div key={pkg.id}>
-                {renderPackageCard(pkg)}
+                {renderPackageCard(pkg, true)}
               </div>
             ))}
           </div>

@@ -1,6 +1,11 @@
 import { MetadataRoute } from "next";
+import { routing } from "@/i18n/routing";
 
 export default function robots(): MetadataRoute.Robots {
+  // Dynamically extract and block all localized checkout/payment pages
+  const checkoutDisallows = Object.values(routing.pathnames["/checkout"]).map(path => `/*${path}*`);
+  const printsCheckoutDisallows = Object.values(routing.pathnames["/prints/checkout"]).map(path => `/*${path}*`);
+
   return {
     rules: {
       userAgent: "*",
@@ -12,6 +17,8 @@ export default function robots(): MetadataRoute.Robots {
         "/*?*booking*", // Disallow parameterized booking states
         "/*?*payment*", // Disallow payment gateways
         "/*?*search=",  // Disallow user search queries
+        ...checkoutDisallows,
+        ...printsCheckoutDisallows,
       ],
     },
     sitemap: "https://istanbulphotosession.com.tr/sitemap.xml",
