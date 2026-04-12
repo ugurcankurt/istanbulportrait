@@ -85,22 +85,23 @@ export function Navigation({ dynamicNavData = {}, settings }: NavigationProps) {
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container mx-auto flex h-14 sm:h-16 items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Logo */}
-        <Link href={`/${locale}`} className="flex items-center w-40 sm:w-48">
-          <AspectRatio ratio={15 / 4}>
+        <Link href={`/${locale}`} className="relative flex items-center w-36 h-10 sm:w-48 sm:h-12 transition-transform hover:opacity-90">
             <Image
-              src={
-                mounted && resolvedTheme === "dark"
-                  ? settings?.logo_dark_url || "/istanbulportrait_white_logo.webp"
-                  : settings?.logo_url || "/istanbulportrait_dark_logo.webp"
-              }
+              src={settings?.logo_url || "/istanbulportrait_dark_logo.webp"}
               alt="Photographer in Istanbul - Istanbul Photoshoot"
               fill
-              sizes="(max-width: 640px) 160px, 192px"
-              className="object-contain"
+              sizes="(max-width: 640px) 144px, 192px"
+              className="object-contain object-left dark:hidden"
               priority
-              suppressHydrationWarning
             />
-          </AspectRatio>
+            <Image
+              src={settings?.logo_dark_url || "/istanbulportrait_white_logo.webp"}
+              alt="Photographer in Istanbul - Istanbul Photoshoot"
+              fill
+              sizes="(max-width: 640px) 144px, 192px"
+              className="object-contain object-left hidden dark:block"
+              priority
+            />
         </Link>
 
         {/* Desktop Navigation */}
@@ -205,21 +206,21 @@ export function Navigation({ dynamicNavData = {}, settings }: NavigationProps) {
             </SheetTrigger>
             <SheetContent side="right" className="w-80 p-0">
               <SheetHeader className="p-6 pb-4 bg-muted/30">
-                <div className="flex items-center justify-center w-32 mx-auto">
-                  <AspectRatio ratio={15 / 4}>
+                <div className="relative flex items-center justify-center w-32 h-10 mx-auto">
                     <Image
-                      src={
-                        mounted && resolvedTheme === "dark"
-                          ? "/istanbulportrait_white_logo.webp"
-                          : "/istanbulportrait_dark_logo.webp"
-                      }
+                      src={settings?.logo_url || "/istanbulportrait_dark_logo.webp"}
                       alt="Best Istanbul photographer - Professional photography services"
                       fill
                       sizes="128px"
-                      className="object-contain"
-                      suppressHydrationWarning
+                      className="object-contain dark:hidden"
                     />
-                  </AspectRatio>
+                    <Image
+                      src={settings?.logo_dark_url || "/istanbulportrait_white_logo.webp"}
+                      alt="Best Istanbul photographer - Professional photography services"
+                      fill
+                      sizes="128px"
+                      className="object-contain hidden dark:block"
+                    />
                   <SheetTitle className="sr-only">
                     Istanbul Photographer
                   </SheetTitle>

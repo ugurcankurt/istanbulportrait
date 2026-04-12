@@ -1,14 +1,14 @@
-import { DM_Sans, Figtree, Geist_Mono } from "next/font/google";
+import { Outfit, Geist_Mono } from "next/font/google";
 import { AdminLayoutClient } from "./admin-layout-client";
 import { settingsService } from "@/lib/settings-service";
 import "../globals.css";
 
-const fontHeading = DM_Sans({
+const fontHeading = Outfit({
   variable: "--font-heading",
   subsets: ["latin"],
 });
 
-const fontSans = Figtree({
+const fontSans = Outfit({
   variable: "--font-sans",
   subsets: ["latin"],
 });

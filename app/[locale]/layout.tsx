@@ -1,9 +1,9 @@
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
-import { DM_Sans, Figtree, Geist_Mono } from "next/font/google";
+import { Outfit, Geist_Mono } from "next/font/google";
 import Script from "next/script";
 import { NextIntlClientProvider } from "next-intl";
-import { getMessages, getTranslations } from "next-intl/server";
+import { getMessages } from "next-intl/server";
 import { CoreWebVitals } from "@/components/analytics/core-web-vitals";
 import { FacebookPixel } from "@/components/analytics/facebook-pixel";
 import { InteractionLoader } from "@/components/analytics/interaction-loader";
@@ -36,12 +36,12 @@ const DeferredCookieConsent = dynamic(() =>
   import("@/components/analytics/deferred-analytics").then((mod) => mod.DeferredCookieConsent)
 );
 
-const fontHeading = DM_Sans({
+const fontHeading = Outfit({
   variable: "--font-heading",
   subsets: ["latin"],
 });
 
-const fontSans = Figtree({
+const fontSans = Outfit({
   variable: "--font-sans",
   subsets: ["latin"],
 });
