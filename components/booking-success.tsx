@@ -338,11 +338,11 @@ export function BookingSuccess({
 
             {/* Action Buttons */}
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 rtl:gap-reverse pt-4">
-              <Button asChild className="flex-1 h-11">
-                <Link href={"/packages" as any}>{t("buttons.book_another")}</Link>
+              <Button render={<Link href={"/packages" as any} />} className="flex-1 h-11">
+                {t("buttons.book_another")}
               </Button>
-              <Button asChild variant="outline" className="flex-1 h-11">
-                <Link href="/">{tui("back_to_home")}</Link>
+              <Button render={<Link href="/" />} variant="outline" className="flex-1 h-11">
+                {tui("back_to_home")}
               </Button>
             </div>
           </CardContent>

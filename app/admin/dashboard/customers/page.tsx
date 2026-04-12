@@ -519,10 +519,8 @@ export default function CustomersPage() {
                     </TableCell>
                     <TableCell>
                       <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" size="sm">
+                        <DropdownMenuTrigger render={<Button variant="ghost" size="sm" />}>
                             <MoreHorizontal className="w-4 h-4" />
-                          </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
                           <DropdownMenuLabel>Actions</DropdownMenuLabel>

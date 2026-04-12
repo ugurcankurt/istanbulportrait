@@ -210,11 +210,9 @@ export default function BlogManagementPage() {
           </p>
         </div>
         <div className="flex gap-2">
-          <Button asChild>
-            <Link href="/admin/dashboard/blog/new">
+          <Button render={<Link href="/admin/dashboard/blog/new" />}>
               <Plus className="w-4 h-4 mr-2" />
               New Post
-            </Link>
           </Button>
         </div>
       </div>
@@ -348,13 +346,11 @@ export default function BlogManagementPage() {
           </div>
 
           <div className="flex gap-2 mt-4">
-            <Button asChild variant="outline" size="sm">
-              <Link href="/admin/dashboard/blog/categories">
+            <Button render={<Link href="/admin/dashboard/blog/categories" />} variant="outline" size="sm">
                 Manage Categories
-              </Link>
             </Button>
-            <Button asChild variant="outline" size="sm">
-              <Link href="/admin/dashboard/blog/tags">Manage Tags</Link>
+            <Button render={<Link href="/admin/dashboard/blog/tags" />} variant="outline" size="sm">
+              Manage Tags
             </Button>
           </div>
         </CardContent>
@@ -381,11 +377,9 @@ export default function BlogManagementPage() {
                   Start creating engaging content for your photography blog
                 </EmptyDescription>
                 <EmptyContent>
-                  <Button asChild>
-                    <Link href="/admin/dashboard/blog/new">
+                  <Button render={<Link href="/admin/dashboard/blog/new" />}>
                       <Plus className="w-4 h-4 mr-2" />
                       Create First Post
-                    </Link>
                   </Button>
                 </EmptyContent>
               </Empty>
@@ -451,27 +445,18 @@ export default function BlogManagementPage() {
                       <TableCell>{post.views_count}</TableCell>
                       <TableCell className="text-right">
                         <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="sm">
+                          <DropdownMenuTrigger render={<Button variant="ghost" size="sm" />}>
                               <MoreHorizontal className="w-4 h-4" />
-                            </Button>
                           </DropdownMenuTrigger>
                           <DropdownMenuContent align="end">
                             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                            <DropdownMenuItem asChild>
-                              <Link
-                                href={`/${locale}/blog/${post.translation.slug}`}
-                                target="_blank"
-                              >
+                            <DropdownMenuItem render={<Link href={`/${locale}/blog/${post.translation.slug}`} target="_blank" />}>
                                 <Eye className="w-4 h-4 mr-2" />
                                 View Post
-                              </Link>
                             </DropdownMenuItem>
-                            <DropdownMenuItem asChild>
-                              <Link href={`/admin/dashboard/blog/${post.id}`}>
+                            <DropdownMenuItem render={<Link href={`/admin/dashboard/blog/${post.id}`} />}>
                                 <Edit className="w-4 h-4 mr-2" />
                                 Edit Post
-                              </Link>
                             </DropdownMenuItem>
                             <DeletePostDialog
                               post={post}

@@ -139,11 +139,11 @@ export function AboutSection({
 
             <div className="pt-2 sm:pt-4">
               <Button
-                asChild
+                render={<Link href={"/packages" as any} />}
                 size="sm"
                 className="sm:size-lg text-xs sm:text-sm"
               >
-                <Link href={"/packages" as any}>{tui("view_my_work")}</Link>
+                {tui("view_my_work")}
               </Button>
             </div>
           </div>
@@ -201,19 +201,19 @@ export function AboutSection({
             {ctaHeader}
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
               <Button
-                asChild
+                render={<Link href={"/locations" as any} />}
                 size="sm"
                 className="sm:size-lg text-xs sm:text-sm"
               >
-                <Link href={"/locations" as any}>{tui("check_locations")}</Link>
+                {tui("check_locations")}
               </Button>
               <Button
-                asChild
+                render={<Link href={"/packages" as any} />}
                 variant="outline"
                 size="sm"
                 className="sm:size-lg text-xs sm:text-sm"
               >
-                <Link href={"/packages" as any}>{tui("view_packages")}</Link>
+                {tui("view_packages")}
               </Button>
             </div>
           </div>

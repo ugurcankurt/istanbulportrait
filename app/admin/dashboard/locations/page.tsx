@@ -86,11 +86,9 @@ export default function LocationsAdminPage() {
             Manage your photography locations and maps.
           </p>
         </div>
-        <Button asChild className="shrink-0 gap-2">
-          <Link href="/admin/dashboard/locations/new">
+        <Button render={<Link href="/admin/dashboard/locations/new" />} className="shrink-0 gap-2">
             <Plus className="w-4 h-4" />
             Add Location
-          </Link>
         </Button>
       </div>
 
@@ -177,10 +175,8 @@ export default function LocationsAdminPage() {
                     <TableCell>{loc.sort_order}</TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end gap-2">
-                        <Button variant="outline" size="icon" asChild>
-                          <Link href={`/admin/dashboard/locations/${loc.id}`}>
+                        <Button variant="outline" size="icon" render={<Link href={`/admin/dashboard/locations/${loc.id}`} />}>
                             <Pencil className="w-4 h-4" />
-                          </Link>
                         </Button>
                         <Button 
                           variant="outline" 

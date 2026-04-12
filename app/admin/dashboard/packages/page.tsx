@@ -93,11 +93,9 @@ export default function PackagesAdminPage() {
             Manage your photography packages, pricing, and features.
           </p>
         </div>
-        <Button asChild className="shrink-0 gap-2">
-          <Link href="/admin/dashboard/packages/new">
+        <Button render={<Link href="/admin/dashboard/packages/new" />} className="shrink-0 gap-2">
             <Plus className="w-4 h-4" />
             Add Package
-          </Link>
         </Button>
       </div>
 
@@ -184,12 +182,10 @@ export default function PackagesAdminPage() {
                         <Button
                           variant="ghost"
                           size="icon"
-                          asChild
+                          render={<Link href={`/admin/dashboard/packages/${pkg.id}`} />}
                         >
-                          <Link href={`/admin/dashboard/packages/${pkg.id}`}>
                             <Pencil className="w-4 h-4" />
                             <span className="sr-only">Edit</span>
-                          </Link>
                         </Button>
                         <Button
                           variant="ghost"

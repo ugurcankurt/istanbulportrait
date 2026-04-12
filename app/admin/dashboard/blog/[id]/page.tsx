@@ -72,8 +72,8 @@ export default function EditBlogPostPage({
       <div className="flex items-center justify-center min-h-[400px]">
         <div className="text-center">
           <p className="text-muted-foreground mb-4">Blog post not found</p>
-          <Button asChild>
-            <Link href="/admin/dashboard/blog">Back to Posts</Link>
+          <Button render={<Link href="/admin/dashboard/blog" />}>
+            Back to Posts
           </Button>
         </div>
       </div>
@@ -84,11 +84,9 @@ export default function EditBlogPostPage({
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center gap-4">
-        <Button variant="ghost" size="sm" asChild>
-          <Link href="/admin/dashboard/blog">
+        <Button variant="ghost" size="sm" render={<Link href="/admin/dashboard/blog" />}>
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back to Posts
-          </Link>
         </Button>
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Edit Post</h1>

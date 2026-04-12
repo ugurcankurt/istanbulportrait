@@ -37,11 +37,9 @@ export default function NewBlogPostPage() {
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center gap-4">
-        <Button variant="ghost" size="sm" asChild>
-          <Link href="/admin/dashboard/blog">
+        <Button variant="ghost" size="sm" render={<Link href="/admin/dashboard/blog" />}>
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back to Posts
-          </Link>
         </Button>
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Create New Post</h1>

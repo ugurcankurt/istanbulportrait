@@ -251,11 +251,11 @@ export async function LocationDetailPageContent({
                     {t("bookPhotoshootDescription")}
                   </p>
                   <Button
-                    asChild
+                    render={<Link href={"/packages" as any} />}
                     variant="secondary"
                     className="w-full font-semibold shadow-lg hover:shadow-xl transition-all"
                   >
-                    <Link href={"/packages" as any}>{t("viewPackages")}</Link>
+                    {t("viewPackages")}
                   </Button>
                 </CardContent>
               </Card>

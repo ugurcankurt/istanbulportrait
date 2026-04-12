@@ -43,11 +43,9 @@ export function ErrorContent({ error, reset }: ErrorContentProps) {
             <RefreshCw className="w-4 h-4" />
             Retry Request
           </Button>
-          <Button variant="outline" asChild className="w-full sm:w-auto gap-2">
-            <Link href="/">
+          <Button variant="outline" render={<Link href="/" />} className="w-full sm:w-auto gap-2">
               <Home className="w-4 h-4" />
               Return Home
-            </Link>
           </Button>
         </CardFooter>
       </Card>

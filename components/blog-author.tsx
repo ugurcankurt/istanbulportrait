@@ -95,51 +95,27 @@ export function BlogAuthor({ author, siteSettings }: BlogAuthorProps) {
 
           <div className="flex flex-wrap gap-2 pt-2 justify-center md:justify-start">
             {socialLinks.instagram && (
-              <Button asChild variant="outline" size="sm" className="gap-2">
-                <a
-                  href={socialLinks.instagram}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
+              <Button render={<a href={socialLinks.instagram} target="_blank" rel="noopener noreferrer" />} variant="outline" size="sm" className="gap-2">
                   <Instagram className="w-4 h-4" />
                   Instagram
-                </a>
               </Button>
             )}
             {socialLinks.twitter && (
-              <Button asChild variant="outline" size="sm" className="gap-2">
-                <a
-                  href={socialLinks.twitter}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
+              <Button render={<a href={socialLinks.twitter} target="_blank" rel="noopener noreferrer" />} variant="outline" size="sm" className="gap-2">
                   <Twitter className="w-4 h-4" />
                   Twitter
-                </a>
               </Button>
             )}
             {socialLinks.linkedin && (
-              <Button asChild variant="outline" size="sm" className="gap-2">
-                <a
-                  href={socialLinks.linkedin}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
+              <Button render={<a href={socialLinks.linkedin} target="_blank" rel="noopener noreferrer" />} variant="outline" size="sm" className="gap-2">
                   <Linkedin className="w-4 h-4" />
                   LinkedIn
-                </a>
               </Button>
             )}
             {socialLinks.website && (
-              <Button asChild variant="outline" size="sm" className="gap-2">
-                <a
-                  href={socialLinks.website}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
+              <Button render={<a href={socialLinks.website} target="_blank" rel="noopener noreferrer" />} variant="outline" size="sm" className="gap-2">
                   <Globe className="w-4 h-4" />
                   Website
-                </a>
               </Button>
             )}
           </div>

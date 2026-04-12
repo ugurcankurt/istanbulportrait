@@ -104,36 +104,26 @@ export function NotFoundContent({
           {/* Action Buttons */}
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 md:gap-6 justify-center items-center">
             <Button
-              asChild
+              render={<Link href={`/${locale}`} className="flex items-center gap-2 sm:gap-3" />}
               size="lg"
               className="w-full sm:w-auto bg-primary hover:bg-primary/90 text-primary-foreground transition-all duration-300 shadow-lg hover:shadow-xl px-6 sm:px-8"
             >
-              <Link
-                href={`/${locale}`}
-                className="flex items-center gap-2 sm:gap-3"
-              >
                 <Home className="w-4 h-4 sm:w-5 sm:h-5" />
                 <span className="text-sm sm:text-base font-medium">
                   {homeButton}
                 </span>
-              </Link>
             </Button>
 
             <Button
-              asChild
+              render={<Link href={`/${locale}/packages`} className="flex items-center gap-2 sm:gap-3" />}
               variant="outline"
               size="lg"
               className="w-full sm:w-auto text-white border-white hover:bg-white hover:text-black sm:px-8"
             >
-              <Link
-                href={`/${locale}/packages`}
-                className="flex items-center gap-2 sm:gap-3"
-              >
                 <MapPin className="w-4 h-4 sm:w-5 sm:h-5" />
                 <span className="text-sm sm:text-base font-medium">
                   {packagesButton}
                 </span>
-              </Link>
             </Button>
           </div>
 

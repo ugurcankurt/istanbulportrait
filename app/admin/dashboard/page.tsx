@@ -167,8 +167,8 @@ export default function AdminDashboard() {
           </p>
         </div>
         <div className="flex gap-2">
-          <Button asChild variant="outline">
-            <Link href="/admin/dashboard/bookings">View All Bookings</Link>
+          <Button render={<Link href="/admin/dashboard/bookings" />} variant="outline">
+            View All Bookings
           </Button>
         </div>
       </div>
@@ -266,8 +266,8 @@ export default function AdminDashboard() {
               Latest booking activities
             </p>
           </div>
-          <Button asChild variant="outline" size="sm">
-            <Link href="/admin/dashboard/bookings">View All</Link>
+          <Button render={<Link href="/admin/dashboard/bookings" />} variant="outline" size="sm">
+            View All
           </Button>
         </CardHeader>
         <CardContent>

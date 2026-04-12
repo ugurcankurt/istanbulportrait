@@ -149,12 +149,10 @@ export default function PagesAdminPage() {
                           variant="ghost"
                           size="sm"
                           className="gap-2"
-                          asChild
+                          render={<Link href={`/admin/dashboard/pages/${page.slug}`} />}
                         >
-                          <Link href={`/admin/dashboard/pages/${page.slug}`}>
                             <Pencil className="w-4 h-4" />
                             <span>{page.id ? "Edit" : "Setup Page"}</span>
-                          </Link>
                         </Button>
                       </div>
                     </TableCell>
