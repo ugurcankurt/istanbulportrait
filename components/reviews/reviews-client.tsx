@@ -2,7 +2,7 @@
 
 import { ExternalLink, Quote, Star } from "lucide-react";
 import Image from "next/image";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import {
@@ -26,6 +26,8 @@ export function ReviewsClient({
   header,
 }: ReviewsClientProps) {
   const t = useTranslations("reviews");
+  const locale = useLocale();
+  const isRtl = locale === "ar";
 
   const renderStars = (rating: number, size: "sm" | "md" | "lg" = "md") => {
     const sizeClasses = {
@@ -80,6 +82,7 @@ export function ReviewsClient({
             opts={{
               align: "start",
               loop: true,
+              direction: isRtl ? "rtl" : "ltr",
             }}
             className="w-full"
           >
