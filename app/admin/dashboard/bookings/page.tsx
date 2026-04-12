@@ -86,14 +86,13 @@ function StatusBadge({ status }: { status: string }) {
 }
 
 function BookingDetailsDialog({ booking }: { booking: Booking }) {
+  const [open, setOpen] = useState(false);
   return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-          <Eye className="w-4 h-4 mr-2" />
-          View Details
-        </DropdownMenuItem>
-      </DialogTrigger>
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DropdownMenuItem onSelect={(e) => setOpen(true)}>
+        <Eye className="w-4 h-4 mr-2" />
+        View Details
+      </DropdownMenuItem>
       <DialogContent className="max-w-2xl">
         <DialogHeader>
           <DialogTitle>Booking Details</DialogTitle>
@@ -243,12 +242,10 @@ function EditBookingDialog({
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-          <Edit className="w-4 h-4 mr-2" />
-          Edit Booking
-        </DropdownMenuItem>
-      </DialogTrigger>
+      <DropdownMenuItem onSelect={() => setOpen(true)}>
+        <Edit className="w-4 h-4 mr-2" />
+        Edit Booking
+      </DropdownMenuItem>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Edit Booking</DialogTitle>
@@ -261,9 +258,9 @@ function EditBookingDialog({
             <Label htmlFor="status">Status</Label>
             <Select
               value={status}
-              onValueChange={(value: string) =>
-                setStatus(value as typeof status)
-              }
+              onValueChange={(value) => {
+                if (value) setStatus(value as typeof status)
+              }}
             >
               <SelectTrigger>
                 <SelectValue />
@@ -397,7 +394,7 @@ export default function BookingsPage() {
             </div>
             <Select
               value={statusFilter}
-              onValueChange={(value) => setFilters({ statusFilter: value })}
+              onValueChange={(value) => setFilters({ statusFilter: value || 'all' })}
             >
               <SelectTrigger className="w-40">
                 <SelectValue placeholder="Status" />
@@ -413,6 +410,7 @@ export default function BookingsPage() {
             <Select
               value={`${sortBy}-${sortOrder}`}
               onValueChange={(value) => {
+                if (!value) return;
                 const [field, order] = value.split("-");
                 setFilters({
                   sortBy: field,

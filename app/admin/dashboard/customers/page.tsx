@@ -53,6 +53,7 @@ import {
 import { type Customer, useCustomersStore } from "@/stores/customers-store";
 
 function CustomerDetailsDialog({ customer }: { customer: Customer }) {
+  const [open, setOpen] = useState(false);
   const formatCurrency = (amount: number) => `€${amount.toLocaleString()}`;
   const averageSpent =
     customer.confirmed_bookings > 0
@@ -60,13 +61,11 @@ function CustomerDetailsDialog({ customer }: { customer: Customer }) {
       : 0;
 
   return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-          <Eye className="w-4 h-4 mr-2" />
-          View Details
-        </DropdownMenuItem>
-      </DialogTrigger>
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DropdownMenuItem onSelect={(e) => setOpen(true)}>
+        <Eye className="w-4 h-4 mr-2" />
+        View Details
+      </DropdownMenuItem>
       <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Customer Details</DialogTitle>
@@ -399,6 +398,7 @@ export default function CustomersPage() {
             <Select
               value={`${sortBy}-${sortOrder}`}
               onValueChange={(value) => {
+                if (!value) return;
                 const [field, order] = value.split("-");
                 setFilters({
                   sortBy: field,

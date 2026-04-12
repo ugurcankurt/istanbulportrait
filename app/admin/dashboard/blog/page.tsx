@@ -279,7 +279,7 @@ export default function BlogManagementPage() {
             {/* Category Filter */}
             <Select
               value={category_id}
-              onValueChange={(value) => setFilters({ category_id: value })}
+              onValueChange={(value) => setFilters({ category_id: value || 'all' })}
             >
               <SelectTrigger>
                 <SelectValue placeholder="Category" />
@@ -297,7 +297,7 @@ export default function BlogManagementPage() {
             {/* Tag Filter */}
             <Select
               value={tag_id}
-              onValueChange={(value) => setFilters({ tag_id: value })}
+              onValueChange={(value) => setFilters({ tag_id: value || 'all' })}
             >
               <SelectTrigger>
                 <SelectValue placeholder="Tag" />

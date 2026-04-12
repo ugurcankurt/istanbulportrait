@@ -1,11 +1,8 @@
 "use client";
 
 import {
-  Bell,
   BookOpen,
   Calendar,
-  Camera,
-  CreditCard,
   LayoutDashboard,
   Loader2,
   LogOut,
@@ -17,6 +14,7 @@ import {
   TicketPercent,
 } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
@@ -37,6 +35,7 @@ import { useAuthStore } from "@/stores/auth-store";
 
 interface AdminLayoutClientProps {
   children: React.ReactNode;
+  settings?: any;
 }
 
 const navigation = [
@@ -87,7 +86,7 @@ const navigation = [
   },
 ];
 
-export function AdminLayoutClient({ children }: AdminLayoutClientProps) {
+export function AdminLayoutClient({ children, settings }: AdminLayoutClientProps) {
   const {
     user,
     isAuthenticated,
@@ -183,10 +182,18 @@ export function AdminLayoutClient({ children }: AdminLayoutClientProps) {
             <SidebarHeader className="border-b">
               <Link
                 href="/admin/dashboard"
-                className="flex items-center space-x-2 p-2"
+                className="flex items-center space-x-2 p-2 relative h-12 w-full max-w-[180px]"
               >
-                <Camera className="w-8 h-8 text-blue-600" />
-                <span className="font-bold text-xl">Istanbul Photographer</span>
+                <Image
+                  src={
+                    settings?.logo_url ||
+                    "/istanbulportrait_dark_logo.webp"
+                  }
+                  alt={settings?.site_name || "Istanbul Photographer"}
+                  fill
+                  className="object-contain object-left"
+                  priority
+                />
               </Link>
             </SidebarHeader>
 

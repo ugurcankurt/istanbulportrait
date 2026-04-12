@@ -1,5 +1,6 @@
 import { DM_Sans, Figtree, Geist_Mono } from "next/font/google";
 import { AdminLayoutClient } from "./admin-layout-client";
+import { settingsService } from "@/lib/settings-service";
 import "../globals.css";
 
 const fontHeading = DM_Sans({
@@ -19,11 +20,13 @@ const geistMono = Geist_Mono({
 
 
 
-export default function AdminLayout({
+export default async function AdminLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const settings = await settingsService.getSettings();
+
   return (
     <html
       lang="en"
@@ -31,7 +34,7 @@ export default function AdminLayout({
       suppressHydrationWarning
     >
       <body className="antialiased min-h-screen bg-background font-sans">
-        <AdminLayoutClient>{children}</AdminLayoutClient>
+        <AdminLayoutClient settings={settings}>{children}</AdminLayoutClient>
       </body>
     </html>
   );
