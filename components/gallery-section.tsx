@@ -71,10 +71,9 @@ export function GallerySection({ header, images = [] }: GallerySectionProps) {
               className="group relative aspect-square rounded-xl overflow-hidden cursor-pointer"
             >
               <Dialog>
-                <DialogTrigger asChild>
-                  <button
+                <DialogTrigger
                     onClick={() => openLightbox(image.id)}
-                    className="relative w-full h-full border-0 p-0 bg-transparent cursor-pointer"
+                    className="relative w-full h-full border-0 p-0 bg-transparent cursor-pointer group-hover:scale-100"
                     aria-label={`View ${image.alt} in fullscreen`}
                     type="button"
                   >
@@ -108,7 +107,6 @@ export function GallerySection({ header, images = [] }: GallerySectionProps) {
                         </svg>
                       </div>
                     </div>
-                  </button>
                 </DialogTrigger>
               </Dialog>
             </div>

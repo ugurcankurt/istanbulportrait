@@ -40,6 +40,13 @@
       "submit": "أرسل رسالة",
       "success": "شكرا لك! سوف نعود اليكم قريبا.",
       "error": "حدث خطأ ما. يرجى المحاولة مرة أخرى."
+    },
+    "info": {
+      "phone": "هاتف",
+      "email": "بريد إلكتروني",
+      "address": "عنوان",
+      "whatsapp": "WhatsApp",
+      "instagram": "Instagram"
     }
   },
   "checkout": {

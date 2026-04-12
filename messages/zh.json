@@ -40,6 +40,13 @@
       "submit": "发送消息",
       "success": "谢谢！我们会尽快回复您。",
       "error": "出了点问题。请再试一次。"
+    },
+    "info": {
+      "phone": "电话",
+      "email": "电子邮件",
+      "address": "地址",
+      "whatsapp": "WhatsApp",
+      "instagram": "Instagram"
     }
   },
   "checkout": {

@@ -40,6 +40,13 @@
       "submit": "Отправить сообщение",
       "success": "Спасибо! Мы скоро свяжемся с вами.",
       "error": "Что-то пошло не так. Пожалуйста, попробуйте еще раз."
+    },
+    "info": {
+      "phone": "Телефон",
+      "email": "Email",
+      "address": "Адрес",
+      "whatsapp": "WhatsApp",
+      "instagram": "Instagram"
     }
   },
   "checkout": {

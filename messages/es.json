@@ -40,6 +40,13 @@
       "submit": "Enviar mensaje",
       "success": "¡Gracias! Nos comunicaremos contigo pronto.",
       "error": "Algo salió mal. Por favor inténtalo de nuevo."
+    },
+    "info": {
+      "phone": "Teléfono",
+      "email": "Correo",
+      "address": "Dirección",
+      "whatsapp": "WhatsApp",
+      "instagram": "Instagram"
     }
   },
   "checkout": {

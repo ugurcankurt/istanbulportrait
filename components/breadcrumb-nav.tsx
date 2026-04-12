@@ -156,14 +156,11 @@ export function BreadcrumbNav(props: BreadcrumbNavProps) {
                         {item.label}
                       </BreadcrumbPage>
                     ) : (
-                      <BreadcrumbLink asChild>
-                        <Link
-                          href={item.href || "#"}
-                          className="flex items-center gap-2"
-                        >
-                          {item.isHome && <Home className="h-4 w-4" />}
-                          {item.label}
-                        </Link>
+                      <BreadcrumbLink
+                        render={<Link href={item.href || "#"} className="flex items-center gap-2" />}
+                      >
+                        {item.isHome && <Home className="h-4 w-4" />}
+                        {item.label}
                       </BreadcrumbLink>
                     )}
                   </BreadcrumbItem>

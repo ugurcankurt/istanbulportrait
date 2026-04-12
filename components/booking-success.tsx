@@ -6,8 +6,6 @@ import {
   Clock,
   Mail,
   Phone,
-  Users,
-  Wallet,
 } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { Badge } from "@/components/ui/badge";
@@ -15,11 +13,11 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Link } from "@/i18n/routing";
-import { getPackagePricing } from "@/lib/pricing";
 import { formatCurrency, localizeNumerals } from "@/lib/utils";
 import type { BookingFormData, PackageId } from "@/lib/validations";
 import { usePackagesStore } from "@/stores/packages-store";
-import { useEffect } from "react";
+import { settingsService, type SiteSettings } from "@/lib/settings-service";
+import { useEffect, useState } from "react";
 
 interface BookingSuccessProps {
   bookingId: string;
@@ -44,9 +42,11 @@ export function BookingSuccess({
   const tcontact = useTranslations("contact");
 
   const { packages, fetchPackages } = usePackagesStore();
+  const [settings, setSettings] = useState<SiteSettings | null>(null);
 
   useEffect(() => {
     fetchPackages();
+    settingsService.getSettings().then(setSettings);
   }, [fetchPackages]);
 
   const packageDBInfo = packages.find((p) => p.slug === packageId);
@@ -68,7 +68,7 @@ export function BookingSuccess({
   const isPerPerson = packageId === "rooftop" || packageId === "rooftop-swing";
   const baseTotal = isPerPerson ? basePrice * peopleCount : basePrice;
   const paidTotal = confirmedBooking?.totalAmount || 0;
-  
+
   const discountAmount = baseTotal > 0 ? Math.max(0, baseTotal - paidTotal) : 0;
   const isDiscounted = discountAmount > 0;
 
@@ -322,7 +322,7 @@ export function BookingSuccess({
                     <Mail className="w-4 h-4" />
                   </div>
                   <span className="text-sm font-medium">
-                    info@istanbulphotosession.com.tr
+                    {settings?.contact_email || "info@istanbulphotosession.com.tr"}
                   </span>
                 </div>
                 <div className="flex items-center gap-3 rtl:gap-reverse">
@@ -330,7 +330,7 @@ export function BookingSuccess({
                     <Phone className="w-4 h-4" />
                   </div>
                   <span className="text-sm font-medium phone-number">
-                    {tcontact("info.phone")}
+                    {settings?.contact_phone || tcontact("info.phone")}
                   </span>
                 </div>
               </div>

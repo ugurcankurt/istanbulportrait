@@ -40,6 +40,13 @@
       "submit": "Send Message",
       "success": "Thank you! We'll get back to you soon.",
       "error": "Something went wrong. Please try again."
+    },
+    "info": {
+      "phone": "Phone",
+      "email": "Email",
+      "address": "Address",
+      "whatsapp": "WhatsApp",
+      "instagram": "Instagram"
     }
   },
   "checkout": {

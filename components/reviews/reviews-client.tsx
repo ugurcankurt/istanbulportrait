@@ -158,16 +158,21 @@ export function ReviewsClient({
 
         {/* View All Reviews Button */}
         <div className="text-center mt-8 sm:mt-12 lg:mt-16">
-          <Button variant="outline" size="lg" className="group" asChild>
-            <a
-              href="https://maps.app.goo.gl/Q2v1FDMw5LJHBBCA9"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2"
-            >
-              <span>{t("view_all")}</span>
-              <ExternalLink className="w-4 h-4 group-hover:translate-x-1 transition-all duration-300" />
-            </a>
+          <Button
+            variant="outline"
+            size="lg"
+            className="group"
+            render={
+              <a
+                href="https://maps.app.goo.gl/Q2v1FDMw5LJHBBCA9"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2"
+              />
+            }
+          >
+            <span>{t("view_all")}</span>
+            <ExternalLink className="w-4 h-4 group-hover:translate-x-1 transition-all duration-300" />
           </Button>
         </div>
       </div>

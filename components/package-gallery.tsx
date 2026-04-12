@@ -1,7 +1,7 @@
 "use client";
 
 import useEmblaCarousel from "embla-carousel-react";
-import * as DialogPrimitive from "@radix-ui/react-dialog";
+import { Dialog as DialogPrimitive } from "@base-ui/react/dialog";
 import {
   ChevronLeft,
   ChevronRight,
@@ -12,7 +12,7 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import * as React from "react";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -255,8 +255,8 @@ export function PackageGallery({
       {/* --- LIGHTBOX DIALOG --- */}
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogPrimitive.Portal>
-          <DialogPrimitive.Overlay className="fixed inset-0 z-[110] bg-background data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0" />
-          <DialogPrimitive.Content className="fixed inset-0 z-[120] w-screen h-screen flex flex-col items-center justify-center outline-none bg-background data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 duration-200">
+          <DialogPrimitive.Backdrop className="fixed inset-0 z-[110] bg-background data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0" />
+          <DialogPrimitive.Popup className="fixed inset-0 z-[120] w-screen h-screen flex flex-col items-center justify-center outline-none bg-background data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 duration-200">
             <DialogTitle className="sr-only">Photo Gallery</DialogTitle>
 
             {/* Header Controls */}
@@ -269,14 +269,10 @@ export function PackageGallery({
               </div>
 
               {/* Close Button Top Right */}
-              <DialogClose asChild>
-                <Button
-                  variant="outline"
-                  size="icon"
-                  className="h-10 w-10 sm:h-12 sm:w-12 rounded-full bg-white shadow-lg border-slate-100 text-slate-900 hover:bg-slate-50 transition-all hover:scale-110"
-                >
-                  <X className="h-5 w-5 sm:h-6 sm:w-6" />
-                </Button>
+              <DialogClose
+                className={cn(buttonVariants({ variant: "outline", size: "icon" }), "h-10 w-10 sm:h-12 sm:w-12 rounded-full bg-white shadow-lg border-slate-100 text-slate-900 hover:bg-slate-50 transition-all hover:scale-110")}
+              >
+                <X className="h-5 w-5 sm:h-6 sm:w-6" />
               </DialogClose>
             </div>
 
@@ -323,7 +319,7 @@ export function PackageGallery({
                 </Button>
               </div>
             </div>
-          </DialogPrimitive.Content>
+          </DialogPrimitive.Popup>
         </DialogPrimitive.Portal>
       </Dialog>
     </div>

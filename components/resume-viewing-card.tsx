@@ -28,15 +28,6 @@ export interface LastVisited {
   timestamp: number;
 }
 
-const PACKAGE_IMAGES: Record<PackageId, string> = {
-  essential: "/images/packages/essential/istanbul_photoshoot_1.webp",
-  premium: "/images/packages/premium/istanbul_couple_photography_2.webp",
-  luxury: "/images/packages/luxury/istanbul_best_couple_photographer_5.webp",
-  rooftop: "/images/locations/bosphorus-rooftop-hero.webp",
-  "rooftop-swing": "/images/locations/bosphorus-rooftop-hero.webp",
-  cappadocia: "/images/packages/cappadocia/cappadocia_couple_photoshoot_1.webp",
-};
-
 interface ResumeViewingCardProps {
   visitedPackages?: LastVisited[];
   showTitle?: boolean;
@@ -152,7 +143,7 @@ export function ResumeViewingCard({
               const locName = packageDb?.title[locale] || packageDb?.title["en"] || packageDb?.slug || packageId;
               const locDuration = packageDb?.duration[locale] || packageDb?.duration["en"] || "";
               const locPhotos = extractPhotosCount(locFeatures);
-              const packageImage = packageDb?.cover_image || PACKAGE_IMAGES[packageId as keyof typeof PACKAGE_IMAGES] || "/images/packages/essential/istanbul_photoshoot_1.webp";
+              const packageImage = packageDb?.cover_image || "";
 
               const nativeSlug = packageDb?.title[locale] ? generateNativeSlug(packageDb.title[locale]) : (packageDb?.slug || packageId);
 
@@ -175,13 +166,19 @@ export function ResumeViewingCard({
                       </div>
 
                       <div className="relative w-32 sm:w-40 h-full overflow-hidden shrink-0 rounded-xl">
-                        <Image
-                          src={packageImage}
-                          alt={locName}
-                          fill
-                          className="object-cover transition-transform duration-500 group-hover:scale-110"
-                          sizes="(max-width: 640px) 150px, 200px"
-                        />
+                        {packageImage ? (
+                          <Image
+                            src={packageImage}
+                            alt={locName}
+                            fill
+                            className="object-cover transition-transform duration-500 group-hover:scale-110"
+                            sizes="(max-width: 640px) 150px, 200px"
+                          />
+                        ) : (
+                          <div className="w-full h-full bg-slate-100 flex items-center justify-center">
+                            <Images className="w-6 h-6 text-slate-300" />
+                          </div>
+                        )}
                       </div>
                       <CardHeader className="flex-1 flex flex-col justify-between p-0 py-1 pr-2 uppercase-none">
                         <div className="space-y-1">

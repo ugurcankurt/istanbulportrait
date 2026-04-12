@@ -40,6 +40,13 @@
       "submit": "Nachricht senden",
       "success": "Vielen Dank! Wir werden uns bald bei Ihnen melden.",
       "error": "Etwas ist schief gelaufen. Bitte versuchen Sie es erneut."
+    },
+    "info": {
+      "phone": "Telefon",
+      "email": "E-Mail",
+      "address": "Adresse",
+      "whatsapp": "WhatsApp",
+      "instagram": "Instagram"
     }
   },
   "checkout": {

@@ -64,7 +64,7 @@ export function PackagesSection({ header, customCtaHeader, aggregateRating, dbPa
           locations: pkg.locations || 1,
           features: locFeatures,
           popular: pkg.is_popular, // Set via dynamic CMS switch
-          image: pkg.cover_image || "/images/packages/essential/istanbul_photoshoot_1.webp",
+          image: pkg.cover_image || "",
         };
       });
     }
@@ -105,14 +105,20 @@ export function PackagesSection({ header, customCtaHeader, aggregateRating, dbPa
           className={`h-full flex flex-col overflow-hidden p-0 gap-0 pt-0 ${pkg.popular ? "ring-2 ring-primary shadow-xl sm:scale-105 bg-gradient-to-b from-background to-primary/5" : "border-2 hover:border-primary/20"}`}
         >
           <div className="relative h-50 w-full overflow-hidden">
-            <Image
-              src={pkg.image}
-              alt={pkg.name}
-              fill
-              className="object-cover transition-transform duration-500 hover:scale-110"
-              sizes="(max-width: 639px) 80vw, (max-width: 1023px) 45vw, 22vw"
-              quality={50}
-            />
+            {pkg.image ? (
+              <Image
+                src={pkg.image}
+                alt={pkg.name}
+                fill
+                className="object-cover transition-transform duration-500 hover:scale-110"
+                sizes="(max-width: 639px) 80vw, (max-width: 1023px) 45vw, 22vw"
+                quality={50}
+              />
+            ) : (
+                <div className="w-full h-full bg-muted flex flex-col items-center justify-center text-muted-foreground/30">
+                  <ImageIcon className="w-12 h-12 mb-2" />
+                </div>
+            )}
             <div className="absolute top-2 left-2 z-10 bg-primary text-primary-foreground px-3 py-1 rounded-lg font-bold text-lg sm:text-xl shadow-lg border border-white/20 flex flex-col items-center">
               <span
                 className={

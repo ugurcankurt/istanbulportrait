@@ -16,7 +16,7 @@ import { DEPOSIT_PERCENTAGE } from "@/lib/pricing";
 import { useState, useEffect } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { format } from "date-fns";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -150,23 +150,19 @@ export function BookingCard({
           {isPerPerson && (
             <div className="space-y-2">
               <Popover open={isPeoplePopoverOpen} onOpenChange={setIsPeoplePopoverOpen} modal={false}>
-                <PopoverTrigger asChild>
-                  <Button
-                    variant="outline"
-                    className="w-full h-12 px-6 font-bold flex items-center justify-between"
-                  >
-                    <div className="flex items-center gap-3">
-                      <User2 className="h-5 w-5 text-primary stroke-[2.5]" />
-                      <span>{tCheckout("person")} x {peopleCount}</span>
-                    </div>
-                    <ChevronDown className={cn("h-4 w-4 opacity-50 transition-transform", isPeoplePopoverOpen && "rotate-180")} />
-                  </Button>
+                <PopoverTrigger
+                  className={cn(buttonVariants({ variant: "outline" }), "w-full h-12 px-6 font-bold flex items-center justify-between")}
+                >
+                  <div className="flex items-center gap-3">
+                    <User2 className="h-5 w-5 text-primary stroke-[2.5]" />
+                    <span>{tCheckout("person")} x {peopleCount}</span>
+                  </div>
+                  <ChevronDown className={cn("h-4 w-4 opacity-50 transition-transform", isPeoplePopoverOpen && "rotate-180")} />
                 </PopoverTrigger>
                 <PopoverContent
                   className="w-[var(--radix-popover-trigger-width)] p-4 border-border shadow-2xl transition-all data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=open]:fade-in-0 data-[state=closed]:fade-out-0 data-[state=open]:slide-in-from-top-4 data-[state=closed]:slide-out-to-top-4 duration-300 ease-in-out"
                   align="start"
                   side="bottom"
-                  avoidCollisions={false}
                 >
                   <div className="space-y-6">
                     <div className="flex items-center justify-between">
@@ -213,20 +209,18 @@ export function BookingCard({
           {/* Date Selector */}
           <div className="space-y-2">
             <Popover open={isDatePopoverOpen} onOpenChange={setIsDatePopoverOpen} modal={false}>
-              <PopoverTrigger asChild>
-                <Button
-                  variant="outline"
-                  className={cn(
-                    "w-full h-12 px-6 font-bold flex items-center justify-between",
-                    !selectedDate && "text-muted-foreground/60"
-                  )}
-                >
-                  <div className="flex items-center gap-3 text-start">
-                    <CalendarIcon className="h-5 w-5 text-primary stroke-[2.5]" />
-                    <span>{selectedDate ? format(selectedDate, "PPP", { locale: dateFnsLocale }) : tCheckout("form.date")}</span>
-                  </div>
-                  <ChevronDown className={cn("h-4 w-4 opacity-50 transition-transform", isDatePopoverOpen && "rotate-180")} />
-                </Button>
+              <PopoverTrigger
+                className={cn(
+                  buttonVariants({ variant: "outline" }),
+                  "w-full h-12 px-6 font-bold flex items-center justify-between",
+                  !selectedDate && "text-muted-foreground/60"
+                )}
+              >
+                <div className="flex items-center gap-3 text-start">
+                  <CalendarIcon className="h-5 w-5 text-primary stroke-[2.5]" />
+                  <span>{selectedDate ? format(selectedDate, "PPP", { locale: dateFnsLocale }) : tCheckout("form.date")}</span>
+                </div>
+                <ChevronDown className={cn("h-4 w-4 opacity-50 transition-transform", isDatePopoverOpen && "rotate-180")} />
               </PopoverTrigger>
               <PopoverContent
                 className={cn(
@@ -235,7 +229,6 @@ export function BookingCard({
                 )}
                 align="center"
                 side="bottom"
-                avoidCollisions={true}
                 sideOffset={8}
               >
                 <Calendar
@@ -268,26 +261,23 @@ export function BookingCard({
           {selectedDate && (
             <div className="space-y-2 animate-in fade-in slide-in-from-top-2 duration-500">
               <Popover open={isTimePopoverOpen} onOpenChange={setIsTimePopoverOpen} modal={false}>
-                <PopoverTrigger asChild>
-                  <Button
-                    variant="outline"
-                    className={cn(
-                      "w-full h-12 px-6 font-bold flex items-center justify-between",
-                      !selectedTime && "text-muted-foreground/60"
-                    )}
-                  >
-                    <div className="flex items-center gap-3 text-start">
-                      <Clock className="h-5 w-5 text-primary stroke-[2.5]" />
-                      <span>{selectedTime ? selectedTime : tCheckout("form.select_time")}</span>
-                    </div>
-                    <ChevronDown className={cn("h-4 w-4 opacity-50 transition-transform", isTimePopoverOpen && "rotate-180")} />
-                  </Button>
+                <PopoverTrigger
+                  className={cn(
+                    buttonVariants({ variant: "outline" }),
+                    "w-full h-12 px-6 font-bold flex items-center justify-between",
+                    !selectedTime && "text-muted-foreground/60"
+                  )}
+                >
+                  <div className="flex items-center gap-3 text-start">
+                    <Clock className="h-5 w-5 text-primary stroke-[2.5]" />
+                    <span>{selectedTime ? selectedTime : tCheckout("form.select_time")}</span>
+                  </div>
+                  <ChevronDown className={cn("h-4 w-4 opacity-50 transition-transform", isTimePopoverOpen && "rotate-180")} />
                 </PopoverTrigger>
                 <PopoverContent
                   className="w-[var(--radix-popover-trigger-width)] p-3 border-border shadow-2xl transition-all data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=open]:fade-in-0 data-[state=closed]:fade-out-0 data-[state=open]:slide-in-from-top-4 data-[state=closed]:slide-out-to-top-4 duration-300 ease-in-out"
                   align="start"
                   side="bottom"
-                  avoidCollisions={false}
                 >
                   <Tabs defaultValue="morning" className="w-full">
                     <TabsList className="grid grid-cols-3 w-full h-12 p-1 bg-muted/50 rounded-lg mb-6">

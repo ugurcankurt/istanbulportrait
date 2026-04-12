@@ -127,14 +127,18 @@ export function InstagramFeed({ header, instagramUrl }: InstagramFeedProps) {
         )}
 
         <div className="mt-10 text-center">
-          <Button asChild variant="outline" className="px-8">
-            <a
-              href={instagramUrl || `https://instagram.com/${username}`}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              {tui("instagram_feed.visit_profile")}
-            </a>
+          <Button
+            variant="outline"
+            className="px-8"
+            render={
+              <a
+                href={instagramUrl || `https://instagram.com/${username}`}
+                target="_blank"
+                rel="noopener noreferrer"
+              />
+            }
+          >
+            {tui("instagram_feed.visit_profile")}
           </Button>
         </div>
       </div>

@@ -40,6 +40,13 @@
       "submit": "Trimite mesaj",
       "success": "Multumesc! Vă vom reveni în curând.",
       "error": "Ceva a mers prost. Vă rugăm să încercați din nou."
+    },
+    "info": {
+      "phone": "Telefon",
+      "email": "E-mail",
+      "address": "Adresă",
+      "whatsapp": "WhatsApp",
+      "instagram": "Instagram"
     }
   },
   "checkout": {

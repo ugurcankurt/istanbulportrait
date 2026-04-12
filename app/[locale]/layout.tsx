@@ -168,26 +168,24 @@ export default async function LocaleLayout({
         >
           <ConsentProvider>
             <NextIntlClientProvider messages={messages}>
-
-
-              <div className="flex min-h-screen flex-col">
-                <Navigation dynamicNavData={dynamicNavData} settings={settings} />
-                <main className="flex-1">{children}</main>
-
-                {/* Non-critical Analytics — deferred until first interaction to minimize main-thread work */}
-                <InteractionLoader>
-                  <FacebookPixel />
-                  <DeferredAnalytics gaId={settings.google_analytics_id} />
-                  <ConsentGate consent="accepted_all">
-                    <YandexMetrica id={settings.yandex_metrica_id || undefined} />
-                  </ConsentGate>
-                </InteractionLoader>
-
-                <CoreWebVitals />
-                <Footer dynamicNavData={dynamicNavData} settings={settings} />
-              </div>
-              <Toaster />
               <TooltipProvider>
+                <div className="flex min-h-screen flex-col">
+                  <Navigation dynamicNavData={dynamicNavData} settings={settings} />
+                  <main className="flex-1">{children}</main>
+
+                  {/* Non-critical Analytics — deferred until first interaction to minimize main-thread work */}
+                  <InteractionLoader>
+                    <FacebookPixel />
+                    <DeferredAnalytics gaId={settings.google_analytics_id} />
+                    <ConsentGate consent="accepted_all">
+                      <YandexMetrica id={settings.yandex_metrica_id || undefined} />
+                    </ConsentGate>
+                  </InteractionLoader>
+
+                  <CoreWebVitals />
+                  <Footer dynamicNavData={dynamicNavData} settings={settings} />
+                </div>
+                <Toaster />
                 <DeferredCookieConsent />
                 <WhatsAppButton
                   phoneNumber={settings.whatsapp_number}

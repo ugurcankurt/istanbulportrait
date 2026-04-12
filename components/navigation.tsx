@@ -132,8 +132,7 @@ export function Navigation({ dynamicNavData = {}, settings }: NavigationProps) {
         <div className="flex items-center space-x-2">
           {/* Language Switcher Modal */}
           <Dialog open={isLangOpen} onOpenChange={setIsLangOpen}>
-            <DialogTrigger asChild>
-              <button
+            <DialogTrigger
                 className={cn(
                   buttonVariants({ variant: "ghost", size: "sm" }),
                   "h-9 px-3 hover:bg-muted/50 hover:scale-105 active:scale-95 transition-all duration-200 gap-2 border border-transparent hover:border-border/50",
@@ -149,7 +148,6 @@ export function Navigation({ dynamicNavData = {}, settings }: NavigationProps) {
                   {locale}
                 </span>
                 <span className="sr-only">Change language</span>
-              </button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-md">
               <DialogHeader>
@@ -188,11 +186,10 @@ export function Navigation({ dynamicNavData = {}, settings }: NavigationProps) {
 
           {/* Mobile Menu */}
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
-            <SheetTrigger asChild className="md:hidden">
-              <button
+            <SheetTrigger
                 className={cn(
                   buttonVariants({ variant: "ghost", size: "sm" }),
-                  "h-8 w-8 px-0 relative hover:scale-110 transition-transform duration-200",
+                  "md:hidden h-8 w-8 px-0 relative hover:scale-110 transition-transform duration-200",
                 )}
                 aria-label="Open menu"
               >
@@ -205,7 +202,6 @@ export function Navigation({ dynamicNavData = {}, settings }: NavigationProps) {
                   <Menu className="h-4 w-4" />
                 </div>
                 <span className="sr-only">Open menu</span>
-              </button>
             </SheetTrigger>
             <SheetContent side="right" className="w-80 p-0">
               <SheetHeader className="p-6 pb-4 bg-muted/30">
