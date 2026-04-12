@@ -197,15 +197,15 @@ export function AdminLayoutClient({ children }: AdminLayoutClientProps) {
                   return (
                     <SidebarMenuItem key={item.href}>
                       <SidebarMenuButton
-                        asChild
                         isActive={isActive}
                         tooltip={item.name}
-                      >
-                        <Link href={item.href as string}>
-                          <item.icon className="w-5 h-5" />
-                          <span>{item.name}</span>
-                        </Link>
-                      </SidebarMenuButton>
+                        render={
+                          <Link href={item.href as string}>
+                            <item.icon className="w-5 h-5" />
+                            <span>{item.name}</span>
+                          </Link>
+                        }
+                      />
                     </SidebarMenuItem>
                   );
                 })}
