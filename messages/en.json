@@ -109,10 +109,6 @@
       "checking_availability": "Checking Availability...",
       "availability_confirmed": "Spot Available! Opening now..."
     },
-    "cancellation": {
-      "title": "Free cancellation",
-      "description": "Cancel up to 24 hours in advance for a full refund"
-    },
     "payment_breakdown": {
       "pay_now": "Pay {amount} now",
       "pay_on_day": "and rest of payment {amount} on the day of photoshoot"

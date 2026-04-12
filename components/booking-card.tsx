@@ -405,18 +405,7 @@ export function BookingCard({
           </Button>
         )}
 
-        <div className="space-y-4 pt-4 border-t border-border">
-          <div className="flex items-start gap-3 group">
-            <div className="mt-1">
-              <CheckCircle2 className="h-5 w-5 text-emerald-500" />
-            </div>
-            <div>
-              <p className="text-sm font-bold text-foreground">{tCheckout("cancellation.title")}</p>
-              <p className="text-xs font-medium text-muted-foreground leading-relaxed">{tCheckout("cancellation.description")}</p>
-            </div>
-          </div>
-
-          <div className="flex items-start gap-3 group">
+        <div className="space-y-4 pt-4 border-t border-border">          <div className="flex items-start gap-3 group">
             <div className="mt-1">
               <CreditCard className="h-5 w-5 text-primary" />
             </div>

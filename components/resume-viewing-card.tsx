@@ -221,8 +221,8 @@ export function ResumeViewingCard({
           </CarouselContent>
           {visitedPackages.length > 3 && (
             <>
-              <CarouselPrevious className="hidden xl:flex -left-12 bg-white/10 border-white/20 hover:bg-white/20 text-white" />
-              <CarouselNext className="hidden xl:flex -right-12 bg-white/10 border-white/20 hover:bg-white/20 text-white" />
+              <CarouselPrevious className="hidden xl:flex bg-white/10 border-white/20 hover:bg-white/20 text-white" />
+              <CarouselNext className="hidden xl:flex bg-white/10 border-white/20 hover:bg-white/20 text-white" />
             </>
           )}
         </Carousel>

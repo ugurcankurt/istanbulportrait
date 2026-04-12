@@ -109,10 +109,6 @@
       "checking_availability": "Se verifică disponibilitatea...",
       "availability_confirmed": "Loc disponibil! Se deschide acum..."
     },
-    "cancellation": {
-      "title": "Anulare gratuită",
-      "description": "Anulați cu până la 24 de ore în avans pentru o rambursare completă"
-    },
     "payment_breakdown": {
       "pay_now": "Plătiți acum {amount}",
       "pay_on_day": "și restul plății {amount} în ziua ședinței foto"

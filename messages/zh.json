@@ -109,10 +109,6 @@
       "checking_availability": "检查可用性...",
       "availability_confirmed": "现货可用！现已开放..."
     },
-    "cancellation": {
-      "title": "免费取消",
-      "description": "提前 24 小时取消可获得全额退款"
-    },
     "payment_breakdown": {
       "pay_now": "立即支付 {amount}",
       "pay_on_day": "其余付款 {amount} 在拍摄当天支付"

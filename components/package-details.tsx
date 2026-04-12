@@ -382,18 +382,7 @@ export function PackageDetails({ packageData, aggregateRating, reviews, activeDi
           "transition-all duration-500 ease-in-out overflow-hidden border-b border-border/50 px-4",
           isScrolled ? "max-h-0 py-0 opacity-0 border-none" : "max-h-40 py-3 opacity-100"
         )}>
-          <div className="space-y-3">
-            <div className="flex items-start gap-3">
-              <div className="mt-0.5">
-                <CheckCircle2 className="h-4 w-4 text-emerald-500" />
-              </div>
-              <div>
-                <p className="text-[11px] font-bold text-foreground leading-tight">{tCheckout("cancellation.title")}</p>
-                <p className="text-[10px] font-medium text-muted-foreground leading-tight line-clamp-1">{tCheckout("cancellation.description")}</p>
-              </div>
-            </div>
-
-            <div className="flex items-start gap-3">
+          <div className="space-y-3">            <div className="flex items-start gap-3">
               <div className="mt-0.5">
                 <CreditCard className="h-4 w-4 text-primary" />
               </div>

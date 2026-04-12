@@ -109,10 +109,6 @@
       "checking_availability": "Comprobando disponibilidad...",
       "availability_confirmed": "¡Lugar disponible! Abriendo ahora..."
     },
-    "cancellation": {
-      "title": "Cancelación gratuita",
-      "description": "Cancele con hasta 24 horas de anticipación para obtener un reembolso completo"
-    },
     "payment_breakdown": {
       "pay_now": "Paga {amount} ahora",
       "pay_on_day": "y resto de pago {amount} el día de la sesión de fotos"

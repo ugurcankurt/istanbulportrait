@@ -109,10 +109,6 @@
       "checking_availability": "جارٍ التحقق من التوفر...",
       "availability_confirmed": "بقعة متاحة! الافتتاح الآن..."
     },
-    "cancellation": {
-      "title": "إلغاء مجاني",
-      "description": "قم بإلغاء ما يصل إلى 24 ساعة مقدمًا لاسترداد أموالك بالكامل"
-    },
     "payment_breakdown": {
       "pay_now": "ادفع {amount} الآن",
       "pay_on_day": "والباقي دفع {amount} في يوم التصوير"

@@ -109,10 +109,6 @@
       "checking_availability": "Verfügbarkeit prüfen...",
       "availability_confirmed": "Platz verfügbar! Jetzt geöffnet..."
     },
-    "cancellation": {
-      "title": "Kostenlose Stornierung",
-      "description": "Stornieren Sie bis zu 24 Stunden im Voraus, um eine vollständige Rückerstattung zu erhalten"
-    },
     "payment_breakdown": {
       "pay_now": "Zahlen Sie jetzt {amount}",
       "pay_on_day": "und Restzahlung {amount} am Tag des Fotoshootings"

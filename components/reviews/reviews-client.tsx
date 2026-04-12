@@ -154,8 +154,8 @@ export function ReviewsClient({
             </CarouselContent>
 
             {/* Carousel Navigation */}
-            <CarouselPrevious className="-left-12 hidden sm:flex" />
-            <CarouselNext className="-right-12 hidden sm:flex" />
+            <CarouselPrevious className="hidden sm:flex" />
+            <CarouselNext className="hidden sm:flex" />
           </Carousel>
         </div>
 
