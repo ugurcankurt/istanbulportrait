@@ -4,7 +4,8 @@ import { useState } from "react";
 import { useForm, useFieldArray } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { Loader2, Sparkles, Trash2, UploadCloud, Plus } from "lucide-react";
+import {  Sparkles, Trash2, UploadCloud, Plus } from "lucide-react";
+import { Spinner } from "@/components/ui/spinner";
 import Image from "next/image";
 
 import { Button } from "@/components/ui/button";
@@ -755,7 +756,7 @@ export function PageForm({ initialData }: PageFormProps) {
           <Button type="submit" disabled={isSubmitting}>
             {isSubmitting ? (
               <>
-                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                <Spinner className="w-4 h-4 mr-2 animate-spin" />
                 Saving...
               </>
             ) : (

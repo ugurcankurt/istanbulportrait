@@ -37,7 +37,7 @@ export default function NewBlogPostPage() {
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center gap-4">
-        <Button variant="ghost" size="sm" render={<Link href="/admin/dashboard/blog" />}>
+        <Button nativeButton={false} variant="ghost" size="sm" render={<Link href="/admin/dashboard/blog" />}>
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back to Posts
         </Button>

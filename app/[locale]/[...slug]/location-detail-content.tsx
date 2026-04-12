@@ -250,7 +250,7 @@ export async function LocationDetailPageContent({
                   <p className="text-primary-foreground/80 text-sm mb-5 leading-relaxed">
                     {t("bookPhotoshootDescription")}
                   </p>
-                  <Button
+                  <Button nativeButton={false}
                     render={<Link href={"/packages" as any} />}
                     variant="secondary"
                     className="w-full font-semibold shadow-lg hover:shadow-xl transition-all"

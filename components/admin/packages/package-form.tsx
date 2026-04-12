@@ -4,14 +4,17 @@ import { useState } from "react";
 import { useForm, useFieldArray } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { Package, Trash2, UploadCloud, ImageIcon, Loader2, Plus, Sparkles } from "lucide-react";
+import { Trash2, UploadCloud, Plus, Sparkles } from "lucide-react";
+import { Spinner } from "@/components/ui/spinner";
 import Image from "next/image";
 
 import { Button } from "@/components/ui/button";
+import { ButtonGroup } from "@/components/ui/button-group";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
+import { Field, FieldLabel } from "@/components/ui/field";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
@@ -326,9 +329,9 @@ export function PackageForm({ initialData }: PackageFormProps) {
                         Manage package details for each language.
                       </p>
                     </div>
-                    <Button 
-                      type="button" 
-                      variant="outline" 
+                    <Button
+                      type="button"
+                      variant="outline"
                       onClick={handleAITranslate}
                       className="bg-indigo-50 text-indigo-700 border-indigo-200 hover:bg-indigo-100 dark:bg-indigo-950/50 dark:text-indigo-300 dark:border-indigo-900"
                     >
@@ -336,7 +339,7 @@ export function PackageForm({ initialData }: PackageFormProps) {
                       Auto-Translate All with AI
                     </Button>
                   </div>
-                  
+
                   <Tabs defaultValue="en" className="w-full">
                     <TabsList className="w-full flex flex-wrap h-auto">
                       {SUPPORTED_LOCALES.map(loc => (
@@ -357,7 +360,7 @@ export function PackageForm({ initialData }: PackageFormProps) {
                             </FormItem>
                           )}
                         />
-                        
+
                         <FormField
                           control={form.control}
                           name={`duration.${loc}`}
@@ -370,7 +373,7 @@ export function PackageForm({ initialData }: PackageFormProps) {
                             </FormItem>
                           )}
                         />
-                        
+
                         <FormField
                           control={form.control}
                           name={`description.${loc}`}
@@ -519,8 +522,8 @@ export function PackageForm({ initialData }: PackageFormProps) {
               </CardHeader>
               <CardContent className="space-y-6">
 
-                <div className="space-y-4">
-                  <Label>Cover Image</Label>
+                <Field className="space-y-4">
+                  <FieldLabel>Cover Image</FieldLabel>
                   {coverImagePreview ? (
                     <div className="relative w-full aspect-[4/3] rounded-lg overflow-hidden border">
                       <Image src={coverImagePreview} fill className="object-cover" alt="Cover" />
@@ -555,10 +558,10 @@ export function PackageForm({ initialData }: PackageFormProps) {
                       />
                     </Label>
                   )}
-                </div>
+                </Field>
 
-                <div className="space-y-4">
-                  <Label>Gallery Images</Label>
+                <Field className="space-y-4">
+                  <FieldLabel>Gallery Images</FieldLabel>
 
                   {galleryPreviews.length > 0 && (
                     <div className="grid grid-cols-3 gap-2">
@@ -597,27 +600,29 @@ export function PackageForm({ initialData }: PackageFormProps) {
                       disabled={isSubmitting}
                     />
                   </Label>
-                </div>
+                </Field>
               </CardContent>
             </Card>
 
           </div>
         </div>
 
-        <div className="flex justify-end gap-4 py-4 sticky bottom-0 bg-background border-t pt-4">
-          <Button type="button" variant="outline" onClick={() => router.push("/admin/dashboard/packages")}>
-            Cancel
-          </Button>
-          <Button type="submit" disabled={isSubmitting}>
-            {isSubmitting ? (
-              <>
-                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                Saving...
-              </>
-            ) : (
-              initialData ? "Save Changes" : "Create Package"
-            )}
-          </Button>
+        <div className="flex justify-end py-4 sticky bottom-0 bg-background border-t pt-4">
+          <ButtonGroup>
+            <Button type="button" variant="outline" onClick={() => router.push("/admin/dashboard/packages")}>
+              Cancel
+            </Button>
+            <Button type="submit" disabled={isSubmitting}>
+              {isSubmitting ? (
+                <>
+                  <Spinner className="w-4 h-4 mr-2 animate-spin" />
+                  Saving...
+                </>
+              ) : (
+                initialData ? "Save Changes" : "Create Package"
+              )}
+            </Button>
+          </ButtonGroup>
         </div>
       </form>
     </Form>

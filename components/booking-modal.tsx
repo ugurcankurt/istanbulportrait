@@ -54,7 +54,8 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
-import { Calendar as CalendarIcon, Clock, Image as ImageIcon, Loader2, Users, ChevronLeft } from "lucide-react";
+import { Calendar as CalendarIcon, Clock, Image as ImageIcon, Users, ChevronLeft } from "lucide-react";
+import { Spinner } from "@/components/ui/spinner";
 import { Badge } from "@/components/ui/badge";
 
 interface BookingModalProps {
@@ -576,7 +577,7 @@ export function BookingModal({
                   disabled={isNavigating || form.formState.isSubmitting}
                 >
                   {isNavigating || form.formState.isSubmitting ? (
-                    <Loader2 className="h-5 w-5 animate-spin" />
+                    <Spinner className="h-5 w-5 animate-spin" />
                   ) : (
                     t("buttons.complete_booking")
                   )}
@@ -628,7 +629,7 @@ export function BookingModal({
             disabled={isNavigating || form.formState.isSubmitting}
           >
             {isNavigating || form.formState.isSubmitting ? (
-              <Loader2 className="h-5 w-5 animate-spin" />
+              <Spinner className="h-5 w-5 animate-spin" />
             ) : (
               t("buttons.complete_booking")
             )}

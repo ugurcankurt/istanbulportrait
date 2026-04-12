@@ -145,7 +145,7 @@ export default function PagesAdminPage() {
                     </TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end gap-2">
-                        <Button
+                        <Button nativeButton={false}
                           variant="ghost"
                           size="sm"
                           className="gap-2"

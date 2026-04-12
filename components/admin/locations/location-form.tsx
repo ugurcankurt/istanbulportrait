@@ -4,7 +4,8 @@ import { useState, useEffect } from "react";
 import { useForm, useFieldArray } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { MapPin, Trash2, UploadCloud, ImageIcon, Loader2, Plus, Sparkles, Navigation } from "lucide-react";
+import { MapPin, Trash2, UploadCloud, ImageIcon, Plus, Sparkles, Navigation } from "lucide-react";
+import { Spinner } from "@/components/ui/spinner";
 import Image from "next/image";
 
 import { Button } from "@/components/ui/button";
@@ -22,7 +23,6 @@ import {
   FormField,
   FormItem,
   FormLabel,
-  FormMessage,
 } from "@/components/ui/form";
 
 import { locationsService, type LocationDB } from "@/lib/locations-service";
@@ -65,7 +65,7 @@ export function LocationForm({ initialData }: LocationFormProps) {
     control,
     name: `photography_tips.en`,
   });
-  
+
   const { fields: tagsFields, append: appendTag, remove: removeTag } = useFieldArray({
     control,
     name: `tags`,
@@ -180,7 +180,7 @@ export function LocationForm({ initialData }: LocationFormProps) {
 
   const handleAITranslate = async () => {
     const values = form.getValues();
-    
+
     // Ensure we have English content to translate
     if (!values.title?.en || !values.description?.en) {
       toast.error("Please enter English Title and Description first!");
@@ -212,14 +212,14 @@ export function LocationForm({ initialData }: LocationFormProps) {
 
       SUPPORTED_LOCALES.forEach((locale) => {
         if (locale === "en") return;
-        
+
         if (translatedSegments[locale]) {
           const trans = translatedSegments[locale];
-          
+
           form.setValue(`title.${locale}`, trans.title || "");
           form.setValue(`description.${locale}`, trans.description || "");
           form.setValue(`best_time.${locale}`, trans.best_time || "");
-          
+
           if (Array.isArray(trans.photography_tips)) {
             form.setValue(`photography_tips.${locale}`, trans.photography_tips);
           }
@@ -239,7 +239,7 @@ export function LocationForm({ initialData }: LocationFormProps) {
     setIsSubmitting(true);
     try {
       toast.loading("Saving location...", { id: "save-loc" });
-      
+
       const payload: Partial<LocationDB> = {
         slug: data.slug,
         is_active: data.is_active,
@@ -251,8 +251,8 @@ export function LocationForm({ initialData }: LocationFormProps) {
         best_time: data.best_time,
         photography_tips: data.photography_tips,
         nearby_locations: data.nearby_locations,
-        tags: Array.isArray(data.tags) 
-          ? data.tags.flatMap((t: string) => t.split(',').map(s => s.trim()).filter(Boolean)) 
+        tags: Array.isArray(data.tags)
+          ? data.tags.flatMap((t: string) => t.split(',').map(s => s.trim()).filter(Boolean))
           : [],
         coordinates: {
           lat: parseFloat(data.coordinates.lat),
@@ -267,7 +267,7 @@ export function LocationForm({ initialData }: LocationFormProps) {
         await locationsService.createLocation(payload);
         toast.success("Location created successfully", { id: "save-loc" });
       }
-      
+
       router.push("/admin/dashboard/locations");
       router.refresh();
     } catch (error: any) {
@@ -281,7 +281,7 @@ export function LocationForm({ initialData }: LocationFormProps) {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        
+
         {/* TOP ACTIONS */}
         <div className="flex justify-between items-center bg-card p-4 rounded-xl border border-primary/10 shadow-sm sticky top-0 z-10 w-full dark:bg-background">
           <div className="flex items-center gap-4">
@@ -301,7 +301,7 @@ export function LocationForm({ initialData }: LocationFormProps) {
               <Label>Active & Published</Label>
             </div>
           </div>
-          
+
           <div className="flex items-center gap-3">
             <Button
               type="button"
@@ -310,13 +310,13 @@ export function LocationForm({ initialData }: LocationFormProps) {
               disabled={isTranslating || isSubmitting}
               className="gap-2 bg-blue-50 hover:bg-blue-100 text-blue-600 border-blue-200 dark:bg-blue-950/30 dark:border-blue-900 dark:text-blue-400"
             >
-              {isTranslating ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
+              {isTranslating ? <Spinner className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
               Translate All (AI)
             </Button>
             <Button type="submit" disabled={isSubmitting}>
               {isSubmitting ? (
                 <>
-                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  <Spinner className="w-4 h-4 mr-2 animate-spin" />
                   Saving...
                 </>
               ) : (
@@ -327,7 +327,7 @@ export function LocationForm({ initialData }: LocationFormProps) {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          
+
           {/* LEFT COLUMN: Metadata & Media */}
           <div className="space-y-6 lg:col-span-1">
             <Card>
@@ -348,7 +348,7 @@ export function LocationForm({ initialData }: LocationFormProps) {
                     </FormItem>
                   )}
                 />
-                
+
                 <FormField
                   control={form.control}
                   name="sort_order"
@@ -539,7 +539,7 @@ export function LocationForm({ initialData }: LocationFormProps) {
 
                 {SUPPORTED_LOCALES.map((locale) => (
                   <TabsContent key={locale} value={locale} className="p-6 space-y-6 m-0 border-none outline-none">
-                    
+
                     <FormField
                       control={form.control}
                       name={`title.${locale}`}
@@ -560,10 +560,10 @@ export function LocationForm({ initialData }: LocationFormProps) {
                         <FormItem>
                           <FormLabel>Detailed Description ({locale})</FormLabel>
                           <FormControl>
-                            <Textarea 
-                              placeholder="Describe the location..." 
-                              {...field} 
-                              className="min-h-[150px] resize-y" 
+                            <Textarea
+                              placeholder="Describe the location..."
+                              {...field}
+                              className="min-h-[150px] resize-y"
                             />
                           </FormControl>
                         </FormItem>
@@ -587,7 +587,7 @@ export function LocationForm({ initialData }: LocationFormProps) {
                       <FormLabel className="text-base font-semibold block">
                         Photography Tips ({locale})
                       </FormLabel>
-                      
+
                       {/* For English: Let admin add/remove fields */}
                       {locale === "en" ? (
                         <>

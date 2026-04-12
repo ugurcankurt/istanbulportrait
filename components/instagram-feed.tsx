@@ -127,7 +127,7 @@ export function InstagramFeed({ header, instagramUrl }: InstagramFeedProps) {
         )}
 
         <div className="mt-10 text-center">
-          <Button
+          <Button nativeButton={false}
             variant="outline"
             className="px-8"
             render={

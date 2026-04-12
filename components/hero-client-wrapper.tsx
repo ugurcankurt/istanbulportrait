@@ -53,7 +53,7 @@ export function HeroClientWrapper({
 
         {/* CTA Buttons - Client side tracking and layout adjustment */}
         <div className="flex flex-row flex-wrap justify-start items-center gap-2 w-full mb-8">
-          <Button
+          <Button nativeButton={false}
             render={
               <Link href={"/packages" as any} className="flex items-center justify-center gap-2">
                 {packagesButtonText}
@@ -65,7 +65,7 @@ export function HeroClientWrapper({
             onClick={() => trackEvent("cta_click", "Hero", "View Packages")}
           />
 
-          <Button
+          <Button nativeButton={false}
             render={<Link href={"/locations" as any}>{bookSessionButtonText}</Link>}
             variant="outline"
             size="lg"

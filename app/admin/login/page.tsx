@@ -1,6 +1,7 @@
 "use client";
 
-import { Loader2, Shield } from "lucide-react";
+import {  Shield } from "lucide-react";
+import { Spinner } from "@/components/ui/spinner";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -104,7 +105,7 @@ export default function AdminLoginPage() {
             >
               {loading ? (
                 <>
-                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  <Spinner className="w-4 h-4 mr-2 animate-spin" />
                   Signing in...
                 </>
               ) : (

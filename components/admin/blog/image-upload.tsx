@@ -1,6 +1,7 @@
 "use client";
 
-import { ImagePlus, Loader2, X } from "lucide-react";
+import { ImagePlus, X } from "lucide-react";
+import { Spinner } from "@/components/ui/spinner";
 import Image from "next/image";
 import { useCallback, useState } from "react";
 import { toast } from "sonner";
@@ -129,7 +130,7 @@ export function ImageUpload({
         <div className="flex flex-col items-center justify-center pt-5 pb-6">
           {isUploading ? (
             <>
-              <Loader2 className="w-10 h-10 mb-3 animate-spin text-muted-foreground" />
+              <Spinner className="w-10 h-10 mb-3 animate-spin text-muted-foreground" />
               <p className="mb-2 text-sm text-muted-foreground">
                 <span className="font-semibold">Converting & Uploading...</span>
               </p>

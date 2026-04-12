@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Empty, EmptyDescription, EmptyMedia, EmptyTitle } from "@/components/ui/empty";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -60,13 +61,13 @@ export default function LocationsAdminPage() {
       if (locationToDelete.cover_image) {
         await deleteLocationImage(locationToDelete.cover_image);
       }
-      
+
       if (locationToDelete.gallery_images && locationToDelete.gallery_images.length > 0) {
         await Promise.all(locationToDelete.gallery_images.map(img => deleteLocationImage(img)));
       }
 
       await locationsService.deleteLocation(locationToDelete.id);
-      
+
       toast.success("Location deleted successfully", { id: "delete-loc" });
       setLocations(locations.filter(l => l.id !== locationToDelete.id));
     } catch (error) {
@@ -86,9 +87,9 @@ export default function LocationsAdminPage() {
             Manage your photography locations and maps.
           </p>
         </div>
-        <Button render={<Link href="/admin/dashboard/locations/new" />} className="shrink-0 gap-2">
-            <Plus className="w-4 h-4" />
-            Add Location
+        <Button nativeButton={false} render={<Link href="/admin/dashboard/locations/new" />} className="shrink-0 gap-2">
+          <Plus className="w-4 h-4" />
+          Add Location
         </Button>
       </div>
 
@@ -122,8 +123,12 @@ export default function LocationsAdminPage() {
                 </TableRow>
               ) : locations.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={7} className="h-32 text-center text-muted-foreground">
-                    No locations found. Create your first one!
+                  <TableCell colSpan={7} className="h-48 text-center text-muted-foreground p-0">
+                    <Empty className="py-6 border-0 w-full flex-col justify-center items-center shadow-none">
+                      <EmptyMedia variant="icon"><MapPinIcon className="w-8 h-8 text-muted-foreground" /></EmptyMedia>
+                      <EmptyTitle>No locations found</EmptyTitle>
+                      <EmptyDescription>Create your first location to get started.</EmptyDescription>
+                    </Empty>
                   </TableCell>
                 </TableRow>
               ) : (
@@ -175,12 +180,12 @@ export default function LocationsAdminPage() {
                     <TableCell>{loc.sort_order}</TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end gap-2">
-                        <Button variant="outline" size="icon" render={<Link href={`/admin/dashboard/locations/${loc.id}`} />}>
-                            <Pencil className="w-4 h-4" />
+                        <Button nativeButton={false} variant="outline" size="icon" render={<Link href={`/admin/dashboard/locations/${loc.id}`} />}>
+                          <Pencil className="w-4 h-4" />
                         </Button>
-                        <Button 
-                          variant="outline" 
-                          size="icon" 
+                        <Button
+                          variant="outline"
+                          size="icon"
                           className="text-destructive hover:bg-destructive/10"
                           onClick={() => setLocationToDelete(loc)}
                         >
@@ -201,13 +206,13 @@ export default function LocationsAdminPage() {
           <AlertDialogHeader>
             <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
             <AlertDialogDescription>
-              This will permanently delete the location <strong>{locationToDelete?.title?.en || locationToDelete?.slug}</strong>. 
+              This will permanently delete the location <strong>{locationToDelete?.title?.en || locationToDelete?.slug}</strong>.
               All associated images in Supabase Storage will also be completely deleted. This action cannot be undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction 
+            <AlertDialogAction
               onClick={handleDelete}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >

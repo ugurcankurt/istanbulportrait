@@ -1,6 +1,7 @@
 "use client";
 
-import { ArrowLeft, Loader2 } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
+import { Spinner } from "@/components/ui/spinner";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { use, useEffect, useState } from "react";
@@ -60,7 +61,7 @@ export default function EditBlogPostPage({
     return (
       <div className="flex items-center justify-center min-h-[400px]">
         <div className="text-center">
-          <Loader2 className="w-8 h-8 animate-spin mx-auto mb-4" />
+          <Spinner className="w-8 h-8 animate-spin mx-auto mb-4" />
           <p className="text-muted-foreground">Loading blog post...</p>
         </div>
       </div>
@@ -72,7 +73,7 @@ export default function EditBlogPostPage({
       <div className="flex items-center justify-center min-h-[400px]">
         <div className="text-center">
           <p className="text-muted-foreground mb-4">Blog post not found</p>
-          <Button render={<Link href="/admin/dashboard/blog" />}>
+          <Button nativeButton={false} render={<Link href="/admin/dashboard/blog" />}>
             Back to Posts
           </Button>
         </div>
@@ -84,7 +85,7 @@ export default function EditBlogPostPage({
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center gap-4">
-        <Button variant="ghost" size="sm" render={<Link href="/admin/dashboard/blog" />}>
+        <Button nativeButton={false} variant="ghost" size="sm" render={<Link href="/admin/dashboard/blog" />}>
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back to Posts
         </Button>

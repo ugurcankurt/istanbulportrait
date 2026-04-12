@@ -95,25 +95,25 @@ export function BlogAuthor({ author, siteSettings }: BlogAuthorProps) {
 
           <div className="flex flex-wrap gap-2 pt-2 justify-center md:justify-start">
             {socialLinks.instagram && (
-              <Button render={<a href={socialLinks.instagram} target="_blank" rel="noopener noreferrer" />} variant="outline" size="sm" className="gap-2">
+              <Button nativeButton={false} render={<a href={socialLinks.instagram} target="_blank" rel="noopener noreferrer" />} variant="outline" size="sm" className="gap-2">
                   <Instagram className="w-4 h-4" />
                   Instagram
               </Button>
             )}
             {socialLinks.twitter && (
-              <Button render={<a href={socialLinks.twitter} target="_blank" rel="noopener noreferrer" />} variant="outline" size="sm" className="gap-2">
+              <Button nativeButton={false} render={<a href={socialLinks.twitter} target="_blank" rel="noopener noreferrer" />} variant="outline" size="sm" className="gap-2">
                   <Twitter className="w-4 h-4" />
                   Twitter
               </Button>
             )}
             {socialLinks.linkedin && (
-              <Button render={<a href={socialLinks.linkedin} target="_blank" rel="noopener noreferrer" />} variant="outline" size="sm" className="gap-2">
+              <Button nativeButton={false} render={<a href={socialLinks.linkedin} target="_blank" rel="noopener noreferrer" />} variant="outline" size="sm" className="gap-2">
                   <Linkedin className="w-4 h-4" />
                   LinkedIn
               </Button>
             )}
             {socialLinks.website && (
-              <Button render={<a href={socialLinks.website} target="_blank" rel="noopener noreferrer" />} variant="outline" size="sm" className="gap-2">
+              <Button nativeButton={false} render={<a href={socialLinks.website} target="_blank" rel="noopener noreferrer" />} variant="outline" size="sm" className="gap-2">
                   <Globe className="w-4 h-4" />
                   Website
               </Button>

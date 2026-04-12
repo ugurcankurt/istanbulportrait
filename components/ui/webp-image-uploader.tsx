@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useRef } from "react";
-import { Upload, X, Loader2, Image as ImageIcon } from "lucide-react";
+import { Upload, X, Image as ImageIcon } from "lucide-react";
+import { Spinner } from "@/components/ui/spinner";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { createClientSupabaseClient } from "@/lib/supabase/client";
@@ -168,7 +169,7 @@ export function WebpImageUploader({
           >
             {isUploading ? (
               <>
-                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                <Spinner className="w-4 h-4 mr-2 animate-spin" />
                 Converting & Uploading...
               </>
             ) : (

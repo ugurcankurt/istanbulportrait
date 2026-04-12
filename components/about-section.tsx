@@ -138,7 +138,7 @@ export function AboutSection({
             </div>
 
             <div className="pt-2 sm:pt-4">
-              <Button
+              <Button nativeButton={false}
                 render={<Link href={"/packages" as any} />}
                 size="sm"
                 className="sm:size-lg text-xs sm:text-sm"
@@ -200,14 +200,14 @@ export function AboutSection({
           <div className="bg-muted/30 rounded-lg sm:rounded-xl lg:rounded-2xl p-6 sm:p-8 lg:p-12 mx-auto">
             {ctaHeader}
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
-              <Button
+              <Button nativeButton={false}
                 render={<Link href={"/locations" as any} />}
                 size="sm"
                 className="sm:size-lg text-xs sm:text-sm"
               >
                 {tui("check_locations")}
               </Button>
-              <Button
+              <Button nativeButton={false}
                 render={<Link href={"/packages" as any} />}
                 variant="outline"
                 size="sm"

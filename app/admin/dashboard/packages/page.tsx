@@ -93,7 +93,7 @@ export default function PackagesAdminPage() {
             Manage your photography packages, pricing, and features.
           </p>
         </div>
-        <Button render={<Link href="/admin/dashboard/packages/new" />} className="shrink-0 gap-2">
+        <Button nativeButton={false} render={<Link href="/admin/dashboard/packages/new" />} className="shrink-0 gap-2">
             <Plus className="w-4 h-4" />
             Add Package
         </Button>
@@ -179,7 +179,7 @@ export default function PackagesAdminPage() {
                     </TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end gap-2">
-                        <Button
+                        <Button nativeButton={false}
                           variant="ghost"
                           size="icon"
                           render={<Link href={`/admin/dashboard/packages/${pkg.id}`} />}

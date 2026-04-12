@@ -1,10 +1,10 @@
+import { Spinner } from "@/components/ui/spinner";
 "use client";
 
 import {
   BookOpen,
   Calendar,
   LayoutDashboard,
-  Loader2,
   LogOut,
   Package,
   Users,
@@ -144,7 +144,7 @@ export function AdminLayoutClient({ children, settings }: AdminLayoutClientProps
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <Loader2 className="w-8 h-8 animate-spin mx-auto mb-4 text-blue-600" />
+          <Spinner className="w-8 h-8 animate-spin mx-auto mb-4 text-blue-600" />
           <p className="text-sm text-muted-foreground">Verifying access...</p>
         </div>
       </div>

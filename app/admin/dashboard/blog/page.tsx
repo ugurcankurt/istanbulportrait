@@ -210,7 +210,7 @@ export default function BlogManagementPage() {
           </p>
         </div>
         <div className="flex gap-2">
-          <Button render={<Link href="/admin/dashboard/blog/new" />}>
+          <Button nativeButton={false} render={<Link href="/admin/dashboard/blog/new" />}>
               <Plus className="w-4 h-4 mr-2" />
               New Post
           </Button>
@@ -346,10 +346,10 @@ export default function BlogManagementPage() {
           </div>
 
           <div className="flex gap-2 mt-4">
-            <Button render={<Link href="/admin/dashboard/blog/categories" />} variant="outline" size="sm">
+            <Button nativeButton={false} render={<Link href="/admin/dashboard/blog/categories" />} variant="outline" size="sm">
                 Manage Categories
             </Button>
-            <Button render={<Link href="/admin/dashboard/blog/tags" />} variant="outline" size="sm">
+            <Button nativeButton={false} render={<Link href="/admin/dashboard/blog/tags" />} variant="outline" size="sm">
               Manage Tags
             </Button>
           </div>
@@ -377,7 +377,7 @@ export default function BlogManagementPage() {
                   Start creating engaging content for your photography blog
                 </EmptyDescription>
                 <EmptyContent>
-                  <Button render={<Link href="/admin/dashboard/blog/new" />}>
+                  <Button nativeButton={false} render={<Link href="/admin/dashboard/blog/new" />}>
                       <Plus className="w-4 h-4 mr-2" />
                       Create First Post
                   </Button>

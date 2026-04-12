@@ -161,7 +161,7 @@ export function ReviewsClient({
 
         {/* View All Reviews Button */}
         <div className="text-center mt-8 sm:mt-12 lg:mt-16">
-          <Button
+          <Button nativeButton={false}
             variant="outline"
             size="lg"
             className="group"

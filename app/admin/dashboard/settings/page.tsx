@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Loader2, Save } from "lucide-react";
+import {  Save } from "lucide-react";
+import { Spinner } from "@/components/ui/spinner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -74,7 +75,7 @@ export default function SettingsPage() {
   if (loading) {
     return (
       <div className="flex h-[400px] items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+        <Spinner className="h-8 w-8 animate-spin text-muted-foreground" />
       </div>
     );
   }
@@ -87,7 +88,7 @@ export default function SettingsPage() {
           <p className="text-muted-foreground">Manage global site configuration, API links, and logos.</p>
         </div>
         <Button onClick={handleSave} disabled={saving}>
-          {saving ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Save className="w-4 h-4 mr-2" />}
+          {saving ? <Spinner className="w-4 h-4 mr-2 animate-spin" /> : <Save className="w-4 h-4 mr-2" />}
           Save Changes
         </Button>
       </div>
