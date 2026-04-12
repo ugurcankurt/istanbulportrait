@@ -1,0 +1,503 @@
+{
+  "payment_banner": {
+    "message": "Pago Seguro"
+  },
+  "nav": {
+    "home": "Inicio",
+    "selectLanguage": "Seleccionar idioma",
+    "selectLanguageDescription": "Elija su idioma preferido para explorar el retrato de Estambul."
+  },
+  "whatsapp": {
+    "button": "WhatsApp",
+    "tooltip": "Chatea con nosotros en WhatsApp",
+    "message": "¡Hola! Me gustaría obtener información sobre sesiones de fotos en Estambul.",
+    "notification_title": "Contacto por whatsapp",
+    "notification_message": "¡Puedes contactarnos vía WhatsApp!",
+    "close_notification": "Cerrar notificación",
+    "direction": "litros"
+  },
+  "hero": {
+    "resume_title": "Continúa planificando tu sesión de fotos"
+  },
+  "contact": {
+    "title": "Ponte en contacto",
+    "subtitle": "¿Listo para reservar tu sesión de fotos en Estambul?",
+    "sectionTitle": "Ponte en contacto",
+    "sectionDescription": "¿Listo para reservar tu sesión de fotos en Estambul? Discutamos sus necesidades fotográficas y creemos algo hermoso juntos.",
+    "cta_description": "¿Listo para capturar tus recuerdos en Estambul? Explore nuestros paquetes y reserve su sesión directamente en línea.",
+    "experience_description": "Más de 8 años de experiencia capturando la belleza de Estambul.",
+    "premium_locations": "Ubicaciones premium",
+    "locations_description": "Tejados, monumentos históricos y joyas escondidas",
+    "professional_quality": "Calidad profesional",
+    "quality_description": "Fotografías editadas en alta resolución entregadas digitalmente",
+    "form": {
+      "name": "Nombre completo",
+      "email": "Dirección de correo electrónico",
+      "phone": "Número de teléfono",
+      "date": "Fecha preferida",
+      "package": "Seleccionar paquete",
+      "message": "Mensaje",
+      "submit": "Enviar mensaje",
+      "success": "¡Gracias! Nos comunicaremos contigo pronto.",
+      "error": "Algo salió mal. Por favor inténtalo de nuevo."
+    }
+  },
+  "checkout": {
+    "title": "Reserva tu sesión",
+    "description": "Completa tu reserva para la experiencia perfecta de sesión de fotos en Estambul",
+    "payment_description": "Revise los detalles de su reserva y complete el pago",
+    "booking_summary": "Resumen de reserva",
+    "modal_description": "Rellena tus datos para reservar",
+    "booking": {
+      "review_details": "Revisa la información de tu reserva"
+    },
+    "package": {
+      "selected_details": "Detalles de su paquete de fotografía seleccionado"
+    },
+    "steps": {
+      "package": "Paquete",
+      "details": "Detalles",
+      "payment": "Pago",
+      "confirmation": "Confirmación"
+    },
+    "package_summary": "Resumen del paquete",
+    "customer_details": "Detalles del cliente",
+    "payment_details": "Detalles de pago",
+    "booking_details": "Detalles de la reserva",
+    "form": {
+      "people_count": "Número de personas",
+      "name": "Nombre completo",
+      "email": "Dirección de correo electrónico",
+      "phone": "Número de teléfono",
+      "date": "Seleccionar fecha",
+      "date_time": "Seleccionar fecha y hora",
+      "select_booking_details": "Selecciona la fecha y hora de tu sesión",
+      "time": "Seleccionar hora",
+      "select_time": "Seleccionar hora",
+      "morning": "mañana",
+      "noon": "Mediodía",
+      "afternoon": "tarde",
+      "notes": "Solicitudes especiales (opcional)",
+      "card_holder": "Nombre del titular de la tarjeta",
+      "card_number": "Número de tarjeta",
+      "expire_month": "MM",
+      "expire_year": "AA",
+      "cvc": "CVC",
+      "terms": "Acepto los términos y condiciones",
+      "month_short": "MM",
+      "year_short": "AA"
+    },
+    "buttons": {
+      "continue": "Continuar",
+      "check_availability": "Consultar disponibilidad",
+      "back": "Atrás",
+      "cancel": "Cancelar",
+      "continue_to_payment": "Añadir al carrito",
+      "edit_details": "Editar detalles",
+      "complete_booking": "Reserva completa",
+      "pay_amount": "PAGAR {amount}",
+      "processing": "Procesando...",
+      "book_another": "Reservar otra sesión",
+      "pay_with_turinvoice": "Paga con Turinvoice",
+      "checking_availability": "Comprobando disponibilidad...",
+      "availability_confirmed": "¡Lugar disponible! Abriendo ahora..."
+    },
+    "cancellation": {
+      "title": "Cancelación gratuita",
+      "description": "Cancele con hasta 24 horas de anticipación para obtener un reembolso completo"
+    },
+    "payment_breakdown": {
+      "pay_now": "Paga {amount} ahora",
+      "pay_on_day": "y resto de pago {amount} el día de la sesión de fotos"
+    },
+    "success": {
+      "title": "¡Reserva confirmada!",
+      "message": "Gracias por reservar con el fotógrafo de Estambul. La confirmación de su reserva ha sido enviada a su correo electrónico.",
+      "booking_id": "ID de reserva",
+      "payment_successful": "¡Pago exitoso! Correo electrónico de confirmación enviado."
+    },
+    "error": {
+      "generic": "Algo salió mal. Por favor inténtalo de nuevo.",
+      "payment_failed": "El pago falló. Por favor verifique los datos de su tarjeta e inténtelo nuevamente.",
+      "booking_failed": "No se pudo crear la reserva. Por favor inténtalo de nuevo.",
+      "payment_init_failed": "No se pudo inicializar el pago. Por favor inténtalo de nuevo."
+    },
+    "included_features": "Funciones incluidas",
+    "more_features": "más características",
+    "loading_booking": "Cargando detalles de la reserva...",
+    "labels": {
+      "customer": "Cliente:",
+      "date": "Fecha:",
+      "time": "Hora:",
+      "package": "Paquete:",
+      "people_count": "Personas:",
+      "total_amount": "Monto total:",
+      "deposit_amount": "Monto del depósito:",
+      "remaining_cash": "Efectivo restante:",
+      "payment_terms_notice": "Condiciones de Pago: 30% depósito online, 70% en efectivo el día de la sesión de fotos."
+    },
+    "security": {
+      "ssl_encrypted": "SSL cifrado",
+      "secure_payment": "Pago Seguro",
+      "pci_compliant": "Cumple con PCI",
+      "payment_secure_message": "Pago seguro • Cifrado SSL • Cumple con PCI"
+    },
+    "payment": {
+      "complete_description": "Completa tu reserva introduciendo tus datos de pago",
+      "secure_no_fees": "Pago seguro • Sin cargos ocultos"
+    },
+    "people_count_title": "Número de personas",
+    "price_per_person": "Precio por persona",
+    "seasonal_discount_applied": "Oferta ({percentage}% DE DESCUENTO)",
+    "promo_code": "Código promocional",
+    "apply_promo": "Aplicar",
+    "promo_applied": "¡Código promocional aplicado!",
+    "invalid_promo": "Código promocional no válido o caducado",
+    "promo_discount": "Descuento promocional",
+    "person": "persona",
+    "people": "gente",
+    "payment_method": "Método de pago",
+    "payment_methods": {
+      "credit_card": "Tarjeta de crédito/débito",
+      "russian_banks": "Оплата через СБП"
+    },
+    "turinvoice_description": "Serás redirigido a la página de pago seguro de Turinvoice.",
+    "turinvoice": {
+      "title": "Pago de factura",
+      "status_new": "Inicializando...",
+      "time_remaining": "Tiempo restante",
+      "amount_label": "Cantidad",
+      "exchange_rate": "Tipo de cambio",
+      "instruction_1": "Complete su pago en la página abierta.",
+      "open_payment_page": "Abrir página de pago",
+      "instruction_2": "No cierre esta ventana hasta que se confirme el pago.",
+      "security_notice": "Pago seguro a través de Turinvoice",
+      "status_paying": "Esperando pago...",
+      "status_paid": "¡Pago exitoso!",
+      "status_timeout": "Pago agotado",
+      "success_message": "Su pago ha sido confirmado.",
+      "redirect_message": "Redirigiendo...",
+      "timeout_message": "La sesión de pago ha caducado.",
+      "timeout_desc": "Intente nuevamente para reiniciar el proceso de pago.",
+      "try_again": "Inténtalo de nuevo"
+    },
+    "expires_in": "Mantendremos su lugar durante [TIEMPO] minutos.",
+    "expired": "El espacio de reserva expiró. Por favor seleccione una nueva hora."
+  },
+  "footer": {
+    "description": "Fotógrafo líder en Estambul para fotografía de retratos profesionales. Capturando tus momentos especiales con los escenarios más emblemáticos de la ciudad.",
+    "quickLinks": "Enlaces rápidos",
+    "services": "Servicios",
+    "followUs": "Síguenos",
+    "copyright": "© 2026 istanbulphotosession.com.tr | Reservados todos los derechos.",
+    "service_items": {
+      "portrait": "Fotografía de retrato",
+      "couples": "Sesiones de pareja",
+      "rooftop": "Sesiones de fotos en la azotea",
+      "historic": "Sesiones en lugares históricos",
+      "lifestyle": "Fotografía de estilo de vida",
+      "historic_shoots": "Sesiones en lugares históricos"
+    },
+    "privacy_policy": "Política de privacidad",
+    "terms_of_service": "Términos de servicio"
+  },
+  "validation": {
+    "people_count_required": "Se requiere recuento de personas para el paquete en la azotea",
+    "package_required": "Se requiere selección de paquete",
+    "email_invalid": "Por favor introduce una dirección de correo electrónico válida",
+    "phone_invalid": "Por favor ingresa un número de teléfono válido",
+    "date_required": "Por favor seleccione una fecha",
+    "time_required": "Por favor seleccione una hora",
+    "amount_positive": "El importe total debe ser positivo.",
+    "cardholder_required": "El nombre del titular de la tarjeta es obligatorio",
+    "card_number_required": "Se requiere el número de tarjeta",
+    "month_required": "Se requiere mes",
+    "year_required": "Se requiere año",
+    "cvc_required": "CVC debe tener 3 dígitos",
+    "name_min": "El nombre debe tener al menos 2 caracteres.",
+    "phone_min": "El número de teléfono debe tener al menos 10 dígitos",
+    "message_min": "El mensaje debe tener al menos 10 caracteres.",
+    "card_number_invalid": "El número de tarjeta debe tener entre 13 y 19 dígitos",
+    "preferred_date_required": "Por favor seleccione una fecha preferida",
+    "package_selection_required": "Por favor seleccione un paquete",
+    "phone_required": "Se requiere número de teléfono"
+  },
+  "placeholders": {
+    "full_name": "Nombre completo",
+    "email": "juan@ejemplo.com",
+    "phone": "+90 536 709 37 24",
+    "select_package": "Seleccione un paquete",
+    "tell_us_vision": "Cuéntanos tu visión para la sesión de fotos...",
+    "test_card": "5528790000000008 (Utilice esta tarjeta de prueba para realizar un pago de demostración exitoso)",
+    "enter_full_name": "Introduce tu nombre completo",
+    "enter_email": "Introduce tu correo electrónico",
+    "phone_number": "+90 555 123 45 67",
+    "pick_date": "Elige una fecha",
+    "select_time": "Seleccionar hora",
+    "special_requests": "Cualquier petición o nota especial sobre tu sesión de fotos...",
+    "card_holder": "NOMBRE COMPLETO",
+    "card_number": "XXXXXXXXXXXXXXXX",
+    "expire_mm": "MM",
+    "expire_yy": "AA",
+    "cvc_placeholder": "XXX"
+  },
+  "ui": {
+    "custom_package": "Paquete personalizado",
+    "language": "Idioma",
+    "send_message": "Envíanos un mensaje",
+    "contact_information": "Información de contacto",
+    "cookie_settings": "Configuración de cookies",
+    "share": "Compartir",
+    "save": "Guardar",
+    "saved": "Guardado",
+    "link_copied": "Enlace copiado al portapapeles",
+    "saved_to_favorites": "Guardado en favoritos",
+    "removed_from_saved": "Eliminado de favoritos",
+    "save_percentage": "GUARDAR {percentage}%",
+    "duration": "Duración",
+    "photos": "Fotos",
+    "locations": "Ubicaciones",
+    "location": "Ubicación",
+    "email": "Correo electrónico",
+    "phone": "Teléfono",
+    "availability": "Disponibilidad",
+    "availability_status": "Estado de disponibilidad",
+    "what_to_expect": "Qué esperar",
+    "response_time": "Tiempo de respuesta",
+    "booking_process": "Proceso de reserva",
+    "payment": "Pago",
+    "response_time_desc": "Normalmente respondemos a las consultas dentro de las 24 horas.",
+    "booking_process_desc": "Después de su consulta, programaremos una consulta para analizar su visión y finalizar los detalles.",
+    "payment_desc": "Se requiere el pago completo en línea al momento de la reserva para asegurar su fecha.",
+    "professional_photographer": "fotógrafo profesional",
+    "professional_photographer_in_istanbul": "Fotógrafo profesional en Estambul",
+    "portrait_photography": "Fotografía de retrato",
+    "couple_sessions": "Sesiones de pareja",
+    "lifestyle": "Estilo de vida",
+    "rooftop_shoots": "Sesiones en la azotea",
+    "view_my_work": "Ver mi trabajo",
+    "book_your_session": "Reserva tu sesión",
+    "check_locations": "Verificar ubicaciones",
+    "view_packages": "Ver paquetes",
+    "packages_button": "Paquetes",
+    "book_package": "Consultar disponibilidad",
+    "show_all_photos": "Mostrar todas las fotos",
+    "back_to_home": "Volver a Inicio",
+    "selected": "Seleccionado",
+    "select_package": "Seleccionar paquete",
+    "total": "totales",
+    "contact": "Contacto",
+    "most_popular": "Más Popular",
+    "tryAgain": "Inténtalo de nuevo",
+    "loading": "Cargando...",
+    "error": "error",
+    "retry": "Reintentar",
+    "breadcrumbs": {
+      "photography_locations": "Lugares de fotografía",
+      "checkout": "Pagar",
+      "locations": "Ubicaciones"
+    },
+    "instagram_feed": {
+      "title": "Seguir en Instagram",
+      "visit_profile": "Visitar perfil",
+      "api_error": "Falta la conexión API",
+      "error_msg": "No se pudo cargar el feed de Instagram."
+    },
+    "shipping": {
+      "title": "Envíos y devoluciones",
+      "worldwide": "Envío mundial disponible",
+      "delivery": "Entrega estimada: 3-10 días hábiles",
+      "returns": "Política de devolución de 14 días para su tranquilidad",
+      "quality": "Garantía de calidad de impresión de alta resolución"
+    }
+  },
+  "about_cta": {
+    "title": "¿Listo para crear algo hermoso?",
+    "description": "Capturemos su historia con el impresionante telón de fondo de Estambul."
+  },
+  "about_highlights": {
+    "title": "¿Por qué elegirnos?",
+    "professional_quality": "Calidad profesional",
+    "professional_quality_desc": "Equipos de alta gama y años de experiencia.",
+    "local_knowledge": "Conocimiento local",
+    "local_knowledge_desc": "Conociendo los mejores rincones escondidos.",
+    "personalized_experience": "Experiencia personalizada",
+    "personalized_experience_desc": "Adaptado a tu estilo único."
+  },
+  "about": {
+    "experience": "Años de experiencia",
+    "sessions": "Sesiones completadas",
+    "clients": "Clientes felices",
+    "satisfaction": "Satisfacción del cliente",
+    "description": "¡Bienvenidos a mi portafolio! Me especializo en capturar momentos hermosos con luz natural."
+  },
+  "api_errors": {
+    "rate_limit": "Demasiadas solicitudes. Inténtelo de nuevo más tarde.",
+    "payment_rate_limit": "Demasiados intentos de pago. Inténtelo de nuevo más tarde.",
+    "invalid_data": "Datos de solicitud no válidos",
+    "missing_payment_data": "Faltan datos de pago requeridos",
+    "invalid_amount": "Monto de pago no válido",
+    "booking_not_found": "Reserva no encontrada. Primero cree una reserva.",
+    "invalid_package_price": "Precio del paquete no válido",
+    "duplicate_booking": "Recientemente se creó una reserva similar. Por favor revisa tu correo electrónico o espera unos minutos.",
+    "booking_config_error": "No se puede procesar la reserva. Por favor verifique la configuración de Supabase.",
+    "internal_error": "Error interno del servidor",
+    "payment_processing_failed": "Error al procesar el pago. Inténtelo de nuevo más tarde.",
+    "unknown_error": "Error desconocido"
+  },
+  "breadcrumb": {
+    "home": "Inicio",
+    "privacy": "Política de privacidad",
+    "about": "Acerca de",
+    "packages": "Paquetes",
+    "locations": "Ubicaciones",
+    "blog": "Blog",
+    "contact": "Contacto",
+    "checkout": "Pagar"
+  },
+  "success": {
+    "booking_details": "Detalles de la reserva",
+    "booking_id": "ID de reserva",
+    "customer_details": "Información del cliente",
+    "package_label": "Paquete",
+    "amount_paid": "Monto pagado",
+    "booking_date": "Fecha",
+    "booking_time": "tiempo",
+    "customer_name": "Nombre",
+    "customer_email": "Correo electrónico",
+    "customer_phone": "Teléfono",
+    "notes": "Solicitudes especiales",
+    "whats_next": "¿Qué sigue?",
+    "confirmation_email": "Correo electrónico de confirmación enviado",
+    "email_description": "Revisa tu bandeja de entrada para obtener información detallada sobre la reserva.",
+    "pre_session_contact": "Contacto previo a la sesión",
+    "contact_description": "Nos comunicaremos contigo 24 horas antes de tu sesión para confirmar los detalles.",
+    "photo_delivery": "Entrega de fotos",
+    "delivery_description": "Sus fotos editadas se entregarán dentro de 5 a 7 días hábiles.",
+    "have_questions": "¿Tiene preguntas?",
+    "bullet_professional": "• Fotógrafo profesional incluido.",
+    "bullet_photos": "• Fotografías editadas en alta resolución",
+    "bullet_gallery": "• Entrega de galería en línea",
+    "bullet_retouching": "• Retoque profesional",
+    "need_help": "¿Necesita ayuda?",
+    "help_description": "¿Preguntas sobre tu reserva? Contáctanos en cualquier momento.",
+    "people_count": "Número de personas"
+  },
+  "package_selection": {
+    "choose_package": "Elige tu paquete",
+    "select_description": "Selecciona el paquete de fotografía que mejor se adapta a tus necesidades",
+    "you_selected": "Tu seleccionaste:"
+  },
+  "success_messages": {
+    "payment_successful": "¡Pago exitoso! Correo electrónico de confirmación enviado.",
+    "booking_created": "¡Reserva creada con éxito!"
+  },
+  "packages": {
+    "title": "Paquetes disponibles",
+    "subtitle": "Elige el mejor paquete para ti",
+    "per_person": "por persona"
+  },
+  "gallery": {
+    "title": "Portafolio",
+    "subtitle": "Capturando tus mejores momentos"
+  },
+  "faq": {
+    "title": "Preguntas frecuentes",
+    "subtitle": "Encuentre respuestas a sus preguntas"
+  },
+  "locations": {
+    "locationInfo": "Información de ubicación",
+    "photographyTips": "Consejos de fotografía",
+    "aboutLocation": "Acerca de la ubicación",
+    "gallery": "Galería",
+    "nearbyLocations": "Ubicaciones cercanas",
+    "bestTimeToVisit": "Mejor época para visitar",
+    "viewOnMap": "Ver en el mapa",
+    "bookPhotoshoot": "Reserva una sesión de fotos",
+    "bookPhotoshootDescription": "Capture sus mejores momentos en este lugar con un fotógrafo profesional.",
+    "viewPackages": "Ver paquetes",
+    "explore": "Explorar"
+  },
+  "cookies": {
+    "banner": {
+      "title": "Preferencias de cookies",
+      "description": "Utilizamos cookies para mejorar su experiencia de navegación y analizar nuestro tráfico. Al hacer clic en \"Aceptar todo\", acepta nuestro uso de cookies.",
+      "privacy_link": "Más información"
+    },
+    "buttons": {
+      "accept_all": "Aceptar todo",
+      "essential_only": "Sólo esencial",
+      "decline_all": "Rechazar todo"
+    }
+  },
+  "reviews": {
+    "title": "Lo que dicen los clientes sobre nosotros",
+    "subtitle": "Reseñas reales de clientes de fotografía satisfechos que nos eligieron para su experiencia de sesión de fotos en Estambul.",
+    "total_reviews": "revisiones",
+    "view_all": "Ver todas las reseñas en Google",
+    "loading": "Cargando reseñas...",
+    "error": "No se pueden cargar reseñas en este momento",
+    "overall_rating": "Calificación general",
+    "based_on": "basado en revisiones {count}",
+    "summary": "Resumen de revisión",
+    "verified_visitors": "Todas las reseñas son de visitantes verificados.",
+    "filter_stars": "Mostrando solo reseñas de estrellas {count}",
+    "no_reviews": "No se encontraron reseñas para esta calificación.",
+    "clear_filter": "Borrar",
+    "show_all": "Mostrar todas las reseñas",
+    "show_more": "Mostrar más",
+    "rating_only": "Sólo calificación",
+    "rating_no_text": "Calificación proporcionada sin revisión escrita",
+    "filter_hint": "Haga clic en una barra para filtrar reseñas por calificación de estrellas.",
+    "excellent": "Excelente",
+    "very_good": "Muy bueno",
+    "average": "Promedio",
+    "poor": "pobre",
+    "terrible": "Terrible"
+  },
+  "pricing": {
+    "base_price": "Precio base",
+    "tax_rate": "IVA ({rate}%)",
+    "tax_amount": "Importe del IVA",
+    "total_price": "Precio total",
+    "tax_inclusive": "Impuestos Incluidos",
+    "price_breakdown": "Desglose de precios",
+    "subtotal": "Subtotal",
+    "vat": "IVA",
+    "final_total": "Total final"
+  },
+  "notfound": {
+    "title": "Página no encontrada",
+    "subtitle": "¡Ups! Parece que falta esta sesión de fotografía.",
+    "description": "La página que estás buscando no existe. Quizás desee explorar nuestros paquetes de fotografía o regresar a casa para descubrir la belleza de la fotografía de Estambul.",
+    "homeButton": "Regresar a casa",
+    "packagesButton": "Ver paquetes",
+    "goBack": "Volver"
+  },
+  "blog": {
+    "title": "Blog de fotografía",
+    "subtitle": "Consejos, guías e historias de Estambul",
+    "read_more": "Leer más",
+    "reading_time": "{minutes} lectura mínima",
+    "published_on": "Publicado {date}",
+    "by_author": "por {author}",
+    "categories": "Categorías",
+    "tags": "Etiquetas",
+    "related_posts": "Publicaciones relacionadas",
+    "recent_posts": "Publicaciones recientes",
+    "no_posts": "No se encontraron publicaciones de blog",
+    "search": "Buscar blog...",
+    "all_categories": "Todas las categorías",
+    "featured": "Destacado",
+    "author": {
+      "about_title": "Sobre el autor",
+      "name": "Fotógrafo de Estambul",
+      "bio": "Fotógrafo profesional especializado en fotografía de retratos, parejas y estilo de vida en Estambul. Con más de 8 años de experiencia, capturando recuerdos eternos con los fondos más emblemáticos de la ciudad.",
+      "follow": "Seguir en Instagram"
+    },
+    "summary": {
+      "title": "Conclusiones clave",
+      "ai_overview": "Descripción general de la IA"
+    }
+  }
+}

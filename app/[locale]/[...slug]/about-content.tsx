@@ -1,0 +1,68 @@
+import { getTranslations } from "next-intl/server";
+import { PageHeroSection } from "@/components/page-hero-section";
+import { AboutSection } from "@/components/about-section";
+import { BreadcrumbNav } from "@/components/breadcrumb-nav";
+
+import { pagesContentService } from "@/lib/pages-content-service";
+
+
+
+export async function AboutPageContent({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+
+
+
+
+
+
+  const dbPage = await pagesContentService.getPageBySlug("about");
+
+  const dynamicTitle = dbPage?.title?.[locale] || dbPage?.title?.en || "";
+  const dynamicSubtitle = dbPage?.subtitle?.[locale] || dbPage?.subtitle?.en || "";
+
+  const tAboutHighlights = await getTranslations({
+    locale,
+    namespace: "about_highlights",
+  });
+  const tAboutCta = await getTranslations({
+    locale,
+    namespace: "about_cta",
+  });
+
+  return (
+    <div>
+
+
+      <BreadcrumbNav customLastLabel={dynamicTitle || undefined} />
+      <div className="section-contain-auto">
+        <PageHeroSection title={dynamicTitle} subtitle={dynamicSubtitle} />
+      </div>
+
+      <div className="section-contain-auto">
+        <AboutSection
+          dbPage={dbPage as any}
+          locale={locale}
+          highlightsHeader={
+            <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-center mb-8 sm:mb-10 lg:mb-12">
+              {tAboutHighlights("title")}
+            </h2>
+          }
+          ctaHeader={
+            <>
+              <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold mb-3 sm:mb-4">
+                {tAboutCta("title")}
+              </h2>
+              <p className="text-muted-foreground mb-6 sm:mb-8 text-sm sm:text-base lg:text-lg px-2">
+                {tAboutCta("description")}
+              </p>
+            </>
+          }
+        />
+      </div>
+    </div>
+  );
+}

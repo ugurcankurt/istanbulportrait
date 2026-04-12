@@ -1,0 +1,503 @@
+{
+  "payment_banner": {
+    "message": "Plata sigura"
+  },
+  "nav": {
+    "home": "Acasă",
+    "selectLanguage": "Selectați Limbă",
+    "selectLanguageDescription": "Alegeți limba preferată pentru a explora Istanbul Portrait."
+  },
+  "whatsapp": {
+    "button": "WhatsApp",
+    "tooltip": "Discutați cu noi pe WhatsApp",
+    "message": "Bună ziua! Aș dori să obțin informații despre ședințe foto din Istanbul.",
+    "notification_title": "Contact pe Whatsapp",
+    "notification_message": "Ne poți contacta prin WhatsApp!",
+    "close_notification": "Închideți notificarea",
+    "direction": "ltr"
+  },
+  "hero": {
+    "resume_title": "Continuați să vă planificați ședința foto"
+  },
+  "contact": {
+    "title": "Luați legătura",
+    "subtitle": "Ești gata să-ți rezervi ședința foto la Istanbul?",
+    "sectionTitle": "Luați legătura",
+    "sectionDescription": "Ești gata să-ți rezervi ședința foto la Istanbul? Să discutăm despre nevoile tale de fotografie și să creăm ceva frumos împreună",
+    "cta_description": "Ești gata să-ți surprinzi amintirile din Istanbul? Răsfoiți pachetele noastre și rezervați-vă sesiunea direct online.",
+    "experience_description": "Peste 8 ani de experiență în surprinderea frumuseții Istanbulului",
+    "premium_locations": "Locații premium",
+    "locations_description": "Acoperișuri, repere istorice și pietre prețioase ascunse",
+    "professional_quality": "Calitate Profesionala",
+    "quality_description": "Fotografii editate de înaltă rezoluție livrate digital",
+    "form": {
+      "name": "Nume complet",
+      "email": "Adresa de e-mail",
+      "phone": "Număr de telefon",
+      "date": "Data preferată",
+      "package": "Selectați Pachet",
+      "message": "Mesaj",
+      "submit": "Trimite mesaj",
+      "success": "Multumesc! Vă vom reveni în curând.",
+      "error": "Ceva a mers prost. Vă rugăm să încercați din nou."
+    }
+  },
+  "checkout": {
+    "title": "Rezervă-ți sesiunea",
+    "description": "Finalizați rezervarea pentru experiența perfectă de ședință foto la Istanbul",
+    "payment_description": "Verificați detaliile rezervării și finalizați plata",
+    "booking_summary": "Rezumatul rezervării",
+    "modal_description": "Completează datele tale pentru a rezerva",
+    "booking": {
+      "review_details": "Verificați informațiile de rezervare"
+    },
+    "package": {
+      "selected_details": "Detalii despre pachetul foto selectat"
+    },
+    "steps": {
+      "package": "Pachet",
+      "details": "Detalii",
+      "payment": "Plata",
+      "confirmation": "Confirmare"
+    },
+    "package_summary": "Rezumatul pachetului",
+    "customer_details": "Detalii client",
+    "payment_details": "Detalii de plată",
+    "booking_details": "Detalii rezervare",
+    "form": {
+      "people_count": "Numărul de persoane",
+      "name": "Nume complet",
+      "email": "Adresa de e-mail",
+      "phone": "Număr de telefon",
+      "date": "Selectați Data",
+      "date_time": "Selectați Data și ora",
+      "select_booking_details": "Selectați data și ora pentru sesiunea dvs",
+      "time": "Selectați Ora",
+      "select_time": "Selectați Ora",
+      "morning": "dimineata",
+      "noon": "amiază",
+      "afternoon": "după-amiază",
+      "notes": "Cereri speciale (opțional)",
+      "card_holder": "Numele titularului cardului",
+      "card_number": "Numărul cardului",
+      "expire_month": "MM",
+      "expire_year": "YY",
+      "cvc": "CVC",
+      "terms": "Sunt de acord cu termenii și condițiile",
+      "month_short": "MM",
+      "year_short": "YY"
+    },
+    "buttons": {
+      "continue": "Continuă",
+      "check_availability": "Verificați disponibilitatea",
+      "back": "Înapoi",
+      "cancel": "Anulează",
+      "continue_to_payment": "Adaugă în coș",
+      "edit_details": "Editați detalii",
+      "complete_booking": "Rezervare completă",
+      "pay_amount": "Plătiți {amount}",
+      "processing": "Se procesează...",
+      "book_another": "Rezervați o altă sesiune",
+      "pay_with_turinvoice": "Plătiți cu Turinvoice",
+      "checking_availability": "Se verifică disponibilitatea...",
+      "availability_confirmed": "Loc disponibil! Se deschide acum..."
+    },
+    "cancellation": {
+      "title": "Anulare gratuită",
+      "description": "Anulați cu până la 24 de ore în avans pentru o rambursare completă"
+    },
+    "payment_breakdown": {
+      "pay_now": "Plătiți acum {amount}",
+      "pay_on_day": "și restul plății {amount} în ziua ședinței foto"
+    },
+    "success": {
+      "title": "Rezervare confirmată!",
+      "message": "Vă mulțumim pentru rezervarea la Istanbul Photographer. Confirmarea rezervării dvs. a fost trimisă pe adresa dvs. de e-mail.",
+      "booking_id": "ID rezervare",
+      "payment_successful": "Plata reușită! E-mail de confirmare trimis."
+    },
+    "error": {
+      "generic": "Ceva a mers prost. Vă rugăm să încercați din nou.",
+      "payment_failed": "Plata nu a reușit. Vă rugăm să verificați detaliile cardului dvs. și să încercați din nou.",
+      "booking_failed": "Nu s-a putut crea rezervarea. Vă rugăm să încercați din nou.",
+      "payment_init_failed": "Nu s-a inițializat plata. Vă rugăm să încercați din nou."
+    },
+    "included_features": "Caracteristici incluse",
+    "more_features": "mai multe caracteristici",
+    "loading_booking": "Se încarcă detaliile rezervării...",
+    "labels": {
+      "customer": "Client:",
+      "date": "Data:",
+      "time": "Ora:",
+      "package": "Pachet:",
+      "people_count": "Oameni:",
+      "total_amount": "Suma totală:",
+      "deposit_amount": "Suma depozitului:",
+      "remaining_cash": "Numerar rămas:",
+      "payment_terms_notice": "Condiții de plată: 30% depozit online, 70% numerar în ziua ședinței foto."
+    },
+    "security": {
+      "ssl_encrypted": "SSL criptat",
+      "secure_payment": "Plata sigura",
+      "pci_compliant": "Conform PCI",
+      "payment_secure_message": "Plată Securizată • Cript SSL • Conform PCI"
+    },
+    "payment": {
+      "complete_description": "Finalizați rezervarea introducând informațiile de plată",
+      "secure_no_fees": "Plată sigură • Fără taxe ascunse"
+    },
+    "people_count_title": "Numărul de persoane",
+    "price_per_person": "Pret per persoana",
+    "seasonal_discount_applied": "Reducere ({percentage}% REDUCERE)",
+    "promo_code": "Cod promoțional",
+    "apply_promo": "Aplicați",
+    "promo_applied": "Cod promoțional aplicat!",
+    "invalid_promo": "Cod promoțional nevalid sau expirat",
+    "promo_discount": "Reducere promoțională",
+    "person": "persoana",
+    "people": "oameni",
+    "payment_method": "Metoda de plată",
+    "payment_methods": {
+      "credit_card": "Card de credit/debit",
+      "russian_banks": "Оплата через СБП"
+    },
+    "turinvoice_description": "Veți fi redirecționat către pagina de plată securizată Turinvoice.",
+    "turinvoice": {
+      "title": "Plata Turinvoice",
+      "status_new": "Se inițializează...",
+      "time_remaining": "Timpul rămas",
+      "amount_label": "Suma",
+      "exchange_rate": "Cursul de schimb",
+      "instruction_1": "Vă rugăm să finalizați plata în pagina deschisă.",
+      "open_payment_page": "Deschide pagina de plată",
+      "instruction_2": "Nu închideți această fereastră până când plata nu este confirmată.",
+      "security_notice": "Plata sigura prin Turinvoice",
+      "status_paying": "Se așteaptă plata...",
+      "status_paid": "Plata reușită!",
+      "status_timeout": "Timp de plată expirat",
+      "success_message": "Plata dvs. a fost confirmată.",
+      "redirect_message": "Se redirecționează...",
+      "timeout_message": "Sesiunea de plată a expirat.",
+      "timeout_desc": "Vă rugăm să încercați din nou să reporniți procesul de plată.",
+      "try_again": "Încercați din nou"
+    },
+    "expires_in": "Vă vom păstra locul timp de [TIME] minute.",
+    "expired": "Slot de rezervare a expirat. Vă rugăm să selectați o nouă oră."
+  },
+  "footer": {
+    "description": "Fotograf de top din Istanbul pentru fotografii profesionale de portret. Surprindeți-vă momentele speciale cu cele mai emblematice fundaluri ale orașului.",
+    "quickLinks": "Legături rapide",
+    "services": "Servicii",
+    "followUs": "Urmărește-ne",
+    "copyright": "© 2026 istanbulphotosession.com.tr | Toate drepturile rezervate.",
+    "service_items": {
+      "portrait": "Fotografie portret",
+      "couples": "Sesiuni de cuplu",
+      "rooftop": "Sesiuni foto pe acoperiș",
+      "historic": "Filmări cu locație istorică",
+      "lifestyle": "Fotografie de stil de viață",
+      "historic_shoots": "Filmări cu locație istorică"
+    },
+    "privacy_policy": "Politica de confidențialitate",
+    "terms_of_service": "Termeni și condiții"
+  },
+  "validation": {
+    "people_count_required": "Numărarea persoanelor este necesară pentru pachetul pe acoperiș",
+    "package_required": "Este necesară selecția pachetului",
+    "email_invalid": "Vă rugăm să introduceți o adresă de e-mail validă",
+    "phone_invalid": "Vă rugăm să introduceți un număr de telefon valid",
+    "date_required": "Vă rugăm să selectați o dată",
+    "time_required": "Vă rugăm să selectați o oră",
+    "amount_positive": "Suma totală trebuie să fie pozitivă",
+    "cardholder_required": "Numele titularului cardului este obligatoriu",
+    "card_number_required": "Numărul cardului este necesar",
+    "month_required": "Luna este obligatorie",
+    "year_required": "Anul este necesar",
+    "cvc_required": "CVC trebuie să aibă 3 cifre",
+    "name_min": "Numele trebuie să aibă cel puțin 2 caractere",
+    "phone_min": "Numărul de telefon trebuie să aibă cel puțin 10 cifre",
+    "message_min": "Mesajul trebuie să aibă cel puțin 10 caractere",
+    "card_number_invalid": "Numărul cardului trebuie să aibă 13-19 cifre",
+    "preferred_date_required": "Vă rugăm să selectați o dată preferată",
+    "package_selection_required": "Vă rugăm să selectați un pachet",
+    "phone_required": "Numărul de telefon este obligatoriu"
+  },
+  "placeholders": {
+    "full_name": "Nume complet",
+    "email": "john@example.com",
+    "phone": "+90 536 709 37 24",
+    "select_package": "Selectați un pachet",
+    "tell_us_vision": "Povestește-ne despre viziunea ta pentru ședința foto...",
+    "test_card": "5528790000000008 (Folosiți acest card de test pentru plata demonstrativă cu succes)",
+    "enter_full_name": "Introduceți numele dvs. complet",
+    "enter_email": "Introduceți adresa dvs. de e-mail",
+    "phone_number": "+90 555 123 45 67",
+    "pick_date": "Alegeți o dată",
+    "select_time": "Selectați ora",
+    "special_requests": "Orice solicitări speciale sau note despre ședința foto...",
+    "card_holder": "NUME COMPLET",
+    "card_number": "XXXX XXXX XXXX XXXX",
+    "expire_mm": "MM",
+    "expire_yy": "YY",
+    "cvc_placeholder": "XXX"
+  },
+  "ui": {
+    "custom_package": "Pachet personalizat",
+    "language": "Limbă",
+    "send_message": "Trimite-ne un mesaj",
+    "contact_information": "Informații de contact",
+    "cookie_settings": "Setări cookie",
+    "share": "Distribuie",
+    "save": "Salvați",
+    "saved": "Salvat",
+    "link_copied": "Link copiat în clipboard",
+    "saved_to_favorites": "Salvat la favorite",
+    "removed_from_saved": "Eliminat din favorite",
+    "save_percentage": "SALVAȚI {percentage}%",
+    "duration": "Durata",
+    "photos": "Fotografii",
+    "locations": "Locații",
+    "location": "Locație",
+    "email": "E-mail",
+    "phone": "Telefon",
+    "availability": "Disponibilitate",
+    "availability_status": "Starea de disponibilitate",
+    "what_to_expect": "La ce să te aștepți",
+    "response_time": "Timp de răspuns",
+    "booking_process": "Procesul de rezervare",
+    "payment": "Plata",
+    "response_time_desc": "De obicei, răspundem la întrebări în termen de 24 de ore.",
+    "booking_process_desc": "După întrebarea dvs., vom programa o consultație pentru a discuta viziunea dvs. și pentru a finaliza detaliile.",
+    "payment_desc": "Plata integrală este necesară online în momentul rezervării pentru a vă asigura data.",
+    "professional_photographer": "Fotograf profesionist",
+    "professional_photographer_in_istanbul": "Fotograf profesionist în Istanbul",
+    "portrait_photography": "Fotografie portret",
+    "couple_sessions": "Sesiuni de cuplu",
+    "lifestyle": "Stil de viață",
+    "rooftop_shoots": "Filmări de pe acoperiș",
+    "view_my_work": "Vizualizați lucrarea mea",
+    "book_your_session": "Rezervă-ți sesiunea",
+    "check_locations": "Verificați locații",
+    "view_packages": "Vezi pachete",
+    "packages_button": "Pachete",
+    "book_package": "Verificați disponibilitatea",
+    "show_all_photos": "Afișați toate fotografiile",
+    "back_to_home": "Înapoi la Acasă",
+    "selected": "Selectat",
+    "select_package": "Selectați Pachet",
+    "total": "Total",
+    "contact": "Contact",
+    "most_popular": "Cele mai populare",
+    "tryAgain": "Încercați din nou",
+    "loading": "Se încarcă...",
+    "error": "Eroare",
+    "retry": "Reîncercați",
+    "breadcrumbs": {
+      "photography_locations": "Locații de fotografie",
+      "checkout": "Checkout",
+      "locations": "Locații"
+    },
+    "instagram_feed": {
+      "title": "Urmărește pe Instagram",
+      "visit_profile": "Vizitați Profil",
+      "api_error": "Conexiune API lipsește",
+      "error_msg": "Nu s-a putut încărca feedul Instagram."
+    },
+    "shipping": {
+      "title": "Livrare și returnare",
+      "worldwide": "Livrare în toată lumea disponibilă",
+      "delivery": "Livrare estimată: 3-10 zile lucrătoare",
+      "returns": "Politica de returnare de 14 zile pentru liniște sufletească",
+      "quality": "Garanție de calitate a imprimării de înaltă rezoluție"
+    }
+  },
+  "about_cta": {
+    "title": "Ești gata să creezi ceva frumos?",
+    "description": "Să surprindem povestea ta pe fundalul uimitor al Istanbulului."
+  },
+  "about_highlights": {
+    "title": "De ce să ne alegeți",
+    "professional_quality": "Calitate Profesionala",
+    "professional_quality_desc": "Echipamente de ultimă generație și ani de experiență.",
+    "local_knowledge": "Cunoștințe locale",
+    "local_knowledge_desc": "Cunoașterea celor mai bune locuri ascunse.",
+    "personalized_experience": "Experiență personalizată",
+    "personalized_experience_desc": "Adaptat stilului dvs. unic."
+  },
+  "about": {
+    "experience": "Ani de experiență",
+    "sessions": "Sesiuni finalizate",
+    "clients": "Clienti fericiti",
+    "satisfaction": "Satisfacția clientului",
+    "description": "Bun venit în portofoliul meu! Sunt specializată în surprinderea momentelor frumoase în lumină naturală."
+  },
+  "api_errors": {
+    "rate_limit": "Prea multe cereri. Vă rugăm să încercați din nou mai târziu.",
+    "payment_rate_limit": "Prea multe încercări de plată. Vă rugăm să încercați din nou mai târziu.",
+    "invalid_data": "Date de solicitare nevalide",
+    "missing_payment_data": "Lipsesc datele de plată necesare",
+    "invalid_amount": "Sumă de plată nevalidă",
+    "booking_not_found": "Rezervarea nu a fost găsită. Vă rugăm să creați mai întâi o rezervare.",
+    "invalid_package_price": "Prețul pachetului este nevalid",
+    "duplicate_booking": "O rezervare similară a fost creată recent. Vă rugăm să vă verificați e-mailul sau așteptați câteva minute.",
+    "booking_config_error": "Nu se poate procesa rezervarea. Vă rugăm să verificați configurația Supabase.",
+    "internal_error": "Eroare internă de server",
+    "payment_processing_failed": "Procesarea plății a eșuat. Vă rugăm să încercați din nou mai târziu.",
+    "unknown_error": "Eroare necunoscută"
+  },
+  "breadcrumb": {
+    "home": "Acasă",
+    "privacy": "Politica de confidențialitate",
+    "about": "Despre",
+    "packages": "Pachete",
+    "locations": "Locații",
+    "blog": "Blog",
+    "contact": "Contact",
+    "checkout": "Checkout"
+  },
+  "success": {
+    "booking_details": "Detalii rezervare",
+    "booking_id": "ID rezervare",
+    "customer_details": "Informații despre clienți",
+    "package_label": "Pachet",
+    "amount_paid": "Suma plătită",
+    "booking_date": "Data",
+    "booking_time": "timpul",
+    "customer_name": "Nume",
+    "customer_email": "E-mail",
+    "customer_phone": "Telefon",
+    "notes": "Cereri speciale",
+    "whats_next": "Ce urmează?",
+    "confirmation_email": "E-mail de confirmare trimis",
+    "email_description": "Verificați-vă căsuța de e-mail pentru informații detaliate despre rezervare",
+    "pre_session_contact": "Contact înainte de sesiune",
+    "contact_description": "Vă vom contacta cu 24 de ore înainte de sesiune pentru a confirma detaliile",
+    "photo_delivery": "Livrare fotografii",
+    "delivery_description": "Fotografiile dvs. editate vor fi livrate în 5-7 zile lucrătoare",
+    "have_questions": "Aveți întrebări?",
+    "bullet_professional": "• Fotograf profesionist inclus",
+    "bullet_photos": "• Fotografii editate de înaltă rezoluție",
+    "bullet_gallery": "• Livrare galerie online",
+    "bullet_retouching": "• Retușare profesională",
+    "need_help": "Ai nevoie de ajutor?",
+    "help_description": "Întrebări despre rezervarea dvs.? Contactați-ne oricând.",
+    "people_count": "Numărul de persoane"
+  },
+  "package_selection": {
+    "choose_package": "Alegeți pachetul dvs",
+    "select_description": "Selectează pachetul de fotografie care se potrivește cel mai bine nevoilor tale",
+    "you_selected": "Ai selectat:"
+  },
+  "success_messages": {
+    "payment_successful": "Plata reușită! E-mail de confirmare trimis.",
+    "booking_created": "Rezervarea a fost creată cu succes!"
+  },
+  "packages": {
+    "title": "Pachete disponibile",
+    "subtitle": "Alege cel mai bun pachet pentru tine",
+    "per_person": "pe persoană"
+  },
+  "gallery": {
+    "title": "Portofoliu",
+    "subtitle": "Surprinderea celor mai bune momente ale tale"
+  },
+  "faq": {
+    "title": "Întrebări frecvente",
+    "subtitle": "Găsiți răspunsuri la întrebările dvs"
+  },
+  "locations": {
+    "locationInfo": "Informații despre locație",
+    "photographyTips": "Sfaturi pentru fotografie",
+    "aboutLocation": "Despre locație",
+    "gallery": "Galerie",
+    "nearbyLocations": "Locații din apropiere",
+    "bestTimeToVisit": "Cel mai bun moment pentru a vizita",
+    "viewOnMap": "Vizualizați pe hartă",
+    "bookPhotoshoot": "Rezervă o ședință foto",
+    "bookPhotoshootDescription": "Surprindeți-vă cele mai bune momente în această locație cu un fotograf profesionist.",
+    "viewPackages": "Vezi pachete",
+    "explore": "Explorează"
+  },
+  "cookies": {
+    "banner": {
+      "title": "Preferințe cookie",
+      "description": "Folosim cookie-uri pentru a vă îmbunătăți experiența de navigare și pentru a analiza traficul nostru. Făcând clic pe „Accept toate”, sunteți de acord cu utilizarea cookie-urilor.",
+      "privacy_link": "Aflați mai multe"
+    },
+    "buttons": {
+      "accept_all": "Acceptați toate",
+      "essential_only": "Numai Esențial",
+      "decline_all": "Refuzați toate"
+    }
+  },
+  "reviews": {
+    "title": "Ce spun clienții despre noi",
+    "subtitle": "Recenzii reale de la clienți mulțumiți de fotografie care ne-au ales pentru experiența lor de ședință foto la Istanbul",
+    "total_reviews": "recenzii",
+    "view_all": "Vezi toate recenziile pe Google",
+    "loading": "Se încarcă recenziile...",
+    "error": "Nu se pot încărca recenzii în acest moment",
+    "overall_rating": "Evaluare generală",
+    "based_on": "pe baza recenziilor {count}",
+    "summary": "Rezumatul revizuirii",
+    "verified_visitors": "Toate recenziile provin de la vizitatori verificați",
+    "filter_stars": "Se afișează numai recenzii cu stele {count}",
+    "no_reviews": "Nu s-au găsit recenzii pentru această evaluare",
+    "clear_filter": "Clar",
+    "show_all": "Afișați toate recenziile",
+    "show_more": "Arată mai multe",
+    "rating_only": "Doar evaluare",
+    "rating_no_text": "Evaluare oferită fără recenzie scrisă",
+    "filter_hint": "Faceți clic pe o bară pentru a filtra recenziile după evaluarea cu stele.",
+    "excellent": "Excelent",
+    "very_good": "Foarte bine",
+    "average": "Medie",
+    "poor": "Sărac",
+    "terrible": "Teribil"
+  },
+  "pricing": {
+    "base_price": "Prețul de bază",
+    "tax_rate": "TVA ({rate}%)",
+    "tax_amount": "Suma TVA",
+    "total_price": "Preț total",
+    "tax_inclusive": "Taxa inclusiv",
+    "price_breakdown": "Defalcare de preț",
+    "subtotal": "Subtotal",
+    "vat": "TVA",
+    "final_total": "Total final"
+  },
+  "notfound": {
+    "title": "Pagina nu a fost găsită",
+    "subtitle": "Hopa! Această sesiune de fotografie pare să lipsească",
+    "description": "Pagina pe care o cauți nu există. Poate ați dori să explorați pachetele noastre de fotografie sau să vă întoarceți acasă pentru a descoperi frumusețea fotografiei din Istanbul.",
+    "homeButton": "Întoarce-te acasă",
+    "packagesButton": "Vezi pachete",
+    "goBack": "Du-te înapoi"
+  },
+  "blog": {
+    "title": "Blog de fotografie",
+    "subtitle": "Sfaturi, ghiduri și povești din Istanbul",
+    "read_more": "Citește mai mult",
+    "reading_time": "{minutes} min. citire",
+    "published_on": "Publicat {date}",
+    "by_author": "de {author}",
+    "categories": "Categorii",
+    "tags": "Etichete",
+    "related_posts": "Postări înrudite",
+    "recent_posts": "Postări recente",
+    "no_posts": "Nu s-au găsit postări pe blog",
+    "search": "Cauta pe blog...",
+    "all_categories": "Toate categoriile",
+    "featured": "Prezentare",
+    "author": {
+      "about_title": "Despre autor",
+      "name": "Fotograf Istanbul",
+      "bio": "Fotograf profesionist specializat în fotografie de portret, cuplu și stil de viață în Istanbul. Cu peste 8 ani de experiență, surprinzând amintiri atemporale pe cele mai emblematice fundaluri ale orașului.",
+      "follow": "Urmărește pe Instagram"
+    },
+    "summary": {
+      "title": "Recomandări cheie",
+      "ai_overview": "Prezentare generală a AI"
+    }
+  }
+}

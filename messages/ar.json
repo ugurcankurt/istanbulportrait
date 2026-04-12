@@ -1,0 +1,503 @@
+{
+  "payment_banner": {
+    "message": "الدفع الآمن"
+  },
+  "nav": {
+    "home": "الصفحة الرئيسية",
+    "selectLanguage": "اختر اللغة",
+    "selectLanguageDescription": "اختر لغتك المفضلة لاستكشاف صورة اسطنبول."
+  },
+  "whatsapp": {
+    "button": "واتساب",
+    "tooltip": "تحدث معنا على الواتساب",
+    "message": "مرحبا! أرغب في الحصول على معلومات حول جلسات التصوير في إسطنبول.",
+    "notification_title": "التواصل على الواتس اب",
+    "notification_message": "يمكنكم التواصل معنا عبر الواتساب!",
+    "close_notification": "إغلاق الإخطار",
+    "direction": "لتر"
+  },
+  "hero": {
+    "resume_title": "استمر في التخطيط لجلسة التصوير الخاصة بك"
+  },
+  "contact": {
+    "title": "تواصل معنا",
+    "subtitle": "هل أنت مستعد لحجز جلسة التصوير الخاصة بك في اسطنبول؟",
+    "sectionTitle": "تواصل معنا",
+    "sectionDescription": "هل أنت مستعد لحجز جلسة التصوير الخاصة بك في اسطنبول؟ دعونا نناقش احتياجات التصوير الفوتوغرافي الخاصة بك ونصنع شيئًا جميلًا معًا",
+    "cta_description": "هل أنت مستعد لالتقاط ذكرياتك في إسطنبول؟ تصفح عروضنا واحجز جلستك مباشرة عبر الإنترنت.",
+    "experience_description": "أكثر من 8 سنوات من الخبرة في التقاط جمال إسطنبول",
+    "premium_locations": "مواقع متميزة",
+    "locations_description": "أسطح المنازل والمعالم التاريخية والجواهر المخفية",
+    "professional_quality": "الجودة المهنية",
+    "quality_description": "صور معدلة عالية الدقة يتم تسليمها رقميًا",
+    "form": {
+      "name": "الاسم الكامل",
+      "email": "عنوان البريد الإلكتروني",
+      "phone": "رقم الهاتف",
+      "date": "التاريخ المفضل",
+      "package": "حدد الحزمة",
+      "message": "رسالة",
+      "submit": "أرسل رسالة",
+      "success": "شكرا لك! سوف نعود اليكم قريبا.",
+      "error": "حدث خطأ ما. يرجى المحاولة مرة أخرى."
+    }
+  },
+  "checkout": {
+    "title": "احجز جلستك",
+    "description": "أكمل حجزك لتجربة التصوير الفوتوغرافي المثالية في إسطنبول",
+    "payment_description": "قم بمراجعة تفاصيل الحجز وإكمال الدفع",
+    "booking_summary": "ملخص الحجز",
+    "modal_description": "املأ التفاصيل الخاصة بك للحجز",
+    "booking": {
+      "review_details": "قم بمراجعة معلومات الحجز الخاصة بك"
+    },
+    "package": {
+      "selected_details": "تفاصيل باقة التصوير الفوتوغرافي التي اخترتها"
+    },
+    "steps": {
+      "package": "الحزمة",
+      "details": "التفاصيل",
+      "payment": "الدفع",
+      "confirmation": "تأكيد"
+    },
+    "package_summary": "ملخص الحزمة",
+    "customer_details": "تفاصيل العميل",
+    "payment_details": "تفاصيل الدفع",
+    "booking_details": "تفاصيل الحجز",
+    "form": {
+      "people_count": "عدد الأشخاص",
+      "name": "الاسم الكامل",
+      "email": "عنوان البريد الإلكتروني",
+      "phone": "رقم الهاتف",
+      "date": "حدد التاريخ",
+      "date_time": "حدد التاريخ والوقت",
+      "select_booking_details": "حدد التاريخ والوقت لجلستك",
+      "time": "حدد الوقت",
+      "select_time": "حدد الوقت",
+      "morning": "صباح",
+      "noon": "الظهر",
+      "afternoon": "بعد الظهر",
+      "notes": "الطلبات الخاصة (اختياري)",
+      "card_holder": "اسم حامل البطاقة",
+      "card_number": "رقم البطاقة",
+      "expire_month": "مم",
+      "expire_year": "ص",
+      "cvc": "رمز التحقق من البطاقة",
+      "terms": "أنا أوافق على الشروط والأحكام",
+      "month_short": "مم",
+      "year_short": "ص"
+    },
+    "buttons": {
+      "continue": "متابعة",
+      "check_availability": "التحقق من التوفر",
+      "back": "العودة",
+      "cancel": "إلغاء",
+      "continue_to_payment": "أضف إلى السلة",
+      "edit_details": "تحرير التفاصيل",
+      "complete_booking": "الحجز الكامل",
+      "pay_amount": "ادفع {amount}",
+      "processing": "جارٍ المعالجة...",
+      "book_another": "احجز جلسة أخرى",
+      "pay_with_turinvoice": "الدفع باستخدام Turinvoice",
+      "checking_availability": "جارٍ التحقق من التوفر...",
+      "availability_confirmed": "بقعة متاحة! الافتتاح الآن..."
+    },
+    "cancellation": {
+      "title": "إلغاء مجاني",
+      "description": "قم بإلغاء ما يصل إلى 24 ساعة مقدمًا لاسترداد أموالك بالكامل"
+    },
+    "payment_breakdown": {
+      "pay_now": "ادفع {amount} الآن",
+      "pay_on_day": "والباقي دفع {amount} في يوم التصوير"
+    },
+    "success": {
+      "title": "تم تأكيد الحجز!",
+      "message": "شكرا لك على الحجز مع مصور اسطنبول. تم إرسال تأكيد الحجز الخاص بك إلى البريد الإلكتروني الخاص بك.",
+      "booking_id": "معرف الحجز",
+      "payment_successful": "تم الدفع بنجاح! تم إرسال رسالة تأكيد بالبريد الإلكتروني."
+    },
+    "error": {
+      "generic": "حدث خطأ ما. يرجى المحاولة مرة أخرى.",
+      "payment_failed": "فشل الدفع. يرجى التحقق من تفاصيل بطاقتك والمحاولة مرة أخرى.",
+      "booking_failed": "فشل في إنشاء الحجز. يرجى المحاولة مرة أخرى.",
+      "payment_init_failed": "فشل في تهيئة الدفع. يرجى المحاولة مرة أخرى."
+    },
+    "included_features": "الميزات المضمنة",
+    "more_features": "المزيد من الميزات",
+    "loading_booking": "جارٍ تحميل تفاصيل الحجز...",
+    "labels": {
+      "customer": "العميل:",
+      "date": "التاريخ:",
+      "time": "الوقت:",
+      "package": "الحزمة:",
+      "people_count": "الناس:",
+      "total_amount": "المبلغ الإجمالي:",
+      "deposit_amount": "مبلغ الإيداع:",
+      "remaining_cash": "النقدية المتبقية:",
+      "payment_terms_notice": "شروط الدفع: إيداع 30% عبر الإنترنت، و70% نقدًا في يوم التصوير."
+    },
+    "security": {
+      "ssl_encrypted": "مشفرة بتقنية SSL",
+      "secure_payment": "الدفع الآمن",
+      "pci_compliant": "متوافق مع PCI",
+      "payment_secure_message": "الدفع الآمن • تشفير SSL • متوافق مع PCI"
+    },
+    "payment": {
+      "complete_description": "أكمل حجزك عن طريق إدخال معلومات الدفع الخاصة بك",
+      "secure_no_fees": "الدفع الآمن • لا توجد رسوم خفية"
+    },
+    "people_count_title": "عدد الأشخاص",
+    "price_per_person": "السعر للشخص الواحد",
+    "seasonal_discount_applied": "التخفيضات (خصم {percentage}%)",
+    "promo_code": "الرمز الترويجي",
+    "apply_promo": "تطبيق",
+    "promo_applied": "تم تطبيق الرمز الترويجي!",
+    "invalid_promo": "الرمز الترويجي غير صالح أو منتهي الصلاحية",
+    "promo_discount": "الخصم الترويجي",
+    "person": "شخص",
+    "people": "الناس",
+    "payment_method": "طريقة الدفع",
+    "payment_methods": {
+      "credit_card": "بطاقة الائتمان/الخصم",
+      "russian_banks": "الدفع عن طريق SB"
+    },
+    "turinvoice_description": "ستتم إعادة توجيهك إلى صفحة الدفع الآمنة Turinvoice.",
+    "turinvoice": {
+      "title": "دفع فاتورة تورين",
+      "status_new": "جارٍ التهيئة...",
+      "time_remaining": "الوقت المتبقي",
+      "amount_label": "المبلغ",
+      "exchange_rate": "سعر الصرف",
+      "instruction_1": "يرجى إكمال الدفع على الصفحة المفتوحة.",
+      "open_payment_page": "افتح صفحة الدفع",
+      "instruction_2": "لا تغلق هذه النافذة حتى يتم تأكيد الدفع.",
+      "security_notice": "الدفع الآمن عبر Turinvoice",
+      "status_paying": "في انتظار الدفع...",
+      "status_paid": "تم الدفع بنجاح!",
+      "status_timeout": "انتهت مهلة الدفع",
+      "success_message": "لقد تم تأكيد الدفع الخاص بك.",
+      "redirect_message": "إعادة التوجيه...",
+      "timeout_message": "انتهت صلاحية جلسة الدفع.",
+      "timeout_desc": "يرجى المحاولة مرة أخرى لإعادة تشغيل عملية الدفع.",
+      "try_again": "حاول مرة أخرى"
+    },
+    "expires_in": "سنحتفظ بمكانك لمدة [TIME] دقيقة.",
+    "expired": "انتهت فترة الحجز. الرجاء تحديد وقت جديد."
+  },
+  "footer": {
+    "description": "مصور فوتوغرافي رائد في اسطنبول لتصوير البورتريه الاحترافي. التقط لحظاتك الخاصة مع الخلفيات الأكثر شهرة في المدينة.",
+    "quickLinks": "روابط سريعة",
+    "services": "الخدمات",
+    "followUs": "تابعنا",
+    "copyright": "© 2026 istanbulphotosession.com.tr | جميع الحقوق محفوظة.",
+    "service_items": {
+      "portrait": "تصوير بورتريه",
+      "couples": "جلسات زوجية",
+      "rooftop": "جلسات تصوير على السطح",
+      "historic": "لقطات الموقع التاريخي",
+      "lifestyle": "التصوير الفوتوغرافي لأسلوب الحياة",
+      "historic_shoots": "لقطات الموقع التاريخي"
+    },
+    "privacy_policy": "سياسة الخصوصية",
+    "terms_of_service": "شروط الخدمة"
+  },
+  "validation": {
+    "people_count_required": "عدد الأشخاص مطلوب لحزمة السطح",
+    "package_required": "مطلوب اختيار الحزمة",
+    "email_invalid": "الرجاء إدخال عنوان بريد إلكتروني صالح",
+    "phone_invalid": "الرجاء إدخال رقم هاتف صالح",
+    "date_required": "الرجاء تحديد تاريخ",
+    "time_required": "الرجاء تحديد الوقت",
+    "amount_positive": "يجب أن يكون المبلغ الإجمالي موجبًا",
+    "cardholder_required": "اسم حامل البطاقة مطلوب",
+    "card_number_required": "رقم البطاقة مطلوب",
+    "month_required": "الشهر مطلوب",
+    "year_required": "السنة مطلوبة",
+    "cvc_required": "يجب أن يتكون رمز التحقق من البطاقة (CVC) من 3 أرقام",
+    "name_min": "يجب أن يتكون الاسم من حرفين على الأقل",
+    "phone_min": "يجب أن يتكون رقم الهاتف من 10 أرقام على الأقل",
+    "message_min": "يجب أن تكون الرسالة 10 أحرف على الأقل",
+    "card_number_invalid": "يجب أن يتكون رقم البطاقة من 13 إلى 19 رقمًا",
+    "preferred_date_required": "الرجاء تحديد التاريخ المفضل",
+    "package_selection_required": "الرجاء تحديد الحزمة",
+    "phone_required": "رقم الهاتف مطلوب"
+  },
+  "placeholders": {
+    "full_name": "الاسم الكامل",
+    "email": "جون@example.com",
+    "phone": "+90 536 709 37 24",
+    "select_package": "حدد الحزمة",
+    "tell_us_vision": "أخبرنا عن رؤيتك في جلسة التصوير...",
+    "test_card": "5528790000000008 (استخدم بطاقة الاختبار هذه للدفع التجريبي الناجح)",
+    "enter_full_name": "أدخل اسمك الكامل",
+    "enter_email": "أدخل بريدك الإلكتروني",
+    "phone_number": "+90 555 123 45 67",
+    "pick_date": "اختر موعدًا",
+    "select_time": "حدد الوقت",
+    "special_requests": "أي طلبات أو ملاحظات خاصة بخصوص جلسة التصوير الخاصة بك...",
+    "card_holder": "الاسم الكامل",
+    "card_number": "XXXX XXXX XXXX XXXX",
+    "expire_mm": "مم",
+    "expire_yy": "ص",
+    "cvc_placeholder": "XXX"
+  },
+  "ui": {
+    "custom_package": "حزمة مخصصة",
+    "language": "اللغة",
+    "send_message": "أرسل لنا رسالة",
+    "contact_information": "معلومات الاتصال",
+    "cookie_settings": "إعدادات ملفات تعريف الارتباط",
+    "share": "شارك",
+    "save": "حفظ",
+    "saved": "تم الحفظ",
+    "link_copied": "تم نسخ الرابط إلى الحافظة",
+    "saved_to_favorites": "تم الحفظ في المفضلة",
+    "removed_from_saved": "تمت الإزالة من المفضلة",
+    "save_percentage": "حفظ {percentage}%",
+    "duration": "المدة",
+    "photos": "صور",
+    "locations": "المواقع",
+    "location": "الموقع",
+    "email": "البريد الإلكتروني",
+    "phone": "الهاتف",
+    "availability": "التوفر",
+    "availability_status": "حالة التوفر",
+    "what_to_expect": "ماذا تتوقع",
+    "response_time": "وقت الاستجابة",
+    "booking_process": "عملية الحجز",
+    "payment": "الدفع",
+    "response_time_desc": "نرد عادةً على الاستفسارات خلال 24 ساعة.",
+    "booking_process_desc": "بعد استفسارك، سنقوم بجدولة استشارة لمناقشة رؤيتك ووضع اللمسات الأخيرة على التفاصيل.",
+    "payment_desc": "يجب دفع المبلغ بالكامل عبر الإنترنت في وقت الحجز لتأمين موعدك.",
+    "professional_photographer": "مصور محترف",
+    "professional_photographer_in_istanbul": "مصور محترف في اسطنبول",
+    "portrait_photography": "تصوير بورتريه",
+    "couple_sessions": "جلسات زوجية",
+    "lifestyle": "نمط الحياة",
+    "rooftop_shoots": "يطلق النار على السطح",
+    "view_my_work": "عرض عملي",
+    "book_your_session": "احجز جلستك",
+    "check_locations": "التحقق من المواقع",
+    "view_packages": "عرض الحزم",
+    "packages_button": "الحزم",
+    "book_package": "التحقق من التوفر",
+    "show_all_photos": "عرض جميع الصور",
+    "back_to_home": "العودة إلى المنزل",
+    "selected": "مختارة",
+    "select_package": "حدد الحزمة",
+    "total": "المجموع",
+    "contact": "الاتصال",
+    "most_popular": "الأكثر شعبية",
+    "tryAgain": "حاول مرة أخرى",
+    "loading": "جار التحميل...",
+    "error": "خطأ",
+    "retry": "أعد المحاولة",
+    "breadcrumbs": {
+      "photography_locations": "مواقع التصوير",
+      "checkout": "الخروج",
+      "locations": "المواقع"
+    },
+    "instagram_feed": {
+      "title": "اتبع على Instagram",
+      "visit_profile": "زيارة الملف الشخصي",
+      "api_error": "اتصال API مفقود",
+      "error_msg": "تعذر تحميل خلاصة Instagram."
+    },
+    "shipping": {
+      "title": "الشحن والإرجاع",
+      "worldwide": "الشحن في جميع أنحاء العالم متاح",
+      "delivery": "التسليم المقدر: 3-10 أيام عمل",
+      "returns": "سياسة إرجاع لمدة 14 يومًا لراحة البال",
+      "quality": "ضمان جودة طباعة عالية الدقة"
+    }
+  },
+  "about_cta": {
+    "title": "على استعداد لخلق شيء جميل؟",
+    "description": "دعونا نلتقط قصتك على خلفية اسطنبول المذهلة."
+  },
+  "about_highlights": {
+    "title": "لماذا تختارنا؟",
+    "professional_quality": "الجودة المهنية",
+    "professional_quality_desc": "معدات عالية الجودة وسنوات من الخبرة.",
+    "local_knowledge": "المعرفة المحلية",
+    "local_knowledge_desc": "معرفة أفضل الأماكن المخفية.",
+    "personalized_experience": "تجربة شخصية",
+    "personalized_experience_desc": "مصممة لأسلوبك الفريد."
+  },
+  "about": {
+    "experience": "سنوات الخبرة",
+    "sessions": "اكتملت الجلسات",
+    "clients": "عملاء سعداء",
+    "satisfaction": "رضا العميل",
+    "description": "مرحبا بكم في محفظتي! أنا متخصص في التقاط اللحظات الجميلة في الضوء الطبيعي."
+  },
+  "api_errors": {
+    "rate_limit": "طلبات كثيرة جدًا. يرجى المحاولة مرة أخرى لاحقا.",
+    "payment_rate_limit": "محاولات دفع كثيرة جدًا. يرجى المحاولة مرة أخرى لاحقا.",
+    "invalid_data": "بيانات الطلب غير صالحة",
+    "missing_payment_data": "بيانات الدفع المطلوبة مفقودة",
+    "invalid_amount": "مبلغ الدفع غير صالح",
+    "booking_not_found": "لم يتم العثور على الحجز. يرجى إنشاء الحجز أولا.",
+    "invalid_package_price": "سعر الحزمة غير صالح",
+    "duplicate_booking": "تم إنشاء حجز مماثل مؤخرًا. يرجى التحقق من بريدك الإلكتروني أو الانتظار بضع دقائق.",
+    "booking_config_error": "غير قادر على معالجة الحجز. يرجى التحقق من تكوين Supabase الخاص بك.",
+    "internal_error": "خطأ داخلي في الخادم",
+    "payment_processing_failed": "فشلت معالجة الدفع. يرجى المحاولة مرة أخرى لاحقا.",
+    "unknown_error": "خطأ غير معروف"
+  },
+  "breadcrumb": {
+    "home": "الصفحة الرئيسية",
+    "privacy": "سياسة الخصوصية",
+    "about": "حول",
+    "packages": "الحزم",
+    "locations": "المواقع",
+    "blog": "مدونة",
+    "contact": "الاتصال",
+    "checkout": "الخروج"
+  },
+  "success": {
+    "booking_details": "تفاصيل الحجز",
+    "booking_id": "معرف الحجز",
+    "customer_details": "معلومات العملاء",
+    "package_label": "الحزمة",
+    "amount_paid": "المبلغ المدفوع",
+    "booking_date": "التاريخ",
+    "booking_time": "الوقت",
+    "customer_name": "الاسم",
+    "customer_email": "البريد الإلكتروني",
+    "customer_phone": "الهاتف",
+    "notes": "طلبات خاصة",
+    "whats_next": "ما هي الخطوة التالية؟",
+    "confirmation_email": "تم إرسال البريد الإلكتروني للتأكيد",
+    "email_description": "تحقق من صندوق الوارد الخاص بك للحصول على معلومات الحجز التفصيلية",
+    "pre_session_contact": "الاتصال قبل الجلسة",
+    "contact_description": "سنتصل بك قبل 24 ساعة من جلستك لتأكيد التفاصيل",
+    "photo_delivery": "تسليم الصور",
+    "delivery_description": "سيتم تسليم صورك المعدلة خلال 5-7 أيام عمل",
+    "have_questions": "هل لديك أسئلة؟",
+    "bullet_professional": "• شامل مصور محترف",
+    "bullet_photos": "• صور معدلة عالية الدقة",
+    "bullet_gallery": "• تسليم المعرض على الانترنت",
+    "bullet_retouching": "• التنقيح الاحترافي",
+    "need_help": "هل تحتاج إلى مساعدة؟",
+    "help_description": "أسئلة حول الحجز الخاص بك؟ اتصل بنا في أي وقت.",
+    "people_count": "عدد الأشخاص"
+  },
+  "package_selection": {
+    "choose_package": "اختر الحزمة الخاصة بك",
+    "select_description": "اختر باقة التصوير الفوتوغرافي التي تناسب احتياجاتك",
+    "you_selected": "لقد حددت:"
+  },
+  "success_messages": {
+    "payment_successful": "تم الدفع بنجاح! تم إرسال رسالة تأكيد بالبريد الإلكتروني.",
+    "booking_created": "تم إنشاء الحجز بنجاح!"
+  },
+  "packages": {
+    "title": "الحزم المتاحة",
+    "subtitle": "اختر الحزمة الأفضل بالنسبة لك",
+    "per_person": "لكل شخص"
+  },
+  "gallery": {
+    "title": "المحفظة",
+    "subtitle": "التقاط أفضل لحظاتك"
+  },
+  "faq": {
+    "title": "الأسئلة المتداولة",
+    "subtitle": "العثور على إجابات لأسئلتك"
+  },
+  "locations": {
+    "locationInfo": "معلومات الموقع",
+    "photographyTips": "نصائح التصوير الفوتوغرافي",
+    "aboutLocation": "حول الموقع",
+    "gallery": "معرض",
+    "nearbyLocations": "المواقع القريبة",
+    "bestTimeToVisit": "أفضل وقت للزيارة",
+    "viewOnMap": "عرض على الخريطة",
+    "bookPhotoshoot": "احجز جلسة تصوير",
+    "bookPhotoshootDescription": "التقط أفضل لحظاتك في هذا الموقع مع مصور محترف.",
+    "viewPackages": "عرض الحزم",
+    "explore": "استكشاف"
+  },
+  "cookies": {
+    "banner": {
+      "title": "تفضيلات ملفات تعريف الارتباط",
+      "description": "نحن نستخدم ملفات تعريف الارتباط لتحسين تجربة التصفح لديك وتحليل حركة المرور لدينا. بالنقر على \"قبول الكل\"، فإنك توافق على استخدامنا لملفات تعريف الارتباط.",
+      "privacy_link": "تعلم المزيد"
+    },
+    "buttons": {
+      "accept_all": "قبول الكل",
+      "essential_only": "الأساسية فقط",
+      "decline_all": "رفض الكل"
+    }
+  },
+  "reviews": {
+    "title": "ماذا يقول العملاء عنا",
+    "subtitle": "تقييمات حقيقية من عملاء التصوير الفوتوغرافي الراضين الذين اختارونا لتجربة التصوير الفوتوغرافي في إسطنبول",
+    "total_reviews": "المراجعات",
+    "view_all": "عرض جميع التقييمات على جوجل",
+    "loading": "جارٍ تحميل التقييمات...",
+    "error": "غير قادر على تحميل التقييمات في هذا الوقت",
+    "overall_rating": "التقييم العام",
+    "based_on": "بناءً على مراجعات {count}",
+    "summary": "ملخص المراجعة",
+    "verified_visitors": "جميع التقييمات من زوار تم التحقق منهم",
+    "filter_stars": "عرض تقييمات النجوم {count} فقط",
+    "no_reviews": "لم يتم العثور على تعليقات لهذا التصنيف",
+    "clear_filter": "واضح",
+    "show_all": "عرض جميع التقييمات",
+    "show_more": "عرض المزيد",
+    "rating_only": "التقييم فقط",
+    "rating_no_text": "يتم تقديم التقييم دون مراجعة مكتوبة",
+    "filter_hint": "انقر على الشريط لتصفية المراجعات حسب تصنيف النجوم.",
+    "excellent": "ممتاز",
+    "very_good": "جيد جدًا",
+    "average": "متوسط",
+    "poor": "فقير",
+    "terrible": "رهيب"
+  },
+  "pricing": {
+    "base_price": "السعر الأساسي",
+    "tax_rate": "ضريبة القيمة المضافة ({rate}%)",
+    "tax_amount": "مبلغ ضريبة القيمة المضافة",
+    "total_price": "السعر الإجمالي",
+    "tax_inclusive": "شامل الضريبة",
+    "price_breakdown": "انهيار الأسعار",
+    "subtotal": "المجموع الفرعي",
+    "vat": "ضريبة القيمة المضافة",
+    "final_total": "المجموع النهائي"
+  },
+  "notfound": {
+    "title": "لم يتم العثور على الصفحة",
+    "subtitle": "عفوًا! يبدو أن جلسة التصوير الفوتوغرافي هذه مفقودة",
+    "description": "الصفحة التي تبحث عنها غير موجودة. ربما ترغب في استكشاف عروض التصوير الفوتوغرافي لدينا أو العودة إلى المنزل لاكتشاف جمال التصوير الفوتوغرافي في إسطنبول.",
+    "homeButton": "العودة إلى المنزل",
+    "packagesButton": "عرض الحزم",
+    "goBack": "العودة"
+  },
+  "blog": {
+    "title": "مدونة التصوير الفوتوغرافي",
+    "subtitle": "نصائح وأدلة وقصص من اسطنبول",
+    "read_more": "اقرأ المزيد",
+    "reading_time": "قراءة {minutes} دقيقة",
+    "published_on": "تم النشر",
+    "by_author": "بواسطة {author}",
+    "categories": "الفئات",
+    "tags": "العلامات",
+    "related_posts": "المشاركات ذات الصلة",
+    "recent_posts": "المشاركات الأخيرة",
+    "no_posts": "لم يتم العثور على مشاركات مدونة",
+    "search": "بحث في المدونة...",
+    "all_categories": "جميع الفئات",
+    "featured": "مميز",
+    "author": {
+      "about_title": "عن المؤلف",
+      "name": "مصور اسطنبول",
+      "bio": "مصور فوتوغرافي محترف متخصص في تصوير الصور الشخصية والأزواج ونمط الحياة في إسطنبول. مع أكثر من 8 سنوات من الخبرة، يمكنك التقاط ذكريات خالدة أمام الخلفيات الأكثر شهرة في المدينة.",
+      "follow": "اتبع على Instagram"
+    },
+    "summary": {
+      "title": "الوجبات السريعة الرئيسية",
+      "ai_overview": "نظرة عامة على الذكاء الاصطناعي"
+    }
+  }
+}

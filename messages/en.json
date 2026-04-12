@@ -1,0 +1,503 @@
+{
+  "payment_banner": {
+    "message": "Secure Payment"
+  },
+  "nav": {
+    "home": "Home",
+    "selectLanguage": "Select Language",
+    "selectLanguageDescription": "Choose your preferred language to explore Istanbul Portrait."
+  },
+  "whatsapp": {
+    "button": "WhatsApp",
+    "tooltip": "Chat with us on WhatsApp",
+    "message": "Hello! I would like to get information about photoshoots in Istanbul.",
+    "notification_title": "Contact on Whatsapp",
+    "notification_message": "You can contact us via WhatsApp!",
+    "close_notification": "Close notification",
+    "direction": "ltr"
+  },
+  "hero": {
+    "resume_title": "Continue planning your photoshoot"
+  },
+  "contact": {
+    "title": "Get In Touch",
+    "subtitle": "Ready to book your Istanbul photoshoot?",
+    "sectionTitle": "Get In Touch",
+    "sectionDescription": "Ready to book your Istanbul photoshoot? Let's discuss your photography needs and create something beautiful together",
+    "cta_description": "Ready to capture your memories in Istanbul? Browse our packages and book your session directly online.",
+    "experience_description": "8+ years of experience capturing Istanbul's beauty",
+    "premium_locations": "Premium Locations",
+    "locations_description": "Rooftops, historic landmarks, and hidden gems",
+    "professional_quality": "Professional Quality",
+    "quality_description": "High-resolution edited photos delivered digitally",
+    "form": {
+      "name": "Full Name",
+      "email": "Email Address",
+      "phone": "Phone Number",
+      "date": "Preferred Date",
+      "package": "Select Package",
+      "message": "Message",
+      "submit": "Send Message",
+      "success": "Thank you! We'll get back to you soon.",
+      "error": "Something went wrong. Please try again."
+    }
+  },
+  "checkout": {
+    "title": "Book Your Session",
+    "description": "Complete your booking for the perfect Istanbul photoshoot experience",
+    "payment_description": "Review your booking details and complete payment",
+    "booking_summary": "Booking Summary",
+    "modal_description": "Fill in your details to book",
+    "booking": {
+      "review_details": "Review your booking information"
+    },
+    "package": {
+      "selected_details": "Details of your selected photography package"
+    },
+    "steps": {
+      "package": "Package",
+      "details": "Details",
+      "payment": "Payment",
+      "confirmation": "Confirmation"
+    },
+    "package_summary": "Package Summary",
+    "customer_details": "Customer Details",
+    "payment_details": "Payment Details",
+    "booking_details": "Booking Details",
+    "form": {
+      "people_count": "Number of People",
+      "name": "Full Name",
+      "email": "Email Address",
+      "phone": "Phone Number",
+      "date": "Select Date",
+      "date_time": "Select Date & Time",
+      "select_booking_details": "Select the date and time for your session",
+      "time": "Select Time",
+      "select_time": "Select Time",
+      "morning": "Morning",
+      "noon": "Noon",
+      "afternoon": "Afternoon",
+      "notes": "Special Requests (Optional)",
+      "card_holder": "Cardholder Name",
+      "card_number": "Card Number",
+      "expire_month": "MM",
+      "expire_year": "YY",
+      "cvc": "CVC",
+      "terms": "I agree to the terms and conditions",
+      "month_short": "MM",
+      "year_short": "YY"
+    },
+    "buttons": {
+      "continue": "Continue",
+      "check_availability": "Check Availability",
+      "back": "Back",
+      "cancel": "Cancel",
+      "continue_to_payment": "Add to Cart",
+      "edit_details": "Edit Details",
+      "complete_booking": "Complete Booking",
+      "pay_amount": "PAY {amount}",
+      "processing": "Processing...",
+      "book_another": "Book Another Session",
+      "pay_with_turinvoice": "Pay with Turinvoice",
+      "checking_availability": "Checking Availability...",
+      "availability_confirmed": "Spot Available! Opening now..."
+    },
+    "cancellation": {
+      "title": "Free cancellation",
+      "description": "Cancel up to 24 hours in advance for a full refund"
+    },
+    "payment_breakdown": {
+      "pay_now": "Pay {amount} now",
+      "pay_on_day": "and rest of payment {amount} on the day of photoshoot"
+    },
+    "success": {
+      "title": "Booking Confirmed!",
+      "message": "Thank you for booking with Istanbul Photographer. Your booking confirmation has been sent to your email.",
+      "booking_id": "Booking ID",
+      "payment_successful": "Payment successful! Confirmation email sent."
+    },
+    "error": {
+      "generic": "Something went wrong. Please try again.",
+      "payment_failed": "Payment failed. Please check your card details and try again.",
+      "booking_failed": "Failed to create booking. Please try again.",
+      "payment_init_failed": "Failed to initialize payment. Please try again."
+    },
+    "included_features": "Included Features",
+    "more_features": "more features",
+    "loading_booking": "Loading booking details...",
+    "labels": {
+      "customer": "Customer:",
+      "date": "Date:",
+      "time": "Time:",
+      "package": "Package:",
+      "people_count": "People:",
+      "total_amount": "Total Amount:",
+      "deposit_amount": "Deposit Amount:",
+      "remaining_cash": "Remaining Cash:",
+      "payment_terms_notice": "Payment Terms: 30% deposit online, 70% in cash on the day of the photoshoot."
+    },
+    "security": {
+      "ssl_encrypted": "SSL Encrypted",
+      "secure_payment": "Secure Payment",
+      "pci_compliant": "PCI Compliant",
+      "payment_secure_message": "Secure Payment • SSL Encrypted • PCI Compliant"
+    },
+    "payment": {
+      "complete_description": "Complete your booking by entering your payment information",
+      "secure_no_fees": "Secure payment • No hidden fees"
+    },
+    "people_count_title": "Number of People",
+    "price_per_person": "Price per person",
+    "seasonal_discount_applied": "Sale ({percentage}% OFF)",
+    "promo_code": "Promo Code",
+    "apply_promo": "Apply",
+    "promo_applied": "Promo code applied!",
+    "invalid_promo": "Invalid or expired promo code",
+    "promo_discount": "Promo Discount",
+    "person": "person",
+    "people": "people",
+    "payment_method": "Payment Method",
+    "payment_methods": {
+      "credit_card": "Credit/Debit Card",
+      "russian_banks": "Оплата через СБП"
+    },
+    "turinvoice_description": "You will be redirected to Turinvoice secure payment page.",
+    "turinvoice": {
+      "title": "Turinvoice Payment",
+      "status_new": "Initializing...",
+      "time_remaining": "Time Remaining",
+      "amount_label": "Amount",
+      "exchange_rate": "Exchange Rate",
+      "instruction_1": "Please complete your payment on the opened page.",
+      "open_payment_page": "Open Payment Page",
+      "instruction_2": "Do not close this window until payment is confirmed.",
+      "security_notice": "Secure Payment via Turinvoice",
+      "status_paying": "Waiting for payment...",
+      "status_paid": "Payment Successful!",
+      "status_timeout": "Payment Timed Out",
+      "success_message": "Your payment has been confirmed.",
+      "redirect_message": "Redirecting...",
+      "timeout_message": "The payment session has expired.",
+      "timeout_desc": "Please try again to restart the payment process.",
+      "try_again": "Try Again"
+    },
+    "expires_in": "We'll hold your spot for [TIME] minutes.",
+    "expired": "Reservation slot expired. Please select a new time."
+  },
+  "footer": {
+    "description": "Leading photographer in Istanbul for professional portrait photography. Capturing your special moments with the city's most iconic backdrops.",
+    "quickLinks": "Quick Links",
+    "services": "Services",
+    "followUs": "Follow Us",
+    "copyright": "© 2026 istanbulphotosession.com.tr | All rights reserved.",
+    "service_items": {
+      "portrait": "Portrait Photography",
+      "couples": "Couple Sessions",
+      "rooftop": "Rooftop Photoshoots",
+      "historic": "Historic Location Shoots",
+      "lifestyle": "Lifestyle Photography",
+      "historic_shoots": "Historic Location Shoots"
+    },
+    "privacy_policy": "Privacy Policy",
+    "terms_of_service": "Terms of Service"
+  },
+  "validation": {
+    "people_count_required": "People count is required for rooftop package",
+    "package_required": "Package selection is required",
+    "email_invalid": "Please enter a valid email address",
+    "phone_invalid": "Please enter a valid phone number",
+    "date_required": "Please select a date",
+    "time_required": "Please select a time",
+    "amount_positive": "Total amount must be positive",
+    "cardholder_required": "Cardholder name is required",
+    "card_number_required": "Card number is required",
+    "month_required": "Month is required",
+    "year_required": "Year is required",
+    "cvc_required": "CVC must be 3 digits",
+    "name_min": "Name must be at least 2 characters",
+    "phone_min": "Phone number must be at least 10 digits",
+    "message_min": "Message must be at least 10 characters",
+    "card_number_invalid": "Card number must be 13-19 digits",
+    "preferred_date_required": "Please select a preferred date",
+    "package_selection_required": "Please select a package",
+    "phone_required": "Phone number is required"
+  },
+  "placeholders": {
+    "full_name": "Full Name",
+    "email": "john@example.com",
+    "phone": "+90 536 709 37 24",
+    "select_package": "Select a package",
+    "tell_us_vision": "Tell us about your vision for the photoshoot...",
+    "test_card": "5528790000000008 (Use this test card for successful demo payment)",
+    "enter_full_name": "Enter your full name",
+    "enter_email": "Enter your email",
+    "phone_number": "+90 555 123 45 67",
+    "pick_date": "Pick a date",
+    "select_time": "Select time",
+    "special_requests": "Any special requests or notes about your photoshoot...",
+    "card_holder": "FULL NAME",
+    "card_number": "XXXX XXXX XXXX XXXX",
+    "expire_mm": "MM",
+    "expire_yy": "YY",
+    "cvc_placeholder": "XXX"
+  },
+  "ui": {
+    "custom_package": "Custom Package",
+    "language": "Language",
+    "send_message": "Send us a message",
+    "contact_information": "Contact Information",
+    "cookie_settings": "Cookie Settings",
+    "share": "Share",
+    "save": "Save",
+    "saved": "Saved",
+    "link_copied": "Link copied to clipboard",
+    "saved_to_favorites": "Saved to favorites",
+    "removed_from_saved": "Removed from favorites",
+    "save_percentage": "SAVE {percentage}%",
+    "duration": "Duration",
+    "photos": "Photos",
+    "locations": "Locations",
+    "location": "Location",
+    "email": "Email",
+    "phone": "Phone",
+    "availability": "Availability",
+    "availability_status": "Availability status",
+    "what_to_expect": "What to Expect",
+    "response_time": "Response Time",
+    "booking_process": "Booking Process",
+    "payment": "Payment",
+    "response_time_desc": "We typically respond to inquiries within 24 hours.",
+    "booking_process_desc": "After your inquiry, we'll schedule a consultation to discuss your vision and finalize details.",
+    "payment_desc": "Full payment required online at the time of booking to secure your date.",
+    "professional_photographer": "Professional photographer",
+    "professional_photographer_in_istanbul": "Professional photographer in Istanbul",
+    "portrait_photography": "Portrait Photography",
+    "couple_sessions": "Couple Sessions",
+    "lifestyle": "Lifestyle",
+    "rooftop_shoots": "Rooftop Shoots",
+    "view_my_work": "View My Work",
+    "book_your_session": "Book your session",
+    "check_locations": "Check Locations",
+    "view_packages": "View Packages",
+    "packages_button": "Packages",
+    "book_package": "Check Availability",
+    "show_all_photos": "Show all photos",
+    "back_to_home": "Back to Home",
+    "selected": "Selected",
+    "select_package": "Select Package",
+    "total": "Total",
+    "contact": "Contact",
+    "most_popular": "Most Popular",
+    "tryAgain": "Try Again",
+    "loading": "Loading...",
+    "error": "Error",
+    "retry": "Retry",
+    "breadcrumbs": {
+      "photography_locations": "Photography Locations",
+      "checkout": "Checkout",
+      "locations": "Locations"
+    },
+    "instagram_feed": {
+      "title": "Follow on Instagram",
+      "visit_profile": "Visit Profile",
+      "api_error": "API Connection Missing",
+      "error_msg": "Could not load Instagram feed."
+    },
+    "shipping": {
+      "title": "Shipping & Returns",
+      "worldwide": "Worldwide shipping available",
+      "delivery": "Estimated delivery: 3-10 business days",
+      "returns": "14-day return policy for peace of mind",
+      "quality": "High-resolution print quality guarantee"
+    }
+  },
+  "about_cta": {
+    "title": "Ready to Create Something Beautiful?",
+    "description": "Let's capture your story against the stunning backdrop of Istanbul."
+  },
+  "about_highlights": {
+    "title": "Why Choose Us",
+    "professional_quality": "Professional Quality",
+    "professional_quality_desc": "High-end equipment and years of expertise.",
+    "local_knowledge": "Local Knowledge",
+    "local_knowledge_desc": "Knowing the best hidden spots.",
+    "personalized_experience": "Personalized Experience",
+    "personalized_experience_desc": "Tailored to your unique style."
+  },
+  "about": {
+    "experience": "Years Experience",
+    "sessions": "Sessions Completed",
+    "clients": "Happy Clients",
+    "satisfaction": "Client Satisfaction",
+    "description": "Welcome to my portfolio! I specialize in capturing beautiful moments in natural light."
+  },
+  "api_errors": {
+    "rate_limit": "Too many requests. Please try again later.",
+    "payment_rate_limit": "Too many payment attempts. Please try again later.",
+    "invalid_data": "Invalid request data",
+    "missing_payment_data": "Missing required payment data",
+    "invalid_amount": "Invalid payment amount",
+    "booking_not_found": "Booking not found. Please create a booking first.",
+    "invalid_package_price": "Invalid package price",
+    "duplicate_booking": "A similar booking was recently created. Please check your email or wait a few minutes.",
+    "booking_config_error": "Unable to process booking. Please check your Supabase configuration.",
+    "internal_error": "Internal server error",
+    "payment_processing_failed": "Payment processing failed. Please try again later.",
+    "unknown_error": "Unknown error"
+  },
+  "breadcrumb": {
+    "home": "Home",
+    "privacy": "Privacy Policy",
+    "about": "About",
+    "packages": "Packages",
+    "locations": "Locations",
+    "blog": "Blog",
+    "contact": "Contact",
+    "checkout": "Checkout"
+  },
+  "success": {
+    "booking_details": "Booking Details",
+    "booking_id": "Booking ID",
+    "customer_details": "Customer Information",
+    "package_label": "Package",
+    "amount_paid": "Amount Paid",
+    "booking_date": "Date",
+    "booking_time": "Time",
+    "customer_name": "Name",
+    "customer_email": "Email",
+    "customer_phone": "Phone",
+    "notes": "Special Requests",
+    "whats_next": "What's Next?",
+    "confirmation_email": "Confirmation Email Sent",
+    "email_description": "Check your inbox for detailed booking information",
+    "pre_session_contact": "Pre-Session Contact",
+    "contact_description": "We'll contact you 24 hours before your session to confirm details",
+    "photo_delivery": "Photo Delivery",
+    "delivery_description": "Your edited photos will be delivered within 5-7 business days",
+    "have_questions": "Have Questions?",
+    "bullet_professional": "• Professional photographer included",
+    "bullet_photos": "• High-resolution edited photos",
+    "bullet_gallery": "• Online gallery delivery",
+    "bullet_retouching": "• Professional retouching",
+    "need_help": "Need Help?",
+    "help_description": "Questions about your booking? Contact us anytime.",
+    "people_count": "Number of People"
+  },
+  "package_selection": {
+    "choose_package": "Choose Your Package",
+    "select_description": "Select the photography package that best fits your needs",
+    "you_selected": "You selected:"
+  },
+  "success_messages": {
+    "payment_successful": "Payment successful! Confirmation email sent.",
+    "booking_created": "Booking created successfully!"
+  },
+  "packages": {
+    "title": "Available Packages",
+    "subtitle": "Choose the best package for you",
+    "per_person": "per person"
+  },
+  "gallery": {
+    "title": "Portfolio",
+    "subtitle": "Capturing your best moments"
+  },
+  "faq": {
+    "title": "Frequently Asked Questions",
+    "subtitle": "Find answers to your questions"
+  },
+  "locations": {
+    "locationInfo": "Location Info",
+    "photographyTips": "Photography Tips",
+    "aboutLocation": "About Location",
+    "gallery": "Gallery",
+    "nearbyLocations": "Nearby Locations",
+    "bestTimeToVisit": "Best Time to Visit",
+    "viewOnMap": "View on Map",
+    "bookPhotoshoot": "Book a Photoshoot",
+    "bookPhotoshootDescription": "Capture your best moments at this location with a professional photographer.",
+    "viewPackages": "View Packages",
+    "explore": "Explore"
+  },
+  "cookies": {
+    "banner": {
+      "title": "Cookie Preferences",
+      "description": "We use cookies to enhance your browsing experience and analyze our traffic. By clicking \"Accept All\", you consent to our use of cookies.",
+      "privacy_link": "Learn more"
+    },
+    "buttons": {
+      "accept_all": "Accept All",
+      "essential_only": "Essential Only",
+      "decline_all": "Decline All"
+    }
+  },
+  "reviews": {
+    "title": "What Clients Say About Us",
+    "subtitle": "Real reviews from satisfied photography clients who chose us for their Istanbul photoshoot experience",
+    "total_reviews": "reviews",
+    "view_all": "View all reviews on Google",
+    "loading": "Loading reviews...",
+    "error": "Unable to load reviews at this time",
+    "overall_rating": "Overall rating",
+    "based_on": "based on {count} reviews",
+    "summary": "Review summary",
+    "verified_visitors": "All reviews are from verified visitors",
+    "filter_stars": "Showing only {count}-star reviews",
+    "no_reviews": "No reviews found for this rating",
+    "clear_filter": "Clear",
+    "show_all": "Show all reviews",
+    "show_more": "Show more",
+    "rating_only": "Rating only",
+    "rating_no_text": "Rating provided without written review",
+    "filter_hint": "Click on a bar to filter reviews by star rating.",
+    "excellent": "Excellent",
+    "very_good": "Very good",
+    "average": "Average",
+    "poor": "Poor",
+    "terrible": "Terrible"
+  },
+  "pricing": {
+    "base_price": "Base Price",
+    "tax_rate": "VAT ({rate}%)",
+    "tax_amount": "VAT Amount",
+    "total_price": "Total Price",
+    "tax_inclusive": "Tax Inclusive",
+    "price_breakdown": "Price Breakdown",
+    "subtotal": "Subtotal",
+    "vat": "VAT",
+    "final_total": "Final Total"
+  },
+  "notfound": {
+    "title": "Page Not Found",
+    "subtitle": "Oops! This photography session seems to be missing",
+    "description": "The page you're looking for doesn't exist. Perhaps you'd like to explore our photography packages or return home to discover the beauty of Istanbul photography.",
+    "homeButton": "Return Home",
+    "packagesButton": "View Packages",
+    "goBack": "Go Back"
+  },
+  "blog": {
+    "title": "Photography Blog",
+    "subtitle": "Tips, guides and stories from Istanbul",
+    "read_more": "Read More",
+    "reading_time": "{minutes} min read",
+    "published_on": "Published {date}",
+    "by_author": "by {author}",
+    "categories": "Categories",
+    "tags": "Tags",
+    "related_posts": "Related Posts",
+    "recent_posts": "Recent Posts",
+    "no_posts": "No blog posts found",
+    "search": "Search blog...",
+    "all_categories": "All Categories",
+    "featured": "Featured",
+    "author": {
+      "about_title": "About the Author",
+      "name": "Istanbul Photographer",
+      "bio": "Professional photographer specializing in portrait, couple, and lifestyle photography in Istanbul. With over 8 years of experience, capturing timeless memories against the city's most iconic backdrops.",
+      "follow": "Follow on Instagram"
+    },
+    "summary": {
+      "title": "Key Takeaways",
+      "ai_overview": "AI Overview"
+    }
+  }
+}
