@@ -61,7 +61,7 @@ export function HeroClientWrapper({
               </Link>
             }
             size="lg"
-            className="w-auto min-w-[140px] h-12 font-semibold"
+            className="w-auto min-w-[140px] h-12 font-bold bg-white text-slate-900 border-none hover:bg-slate-200"
             onClick={() => trackEvent("cta_click", "Hero", "View Packages")}
           />
 

@@ -60,7 +60,7 @@ export function LocationCard({ location, index, parentSlug }: LocationCardProps)
                   <Badge
                     key={tag}
                     variant="secondary"
-                    className="bg-white/95 hover:bg-white text-[10px] sm:text-xs font-medium px-2 py-0.5 shadow-sm capitalize"
+                    className="bg-background/85 backdrop-blur-md text-foreground border-border/50 text-[10px] sm:text-xs font-medium px-2 py-0.5 shadow-sm capitalize"
                   >
                     {tag.replace(/-/g, ' ')}
                   </Badge>

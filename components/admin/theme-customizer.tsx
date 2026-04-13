@@ -29,10 +29,14 @@ const colorThemes: { name: string; value: string; class: string }[] = [
 
 export function ThemeCustomizer({
   themeColor: propColor,
-  onThemeChange
+  onThemeChange,
+  colorMode,
+  onColorModeChange
 }: {
   themeColor?: string;
   onThemeChange?: (color: string) => void;
+  colorMode?: string;
+  onColorModeChange?: (mode: string) => void;
 } = {}) {
   const { theme, setTheme } = useTheme();
   const activeColor = propColor;
@@ -56,13 +60,24 @@ export function ThemeCustomizer({
     }
   };
 
+  const handleModeChange = (mode: string) => {
+    // 1. Trigger NextThemes locally so the browser flips the color for preview
+    setTheme(mode);
+    // 2. Report it to the parent so it can be saved globally via settings API
+    if (onColorModeChange) {
+      onColorModeChange(mode);
+    }
+  };
+
+  const activeMode = colorMode || theme;
+
   return (
     <Card>
       <CardHeader>
         <CardTitle>Appearance</CardTitle>
         <CardDescription>
-          Customize the appearance of the app. Automatically switch between day
-          and night themes.
+          Customize the appearance of the app. Switch between day
+          and night modes or use the system preference globally.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
@@ -100,8 +115,8 @@ export function ThemeCustomizer({
             <Button
               variant="outline"
               size="sm"
-              onClick={() => setTheme("light")}
-              className={theme === "light" ? "border-primary border-2" : ""}
+              onClick={() => handleModeChange("light")}
+              className={activeMode === "light" ? "border-primary border-2" : ""}
             >
               <Sun className="mr-2 h-4 w-4" />
               Light
@@ -109,8 +124,8 @@ export function ThemeCustomizer({
             <Button
               variant="outline"
               size="sm"
-              onClick={() => setTheme("dark")}
-              className={theme === "dark" ? "border-primary border-2" : ""}
+              onClick={() => handleModeChange("dark")}
+              className={activeMode === "dark" ? "border-primary border-2" : ""}
             >
               <Moon className="mr-2 h-4 w-4" />
               Dark
@@ -118,8 +133,8 @@ export function ThemeCustomizer({
             <Button
               variant="outline"
               size="sm"
-              onClick={() => setTheme("system")}
-              className={theme === "system" ? "border-primary border-2" : ""}
+              onClick={() => handleModeChange("system")}
+              className={activeMode === "system" ? "border-primary border-2" : ""}
             >
               <Monitor className="mr-2 h-4 w-4" />
               System

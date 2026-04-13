@@ -119,7 +119,7 @@ export function PackagesSection({ header, customCtaHeader, aggregateRating, dbPa
                   <ImageIcon className="w-12 h-12 mb-2" />
                 </div>
             )}
-            <div className="absolute top-2 left-2 z-10 bg-primary text-primary-foreground px-3 py-1 rounded-lg font-bold text-lg sm:text-xl shadow-lg border border-white/20 flex flex-col items-center">
+            <div className="absolute top-2 left-2 z-10 bg-background/85 backdrop-blur-md text-foreground px-3 py-1 rounded-lg font-bold text-lg sm:text-xl shadow-lg border border-border/50 flex flex-col items-center">
               <span
                 className={
                   pkg.pricing.isDiscounted
@@ -177,12 +177,12 @@ export function PackagesSection({ header, customCtaHeader, aggregateRating, dbPa
                         "h-3.5 w-3.5",
                         i < Math.floor(aggregateRating.average)
                           ? "fill-primary text-primary"
-                          : "text-slate-300"
+                          : "text-muted-foreground/30"
                       )}
                     />
                   ))}
                 </div>
-                <span className="text-sm font-bold text-slate-800">{aggregateRating.average}</span>
+                <span className="text-sm font-bold text-foreground">{aggregateRating.average}</span>
                 <span className="text-xs text-muted-foreground font-medium">({aggregateRating.count})</span>
               </div>
             )}

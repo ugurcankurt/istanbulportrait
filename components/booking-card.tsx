@@ -167,23 +167,23 @@ export function BookingCard({
                   <div className="space-y-6">
                     <div className="flex items-center justify-between">
                       <div className="space-y-1">
-                        <p className="font-bold text-slate-900">{tCheckout("person")}</p>
+                        <p className="font-bold text-foreground">{tCheckout("person")}</p>
                       </div>
                       <div className="flex items-center gap-4">
                         <Button
                           variant="outline"
                           size="icon"
-                          className="h-8 w-8 rounded-md border-slate-200 text-primary hover:border-primary/50 hover:bg-primary/5 disabled:opacity-30"
+                          className="h-8 w-8 rounded-md border-border text-primary hover:border-primary/50 hover:bg-primary/5 disabled:opacity-30"
                           onClick={() => setPeopleCount(Math.max(1, peopleCount - 1))}
                           disabled={peopleCount <= 1}
                         >
                           <MinusCircle className="h-6 w-6 stroke-[1.5]" />
                         </Button>
-                        <span className="w-6 text-center text-lg font-bold text-slate-900">{peopleCount}</span>
+                        <span className="w-6 text-center text-lg font-bold text-foreground">{peopleCount}</span>
                         <Button
                           variant="outline"
                           size="icon"
-                          className="h-8 w-8 rounded-md border-slate-200 text-primary hover:border-primary/50 hover:bg-primary/5 disabled:opacity-30"
+                          className="h-8 w-8 rounded-md border-border text-primary hover:border-primary/50 hover:bg-primary/5 disabled:opacity-30"
                           onClick={() => setPeopleCount(Math.min(10, peopleCount + 1))}
                           disabled={peopleCount >= 10}
                         >
@@ -192,9 +192,9 @@ export function BookingCard({
                       </div>
                     </div>
 
-                    <div className="pt-4 border-t border-slate-100">
+                    <div className="pt-4 border-t border-border/50">
                       <Button
-                        className="w-full h-10 bg-primary text-white font-bold"
+                        className="w-full h-10 bg-primary text-primary-foreground font-bold"
                         onClick={() => setIsPeoplePopoverOpen(false)}
                       >
                         {tCheckout("buttons.continue")}
@@ -334,9 +334,9 @@ export function BookingCard({
                       );
                     })}
                   </Tabs>
-                  <div className="pt-2 border-t border-slate-100 mt-0">
+                  <div className="pt-2 border-t border-border/50 mt-0">
                     <Button
-                      className="w-full h-10 bg-primary text-white font-bold"
+                      className="w-full h-10 bg-primary text-primary-foreground font-bold"
                       onClick={() => setIsTimePopoverOpen(false)}
                       disabled={!selectedTime}
                     >

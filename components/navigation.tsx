@@ -26,6 +26,7 @@ import {
 import { usePathname, useRouter } from "@/i18n/routing";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 const locales = [
   { code: "en", name: "English", flag: "🇬🇧" },
@@ -141,6 +142,9 @@ export function Navigation({ dynamicNavData = {}, settings }: NavigationProps) {
         </nav>
 
         <div className="flex items-center space-x-2">
+          {/* Theme Toggle */}
+          <ThemeToggle />
+
           {/* Language Switcher Modal */}
           <Dialog open={isLangOpen} onOpenChange={setIsLangOpen}>
             <DialogTrigger

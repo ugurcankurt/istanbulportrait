@@ -100,6 +100,8 @@ export default function SettingsPage() {
            <ThemeCustomizer 
              themeColor={settings.theme_color} 
              onThemeChange={(v) => updateSetting("theme_color", v)} 
+             colorMode={settings.color_mode}
+             onColorModeChange={(v) => updateSetting("color_mode", v)}
            />
         </div>
 

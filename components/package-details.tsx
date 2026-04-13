@@ -152,11 +152,11 @@ export function PackageDetails({ packageData, aggregateRating, reviews, activeDi
   return (
     <div className="flex flex-col min-h-screen bg-background">
       {/* --- DESKTOP HEADER (md:block) --- */}
-      <div className="hidden md:block border-b bg-white/50 backdrop-blur-sm sticky top-16 z-30">
+      <div className="hidden md:block border-b bg-background/85 backdrop-blur-sm sticky top-16 z-30">
         <div className="container mx-auto px-4 py-4 lg:px-8">
           <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
             <div className="space-y-2">
-              <h1 className="text-3xl lg:text-4xl font-black tracking-tight text-slate-900 leading-tight">
+              <h1 className="text-3xl lg:text-4xl font-black tracking-tight text-foreground leading-tight">
                 {packageName}
               </h1>
               <div className="flex flex-wrap items-center gap-x-2 gap-y-2 text-sm">
@@ -174,12 +174,12 @@ export function PackageDetails({ packageData, aggregateRating, reviews, activeDi
                           "h-5 w-5",
                           i < Math.floor(aggregateRating.average)
                             ? "fill-primary text-primary"
-                            : "text-slate-400"
+                            : "text-muted-foreground/30"
                         )}
                       />
                     ))}
                   </div>
-                  <span className="font-bold text-black">{aggregateRating.average}</span>
+                  <span className="font-bold text-foreground">{aggregateRating.average}</span>
                 </div>
                 <button
                   onClick={() => document.getElementById("reviews")?.scrollIntoView({ behavior: "smooth" })}
@@ -187,8 +187,8 @@ export function PackageDetails({ packageData, aggregateRating, reviews, activeDi
                 >
                   {aggregateRating.count} {tReviews("total_reviews")}
                 </button>
-                <div className="h-1 w-1 rounded-full bg-slate-300 hidden sm:block" />
-                <span className="text-slate-500 font-medium">
+                <div className="h-1 w-1 rounded-full bg-border hidden sm:block" />
+                <span className="text-muted-foreground font-medium">
                   {tui("professional_photographer")}
                 </span>
               </div>
@@ -207,7 +207,7 @@ export function PackageDetails({ packageData, aggregateRating, reviews, activeDi
                 size="sm"
                 onClick={toggleSave}
               >
-                <Heart className={cn("h-4 w-4", isSaved ? "fill-primary text-primary" : "text-slate-400")} />
+                <Heart className={cn("h-4 w-4", isSaved ? "fill-primary text-primary" : "text-muted-foreground")} />
                 <span>{isSaved ? tui("saved") : tui("save")}</span>
               </Button>
             </div>
@@ -242,7 +242,7 @@ export function PackageDetails({ packageData, aggregateRating, reviews, activeDi
                     </Badge>
                   )}
                 </div>
-                <h1 className="text-3xl font-extrabold tracking-tight text-slate-900">
+                <h1 className="text-3xl font-extrabold tracking-tight text-foreground">
                   {packageName}
                 </h1>
                 <div className="flex items-center gap-3">
@@ -254,7 +254,7 @@ export function PackageDetails({ packageData, aggregateRating, reviews, activeDi
                           "h-4 w-4",
                           i < Math.floor(aggregateRating.average)
                             ? "fill-primary text-primary"
-                            : "text-slate-300"
+                            : "text-muted-foreground/30"
                         )}
                       />
                     ))}
@@ -304,7 +304,7 @@ export function PackageDetails({ packageData, aggregateRating, reviews, activeDi
             {/* Shared Description */}
             <div className="space-y-8">
               <div className="prose prose-slate dark:prose-invert max-w-none">
-                <p className="text-xl text-slate-600 leading-relaxed italic border-s-4 border-primary/20 ps-6 py-2">
+                <p className="text-xl text-muted-foreground leading-relaxed italic border-s-4 border-primary/20 ps-6 py-2">
                   {packageDesc}
                 </p>
               </div>
@@ -318,9 +318,9 @@ export function PackageDetails({ packageData, aggregateRating, reviews, activeDi
                   {features.map((feature, index) => (
                     <li key={index} className="flex items-start gap-4 group">
                       <div className="mt-1 bg-primary p-1.5 rounded-full group-hover:bg-primary/70 transition-colors">
-                        <Check className="h-3.5 w-3.5 text-white stroke-[3]" />
+                        <Check className="h-3.5 w-3.5 text-primary-foreground stroke-[3]" />
                       </div>
-                      <span className="text-lg font-semibold text-slate-700">{feature}</span>
+                      <span className="text-lg font-semibold text-foreground">{feature}</span>
                     </li>
                   ))}
                 </ul>

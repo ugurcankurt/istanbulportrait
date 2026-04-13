@@ -3,6 +3,8 @@ import { AdminLayoutClient } from "./admin-layout-client";
 import { settingsService } from "@/lib/settings-service";
 import "../globals.css";
 
+import { ThemeProvider } from "next-themes";
+
 const fontHeading = Outfit({
   variable: "--font-heading",
   subsets: ["latin"],
@@ -34,7 +36,14 @@ export default async function AdminLayout({
       suppressHydrationWarning
     >
       <body className="antialiased min-h-screen bg-background font-sans">
-        <AdminLayoutClient settings={settings}>{children}</AdminLayoutClient>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme={settings.color_mode || 'system'}
+          enableSystem
+          disableTransitionOnChange
+        >
+          <AdminLayoutClient settings={settings}>{children}</AdminLayoutClient>
+        </ThemeProvider>
       </body>
     </html>
   );

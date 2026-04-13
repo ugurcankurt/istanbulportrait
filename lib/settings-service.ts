@@ -29,6 +29,7 @@ export interface SiteSettings {
   founder_image_url: string | null;
   ai_search_config: Record<string, any>; // JSON schema config
   theme_color: string;
+  color_mode: "light" | "dark" | "system" | string;
 }
 
 export const defaultSettings: SiteSettings = {
@@ -58,7 +59,8 @@ export const defaultSettings: SiteSettings = {
   founder_name: "",
   founder_image_url: "",
   ai_search_config: {},
-  theme_color: "violet"
+  theme_color: "violet",
+  color_mode: "system"
 };
 
 export const settingsService = {
@@ -111,6 +113,7 @@ export const settingsService = {
         founder_image_url: data.founder_image_url || defaultSettings.founder_image_url,
         ai_search_config: (data.ai_search_config as Record<string, any>) || defaultSettings.ai_search_config,
         theme_color: data.theme_color || defaultSettings.theme_color,
+        color_mode: data.color_mode || defaultSettings.color_mode,
       };
     } catch (error) {
       console.error("Failed to load settings:", error);

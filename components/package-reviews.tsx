@@ -32,8 +32,8 @@ export function PackageReviews({ reviews, aggregateRating }: PackageReviewsProps
             className={cn(
               sizeClasses[size],
               star <= rating
-                ? "fill-slate-900 text-slate-900"
-                : "fill-slate-200 text-slate-200"
+                ? "fill-foreground text-foreground"
+                : "fill-muted text-muted"
             )}
           />
         ))}
@@ -74,20 +74,20 @@ export function PackageReviews({ reviews, aggregateRating }: PackageReviewsProps
         {/* LEFT SIDEBAR - Overall Rating & Summary */}
         <div className="lg:col-span-1 space-y-10 lg:sticky lg:top-44 h-fit">
           <div className="space-y-6">
-            <h3 className="text-xl font-bold text-slate-800">{t("overall_rating")}</h3>
+            <h3 className="text-xl font-bold text-foreground">{t("overall_rating")}</h3>
             <div className="flex items-center gap-4">
               <div className="text-4xl font-extrabold text-primary">{Number(aggregateRating.average || 0).toFixed(1)}</div>
-              <div className="text-xl font-bold text-slate-400">/ 5</div>
+              <div className="text-xl font-bold text-muted-foreground">/ 5</div>
             </div>
             {renderStars(Math.round(aggregateRating.average || 5), "lg")}
-            <p className="text-sm font-medium text-slate-500">
+            <p className="text-sm font-medium text-muted-foreground">
               {t("based_on", { count: aggregateRating.count })}
             </p>
           </div>
 
-          <div className="space-y-6 pt-6 border-t border-slate-100">
+          <div className="space-y-6 pt-6 border-t border-border">
             <div className="flex items-center justify-between">
-              <h4 className="text-sm font-bold text-slate-900 uppercase tracking-tight">{t("summary")}</h4>
+              <h4 className="text-sm font-bold text-foreground uppercase tracking-tight">{t("summary")}</h4>
               {filterRating && (
                 <Button
                   variant="link"
@@ -117,26 +117,26 @@ export function PackageReviews({ reviews, aggregateRating }: PackageReviewsProps
                       filterRating && filterRating !== stars ? "opacity-30" : "opacity-100"
                     )}
                   >
-                    <span className="w-20 text-xs font-bold text-slate-600 text-start group-hover:text-slate-900 transition-colors">
+                    <span className="w-20 text-xs font-bold text-muted-foreground text-start group-hover:text-foreground transition-colors">
                       {stars === 5 ? t("excellent") : stars === 4 ? t("very_good") : stars === 3 ? t("average") : stars === 2 ? t("poor") : t("terrible")}
                     </span>
-                    <div className="flex-1 h-2.5 bg-slate-100 rounded-full overflow-hidden">
+                    <div className="flex-1 h-2.5 bg-muted rounded-full overflow-hidden">
                       <div
                         className={cn(
                           "h-full rounded-full transition-all duration-700",
-                          filterRating === stars ? "bg-primary" : "bg-slate-800"
+                          filterRating === stars ? "bg-primary" : "bg-muted-foreground/30"
                         )}
                         style={{ width: `${percentage}%` }}
                       />
                     </div>
-                    <span className="w-10 text-end text-xs font-bold text-slate-900">
+                    <span className="w-10 text-end text-xs font-bold text-foreground">
                       {stars}.0/5
                     </span>
                   </button>
                 );
               })}
             </div>
-            <p className="text-[10px] font-medium text-slate-400 leading-tight">
+            <p className="text-[10px] font-medium text-muted-foreground leading-tight">
               {t("filter_hint")}
             </p>
           </div>
@@ -145,8 +145,8 @@ export function PackageReviews({ reviews, aggregateRating }: PackageReviewsProps
         {/* RIGHT COLUMN - Review List */}
         <div className="lg:col-span-3 space-y-10">
           {/* Marketplace Header */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-300">
-            <div className="flex items-center gap-2 text-sm text-slate-500">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-border">
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <Info className="w-4 h-4" />
               <span>
                 {filterRating
@@ -157,7 +157,7 @@ export function PackageReviews({ reviews, aggregateRating }: PackageReviewsProps
           </div>
 
           {/* Reviews List */}
-          <div className="divide-y divide-slate-300 min-h-[400px]">
+          <div className="divide-y divide-border min-h-[400px]">
             {filteredReviews.length > 0 ? (
               <>
                 {filteredReviews.slice(0, visibleCount).map((review, index) => (
@@ -169,17 +169,17 @@ export function PackageReviews({ reviews, aggregateRating }: PackageReviewsProps
                       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                         <div className="flex items-center gap-2">
                           {renderStars(review.rating, "sm")}
-                          <span className="text-sm font-bold text-slate-900">{review.rating}</span>
+                          <span className="text-sm font-bold text-foreground">{review.rating}</span>
                         </div>
                         {(!review.text || review.text === "") && (
-                          <div className="px-2 py-1 bg-slate-100 rounded text-[10px] font-bold text-slate-500 uppercase tracking-wider">
+                          <div className="px-2 py-1 bg-muted rounded text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
                             {t("rating_only")}
                           </div>
                         )}
                       </div>
 
                       <div className="flex items-center gap-4">
-                        <div className="w-11 h-11 rounded-full bg-slate-100 overflow-hidden flex-shrink-0 flex items-center justify-center text-slate-900 text-lg font-bold border border-slate-200">
+                        <div className="w-11 h-11 rounded-full bg-muted overflow-hidden flex-shrink-0 flex items-center justify-center text-foreground text-lg font-bold border border-border/50">
                           {review.author.photoUrl ? (
                             <Image
                               src={review.author.photoUrl}
@@ -193,13 +193,13 @@ export function PackageReviews({ reviews, aggregateRating }: PackageReviewsProps
                           )}
                         </div>
                         <div className="space-y-0.5">
-                          <div className="text-sm font-bold text-slate-900 flex items-center gap-2">
+                          <div className="text-sm font-bold text-foreground flex items-center gap-2">
                             {review.author.name}
                             <span title="Verified Customer">
                               <CheckCircle className="w-3.5 h-3.5 text-blue-500 fill-blue-500/10" />
                             </span>
                           </div>
-                          <div className="text-xs text-slate-400 font-medium tracking-wide">
+                          <div className="text-xs text-muted-foreground font-medium tracking-wide">
                             {formatDate(review.date)}
                           </div>
                         </div>
@@ -207,12 +207,12 @@ export function PackageReviews({ reviews, aggregateRating }: PackageReviewsProps
 
                       {review.text && review.text.trim() !== "" ? (
                         <div className="relative">
-                          <blockquote className="text-base font-semibold leading-relaxed text-slate-800">
+                          <blockquote className="text-base font-semibold leading-relaxed text-foreground/90">
                             {review.text}
                           </blockquote>
                         </div>
                       ) : (
-                        <div className="text-sm italic text-slate-400 font-medium py-3 px-4 bg-slate-50/50 rounded-xl border-s-4 border-slate-200">
+                        <div className="text-sm italic text-muted-foreground font-medium py-3 px-4 bg-muted/50 rounded-xl border-s-4 border-border/50">
                           {t("rating_no_text")}
                         </div>
                       )}
@@ -236,12 +236,12 @@ export function PackageReviews({ reviews, aggregateRating }: PackageReviewsProps
               </>
             ) : (
               <div className="py-20 text-center space-y-4">
-                <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-slate-50 text-slate-300">
+                <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-muted/50 text-muted-foreground/50">
                   <Star className="w-8 h-8" />
                 </div>
                 <div className="space-y-2">
-                  <p className="text-lg font-bold text-slate-900">{t("no_reviews")}</p>
-                  <p className="text-sm text-slate-500">{t("show_all")}</p>
+                  <p className="text-lg font-bold text-foreground">{t("no_reviews")}</p>
+                  <p className="text-sm text-muted-foreground">{t("show_all")}</p>
                   <Button
                     variant="default"
                     onClick={() => setFilterRating(null)}
