@@ -1,9 +1,10 @@
 import "@/app/globals.css";
 import { NotFoundContent } from "@/components/not-found-content";
+import { settingsService } from "@/lib/settings-service";
 
+export default async function RootNotFound() {
+  const settings = await settingsService.getSettings().catch(() => null);
 
-
-export default function RootNotFound() {
   return (
     <html lang="en">
       <body>
@@ -15,6 +16,7 @@ export default function RootNotFound() {
           homeButton="Return Home"
           packagesButton="View Packages"
           goBack="Go Back"
+          settings={settings}
         />
       </body>
     </html>

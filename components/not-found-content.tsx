@@ -13,6 +13,7 @@ interface NotFoundContentProps {
   homeButton: string;
   packagesButton: string;
   goBack: string;
+  settings?: any;
 }
 
 export function NotFoundContent({
@@ -23,6 +24,7 @@ export function NotFoundContent({
   homeButton,
   packagesButton,
   goBack,
+  settings,
 }: NotFoundContentProps) {
   return (
     <div className="relative min-h-screen md:min-h-[calc(100vh-140px)] flex items-center justify-center overflow-hidden">
@@ -61,7 +63,7 @@ export function NotFoundContent({
             <Link href={`/${locale}`} className="inline-block group">
               <div className="relative transition-transform duration-300 group-hover:scale-105">
                 <Image
-                  src="/360istanbul_white_logo.webp"
+                  src={settings?.logo_dark_url || "/360istanbul_white_logo.webp"}
                   alt="Istanbul Photographer Logo"
                   width={200}
                   height={56}

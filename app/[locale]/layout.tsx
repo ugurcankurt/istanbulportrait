@@ -1,6 +1,6 @@
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
-import { Outfit, Geist_Mono } from "next/font/google";
+import { Instrument_Sans, Geist_Mono } from "next/font/google";
 import Script from "next/script";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
@@ -37,12 +37,12 @@ const DeferredCookieConsent = dynamic(() =>
   import("@/components/analytics/deferred-analytics").then((mod) => mod.DeferredCookieConsent)
 );
 
-const fontHeading = Outfit({
+const fontHeading = Instrument_Sans({
   variable: "--font-heading",
   subsets: ["latin"],
 });
 
-const fontSans = Outfit({
+const fontSans = Instrument_Sans({
   variable: "--font-sans",
   subsets: ["latin"],
 });
