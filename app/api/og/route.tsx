@@ -13,15 +13,20 @@ export async function GET(req: NextRequest) {
     }
 
     let imageSrc: any = imageUrl;
+    let targetUrl = imageUrl;
 
-    // Supabase veya diğer harici kaynaklardan gelen resimleri satori'nin algılayabilmesi için 
-    // Edge fonksiyonu içerisinde ArrayBuffer olarak fetch etmemiz gerekiyor.
-    if (imageUrl.startsWith("http")) {
-      const imgFetch = await fetch(imageUrl);
+    // Satori (ImageResponse) .webp formatını desteklemediği için, sadece .webp uzantılı 
+    // Supabase görsellerini anında JPG'ye çeviren aracı pipe (wsrv) kullanıyoruz.
+    if (imageUrl.toLowerCase().includes('.webp')) {
+      targetUrl = `https://wsrv.nl/?url=${encodeURIComponent(imageUrl)}&output=jpg&w=1200`;
+    }
+
+    if (targetUrl.startsWith("http")) {
+      const imgFetch = await fetch(targetUrl);
       if (imgFetch.ok) {
         imageSrc = await imgFetch.arrayBuffer();
       } else {
-        console.error(`OG Image Fetch Hatası: ${imageUrl} (${imgFetch.status})`);
+        console.error(`OG Image Fetch Hatası: ${targetUrl} (${imgFetch.status})`);
       }
     }
 
