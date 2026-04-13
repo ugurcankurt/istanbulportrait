@@ -30,7 +30,7 @@ export default async function AdminLayout({
   return (
     <html
       lang="en"
-      className={`${fontSans.variable} ${fontHeading.variable} ${geistMono.variable}`}
+      className={`${fontSans.variable} ${fontHeading.variable} ${geistMono.variable} theme-${settings.theme_color || "violet"}`}
       suppressHydrationWarning
     >
       <body className="antialiased min-h-screen bg-background font-sans">

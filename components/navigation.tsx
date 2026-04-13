@@ -1,13 +1,11 @@
 "use client";
 
-import { BookImage, Globe, Menu, ShoppingBag, Sparkles } from "lucide-react";
+import { Globe, Menu } from "lucide-react";
 import Image from "next/image";
 import { useParams } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
-
-import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Button, buttonVariants } from "@/components/ui/button";
 import {
   Dialog,
@@ -60,6 +58,18 @@ export function Navigation({ dynamicNavData = {}, settings }: NavigationProps) {
     setMounted(true);
   }, []);
 
+  // Helper logic to accurately detect multi-language active states
+  const isLinkActive = (href: string) => {
+    // pathname omits locale in next-intl (e.g. "/" or "/blog/post")
+    const currentFullPath = pathname === "/" ? `/${locale}` : `/${locale}${pathname}`;
+    // Exact match for the Home page
+    if (href === `/${locale}`) {
+      return currentFullPath === href;
+    }
+    // Exact match or sub-route (e.g. /tr/blog matching /tr/blog/hello)
+    return currentFullPath === href || currentFullPath.startsWith(`${href}/`);
+  };
+
   const navItems = [
     { href: `/${locale}`, label: t("home") },
     { href: `/${locale}/${dynamicNavData.packages?.path || "packages"}`, label: dynamicNavData.packages?.title || t("packages") },
@@ -86,22 +96,22 @@ export function Navigation({ dynamicNavData = {}, settings }: NavigationProps) {
       <div className="container mx-auto flex h-14 sm:h-16 items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Logo */}
         <Link href={`/${locale}`} className="relative flex items-center w-36 h-10 sm:w-48 sm:h-12 transition-transform hover:opacity-90">
-            <Image
-              src={settings?.logo_url || "/istanbulportrait_dark_logo.webp"}
-              alt="Photographer in Istanbul - Istanbul Photoshoot"
-              fill
-              sizes="(max-width: 640px) 144px, 192px"
-              className="object-contain object-left dark:hidden"
-              priority
-            />
-            <Image
-              src={settings?.logo_dark_url || "/istanbulportrait_white_logo.webp"}
-              alt="Photographer in Istanbul - Istanbul Photoshoot"
-              fill
-              sizes="(max-width: 640px) 144px, 192px"
-              className="object-contain object-left hidden dark:block"
-              priority
-            />
+          <Image
+            src={settings?.logo_url || "/istanbulportrait_dark_logo.webp"}
+            alt="Photographer in Istanbul - Istanbul Photoshoot"
+            fill
+            sizes="(max-width: 640px) 144px, 192px"
+            className="object-contain object-left dark:hidden"
+            priority
+          />
+          <Image
+            src={settings?.logo_dark_url || "/istanbulportrait_white_logo.webp"}
+            alt="Photographer in Istanbul - Istanbul Photoshoot"
+            fill
+            sizes="(max-width: 640px) 144px, 192px"
+            className="object-contain object-left hidden dark:block"
+            priority
+          />
         </Link>
 
         {/* Desktop Navigation */}
@@ -116,13 +126,13 @@ export function Navigation({ dynamicNavData = {}, settings }: NavigationProps) {
                 href={item.href as any}
                 className={cn(
                   "relative transition-all duration-200 hover:text-foreground/80 hover:scale-110",
-                  (pathname === "/" && item.href === `/${locale}`) || (pathname !== "/" && `/${locale}${pathname}`.startsWith(Math.max((item.href as string).split('/').length, 0) > 2 ? (item.href as string) : item.href + '/')) || (pathname !== "/" && `/${locale}${pathname}` === item.href)
+                  isLinkActive(item.href as string)
                     ? "text-foreground"
                     : "text-foreground/60",
                 )}
               >
                 {item.label}
-                {((pathname === "/" && item.href === `/${locale}`) || (pathname !== "/" && `/${locale}${pathname}`.startsWith(Math.max((item.href as string).split('/').length, 0) > 2 ? (item.href as string) : item.href + '/')) || (pathname !== "/" && `/${locale}${pathname}` === item.href)) && (
+                {isLinkActive(item.href as string) && (
                   <div className="absolute -bottom-1 left-0 right-0 h-0.5 bg-primary transition-all duration-300" />
                 )}
               </Link>
@@ -134,21 +144,21 @@ export function Navigation({ dynamicNavData = {}, settings }: NavigationProps) {
           {/* Language Switcher Modal */}
           <Dialog open={isLangOpen} onOpenChange={setIsLangOpen}>
             <DialogTrigger
-                className={cn(
-                  buttonVariants({ variant: "ghost", size: "sm" }),
-                  "h-9 px-3 hover:bg-muted/50 hover:scale-105 active:scale-95 transition-all duration-200 gap-2 border border-transparent hover:border-border/50",
+              className={cn(
+                buttonVariants({ variant: "ghost", size: "sm" }),
+                "h-9 px-3 hover:bg-muted/50 hover:scale-105 active:scale-95 transition-all duration-200 gap-2 border border-transparent hover:border-border/50",
+              )}
+              aria-label="Change language"
+            >
+              <span className="text-lg leading-none">
+                {locales.find((l) => l.code === locale)?.flag || (
+                  <Globe className="h-4 w-4" />
                 )}
-                aria-label="Change language"
-              >
-                <span className="text-lg leading-none">
-                  {locales.find((l) => l.code === locale)?.flag || (
-                    <Globe className="h-4 w-4" />
-                  )}
-                </span>
-                <span className="text-xs font-medium uppercase hidden sm:inline-block">
-                  {locale}
-                </span>
-                <span className="sr-only">Change language</span>
+              </span>
+              <span className="text-xs font-medium uppercase hidden sm:inline-block">
+                {locale}
+              </span>
+              <span className="sr-only">Change language</span>
             </DialogTrigger>
             <DialogContent className="sm:max-w-md">
               <DialogHeader>
@@ -188,39 +198,39 @@ export function Navigation({ dynamicNavData = {}, settings }: NavigationProps) {
           {/* Mobile Menu */}
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
             <SheetTrigger
+              className={cn(
+                buttonVariants({ variant: "ghost", size: "sm" }),
+                "md:hidden h-8 w-8 px-0 relative hover:scale-110 transition-transform duration-200",
+              )}
+              aria-label="Open menu"
+            >
+              <div
                 className={cn(
-                  buttonVariants({ variant: "ghost", size: "sm" }),
-                  "md:hidden h-8 w-8 px-0 relative hover:scale-110 transition-transform duration-200",
+                  "transition-transform duration-300",
+                  isOpen && "rotate-180",
                 )}
-                aria-label="Open menu"
               >
-                <div
-                  className={cn(
-                    "transition-transform duration-300",
-                    isOpen && "rotate-180",
-                  )}
-                >
-                  <Menu className="h-4 w-4" />
-                </div>
-                <span className="sr-only">Open menu</span>
+                <Menu className="h-4 w-4" />
+              </div>
+              <span className="sr-only">Open menu</span>
             </SheetTrigger>
             <SheetContent side="right" className="w-80 p-0">
               <SheetHeader className="p-6 pb-4 bg-muted/30">
                 <div className="relative flex items-center justify-center w-32 h-10 mx-auto">
-                    <Image
-                      src={settings?.logo_url || "/istanbulportrait_dark_logo.webp"}
-                      alt="Best Istanbul photographer - Professional photography services"
-                      fill
-                      sizes="128px"
-                      className="object-contain dark:hidden"
-                    />
-                    <Image
-                      src={settings?.logo_dark_url || "/istanbulportrait_white_logo.webp"}
-                      alt="Best Istanbul photographer - Professional photography services"
-                      fill
-                      sizes="128px"
-                      className="object-contain hidden dark:block"
-                    />
+                  <Image
+                    src={settings?.logo_url || "/istanbulportrait_dark_logo.webp"}
+                    alt="Best Istanbul photographer - Professional photography services"
+                    fill
+                    sizes="128px"
+                    className="object-contain dark:hidden"
+                  />
+                  <Image
+                    src={settings?.logo_dark_url || "/istanbulportrait_white_logo.webp"}
+                    alt="Best Istanbul photographer - Professional photography services"
+                    fill
+                    sizes="128px"
+                    className="object-contain hidden dark:block"
+                  />
                   <SheetTitle className="sr-only">
                     Istanbul Photographer
                   </SheetTitle>
@@ -241,7 +251,7 @@ export function Navigation({ dynamicNavData = {}, settings }: NavigationProps) {
                       href={item.href}
                       className={cn(
                         "flex items-center px-5 py-4 rounded-md transition-all duration-300 group hover:scale-[1.03] active:scale-[0.98] hover:translate-x-2",
-                        (pathname === "/" && item.href === `/${locale}`) || (pathname !== "/" && `/${locale}${pathname}`.startsWith(item.href))
+                        isLinkActive(item.href as string)
                           ? "bg-primary text-primary-foreground shadow-md"
                           : "hover:bg-muted/60 text-foreground/90",
                       )}

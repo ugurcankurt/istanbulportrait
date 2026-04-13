@@ -12,6 +12,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { WebpImageUploader } from "@/components/ui/webp-image-uploader";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { SiteSettings, defaultSettings } from "@/lib/settings-service";
+import { ThemeCustomizer } from "@/components/admin/theme-customizer";
 
 const SUPPORTED_LOCALES = ["en", "ar", "ru", "es", "zh", "de", "fr", "ro", "tr"];
 
@@ -94,6 +95,14 @@ export default function SettingsPage() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Appearance / Theme Customizer */}
+        <div className="lg:col-span-2">
+           <ThemeCustomizer 
+             themeColor={settings.theme_color} 
+             onThemeChange={(v) => updateSetting("theme_color", v)} 
+           />
+        </div>
+
         {/* SEO & Brand Identity */}
         <Card className="lg:col-span-2">
             <CardHeader>

@@ -128,7 +128,7 @@ export default async function LocaleLayout({
       lang={locale}
       dir={locale === "ar" ? "rtl" : "ltr"}
       data-scroll-behavior="smooth"
-      className={`${fontSans.variable} ${fontHeading.variable} ${geistMono.variable}`}
+      className={`${fontSans.variable} ${fontHeading.variable} ${geistMono.variable} theme-${settings.theme_color || "violet"}`}
       suppressHydrationWarning
     >
       <body
