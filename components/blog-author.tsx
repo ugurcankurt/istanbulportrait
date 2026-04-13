@@ -33,8 +33,8 @@ export function BlogAuthor({ author, siteSettings }: BlogAuthorProps) {
   const avatarUrl = author?.avatar_url;
 
   // Prefer dynamic global site settings over hardcoded fallbacks
-  const fallbackLightLogo = siteSettings?.logo_url || "/istanbulportrait_dark_logo.webp";
-  const fallbackDarkLogo = siteSettings?.logo_dark_url || "/istanbulportrait_white_logo.webp";
+  const fallbackLightLogo = siteSettings?.logo_url || "/360istanbul_dark_logo.webp";
+  const fallbackDarkLogo = siteSettings?.logo_dark_url || "/360istanbul_white_logo.webp";
 
   const socialLinks = {
     ...author?.social_links,

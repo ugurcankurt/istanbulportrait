@@ -21,6 +21,6 @@ export default function robots(): MetadataRoute.Robots {
         ...printsCheckoutDisallows,
       ],
     },
-    sitemap: "https://istanbulphotosession.com.tr/sitemap.xml",
+    sitemap: "https://360istanbul.com.tr/sitemap.xml",
   };
 }

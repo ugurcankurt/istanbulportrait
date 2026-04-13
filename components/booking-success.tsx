@@ -322,7 +322,7 @@ export function BookingSuccess({
                     <Mail className="w-4 h-4" />
                   </div>
                   <span className="text-sm font-medium">
-                    {settings?.contact_email || "info@istanbulphotosession.com.tr"}
+                    {settings?.contact_email || "info@360istanbul.com.tr"}
                   </span>
                 </div>
                 <div className="flex items-center gap-3 rtl:gap-reverse">

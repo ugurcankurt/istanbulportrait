@@ -39,7 +39,7 @@ export const renderEmailLayout = (
             <table width="600" border="0" cellspacing="0" cellpadding="0" style="background: ${COLORS.primary}; border-radius: 16px 16px 0 0; overflow: hidden;">
               <tr>
                 <td align="center" style="padding: 40px 20px; text-align: center;">
-                  <img src="${settings.logo_dark_url || 'https://istanbulphotosession.com.tr/istanbulportrait_white_logo.webp'}" alt="Logo" width="180" style="display: block; margin: 0 auto; max-width: 100%;">
+                  <img src="${settings.logo_dark_url || 'https://360istanbul.com.tr/360istanbul_white_logo.webp'}" alt="Logo" width="180" style="display: block; margin: 0 auto; max-width: 100%;">
                 </td>
               </tr>
             </table>
@@ -57,7 +57,7 @@ export const renderEmailLayout = (
             <table width="600" border="0" cellspacing="0" cellpadding="0" style="margin-top: 20px;">
               <tr>
                 <td align="center" style="padding: 30px; text-align: center; color: ${COLORS.textMuted}; font-size: 14px;">
-                  <img src="${settings.logo_url || 'https://istanbulphotosession.com.tr/istanbulportrait_dark_logo.webp'}" alt="Logo Footer" width="120" style="display: block; margin: 0 auto 15px; opacity: 0.8;">
+                  <img src="${settings.logo_url || 'https://360istanbul.com.tr/360istanbul_dark_logo.webp'}" alt="Logo Footer" width="120" style="display: block; margin: 0 auto 15px; opacity: 0.8;">
                   <p style="margin: 0 0 10px;">Istanbul Photographer</p>
                   <p style="margin: 0 0 20px;">
                     ${settings.instagram_url ? `<a href="${settings.instagram_url}" style="color: ${COLORS.primary}; text-decoration: none;">Instagram</a>` : ''}

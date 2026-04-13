@@ -37,7 +37,7 @@ export async function LocationDetailPageContent({
   }
 
   const t = await getTranslations({ locale, namespace: "locations" });
-  const baseUrl = "https://istanbulphotosession.com.tr";
+  const baseUrl = "https://360istanbul.com.tr";
 
   const dynamicTitle = location.title?.[locale] || location.title?.en || slug;
   const dynamicDesc = location.description?.[locale] || location.description?.en || "";

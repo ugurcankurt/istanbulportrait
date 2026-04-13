@@ -7,7 +7,7 @@ import { routing } from "@/i18n/routing";
 export const dynamic = "force-dynamic";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = "https://istanbulphotosession.com.tr";
+  const baseUrl = "https://360istanbul.com.tr";
   const locales = routing.locales;
 
   const getAlternates = (pathResolver: (locale: string) => string) => {

@@ -60,7 +60,7 @@ export async function isServerAdmin(email?: string): Promise<boolean> {
   }
 
   const adminEmails = [
-    process.env.NEXT_PUBLIC_ADMIN_EMAIL || "admin@istanbulphotosession.com.tr",
+    process.env.NEXT_PUBLIC_ADMIN_EMAIL || "admin@360istanbul.com.tr",
   ];
 
   const isAdmin = adminEmails.includes(email.toLowerCase());

@@ -179,7 +179,7 @@ export function AdminLayoutClient({ children, settings }: AdminLayoutClientProps
                 <Image
                   src={
                     settings?.logo_url ||
-                    "/istanbulportrait_dark_logo.webp"
+                    "/360istanbul_dark_logo.webp"
                   }
                   alt={settings?.site_name || "Istanbul Photographer"}
                   fill

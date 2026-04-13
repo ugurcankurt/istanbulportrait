@@ -14,7 +14,7 @@ export async function GET() {
     if (!beholdUrl || typeof beholdUrl !== "string") {
       // Return graceful empty state if the Administrator hasn't configured a feed yet
       return NextResponse.json({
-        username: "istanbulportrait",
+        username: "360istanbul",
         biography: "Instagram Feed Not Configured",
         profilePictureUrl: "",
         website: "",

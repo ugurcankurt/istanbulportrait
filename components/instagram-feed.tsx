@@ -32,7 +32,7 @@ export function InstagramFeed({ header, instagramUrl }: InstagramFeedProps) {
 
   const tui = useTranslations("ui");
   const [posts, setPosts] = useState<BeholdPost[]>([]);
-  const [username, setUsername] = useState<string>("istanbulportrait");
+  const [username, setUsername] = useState<string>("360istanbul");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 

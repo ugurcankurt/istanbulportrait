@@ -98,7 +98,7 @@ export function Navigation({ dynamicNavData = {}, settings }: NavigationProps) {
         {/* Logo */}
         <Link href={`/${locale}`} className="relative flex items-center w-36 h-10 sm:w-48 sm:h-12 transition-transform hover:opacity-90">
           <Image
-            src={settings?.logo_url || "/istanbulportrait_dark_logo.webp"}
+            src={settings?.logo_url || "/360istanbul_dark_logo.webp"}
             alt="Photographer in Istanbul - Istanbul Photoshoot"
             fill
             sizes="(max-width: 640px) 144px, 192px"
@@ -106,7 +106,7 @@ export function Navigation({ dynamicNavData = {}, settings }: NavigationProps) {
             priority
           />
           <Image
-            src={settings?.logo_dark_url || "/istanbulportrait_white_logo.webp"}
+            src={settings?.logo_dark_url || "/360istanbul_white_logo.webp"}
             alt="Photographer in Istanbul - Istanbul Photoshoot"
             fill
             sizes="(max-width: 640px) 144px, 192px"
@@ -222,14 +222,14 @@ export function Navigation({ dynamicNavData = {}, settings }: NavigationProps) {
               <SheetHeader className="p-6 pb-4 bg-muted/30">
                 <div className="relative flex items-center justify-center w-32 h-10 mx-auto">
                   <Image
-                    src={settings?.logo_url || "/istanbulportrait_dark_logo.webp"}
+                    src={settings?.logo_url || "/360istanbul_dark_logo.webp"}
                     alt="Best Istanbul photographer - Professional photography services"
                     fill
                     sizes="128px"
                     className="object-contain dark:hidden"
                   />
                   <Image
-                    src={settings?.logo_dark_url || "/istanbulportrait_white_logo.webp"}
+                    src={settings?.logo_dark_url || "/360istanbul_white_logo.webp"}
                     alt="Best Istanbul photographer - Professional photography services"
                     fill
                     sizes="128px"

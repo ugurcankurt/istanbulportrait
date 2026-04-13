@@ -61,7 +61,7 @@ export function NotFoundContent({
             <Link href={`/${locale}`} className="inline-block group">
               <div className="relative transition-transform duration-300 group-hover:scale-105">
                 <Image
-                  src="/istanbulportrait_white_logo.webp"
+                  src="/360istanbul_white_logo.webp"
                   alt="Istanbul Photographer Logo"
                   width={200}
                   height={56}

@@ -32,7 +32,7 @@ export function Footer({ dynamicNavData = {}, settings }: FooterProps) {
   const socialLinks = [
     ...(settings?.instagram_url ? [{ icon: Instagram, href: settings.instagram_url, label: "Instagram" }] : []),
     ...(settings?.facebook_url ? [{ icon: Facebook, href: settings.facebook_url, label: "Facebook" }] : []),
-    { icon: Mail, href: `mailto:${settings?.contact_email || "info@istanbulphotosession.com.tr"}`, label: "Email" },
+    { icon: Mail, href: `mailto:${settings?.contact_email || "info@360istanbul.com.tr"}`, label: "Email" },
   ];
 
   const quickLinks = [
@@ -53,8 +53,8 @@ export function Footer({ dynamicNavData = {}, settings }: FooterProps) {
                 <Image
                   src={
                     mounted && resolvedTheme === "dark"
-                      ? settings?.logo_dark_url || "/istanbulportrait_white_logo.webp"
-                      : settings?.logo_url || "/istanbulportrait_dark_logo.webp"
+                      ? settings?.logo_dark_url || "/360istanbul_white_logo.webp"
+                      : settings?.logo_url || "/360istanbul_dark_logo.webp"
                   }
                   alt="Professional Istanbul photographer - Top photographer in Istanbul"
                   fill
@@ -119,10 +119,10 @@ export function Footer({ dynamicNavData = {}, settings }: FooterProps) {
               <div className="flex items-center space-x-2 rtl:space-x-reverse">
                 <Mail className="h-5 w-5 shrink-0" />
                 <a
-                  href={`mailto:${settings?.contact_email || "info@istanbulphotosession.com"}`}
+                  href={`mailto:${settings?.contact_email || "info@360istanbul.com.tr"}`}
                   className="hover:text-foreground transition-colors"
                 >
-                  {settings?.contact_email || "info@istanbulphotosession.com"}
+                  {settings?.contact_email || "info@360istanbul.com.tr"}
                 </a>
               </div>
               <div className="flex items-center space-x-2 rtl:space-x-reverse">

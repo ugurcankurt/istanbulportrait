@@ -154,7 +154,7 @@ export async function isAdmin(email?: string): Promise<boolean> {
   if (!email) return false;
 
   const adminEmails = [
-    process.env.NEXT_PUBLIC_ADMIN_EMAIL || "admin@istanbulphotosession.com.tr",
+    process.env.NEXT_PUBLIC_ADMIN_EMAIL || "admin@360istanbul.com.tr",
   ];
 
   return adminEmails.includes(email.toLowerCase());

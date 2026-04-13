@@ -75,7 +75,7 @@ export default function AdminLoginPage() {
               <Input
                 id="email"
                 type="email"
-                placeholder="admin@istanbulphotosession.com.tr"
+                placeholder="admin@360istanbul.com.tr"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required

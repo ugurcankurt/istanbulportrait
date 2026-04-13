@@ -16,7 +16,7 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
-        hostname: "istanbulphotosession.com.tr",
+        hostname: "360istanbul.com.tr",
       },
       {
         protocol: "https",

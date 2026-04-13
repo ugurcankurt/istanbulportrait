@@ -399,7 +399,7 @@ export function CustomerDetailsForm({
               {tsuccess("help_description")}
             </p>
             <div className="text-sm space-y-1">
-              <p>📧 info@istanbulphotosession.com.tr</p>
+              <p>📧 info@360istanbul.com.tr</p>
               <p>📞 +90 536 709 37 24</p>
             </div>
           </CardContent>
