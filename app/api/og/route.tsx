@@ -12,6 +12,19 @@ export async function GET(req: NextRequest) {
       return new Response("Missing image URL", { status: 400 });
     }
 
+    let imageSrc: any = imageUrl;
+
+    // Supabase veya diğer harici kaynaklardan gelen resimleri satori'nin algılayabilmesi için 
+    // Edge fonksiyonu içerisinde ArrayBuffer olarak fetch etmemiz gerekiyor.
+    if (imageUrl.startsWith("http")) {
+      const imgFetch = await fetch(imageUrl);
+      if (imgFetch.ok) {
+        imageSrc = await imgFetch.arrayBuffer();
+      } else {
+        console.error(`OG Image Fetch Hatası: ${imageUrl} (${imgFetch.status})`);
+      }
+    }
+
     return new ImageResponse(
       (
         <div
@@ -26,7 +39,7 @@ export async function GET(req: NextRequest) {
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src={imageUrl}
+            src={imageSrc}
             alt="OG Image"
             style={{
               width: "100%",
