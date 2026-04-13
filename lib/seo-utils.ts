@@ -37,17 +37,20 @@ export function generateSeoTitle(title: string | null | undefined, locale: strin
 }
 
 /**
- * Optimizes an image URL for SEO (OpenGraph & Schema) by passing it through Next.js Image Optimization.
- * Resizes the image to a standardized width to improve crawlability and social sharing performance.
+ * Resolves an image URL for SEO (OpenGraph & Schema).
+ * Uses Next.js /api/og dynamic image generation to guarantee a perfect 1200x630
+ * aspect ratio for social media crawlers, avoiding cropped or improperly sized previews.
  */
 export function optimizeSeoImage(imageUrl: string | null | undefined, width: 1200 | 1080 | 1920 = 1200): string {
   if (!imageUrl) return "";
-  if (imageUrl.startsWith("/")) return `https://istanbulphotosession.com.tr${imageUrl}`;
-  if (!imageUrl.startsWith("http")) return imageUrl;
   
-  // Uses Next.js built-in optimizer for allowed remote patterns
-  // 1200 is configured in next.config.ts deviceSizes
-  return `https://istanbulphotosession.com.tr/_next/image?url=${encodeURIComponent(imageUrl)}&w=${width}&q=80`;
+  // Get absolute URL
+  const absoluteUrl = imageUrl.startsWith("/")
+    ? `https://istanbulphotosession.com.tr${imageUrl}`
+    : imageUrl;
+  
+  // Return the dynamic OG generation url
+  return `https://istanbulphotosession.com.tr/api/og?image=${encodeURIComponent(absoluteUrl)}`;
 }
 
 /**

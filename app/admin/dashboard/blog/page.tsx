@@ -31,6 +31,7 @@ import {
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuTrigger,
@@ -111,10 +112,8 @@ function DeletePostDialog({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DropdownMenuItem
-        onSelect={(e) => {
-          e.preventDefault();
-          setOpen(true);
-        }}
+        onClick={() => setOpen(true)}
+        closeOnClick={false}
       >
         <div className="flex items-center w-full">
           <Trash className="w-4 h-4 mr-2" />
@@ -449,19 +448,21 @@ export default function BlogManagementPage() {
                               <MoreHorizontal className="w-4 h-4" />
                           </DropdownMenuTrigger>
                           <DropdownMenuContent align="end">
-                            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                            <DropdownMenuItem render={<Link href={`/${locale}/blog/${post.translation.slug}`} target="_blank" />}>
-                                <Eye className="w-4 h-4 mr-2" />
-                                View Post
-                            </DropdownMenuItem>
-                            <DropdownMenuItem render={<Link href={`/admin/dashboard/blog/${post.id}`} />}>
-                                <Edit className="w-4 h-4 mr-2" />
-                                Edit Post
-                            </DropdownMenuItem>
-                            <DeletePostDialog
-                              post={post}
-                              onDelete={handleDeletePost}
-                            />
+                            <DropdownMenuGroup>
+                              <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                              <DropdownMenuItem render={<Link href={`/${locale}/blog/${post.translation.slug}`} target="_blank" />}>
+                                  <Eye className="w-4 h-4 mr-2" />
+                                  View Post
+                              </DropdownMenuItem>
+                              <DropdownMenuItem render={<Link href={`/admin/dashboard/blog/${post.id}`} />}>
+                                  <Edit className="w-4 h-4 mr-2" />
+                                  Edit Post
+                              </DropdownMenuItem>
+                              <DeletePostDialog
+                                post={post}
+                                onDelete={handleDeletePost}
+                              />
+                            </DropdownMenuGroup>
                           </DropdownMenuContent>
                         </DropdownMenu>
                       </TableCell>

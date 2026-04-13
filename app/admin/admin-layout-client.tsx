@@ -22,6 +22,9 @@ import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
   SidebarHeader,
   SidebarInset,
   SidebarMenu,
@@ -38,51 +41,40 @@ interface AdminLayoutClientProps {
   settings?: any;
 }
 
-const navigation = [
+const navigationGroups = [
   {
-    name: "Dashboard",
-    href: "/admin/dashboard",
-    icon: LayoutDashboard,
+    title: "Overview",
+    items: [
+      { name: "Dashboard", href: "/admin/dashboard", icon: LayoutDashboard },
+    ],
   },
   {
-    name: "Bookings",
-    href: "/admin/dashboard/bookings",
-    icon: Calendar,
+    title: "Operations",
+    items: [
+      { name: "Bookings", href: "/admin/dashboard/bookings", icon: Calendar },
+      { name: "Customers", href: "/admin/dashboard/customers", icon: Users },
+    ],
   },
   {
-    name: "Customers",
-    href: "/admin/dashboard/customers",
-    icon: Users,
+    title: "Sales & Catalog",
+    items: [
+      { name: "Packages", href: "/admin/dashboard/packages", icon: Package },
+      { name: "Discounts", href: "/admin/dashboard/discounts", icon: TicketPercent },
+    ],
   },
   {
-    name: "Packages",
-    href: "/admin/dashboard/packages",
-    icon: Package,
+    title: "Content",
+    items: [
+      { name: "Blog", href: "/admin/dashboard/blog", icon: BookOpen },
+      { name: "Pages", href: "/admin/dashboard/pages", icon: FileText },
+      { name: "Locations", href: "/admin/dashboard/locations", icon: MapPin },
+    ],
   },
   {
-    name: "Blog",
-    href: "/admin/dashboard/blog",
-    icon: BookOpen,
-  },
-  {
-    name: "Discounts",
-    href: "/admin/dashboard/discounts",
-    icon: TicketPercent,
-  },
-  {
-    name: "Pages",
-    href: "/admin/dashboard/pages",
-    icon: FileText,
-  },
-  {
-    name: "Locations",
-    href: "/admin/dashboard/locations",
-    icon: MapPin,
-  },
-  {
-    name: "Settings",
-    href: "/admin/dashboard/settings",
-    icon: Settings,
+    title: "System",
+    items: [
+      { name: "Settings", href: "/admin/dashboard/settings", icon: Settings },
+    ],
   },
 ];
 
@@ -198,25 +190,32 @@ export function AdminLayoutClient({ children, settings }: AdminLayoutClientProps
             </SidebarHeader>
 
             <SidebarContent>
-              <SidebarMenu>
-                {navigation.map((item) => {
-                  const isActive = pathname === item.href;
-                  return (
-                    <SidebarMenuItem key={item.href}>
-                      <SidebarMenuButton
-                        isActive={isActive}
-                        tooltip={item.name}
-                        render={
-                          <Link href={item.href as string}>
-                            <item.icon className="w-5 h-5" />
-                            <span>{item.name}</span>
-                          </Link>
-                        }
-                      />
-                    </SidebarMenuItem>
-                  );
-                })}
-              </SidebarMenu>
+              {navigationGroups.map((group) => (
+                <SidebarGroup key={group.title}>
+                  <SidebarGroupLabel>{group.title}</SidebarGroupLabel>
+                  <SidebarGroupContent>
+                    <SidebarMenu>
+                      {group.items.map((item) => {
+                        const isActive = pathname === item.href;
+                        return (
+                          <SidebarMenuItem key={item.href}>
+                            <SidebarMenuButton
+                              isActive={isActive}
+                              tooltip={item.name}
+                              render={
+                                <Link href={item.href as string}>
+                                  <item.icon className="w-5 h-5" />
+                                  <span>{item.name}</span>
+                                </Link>
+                              }
+                            />
+                          </SidebarMenuItem>
+                        );
+                      })}
+                    </SidebarMenu>
+                  </SidebarGroupContent>
+                </SidebarGroup>
+              ))}
             </SidebarContent>
 
             <SidebarFooter className="border-t">

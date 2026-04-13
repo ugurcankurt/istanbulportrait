@@ -29,6 +29,7 @@ import {
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuTrigger,
@@ -62,7 +63,10 @@ function CustomerDetailsDialog({ customer }: { customer: Customer }) {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DropdownMenuItem onSelect={(e) => setOpen(true)}>
+      <DropdownMenuItem
+        onClick={() => setOpen(true)}
+        closeOnClick={false}
+      >
         <Eye className="w-4 h-4 mr-2" />
         View Details
       </DropdownMenuItem>
@@ -523,8 +527,10 @@ export default function CustomersPage() {
                             <MoreHorizontal className="w-4 h-4" />
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
-                          <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                          <CustomerDetailsDialog customer={customer} />
+                          <DropdownMenuGroup>
+                            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                            <CustomerDetailsDialog customer={customer} />
+                          </DropdownMenuGroup>
                         </DropdownMenuContent>
                       </DropdownMenu>
                     </TableCell>

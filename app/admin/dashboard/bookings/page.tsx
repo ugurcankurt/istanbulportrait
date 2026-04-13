@@ -26,11 +26,11 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuTrigger,
@@ -89,7 +89,10 @@ function BookingDetailsDialog({ booking }: { booking: Booking }) {
   const [open, setOpen] = useState(false);
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DropdownMenuItem onSelect={(e) => setOpen(true)}>
+      <DropdownMenuItem
+        onClick={() => setOpen(true)}
+        closeOnClick={false}
+      >
         <Eye className="w-4 h-4 mr-2" />
         View Details
       </DropdownMenuItem>
@@ -242,7 +245,10 @@ function EditBookingDialog({
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DropdownMenuItem onSelect={() => setOpen(true)}>
+      <DropdownMenuItem
+        onClick={() => setOpen(true)}
+        closeOnClick={false}
+      >
         <Edit className="w-4 h-4 mr-2" />
         Edit Booking
       </DropdownMenuItem>
@@ -515,9 +521,9 @@ export default function BookingsPage() {
                     <TableCell className="text-destructive font-medium">
                       {formatCurrency(
                         booking.total_amount -
-                          (booking.payments
-                            ?.filter((p) => p.status === "success")
-                            .reduce((sum, p) => sum + p.amount, 0) || 0),
+                        (booking.payments
+                          ?.filter((p) => p.status === "success")
+                          .reduce((sum, p) => sum + p.amount, 0) || 0),
                       )}
                     </TableCell>
                     <TableCell className="text-sm text-muted-foreground">
@@ -526,15 +532,17 @@ export default function BookingsPage() {
                     <TableCell>
                       <DropdownMenu>
                         <DropdownMenuTrigger render={<Button variant="ghost" size="sm" />}>
-                            <MoreHorizontal className="w-4 h-4" />
+                          <MoreHorizontal className="w-4 h-4" />
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
-                          <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                          <BookingDetailsDialog booking={booking} />
-                          <EditBookingDialog
-                            booking={booking}
-                            onUpdate={handleUpdateBooking}
-                          />
+                          <DropdownMenuGroup>
+                            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                            <BookingDetailsDialog booking={booking} />
+                            <EditBookingDialog
+                              booking={booking}
+                              onUpdate={handleUpdateBooking}
+                            />
+                          </DropdownMenuGroup>
                         </DropdownMenuContent>
                       </DropdownMenu>
                     </TableCell>

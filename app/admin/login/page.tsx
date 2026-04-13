@@ -1,6 +1,6 @@
 "use client";
 
-import {  Shield } from "lucide-react";
+import { Shield } from "lucide-react";
 import { Spinner } from "@/components/ui/spinner";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -49,15 +49,15 @@ export default function AdminLoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 to-slate-800 p-4">
+    <div className="min-h-screen flex items-center justify-center bg-primary p-4">
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-2 text-center">
           <div className="flex justify-center">
-            <Shield className="h-12 w-12 text-blue-600" />
+            <Shield className="h-12 w-12 text-primary" />
           </div>
           <CardTitle className="text-2xl font-bold">Admin Login</CardTitle>
           <p className="text-sm text-muted-foreground">
-            Istanbul Photographer Admin Panel
+            Istanbul Photosession Admin Panel
           </p>
         </CardHeader>
         <CardContent>
