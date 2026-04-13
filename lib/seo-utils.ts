@@ -1,4 +1,3 @@
-import { Metadata } from "next";
 import { SiteSettings } from "./settings-service";
 
 export function getBaseUrl() {
@@ -21,7 +20,7 @@ export function generateSeoDescription(
   maxLength = 160
 ): string {
   if (!content) return "";
-  
+
   // 1. Remove HTML tags
   let cleanText = content.replace(/<[^>]*>?/gm, " ");
   // 2. Remove markdown/formatting chars if any
@@ -51,12 +50,12 @@ export function generateSeoTitle(title: string | null | undefined, locale: strin
  */
 export function optimizeSeoImage(imageUrl: string | null | undefined, width: 1200 | 1080 | 1920 = 1200): string {
   if (!imageUrl) return "";
-  
+
   // Get absolute URL
   const absoluteUrl = imageUrl.startsWith("/")
     ? `${getBaseUrl()}${imageUrl}`
     : imageUrl;
-  
+
   // Return the dynamic OG generation url
   return `${getBaseUrl()}/api/og?image=${encodeURIComponent(absoluteUrl)}`;
 }
