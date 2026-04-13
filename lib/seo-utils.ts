@@ -1,6 +1,14 @@
 import { Metadata } from "next";
 import { SiteSettings } from "./settings-service";
 
+export function getBaseUrl() {
+  if (typeof window !== "undefined") return window.location.origin;
+  if (process.env.NEXT_PUBLIC_APP_URL) return process.env.NEXT_PUBLIC_APP_URL;
+  if (process.env.VERCEL_PROJECT_PRODUCTION_URL) return `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`;
+  if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`;
+  return "https://istanbulphotosession.vercel.app";
+}
+
 // ----------------------------------------------------
 // CORE SEO HELPERS
 // ----------------------------------------------------
@@ -46,11 +54,11 @@ export function optimizeSeoImage(imageUrl: string | null | undefined, width: 120
   
   // Get absolute URL
   const absoluteUrl = imageUrl.startsWith("/")
-    ? `https://istanbulphotosession.com.tr${imageUrl}`
+    ? `${getBaseUrl()}${imageUrl}`
     : imageUrl;
   
   // Return the dynamic OG generation url
-  return `https://istanbulphotosession.com.tr/api/og?image=${encodeURIComponent(absoluteUrl)}`;
+  return `${getBaseUrl()}/api/og?image=${encodeURIComponent(absoluteUrl)}`;
 }
 
 /**
@@ -68,7 +76,7 @@ export function constructOpenGraph(
   return {
     title,
     description,
-    url: "https://istanbulphotosession.com.tr", // Base URL handled by metadataBase in layout
+    url: getBaseUrl(), // Base URL handled by metadataBase in layout
     siteName: siteName || title,
     images: [
       {
@@ -95,8 +103,8 @@ export function buildLocalBusinessSchema(settings: SiteSettings) {
     "@type": "LocalBusiness",
     name: settings.organization_name || settings.site_name,
     image: imageUrl,
-    "@id": "https://istanbulphotosession.com.tr",
-    url: "https://istanbulphotosession.com.tr",
+    "@id": getBaseUrl(),
+    url: getBaseUrl(),
     telephone: settings.contact_phone || settings.whatsapp_number,
     address: {
       "@type": "PostalAddress",
@@ -157,7 +165,7 @@ export function buildProductSchema({
     description,
     offers: {
       "@type": "Offer",
-      url: "https://istanbulphotosession.com.tr",
+      url: getBaseUrl(),
       priceCurrency: currency,
       price: price,
       availability: "https://schema.org/InStock",
