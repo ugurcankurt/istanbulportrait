@@ -14,14 +14,10 @@ export async function GET(req: NextRequest) {
 
     let imageSrc: any = imageUrl;
 
-    // Satori (ImageResponse) KESİNLİKLE .webp formatını desteklemez! (Sadece PNG, JPEG ve SVG).
-    // Supabase veya diğer kaynaklardan gelen resimleri (özellikle webp) desteklenen formata sokmak 
-    // ve boyutunu optimize etmek için hızlı, ücretsiz bir global cdn proxysi (wsrv.nl) ile
-    // on-the-fly .jpg formatına çevirip (1200px genişlikle) öyle indiriyoruz:
+    // Supabase veya diğer harici kaynaklardan gelen resimleri satori'nin algılayabilmesi için 
+    // Edge fonksiyonu içerisinde ArrayBuffer olarak fetch etmemiz gerekiyor.
     if (imageUrl.startsWith("http")) {
-      const optimizedUrl = `https://wsrv.nl/?url=${encodeURIComponent(imageUrl)}&output=jpg&w=1200`;
-      
-      const imgFetch = await fetch(optimizedUrl);
+      const imgFetch = await fetch(imageUrl);
       if (imgFetch.ok) {
         imageSrc = await imgFetch.arrayBuffer();
       } else {
