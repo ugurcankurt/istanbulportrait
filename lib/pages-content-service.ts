@@ -60,8 +60,8 @@ export const pagesContentService = {
       // Match core slug "about"
       if (page.slug === decodedSlug) return page;
 
-      // Match localized active translated titles "biz-kimiz"
-      if (page.title) {
+      // Match localized active translated titles for actual standalone pages (skip sections like home-*)
+      if (page.title && !page.slug.startsWith("home-") && page.slug !== "home") {
         for (const val of Object.values(page.title)) {
           if (val && generateNativeSlug(val) === decodedSlug) {
             return page;
