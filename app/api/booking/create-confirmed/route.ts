@@ -187,7 +187,7 @@ export async function POST(request: NextRequest) {
         const { data: newBooking, error: insertError } = await supabaseAdmin
           .from("bookings")
           .insert({
-            package_id: packageId,
+            package_id: packageObj.id,
             user_name: customerName,
             user_email: customerEmail,
             user_phone: customerPhone,

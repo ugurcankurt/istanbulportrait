@@ -14,6 +14,7 @@ import {
 } from "@/lib/rate-limit";
 import { supabaseAdmin } from "@/lib/supabase";
 import { bookingSchema } from "@/lib/validations";
+import { packagesService } from "@/lib/packages-service";
 
 export async function POST(request: NextRequest) {
   const startTime = Date.now();
@@ -70,19 +71,16 @@ export async function POST(request: NextRequest) {
 
     try {
       // Check if package exists
-      const { data: packageData, error: packageError } = await supabaseAdmin
-        .from("packages")
-        .select("id, price")
-        .eq("id", packageId)
-        .single();
+      const packageData = await packagesService.getPackageBySlug(packageId as string);
 
-      if (packageError) {
-        logError(handleSupabaseError(packageError), {
+      if (!packageData) {
+        logError(new Error("Package not found"), {
           ip,
           endpoint: "booking",
           action: "package_validation",
         });
         // Continue with demo mode if package table doesn't exist
+
       } else if (
         packageData &&
         Math.abs(packageData.price - totalAmount) > 0.01
@@ -106,7 +104,7 @@ export async function POST(request: NextRequest) {
         .from("bookings")
         .select("id")
         .eq("user_email", customerEmail)
-        .eq("package_id", packageId)
+        .eq("package_id", packageData?.id || packageId)
         .eq("booking_date", bookingDate)
         .eq("booking_time", bookingTime)
         .gte("created_at", fiveMinutesAgo);
@@ -156,7 +154,7 @@ export async function POST(request: NextRequest) {
       const { data: booking, error } = await supabaseAdmin
         .from("bookings")
         .insert({
-          package_id: packageId,
+          package_id: packageData?.id || packageId,
           user_name: customerName,
           user_email: customerEmail,
           user_phone: customerPhone,
