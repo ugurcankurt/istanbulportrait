@@ -57,7 +57,7 @@ export default function AdminLoginPage() {
           </div>
           <CardTitle className="text-2xl font-bold">Admin Login</CardTitle>
           <p className="text-sm text-muted-foreground">
-            Istanbul Photosession Admin Panel
+            360istanbul.com.tr Admin Panel
           </p>
         </CardHeader>
         <CardContent>
