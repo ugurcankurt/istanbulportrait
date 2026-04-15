@@ -12,7 +12,8 @@ interface EditPageAdminProps {
 export default async function EditPageAdmin({ params }: EditPageAdminProps) {
   const { slug } = await params;
 
-  let pageRecord = await pagesContentService.getPageBySlug(slug);
+  const allPages = await pagesContentService.getAllPages();
+  let pageRecord = allPages.find((p) => p.slug === slug);
 
   if (!pageRecord) {
     // Inject a skeleton for PageForm to treat as an existing initial entity ready to be created.

@@ -74,10 +74,7 @@ export async function generateMetadata({
   const desc = settingsService.resolveTranslatable(settings.site_description, locale);
   const ogImage = settings.default_og_image_url || "";
 
-  const languages: Record<string, string> = {};
-  routing.locales.forEach((loc) => {
-    languages[loc] = `/${loc}`;
-  });
+
 
   return {
     metadataBase: new URL(getBaseUrl()),
@@ -88,7 +85,6 @@ export async function generateMetadata({
     description: desc,
     alternates: {
       canonical: "./",
-      languages: languages
     },
     openGraph: constructOpenGraph(title, desc, ogImage, title, locale),
     twitter: {

@@ -2,8 +2,7 @@
 
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import Image from "next/image";
-import { useTranslations } from "next-intl";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -29,6 +28,17 @@ export function GallerySection({ header, images = [] }: GallerySectionProps) {
 
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  const [randomImages, setRandomImages] = useState<GalleryImage[]>([]);
+
+  useEffect(() => {
+    // Shuffle images and select first 8 to show continuously changing images on every load
+    const shuffled = [...images].sort(() => 0.5 - Math.random());
+    setRandomImages(shuffled.slice(0, 8));
+    setMounted(true);
+  }, [images]);
+
+  const displayImages = mounted ? randomImages : images.slice(0, 8);
 
   const openLightbox = (imageId: string) => {
     setSelectedImage(imageId);
@@ -38,22 +48,22 @@ export function GallerySection({ header, images = [] }: GallerySectionProps) {
   const navigateImage = (direction: "prev" | "next") => {
     if (selectedImage === null) return;
 
-    const currentIndex = images.findIndex(
+    const currentIndex = displayImages.findIndex(
       (img) => img.id === selectedImage,
     );
     let newIndex;
 
     if (direction === "next") {
-      newIndex = (currentIndex + 1) % images.length;
+      newIndex = (currentIndex + 1) % displayImages.length;
     } else {
       newIndex =
-        (currentIndex - 1 + images.length) % images.length;
+        (currentIndex - 1 + displayImages.length) % displayImages.length;
     }
 
-    setSelectedImage(images[newIndex].id);
+    setSelectedImage(displayImages[newIndex].id);
   };
 
-  const selectedImageData = images.find(
+  const selectedImageData = displayImages.find(
     (img) => img.id === selectedImage,
   );
 
@@ -63,50 +73,51 @@ export function GallerySection({ header, images = [] }: GallerySectionProps) {
         {header}
 
         {/* Gallery Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 sm:gap-6 lg:gap-8 mx-auto">
-          {images.map((image) => (
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-6 lg:gap-8 mx-auto">
+          {displayImages.map((image, index) => (
             <div
               key={image.id}
               id={`gallery-image-${image.id}`}
-              className="group relative aspect-square rounded-xl overflow-hidden cursor-pointer"
+              className={`group relative aspect-square rounded-xl overflow-hidden cursor-pointer ${index >= 6 ? "hidden md:block" : ""
+                }`}
             >
               <Dialog>
                 <DialogTrigger
-                    onClick={() => openLightbox(image.id)}
-                    className="relative w-full h-full border-0 p-0 bg-transparent cursor-pointer group-hover:scale-100"
-                    aria-label={`View ${image.alt} in fullscreen`}
-                    type="button"
-                  >
-                    <Image
-                      src={image.src}
-                      alt={image.alt}
-                      fill
-                      className="object-cover transition-transform duration-500 group-hover:scale-110"
-                      sizes="(max-width: 639px) 48vw, (max-width: 1023px) 48vw, (max-width: 1279px) 31vw, 22vw"
-                      quality={50}
-                      onError={(e) => {
-                        const target = e.target as HTMLImageElement;
-                        target.style.display = "none";
-                      }}
-                    />
-                    <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors duration-300" />
-                    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                      <div className="bg-white/20 backdrop-blur-sm rounded-full p-3">
-                        <svg
-                          className="w-6 h-6 text-white"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"
-                          />
-                        </svg>
-                      </div>
+                  onClick={() => openLightbox(image.id)}
+                  className="relative w-full h-full border-0 p-0 bg-transparent cursor-pointer group-hover:scale-100"
+                  aria-label={`View ${image.alt} in fullscreen`}
+                  type="button"
+                >
+                  <Image
+                    src={image.src}
+                    alt={image.alt}
+                    fill
+                    className="object-cover transition-transform duration-500 group-hover:scale-110"
+                    sizes="(max-width: 639px) 48vw, (max-width: 1023px) 48vw, (max-width: 1279px) 31vw, 22vw"
+                    quality={50}
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      target.style.display = "none";
+                    }}
+                  />
+                  <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors duration-300" />
+                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <div className="bg-white/20 backdrop-blur-sm rounded-full p-3">
+                      <svg
+                        className="w-6 h-6 text-white"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"
+                        />
+                      </svg>
                     </div>
+                  </div>
                 </DialogTrigger>
               </Dialog>
             </div>

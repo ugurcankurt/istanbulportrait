@@ -621,11 +621,17 @@ export function PageForm({ initialData }: PageFormProps) {
                                   size="sm"
                                   onClick={async () => {
                                     if (confirm("Remove cover image?")) {
-                                      if (initialData?.cover_image === coverImagePreview) {
-                                         await deletePackageImage(coverImagePreview, "pages");
+                                      if (coverImagePreview && coverImagePreview.startsWith("http")) {
+                                         try { await deletePackageImage(coverImagePreview, "pages"); } catch (e) { console.error(e) }
                                       }
                                       setCoverImagePreview(null);
-                                      form.setValue("cover_image", null, { shouldDirty: true });
+                                      form.setValue("cover_image", null, { shouldDirty: true, shouldValidate: true });
+                                      
+                                      if (initialData?.id) {
+                                        try {
+                                          await pagesContentService.updatePage(initialData.id, { cover_image: null });
+                                        } catch (e) {}
+                                      }
                                     }
                                   }}
                                 >
@@ -652,6 +658,12 @@ export function PageForm({ initialData }: PageFormProps) {
                                     const file = e.target.files?.[0];
                                     if (file) {
                                       const slugValue = form.getValues().slug || "draft";
+                                      
+                                      // Silinecek olan eski resim varsa öksüz kalmaması için önce bucket'tan sil (storage cleanup)
+                                      if (coverImagePreview && coverImagePreview.startsWith("http")) {
+                                        try { await deletePackageImage(coverImagePreview, "pages"); } catch (err) { console.error(err) }
+                                      }
+
                                       const mockPreview = URL.createObjectURL(file);
                                       setCoverImagePreview(mockPreview);
                                       toast.loading("Uploading cover image...", { id: "upload-cover" });
@@ -660,8 +672,16 @@ export function PageForm({ initialData }: PageFormProps) {
                                         const { success, url, error } = await uploadPackageImage(slugValue, file, "pages");
                                         if (success && url) {
                                           setCoverImagePreview(url);
-                                          form.setValue("cover_image", url, { shouldDirty: true });
-                                          toast.success("Cover image uploaded!", { id: "upload-cover" });
+                                          form.setValue("cover_image", url, { shouldDirty: true, shouldValidate: true });
+                                          
+                                          // Eğer daha önceden oluşmuş bir sayfaysa form gönderilmesini beklemeden veritabanına otomatik kaydet (kullanıcı unutmasına karşı)
+                                          if (initialData?.id) {
+                                            try {
+                                              await pagesContentService.updatePage(initialData.id, { cover_image: url });
+                                            } catch (e) { console.error("Auto-save failed", e) }
+                                          }
+
+                                          toast.success("Cover image uploaded and saved!", { id: "upload-cover" });
                                         } else {
                                           throw new Error(error);
                                         }

@@ -2,7 +2,7 @@ import { createNavigation } from "next-intl/navigation";
 import { defineRouting } from "next-intl/routing";
 
 export const routing = defineRouting({
-  locales: ["en", "ar", "ru", "es", "zh", "fr", "de", "ro"],
+  locales: ["en", "ar", "ru", "es", "zh", "fr", "de", "ro", "tr"],
   defaultLocale: "en",
   localeDetection: true,
   // Disable automatic hreflang headers - we manage them in page metadata
@@ -21,6 +21,7 @@ export const routing = defineRouting({
       fr: "/paiement",
       de: "/kasse",
       ro: "/finalizare",
+      tr: "/odeme",
     },
 
     "/blog": {
@@ -32,6 +33,7 @@ export const routing = defineRouting({
       fr: "/blog",
       de: "/blog",
       ro: "/blog",
+      tr: "/blog",
     },
     "/blog/[slug]": {
       en: "/blog/[slug]",
@@ -42,6 +44,7 @@ export const routing = defineRouting({
       fr: "/blog/[slug]",
       de: "/blog/[slug]",
       ro: "/blog/[slug]",
+      tr: "/blog/[slug]",
     },
 
     "/prints": {
@@ -53,6 +56,7 @@ export const routing = defineRouting({
       fr: "/impressions",
       de: "/drucke",
       ro: "/printuri",
+      tr: "/baskilar",
     },
     "/prints/[slug]": {
       en: "/prints/[slug]",
@@ -63,6 +67,7 @@ export const routing = defineRouting({
       fr: "/impressions/[slug]",
       de: "/drucke/[slug]",
       ro: "/printuri/[slug]",
+      tr: "/baskilar/[slug]",
     },
     "/prints/checkout": {
       en: "/prints/checkout",
@@ -73,6 +78,7 @@ export const routing = defineRouting({
       fr: "/impressions/paiement",
       de: "/drucke/kasse",
       ro: "/printuri/finalizare",
+      tr: "/baskilar/odeme",
     },
     "/prints/checkout/success": {
       en: "/prints/checkout/success",
@@ -83,6 +89,7 @@ export const routing = defineRouting({
       fr: "/impressions/paiement/succes",
       de: "/drucke/kasse/erfolg",
       ro: "/printuri/finalizare/succes",
+      tr: "/baskilar/odeme/basarili",
     },
   },
 });

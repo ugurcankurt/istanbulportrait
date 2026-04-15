@@ -1,6 +1,6 @@
 "use client";
 
-import { Clock, Image as ImageIcon, MapPin, Star } from "lucide-react";
+import { Clapperboard, Image as ImageIcon, MapPin, Star } from "lucide-react";
 import Image from "next/image";
 import { useTranslations, useLocale } from "next-intl";
 import { useEffect, useMemo } from "react";
@@ -189,8 +189,8 @@ export function PackagesSection({ header, customCtaHeader, aggregateRating, dbPa
 
             <div className="flex flex-wrap justify-start gap-x-2 gap-y-1">
               <div className="flex items-center justify-center space-x-2 rtl:space-x-reverse text-lg sm:text-sm">
-                <Clock className="w-4 h-4 sm:w-4 sm:h-4 text-primary" />
-                <span className="font-medium whitespace-nowrap">{pkg.duration}</span>
+                <Clapperboard className="w-4 h-4 sm:w-4 sm:h-4 text-primary" />
+                <span className="font-medium whitespace-nowrap">{pkg.duration} Reels</span>
               </div>
               <div className="flex items-center justify-center space-x-2 rtl:space-x-reverse text-lg sm:text-sm">
                 <ImageIcon className="w-4 h-4 sm:w-4 sm:h-4 text-primary" />

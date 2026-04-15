@@ -1,5 +1,6 @@
 import { getTranslations } from "next-intl/server";
 import { Star } from "lucide-react";
+export const revalidate = 60;
 import dynamic from "next/dynamic";
 import { HeroSection } from "@/components/hero-section";
 import { HomeGalleryWrapper } from "@/components/home-gallery-wrapper";
@@ -16,7 +17,7 @@ import { packagesService } from "@/lib/packages-service";
 import { discountService } from "@/lib/discount-service";
 import { reviewsService } from "@/lib/reviews-service";
 import { Metadata } from "next";
-import { generateSeoDescription, generateSeoTitle, constructOpenGraph, buildFAQSchema } from "@/lib/seo-utils";
+import { generateSeoDescription, generateSeoTitle, constructOpenGraph, buildFAQSchema, getBaseUrl } from "@/lib/seo-utils";
 import { SchemaInjector } from "@/components/schema-injector";
 import { settingsService } from "@/lib/settings-service";
 
@@ -36,9 +37,21 @@ export async function generateMetadata({
   const desc = generateSeoDescription(rawDesc) || "";
   const ogImage = heroPage?.cover_image || settings.default_og_image_url || "";
 
+  const { routing } = await import("@/i18n/routing");
+  const { getBaseUrl } = await import("@/lib/seo-utils");
+  const baseUrl = getBaseUrl();
+  const languages: Record<string, string> = {};
+  routing.locales.forEach((loc) => {
+    languages[loc] = `${baseUrl}/${loc}`;
+  });
+
   return {
     title: { absolute: title },
     description: desc,
+    alternates: {
+      canonical: `${baseUrl}/${locale}`,
+      languages
+    },
     openGraph: constructOpenGraph(title, desc, ogImage, settings.site_name || title, locale),
   };
 }
@@ -77,13 +90,15 @@ export default async function HomePage({
   const getDynamicTitle = (slug: string, fallback: string) => {
     const page = pageMap.get(slug);
     if (!page || !page.is_active) return fallback;
-    return page.title?.[locale] || page.title?.en || fallback;
+    const val = page.title?.[locale] || page.title?.en;
+    return val ? val : fallback;
   };
 
   const getDynamicSubtitle = (slug: string, fallback: string) => {
     const page = pageMap.get(slug);
     if (!page || !page.is_active) return fallback;
-    return page.subtitle?.[locale] || page.subtitle?.en || fallback;
+    const val = page.subtitle?.[locale] || page.subtitle?.en;
+    return val ? val : fallback;
   };
 
   const getDynamicImage = (slug: string, fallback?: string) => {
@@ -131,10 +146,10 @@ export default async function HomePage({
         "@context": "https://schema.org",
         "@type": "WebSite",
         name: settings.site_name || "Website",
-        url: `https://360istanbul.com.tr/${locale}`,
+        url: `${getBaseUrl()}/${locale}`,
         potentialAction: {
           "@type": "SearchAction",
-          target: `https://360istanbul.com.tr/${locale}/packages?search={search_term_string}`,
+          target: `${getBaseUrl()}/${locale}/packages?search={search_term_string}`,
           "query-input": "required name=search_term_string"
         }
       }} />
@@ -145,27 +160,10 @@ export default async function HomePage({
 
       <div className="overflow-hidden">
         <HeroSection
-          title={getDynamicTitle("home-hero", "")}
-          subtitle={getDynamicSubtitle("home-hero", "")}
+          title={getDynamicTitle("home-hero", tUi("professional_photographer_in_istanbul"))}
+          subtitle={getDynamicSubtitle("home-hero", tUi("portrait_photography"))}
           backgroundImage={getDynamicImage("home-hero", undefined)}
         />
-
-        <div className="section-contain-auto">
-          <HomeGalleryWrapper
-            locale={locale}
-            packages={activePackages}
-            header={
-              <div key="gallery-header" className="text-left mb-4 sm:mb-4 lg:mb-4">
-                <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-4xl font-bold mb-2 sm:mb-2">
-                  {getDynamicTitle("home-portfolio", tGallery("title"))}
-                </h2>
-                <p className="text-base sm:text-lg lg:text-xl text-muted-foreground max-w-5xl">
-                  {getDynamicSubtitle("home-portfolio", tGallery("subtitle"))}
-                </p>
-              </div>
-            }
-          />
-        </div>
 
         <div className="section-contain-auto">
           <PackagesSection
@@ -179,6 +177,23 @@ export default async function HomePage({
                 </h2>
                 <p className="text-base sm:text-lg lg:text-xl text-muted-foreground max-w-6xl">
                   {getDynamicSubtitle("home-packages", tPackages("subtitle"))}
+                </p>
+              </div>
+            }
+          />
+        </div>
+
+        <div className="section-contain-auto">
+          <HomeGalleryWrapper
+            locale={locale}
+            packages={activePackages}
+            header={
+              <div key="gallery-header" className="text-left mb-4 sm:mb-4 lg:mb-4">
+                <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-4xl font-bold mb-2 sm:mb-2">
+                  {getDynamicTitle("home-portfolio", tGallery("title"))}
+                </h2>
+                <p className="text-base sm:text-lg lg:text-xl text-muted-foreground max-w-5xl">
+                  {getDynamicSubtitle("home-portfolio", tGallery("subtitle"))}
                 </p>
               </div>
             }

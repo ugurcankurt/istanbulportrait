@@ -56,6 +56,7 @@ function CategoryDialog({
     fr: { name: "", description: "" },
     de: { name: "", description: "" },
     ro: { name: "", description: "" },
+    tr: { name: "", description: "" },
   });
 
   // Reset form when dialog closes or category changes
@@ -107,6 +108,10 @@ function CategoryDialog({
                 name: data.category.translations?.ro?.name || "",
                 description: data.category.translations?.ro?.description || "",
               },
+              tr: {
+                name: data.category.translations?.tr?.name || "",
+                description: data.category.translations?.tr?.description || "",
+              },
             });
           }
         } catch (error) {
@@ -131,6 +136,7 @@ function CategoryDialog({
         fr: { name: "", description: "" },
         de: { name: "", description: "" },
         ro: { name: "", description: "" },
+        tr: { name: "", description: "" },
       });
     }
   }, [open, category]);
@@ -309,7 +315,7 @@ function CategoryDialog({
               </TabsTrigger>
             </TabsList>
 
-            {(["en", "ar", "ru", "es", "zh", "fr", "de", "ro"] as const).map(
+            {(["en", "ar", "ru", "es", "zh", "fr", "de", "ro", "tr"] as const).map(
               (locale) => (
                 <TabsContent key={locale} value={locale} className="space-y-4">
                   <div>

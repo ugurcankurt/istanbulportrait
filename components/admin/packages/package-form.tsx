@@ -34,7 +34,7 @@ interface PackageFormProps {
   initialData?: PackageDB;
 }
 
-const SUPPORTED_LOCALES = ["en", "ar", "ru", "es", "zh", "de", "fr", "ro"];
+const SUPPORTED_LOCALES = ["en", "ar", "ru", "es", "zh", "de", "fr", "ro", "tr"];
 
 export function PackageForm({ initialData }: PackageFormProps) {
   const router = useRouter();

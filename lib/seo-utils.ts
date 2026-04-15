@@ -72,6 +72,19 @@ export function constructOpenGraph(
 ) {
   const optimizedUrl = optimizeSeoImage(imageUrl, 1200);
 
+  const ogLocaleMap: Record<string, string> = {
+    en: "en_US",
+    ar: "ar_SA",
+    tr: "tr_TR",
+    ru: "ru_RU",
+    es: "es_ES",
+    zh: "zh_CN",
+    fr: "fr_FR",
+    de: "de_DE",
+    ro: "ro_RO",
+  };
+  const ogLocale = ogLocaleMap[locale] || "en_US";
+
   return {
     title,
     description,
@@ -85,7 +98,7 @@ export function constructOpenGraph(
         alt: title,
       },
     ],
-    locale: locale === "tr" ? "tr_TR" : "en_US", // Simplify for main locales.
+    locale: ogLocale,
     type: "website",
   };
 }

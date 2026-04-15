@@ -34,6 +34,18 @@ export async function generateMetadata(props: {
     return { title: "Not Found" };
   }
 
+  const { routing } = await import("@/i18n/routing");
+  const { getBaseUrl } = await import("@/lib/seo-utils");
+  const { generateNativeSlug } = await import("@/lib/slug-generator");
+  const baseUrl = getBaseUrl();
+  const getAlternates = (resolver: (loc: string) => string) => {
+    const langs: Record<string, string> = {};
+    routing.locales.forEach((loc) => {
+      langs[loc] = `${baseUrl}/${loc}${resolver(loc)}`;
+    });
+    return { languages: langs };
+  };
+
   // Level 1: Root Pages (e.g. /about, /locations, /packages)
   if (slugArray.length === 1) {
     const title = generateSeoTitle(dbPage.title?.[params.locale] || dbPage.title?.en, params.locale, fallbackTitle);
@@ -43,6 +55,10 @@ export async function generateMetadata(props: {
     return {
       title,
       description: desc,
+      alternates: getAlternates((loc) => {
+        const tLoc = dbPage.title?.[loc];
+        return `/${tLoc ? generateNativeSlug(tLoc) : dbPage.slug}`;
+      }),
       openGraph: constructOpenGraph(title, desc, ogImage, fallbackTitle, params.locale),
     };
   }
@@ -60,6 +76,11 @@ export async function generateMetadata(props: {
       return {
         title,
         description: desc,
+        alternates: getAlternates((l) => {
+          const tTitle = dbPage.title?.[l];
+          const tSeg = tTitle ? generateNativeSlug(tTitle) : "packages";
+          return `/${tSeg}/${pkg.slug}`;
+        }),
         openGraph: constructOpenGraph(title, desc, ogImage, fallbackTitle, params.locale),
       };
     }
@@ -73,6 +94,11 @@ export async function generateMetadata(props: {
       return {
         title,
         description: desc,
+        alternates: getAlternates((l) => {
+          const tTitle = dbPage.title?.[l];
+          const tSeg = tTitle ? generateNativeSlug(tTitle) : "locations";
+          return `/${tSeg}/${loc.slug}`;
+        }),
         openGraph: constructOpenGraph(title, desc, ogImage, fallbackTitle, params.locale),
       };
     }

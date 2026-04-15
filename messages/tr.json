@@ -1,0 +1,506 @@
+{
+  "payment_banner": {
+    "message": "Güvenli Ödeme"
+  },
+  "nav": {
+    "home": "Ana Sayfa",
+    "selectLanguage": "Dil Seçin",
+    "selectLanguageDescription": "İstanbul Portre sayfasını keşfetmek için tercih ettiğiniz dili seçin."
+  },
+  "whatsapp": {
+    "button": "WhatsApp",
+    "tooltip": "Bizimle WhatsApp üzerinden sohbet edin",
+    "message": "Merhaba! İstanbul'daki fotoğraf çekimleri hakkında bilgi almak istiyorum.",
+    "notification_title": "WhatsApp ile İletişim",
+    "notification_message": "Bizimle WhatsApp üzerinden iletişime geçebilirsiniz!",
+    "close_notification": "Bildirimi kapat",
+    "direction": "ltr"
+  },
+  "hero": {
+    "resume_title": "Fotoğraf çekiminizi planlamaya devam edin"
+  },
+  "contact": {
+    "title": "İletişime Geçin",
+    "subtitle": "İstanbul fotoğraf çekiminizi rezerve etmeye hazır mısınız?",
+    "sectionTitle": "İletişime Geçin",
+    "sectionDescription": "İstanbul fotoğraf çekiminizi ayırtmaya hazır mısınız? Fotoğrafçılık ihtiyaçlarınızı konuşalım ve birlikte güzel bir şeyler yaratalım",
+    "cta_description": "Anılarınızı İstanbul'da ölümsüzleştirmeye hazır mısınız? Paketlerimizi inceleyin ve çekiminizi doğrudan çevrimiçi olarak rezerve edin.",
+    "experience_description": "İstanbul'un güzelliğini yakalamada 8+ yıllık deneyim",
+    "premium_locations": "Premium Konumlar",
+    "locations_description": "Teraslar, tarihi simge yapılar ve gizli mücevherler",
+    "professional_quality": "Profesyonel Kalite",
+    "quality_description": "Dijital olarak teslim edilen yüksek çözünürlüklü düzenlenmiş fotoğraflar",
+    "form": {
+      "name": "Ad Soyad",
+      "email": "E-posta Adresi",
+      "phone": "Telefon Numarası",
+      "date": "Tercih Edilen Tarih",
+      "package": "Paket Seçin",
+      "message": "Mesajınız",
+      "submit": "Mesaj Gönder",
+      "success": "Teşekkürler! Size en kısa sürede geri döneceğiz.",
+      "error": "Bir şeyler ters gitti. Lütfen tekrar deneyin."
+    },
+    "info": {
+      "phone": "Telefon",
+      "email": "E-posta",
+      "address": "Adres",
+      "whatsapp": "WhatsApp",
+      "instagram": "Instagram"
+    }
+  },
+  "checkout": {
+    "title": "Çekiminizi Ayırtın",
+    "description": "Mükemmel İstanbul fotoğraf çekimi deneyimi için rezervasyonunuzu tamamlayın",
+    "payment_description": "Rezervasyon detaylarınızı gözden geçirin ve ödemeyi tamamlayın",
+    "booking_summary": "Rezervasyon Özeti",
+    "modal_description": "Rezervasyon yapmak için bilgilerinizi doldurun",
+    "booking": {
+      "review_details": "Rezervasyon bilgilerinizi gözden geçirin"
+    },
+    "package": {
+      "selected_details": "Seçtiğiniz fotoğrafçılık paketinin detayları"
+    },
+    "steps": {
+      "package": "Paket",
+      "details": "Detaylar",
+      "payment": "Ödeme",
+      "confirmation": "Onay"
+    },
+    "package_summary": "Paket Özeti",
+    "customer_details": "Müşteri Bilgileri",
+    "payment_details": "Ödeme Bilgileri",
+    "booking_details": "Rezervasyon Bilgileri",
+    "form": {
+      "people_count": "Kişi Sayısı",
+      "name": "Ad Soyad",
+      "email": "E-posta Adresi",
+      "phone": "Telefon Numarası",
+      "date": "Tarih Seçin",
+      "date_time": "Tarih ve Saat Seçin",
+      "select_booking_details": "Çekiminiz için tarih ve saat seçin",
+      "time": "Saat Seçin",
+      "select_time": "Saat Seçin",
+      "morning": "Sabah",
+      "noon": "Öğlen",
+      "afternoon": "Öğleden Sonra",
+      "notes": "Özel İstekler (İsteğe Bağlı)",
+      "card_holder": "Kart Sahibinin Adı",
+      "card_number": "Kart Numarası",
+      "expire_month": "AA",
+      "expire_year": "YY",
+      "cvc": "CVC",
+      "terms": "Şartlar ve koşulları kabul ediyorum",
+      "month_short": "AA",
+      "year_short": "YY"
+    },
+    "buttons": {
+      "continue": "Devam Et",
+      "check_availability": "Müsaitlik Kontrol Et",
+      "back": "Geri",
+      "cancel": "İptal",
+      "continue_to_payment": "Sepete Ekle",
+      "edit_details": "Detayları Düzenle",
+      "complete_booking": "Rezervasyonu Tamamla",
+      "pay_amount": "{amount} ÖDE",
+      "processing": "İşleniyor...",
+      "book_another": "Başka Bir Çekim Rezerve Et",
+      "pay_with_turinvoice": "Turinvoice ile Öde",
+      "checking_availability": "Müsaitlik Kontrol Ediliyor...",
+      "availability_confirmed": "Yer Müsait! Açılıyor..."
+    },
+    "payment_breakdown": {
+      "pay_now": "Şimdi {amount} ödeyin",
+      "pay_on_day": "kalan {amount} çekim günü ödenecektir"
+    },
+    "success": {
+      "title": "Rezervasyon Onaylandı!",
+      "message": "İstanbul Photographer ile rezervasyon yaptığınız için teşekkür ederiz. Rezervasyon onayınız e-posta adresinize gönderildi.",
+      "booking_id": "Rezervasyon ID",
+      "payment_successful": "Ödeme başarılı! Onay e-postası gönderildi."
+    },
+    "error": {
+      "generic": "Bir şeyler ters gitti. Lütfen tekrar deneyin.",
+      "payment_failed": "Ödeme başarısız oldu. Lütfen kart bilgilerinizi kontrol edip tekrar deneyin.",
+      "booking_failed": "Rezervasyon oluşturulamadı. Lütfen tekrar deneyin.",
+      "payment_init_failed": "Ödeme başlatılamadı. Lütfen tekrar deneyin."
+    },
+    "included_features": "Dahil Olan Özellikler",
+    "more_features": "daha fazla özellik",
+    "loading_booking": "Rezervasyon detayları yükleniyor...",
+    "labels": {
+      "customer": "Müşteri:",
+      "date": "Tarih:",
+      "time": "Saat:",
+      "package": "Paket:",
+      "people_count": "Kişi Sayısı:",
+      "total_amount": "Toplam Tutar:",
+      "deposit_amount": "Depozito Tutarı:",
+      "remaining_cash": "Kalan (Nakit):",
+      "payment_terms_notice": "Ödeme Şartları: %30 online depozito, %70 fotoğraf çekimi günü nakit."
+    },
+    "security": {
+      "ssl_encrypted": "SSL Şifreli",
+      "secure_payment": "Güvenli Ödeme",
+      "pci_compliant": "PCI Uyumlu",
+      "payment_secure_message": "Güvenli Ödeme • SSL Şifreli • PCI Uyumlu"
+    },
+    "payment": {
+      "complete_description": "Ödeme bilgilerinizi girerek rezervasyonunuzu tamamlayın",
+      "secure_no_fees": "Güvenli ödeme • Gizli ücret yok"
+    },
+    "people_count_title": "Kişi Sayısı",
+    "price_per_person": "Kişi başı fiyat",
+    "seasonal_discount_applied": "İndirim (%{percentage} İndirimli)",
+    "promo_code": "Promosyon Kodu",
+    "apply_promo": "Uygula",
+    "promo_applied": "Promosyon kodu uygulandı!",
+    "invalid_promo": "Geçersiz veya süresi dolmuş promosyon kodu",
+    "promo_discount": "Promosyon İndirimi",
+    "person": "kişi",
+    "people": "kişi",
+    "payment_method": "Ödeme Yöntemi",
+    "payment_methods": {
+      "credit_card": "Kredi/Banka Kartı",
+      "russian_banks": "Оплата через СБП"
+    },
+    "turinvoice_description": "Güvenli Turinvoice ödeme sayfasına yönlendirileceksiniz.",
+    "turinvoice": {
+      "title": "Turinvoice Ödemesi",
+      "status_new": "Başlatılıyor...",
+      "time_remaining": "Kalan Süre",
+      "amount_label": "Tutar",
+      "exchange_rate": "Döviz Kuru",
+      "instruction_1": "Lütfen ödemenizi açılan sayfada tamamlayın.",
+      "open_payment_page": "Ödeme Sayfasını Aç",
+      "instruction_2": "Ödeme onaylanana kadar bu pencereyi kapatmayın.",
+      "security_notice": "Turinvoice aracılığıyla Güvenli Ödeme",
+      "status_paying": "Ödeme bekleniyor...",
+      "status_paid": "Ödeme Başarılı!",
+      "status_timeout": "Ödeme Süresi Doldu",
+      "success_message": "Ödemeniz onaylandı.",
+      "redirect_message": "Yönlendiriliyorsunuz...",
+      "timeout_message": "Ödeme oturumunun süresi doldu.",
+      "timeout_desc": "Ödeme sürecini yeniden başlatmak için lütfen tekrar deneyin.",
+      "try_again": "Tekrar Dene"
+    },
+    "expires_in": "Yerinizi tutuyoruz, kalan: [TIME] dakika.",
+    "expired": "Rezervasyon süresi doldu. Lütfen yeni bir saat seçin."
+  },
+  "footer": {
+    "description": "Profesyonel portre fotoğrafçılığında İstanbul'un önde gelen fotoğrafçısı. Özel anlarınızı şehrin en simgesel arka planlarıyla ölümsüzleştiriyoruz.",
+    "quickLinks": "Hızlı Bağlantılar",
+    "services": "Hizmetler",
+    "followUs": "Bizi Takip Edin",
+    "copyright": "© 2026 360istanbul.com.tr | Tüm hakları saklıdır.",
+    "service_items": {
+      "portrait": "Portre Fotoğrafçılığı",
+      "couples": "Çift Çekimleri",
+      "rooftop": "Teras Fotoğraf Çekimleri",
+      "historic": "Tarihi Mekan Çekimleri",
+      "lifestyle": "Lifestyle Fotoğrafçılık",
+      "historic_shoots": "Tarihi Mekan Çekimleri"
+    },
+    "privacy_policy": "Gizlilik Politikası",
+    "terms_of_service": "Hizmet Şartları"
+  },
+  "validation": {
+    "people_count_required": "Teras paketi için kişi sayısı zorunludur",
+    "package_required": "Paket seçimi zorunludur",
+    "email_invalid": "Lütfen geçerli bir e-posta adresi girin",
+    "phone_invalid": "Lütfen geçerli bir telefon numarası girin",
+    "date_required": "Lütfen bir tarih seçin",
+    "time_required": "Lütfen bir saat seçin",
+    "amount_positive": "Toplam tutar pozitif olmalıdır",
+    "cardholder_required": "Kart sahibinin adı zorunludur",
+    "card_number_required": "Kart numarası zorunludur",
+    "month_required": "Ay zorunludur",
+    "year_required": "Yıl zorunludur",
+    "cvc_required": "CVC 3 haneli olmalıdır",
+    "name_min": "Ad en az 2 karakter olmalıdır",
+    "phone_min": "Telefon numarası en az 10 haneli olmalıdır",
+    "message_min": "Mesaj en az 10 karakter olmalıdır",
+    "card_number_invalid": "Kart numarası 13-19 haneli olmalıdır",
+    "preferred_date_required": "Lütfen tercih edilen bir tarih seçin",
+    "package_selection_required": "Lütfen bir paket seçin",
+    "phone_required": "Telefon numarası zorunludur"
+  },
+  "placeholders": {
+    "full_name": "Ad Soyad",
+    "email": "john@example.com",
+    "phone": "+90 536 709 37 24",
+    "select_package": "Bir paket seçin",
+    "tell_us_vision": "Fotoğraf çekimi vizyonunuzdan bahsedin...",
+    "test_card": "5528790000000008 (Başarılı demo ödemesi için bu test kartını kullanın)",
+    "enter_full_name": "Adınızı ve soyadınızı girin",
+    "enter_email": "E-postanızı girin",
+    "phone_number": "+90 555 123 45 67",
+    "pick_date": "Bir tarih seçin",
+    "select_time": "Saat seçin",
+    "special_requests": "Fotoğraf çekiminizle ilgili özel istekleriniz veya notlarınız...",
+    "card_holder": "AD SOYAD",
+    "card_number": "XXXX XXXX XXXX XXXX",
+    "expire_mm": "AA",
+    "expire_yy": "YY",
+    "cvc_placeholder": "XXX"
+  },
+  "ui": {
+    "custom_package": "Özel Paket",
+    "language": "Dil",
+    "send_message": "Bize mesaj gönderin",
+    "contact_information": "İletişim Bilgileri",
+    "cookie_settings": "Çerez Ayarları",
+    "share": "Paylaş",
+    "save": "Kaydet",
+    "saved": "Kaydedildi",
+    "link_copied": "Bağlantı panoya kopyalandı",
+    "saved_to_favorites": "Favorilere eklendi",
+    "removed_from_saved": "Favorilerden çıkarıldı",
+    "save_percentage": "%{percentage} TASARRUF EDİN",
+    "duration": "Süre",
+    "photos": "Fotoğraflar",
+    "locations": "Konumlar",
+    "location": "Konum",
+    "email": "E-posta",
+    "phone": "Telefon",
+    "availability": "Müsaitlik",
+    "availability_status": "Müsaitlik durumu",
+    "what_to_expect": "Sizi Neler Bekliyor",
+    "response_time": "Yanıt Süresi",
+    "booking_process": "Rezervasyon Süreci",
+    "payment": "Ödeme",
+    "response_time_desc": "Taleplere genellikle 24 saat içinde yanıt veriyoruz.",
+    "booking_process_desc": "Talebinizin ardından vizyonunuzu tartışmak ve detayları netleştirmek için bir görüşme planlayacağız.",
+    "payment_desc": "Gününü ayırmak için rezervasyon sırasında tam veya ön ödeme (kapora) online olarak gereklidir.",
+    "professional_photographer": "Profesyonel Fotoğrafçı",
+    "professional_photographer_in_istanbul": "İstanbul'da profesyonel fotoğrafçı",
+    "portrait_photography": "Portre Fotoğrafçılığı",
+    "couple_sessions": "Çift Çekimleri",
+    "lifestyle": "Lifestyle",
+    "rooftop_shoots": "Teras Çekimleri",
+    "view_my_work": "Çalışmalarımı İncele",
+    "book_your_session": "Çekiminizi Ayırtın",
+    "check_locations": "Konumları İncele",
+    "view_packages": "Paketleri İncele",
+    "packages_button": "Paketler",
+    "book_package": "Müsaitliği Kontrol Et",
+    "show_all_photos": "Tüm fotoğrafları göster",
+    "back_to_home": "Ana Sayfaya Dön",
+    "selected": "Seçili",
+    "select_package": "Paket Seçin",
+    "total": "Toplam",
+    "contact": "İletişim",
+    "most_popular": "En Popüler",
+    "tryAgain": "Tekrar Dene",
+    "loading": "Yükleniyor...",
+    "error": "Hata",
+    "retry": "Yeniden Dene",
+    "breadcrumbs": {
+      "photography_locations": "Çekim Konumları",
+      "checkout": "Ödeme",
+      "locations": "Konumlar"
+    },
+    "instagram_feed": {
+      "title": "Instagram'da Takip Et",
+      "visit_profile": "Profili Ziyaret Et",
+      "api_error": "API Bağlantısı Eksik",
+      "error_msg": "Instagram akışı yüklenemedi."
+    },
+    "shipping": {
+      "title": "Kargo ve İade",
+      "worldwide": "Dünya çapında gönderim mevcut",
+      "delivery": "Tahmini teslim süresi: 3-10 iş günü",
+      "returns": "Gönül rahatlığı için 14 günlük iade politikası",
+      "quality": "Yüksek çözünürlüklü baskı kalitesi garantisi"
+    }
+  },
+  "about_cta": {
+    "title": "Güzel Bir Şeyler Yaratmaya Hazır Mısınız?",
+    "description": "Hikayenizi İstanbul'un muhteşem arka planında ölümsüzleştirelim."
+  },
+  "about_highlights": {
+    "title": "Neden Bizi Seçmelisiniz",
+    "professional_quality": "Profesyonel Kalite",
+    "professional_quality_desc": "Üst düzey ekipman ve yılların tecrübesi.",
+    "local_knowledge": "Yerel Bilgi",
+    "local_knowledge_desc": "En iyi gizli noktaları biliyoruz.",
+    "personalized_experience": "Kişiselleştirilmiş Deneyim",
+    "personalized_experience_desc": "Kendi benzersiz tarzınıza özel."
+  },
+  "about": {
+    "experience": "Yıllık Tecrübe",
+    "sessions": "Tamamlanan Çekim",
+    "clients": "Mutlu Müşteri",
+    "satisfaction": "Müşteri Memnuniyeti",
+    "description": "Portföyüme hoş geldiniz! Doğal ışıkta güzel anları yakalama konusunda uzmanım."
+  },
+  "api_errors": {
+    "rate_limit": "Çok fazla istek gönderildi. Lütfen daha sonra tekrar deneyin.",
+    "payment_rate_limit": "Çok fazla ödeme denemesi. Lütfen daha sonra tekrar deneyin.",
+    "invalid_data": "Geçersiz istek verisi",
+    "missing_payment_data": "Gerekli ödeme verileri eksik",
+    "invalid_amount": "Geçersiz ödeme tutarı",
+    "booking_not_found": "Rezervasyon bulunamadı. Lütfen önce bir rezervasyon oluşturun.",
+    "invalid_package_price": "Geçersiz paket fiyatı",
+    "duplicate_booking": "Kısa süre önce benzer bir rezervasyon oluşturuldu. Lütfen e-postanızı kontrol edin veya birkaç dakika bekleyin.",
+    "booking_config_error": "Rezervasyon işlenemiyor. Lütfen Supabase yapılandırmanızı kontrol edin.",
+    "internal_error": "Dahili sunucu hatası",
+    "payment_processing_failed": "Ödeme işlemi başarısız oldu. Lütfen daha sonra tekrar deneyin.",
+    "unknown_error": "Bilinmeyen hata"
+  },
+  "breadcrumb": {
+    "home": "Ana Sayfa",
+    "privacy": "Gizlilik Politikası",
+    "about": "Hakkımızda",
+    "packages": "Paketler",
+    "locations": "Konumlar",
+    "blog": "Blog",
+    "contact": "İletişim",
+    "checkout": "Ödeme"
+  },
+  "success": {
+    "booking_details": "Rezervasyon Detayları",
+    "booking_id": "Rezervasyon ID",
+    "customer_details": "Müşteri Bilgileri",
+    "package_label": "Paket",
+    "amount_paid": "Ödenen Tutar",
+    "booking_date": "Tarih",
+    "booking_time": "Saat",
+    "customer_name": "Ad",
+    "customer_email": "E-posta",
+    "customer_phone": "Telefon",
+    "notes": "Özel İstekler",
+    "whats_next": "Şimdi Ne Olacak?",
+    "confirmation_email": "Onay E-postası Gönderildi",
+    "email_description": "Ayrıntılı rezervasyon bilgileri için gelen kutunuzu kontrol edin",
+    "pre_session_contact": "Çekim Öncesi İletişim",
+    "contact_description": "Detayları onaylamak için çekiminizden 24 saat önce sizinle iletişime geçeceğiz",
+    "photo_delivery": "Fotoğraf Teslimatı",
+    "delivery_description": "Düzenlenen fotoğraflarınız 5-7 iş günü içinde dijital ortamda teslim edilecektir",
+    "have_questions": "Sorularınız Mı Var?",
+    "bullet_professional": "• Profesyonel fotoğrafçı dahildir",
+    "bullet_photos": "• Yüksek çözünürlüklü düzenlenmiş fotoğraflar",
+    "bullet_gallery": "• Online galeri teslimatı",
+    "bullet_retouching": "• Profesyonel rötuşlama",
+    "need_help": "Yardıma Mı İhtiyacınız Var?",
+    "help_description": "Rezervasyonunuzla ilgili sorularınız mı var? İstediğiniz zaman bizimle iletişime geçin.",
+    "people_count": "Kişi Sayısı"
+  },
+  "package_selection": {
+    "choose_package": "Varyatınızı / Paketinizi Seçin",
+    "select_description": "İhtiyaçlarınıza en uygun fotoğraf paketini (ya da süreyi) seçin",
+    "you_selected": "Seçtiğiniz:"
+  },
+  "success_messages": {
+    "payment_successful": "Ödeme başarılı! Onay e-postası gönderildi.",
+    "booking_created": "Rezervasyon başarıyla oluşturuldu!"
+  },
+  "packages": {
+    "title": "Mevcut Paketler",
+    "subtitle": "Sizin için en iyi paketi seçin",
+    "per_person": "kişi başı"
+  },
+  "gallery": {
+    "title": "Portföyümüz",
+    "subtitle": "En iyi anlarınızı ölümsüzleştiriyoruz"
+  },
+  "faq": {
+    "title": "Sıkça Sorulan Sorular",
+    "subtitle": "Sorularınızın cevaplarını bulun"
+  },
+  "locations": {
+    "locationInfo": "Mekan Bilgisi",
+    "photographyTips": "Çekim İpuçları",
+    "aboutLocation": "Mekan Hakkında",
+    "gallery": "Galeri",
+    "nearbyLocations": "Yakındaki Mekanlar",
+    "bestTimeToVisit": "En Çok Tercih Edilen Saatler",
+    "viewOnMap": "Haritada Gör",
+    "bookPhotoshoot": "Burada Çekim Ayırtın",
+    "bookPhotoshootDescription": "Profesyonel bir asistan desteğiyle, bu efsanevi mekanda hayalinizdeki karelerin baş rolünde olun.",
+    "viewPackages": "Paketleri İncele",
+    "explore": "Keşfet"
+  },
+  "cookies": {
+    "banner": {
+      "title": "Çerez Tercihleri",
+    "description": "Tarama deneyiminizi geliştirmek ve trafiğimizi analiz etmek için çerezleri kullanıyoruz. \"Tümünü Kabul Et\" düğmesine tıklayarak çerez kullanımımıza izin vermiş olursunuz.",
+      "privacy_link": "Daha fazla bilgi"
+    },
+    "buttons": {
+      "accept_all": "Tümünü Kabul Et",
+      "essential_only": "Sadece Gerekli Olanlar",
+      "decline_all": "Tümünü Reddet"
+    }
+  },
+  "reviews": {
+    "title": "Müşterilerimiz Bizim Hakkımızda Ne Diyor",
+    "subtitle": "İstanbul fotoğraf çekimi deneyimi için bizi tercih eden memnun konukların gerçek yorumları",
+    "total_reviews": "yorum",
+    "view_all": "Tüm yorumları Google'da görün",
+    "loading": "Yorumlar yükleniyor...",
+    "error": "Şu anda yorumlar yüklenemiyor",
+    "overall_rating": "Genel değerlendirme",
+    "based_on": "{count} yoruma göre",
+    "summary": "Değerlendirme özeti",
+    "verified_visitors": "Tüm yorumlar doğrulanmış ziyaretçilere aittir",
+    "filter_stars": "Sadece {count} yıldızlı yorumlar gösteriliyor",
+    "no_reviews": "Bu derecelendirme için yorum bulunamadı",
+    "clear_filter": "Temizle",
+    "show_all": "Tüm yorumları göster",
+    "show_more": "Daha fazla göster",
+    "rating_only": "Sadece derecelendirme (metin yok)",
+    "rating_no_text": "Yazılı yorum olmadan sağlanan derecelendirme",
+    "filter_hint": "Yorumları yıldız sayısına göre filtrelemek için bir çubuğa tıklayın.",
+    "excellent": "Mükemmel",
+    "very_good": "Çok iyi",
+    "average": "Ortalama",
+    "poor": "Kötü",
+    "terrible": "Berbat"
+  },
+  "pricing": {
+    "base_price": "Ara Toplam",
+    "tax_rate": "KDV (%{rate})",
+    "tax_amount": "KDV Tutarı",
+    "total_price": "Toplam Fiyat",
+    "tax_inclusive": "Vergiler Dahil",
+    "price_breakdown": "Fiyat Dağılımı",
+    "subtotal": "Ara Toplam",
+    "vat": "KDV",
+    "final_total": "Genel Toplam"
+  },
+  "notfound": {
+    "title": "Sayfa Bulunamadı",
+    "subtitle": "Oops! Görünüşe göre bu fotoğrafçı dosyası kayıp",
+    "description": "Aradığınız sayfa mevcut değil. Belki de fotoğraf çekimi paketlerimizi incelemek veya İstanbul'un güzelliklerini keşfetmek için ana sayfaya dönmek istersiniz.",
+    "homeButton": "Ana Sayfaya Dön",
+    "packagesButton": "Paketleri İncele",
+    "goBack": "Geri Git"
+  },
+  "blog": {
+    "title": "Fotoğrafçılık Blogu",
+    "subtitle": "İstanbul'dan ipuçları, rehberler ve hikayeler",
+    "read_more": "Devamını Oku",
+    "reading_time": "{minutes} dk. okuma",
+    "published_on": "Yayınlanma: {date}",
+    "by_author": "Yazar: {author}",
+    "categories": "Kategoriler",
+    "tags": "Etiketler",
+    "related_posts": "İlgili Yazılar",
+    "recent_posts": "Son Yazılar",
+    "no_posts": "Blog yazısı bulunamadı",
+    "search": "Blogda ara...",
+    "all_categories": "Tüm Kategoriler",
+    "featured": "Öne Çıkanlar",
+    "author": {
+      "about_title": "Yazar Hakkında",
+      "name": "Istanbul Photographer",
+      "bio": "İstanbul'da portre, çift ve yaşam tarzı fotoğrafçılığı konusunda uzmanlaşmış profesyonel fotoğrafçı. 8 yılı aşkın deneyimiyle, şehrin en ikonik manzaralarında zamanın ötesinde anıları yakalıyor.",
+      "follow": "Instagram'da Takip Et"
+    },
+    "summary": {
+      "title": "Önemli Çıkarımlar",
+      "ai_overview": "Yapay Zeka Özeti"
+    }
+  }
+}

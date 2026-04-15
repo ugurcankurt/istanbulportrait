@@ -11,7 +11,7 @@ export async function HeroSection({
   subtitle?: string;
   backgroundImage?: string;
 } = {}) {
-  const t = await getTranslations("hero");
+
   const tui = await getTranslations("ui");
 
   return (
@@ -43,12 +43,12 @@ export async function HeroSection({
           >
             {/* Main Title - Server Rendered for LCP */}
             <h1 className="text-3xl sm:text-4xl md:text-4xl lg:text-6xl font-bold mb-4 leading-[1.1] tracking-tight drop-shadow-lg text-white">
-              {title || t("title")}
+              {title}
             </h1>
 
             {/* Subtitle - Server Rendered */}
             <p className="text-lg sm:text-xl md:text-2xl mb-4 text-white/90 leading-[1.3] tracking-tight font-light drop-shadow-md">
-              {subtitle || t("subtitle")}
+              {subtitle}
             </p>
           </HeroClientWrapper>
         </div>

@@ -51,10 +51,10 @@ export function InstagramFeed({ header, instagramUrl }: InstagramFeedProps) {
           if (data.username) {
             setUsername(data.username);
           }
-          // Filter out videos and reels, only keep images and carousels
+          // Allow images, carousels, and videos (Reels)
           const filteredPosts = data.posts.filter(
             (post: BeholdPost) =>
-              post.mediaType === "IMAGE" || post.mediaType === "CAROUSEL_ALBUM",
+              ["IMAGE", "CAROUSEL_ALBUM", "VIDEO"].includes(post.mediaType)
           );
           setPosts(filteredPosts.slice(0, 6)); // Ensure we only ever show exactly 6
         }
@@ -101,23 +101,31 @@ export function InstagramFeed({ header, instagramUrl }: InstagramFeedProps) {
                 rel="noopener noreferrer"
                 className="group relative block aspect-square overflow-hidden rounded-xl bg-muted"
               >
-                <Image
-                  src={
-                    post.mediaType === "VIDEO" && post.thumbnailUrl
-                      ? post.thumbnailUrl
-                      : post.sizes?.large?.mediaUrl || post.mediaUrl
-                  }
-                  alt={
-                    post.caption?.slice(0, 100) ||
-                    `Instagram post from @${username}`
-                  }
-                  fill
-                  className="object-cover transition-transform duration-500 group-hover:scale-110"
-                  sizes="(max-width: 639px) 48vw, (max-width: 1023px) 31vw, 16vw"
-                  quality={50}
-                  priority={i < 2}
-                  loading={i < 2 ? "eager" : "lazy"}
-                />
+                {post.mediaType === "VIDEO" ? (
+                  <video
+                    src={post.mediaUrl}
+                    poster={post.thumbnailUrl}
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                  />
+                ) : (
+                  <Image
+                    src={post.sizes?.large?.mediaUrl || post.mediaUrl}
+                    alt={
+                      post.caption?.slice(0, 100) ||
+                      `Instagram post from @${username}`
+                    }
+                    fill
+                    className="object-cover transition-transform duration-500 group-hover:scale-110"
+                    sizes="(max-width: 639px) 48vw, (max-width: 1023px) 31vw, 16vw"
+                    quality={50}
+                    priority={i < 2}
+                    loading={i < 2 ? "eager" : "lazy"}
+                  />
+                )}
                 <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors duration-300 flex items-center justify-center">
                   <Instagram className="text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 h-8 w-8" />
                 </div>

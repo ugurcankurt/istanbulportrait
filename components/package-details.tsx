@@ -3,8 +3,7 @@
 import { toast } from "sonner";
 import {
   Check,
-  CheckCircle2,
-  Clock,
+  Clapperboard,
   CreditCard,
   Image as ImageIcon,
   MapPin,
@@ -288,7 +287,7 @@ export function PackageDetails({ packageData, aggregateRating, reviews, activeDi
               {/* Quick Stats Grid (Mobile) */}
               <div className="grid grid-cols-3 gap-3">
                 {[
-                  { icon: Clock, label: tui("duration"), val: packageDur },
+                  { icon: Clapperboard, label: "Reels", val: packageDur },
                   { icon: ImageIcon, label: tui("photos"), val: extractPhotosCount(features) },
                   { icon: MapPin, label: tui("locations"), val: packageData.locations || 1 }
                 ].map((stat, i) => (
@@ -383,16 +382,16 @@ export function PackageDetails({ packageData, aggregateRating, reviews, activeDi
           isScrolled ? "max-h-0 py-0 opacity-0 border-none" : "max-h-40 py-3 opacity-100"
         )}>
           <div className="space-y-3">            <div className="flex items-start gap-3">
-              <div className="mt-0.5">
-                <CreditCard className="h-4 w-4 text-primary" />
-              </div>
-              <div>
-                <p className="text-[11px] font-bold text-foreground leading-tight">Secure Booking</p>
-                <p className="text-[10px] font-medium text-muted-foreground leading-tight">
-                  {`Pay the full amount (€${displayPrice}) in cash on photoshoot day.`}
-                </p>
-              </div>
+            <div className="mt-0.5">
+              <CreditCard className="h-4 w-4 text-primary" />
             </div>
+            <div>
+              <p className="text-[11px] font-bold text-foreground leading-tight">Secure Booking</p>
+              <p className="text-[10px] font-medium text-muted-foreground leading-tight">
+                {`Pay the full amount (€${displayPrice}) in cash on photoshoot day.`}
+              </p>
+            </div>
+          </div>
           </div>
         </div>
 

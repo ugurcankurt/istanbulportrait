@@ -57,24 +57,17 @@ export default function PackagesAdminPage() {
     try {
       toast.loading("Deleting package...", { id: "delete-pkg" });
 
-      // First, try to delete all associated images to save Storage space
-      if (packageToDelete.cover_image) {
-        await deletePackageImage(packageToDelete.cover_image);
-      }
+      // Delete DB record and associated images via secure backend route
+      const response = await fetch(`/api/admin/packages/${packageToDelete.id}`, {
+        method: "DELETE",
+      });
       
-      if (packageToDelete.gallery_images && packageToDelete.gallery_images.length > 0) {
-        // Delete all gallery images in parallel
-        await Promise.all(packageToDelete.gallery_images.map(img => deletePackageImage(img)));
-      }
-
-      // Delete DB record
-      const success = await packagesService.deletePackage(packageToDelete.id);
-      
-      if (success) {
+      if (response.ok) {
         toast.success("Package deleted successfully", { id: "delete-pkg" });
         setPackages(packages.filter(p => p.id !== packageToDelete.id));
       } else {
-        toast.error("Failed to delete package from database", { id: "delete-pkg" });
+        const errorData = await response.json();
+        toast.error(errorData.error || "Failed to delete package from database", { id: "delete-pkg" });
       }
     } catch (error) {
       console.error(error);

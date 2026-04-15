@@ -33,7 +33,7 @@ interface LocationFormProps {
   initialData?: LocationDB;
 }
 
-const SUPPORTED_LOCALES = ["en", "ar", "ru", "es", "zh", "de", "fr", "ro"];
+const SUPPORTED_LOCALES = ["en", "ar", "ru", "es", "zh", "de", "fr", "ro", "tr"];
 
 export function LocationForm({ initialData }: LocationFormProps) {
   const router = useRouter();

@@ -53,7 +53,12 @@ class ReviewsService {
       }
 
       if (!activeWidgetId) {
-        throw new Error("No Featurable Widget ID configured.");
+        console.warn("ReviewsService: No Featurable Widget ID configured. Returning empty reviews gracefully.");
+        return {
+          reviews: [],
+          totalCount: 0,
+          averageRating: 5,
+        };
       }
 
       const response = await fetch(
