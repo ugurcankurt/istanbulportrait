@@ -120,18 +120,18 @@ export function buildLocalBusinessSchema(settings: SiteSettings) {
     telephone: settings.contact_phone || settings.whatsapp_number,
     address: {
       "@type": "PostalAddress",
-      addressLocality: "Istanbul",
-      addressCountry: "TR",
-      streetAddress: settings.address?.en || "Istanbul",
+      addressLocality: settings.city || "",
+      addressCountry: settings.country_code || "",
+      streetAddress: settings.address?.en || settings.city || "",
     },
-    geo: {
+    geo: (settings.latitude && settings.longitude) ? {
       "@type": "GeoCoordinates",
-      latitude: 41.0082,
-      longitude: 28.9784,
-    },
+      latitude: settings.latitude,
+      longitude: settings.longitude,
+    } : undefined,
     openingHoursSpecification: {
       "@type": "OpeningHoursSpecification",
-      dayOfWeek: [
+      dayOfWeek: settings.working_days || [
         "Monday",
         "Tuesday",
         "Wednesday",
@@ -140,8 +140,8 @@ export function buildLocalBusinessSchema(settings: SiteSettings) {
         "Saturday",
         "Sunday",
       ],
-      opens: "06:00",
-      closes: "22:00",
+      opens: settings.opening_time || "06:00",
+      closes: settings.closing_time || "22:00",
     },
     sameAs: [
       settings.instagram_url,

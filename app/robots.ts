@@ -1,5 +1,6 @@
 import { MetadataRoute } from "next";
 import { routing } from "@/i18n/routing";
+import { getBaseUrl } from "@/lib/seo-utils";
 
 export default function robots(): MetadataRoute.Robots {
   // Dynamically extract and block all localized checkout/payment pages
@@ -21,6 +22,6 @@ export default function robots(): MetadataRoute.Robots {
         ...printsCheckoutDisallows,
       ],
     },
-    sitemap: "https://360istanbul.com.tr/sitemap.xml",
+    sitemap: `${getBaseUrl()}/sitemap.xml`,
   };
 }

@@ -3,11 +3,12 @@ import { pagesContentService } from "@/lib/pages-content-service";
 import { packagesService } from "@/lib/packages-service";
 import { locationsService } from "@/lib/locations-service";
 import { routing } from "@/i18n/routing";
+import { getBaseUrl } from "@/lib/seo-utils";
 
 export const dynamic = "force-dynamic";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = "https://360istanbul.com.tr";
+  const baseUrl = getBaseUrl();
   const locales = routing.locales;
 
   const getAlternates = (pathResolver: (locale: string) => string) => {

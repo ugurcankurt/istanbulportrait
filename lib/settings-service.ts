@@ -30,6 +30,13 @@ export interface SiteSettings {
   ai_search_config: Record<string, any>; // JSON schema config
   theme_color: string;
   color_mode: "light" | "dark" | "system" | string;
+  city: string | null;
+  country_code: string | null;
+  latitude: number | null;
+  longitude: number | null;
+  opening_time: string | null;
+  closing_time: string | null;
+  working_days: string[] | null;
 }
 
 export const defaultSettings: SiteSettings = {
@@ -60,7 +67,14 @@ export const defaultSettings: SiteSettings = {
   founder_image_url: "",
   ai_search_config: {},
   theme_color: "violet",
-  color_mode: "system"
+  color_mode: "system",
+  city: null,
+  country_code: null,
+  latitude: null,
+  longitude: null,
+  opening_time: null,
+  closing_time: null,
+  working_days: null
 };
 
 export const settingsService = {
@@ -114,6 +128,13 @@ export const settingsService = {
         ai_search_config: (data.ai_search_config as Record<string, any>) || defaultSettings.ai_search_config,
         theme_color: data.theme_color || defaultSettings.theme_color,
         color_mode: data.color_mode || defaultSettings.color_mode,
+        city: data.city || defaultSettings.city,
+        country_code: data.country_code || defaultSettings.country_code,
+        latitude: data.latitude || defaultSettings.latitude,
+        longitude: data.longitude || defaultSettings.longitude,
+        opening_time: data.opening_time || defaultSettings.opening_time,
+        closing_time: data.closing_time || defaultSettings.closing_time,
+        working_days: data.working_days || defaultSettings.working_days,
       };
     } catch (error) {
       console.error("Failed to load settings:", error);
