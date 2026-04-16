@@ -143,7 +143,9 @@
       "ssl_encrypted": "SSL Encrypted",
       "secure_payment": "Secure Payment",
       "pci_compliant": "PCI Compliant",
-      "payment_secure_message": "Secure Payment • SSL Encrypted • PCI Compliant"
+      "payment_secure_message": "Secure Payment • SSL Encrypted • PCI Compliant",
+      "secure_booking": "Secure Booking",
+      "pay_full_in_cash": "Pay the full amount (€{amount}) in cash on photoshoot day."
     },
     "payment": {
       "complete_description": "Complete your booking by entering your payment information",

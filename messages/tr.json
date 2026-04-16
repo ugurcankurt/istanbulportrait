@@ -143,7 +143,9 @@
       "ssl_encrypted": "SSL Şifreli",
       "secure_payment": "Güvenli Ödeme",
       "pci_compliant": "PCI Uyumlu",
-      "payment_secure_message": "Güvenli Ödeme • SSL Şifreli • PCI Uyumlu"
+      "payment_secure_message": "Güvenli Ödeme • SSL Şifreli • PCI Uyumlu",
+      "secure_booking": "Güvenli Rezervasyon",
+      "pay_full_in_cash": "Tüm tutarı (€{amount}) fotoğraf çekimi günü nakit olarak ödeyin."
     },
     "payment": {
       "complete_description": "Ödeme bilgilerinizi girerek rezervasyonunuzu tamamlayın",
@@ -426,7 +428,7 @@
   "cookies": {
     "banner": {
       "title": "Çerez Tercihleri",
-    "description": "Tarama deneyiminizi geliştirmek ve trafiğimizi analiz etmek için çerezleri kullanıyoruz. \"Tümünü Kabul Et\" düğmesine tıklayarak çerez kullanımımıza izin vermiş olursunuz.",
+      "description": "Tarama deneyiminizi geliştirmek ve trafiğimizi analiz etmek için çerezleri kullanıyoruz. \"Tümünü Kabul Et\" düğmesine tıklayarak çerez kullanımımıza izin vermiş olursunuz.",
       "privacy_link": "Daha fazla bilgi"
     },
     "buttons": {

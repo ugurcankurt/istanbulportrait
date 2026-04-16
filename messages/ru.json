@@ -143,7 +143,9 @@
       "ssl_encrypted": "SSL-шифрование",
       "secure_payment": "Безопасная оплата",
       "pci_compliant": "PCI-совместимый",
-      "payment_secure_message": "Безопасный платеж • SSL-шифрование • PCI-совместимость"
+      "payment_secure_message": "Безопасный платеж • SSL-шифрование • PCI-совместимость",
+      "secure_booking": "Безопасное бронирование",
+      "pay_full_in_cash": "Оплатите полную сумму (€{amount}) наличными в день фотосессии."
     },
     "payment": {
       "complete_description": "Завершите бронирование, введя платежную информацию.",

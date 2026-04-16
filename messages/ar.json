@@ -143,7 +143,9 @@
       "ssl_encrypted": "مشفرة بتقنية SSL",
       "secure_payment": "الدفع الآمن",
       "pci_compliant": "متوافق مع PCI",
-      "payment_secure_message": "الدفع الآمن • تشفير SSL • متوافق مع PCI"
+      "payment_secure_message": "الدفع الآمن • تشفير SSL • متوافق مع PCI",
+      "secure_booking": "حجز آمن",
+      "pay_full_in_cash": "ادفع المبلغ بالكامل (€{amount}) نقدًا في يوم جلسة التصوير."
     },
     "payment": {
       "complete_description": "أكمل حجزك عن طريق إدخال معلومات الدفع الخاصة بك",

@@ -143,7 +143,9 @@
       "ssl_encrypted": "SSL crypté",
       "secure_payment": "Paiement sécurisé",
       "pci_compliant": "Conforme PCI",
-      "payment_secure_message": "Paiement sécurisé • SSL crypté • Conforme PCI"
+      "payment_secure_message": "Paiement sécurisé • SSL crypté • Conforme PCI",
+      "secure_booking": "Réservation Sécurisée",
+      "pay_full_in_cash": "Payez le montant total (€{amount}) en espèces le jour de la séance photo."
     },
     "payment": {
       "complete_description": "Complétez votre réservation en saisissant vos informations de paiement",

@@ -410,10 +410,10 @@ export function BookingCard({
               <CreditCard className="h-5 w-5 text-primary" />
             </div>
             <div>
-              <p className="text-sm font-bold text-foreground">Secure Booking</p>
+              <p className="text-sm font-bold text-foreground">{tCheckout("security.secure_booking")}</p>
               <div className="space-y-1">
                 <p className="text-xs font-medium text-muted-foreground leading-relaxed">
-                  {`Pay the full amount (€${displayPrice}) in cash on photoshoot day.`}
+                  {tCheckout("security.pay_full_in_cash", { amount: displayPrice })}
                 </p>
               </div>
             </div>

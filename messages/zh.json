@@ -143,7 +143,9 @@
       "ssl_encrypted": "SSL 加密",
       "secure_payment": "安全支付",
       "pci_compliant": "符合 PCI 标准",
-      "payment_secure_message": "安全支付 • SSL 加密 • 符合 PCI 标准"
+      "payment_secure_message": "安全支付 • SSL 加密 • 符合 PCI 标准",
+      "secure_booking": "安全预订",
+      "pay_full_in_cash": "在拍照当天以现金支付全额（€{amount}）。"
     },
     "payment": {
       "complete_description": "输入您的付款信息即可完成预订",

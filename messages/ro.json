@@ -143,7 +143,9 @@
       "ssl_encrypted": "SSL criptat",
       "secure_payment": "Plata sigura",
       "pci_compliant": "Conform PCI",
-      "payment_secure_message": "Plată Securizată • Cript SSL • Conform PCI"
+      "payment_secure_message": "Plată Securizată • Cript SSL • Conform PCI",
+      "secure_booking": "Rezervare Securizată",
+      "pay_full_in_cash": "Plătiți suma integrală (€{amount}) în numerar în ziua ședinței foto."
     },
     "payment": {
       "complete_description": "Finalizați rezervarea introducând informațiile de plată",

@@ -387,9 +387,9 @@ export function PackageDetails({ packageData, aggregateRating, reviews, activeDi
               <CreditCard className="h-4 w-4 text-primary" />
             </div>
             <div>
-              <p className="text-[11px] font-bold text-foreground leading-tight">Secure Booking</p>
+              <p className="text-[11px] font-bold text-foreground leading-tight">{tCheckout("security.secure_booking")}</p>
               <p className="text-[10px] font-medium text-muted-foreground leading-tight">
-                {`Pay the full amount (€${displayPrice}) in cash on photoshoot day.`}
+                {tCheckout("security.pay_full_in_cash", { amount: displayPrice })}
               </p>
             </div>
           </div>
