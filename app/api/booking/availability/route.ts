@@ -22,6 +22,16 @@ export async function GET(request: Request) {
     return NextResponse.json({ blockedSlots: [] });
   }
 
+  // Fetch settings bounds (start_time, end_time)
+  const { data: settingsData } = await supabaseAdmin
+    .from("availability_settings")
+    .select("start_time, end_time")
+    .eq("id", "default")
+    .single();
+    
+  const startHour = settingsData?.start_time ? parseInt(settingsData.start_time.split(":")[0]) : 6;
+  const endHour = settingsData?.end_time ? parseInt(settingsData.end_time.split(":")[0]) : 20;
+
   // Find duration of the requested package
   const requestedDuration = PACKAGE_DURATIONS[packageId] || 60;
 
@@ -29,7 +39,6 @@ export async function GET(request: Request) {
   const tenMinsAgo = new Date(Date.now() - 10 * 60 * 1000).toISOString();
 
   // Fetch all bookings for the requested date 
-  // Select all bookings that are not cancelled or failed.
   const { data, error } = await supabaseAdmin
     .from("bookings")
     .select("booking_time, package_id, status, created_at")
@@ -37,32 +46,61 @@ export async function GET(request: Request) {
     .neq("status", "cancelled")
     .neq("status", "failed");
 
-  if (error || !data) {
-    return NextResponse.json({ blockedSlots: [] });
+  // Fetch manually blocked slots
+  const { data: blockedData } = await supabaseAdmin
+    .from("blocked_slots")
+    .select("time")
+    .eq("date", date);
+
+  let isDayFullyBlocked = false;
+  const manualBlockedSlots = new Set<string>();
+
+  if (blockedData && blockedData.length > 0) {
+    for (const b of blockedData) {
+      if (!b.time) {
+        isDayFullyBlocked = true;
+        break;
+      }
+      manualBlockedSlots.add(b.time);
+    }
   }
 
-  // Filter valid bookings that actually block time
-  const validBookings = data.filter((b) => {
-    if (["pending", "confirmed", "completed"].includes(b.status)) return true;
-    if (b.status === "draft") {
-      // Drafts only block if they are within the 10-minute window
-      return new Date(b.created_at) >= new Date(tenMinsAgo);
-    }
-    return false;
-  });
-
-  // Generate all possible 30-min slots from 06:00 to 20:00 (what the UI shows)
+  // Generate all possible 30-min slots
   const allSlots: string[] = [];
-  for (let h = 6; h <= 20; h++) {
+  for (let h = 6; h <= 20; h++) { // For UI consistency we always return the static grid range, but block out of bounds
     allSlots.push(`${h.toString().padStart(2, "0")}:00`);
     allSlots.push(`${h.toString().padStart(2, "0")}:30`);
   }
+
+  if (isDayFullyBlocked) {
+    return NextResponse.json({ blockedSlots: allSlots });
+  }
+
+  // Filter valid bookings that actually block time
+  const validBookings = (data || []).filter((b) => {
+    if (["pending", "confirmed", "completed"].includes(b.status)) return true;
+    if (b.status === "draft") return new Date(b.created_at) >= new Date(tenMinsAgo);
+    return false;
+  });
 
   const blockedSlots: string[] = [];
 
   for (const slot of allSlots) {
     const requestedStart = timeToMinutes(slot);
-    const requestedEnd = requestedStart + requestedDuration; // exclusive end
+    const requestedEnd = requestedStart + requestedDuration;
+    
+    // Block if outside working hours
+    const h = parseInt(slot.split(":")[0]);
+    if (h < startHour || h > endHour) {
+       blockedSlots.push(slot);
+       continue;
+    }
+
+    // Block if manually blocked
+    if (manualBlockedSlots.has(slot)) {
+       blockedSlots.push(slot);
+       continue;
+    }
 
     // Check overlap with any existing booking
     let isOverlapping = false;
@@ -73,7 +111,7 @@ export async function GET(request: Request) {
       const existingDuration = PACKAGE_DURATIONS[b.package_id as string] || 60;
       const existingEnd = existingStart + existingDuration;
 
-      // True Overlap Condition: One starts before the other ends
+      // True Overlap Condition
       if (requestedStart < existingEnd && requestedEnd > existingStart) {
         isOverlapping = true;
         break;

@@ -399,11 +399,11 @@ export function PackageDetails({ packageData, aggregateRating, reviews, activeDi
         {/* Action Bar */}
         <div className="p-4 flex items-center justify-between gap-4 pb-safe-offset-4">
           <div className="flex flex-col">
-            <span className="text-[14px] capitalize font-black text-muted-foreground mb-1">
-              {(packageData.slug === "rooftop" || packageData.slug === "rooftop-swing")
-                ? t("per_person")
-                : packageDur}
-            </span>
+            {packageData.is_per_person && (
+              <span className="text-[14px] capitalize font-black text-muted-foreground mb-1">
+                {t("per_person")}
+              </span>
+            )}
             <div className="flex items-center gap-2">
               <span className="text-2xl font-black text-primary">
                 €{pricing.isDiscounted ? pricing.price : basePrice}

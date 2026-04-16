@@ -87,10 +87,30 @@ export function BookingCard({
       return;
     }
 
-    // The user requested to allow all time slots to be booked at any time, 
-    // effectively disabling the slot blocking mechanic.
-    setBookedSlots([]);
-  }, [selectedDate, packageId, selectedTime, setSelectedTime]);
+    const fetchAvailability = async () => {
+      setIsLoadingSlots(true);
+      try {
+        const formattedDate = format(selectedDate, "yyyy-MM-dd");
+        const res = await fetch(
+          `/api/booking/availability?date=${formattedDate}&packageId=${packageId}`
+        );
+        if (res.ok) {
+          const data = await res.json();
+          setBookedSlots(data.blockedSlots || []);
+          
+          if (selectedTime && data.blockedSlots?.includes(selectedTime)) {
+             setSelectedTime(undefined);
+          }
+        }
+      } catch (error) {
+        console.error("Availability error", error);
+      } finally {
+        setIsLoadingSlots(false);
+      }
+    };
+
+    fetchAvailability();
+  }, [selectedDate, packageId]);
 
   const handleCheckAvailability = () => {
     if (checkState !== "idle") return;

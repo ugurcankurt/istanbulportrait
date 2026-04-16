@@ -64,6 +64,7 @@ export function PackagesSection({ header, customCtaHeader, aggregateRating, dbPa
           locations: pkg.locations || 1,
           features: locFeatures,
           popular: pkg.is_popular, // Set via dynamic CMS switch
+          isPerPerson: pkg.is_per_person,
           image: pkg.cover_image || "",
         };
       });
@@ -119,7 +120,7 @@ export function PackagesSection({ header, customCtaHeader, aggregateRating, dbPa
                   <ImageIcon className="w-12 h-12 mb-2" />
                 </div>
             )}
-            <div className="absolute top-2 left-2 z-10 bg-background/85 backdrop-blur-md text-foreground px-3 py-1 rounded-lg font-bold text-lg sm:text-xl shadow-lg border border-border/50 flex flex-col items-center">
+            <div className="absolute top-2 start-2 z-10 bg-background/85 backdrop-blur-md text-foreground px-3 py-1 rounded-lg font-bold text-lg sm:text-xl shadow-lg border border-border/50 flex flex-col items-center">
               <span
                 className={
                   pkg.pricing.isDiscounted
@@ -132,7 +133,7 @@ export function PackagesSection({ header, customCtaHeader, aggregateRating, dbPa
               {pkg.pricing.isDiscounted && (
                 <span>€{pkg.pricing.price}</span>
               )}
-              {(pkg.id === "rooftop" || pkg.id === "rooftop-swing") && (
+              {pkg.isPerPerson && (
                 <span className="text-[10px] sm:text-xs font-normal opacity-90 -mt-1">
                   {t("per_person")}
                 </span>
@@ -141,7 +142,7 @@ export function PackagesSection({ header, customCtaHeader, aggregateRating, dbPa
           </div>
 
           {/* Seasonal Discount Badge */}
-          <div className="absolute top-2 right-2 z-10 flex flex-col gap-2 items-end">
+          <div className="absolute top-2 end-2 z-10 flex flex-col gap-2 items-end">
             {pkg.popular && (
               <Badge className="bg-primary text-primary-foreground px-2 sm:px-4 py-1 text-xs sm:text-sm shadow-md">
                 {tui("most_popular")}

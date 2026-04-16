@@ -156,7 +156,7 @@ export function ResumeViewingCard({
                   >
                     <Card className="relative flex flex-row overflow-hidden p-2 gap-4 border-none bg-white text-black transition-all shadow-lg hover:shadow-xl rounded-2xl h-[120px] sm:h-[140px]">
                       {/* History Badge - Absolute Top Left */}
-                      <div className="absolute top-2 left-2 flex items-center gap-1 text-[10px] text-white font-medium bg-primary backdrop-blur-md px-2 py-0.5 rounded-full z-10 border border-white/20">
+                      <div className="absolute top-2 start-2 flex items-center gap-1 text-[10px] text-white font-medium bg-primary backdrop-blur-md px-2 py-0.5 rounded-full z-10 border border-white/20">
                         <History className="w-3 h-3" />
                         <span>
                           {formatDistanceToNow(visited.timestamp, {
@@ -181,7 +181,7 @@ export function ResumeViewingCard({
                           </div>
                         )}
                       </div>
-                      <CardHeader className="flex-1 flex flex-col justify-between p-0 py-1 pr-2 uppercase-none">
+                      <CardHeader className="flex-1 flex flex-col justify-between p-0 py-1 pe-2 uppercase-none">
                         <div className="space-y-1">
                           <div className="text-sm sm:text-lg font-bold leading-tight group-hover:text-primary transition-colors line-clamp-2 text-slate-900">
                             {locName}

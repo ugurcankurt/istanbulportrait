@@ -127,7 +127,7 @@ export function PackageGallery({
               <Button
                 size="icon"
                 variant="secondary"
-                className="rounded-full shadow-lg bg-white/90 hover:bg-white text-foreground h-9 w-9"
+                className="rounded-full shadow-lg bg-white/90 dark:bg-slate-900/90 hover:bg-white dark:hover:bg-slate-900 text-slate-900 dark:text-slate-100 hover:text-slate-900 dark:hover:text-slate-100 h-9 w-9"
                 onClick={(e) => {
                   e.stopPropagation();
                   onBack();
@@ -143,7 +143,7 @@ export function PackageGallery({
                 <Button
                   size="icon"
                   variant="secondary"
-                  className="rounded-full shadow-lg bg-white/90 hover:bg-white text-foreground h-9 w-9"
+                  className="rounded-full shadow-lg bg-white/90 dark:bg-slate-900/90 hover:bg-white dark:hover:bg-slate-900 text-slate-900 dark:text-slate-100 hover:text-slate-900 dark:hover:text-slate-100 h-9 w-9"
                   onClick={(e) => {
                     e.stopPropagation();
                     onShare();
@@ -156,7 +156,7 @@ export function PackageGallery({
                 <Button
                   size="icon"
                   variant="secondary"
-                  className="rounded-full shadow-lg bg-white/90 hover:bg-white text-foreground h-9 w-9"
+                  className="rounded-full shadow-lg bg-white/90 dark:bg-slate-900/90 hover:bg-white dark:hover:bg-slate-900 text-slate-900 dark:text-slate-100 hover:text-slate-900 dark:hover:text-slate-100 h-9 w-9"
                   onClick={(e) => {
                     e.stopPropagation();
                     onFavorite();
@@ -175,7 +175,7 @@ export function PackageGallery({
         )}
 
         {/* Floating Image Counter */}
-        <div className="absolute bottom-10 right-4 z-20">
+        <div className="absolute bottom-10 end-4 z-20">
           <Badge variant="secondary" className="bg-primary/40 text-white border-none py-1.5 px-3 text-xs font-semibold backdrop-blur-md">
             {selectedIndex + 1} / {totalImages}
           </Badge>
@@ -238,7 +238,7 @@ export function PackageGallery({
           ))}
 
           {/* Global "View all photos" button */}
-          <div className="absolute bottom-4 right-4 z-20">
+          <div className="absolute bottom-4 end-4 z-20">
             <Button className="primary"
               onClick={() => {
                 setSelectedIndex(0);
@@ -270,7 +270,7 @@ export function PackageGallery({
 
               {/* Close Button Top Right */}
               <DialogClose
-                className={cn(buttonVariants({ variant: "outline", size: "icon" }), "h-10 w-10 sm:h-12 sm:w-12 rounded-full bg-white shadow-lg border-slate-100 text-slate-900 hover:bg-slate-50 transition-all hover:scale-110")}
+                className={cn(buttonVariants({ variant: "outline", size: "icon" }), "h-10 w-10 sm:h-12 sm:w-12 rounded-full bg-white dark:bg-slate-900 shadow-lg border-slate-100 dark:border-slate-800 text-slate-900 dark:text-slate-100 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all hover:scale-110")}
               >
                 <X className="h-5 w-5 sm:h-6 sm:w-6" />
               </DialogClose>
@@ -298,21 +298,21 @@ export function PackageGallery({
               </div>
 
               {/* Desktop Side Navigation */}
-              <div className="absolute left-4 sm:left-10 top-1/2 -translate-y-1/2 z-[130]">
+              <div className="absolute start-4 sm:start-10 top-1/2 -translate-y-1/2 z-[130]">
                 <Button
                   variant="outline"
                   size="icon"
-                  className="h-10 w-10 sm:h-12 sm:w-12 rounded-full bg-white shadow-lg border-slate-100 text-slate-900 transition-all hover:scale-110"
+                  className="h-10 w-10 sm:h-12 sm:w-12 rounded-full bg-white dark:bg-slate-900 shadow-lg border-slate-100 dark:border-slate-800 text-slate-900 dark:text-slate-100 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all hover:scale-110"
                   onClick={() => lightboxApi?.scrollPrev()}
                 >
                   <ChevronLeft className="h-6 w-6 sm:h-8 sm:w-8 rtl:rotate-180" />
                 </Button>
               </div>
-              <div className="absolute right-4 sm:right-10 top-1/2 -translate-y-1/2 z-[130]">
+              <div className="absolute end-4 sm:end-10 top-1/2 -translate-y-1/2 z-[130]">
                 <Button
                   variant="outline"
                   size="icon"
-                  className="h-10 w-10 sm:h-12 sm:w-12 rounded-full bg-white shadow-lg border-slate-100 text-slate-900 transition-all hover:scale-110"
+                  className="h-10 w-10 sm:h-12 sm:w-12 rounded-full bg-white dark:bg-slate-900 shadow-lg border-slate-100 dark:border-slate-800 text-slate-900 dark:text-slate-100 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all hover:scale-110"
                   onClick={() => lightboxApi?.scrollNext()}
                 >
                   <ChevronRight className="h-6 w-6 sm:h-8 sm:w-8 rtl:rotate-180" />

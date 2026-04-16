@@ -65,7 +65,7 @@ export function BookingSuccess({
   const displayBookingId = confirmedBooking?.id || bookingId;
 
   // Check for dynamic differences to reveal applied discounts
-  const isPerPerson = packageId === "rooftop" || packageId === "rooftop-swing";
+  const isPerPerson = packageDBInfo?.is_per_person || false;
   const baseTotal = isPerPerson ? basePrice * peopleCount : basePrice;
   const paidTotal = confirmedBooking?.totalAmount || 0;
 

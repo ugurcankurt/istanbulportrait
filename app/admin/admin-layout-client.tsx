@@ -53,6 +53,7 @@ const navigationGroups = [
     items: [
       { name: "Bookings", href: "/admin/dashboard/bookings", icon: Calendar },
       { name: "Customers", href: "/admin/dashboard/customers", icon: Users },
+      { name: "Availability", href: "/admin/dashboard/availability", icon: Calendar },
     ],
   },
   {

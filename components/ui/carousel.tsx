@@ -55,6 +55,7 @@ function Carousel({
     {
       ...opts,
       axis: orientation === "horizontal" ? "x" : "y",
+      direction: opts?.direction || (typeof document !== "undefined" ? (document.documentElement.dir === "rtl" || document.dir === "rtl" ? "rtl" : "ltr") : "ltr"),
     },
     plugins
   )
