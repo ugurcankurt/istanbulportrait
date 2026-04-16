@@ -37,6 +37,7 @@ const locales = [
   { code: "fr", name: "Français", flag: "🇫🇷" },
   { code: "de", name: "Deutsch", flag: "🇩🇪" },
   { code: "ro", name: "Română", flag: "🇷🇴" },
+  { code: "tr", name: "Türkçe", flag: "🇹🇷" },
 ];
 
 interface NavigationProps {

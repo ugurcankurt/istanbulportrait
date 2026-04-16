@@ -1,7 +1,7 @@
 "use client";
 
 import { format } from "date-fns";
-import { ar, de, enUS, es, fr, ro, ru, zhCN } from "date-fns/locale";
+import { ar, de, enUS, es, fr, ro, ru, tr as trLocale, zhCN } from "date-fns/locale";
 import { Calendar as CalendarIcon, Clock } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useState } from "react";
@@ -67,6 +67,8 @@ const getDateFnsLocale = (locale: string) => {
       return zhCN;
     case "ro":
       return ro;
+    case "tr":
+      return trLocale;
     default:
       return enUS;
   }

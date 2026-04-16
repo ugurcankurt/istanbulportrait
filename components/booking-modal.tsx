@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
-import { ar, de, enUS, es, fr, ro, ru, zhCN } from "date-fns/locale";
+import { ar, de, enUS, es, fr, ro, ru, tr as trLocale, zhCN } from "date-fns/locale";
 import { useRouter } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
@@ -104,6 +104,8 @@ const getDateFnsLocale = (locale: string) => {
       return zhCN;
     case "ro":
       return ro;
+    case "tr":
+      return trLocale;
     default:
       return enUS;
   }

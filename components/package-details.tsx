@@ -16,7 +16,7 @@ import { useTranslations, useLocale } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useEffect, useState, useMemo } from "react";
 import { format } from "date-fns";
-import { ar, de, enUS, es, fr, ro, ru, zhCN } from "date-fns/locale";
+import { ar, de, enUS, es, fr, ro, ru, tr as trLocale, zhCN } from "date-fns/locale";
 import { BookingModal } from "@/components/booking-modal";
 import { BookingCard } from "@/components/booking-card";
 import { PackageGallery } from "@/components/package-gallery";
@@ -47,6 +47,7 @@ const getDateFnsLocale = (locale: string) => {
     case "de": return de;
     case "zh": return zhCN;
     case "ro": return ro;
+    case "tr": return trLocale;
     default: return enUS;
   }
 };

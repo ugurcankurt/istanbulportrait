@@ -11,7 +11,7 @@ import type { PackageId } from "@/lib/validations";
 import { usePackagesStore } from "@/stores/packages-store";
 import { Card, CardHeader } from "@/components/ui/card";
 import { formatDistanceToNow } from "date-fns";
-import { enUS, tr, de, fr, es, zhCN, ro, arSA } from "date-fns/locale";
+import { enUS, tr, de, fr, es, zhCN, ro, arSA, ru } from "date-fns/locale";
 import { useLocale } from "next-intl";
 import { cn } from "@/lib/utils";
 import { extractPhotosCount } from "@/lib/features-parser";
@@ -86,6 +86,7 @@ export function ResumeViewingCard({
       case "zh": return zhCN;
       case "ro": return ro;
       case "ar": return arSA;
+      case "ru": return ru;
       default: return enUS;
     }
   };
