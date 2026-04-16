@@ -44,6 +44,7 @@ export async function generateMetadata({
   routing.locales.forEach((loc) => {
     languages[loc] = `${baseUrl}/${loc}`;
   });
+  languages["x-default"] = `${baseUrl}/en`;
 
   return {
     title: { absolute: title },
@@ -153,10 +154,6 @@ export default async function HomePage({
           "query-input": "required name=search_term_string"
         }
       }} />
-
-      {dynamicFaqs && dynamicFaqs.length > 0 && (
-        <SchemaInjector schema={buildFAQSchema(dynamicFaqs)} />
-      )}
 
       <div className="overflow-hidden">
         <HeroSection

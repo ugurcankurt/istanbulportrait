@@ -205,6 +205,8 @@ export function buildArticleSchema({
   datePublished,
   dateModified,
   authorName,
+  publisherName,
+  publisherLogo,
 }: {
   title: string;
   description: string;
@@ -212,6 +214,8 @@ export function buildArticleSchema({
   datePublished: string;
   dateModified: string;
   authorName: string;
+  publisherName?: string;
+  publisherLogo?: string;
 }) {
   return {
     "@context": "https://schema.org",
@@ -226,6 +230,16 @@ export function buildArticleSchema({
         name: authorName,
       },
     ],
+    publisher: publisherName ? {
+      "@type": "Organization",
+      name: publisherName,
+      ...(publisherLogo ? {
+        logo: {
+          "@type": "ImageObject",
+          url: optimizeSeoImage(publisherLogo, 1200),
+        },
+      } : {}),
+    } : undefined,
     description,
   };
 }

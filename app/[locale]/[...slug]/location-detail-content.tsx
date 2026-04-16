@@ -37,7 +37,8 @@ export async function LocationDetailPageContent({
   }
 
   const t = await getTranslations({ locale, namespace: "locations" });
-  const baseUrl = "https://360istanbul.com.tr";
+  const { getBaseUrl } = await import("@/lib/seo-utils");
+  const baseUrl = getBaseUrl();
 
   const dynamicTitle = location.title?.[locale] || location.title?.en || slug;
   const dynamicDesc = location.description?.[locale] || location.description?.en || "";

@@ -43,6 +43,7 @@ export async function generateMetadata(props: {
     routing.locales.forEach((loc) => {
       langs[loc] = `${baseUrl}/${loc}${resolver(loc)}`;
     });
+    langs["x-default"] = `${baseUrl}/en${resolver("en")}`;
     return { languages: langs };
   };
 
@@ -51,14 +52,18 @@ export async function generateMetadata(props: {
     const title = generateSeoTitle(dbPage.title?.[params.locale] || dbPage.title?.en, params.locale, fallbackTitle);
     const desc = generateSeoDescription(dbPage.subtitle?.[params.locale] || dbPage.subtitle?.en) || "";
     const ogImage = dbPage.cover_image || settings.default_og_image_url || "";
-    
+    const currentSeg = dbPage.title?.[params.locale] ? generateNativeSlug(dbPage.title[params.locale]!) : dbPage.slug;
+
     return {
       title,
       description: desc,
-      alternates: getAlternates((loc) => {
-        const tLoc = dbPage.title?.[loc];
-        return `/${tLoc ? generateNativeSlug(tLoc) : dbPage.slug}`;
-      }),
+      alternates: {
+        canonical: `${baseUrl}/${params.locale}/${currentSeg}`,
+        ...getAlternates((loc) => {
+          const tLoc = dbPage.title?.[loc];
+          return `/${tLoc ? generateNativeSlug(tLoc) : dbPage.slug}`;
+        }),
+      },
       openGraph: constructOpenGraph(title, desc, ogImage, fallbackTitle, params.locale),
     };
   }
@@ -73,14 +78,18 @@ export async function generateMetadata(props: {
       const title = generateSeoTitle(pkg.title?.[params.locale] || pkg.title?.en, params.locale, fallbackTitle);
       const desc = generateSeoDescription(pkg.description?.[params.locale] || pkg.description?.en);
       const ogImage = (pkg.gallery_images && pkg.gallery_images.length > 0) ? pkg.gallery_images[0] : settings.default_og_image_url || "";
+      const currentPSeg = dbPage.title?.[params.locale] ? generateNativeSlug(dbPage.title[params.locale]!) : "packages";
       return {
         title,
         description: desc,
-        alternates: getAlternates((l) => {
-          const tTitle = dbPage.title?.[l];
-          const tSeg = tTitle ? generateNativeSlug(tTitle) : "packages";
-          return `/${tSeg}/${pkg.slug}`;
-        }),
+        alternates: {
+          canonical: `${baseUrl}/${params.locale}/${currentPSeg}/${pkg.slug}`,
+          ...getAlternates((l) => {
+            const tTitle = dbPage.title?.[l];
+            const tSeg = tTitle ? generateNativeSlug(tTitle) : "packages";
+            return `/${tSeg}/${pkg.slug}`;
+          }),
+        },
         openGraph: constructOpenGraph(title, desc, ogImage, fallbackTitle, params.locale),
       };
     }
@@ -91,14 +100,18 @@ export async function generateMetadata(props: {
       const title = generateSeoTitle(loc.title?.[params.locale] || loc.title?.en, params.locale, fallbackTitle);
       const desc = generateSeoDescription(loc.description?.[params.locale] || loc.description?.en);
       const ogImage = loc.cover_image || (loc.gallery_images && loc.gallery_images.length > 0 ? loc.gallery_images[0] : settings.default_og_image_url || "");
+      const currentLSeg = dbPage.title?.[params.locale] ? generateNativeSlug(dbPage.title[params.locale]!) : "locations";
       return {
         title,
         description: desc,
-        alternates: getAlternates((l) => {
-          const tTitle = dbPage.title?.[l];
-          const tSeg = tTitle ? generateNativeSlug(tTitle) : "locations";
-          return `/${tSeg}/${loc.slug}`;
-        }),
+        alternates: {
+          canonical: `${baseUrl}/${params.locale}/${currentLSeg}/${loc.slug}`,
+          ...getAlternates((l) => {
+            const tTitle = dbPage.title?.[l];
+            const tSeg = tTitle ? generateNativeSlug(tTitle) : "locations";
+            return `/${tSeg}/${loc.slug}`;
+          }),
+        },
         openGraph: constructOpenGraph(title, desc, ogImage, fallbackTitle, params.locale),
       };
     }

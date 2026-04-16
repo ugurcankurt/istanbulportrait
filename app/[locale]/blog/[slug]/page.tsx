@@ -31,6 +31,8 @@ export async function generateMetadata({
   params: Promise<{ slug: string; locale: Locale }>;
 }): Promise<Metadata> {
   const { slug, locale } = await params;
+  const { getBlogPostBySlug, getBlogPostByIdWithAllTranslations } = await import("@/lib/blog/blog-service");
+  const { pagesContentService } = await import("@/lib/pages-content-service");
   const post = await getBlogPostBySlug(slug, locale);
   const settings = await settingsService.getSettings();
   const fallbackTitle = settings.site_name || "";
@@ -43,9 +45,40 @@ export async function generateMetadata({
   const desc = generateSeoDescription(post.translation.excerpt || post.translation.content);
   const ogImage = post.featured_image || settings.default_og_image_url || "";
 
+  const { routing } = await import("@/i18n/routing");
+  const { getBaseUrl } = await import("@/lib/seo-utils");
+  const { generateNativeSlug } = await import("@/lib/slug-generator");
+  const baseUrl = getBaseUrl();
+  const allPages = await pagesContentService.getAllPages();
+  const blogParent = allPages.find(p => p.slug === "blog");
+  
+  // Fetch full translation data for correct URL tracking
+  const fullPost = await getBlogPostByIdWithAllTranslations(post.id);
+  const languages: Record<string, string> = {};
+
+  if (fullPost && fullPost.translations) {
+    const enSlug = fullPost.translations["en"]?.slug || slug;
+
+    routing.locales.forEach((loc) => {
+      const tSlug = fullPost.translations[loc as Locale]?.slug || enSlug;
+      const bTitle = blogParent?.title?.[loc];
+      const bSeg = bTitle ? generateNativeSlug(bTitle) : "blog";
+      languages[loc] = `${baseUrl}/${loc}/${bSeg}/${tSlug}`;
+    });
+
+    const xDefaultSeg = blogParent?.title?.["en"] ? generateNativeSlug(blogParent.title["en"]) : "blog";
+    languages["x-default"] = `${baseUrl}/en/${xDefaultSeg}/${enSlug}`;
+  }
+
+  const currentSeg = blogParent?.title?.[locale] ? generateNativeSlug(blogParent.title[locale]) : "blog";
+
   return {
     title,
     description: desc,
+    alternates: {
+      canonical: `${baseUrl}/${locale}/${currentSeg}/${post.translation.slug || slug}`,
+      languages
+    },
     openGraph: constructOpenGraph(title, desc, ogImage, fallbackTitle, locale),
   };
 }
@@ -87,7 +120,9 @@ export default async function BlogPostPage({
         image: post.featured_image || settings.default_og_image_url || "",
         datePublished: post.published_at || post.created_at,
         dateModified: post.updated_at || post.published_at || post.created_at,
-        authorName: post.author?.name || settings.founder_name || settings.site_name || "Author"
+        authorName: post.author?.name || settings.founder_name || settings.site_name || "Author",
+        publisherName: settings.organization_name || settings.site_name || undefined,
+        publisherLogo: settings.logo_url || settings.default_og_image_url || undefined,
       })} />
 
       <BreadcrumbNav />
