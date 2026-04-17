@@ -51,7 +51,15 @@ export async function generateMetadata(props: {
   if (slugArray.length === 1) {
     const title = generateSeoTitle(dbPage.title?.[params.locale] || dbPage.title?.en, params.locale, fallbackTitle);
     const desc = generateSeoDescription(dbPage.subtitle?.[params.locale] || dbPage.subtitle?.en) || "";
-    const ogImage = dbPage.cover_image || settings.default_og_image_url || "";
+    let ogImage = dbPage.cover_image || settings.default_og_image_url || "";
+    
+    // If it's the packages page and no cover image is explicitly defined, fallback to the first active package's image
+    if (dbPage.slug === "packages" && !dbPage.cover_image) {
+      const activePackages = await packagesService.getActivePackages();
+      if (activePackages && activePackages.length > 0 && activePackages[0].cover_image) {
+        ogImage = activePackages[0].cover_image;
+      }
+    }
     const currentSeg = dbPage.title?.[params.locale] ? generateNativeSlug(dbPage.title[params.locale]!) : dbPage.slug;
 
     return {
