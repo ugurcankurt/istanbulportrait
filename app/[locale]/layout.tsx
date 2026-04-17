@@ -17,7 +17,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Metadata } from "next";
 import { SchemaInjector } from "@/components/schema-injector";
-import { buildLocalBusinessSchema, constructOpenGraph, getBaseUrl } from "@/lib/seo-utils";
+import { buildLocalBusinessSchema, constructOpenGraph, getBaseUrl, optimizeSeoImage } from "@/lib/seo-utils";
 import { routing } from "@/i18n/routing";
 
 const WhatsAppButton = dynamic(() =>
@@ -91,7 +91,7 @@ export async function generateMetadata({
       card: "summary_large_image",
       title,
       description: desc,
-      images: [ogImage],
+      images: [optimizeSeoImage(ogImage, 1200)],
     },
     icons: {
       icon: settings.favicon_url || "/favicon.ico",

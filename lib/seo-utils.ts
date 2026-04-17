@@ -56,8 +56,16 @@ export function optimizeSeoImage(imageUrl: string | null | undefined, width: 120
     ? `${getBaseUrl()}${imageUrl}`
     : imageUrl;
 
-  // Return the dynamic OG generation url
-  return `${getBaseUrl()}/api/og?image=${encodeURIComponent(absoluteUrl)}`;
+  // WhatsApp and Facebook crawlers are heavily timeout-sensitive and often drop .webp images.
+  // Instead of using an expensive /api/og Satori edge function, we directly serve a processed JPG via wsrv.nl.
+  const height = width === 1200 ? 630 : Math.round((width / 1200) * 630);
+  
+  if (absoluteUrl.toLowerCase().includes(".webp")) {
+    return `https://wsrv.nl/?url=${encodeURIComponent(absoluteUrl)}&output=jpg&w=${width}&h=${height}&fit=cover`;
+  }
+
+  // If it's already jpg/png, we can still use wsrv for fast cropping, or just return it length.
+  return `https://wsrv.nl/?url=${encodeURIComponent(absoluteUrl)}&output=jpg&w=${width}&h=${height}&fit=cover`;
 }
 
 /**
