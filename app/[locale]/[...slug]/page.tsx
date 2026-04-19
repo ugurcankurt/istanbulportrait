@@ -25,11 +25,13 @@ export async function generateMetadata(props: {
   const slugArray = params.slug || [];
   const rootSlug = slugArray[0];
   const { settingsService } = await import("@/lib/settings-service");
-  const settings = await settingsService.getSettings();
+
+  const [settings, dbPage] = await Promise.all([
+    settingsService.getSettings(),
+    pagesContentService.getPageBySlug(rootSlug)
+  ]);
+
   const fallbackTitle = settings.site_name || "";
-
-
-  const dbPage = await pagesContentService.getPageBySlug(rootSlug);
   if (!dbPage || !dbPage.is_active) {
     return { title: "Not Found" };
   }

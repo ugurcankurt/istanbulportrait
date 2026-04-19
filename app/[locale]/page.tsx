@@ -28,11 +28,15 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const { locale } = await params;
-  const allPages = await pagesContentService.getAllPages();
+  const { settingsService } = await import("@/lib/settings-service");
+
+  const [allPages, settings] = await Promise.all([
+    pagesContentService.getAllPages(),
+    settingsService.getSettings()
+  ]);
+
   const homePage = allPages.find(p => p.slug === "home");
   const heroPage = allPages.find(p => p.slug === "home-hero");
-  const { settingsService } = await import("@/lib/settings-service");
-  const settings = await settingsService.getSettings();
 
   // Decouple SEO Title from H1 string. The user can configure the 'home' page slug in the Pages Core panel to manage SEO metadata perfectly.
   const seoSource = (homePage?.title?.[locale] || homePage?.title?.en) ? homePage : heroPage;
@@ -70,27 +74,33 @@ export default async function HomePage({
   const { locale } = await params;
 
 
-  const tReviews = await getTranslations({ locale, namespace: "reviews" });
-  const tUi = await getTranslations({ locale, namespace: "ui" });
-  const tGallery = await getTranslations({ locale, namespace: "gallery" });
-  const tPackages = await getTranslations({ locale, namespace: "packages" });
-  const tFaq = await getTranslations({ locale, namespace: "faq" });
+  // Fetch data in parallel to avoid Request Waterfall and reduce TTFB
+  const [
+    tReviews,
+    tUi,
+    tGallery,
+    tPackages,
+    tFaq,
+    aggregateRating,
+    reviews,
+    activePackages,
+    settings,
+    activeDiscount,
+    allPages
+  ] = await Promise.all([
+    getTranslations({ locale, namespace: "reviews" }),
+    getTranslations({ locale, namespace: "ui" }),
+    getTranslations({ locale, namespace: "gallery" }),
+    getTranslations({ locale, namespace: "packages" }),
+    getTranslations({ locale, namespace: "faq" }),
+    reviewsService.getAggregateRating(),
+    reviewsService.fetchGoogleReviews(),
+    packagesService.getActivePackages(),
+    settingsService.getSettings(),
+    discountService.getActiveDiscount(),
+    pagesContentService.getAllPages()
+  ]);
 
-  // Fetch aggregate rating and reviews for UI display
-  const aggregateRating = await reviewsService.getAggregateRating();
-  const reviews = await reviewsService.fetchGoogleReviews();
-
-  // Fetch dynamic packages from Supabase
-  const activePackages = await packagesService.getActivePackages();
-
-  // Fetch Site Settings from Supabase
-  const settings = await settingsService.getSettings();
-
-  // Fetch active discount campaign
-  const activeDiscount = await discountService.getActiveDiscount();
-
-  // Fetch all pages data for dynamic Home Pages sections
-  const allPages = await pagesContentService.getAllPages();
   const pageMap = new Map(allPages.map(p => [p.slug, p]));
 
   const getDynamicTitle = (slug: string, fallback: string) => {
