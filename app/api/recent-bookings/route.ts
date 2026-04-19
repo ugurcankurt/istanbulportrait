@@ -24,7 +24,7 @@ export async function GET() {
     }
 
     // Transform data - only show first name for privacy
-    const recentBookings: RecentBooking[] = (bookings || []).map((booking) => {
+    const recentBookings: RecentBooking[] = (bookings || []).map((booking: any) => {
       const firstName = booking.user_name?.split(" ")[0] || "Guest";
 
       return {

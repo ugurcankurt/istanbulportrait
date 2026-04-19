@@ -13,17 +13,17 @@ if (typeof window === "undefined" && !supabaseServiceKey) {
 }
 
 const globalForSupabase = globalThis as unknown as {
-  supabase: ReturnType<typeof createClient> | undefined;
-  supabaseAdmin: ReturnType<typeof createClient> | undefined;
+  supabase: any;
+  supabaseAdmin: any;
 };
 
-export const supabase =
-  globalForSupabase.supabase ?? createClient(supabaseUrl, supabaseAnonKey);
+export const supabase: any =
+  globalForSupabase.supabase ?? createClient<any>(supabaseUrl, supabaseAnonKey);
 
-export const supabaseAdmin =
+export const supabaseAdmin: any =
   globalForSupabase.supabaseAdmin ??
   (typeof window === "undefined" && supabaseServiceKey
-    ? createClient(supabaseUrl, supabaseServiceKey)
+    ? createClient<any>(supabaseUrl, supabaseServiceKey)
     : supabase);
 
 if (process.env.NODE_ENV !== "production") {
@@ -66,9 +66,12 @@ export type Database = {
           user_phone: string;
           booking_date: string;
           booking_time: string;
-          status: "pending" | "confirmed" | "cancelled" | "completed";
+          status: "draft" | "pending" | "confirmed" | "cancelled" | "completed";
           total_amount: number;
           notes?: string;
+          locale?: string;
+          abandoned_email_sent?: boolean;
+          people_count?: number | null;
           created_at: string;
           updated_at?: string;
         };
@@ -80,9 +83,12 @@ export type Database = {
           user_phone: string;
           booking_date: string;
           booking_time: string;
-          status?: "pending" | "confirmed" | "cancelled" | "completed";
+          status?: "draft" | "pending" | "confirmed" | "cancelled" | "completed";
           total_amount: number;
           notes?: string;
+          locale?: string;
+          abandoned_email_sent?: boolean;
+          people_count?: number | null;
           created_at?: string;
           updated_at?: string;
         };
@@ -94,9 +100,12 @@ export type Database = {
           user_phone?: string;
           booking_date?: string;
           booking_time?: string;
-          status?: "pending" | "confirmed" | "cancelled" | "completed";
+          status?: "draft" | "pending" | "confirmed" | "cancelled" | "completed";
           total_amount?: number;
           notes?: string;
+          locale?: string;
+          abandoned_email_sent?: boolean;
+          people_count?: number | null;
           created_at?: string;
           updated_at?: string;
         };

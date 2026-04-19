@@ -116,12 +116,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       const { data: translations } = await supabaseAdmin.from("blog_post_translations").select("post_id, locale, slug");
       
       for (const bp of blogPosts) {
-        const postTranslations = translations?.filter(t => t.post_id === bp.id) || [];
-        const enSlug = postTranslations.find(t => t.locale === "en")?.slug;
+        const postTranslations = translations?.filter((t: any) => t.post_id === bp.id) || [];
+        const enSlug = postTranslations.find((t: any) => t.locale === "en")?.slug;
         if (!enSlug) continue; // Skip if no default translation exists
 
         locales.forEach((locale) => {
-          const tSlug = postTranslations.find(t => t.locale === locale)?.slug || enSlug;
+          const tSlug = postTranslations.find((t: any) => t.locale === locale)?.slug || enSlug;
           const pTitle = blogParent?.title?.[locale];
           const pSeg = pTitle ? generateNativeSlug(pTitle) : "blog";
 
@@ -133,7 +133,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
             alternates: getAlternates((loc) => {
               const bTitle = blogParent?.title?.[loc];
               const bSeg = bTitle ? generateNativeSlug(bTitle) : "blog";
-              const bSlug = postTranslations.find(t => t.locale === loc)?.slug || enSlug;
+              const bSlug = postTranslations.find((t: any) => t.locale === loc)?.slug || enSlug;
               return `/${bSeg}/${bSlug}`;
             }),
             ...(bp.featured_image ? { images: [bp.featured_image] } : {}),

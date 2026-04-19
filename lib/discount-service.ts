@@ -32,7 +32,7 @@ export const discountService = {
 
       const now = new Date();
       // Filter the active discount based on date constraints
-      const validDiscount = data.find(discount => {
+      const validDiscount = data.find((discount: any) => {
         let isValid = true;
         if (discount.start_date) {
             const start = new Date(discount.start_date);

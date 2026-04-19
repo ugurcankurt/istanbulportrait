@@ -77,7 +77,7 @@ export async function GET(request: Request) {
   }
 
   // Filter valid bookings that actually block time
-  const validBookings = (data || []).filter((b) => {
+  const validBookings = (data || []).filter((b: any) => {
     if (["pending", "confirmed", "completed"].includes(b.status)) return true;
     if (b.status === "draft") return new Date(b.created_at) >= new Date(tenMinsAgo);
     return false;

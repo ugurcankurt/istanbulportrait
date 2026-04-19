@@ -161,6 +161,7 @@ export interface BookingConfirmationData {
   peopleCount?: number;
   locale?: string;
   notes?: string;
+  packageId?: string;
 }
 
 const EMAIL_TRANSLATIONS: Record<string, any> = {
@@ -227,6 +228,36 @@ const EMAIL_TRANSLATIONS: Record<string, any> = {
     whatsNextDesc:
       "Çekim lokasyonunu ve diğer detayları netleştirmek için seansınızdan 24 saat önce sizinle iletişime geçeceğiz.",
     questions: "Sorularınız mı var? Bize ulaşın:",
+  },
+};
+
+const ABANDONED_TRANSLATIONS: Record<string, any> = {
+  en: {
+    subject: "Hurry up! Finish your booking before you lose it ⏳",
+    title: "Complete Your Booking",
+    greeting: "Hi {name},",
+    body1: "We noticed you left something behind! Your booking for the <strong>{package}</strong> package on <strong>{date}</strong> at <strong>{time}</strong> is almost ready.",
+    body2: "To secure your spot, please complete your reservation by finishing the checkout process. Spots fill up fast, so make sure to reserve yours!",
+    button: "Complete My Booking",
+    questions: "Need help? Reply to this email or contact us at",
+  },
+  ru: {
+    subject: "Поторопитесь! Завершите свое бронирование ⏳",
+    title: "Завершите Ваше Бронирование",
+    greeting: "Здравствуйте, {name},",
+    body1: "Мы заметили, что вы не завершили процесс! Ваше бронирование пакета <strong>{package}</strong> на <strong>{date}</strong>, время <strong>{time}</strong>, почти готово.",
+    body2: "Чтобы закрепить за собой место, пожалуйста, завершите оплату. Места быстро заканчиваются, не упустите свой шанс!",
+    button: "Завершить Бронирование",
+    questions: "Нужна помощь? Напишите нам:",
+  },
+  tr: {
+    subject: "Acele Edin! Rezervasyonunuz iptal olmadan tamamlayın ⏳",
+    title: "Rezervasyonunuzu Tamamlayın",
+    greeting: "Merhaba {name},",
+    body1: "Sanki bir şeyleri yarım bıraktınız! <strong>{date}</strong> tarihi <strong>{time}</strong> saati için oluşturduğunuz <strong>{package}</strong> paketi rezervasyonunuz neredeyse hazır.",
+    body2: "Yerinizi garantiye almak için lütfen ödeme adımını tamamlayarak rezervasyonunuzu kesinleştirin. Kontenjanlarımız çok hızlı doluyor, bu fırsatı kaçırmayın!",
+    button: "Rezervasyonumu Tamamla",
+    questions: "Yardıma mı ihtiyacınız var? Bize ulaşın:",
   },
 };
 
@@ -447,5 +478,57 @@ export const sendAdminBookingNotification = async (
     });
   } catch (error) {
     console.error("Error sending admin notification email:", error);
+  }
+};
+
+export const sendAbandonedBookingEmail = async (
+  data: BookingConfirmationData,
+  settings: SiteSettings,
+) => {
+  try {
+    const apiKey = settings.resend_api_key || process.env.RESEND_API_KEY;
+    if (!apiKey || apiKey === "demo-resend-key") return;
+
+    const resend = new Resend(apiKey);
+    const colors = getEmailColors(settings);
+
+    const locale = data.locale && ABANDONED_TRANSLATIONS[data.locale] ? data.locale : "en";
+    const t = ABANDONED_TRANSLATIONS[locale];
+
+    const checkoutUrl = `${settings.app_base_url || process.env.NEXT_PUBLIC_APP_URL || "https://istanbulportrait.com"}/${locale}/checkout?package=${data.packageId}`;
+
+    const content = `
+      <h2 style="color: ${colors.text}; margin-top: 0; font-size: 24px;">${t.greeting.replace("{name}", data.customerName.split(' ')[0])}</h2>
+      
+      <p style="font-size: 16px; line-height: 1.6; color: ${colors.textMuted};">
+        ${t.body1.replace("{package}", data.packageName).replace("{date}", data.bookingDate).replace("{time}", data.bookingTime)}
+      </p>
+
+      <div style="background: ${settings.color_mode === "dark" ? "#1e1e24" : "#fafafa"}; padding: 20px; border-radius: 8px; margin: 25px 0; border-left: 4px solid ${colors.warning};">
+        <p style="margin: 0; color: ${colors.text}; font-size: 15px; line-height: 1.5;">${t.body2}</p>
+      </div>
+
+      <div style="text-align: center; margin: 35px 0;">
+        <a href="${checkoutUrl}" style="background-color: ${colors.primary}; color: #ffffff; padding: 14px 28px; text-decoration: none; border-radius: 6px; font-weight: bold; display: inline-block; font-size: 16px;">
+          ${t.button}
+        </a>
+      </div>
+
+      <div style="text-align: center; margin-top: 30px;">
+        <p style="color: ${colors.textMuted}; font-size: 14px;">
+          ${t.questions} <a href="mailto:${settings.contact_email}" style="color: ${colors.primary}; text-decoration: none; font-weight: bold;">${settings.contact_email}</a>
+        </p>
+      </div>
+    `;
+
+    await resend.emails.send({
+      from: `${settings.site_name || "Photographer"} <${settings.contact_email}>`,
+      to: [data.customerEmail],
+      subject: t.subject,
+      html: renderEmailLayout(content, t.title, locale, settings),
+    });
+  } catch (error) {
+    console.error("Error sending abandoned booking email:", error);
+    throw error;
   }
 };
