@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
+import { useCurrency } from "@/contexts/currency-context";
 
 import { Separator } from "@/components/ui/separator";
 
@@ -28,6 +29,7 @@ export function TurinvoicePayment({
   onTimeout,
 }: TurinvoicePaymentProps) {
   const t = useTranslations("checkout.turinvoice");
+  const { formatPrice } = useCurrency();
   const [status, setStatus] = useState<"new" | "paying" | "paid" | "timeout">(
     "new",
   );
@@ -147,11 +149,13 @@ export function TurinvoicePayment({
           <span className="text-muted-foreground">{t("amount_label")}</span>
           <div className="text-right">
             <div className="text-2xl font-bold text-primary">
-              €{amountEUR.toFixed(2)}
+              {formatPrice(amountEUR)}
             </div>
-            <div className="text-sm text-muted-foreground">
-              ≈ ₺{amountTRY.toFixed(2)} TRY
-            </div>
+            {formatPrice(amountEUR) !== formatPrice(amountEUR, true) && (
+              <div className="text-sm text-muted-foreground">
+                ≈ {formatPrice(amountEUR, true)}
+              </div>
+            )}
           </div>
         </div>
         <div className="text-xs text-muted-foreground text-right border-t border-border/50 pt-2">

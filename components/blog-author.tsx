@@ -21,6 +21,9 @@ export function BlogAuthor({ author, siteSettings }: BlogAuthorProps) {
   const { locale } = useParams() as { locale: Locale };
   const { resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
+  const [authorImgError, setAuthorImgError] = useState(false);
+  const [founderImgError, setFounderImgError] = useState(false);
+  const [logoError, setLogoError] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -29,7 +32,6 @@ export function BlogAuthor({ author, siteSettings }: BlogAuthorProps) {
   const name = author?.name || siteSettings?.founder_name || t("name");
   const bio = author?.bio?.[locale] || author?.bio?.en || siteSettings?.site_description?.[locale] || siteSettings?.site_description?.en || t("bio");
   const role = author?.role?.[locale] || author?.role?.en || "";
-  const avatarUrl = author?.avatar_url || siteSettings?.founder_image_url;
 
   const fallbackLogo = (mounted && resolvedTheme === "dark" ? siteSettings?.logo_dark_url : siteSettings?.logo_url) || siteSettings?.logo_url;
 
@@ -46,15 +48,25 @@ export function BlogAuthor({ author, siteSettings }: BlogAuthorProps) {
       <div className="flex flex-col md:flex-row gap-6 items-center md:items-start text-center md:text-start">
         <div className="shrink-0 w-24 h-24 md:w-32 md:h-32 relative">
           <div className="rounded-full overflow-hidden border-2 border-primary/20 w-full h-full relative bg-muted">
-            {avatarUrl ? (
+            {author?.avatar_url && !authorImgError ? (
               <Image
-                src={avatarUrl}
+                src={author.avatar_url}
                 alt={name}
                 fill
                 sizes="(max-width: 768px) 96px, 128px"
                 className="object-cover"
+                onError={() => setAuthorImgError(true)}
               />
-            ) : fallbackLogo ? (
+            ) : siteSettings?.founder_image_url && !founderImgError ? (
+              <Image
+                src={siteSettings.founder_image_url}
+                alt={name}
+                fill
+                sizes="(max-width: 768px) 96px, 128px"
+                className="object-cover"
+                onError={() => setFounderImgError(true)}
+              />
+            ) : fallbackLogo && !logoError ? (
               <Image
                 src={fallbackLogo}
                 alt={name}
@@ -62,10 +74,11 @@ export function BlogAuthor({ author, siteSettings }: BlogAuthorProps) {
                 sizes="(max-width: 768px) 96px, 128px"
                 className="object-contain p-4"
                 suppressHydrationWarning
+                onError={() => setLogoError(true)}
               />
             ) : (
                 <div className="w-full h-full flex flex-col items-center justify-center p-4">
-                  <span className="text-3xl font-bold uppercase text-muted-foreground">{name.charAt(0)}</span>
+                  <span className="text-4xl font-bold uppercase text-muted-foreground">{name.charAt(0)}</span>
                 </div>
             )}
           </div>

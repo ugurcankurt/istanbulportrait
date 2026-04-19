@@ -19,14 +19,8 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { formatPackagePricing } from "@/lib/pricing";
+import { useCurrency } from "@/contexts/currency-context";
+import { getPackagePricing } from "@/lib/pricing";
 import { cn } from "@/lib/utils";
 import type {
   BookingFormData,
@@ -215,15 +209,16 @@ export function PaymentForm({
 
   const handleSubmit = form.handleSubmit(onSubmit);
 
+  const { formatPrice } = useCurrency();
+
   if (!selectedPackage) return null;
 
-  const packagePricing = formatPackagePricing(
+  const packagePricing = getPackagePricing(
     selectedPackage,
     (bookingData as any)?.basePrice || bookingData?.totalAmount || 0,
     (bookingData as any)?.activeDiscount || null,
     appliedPromo,
     bookingData.bookingDate,
-    locale,
     (bookingData as any)?.isPerPerson ? bookingData.peopleCount : undefined,
     undefined,
     undefined,
@@ -383,7 +378,7 @@ export function PaymentForm({
                     ))}
                   </select>
                   <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-muted-foreground">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m6 9 6 6 6-6" /></svg>
                   </div>
                 </div>
               </FormControl>
@@ -419,7 +414,7 @@ export function PaymentForm({
                     ))}
                   </select>
                   <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-muted-foreground">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m6 9 6 6 6-6" /></svg>
                   </div>
                 </div>
               </FormControl>
@@ -486,7 +481,7 @@ export function PaymentForm({
         ) : (
           <span className="flex items-center gap-2">
             <Lock className="w-4 h-4" />
-            {t("buttons.pay_amount", { amount: packagePricing.depositAmount })}
+            {t("buttons.pay_amount", { amount: formatPrice(packagePricing.depositAmount) })}
           </span>
         )}
       </Button>

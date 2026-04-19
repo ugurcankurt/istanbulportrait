@@ -344,12 +344,14 @@ export async function getBlogPostBySlug(
     )
     .eq("translation.slug", slug)
     .eq("translation.locale", locale)
-    .single();
+    .maybeSingle();
 
   if (error) {
     console.error("Error fetching blog post by slug:", error);
     return null;
   }
+  
+  if (!data) return null;
 
   // Transform array translations to objects and filter by locale
   const transformedPost = {
@@ -380,6 +382,42 @@ export async function getBlogPostBySlug(
   };
 
   return transformedPost as unknown as BlogPostWithRelations;
+}
+
+/**
+ * Attempts to salvage a 404 by checking if the slug belongs to another locale,
+ * and if so, returns the slug for the requested target locale.
+ */
+export async function getSalvagedBlogSlug(
+  alienSlug: string,
+  targetLocale: string,
+): Promise<string | null> {
+  // First, find the post_id this alien slug belongs to
+  const { data: alienTrans, error: alienError } = await supabaseAdmin
+    .from("blog_post_translations")
+    .select("post_id")
+    .eq("slug", alienSlug)
+    .limit(1)
+    .maybeSingle();
+
+  if (alienError || !alienTrans?.post_id) {
+    return null;
+  }
+
+  // Now, find the slug for the target locale for this post_id
+  const { data: targetTrans, error: targetError } = await supabaseAdmin
+    .from("blog_post_translations")
+    .select("slug")
+    .eq("post_id", alienTrans.post_id)
+    .eq("locale", targetLocale)
+    .limit(1)
+    .maybeSingle();
+
+  if (targetError || !targetTrans?.slug) {
+    return null;
+  }
+
+  return targetTrans.slug;
 }
 
 /**

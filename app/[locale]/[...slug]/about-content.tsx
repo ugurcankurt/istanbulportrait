@@ -4,6 +4,7 @@ import { AboutSection } from "@/components/about-section";
 import { BreadcrumbNav } from "@/components/breadcrumb-nav";
 
 import { pagesContentService } from "@/lib/pages-content-service";
+import { settingsService } from "@/lib/settings-service";
 
 
 
@@ -20,6 +21,7 @@ export async function AboutPageContent({
 
 
   const dbPage = await pagesContentService.getPageBySlug("about");
+  const settings = await settingsService.getSettings();
 
   const dynamicTitle = dbPage?.title?.[locale] || dbPage?.title?.en || "";
   const dynamicSubtitle = dbPage?.subtitle?.[locale] || dbPage?.subtitle?.en || "";
@@ -46,6 +48,7 @@ export async function AboutPageContent({
         <AboutSection
           dbPage={dbPage as any}
           locale={locale}
+          founderImageUrl={settings.founder_image_url}
           highlightsHeader={
             <h2 key="highlights-header" className="text-xl sm:text-2xl lg:text-3xl font-bold text-center mb-8 sm:mb-10 lg:mb-12">
               {tAboutHighlights("title")}

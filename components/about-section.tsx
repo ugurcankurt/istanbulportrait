@@ -1,5 +1,7 @@
 "use client";
 
+import { useState } from "react";
+
 import { Award, Camera, Heart, MapPin, Star, Users } from "lucide-react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
@@ -13,6 +15,7 @@ interface AboutSectionProps {
   ctaHeader?: React.ReactNode;
   dbPage?: any;
   locale?: string;
+  founderImageUrl?: string | null;
 }
 
 export function AboutSection({
@@ -20,7 +23,9 @@ export function AboutSection({
   ctaHeader,
   dbPage,
   locale = "en",
+  founderImageUrl,
 }: AboutSectionProps) {
+  const [imgError, setImgError] = useState(false);
 
   const tabout = useTranslations("about");
   const tui = useTranslations("ui");
@@ -72,33 +77,25 @@ export function AboutSection({
         <div className="grid lg:grid-cols-2 gap-8 sm:gap-12 lg:gap-16 items-center mx-auto mb-12 sm:mb-16 lg:mb-20">
           {/* Image */}
           <div className="relative">
-            <div className="relative aspect-[4/5] rounded-2xl overflow-hidden">
-              <Image
-                src={dbPage?.cover_image || "/istanbulportprat_ugur_cankurt.webp"}
-                alt={dbPage?.title?.[locale] || "Uğur Cankurt - Professional Istanbul Photographer"}
-                fill
-                className="object-cover"
-                priority={true}
-                quality={75}
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 600px"
-                onError={(e) => {
-                  const target = e.target as HTMLImageElement;
-                  target.src = "/istanbul_photographer.webp";
-                  target.onerror = () => {
-                    target.style.display = "none";
-                    const parent = target.closest(".relative");
-                    if (parent && parent instanceof HTMLElement) {
-                      const fallback = document.createElement("div");
-                      fallback.className =
-                        "absolute inset-0 bg-gradient-to-r from-primary/10 to-primary/5 flex items-center justify-center";
-                      fallback.innerHTML =
-                        '<div class="text-primary font-medium">Image Loading...</div>';
-                      parent.appendChild(fallback);
-                    }
-                  };
-                }}
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
+            <div className="relative aspect-[4/5] rounded-2xl overflow-hidden bg-muted flex flex-col items-center justify-center">
+              {(!imgError && (dbPage?.cover_image || founderImageUrl)) ? (
+                <Image
+                  src={dbPage?.cover_image || founderImageUrl || ""}
+                  alt={dbPage?.title?.[locale] || "Uğur Cankurt - Professional Istanbul Photographer"}
+                  fill
+                  className="object-cover"
+                  priority={true}
+                  quality={75}
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 600px"
+                  onError={() => setImgError(true)}
+                />
+              ) : (
+                <div className="flex flex-col items-center justify-center text-muted-foreground p-8 text-center space-y-4 py-32">
+                  <Camera className="w-12 h-12 opacity-50" />
+                  <span className="text-sm font-medium">Founder Portrait</span>
+                </div>
+              )}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent pointer-events-none" />
             </div>
             <div className="absolute -bottom-2 sm:-bottom-4 -right-2 sm:-right-4 bg-primary text-primary-foreground p-3 sm:p-4 rounded-lg shadow-lg">
               <Camera className="w-6 h-6 sm:w-8 sm:h-8" />

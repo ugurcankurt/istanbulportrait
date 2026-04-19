@@ -39,6 +39,7 @@ import type { BookingFormData } from "@/lib/validations";
 import { createBookingSchema } from "@/lib/validations";
 import type { DiscountDB } from "@/lib/discount-service";
 import type { TimeSurcharge } from "@/lib/availability-service";
+import { useCurrency } from "@/contexts/currency-context";
 
 import { useIsMobile } from "@/hooks/use-mobile";
 import {
@@ -124,6 +125,7 @@ export function BookingModal({
   timeSurcharges = [],
 }: BookingModalProps) {
   const locale = useLocale();
+  const { formatPrice } = useCurrency();
   const router = useRouter();
   const t = useTranslations("checkout");
   const tPackages = useTranslations("packages");
@@ -582,10 +584,10 @@ export function BookingModal({
               <div className="max-w-md mx-auto flex items-center justify-between gap-4">
                 <div className="flex flex-col">
                   <span className="text-[10px] text-muted-foreground font-semibold">
-                    {t("labels.total_amount")} €{packageInfo.price}
+                    {t("labels.total_amount")} {formatPrice(packageInfo.price)}
                   </span>
                   <span className="text-xl font-black text-primary leading-none mt-0.5">
-                    €{packageInfo.depositAmount}
+                    {formatPrice(packageInfo.depositAmount)}
                   </span>
                   <span className="text-[10px] font-bold text-muted-foreground mt-1">
                     {t("labels.deposit_amount")} (30%)
@@ -637,13 +639,13 @@ export function BookingModal({
         <DialogFooter className="p-6 border-t bg-background shadow-[0_-4px_10px_rgba(0,0,0,0.03)] flex flex-row items-center justify-between sm:justify-between gap-4">
           <div className="flex flex-col text-start space-y-1">
             <span className="text-[11px] text-muted-foreground font-semibold">
-              {t("labels.total_amount")} €{packageInfo.price}
+              {t("labels.total_amount")} {formatPrice(packageInfo.price)}
             </span>
             <span className="text-xl font-black text-primary leading-none">
-              {t("labels.deposit_amount")} (30%) €{packageInfo.depositAmount}
+              {t("labels.deposit_amount")} (30%) {formatPrice(packageInfo.depositAmount)}
             </span>
             <span className="text-[11px] text-muted-foreground font-bold">
-              {t("labels.remaining_cash")} (70%) €{packageInfo.remainingAmount}
+              {t("labels.remaining_cash")} (70%) {formatPrice(packageInfo.remainingAmount)}
             </span>
           </div>
 

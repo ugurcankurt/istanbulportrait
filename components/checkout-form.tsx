@@ -14,6 +14,7 @@ import {
   ShieldCheck,
   Tag,
 } from "lucide-react";
+import { useCurrency } from "@/contexts/currency-context";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
@@ -152,21 +153,32 @@ function Step1Summary({
   onNext: () => void;
   timeSurcharges?: TimeSurcharge[];
 }) {
+  const { formatPrice } = useCurrency();
   const activeSurcharge = matchActiveSurcharge(preFilledBookingData?.bookingTime, timeSurcharges);
   const surchargePercentage = activeSurcharge ? activeSurcharge.surcharge_percentage : 0;
 
-  const pricing = formatPackagePricing(
+  const rawPricing = getPackagePricing(
     selectedPackage,
     (preFilledBookingData as any)?.basePrice || preFilledBookingData?.totalAmount || 0,
     (preFilledBookingData as any)?.activeDiscount || null,
     appliedPromo,
     preFilledBookingData?.bookingDate,
-    locale,
     (preFilledBookingData as any)?.isPerPerson ? preFilledBookingData?.peopleCount : undefined,
     undefined,
     undefined,
     surchargePercentage
   );
+
+  const pricing = {
+    ...rawPricing,
+    originalPrice: formatPrice(rawPricing.originalPrice),
+    discountAmount: formatPrice(rawPricing.discountAmount),
+    depositAmount: formatPrice(rawPricing.depositAmount),
+    remainingAmount: formatPrice(rawPricing.remainingAmount),
+    totalPrice: formatPrice(rawPricing.totalPrice),
+    taxAmount: formatPrice(rawPricing.taxAmount),
+    promoAmount: rawPricing.promoAmount ? formatPrice(rawPricing.promoAmount) : undefined
+  };
   return (
     <div className="flex flex-col h-full">
       <div className="flex-1 overflow-y-auto space-y-3 pb-2 min-h-0">
@@ -427,18 +439,29 @@ function PriceStrip({
   appliedPromo: { code: string; percentage: number } | null;
   computedSurchargePercentage: number;
 }) {
-  const pricing = formatPackagePricing(
+  const { formatPrice } = useCurrency();
+  const rawPricing = getPackagePricing(
     selectedPackage,
     (preFilledBookingData as any)?.basePrice || preFilledBookingData?.totalAmount || 0,
     (preFilledBookingData as any)?.activeDiscount || null,
     appliedPromo,
     preFilledBookingData?.bookingDate,
-    locale,
     (preFilledBookingData as any)?.isPerPerson ? preFilledBookingData?.peopleCount : undefined,
     undefined,
     undefined,
     computedSurchargePercentage
   );
+
+  const pricing = {
+    ...rawPricing,
+    originalPrice: formatPrice(rawPricing.originalPrice),
+    discountAmount: formatPrice(rawPricing.discountAmount),
+    depositAmount: formatPrice(rawPricing.depositAmount),
+    remainingAmount: formatPrice(rawPricing.remainingAmount),
+    totalPrice: formatPrice(rawPricing.totalPrice),
+    taxAmount: formatPrice(rawPricing.taxAmount),
+    promoAmount: rawPricing.promoAmount ? formatPrice(rawPricing.promoAmount) : undefined
+  };
   return (
     <div className="bg-primary/8 border border-primary/20 rounded-xl px-3 py-2.5">
       <div className="flex items-center justify-between">

@@ -18,6 +18,8 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { Metadata } from "next";
 import { SchemaInjector } from "@/components/schema-injector";
 import { buildOrganizationSchema, constructOpenGraph, getBaseUrl, optimizeSeoImage } from "@/lib/seo-utils";
+import { getEURtoTRYRate } from "@/lib/currency";
+import { CurrencyProvider } from "@/contexts/currency-context";
 
 const WhatsAppButton = dynamic(() =>
   import("@/components/whatsapp-button").then((mod) => mod.WhatsAppButton),
@@ -117,6 +119,7 @@ export default async function LocaleLayout({
   const dynamicNavData = await pagesContentService.getDynamicCoreNavData(locale);
   const { settingsService } = await import("@/lib/settings-service");
   const settings = await settingsService.getSettings();
+  const tryRate = await getEURtoTRYRate();
 
   return (
     <html
@@ -166,29 +169,31 @@ export default async function LocaleLayout({
         >
           <ConsentProvider>
             <NextIntlClientProvider messages={messages}>
-              <TooltipProvider>
-                <div className="flex min-h-screen flex-col">
-                  <Navigation dynamicNavData={dynamicNavData} settings={settings} />
-                  <main className="flex-1">{children}</main>
+              <CurrencyProvider rate={tryRate}>
+                <TooltipProvider>
+                  <div className="flex min-h-screen flex-col">
+                    <Navigation dynamicNavData={dynamicNavData} settings={settings} />
+                    <main className="flex-1">{children}</main>
 
-                  {/* Non-critical Analytics — deferred until first interaction to minimize main-thread work */}
-                  <InteractionLoader>
-                    <FacebookPixel pixelId={settings.facebook_pixel_id} />
-                    <DeferredAnalytics gaId={settings.google_analytics_id} adsId={settings.google_ads_webhook_key} clarityId={settings.clarity_project_id} />
-                    <ConsentGate consent="accepted_all">
-                      <YandexMetrica id={settings.yandex_metrica_id || undefined} />
-                    </ConsentGate>
-                  </InteractionLoader>
+                    {/* Non-critical Analytics — deferred until first interaction to minimize main-thread work */}
+                    <InteractionLoader>
+                      <FacebookPixel pixelId={settings.facebook_pixel_id} />
+                      <DeferredAnalytics gaId={settings.google_analytics_id} adsId={settings.google_ads_webhook_key} clarityId={settings.clarity_project_id} />
+                      <ConsentGate consent="accepted_all">
+                        <YandexMetrica id={settings.yandex_metrica_id || undefined} />
+                      </ConsentGate>
+                    </InteractionLoader>
 
-                  <CoreWebVitals />
-                  <Footer dynamicNavData={dynamicNavData} settings={settings} />
-                </div>
-                <Toaster />
-                <DeferredCookieConsent />
-                <WhatsAppButton
-                  phoneNumber={settings.whatsapp_number}
-                />
-              </TooltipProvider>
+                    <CoreWebVitals />
+                    <Footer dynamicNavData={dynamicNavData} settings={settings} />
+                  </div>
+                  <Toaster />
+                  <DeferredCookieConsent />
+                  <WhatsAppButton
+                    phoneNumber={settings.whatsapp_number}
+                  />
+                </TooltipProvider>
+              </CurrencyProvider>
             </NextIntlClientProvider>
           </ConsentProvider>
         </ThemeProvider>

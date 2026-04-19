@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import ReactMarkdown from "react-markdown";
 import rehypeRaw from "rehype-raw";
@@ -8,7 +8,7 @@ import { BlogAuthor } from "@/components/blog-author";
 import { BlogSummary } from "@/components/blog-summary";
 import { BreadcrumbNav } from "@/components/breadcrumb-nav";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
-import { getBlogPostBySlug } from "@/lib/blog/blog-service";
+import { getBlogPostBySlug, getSalvagedBlogSlug } from "@/lib/blog/blog-service";
 import { formatBlogDate } from "@/lib/blog/blog-utils";
 import { settingsService } from "@/lib/settings-service";
 import type { Locale } from "@/types/blog";
@@ -30,6 +30,11 @@ export async function BlogDetailPageContent({
   const t = await getTranslations({ locale, namespace: "blog" });
 
   if (!post || post.status !== "published") {
+    // Attempt to salvage the navigation by checking if the slug belongs to another language
+    const salvagedSlug = await getSalvagedBlogSlug(decodedSlug, locale);
+    if (salvagedSlug) {
+      redirect(`/${locale}/blog/${encodeURIComponent(salvagedSlug)}`);
+    }
     notFound();
   }
 

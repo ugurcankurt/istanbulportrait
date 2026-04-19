@@ -31,7 +31,9 @@ export function BreadcrumbNav(props: BreadcrumbNavProps) {
 
   // Remove locale from pathname and decode URL-encoded characters
   let pathWithoutLocale = pathname.replace(/^\/[a-z]{2}/, "") || "/";
+  let decodedPathname = pathname;
   try {
+    decodedPathname = decodeURIComponent(pathname);
     pathWithoutLocale = decodeURIComponent(pathWithoutLocale);
   } catch (error) {
     console.warn("Failed to decode URL path:", pathWithoutLocale);
@@ -139,7 +141,7 @@ export function BreadcrumbNav(props: BreadcrumbNavProps) {
 
   const schemaItems = breadcrumbs.map(b => ({
     name: b.label,
-    url: b.isLast ? pathname : (b.href === "/" ? `/${locale}` : (b.href || pathname))
+    url: b.isLast ? decodedPathname : (b.href === "/" ? `/${locale}` : (b.href || decodedPathname))
   }));
 
   return (

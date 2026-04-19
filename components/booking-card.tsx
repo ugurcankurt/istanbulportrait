@@ -10,11 +10,10 @@ import {
   Sunrise,
   Sun,
   Sunset,
-  CreditCard,
-  Info,
-  ShieldCheck,
+  CreditCard
 } from "lucide-react";
 import { DEPOSIT_PERCENTAGE, matchActiveSurcharge } from "@/lib/pricing";
+import { useCurrency } from "@/contexts/currency-context";
 import { useState, useEffect } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { format } from "date-fns";
@@ -80,6 +79,7 @@ export function BookingCard({
   timeSurcharges = [],
 }: BookingCardProps) {
   const isMobile = useIsMobile();
+  const { formatPrice } = useCurrency();
   const [isPeoplePopoverOpen, setIsPeoplePopoverOpen] = useState(false);
   const [isDatePopoverOpen, setIsDatePopoverOpen] = useState(false);
   const [isTimePopoverOpen, setIsTimePopoverOpen] = useState(false);
@@ -105,9 +105,9 @@ export function BookingCard({
         if (res.ok) {
           const data = await res.json();
           setBookedSlots(data.blockedSlots || []);
-          
+
           if (selectedTime && data.blockedSlots?.includes(selectedTime)) {
-             setSelectedTime(undefined);
+            setSelectedTime(undefined);
           }
         }
       } catch (error) {
@@ -169,11 +169,11 @@ export function BookingCard({
         <div className="space-y-4">
           <div className="flex items-baseline gap-1">
             <span className="text-4xl font-bold text-foreground leading-none">
-              €{displayPrice}
+              {formatPrice(displayPrice)}
             </span>
             {pricing.isDiscounted && (
               <span className="text-lg text-muted-foreground line-through font-medium leading-none">
-                €{basePrice}
+                {formatPrice(basePrice)}
               </span>
             )}
             <span className="text-sm text-primary font-bold text-muted-foreground">
@@ -309,19 +309,19 @@ export function BookingCard({
           {selectedDate && (
             <div className="space-y-2 animate-in fade-in slide-in-from-top-2 duration-500">
               <Popover open={isTimePopoverOpen} onOpenChange={setIsTimePopoverOpen} modal={false}>
-              <PopoverTrigger
-                className={cn(
-                  buttonVariants({ variant: "outline" }),
-                  "w-full h-12 px-6 font-bold flex items-center justify-between",
-                  !selectedTime && "text-muted-foreground/60"
-                )}
-              >
-                <div className="flex items-center gap-3 text-start">
-                  <Clock className="h-5 w-5 text-primary stroke-[2.5]" />
-                  <span>{selectedTime ? selectedTime : tCheckout("form.select_time")}</span>
-                </div>
-                <ChevronDown className={cn("h-4 w-4 opacity-50 transition-transform", isTimePopoverOpen && "rotate-180")} />
-              </PopoverTrigger>
+                <PopoverTrigger
+                  className={cn(
+                    buttonVariants({ variant: "outline" }),
+                    "w-full h-12 px-6 font-bold flex items-center justify-between",
+                    !selectedTime && "text-muted-foreground/60"
+                  )}
+                >
+                  <div className="flex items-center gap-3 text-start">
+                    <Clock className="h-5 w-5 text-primary stroke-[2.5]" />
+                    <span>{selectedTime ? selectedTime : tCheckout("form.select_time")}</span>
+                  </div>
+                  <ChevronDown className={cn("h-4 w-4 opacity-50 transition-transform", isTimePopoverOpen && "rotate-180")} />
+                </PopoverTrigger>
                 <PopoverContent
                   className="w-[var(--anchor-width)] p-3"
                   align="start"
@@ -362,7 +362,7 @@ export function BookingCard({
                             {slots.map((time) => {
                               const isBlocked = bookedSlots.includes(time);
                               const activeSurcharge = matchActiveSurcharge(time, timeSurcharges);
-                              
+
                               return (
                                 <Button
                                   key={time}
@@ -483,7 +483,7 @@ export function BookingCard({
               <p className="text-sm font-bold text-foreground">{tCheckout("security.secure_payment")}</p>
               <div className="space-y-1">
                 <p className="text-xs font-medium text-muted-foreground leading-relaxed">
-                  {tCheckout("payment_breakdown.pay_now", { amount: `€${Math.round(displayPrice * DEPOSIT_PERCENTAGE)}` })} {tCheckout("payment_breakdown.pay_on_day", { amount: `€${displayPrice - Math.round(displayPrice * DEPOSIT_PERCENTAGE)}` })}
+                  {tCheckout("payment_breakdown.pay_now", { amount: `${formatPrice(Math.round(displayPrice * DEPOSIT_PERCENTAGE))}` })} {tCheckout("payment_breakdown.pay_on_day", { amount: `${formatPrice(displayPrice - Math.round(displayPrice * DEPOSIT_PERCENTAGE))}` })}
                 </p>
               </div>
             </div>

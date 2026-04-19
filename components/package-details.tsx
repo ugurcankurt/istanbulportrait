@@ -32,6 +32,7 @@ import { PackageReviews } from "@/components/package-reviews";
 import type { GoogleReview, AggregateRating } from "@/types/reviews";
 import { cn } from "@/lib/utils";
 import type { TimeSurcharge } from "@/lib/availability-service";
+import { useCurrency } from "@/contexts/currency-context";
 
 export interface PackageDetailsProps {
   packageData: PackageDB;
@@ -61,6 +62,7 @@ export function PackageDetails({ packageData, aggregateRating, reviews, activeDi
   const tui = useTranslations("ui");
   const tCheckout = useTranslations("checkout");
   const locale = useLocale();
+  const { formatPrice } = useCurrency();
   const router = useRouter();
   const dateFnsLocale = useMemo(() => getDateFnsLocale(locale), [locale]);
 
@@ -274,12 +276,12 @@ export function PackageDetails({ packageData, aggregateRating, reviews, activeDi
                 <div className="flex items-center gap-3">
                   <div className="flex items-center gap-3">
                     <div className="text-4xl font-bold text-primary">
-                      €{pricing.isDiscounted ? pricing.price : basePrice}
+                      {formatPrice(pricing.isDiscounted ? pricing.price : basePrice)}
                     </div>
                     {pricing.isDiscounted && (
                       <div className="flex items-center gap-2">
                         <span className="text-xl text-muted-foreground line-through font-medium">
-                          €{basePrice}
+                          {formatPrice(basePrice)}
                         </span>
                         <Badge className="bg-red-500 hover:bg-red-600 text-white border-none font-bold">
                           -{Math.round(pricing.discountPercentage * 100)}%
@@ -408,7 +410,7 @@ export function PackageDetails({ packageData, aggregateRating, reviews, activeDi
               <div>
                 <p className="text-[11px] font-bold text-foreground leading-tight">{tCheckout("security.secure_payment")}</p>
                 <p className="text-[10px] font-medium text-muted-foreground leading-tight">
-                  {tCheckout("payment_breakdown.pay_now", { amount: `€${Math.round(displayPrice * DEPOSIT_PERCENTAGE)}` })} {tCheckout("payment_breakdown.pay_on_day", { amount: `€${displayPrice - Math.round(displayPrice * DEPOSIT_PERCENTAGE)}` })}
+                  {tCheckout("payment_breakdown.pay_now", { amount: `${formatPrice(Math.round(displayPrice * DEPOSIT_PERCENTAGE))}` })} {tCheckout("payment_breakdown.pay_on_day", { amount: `${formatPrice(displayPrice - Math.round(displayPrice * DEPOSIT_PERCENTAGE))}` })}
                 </p>
               </div>
             </div>
@@ -425,11 +427,11 @@ export function PackageDetails({ packageData, aggregateRating, reviews, activeDi
             )}
             <div className="flex items-center gap-2">
               <span className="text-2xl font-black text-primary">
-                €{pricing.isDiscounted ? pricing.price : basePrice}
+                {formatPrice(pricing.isDiscounted ? pricing.price : basePrice)}
               </span>
               {pricing.isDiscounted && (
                 <span className="text-sm line-through text-muted-foreground font-medium opacity-60">
-                  €{basePrice}
+                  {formatPrice(basePrice)}
                 </span>
               )}
             </div>

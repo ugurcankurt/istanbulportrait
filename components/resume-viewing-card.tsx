@@ -14,6 +14,7 @@ import { Card, CardHeader } from "@/components/ui/card";
 import { formatDistanceToNow } from "date-fns";
 import { enUS, tr, de, fr, es, zhCN, ro, arSA, ru } from "date-fns/locale";
 import { useLocale } from "next-intl";
+import { useCurrency } from "@/contexts/currency-context";
 import { cn } from "@/lib/utils";
 import { extractPhotosCount } from "@/lib/features-parser";
 import {
@@ -79,6 +80,7 @@ export function ResumeViewingCard({
   }, [initialPackages]);
 
   const locale = useLocale();
+  const { formatPrice } = useCurrency();
 
   const getDateLocale = (code: string) => {
     switch (code) {
@@ -206,11 +208,11 @@ export function ResumeViewingCard({
                           <div className="flex flex-col items-end">
                             <div className="flex items-baseline gap-1">
                               <span className="text-lg sm:text-xl font-bold text-slate-900">
-                                €{pricing.price}
+                                {formatPrice(pricing.price)}
                               </span>
                               {pricing.isDiscounted && (
                                 <span className="text-xs text-slate-400 line-through">
-                                  €{basePrice}
+                                  {formatPrice(basePrice)}
                                 </span>
                               )}
                             </div>

@@ -4,6 +4,7 @@ import { Clock, Image as ImageIcon, MapPin, Star } from "lucide-react";
 import Image from "next/image";
 import { useTranslations, useLocale } from "next-intl";
 import { useEffect, useMemo } from "react";
+import { useCurrency } from "@/contexts/currency-context";
 import { Badge } from "@/components/ui/badge";
 import {
   Card,
@@ -39,6 +40,7 @@ export function PackagesSection({ header, customCtaHeader, aggregateRating, dbPa
   const t = useTranslations("packages");
   const tui = useTranslations("ui");
   const locale = useLocale();
+  const { formatPrice } = useCurrency();
 
   const packages = useMemo(() => {
     const today = new Date();
@@ -128,10 +130,10 @@ export function PackagesSection({ header, customCtaHeader, aggregateRating, dbPa
                     : ""
                 }
               >
-                €{pkg.basePrice}
+                {formatPrice(pkg.basePrice)}
               </span>
               {pkg.pricing.isDiscounted && (
-                <span>€{pkg.pricing.price}</span>
+                <span>{formatPrice(pkg.pricing.price)}</span>
               )}
               {pkg.isPerPerson && (
                 <span className="text-[10px] sm:text-xs font-normal opacity-90 -mt-1">

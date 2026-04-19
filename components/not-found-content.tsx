@@ -1,5 +1,7 @@
 "use client";
 
+import { useState } from "react";
+
 import { ArrowLeft, Camera, Home, MapPin } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -26,30 +28,25 @@ export function NotFoundContent({
   goBack,
   settings,
 }: NotFoundContentProps) {
+  const [imgError, setImgError] = useState(false);
+  const bgImage = settings?.default_og_image_url || settings?.founder_image_url;
+
   return (
     <div className="relative min-h-screen md:min-h-[calc(100vh-140px)] flex items-center justify-center overflow-hidden">
       {/* Background Image */}
       <div className="absolute inset-0 z-0">
-        <Image
-          src="/istanbul_photographer.webp"
-          alt="Istanbul photoshoot"
-          fill
-          className="object-cover"
-          priority={false}
-          quality={75}
-          sizes="100vw"
-          onError={(e) => {
-            const target = e.target as HTMLImageElement;
-            target.src = "/istanbulportprat_ugur_cankurt.webp";
-            target.onerror = () => {
-              target.style.display = "none";
-              const parent = target.closest(".absolute");
-              if (parent && parent instanceof HTMLElement) {
-                parent.style.backgroundColor = "rgba(0,0,0,0.8)";
-              }
-            };
-          }}
-        />
+        {!imgError && bgImage && (
+          <Image
+            src={bgImage}
+            alt="Istanbul photoshoot"
+            fill
+            className="object-cover"
+            priority={false}
+            quality={75}
+            sizes="100vw"
+            onError={() => setImgError(true)}
+          />
+        )}
         <div className="absolute inset-0 bg-black/50 sm:bg-black/60" />
         <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/50 to-black/70" />
         <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-transparent to-primary/5" />
