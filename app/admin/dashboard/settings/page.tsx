@@ -441,6 +441,14 @@ export default function SettingsPage() {
                   placeholder="re_xxxxxxxxxxxxxx"
                 />
               </div>
+              <div className="space-y-2">
+                <Label>Resend Audience ID</Label>
+                <Input
+                  value={settings.resend_audience_id || ""}
+                  onChange={(e) => updateSetting("resend_audience_id", e.target.value)}
+                  placeholder="aud_xxxxxxxxxxxxx"
+                />
+              </div>
               <div className="space-y-2 pt-2 border-t mt-4">
                 <Label>Gemini API Key (AI Translations)</Label>
                 <Input
