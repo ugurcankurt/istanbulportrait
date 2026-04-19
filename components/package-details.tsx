@@ -75,10 +75,8 @@ export function PackageDetails({ packageData, aggregateRating, reviews, activeDi
   const basePrice = Number(packageData.price);
   const pricing = calculateDiscountedPrice(basePrice, activeDiscount, null, selectedDate);
 
-  // Adjusted price for packages with per-person pricing
-  const displayPrice = packageData.is_per_person
-    ? pricing.price * peopleCount
-    : pricing.price;
+  // Price to display (unit price, do not multiply by peopleCount for visual display)
+  const displayPrice = pricing.price;
 
   const features = packageData.features[locale] || packageData.features["en"] || [];
   const packageName = packageData.title[locale] || packageData.title["en"] || packageData.slug;
@@ -349,6 +347,7 @@ export function PackageDetails({ packageData, aggregateRating, reviews, activeDi
                 packageDuration={packageDur}
                 isPerPerson={packageData.is_per_person}
                 onCheckAvailability={() => setIsModalOpen(true)}
+                activeDiscount={activeDiscount}
               />
             </div>
 

@@ -27,6 +27,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
 import { type PackageId } from "@/lib/validations";
+import { type DiscountDB } from "@/lib/discount-service";
 
 interface BookingCardProps {
   packageId: PackageId;
@@ -50,6 +51,7 @@ interface BookingCardProps {
   isPerPerson: boolean;
   onCheckAvailability: () => void;
   isFlat?: boolean;
+  activeDiscount?: DiscountDB | null;
 }
 
 export function BookingCard({
@@ -70,6 +72,7 @@ export function BookingCard({
   isPerPerson,
   onCheckAvailability,
   isFlat = false,
+  activeDiscount = null,
 }: BookingCardProps) {
   const isMobile = useIsMobile();
   const [isPeoplePopoverOpen, setIsPeoplePopoverOpen] = useState(false);
@@ -140,6 +143,16 @@ export function BookingCard({
     };
 
     requestAnimationFrame(tick);
+  };
+
+  const isDateDiscounted = (date: Date) => {
+    if (!activeDiscount || !activeDiscount.start_date || !activeDiscount.end_date) return false;
+    const start = new Date(activeDiscount.start_date);
+    start.setHours(0, 0, 0, 0);
+    const end = new Date(activeDiscount.end_date);
+    end.setHours(23, 59, 59, 999);
+    const checkTime = date.getTime();
+    return checkTime >= start.getTime() && checkTime <= end.getTime();
   };
 
   return (
@@ -270,6 +283,8 @@ export function BookingCard({
                     setIsDatePopoverOpen(false);
                   }}
                   disabled={(date) => date < new Date() || date < new Date("1900-01-01")}
+                  modifiers={{ discount: isDateDiscounted }}
+                  modifiersClassNames={{ discount: "font-black underline decoration-primary underline-offset-4" }}
                   initialFocus
                   locale={dateFnsLocale}
                 />

@@ -321,11 +321,11 @@ export function BookingModal({
         } catch (e) {
           console.error("Draft creation error:", e);
           sessionStorage.setItem("bookingData", JSON.stringify({
-              ...data,
-              packageDisplayName, packageDuration, packagePhotos, packageLocations, packageFeatures: packageFeatures || [],
-              totalAmount: pricing?.totalPrice || basePrice,
-              basePrice,
-              originalPrice: pricing?.originalPrice
+            ...data,
+            packageDisplayName, packageDuration, packagePhotos, packageLocations, packageFeatures: packageFeatures || [],
+            totalAmount: pricing?.totalPrice || basePrice,
+            basePrice,
+            originalPrice: pricing?.originalPrice
           }));
           form.reset();
           onClose();
@@ -375,7 +375,7 @@ export function BookingModal({
                       </FormLabel>
                       <FormControl>
                         <Input
-                          className="h-11 rounded-md bg-slate-50/50 border-slate-200 focus:bg-background transition-all"
+                          className="h-11 rounded-md bg-muted/50 border-input focus:bg-background transition-all"
                           placeholder={tplaceholders("enter_full_name")}
                           {...field}
                         />
@@ -394,7 +394,7 @@ export function BookingModal({
                       </FormLabel>
                       <FormControl>
                         <Input
-                          className="h-11 rounded-md bg-slate-50/50 border-slate-200 focus:bg-background transition-all"
+                          className="h-11 rounded-md bg-muted/50 border-input focus:bg-background transition-all"
                           type="email"
                           placeholder={tplaceholders("enter_email")}
                           {...field}
@@ -419,7 +419,7 @@ export function BookingModal({
                         onChange={field.onChange}
                         defaultCountry="TR"
                         placeholder={tplaceholders("phone_number")}
-                        className="flex h-11 w-full rounded-md border border-slate-200 bg-slate-50/50 px-3 py-2 text-base ring-offset-background placeholder:text-muted-foreground focus-within:ring-2 focus-within:ring-primary focus-within:bg-background focus-within:ring-offset-0 disabled:cursor-not-allowed disabled:opacity-50 transition-all font-medium"
+                        className="flex h-11 w-full rounded-md border border-input bg-muted/50 px-3 py-2 text-base ring-offset-background placeholder:text-muted-foreground focus-within:ring-2 focus-within:ring-primary focus-within:bg-background focus-within:ring-offset-0 disabled:cursor-not-allowed disabled:opacity-50 transition-all font-medium"
                       />
                     </FormControl>
                     <FormMessage className="text-[11px]" />
@@ -438,7 +438,7 @@ export function BookingModal({
                     <FormControl>
                       <Textarea
                         placeholder={tplaceholders("special_requests")}
-                        className="min-h-[100px] rounded-md bg-slate-50/50 border-slate-200 focus:bg-background transition-all resize-none"
+                        className="min-h-[100px] rounded-md bg-muted/50 border-input focus:bg-background transition-all resize-none"
                         {...field}
                       />
                     </FormControl>
@@ -564,6 +564,7 @@ export function BookingModal({
                   isPerPerson={isPerPerson}
                   onCheckAvailability={() => setStep("details")}
                   isFlat={true}
+                  activeDiscount={activeDiscount}
                 />
               </div>
             ) : (
@@ -611,7 +612,7 @@ export function BookingModal({
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent
-        className="sm:max-w-5xl w-full h-[92vh] md:h-[85vh] p-0 overflow-hidden flex flex-col gap-0 rounded-lg max-md:fixed max-md:inset-0 max-md:h-[100dvh] max-md:w-screen max-md:max-w-none max-md:rounded-none max-md:border-none max-md:translate-x-0 max-md:translate-y-0"
+        className="sm:max-w-xl w-full h-[92vh] md:h-[85vh] p-0 overflow-hidden flex flex-col gap-0 rounded-lg max-md:fixed max-md:inset-0 max-md:h-[100dvh] max-md:w-screen max-md:max-w-none max-md:rounded-none max-md:border-none max-md:translate-x-0 max-md:translate-y-0"
         showCloseButton={true}
       >
         <DialogHeader className="p-6 pb-4 border-b">
