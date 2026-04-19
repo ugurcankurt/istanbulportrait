@@ -12,9 +12,7 @@
  *
  * @see https://developers.google.com/analytics/devguides/collection/protocol/ga4
  */
-
-const GA4_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID;
-const GA4_API_SECRET = process.env.GA4_MEASUREMENT_PROTOCOL_SECRET;
+import { settingsService } from "./settings-service";
 
 const GA4_ENDPOINT = "https://www.google-analytics.com/mp/collect";
 
@@ -66,9 +64,13 @@ export async function trackGA4ServerPurchase(
   currency: string = "EUR",
   clientId?: string, // Optional: GA4 client_id from cookie (_ga)
 ): Promise<void> {
+  const settings = await settingsService.getSettings();
+  const GA4_MEASUREMENT_ID = settings.google_analytics_id;
+  const GA4_API_SECRET = settings.ga4_measurement_protocol_secret;
+
   if (!GA4_MEASUREMENT_ID || !GA4_API_SECRET) {
     console.warn(
-      "[GA4 Server] Missing NEXT_PUBLIC_GOOGLE_ANALYTICS_ID or GA4_MEASUREMENT_PROTOCOL_SECRET",
+      "[GA4 Server] Missing google_analytics_id or ga4_measurement_protocol_secret in settings",
     );
     return;
   }

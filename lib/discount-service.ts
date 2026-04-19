@@ -22,20 +22,32 @@ export const discountService = {
         .from("discounts")
         .select("*")
         .eq("is_active", true)
-        .limit(1)
-        .single();
 
       if (error) {
-        if (error.code === "PGRST116") {
-          // PGRST116 = JSON object requested, multiple (or no) rows returned
-          // It's perfectly normal to have no rows if there's no active discount
-          return null;
-        }
         console.error("Supabase Error fetching active discount:", error);
         return null;
       }
 
-      return data as DiscountDB;
+      if (!data || data.length === 0) return null;
+
+      const now = new Date();
+      // Filter the active discount based on date constraints
+      const validDiscount = data.find(discount => {
+        let isValid = true;
+        if (discount.start_date) {
+            const start = new Date(discount.start_date);
+            start.setHours(0, 0, 0, 0);
+            if (now.getTime() < start.getTime()) isValid = false;
+        }
+        if (discount.end_date) {
+            const end = new Date(discount.end_date);
+            end.setHours(23, 59, 59, 999);
+            if (now.getTime() > end.getTime()) isValid = false;
+        }
+        return isValid;
+      });
+
+      return validDiscount || null;
     } catch (e) {
       console.error("Unexpected error fetching active discount:", e);
       return null;

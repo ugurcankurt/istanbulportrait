@@ -5,7 +5,12 @@
   "nav": {
     "home": "Ana Sayfa",
     "selectLanguage": "Dil Seçin",
-    "selectLanguageDescription": "İstanbul Portre sayfasını keşfetmek için tercih ettiğiniz dili seçin."
+    "selectLanguageDescription": "İstanbul Portre sayfasını keşfetmek için tercih ettiğiniz dili seçin.",
+    "packages": "Paketler",
+    "locations": "Mekanlar",
+    "blog": "Blog",
+    "about": "Hakkımızda",
+    "contact": "İletişim"
   },
   "whatsapp": {
     "button": "WhatsApp",
@@ -109,13 +114,17 @@
       "checking_availability": "Müsaitlik Kontrol Ediliyor...",
       "availability_confirmed": "Yer Müsait! Açılıyor..."
     },
+    "cancellation": {
+      "title": "Ücretsiz iptal",
+      "description": "Tam para iadesi için 24 saat öncesine kadar iptal edebilirsiniz."
+    },
     "payment_breakdown": {
       "pay_now": "Şimdi {amount} ödeyin",
       "pay_on_day": "kalan {amount} çekim günü ödenecektir"
     },
     "success": {
       "title": "Rezervasyon Onaylandı!",
-      "message": "İstanbul Photographer ile rezervasyon yaptığınız için teşekkür ederiz. Rezervasyon onayınız e-posta adresinize gönderildi.",
+      "message": "İstanbul Portrait ile rezervasyon yaptığınız için teşekkür ederiz. Rezervasyon onayınız e-posta adresinize gönderildi.",
       "booking_id": "Rezervasyon ID",
       "payment_successful": "Ödeme başarılı! Onay e-postası gönderildi."
     },
@@ -153,7 +162,7 @@
     },
     "people_count_title": "Kişi Sayısı",
     "price_per_person": "Kişi başı fiyat",
-    "seasonal_discount_applied": "İndirim (%{percentage} İndirimli)",
+    "seasonal_discount_applied": "%{percentage} Sezon İndirimi",
     "promo_code": "Promosyon Kodu",
     "apply_promo": "Uygula",
     "promo_applied": "Promosyon kodu uygulandı!",
@@ -187,14 +196,17 @@
       "try_again": "Tekrar Dene"
     },
     "expires_in": "Yerinizi tutuyoruz, kalan: [TIME] dakika.",
-    "expired": "Rezervasyon süresi doldu. Lütfen yeni bir saat seçin."
+    "expired": "Rezervasyon süresi doldu. Lütfen yeni bir saat seçin.",
+    "apply": "Uygula",
+    "remove": "Kaldır",
+    "promo_code_applied": "%{percentage} Promosyon"
   },
   "footer": {
     "description": "Profesyonel portre fotoğrafçılığında İstanbul'un önde gelen fotoğrafçısı. Özel anlarınızı şehrin en simgesel arka planlarıyla ölümsüzleştiriyoruz.",
     "quickLinks": "Hızlı Bağlantılar",
-    "services": "Hizmetler",
+    "services": "Paketler",
     "followUs": "Bizi Takip Edin",
-    "copyright": "© 2026 360istanbul.com.tr | Tüm hakları saklıdır.",
+    "copyright": "© 2026 istanbulportrait.com | Tüm hakları saklıdır.",
     "service_items": {
       "portrait": "Portre Fotoğrafçılığı",
       "couples": "Çift Çekimleri",
@@ -386,7 +398,7 @@
     "bullet_retouching": "• Profesyonel rötuşlama",
     "need_help": "Yardıma Mı İhtiyacınız Var?",
     "help_description": "Rezervasyonunuzla ilgili sorularınız mı var? Bize istediğiniz zaman ulaşabilirsiniz.",
-    "support_email": "info@360istanbul.com.tr",
+    "support_email": "info@istanbulportrait.com",
     "support_phone": "+90 536 709 37 24",
     "people_count": "Kişi Sayısı"
   },
@@ -505,6 +517,78 @@
     "summary": {
       "title": "Önemli Çıkarımlar",
       "ai_overview": "Yapay Zeka Özeti"
+    }
+  },
+  "privacy": {
+    "cookies": {
+      "table": {
+        "title": "Sitemizde Kullanılan Çerezler",
+        "columns": {
+          "name": "Ad",
+          "purpose": "Amaç",
+          "type": "Tür",
+          "duration": "Süre",
+          "provider": "Sağlayıcı"
+        },
+        "types": {
+          "essential": "Zorunlu",
+          "analytics": "Analitik",
+          "marketing": "Pazarlama"
+        },
+        "providers": {
+          "first_party": "Birinci Taraf",
+          "google": "Google",
+          "yandex": "Yandex",
+          "microsoft": "Microsoft",
+          "facebook": "Facebook"
+        },
+        "essential": {
+          "user_consent": {
+            "purpose": "Kullanıcının mevcut alan adı için çerez izin durumunu saklar.",
+            "duration": "1 yıl"
+          }
+        },
+        "analytics": {
+          "ga": {
+            "purpose": "Google Analytics tarafından kullanıcıları ayırt etmek için kullanılır.",
+            "duration": "2 yıl"
+          },
+          "gid": {
+            "purpose": "Google Analytics tarafından kullanıcıları ayırt etmek için kullanılır.",
+            "duration": "24 saat"
+          },
+          "gat": {
+            "purpose": "İstek hızını sınırlamak için kullanılır.",
+            "duration": "1 dakika"
+          },
+          "ym_uid": {
+            "purpose": "Yandex Metrica tarafından site kullanıcılarını tanımlamak için kullanılır.",
+            "duration": "1 yıl"
+          },
+          "ym_d": {
+            "purpose": "Yandex Metrica tarafından kullanıcının ilk oturum tarihini saklamak için kullanılır.",
+            "duration": "1 yıl"
+          },
+          "clck": {
+            "purpose": "Microsoft Clarity Kullanıcı Kimliğini korur.",
+            "duration": "1 yıl"
+          },
+          "clsk": {
+            "purpose": "Kullanıcının birden fazla sayfa görünümünü tek bir Clarity oturumunda birleştirir.",
+            "duration": "1 gün"
+          }
+        },
+        "marketing": {
+          "fbp": {
+            "purpose": "Facebook tarafından reklam ürünlerini sunmak için kullanılır.",
+            "duration": "3 ay"
+          },
+          "fbc": {
+            "purpose": "Facebook tarafından bir reklama tıklandığında reklam ürünlerini sunmak için kullanılır.",
+            "duration": "3 ay"
+          }
+        }
+      }
     }
   }
 }

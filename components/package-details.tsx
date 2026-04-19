@@ -3,7 +3,8 @@
 import { toast } from "sonner";
 import {
   Check,
-  Clapperboard,
+  CheckCircle2,
+  Clock,
   CreditCard,
   Image as ImageIcon,
   MapPin,
@@ -72,7 +73,7 @@ export function PackageDetails({ packageData, aggregateRating, reviews, activeDi
 
   // Calculate pricing
   const basePrice = Number(packageData.price);
-  const pricing = calculateDiscountedPrice(basePrice, activeDiscount, selectedDate);
+  const pricing = calculateDiscountedPrice(basePrice, activeDiscount, null, selectedDate);
 
   // Adjusted price for packages with per-person pricing
   const displayPrice = packageData.is_per_person
@@ -288,7 +289,7 @@ export function PackageDetails({ packageData, aggregateRating, reviews, activeDi
               {/* Quick Stats Grid (Mobile) */}
               <div className="grid grid-cols-3 gap-3">
                 {[
-                  { icon: Clapperboard, label: "Reels", val: packageDur },
+                  { icon: Clock, label: "Duration", val: packageDur },
                   { icon: ImageIcon, label: tui("photos"), val: extractPhotosCount(features) },
                   { icon: MapPin, label: tui("locations"), val: packageData.locations || 1 }
                 ].map((stat, i) => (
@@ -382,17 +383,28 @@ export function PackageDetails({ packageData, aggregateRating, reviews, activeDi
           "transition-all duration-500 ease-in-out overflow-hidden border-b border-border/50 px-4",
           isScrolled ? "max-h-0 py-0 opacity-0 border-none" : "max-h-40 py-3 opacity-100"
         )}>
-          <div className="space-y-3">            <div className="flex items-start gap-3">
-            <div className="mt-0.5">
-              <CreditCard className="h-4 w-4 text-primary" />
+          <div className="space-y-3">
+            <div className="flex items-start gap-3">
+              <div className="mt-0.5">
+                <CheckCircle2 className="h-4 w-4 text-emerald-500" />
+              </div>
+              <div>
+                <p className="text-[11px] font-bold text-foreground leading-tight">{tCheckout("cancellation.title")}</p>
+                <p className="text-[10px] font-medium text-muted-foreground leading-tight line-clamp-1">{tCheckout("cancellation.description")}</p>
+              </div>
             </div>
-            <div>
-              <p className="text-[11px] font-bold text-foreground leading-tight">{tCheckout("security.secure_booking")}</p>
-              <p className="text-[10px] font-medium text-muted-foreground leading-tight">
-                {tCheckout("security.pay_full_in_cash", { amount: displayPrice })}
-              </p>
+
+            <div className="flex items-start gap-3">
+              <div className="mt-0.5">
+                <CreditCard className="h-4 w-4 text-primary" />
+              </div>
+              <div>
+                <p className="text-[11px] font-bold text-foreground leading-tight">{tCheckout("security.secure_payment")}</p>
+                <p className="text-[10px] font-medium text-muted-foreground leading-tight">
+                  {tCheckout("payment_breakdown.pay_now", { amount: `€${Math.round(displayPrice * DEPOSIT_PERCENTAGE)}` })} {tCheckout("payment_breakdown.pay_on_day", { amount: `€${displayPrice - Math.round(displayPrice * DEPOSIT_PERCENTAGE)}` })}
+                </p>
+              </div>
             </div>
-          </div>
           </div>
         </div>
 

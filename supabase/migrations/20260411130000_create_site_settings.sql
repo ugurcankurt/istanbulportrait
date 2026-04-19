@@ -70,11 +70,11 @@ INSERT INTO public.site_settings (
     working_hours
 ) VALUES (
     1, 
-    'info@360istanbul.com.tr', 
-    '+905551234567', 
-    '+905551234567',
-    'https://instagram.com/360istanbul',
-    'https://facebook.com/360istanbul',
+    'info@istanbulportrait.com', 
+    '+905367093724', 
+    '+905367093724',
+    'https://instagram.com/istanbulportrait',
+    'https://facebook.com/istanbulportrait',
     '{"en": "Eminönü, Istanbul, Turkey", "tr": "Eminönü, İstanbul, Türkiye"}'::jsonb,
     '{"en": "Everyday: 06:00 - 22:00", "tr": "Her gün: 06:00 - 22:00"}'::jsonb
 ) ON CONFLICT (id) DO NOTHING;

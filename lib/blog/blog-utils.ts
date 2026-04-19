@@ -8,6 +8,7 @@ import type {
   ReadingTimeResult,
   SlugGenerationOptions,
 } from "@/types/blog";
+import { generateNativeSlug } from "@/lib/slug-generator";
 
 // =============================================
 // SLUG GENERATION
@@ -21,121 +22,14 @@ export function generateSlug(
   text: string,
   options: SlugGenerationOptions = {},
 ): string {
-  const { maxLength = 200, locale = "en" } = options;
+  const { maxLength = 200 } = options;
+  
+  // Use the native sluggifier from site architecture
+  let slug = generateNativeSlug(text);
 
-  let slug = text.toLowerCase().trim();
-
-  // Transliteration maps for different locales
-  const transliterationMaps: Record<string, Record<string, string>> = {
-    // Turkish characters
-    tr: {
-      ç: "c",
-      ğ: "g",
-      ı: "i",
-      İ: "i",
-      ö: "o",
-      ş: "s",
-      ü: "u",
-      Ç: "c",
-      Ğ: "g",
-      Ö: "o",
-      Ş: "s",
-      Ü: "u",
-    },
-    // Russian characters (Cyrillic to Latin)
-    ru: {
-      а: "a",
-      б: "b",
-      в: "v",
-      г: "g",
-      д: "d",
-      е: "e",
-      ё: "yo",
-      ж: "zh",
-      з: "z",
-      и: "i",
-      й: "y",
-      к: "k",
-      л: "l",
-      м: "m",
-      н: "n",
-      о: "o",
-      п: "p",
-      р: "r",
-      с: "s",
-      т: "t",
-      у: "u",
-      ф: "f",
-      х: "h",
-      ц: "ts",
-      ч: "ch",
-      ш: "sh",
-      щ: "sch",
-      ъ: "",
-      ы: "y",
-      ь: "",
-      э: "e",
-      ю: "yu",
-      я: "ya",
-    },
-    // Arabic characters (simplified transliteration)
-    ar: {
-      ا: "a",
-      ب: "b",
-      ت: "t",
-      ث: "th",
-      ج: "j",
-      ح: "h",
-      خ: "kh",
-      د: "d",
-      ذ: "dh",
-      ر: "r",
-      ز: "z",
-      س: "s",
-      ش: "sh",
-      ص: "s",
-      ض: "d",
-      ط: "t",
-      ظ: "z",
-      ع: "a",
-      غ: "gh",
-      ف: "f",
-      ق: "q",
-      ك: "k",
-      ل: "l",
-      م: "m",
-      ن: "n",
-      ه: "h",
-      و: "w",
-      ي: "y",
-      ة: "h",
-      ى: "a",
-      ء: "",
-    },
-  };
-
-  // Apply transliteration based on locale
-  const transliterationMap = transliterationMaps[locale];
-  if (transliterationMap) {
-    Object.entries(transliterationMap).forEach(([char, replacement]) => {
-      slug = slug.replace(new RegExp(char, "g"), replacement);
-    });
-  }
-
-  // Remove accents and diacritics
-  slug = slug.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-
-  // Replace special characters with hyphens
-  slug = slug
-    .replace(/[^a-z0-9\s-]/g, "") // Remove invalid chars
-    .replace(/\s+/g, "-") // Replace spaces with -
-    .replace(/-+/g, "-") // Replace multiple - with single -
-    .replace(/^-+|-+$/g, ""); // Trim - from start and end
-
-  // Limit length
+  // Limit length safely
   if (slug.length > maxLength) {
     slug = slug.substring(0, maxLength);
-    // Remove trailing incomplete word
     const lastDash = slug.lastIndexOf("-");
     if (lastDash > 0) {
       slug = slug.substring(0, lastDash);

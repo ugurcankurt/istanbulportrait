@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 
-const TARGET_LOCALES = ["ar", "ru", "es", "zh", "de", "fr", "ro"];
+const TARGET_LOCALES = ["ar", "ru", "es", "zh", "de", "fr", "ro", "tr"];
 
 export async function POST(req: Request) {
   try {

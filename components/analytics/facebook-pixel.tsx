@@ -5,9 +5,9 @@ import Script from "next/script";
 import { useEffect } from "react";
 import { useConsent } from "@/contexts/consent-context";
 import { getUserDataForAdvancedMatching } from "@/lib/analytics";
-import { FACEBOOK_PIXEL_ID, hashCustomerData, hashPhoneNumber } from "@/lib/facebook";
+import { hashCustomerData, hashPhoneNumber } from "@/lib/facebook";
 
-export function FacebookPixel() {
+export function FacebookPixel({ pixelId }: { pixelId?: string | null }) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const { consent } = useConsent();
@@ -30,7 +30,7 @@ export function FacebookPixel() {
   // biome-ignore lint/correctness/useExhaustiveDependencies: Track page views on route change
   useEffect(() => {
     const initPixelWithAdvancedMatching = async () => {
-      if (!FACEBOOK_PIXEL_ID || typeof window === "undefined" || !window.fbq) return;
+      if (!pixelId || typeof window === "undefined" || !window.fbq) return;
 
       // Check for persisted user data and re-init with it for Advanced Matching
       const userData = getUserDataForAdvancedMatching();
@@ -43,7 +43,7 @@ export function FacebookPixel() {
         if (userData.country) hashed.country = await hashCustomerData(userData.country);
 
         if (Object.keys(hashed).length > 0) {
-          window.fbq("init", FACEBOOK_PIXEL_ID, hashed);
+          window.fbq("init", pixelId, hashed);
         }
       }
 
@@ -54,7 +54,7 @@ export function FacebookPixel() {
   }, [pathname, searchParams]);
 
   // Don't render if no Pixel ID is configured
-  if (!FACEBOOK_PIXEL_ID) {
+  if (!pixelId) {
     return null;
   }
 
@@ -81,7 +81,7 @@ export function FacebookPixel() {
             // fbq('consent', 'grant') will be called by React after user accepts
             fbq('consent', 'revoke');
 
-            fbq('init', '${FACEBOOK_PIXEL_ID}');
+            fbq('init', '${pixelId}');
 
             // CCPA Compliance: Limited Data Use (LDU) for California
             fbq('dataProcessingOptions', ['LDU'], 0, 0);
@@ -131,7 +131,7 @@ export function FacebookPixel() {
           height="1"
           width="1"
           style={{ display: "none" }}
-          src={`https://www.facebook.com/tr?id=${FACEBOOK_PIXEL_ID}&ev=PageView&noscript=1`}
+          src={`https://www.facebook.com/tr?id=${pixelId}&ev=PageView&noscript=1`}
           alt=""
         />
       </noscript>

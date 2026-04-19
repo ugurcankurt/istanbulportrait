@@ -180,7 +180,7 @@ export function BookingCard({
                   <ChevronDown className={cn("h-4 w-4 opacity-50 transition-transform", isPeoplePopoverOpen && "rotate-180")} />
                 </PopoverTrigger>
                 <PopoverContent
-                  className="w-[var(--radix-popover-trigger-width)] p-4 border-border shadow-2xl transition-all data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=open]:fade-in-0 data-[state=closed]:fade-out-0 data-[state=open]:slide-in-from-top-4 data-[state=closed]:slide-out-to-top-4 duration-300 ease-in-out"
+                  className="w-[var(--anchor-width)] p-4"
                   align="start"
                   side="bottom"
                 >
@@ -244,7 +244,7 @@ export function BookingCard({
               </PopoverTrigger>
               <PopoverContent
                 className={cn(
-                  "p-0 border-border shadow-2xl transition-all data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=open]:fade-in-0 data-[state=closed]:fade-out-0 data-[state=open]:slide-in-from-top-4 data-[state=closed]:slide-out-to-top-4 duration-300 ease-in-out",
+                  "p-0",
                   isMobile ? "w-[95vw] max-w-[360px]" : "w-auto"
                 )}
                 align="center"
@@ -281,21 +281,21 @@ export function BookingCard({
           {selectedDate && (
             <div className="space-y-2 animate-in fade-in slide-in-from-top-2 duration-500">
               <Popover open={isTimePopoverOpen} onOpenChange={setIsTimePopoverOpen} modal={false}>
-                <PopoverTrigger
-                  className={cn(
-                    buttonVariants({ variant: "outline" }),
-                    "w-full h-12 px-6 font-bold flex items-center justify-between",
-                    !selectedTime && "text-muted-foreground/60"
-                  )}
-                >
-                  <div className="flex items-center gap-3 text-start">
-                    <Clock className="h-5 w-5 text-primary stroke-[2.5]" />
-                    <span>{selectedTime ? selectedTime : tCheckout("form.select_time")}</span>
-                  </div>
-                  <ChevronDown className={cn("h-4 w-4 opacity-50 transition-transform", isTimePopoverOpen && "rotate-180")} />
-                </PopoverTrigger>
+              <PopoverTrigger
+                className={cn(
+                  buttonVariants({ variant: "outline" }),
+                  "w-full h-12 px-6 font-bold flex items-center justify-between",
+                  !selectedTime && "text-muted-foreground/60"
+                )}
+              >
+                <div className="flex items-center gap-3 text-start">
+                  <Clock className="h-5 w-5 text-primary stroke-[2.5]" />
+                  <span>{selectedTime ? selectedTime : tCheckout("form.select_time")}</span>
+                </div>
+                <ChevronDown className={cn("h-4 w-4 opacity-50 transition-transform", isTimePopoverOpen && "rotate-180")} />
+              </PopoverTrigger>
                 <PopoverContent
-                  className="w-[var(--radix-popover-trigger-width)] p-3 border-border shadow-2xl transition-all data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=open]:fade-in-0 data-[state=closed]:fade-out-0 data-[state=open]:slide-in-from-top-4 data-[state=closed]:slide-out-to-top-4 duration-300 ease-in-out"
+                  className="w-[var(--anchor-width)] p-3"
                   align="start"
                   side="bottom"
                 >
@@ -425,15 +425,26 @@ export function BookingCard({
           </Button>
         )}
 
-        <div className="space-y-4 pt-4 border-t border-border">          <div className="flex items-start gap-3 group">
+        <div className="space-y-4 pt-4 border-t border-border">
+          <div className="flex items-start gap-3 group">
+            <div className="mt-1">
+              <CheckCircle2 className="h-5 w-5 text-emerald-500" />
+            </div>
+            <div>
+              <p className="text-sm font-bold text-foreground">{tCheckout("cancellation.title")}</p>
+              <p className="text-xs font-medium text-muted-foreground leading-relaxed">{tCheckout("cancellation.description")}</p>
+            </div>
+          </div>
+
+          <div className="flex items-start gap-3 group">
             <div className="mt-1">
               <CreditCard className="h-5 w-5 text-primary" />
             </div>
             <div>
-              <p className="text-sm font-bold text-foreground">{tCheckout("security.secure_booking")}</p>
+              <p className="text-sm font-bold text-foreground">{tCheckout("security.secure_payment")}</p>
               <div className="space-y-1">
                 <p className="text-xs font-medium text-muted-foreground leading-relaxed">
-                  {tCheckout("security.pay_full_in_cash", { amount: displayPrice })}
+                  {tCheckout("payment_breakdown.pay_now", { amount: `€${Math.round(displayPrice * DEPOSIT_PERCENTAGE)}` })} {tCheckout("payment_breakdown.pay_on_day", { amount: `€${displayPrice - Math.round(displayPrice * DEPOSIT_PERCENTAGE)}` })}
                 </p>
               </div>
             </div>

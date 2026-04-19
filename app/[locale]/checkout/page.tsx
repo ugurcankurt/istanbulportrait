@@ -1,63 +1,70 @@
+import { getTranslations } from "next-intl/server";
 import { Suspense } from "react";
-import { BookingSuccess } from "@/components/booking-success";
+import { CheckoutForm } from "@/components/checkout-form";
+import { Skeleton } from "@/components/ui/skeleton";
+import { getLocalizedPaths } from "@/lib/localized-url";
 
-
-export default async function CheckoutPage({
-  searchParams,
+export async function generateMetadata({
+  params,
 }: {
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+  params: Promise<{ locale: string }>;
 }) {
-  const resolvedSearchParams = await searchParams;
-  const bookingId =
-    typeof resolvedSearchParams.bookingId === "string"
-      ? resolvedSearchParams.bookingId
-      : undefined;
+  const { locale } = await params;
+  
+  const { settingsService } = await import("@/lib/settings-service");
+  const settings = await settingsService.getSettings();
 
-  if (!bookingId) {
-    return (
-      <div className="flex flex-col h-dvh bg-background items-center justify-center">
-        <p className="text-muted-foreground text-lg text-center">
-          No booking ID provided. The booking may have been completed successfully but the ID is missing.
-        </p>
-      </div>
-    );
-  }
+  const baseUrl = settings.app_base_url || "https://istanbulportrait.com";
+  const paths = getLocalizedPaths("/checkout", baseUrl);
 
-  const { createServerSupabaseAdminClient } = await import("@/lib/supabase/server");
-  const supabase = await createServerSupabaseAdminClient();
-  const { data: booking, error } = await supabase
-    .from("bookings")
-    .select("*")
-    .eq("id", bookingId)
-    .single();
-
-  if (error || !booking) {
-    return (
-      <div className="flex flex-col h-dvh bg-background items-center justify-center">
-        <p className="text-muted-foreground text-lg text-center">
-          Booking not found or could not be loaded. Please contact support.
-        </p>
-      </div>
-    );
-  }
-
-  const confirmedBookingData = {
-    id: booking.id,
-    packageId: booking.package_id,
-    customerName: booking.user_name,
-    customerEmail: booking.user_email,
-    customerPhone: booking.user_phone,
-    bookingDate: booking.booking_date,
-    bookingTime: booking.booking_time,
-    totalAmount: booking.total_amount,
-    status: booking.status,
-    peopleCount: booking.people_count,
-    notes: booking.notes || null,
+  return {
+    title: "Secure Checkout | Istanbul Portrait",
+    description: "Secure checkout page for your Istanbul photography booking.",
+    alternates: {
+      canonical: paths.canonical(locale),
+      languages: paths.languages,
+    },
+    robots: {
+      index: false,
+      follow: true,
+    },
   };
+}
 
+function CheckoutSkeleton() {
   return (
-    <Suspense fallback={<div className="h-dvh flex flex-col items-center justify-center space-y-4 animate-pulse"><div className="w-16 h-16 rounded-full bg-primary/20"></div><p className="text-muted-foreground">Loading booking...</p></div>}>
-      <BookingSuccess bookingId={booking.id} packageId={booking.package_id as any} confirmedBooking={confirmedBookingData} />
+    <div className="flex flex-col h-dvh bg-background">
+      {/* Mini header skeleton */}
+      <div className="flex items-center justify-between px-4 py-3 border-b">
+        <Skeleton className="h-6 w-32" />
+        <Skeleton className="h-6 w-16" />
+      </div>
+      {/* Step indicator skeleton */}
+      <div className="flex items-center justify-center gap-4 py-4 px-6 border-b">
+        <Skeleton className="h-10 w-10 rounded-full" />
+        <Skeleton className="h-0.5 flex-1" />
+        <Skeleton className="h-10 w-10 rounded-full" />
+        <Skeleton className="h-0.5 flex-1" />
+        <Skeleton className="h-10 w-10 rounded-full" />
+      </div>
+      {/* Content skeleton */}
+      <div className="flex-1 px-4 py-4 space-y-3">
+        <Skeleton className="h-28 w-full rounded-2xl" />
+        <Skeleton className="h-24 w-full rounded-2xl" />
+        <Skeleton className="h-20 w-full rounded-2xl" />
+      </div>
+      {/* Button skeleton */}
+      <div className="px-4 py-4 border-t">
+        <Skeleton className="h-12 w-full rounded-xl" />
+      </div>
+    </div>
+  );
+}
+
+export default function CheckoutPage() {
+  return (
+    <Suspense fallback={<CheckoutSkeleton />}>
+      <CheckoutForm />
     </Suspense>
   );
 }

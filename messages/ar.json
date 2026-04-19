@@ -5,7 +5,12 @@
   "nav": {
     "home": "الصفحة الرئيسية",
     "selectLanguage": "اختر اللغة",
-    "selectLanguageDescription": "اختر لغتك المفضلة لاستكشاف صورة اسطنبول."
+    "selectLanguageDescription": "اختر لغتك المفضلة لاستكشاف صورة اسطنبول.",
+    "packages": "الباقات",
+    "locations": "المواقع",
+    "blog": "المدونة",
+    "about": "حول",
+    "contact": "اتصل"
   },
   "whatsapp": {
     "button": "واتساب",
@@ -109,6 +114,10 @@
       "checking_availability": "جارٍ التحقق من التوفر...",
       "availability_confirmed": "بقعة متاحة! الافتتاح الآن..."
     },
+    "cancellation": {
+      "title": "إلغاء مجاني",
+      "description": "إلغاء قبل ما يصل إلى 24 ساعة مقدماً لاسترداد المبلغ بالكامل"
+    },
     "payment_breakdown": {
       "pay_now": "ادفع {amount} الآن",
       "pay_on_day": "والباقي دفع {amount} في يوم التصوير"
@@ -153,8 +162,8 @@
     },
     "people_count_title": "عدد الأشخاص",
     "price_per_person": "السعر للشخص الواحد",
-    "seasonal_discount_applied": "التخفيضات (خصم {percentage}%)",
-    "promo_code": "الرمز الترويجي",
+    "seasonal_discount_applied": "%{percentage} Seasonal Discount",
+    "promo_code": "Promo Code",
     "apply_promo": "تطبيق",
     "promo_applied": "تم تطبيق الرمز الترويجي!",
     "invalid_promo": "الرمز الترويجي غير صالح أو منتهي الصلاحية",
@@ -187,14 +196,17 @@
       "try_again": "حاول مرة أخرى"
     },
     "expires_in": "سنحتفظ بمكانك لمدة [TIME] دقيقة.",
-    "expired": "انتهت فترة الحجز. الرجاء تحديد وقت جديد."
+    "expired": "انتهت فترة الحجز. الرجاء تحديد وقت جديد.",
+    "apply": "Apply",
+    "remove": "Remove",
+    "promo_code_applied": "%{percentage} Promo Discount"
   },
   "footer": {
     "description": "مصور فوتوغرافي رائد في اسطنبول لتصوير البورتريه الاحترافي. التقط لحظاتك الخاصة مع الخلفيات الأكثر شهرة في المدينة.",
     "quickLinks": "روابط سريعة",
-    "services": "الخدمات",
+    "services": "الباقات",
     "followUs": "تابعنا",
-    "copyright": "© 2026 360istanbul.com.tr | جميع الحقوق محفوظة.",
+    "copyright": "© 2026 istanbulportrait.com | جميع الحقوق محفوظة.",
     "service_items": {
       "portrait": "تصوير بورتريه",
       "couples": "جلسات زوجية",
@@ -386,7 +398,7 @@
     "bullet_retouching": "• التنقيح الاحترافي",
     "need_help": "هل تحتاج إلى مساعدة؟",
     "help_description": "هل لديك أسئلة حول حجزك؟ تواصل معنا في أي وقت.",
-    "support_email": "info@360istanbul.com.tr",
+    "support_email": "info@istanbulportrait.com",
     "support_phone": "+90 536 709 37 24",
     "people_count": "عدد الأشخاص"
   },
@@ -505,6 +517,78 @@
     "summary": {
       "title": "الوجبات السريعة الرئيسية",
       "ai_overview": "نظرة عامة على الذكاء الاصطناعي"
+    }
+  },
+  "privacy": {
+    "cookies": {
+      "table": {
+        "title": "Cookies Used on Our Site",
+        "columns": {
+          "name": "Name",
+          "purpose": "Purpose",
+          "type": "Type",
+          "duration": "Duration",
+          "provider": "Provider"
+        },
+        "types": {
+          "essential": "Essential",
+          "analytics": "Analytics",
+          "marketing": "Marketing"
+        },
+        "providers": {
+          "first_party": "First Party",
+          "google": "Google",
+          "yandex": "Yandex",
+          "microsoft": "Microsoft",
+          "facebook": "Facebook"
+        },
+        "essential": {
+          "user_consent": {
+            "purpose": "Stores the user's cookie consent state for the current domain.",
+            "duration": "1 year"
+          }
+        },
+        "analytics": {
+          "ga": {
+            "purpose": "Used by Google Analytics to distinguish users.",
+            "duration": "2 years"
+          },
+          "gid": {
+            "purpose": "Used by Google Analytics to distinguish users.",
+            "duration": "24 hours"
+          },
+          "gat": {
+            "purpose": "Used to throttle request rate.",
+            "duration": "1 minute"
+          },
+          "ym_uid": {
+            "purpose": "Used by Yandex Metrica for identifying site users.",
+            "duration": "1 year"
+          },
+          "ym_d": {
+            "purpose": "Used by Yandex Metrica to store the date of user's first session.",
+            "duration": "1 year"
+          },
+          "clck": {
+            "purpose": "Persists the Microsoft Clarity User ID.",
+            "duration": "1 year"
+          },
+          "clsk": {
+            "purpose": "Connects multiple page views by a user into a single Clarity session.",
+            "duration": "1 day"
+          }
+        },
+        "marketing": {
+          "fbp": {
+            "purpose": "Used by Facebook to deliver advertisement products.",
+            "duration": "3 months"
+          },
+          "fbc": {
+            "purpose": "Used by Facebook to deliver advertisement products when an ad is clicked.",
+            "duration": "3 months"
+          }
+        }
+      }
     }
   }
 }

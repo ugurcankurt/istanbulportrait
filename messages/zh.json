@@ -5,7 +5,12 @@
   "nav": {
     "home": "首页",
     "selectLanguage": "选择语言",
-    "selectLanguageDescription": "选择您喜欢的语言来探索伊斯坦布尔肖像。"
+    "selectLanguageDescription": "选择您喜欢的语言来探索伊斯坦布尔肖像。",
+    "packages": "套餐",
+    "locations": "地点",
+    "blog": "博客",
+    "about": "关于我们",
+    "contact": "联系我们"
   },
   "whatsapp": {
     "button": "WhatsApp",
@@ -109,6 +114,10 @@
       "checking_availability": "检查可用性...",
       "availability_confirmed": "现货可用！现已开放..."
     },
+    "cancellation": {
+      "title": "免费取消",
+      "description": "提前 24 小时取消可全额退款"
+    },
     "payment_breakdown": {
       "pay_now": "立即支付 {amount}",
       "pay_on_day": "其余付款 {amount} 在拍摄当天支付"
@@ -153,8 +162,8 @@
     },
     "people_count_title": "人数",
     "price_per_person": "每人价格",
-    "seasonal_discount_applied": "促销（{percentage}% 折扣）",
-    "promo_code": "促销代码",
+    "seasonal_discount_applied": "%{percentage} Seasonal Discount",
+    "promo_code": "Promo Code",
     "apply_promo": "申请",
     "promo_applied": "促销代码已应用！",
     "invalid_promo": "促销代码无效或过期",
@@ -187,14 +196,17 @@
       "try_again": "再试一次"
     },
     "expires_in": "我们将保留您的位置 [TIME] 分钟。",
-    "expired": "预订时段已过期。请选择新时间。"
+    "expired": "预订时段已过期。请选择新时间。",
+    "apply": "Apply",
+    "remove": "Remove",
+    "promo_code_applied": "%{percentage} Promo Discount"
   },
   "footer": {
     "description": "伊斯坦布尔专业肖像摄影的领先摄影师。在这座城市最具标志性的背景下捕捉您的特殊时刻。",
     "quickLinks": "快速链接",
-    "services": "服务",
+    "services": "套餐",
     "followUs": "关注我们",
-    "copyright": "© 2026 360istanbul.com.tr | 版权所有版权所有。",
+    "copyright": "© 2026 istanbulportrait.com | 版权所有版权所有。",
     "service_items": {
       "portrait": "人像摄影",
       "couples": "情侣会议",
@@ -386,7 +398,7 @@
     "bullet_retouching": "• 专业修饰",
     "need_help": "需要帮助吗？",
     "help_description": "对您的预订有疑问？随时联系我们。",
-    "support_email": "info@360istanbul.com.tr",
+    "support_email": "info@istanbulportrait.com",
     "support_phone": "+90 536 709 37 24",
     "people_count": "人数"
   },
@@ -505,6 +517,78 @@
     "summary": {
       "title": "要点",
       "ai_overview": "人工智能概述"
+    }
+  },
+  "privacy": {
+    "cookies": {
+      "table": {
+        "title": "Cookies Used on Our Site",
+        "columns": {
+          "name": "Name",
+          "purpose": "Purpose",
+          "type": "Type",
+          "duration": "Duration",
+          "provider": "Provider"
+        },
+        "types": {
+          "essential": "Essential",
+          "analytics": "Analytics",
+          "marketing": "Marketing"
+        },
+        "providers": {
+          "first_party": "First Party",
+          "google": "Google",
+          "yandex": "Yandex",
+          "microsoft": "Microsoft",
+          "facebook": "Facebook"
+        },
+        "essential": {
+          "user_consent": {
+            "purpose": "Stores the user's cookie consent state for the current domain.",
+            "duration": "1 year"
+          }
+        },
+        "analytics": {
+          "ga": {
+            "purpose": "Used by Google Analytics to distinguish users.",
+            "duration": "2 years"
+          },
+          "gid": {
+            "purpose": "Used by Google Analytics to distinguish users.",
+            "duration": "24 hours"
+          },
+          "gat": {
+            "purpose": "Used to throttle request rate.",
+            "duration": "1 minute"
+          },
+          "ym_uid": {
+            "purpose": "Used by Yandex Metrica for identifying site users.",
+            "duration": "1 year"
+          },
+          "ym_d": {
+            "purpose": "Used by Yandex Metrica to store the date of user's first session.",
+            "duration": "1 year"
+          },
+          "clck": {
+            "purpose": "Persists the Microsoft Clarity User ID.",
+            "duration": "1 year"
+          },
+          "clsk": {
+            "purpose": "Connects multiple page views by a user into a single Clarity session.",
+            "duration": "1 day"
+          }
+        },
+        "marketing": {
+          "fbp": {
+            "purpose": "Used by Facebook to deliver advertisement products.",
+            "duration": "3 months"
+          },
+          "fbc": {
+            "purpose": "Used by Facebook to deliver advertisement products when an ad is clicked.",
+            "duration": "3 months"
+          }
+        }
+      }
     }
   }
 }

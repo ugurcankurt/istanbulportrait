@@ -5,7 +5,12 @@
   "nav": {
     "home": "Acasă",
     "selectLanguage": "Selectați Limbă",
-    "selectLanguageDescription": "Alegeți limba preferată pentru a explora Istanbul Portrait."
+    "selectLanguageDescription": "Alegeți limba preferată pentru a explora Istanbul Portrait.",
+    "packages": "Pachete",
+    "locations": "Locații",
+    "blog": "Blog",
+    "about": "Despre",
+    "contact": "Contact"
   },
   "whatsapp": {
     "button": "WhatsApp",
@@ -109,13 +114,17 @@
       "checking_availability": "Se verifică disponibilitatea...",
       "availability_confirmed": "Loc disponibil! Se deschide acum..."
     },
+    "cancellation": {
+      "title": "Anulare gratuită",
+      "description": "Anulează cu până la 24 de ore înainte pentru o rambursare completă"
+    },
     "payment_breakdown": {
       "pay_now": "Plătiți acum {amount}",
       "pay_on_day": "și restul plății {amount} în ziua ședinței foto"
     },
     "success": {
       "title": "Rezervare confirmată!",
-      "message": "Vă mulțumim pentru rezervarea la Istanbul Photographer. Confirmarea rezervării dvs. a fost trimisă pe adresa dvs. de e-mail.",
+      "message": "Vă mulțumim pentru rezervarea la Istanbul Portrait. Confirmarea rezervării dvs. a fost trimisă pe adresa dvs. de e-mail.",
       "booking_id": "ID rezervare",
       "payment_successful": "Plata reușită! E-mail de confirmare trimis."
     },
@@ -153,8 +162,8 @@
     },
     "people_count_title": "Numărul de persoane",
     "price_per_person": "Pret per persoana",
-    "seasonal_discount_applied": "Reducere ({percentage}% REDUCERE)",
-    "promo_code": "Cod promoțional",
+    "seasonal_discount_applied": "%{percentage} Seasonal Discount",
+    "promo_code": "Promo Code",
     "apply_promo": "Aplicați",
     "promo_applied": "Cod promoțional aplicat!",
     "invalid_promo": "Cod promoțional nevalid sau expirat",
@@ -187,14 +196,17 @@
       "try_again": "Încercați din nou"
     },
     "expires_in": "Vă vom păstra locul timp de [TIME] minute.",
-    "expired": "Slot de rezervare a expirat. Vă rugăm să selectați o nouă oră."
+    "expired": "Slot de rezervare a expirat. Vă rugăm să selectați o nouă oră.",
+    "apply": "Apply",
+    "remove": "Remove",
+    "promo_code_applied": "%{percentage} Promo Discount"
   },
   "footer": {
     "description": "Fotograf de top din Istanbul pentru fotografii profesionale de portret. Surprindeți-vă momentele speciale cu cele mai emblematice fundaluri ale orașului.",
     "quickLinks": "Legături rapide",
-    "services": "Servicii",
+    "services": "Pachete",
     "followUs": "Urmărește-ne",
-    "copyright": "© 2026 360istanbul.com.tr | Toate drepturile rezervate.",
+    "copyright": "© 2026 istanbulportrait.com | Toate drepturile rezervate.",
     "service_items": {
       "portrait": "Fotografie portret",
       "couples": "Sesiuni de cuplu",
@@ -386,7 +398,7 @@
     "bullet_retouching": "• Retușare profesională",
     "need_help": "Ai nevoie de ajutor?",
     "help_description": "Întrebări despre rezervarea dvs.? Contactați-ne oricând.",
-    "support_email": "info@360istanbul.com.tr",
+    "support_email": "info@istanbulportrait.com",
     "support_phone": "+90 536 709 37 24",
     "people_count": "Numărul de persoane"
   },
@@ -505,6 +517,78 @@
     "summary": {
       "title": "Recomandări cheie",
       "ai_overview": "Prezentare generală a AI"
+    }
+  },
+  "privacy": {
+    "cookies": {
+      "table": {
+        "title": "Cookies Used on Our Site",
+        "columns": {
+          "name": "Name",
+          "purpose": "Purpose",
+          "type": "Type",
+          "duration": "Duration",
+          "provider": "Provider"
+        },
+        "types": {
+          "essential": "Essential",
+          "analytics": "Analytics",
+          "marketing": "Marketing"
+        },
+        "providers": {
+          "first_party": "First Party",
+          "google": "Google",
+          "yandex": "Yandex",
+          "microsoft": "Microsoft",
+          "facebook": "Facebook"
+        },
+        "essential": {
+          "user_consent": {
+            "purpose": "Stores the user's cookie consent state for the current domain.",
+            "duration": "1 year"
+          }
+        },
+        "analytics": {
+          "ga": {
+            "purpose": "Used by Google Analytics to distinguish users.",
+            "duration": "2 years"
+          },
+          "gid": {
+            "purpose": "Used by Google Analytics to distinguish users.",
+            "duration": "24 hours"
+          },
+          "gat": {
+            "purpose": "Used to throttle request rate.",
+            "duration": "1 minute"
+          },
+          "ym_uid": {
+            "purpose": "Used by Yandex Metrica for identifying site users.",
+            "duration": "1 year"
+          },
+          "ym_d": {
+            "purpose": "Used by Yandex Metrica to store the date of user's first session.",
+            "duration": "1 year"
+          },
+          "clck": {
+            "purpose": "Persists the Microsoft Clarity User ID.",
+            "duration": "1 year"
+          },
+          "clsk": {
+            "purpose": "Connects multiple page views by a user into a single Clarity session.",
+            "duration": "1 day"
+          }
+        },
+        "marketing": {
+          "fbp": {
+            "purpose": "Used by Facebook to deliver advertisement products.",
+            "duration": "3 months"
+          },
+          "fbc": {
+            "purpose": "Used by Facebook to deliver advertisement products when an ad is clicked.",
+            "duration": "3 months"
+          }
+        }
+      }
     }
   }
 }

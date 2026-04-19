@@ -17,8 +17,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Metadata } from "next";
 import { SchemaInjector } from "@/components/schema-injector";
-import { buildLocalBusinessSchema, constructOpenGraph, getBaseUrl, optimizeSeoImage } from "@/lib/seo-utils";
-import { routing } from "@/i18n/routing";
+import { buildOrganizationSchema, constructOpenGraph, getBaseUrl, optimizeSeoImage } from "@/lib/seo-utils";
 
 const WhatsAppButton = dynamic(() =>
   import("@/components/whatsapp-button").then((mod) => mod.WhatsAppButton),
@@ -77,7 +76,7 @@ export async function generateMetadata({
 
 
   return {
-    metadataBase: new URL(getBaseUrl()),
+    metadataBase: new URL(settings.app_base_url || getBaseUrl()),
     title: {
       template: `%s | ${title}`,
       default: title,
@@ -157,7 +156,7 @@ export default async function LocaleLayout({
           <div dangerouslySetInnerHTML={{ __html: settings.custom_head_scripts }} />
         )}
 
-        <SchemaInjector schema={buildLocalBusinessSchema(settings)} />
+        <SchemaInjector schema={buildOrganizationSchema(settings)} />
 
         <ThemeProvider
           attribute="class"
@@ -174,8 +173,8 @@ export default async function LocaleLayout({
 
                   {/* Non-critical Analytics — deferred until first interaction to minimize main-thread work */}
                   <InteractionLoader>
-                    <FacebookPixel />
-                    <DeferredAnalytics gaId={settings.google_analytics_id} />
+                    <FacebookPixel pixelId={settings.facebook_pixel_id} />
+                    <DeferredAnalytics gaId={settings.google_analytics_id} adsId={settings.google_ads_webhook_key} clarityId={settings.clarity_project_id} />
                     <ConsentGate consent="accepted_all">
                       <YandexMetrica id={settings.yandex_metrica_id || undefined} />
                     </ConsentGate>

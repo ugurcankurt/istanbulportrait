@@ -111,15 +111,6 @@ export function AboutSection({
               <p className="text-sm sm:text-base lg:text-lg leading-relaxed whitespace-pre-wrap">
                 {dynAbout?.description?.[locale] || tabout("description")}
               </p>
-              <div className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
-                <strong className="text-primary">
-                  Professional Expertise:
-                </strong>{" "}
-                Specializing in portrait photography, couple sessions, rooftop
-                photoshoots with stunning Bosphorus views, and lifestyle
-                photography across Istanbul's most iconic locations including
-                Sultanahmet, Galata Tower, and Ortaköy Mosque.
-              </div>
             </div>
 
             <div className="flex flex-wrap gap-2">
@@ -151,8 +142,8 @@ export function AboutSection({
 
         {/* Stats */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 mx-auto mb-12 sm:mb-16 lg:mb-20">
-          {stats.map((stat) => (
-            <div key={stat.label} className="group">
+          {stats.map((stat, i) => (
+            <div key={`stat-${stat.label}-${i}`} className="group">
               <Card className="text-center p-4 sm:p-6 lg:p-8 transition-colors group-hover:border-primary/30">
                 <CardContent className="p-0">
                   <div className="w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 mx-auto mb-3 sm:mb-4 rounded-full bg-primary/10 flex items-center justify-center transition-transform duration-500 group-hover:scale-110">
@@ -175,8 +166,8 @@ export function AboutSection({
           {highlightsHeader}
 
           <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
-            {highlights.map((highlight) => (
-              <div key={highlight.title} className="group">
+            {highlights.map((highlight, i) => (
+              <div key={`highlight-${highlight.title}-${i}`} className="group">
                 <Card className="text-center p-4 sm:p-5 lg:p-6 transition-colors group-hover:border-primary/30">
                   <CardContent className="p-0">
                     <div className="w-10 h-10 sm:w-12 sm:h-12 mx-auto mb-3 sm:mb-4 rounded-full bg-primary/10 flex items-center justify-center transition-transform duration-500 group-hover:scale-110">

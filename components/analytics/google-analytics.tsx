@@ -2,9 +2,7 @@
 
 import { GoogleAnalytics as NextGoogleAnalytics } from "@next/third-parties/google";
 
-const ADS_ID = process.env.NEXT_PUBLIC_GOOGLE_ADS_ID;
-
-export function GoogleAnalytics({ gaId }: { gaId?: string | null }) {
+export function GoogleAnalytics({ gaId, adsId }: { gaId?: string | null, adsId?: string | null }) {
   if (!gaId) {
     return null;
   }
@@ -12,11 +10,17 @@ export function GoogleAnalytics({ gaId }: { gaId?: string | null }) {
   return (
     <>
       <NextGoogleAnalytics gaId={gaId} />
-      {ADS_ID && (
+      <script
+        dangerouslySetInnerHTML={{
+          __html: `window.__GA_ID = '${gaId}';`,
+        }}
+      />
+      {adsId && (
         <script
           dangerouslySetInnerHTML={{
             __html: `
-              window.gtag('config', '${ADS_ID}', {
+              window.__ADS_ID = '${adsId}';
+              window.gtag('config', '${adsId}', {
                 'allow_enhanced_conversions': true
               });
             `,

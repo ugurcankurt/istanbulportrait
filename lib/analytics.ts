@@ -84,7 +84,8 @@ export function trackBookingEvent(
 // Track page views
 export function trackPageView(url: string, title?: string) {
   if (typeof window !== "undefined" && window.gtag) {
-    window.gtag("config", process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID || "", {
+    const gaId = (window as any).__GA_ID || process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID || "";
+    window.gtag("config", gaId, {
       page_location: url,
       page_title: title,
     });
@@ -143,10 +144,10 @@ export function trackPurchase(
     }
 
     // Google Ads Direct Conversion (AW-1007335227)
-    const adsId = process.env.NEXT_PUBLIC_GOOGLE_ADS_ID;
+    const adsId = (window as any).__ADS_ID || process.env.NEXT_PUBLIC_GOOGLE_ADS_ID;
     if (adsId && typeof window !== "undefined" && window.gtag) {
       window.gtag("event", "conversion", {
-        send_to: `${adsId}/_syvCOGqm5ccELvuquAD`, // Specific purchase label from Ads panel
+        send_to: `${adsId}/LZkiCJ36iZ8cELvuquAD`, // Specific purchase label from Ads panel
         value: value,
         currency: currency,
         transaction_id: transactionId,
@@ -459,10 +460,10 @@ export function trackLead(
     }
 
     // Direct Google Ads Lead Conversion
-    const adsId = process.env.NEXT_PUBLIC_GOOGLE_ADS_ID;
+    const adsId = (window as any).__ADS_ID || process.env.NEXT_PUBLIC_GOOGLE_ADS_ID;
     if (adsId) {
       window.gtag("event", "conversion", {
-        send_to: `${adsId}/pS27CPbelZUcELvuquAD`, // Specific lead label from Ads panel
+        send_to: `${adsId}/RhizCN2v8p4cELvuquAD`, // Specific lead label from Ads panel
         value: value,
         currency: currency,
       });

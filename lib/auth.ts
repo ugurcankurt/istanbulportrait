@@ -139,7 +139,7 @@ export function onAuthStateChange(callback: (user: User | null) => void) {
   return {
     data: {
       subscription: {
-        unsubscribe: () => {},
+        unsubscribe: () => { },
       },
     },
   };
@@ -154,7 +154,7 @@ export async function isAdmin(email?: string): Promise<boolean> {
   if (!email) return false;
 
   const adminEmails = [
-    process.env.NEXT_PUBLIC_ADMIN_EMAIL || "admin@360istanbul.com.tr",
+    process.env.NEXT_PUBLIC_ADMIN_EMAIL || "info@istanbulportrait.com",
   ];
 
   return adminEmails.includes(email.toLowerCase());

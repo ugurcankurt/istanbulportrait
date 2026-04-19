@@ -2,12 +2,10 @@
 
 import Script from "next/script";
 
-export function MicrosoftClarity() {
-  const clarityId = process.env.NEXT_PUBLIC_CLARITY_PROJECT_ID;
-
+export function MicrosoftClarity({ clarityId }: { clarityId?: string | null }) {
   if (!clarityId) {
     console.warn(
-      "Microsoft Clarity Project ID not found. Add NEXT_PUBLIC_CLARITY_PROJECT_ID to .env.local",
+      "Microsoft Clarity Project ID not found. Add it dynamically via Supabase Settings Dashboard.",
     );
     return null;
   }

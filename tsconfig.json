@@ -30,5 +30,5 @@
     "types/globals.d.ts",
     ".next/dev/types/**/*.ts"
   ],
-  "exclude": ["node_modules", "tmp_shadcn_preset"]
+  "exclude": ["node_modules", "tmp_shadcn_preset", "github_backup"]
 }

@@ -8,6 +8,7 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Spinner } from "@/components/ui/spinner";
 import {
   Form,
   FormControl,
@@ -49,6 +50,7 @@ const locales = [
   { value: "fr", label: "Français 🇫🇷" },
   { value: "de", label: "Deutsch 🇩🇪" },
   { value: "ro", label: "Română 🇷🇴" },
+  { value: "tr", label: "Türkçe 🇹🇷" },
 ] as const;
 
 export function BlogForm({
@@ -58,9 +60,10 @@ export function BlogForm({
 }: BlogFormProps) {
   const { categories, tags, fetchCategories, fetchTags } = useBlogStore();
   const [activeTab, setActiveTab] = useState<
-    "en" | "ar" | "ru" | "es" | "zh" | "fr" | "de" | "ro"
+    "en" | "ar" | "ru" | "es" | "zh" | "fr" | "de" | "ro" | "tr"
   >("en");
   const [isLoadingData, setIsLoadingData] = useState(true);
+  const [isTranslating, setIsTranslating] = useState(false);
 
   // Fetch categories and tags
   useEffect(() => {
@@ -134,6 +137,12 @@ export function BlogForm({
             excerpt: (initialData as any).translations?.ro?.excerpt || "",
             content: (initialData as any).translations?.ro?.content || "",
           },
+          tr: {
+            slug: (initialData as any).translations?.tr?.slug || "",
+            title: (initialData as any).translations?.tr?.title || "",
+            excerpt: (initialData as any).translations?.tr?.excerpt || "",
+            content: (initialData as any).translations?.tr?.content || "",
+          },
         },
         category_ids:
           (initialData as any).categories?.map((c: any) => c.category.id) ||
@@ -154,6 +163,7 @@ export function BlogForm({
           fr: { slug: "", title: "", excerpt: "", content: "" },
           de: { slug: "", title: "", excerpt: "", content: "" },
           ro: { slug: "", title: "", excerpt: "", content: "" },
+          tr: { slug: "", title: "", excerpt: "", content: "" },
         },
         category_ids: [],
         tag_ids: [],
@@ -167,6 +177,7 @@ export function BlogForm({
       return;
     }
 
+    setIsTranslating(true);
     toast.loading("AI is translating your blog post (this may take up to 20 seconds)...", { id: "ai-translation" });
     try {
       const translateRes = await fetch("/api/admin/translate-blog-post", {
@@ -205,8 +216,10 @@ export function BlogForm({
       } else {
         toast.error("AI translation failed. Please try again.", { id: "ai-translation" });
       }
-    } catch (err) {
-      toast.error("AI translation API error.", { id: "ai-translation" });
+    } catch (e) {
+      toast.error("AI translation failed due to a network error.", { id: "ai-translation" });
+    } finally {
+      setIsTranslating(false);
     }
   };
 
@@ -242,12 +255,25 @@ export function BlogForm({
           {/* Multi-language Content Card */}
           <Card className="border-border shadow-sm">
             <CardHeader className="bg-muted/30 pb-4 border-b">
-              <CardTitle className="flex items-center justify-between text-lg">
-                <span>Content (Multi-language)</span>
-                <span className="text-sm font-normal text-muted-foreground bg-muted px-2 py-1 rounded-md border">
-                  ~{readingTime} min read
-                </span>
-              </CardTitle>
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div className="flex flex-wrap items-center gap-3">
+                  <CardTitle className="text-lg">Content (Multi-language)</CardTitle>
+                  <span className="text-sm font-normal text-muted-foreground bg-muted px-2 py-1 rounded-md border">
+                    ~{readingTime} min read
+                  </span>
+                </div>
+                <Button
+                  type="button"
+                  variant="secondary"
+                  size="sm"
+                  onClick={handleAITranslate}
+                  disabled={isTranslating}
+                  className="w-fit shrink-0"
+                >
+                  {isTranslating ? <Spinner className="w-4 h-4 mr-2" /> : <Sparkles className="w-4 h-4 mr-2 text-yellow-500" />}
+                  Auto-Translate (AI)
+                </Button>
+              </div>
             </CardHeader>
             <CardContent className="pt-6">
               <Tabs
@@ -281,23 +307,6 @@ export function BlogForm({
                     );
                   })}
                 </TabsList>
-
-                <div className="flex justify-between items-center w-full mb-6 py-2 px-3 bg-fuchsia-50/50 dark:bg-fuchsia-950/20 border border-fuchsia-100 dark:border-fuchsia-900/40 rounded-lg">
-                  <div className="text-sm text-fuchsia-800 dark:text-fuchsia-300">
-                    <span className="font-semibold mr-1">Magic Translation:</span>
-                    Write entirely in English, then click to auto-translate all fields with Gemini.
-                  </div>
-                  <Button
-                    type="button"
-                    onClick={handleAITranslate}
-                    variant="secondary"
-                    size="sm"
-                    className="bg-fuchsia-100 text-fuchsia-700 hover:bg-fuchsia-200 dark:bg-fuchsia-900/50 dark:text-fuchsia-400 dark:hover:bg-fuchsia-900 shrink-0 ml-4"
-                  >
-                    <Sparkles className="w-4 h-4 mr-2" />
-                    Auto-Translate Post
-                  </Button>
-                </div>
 
                 {locales.map((locale) => (
                   <TabsContent

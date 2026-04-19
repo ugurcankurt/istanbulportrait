@@ -53,6 +53,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
           const tLoc = page.title?.[loc];
           return tLoc ? `/${generateNativeSlug(tLoc)}` : `/${page.slug}`;
         }),
+        ...(page.cover_image ? { images: [page.cover_image] } : {}),
       });
     });
   }
@@ -76,6 +77,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
           const tSeg = tTitle ? generateNativeSlug(tTitle) : "packages";
           return `/${tSeg}/${pkg.slug}`;
         }),
+        ...((pkg.gallery_images && pkg.gallery_images.length > 0) ? { images: [pkg.gallery_images[0]] } : {}),
       });
     });
   }
@@ -99,6 +101,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
           const tSeg = tTitle ? generateNativeSlug(tTitle) : "locations";
           return `/${tSeg}/${locItem.slug}`;
         }),
+        ...(locItem.cover_image ? { images: [locItem.cover_image] } : {}),
       });
     });
   }
@@ -106,7 +109,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // 5. Blog Posts
   const { supabaseAdmin } = await import("@/lib/supabase");
   if (supabaseAdmin) {
-    const { data: blogPosts } = await supabaseAdmin.from("blog_posts").select("id, updated_at, created_at, status").eq("status", "published");
+    const { data: blogPosts } = await supabaseAdmin.from("blog_posts").select("id, updated_at, created_at, status, featured_image").eq("status", "published");
     
     if (blogPosts && blogPosts.length > 0) {
       const blogParent = corePages.find(p => p.slug === "blog");
@@ -133,6 +136,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
               const bSlug = postTranslations.find(t => t.locale === loc)?.slug || enSlug;
               return `/${bSeg}/${bSlug}`;
             }),
+            ...(bp.featured_image ? { images: [bp.featured_image] } : {}),
           });
         });
       }

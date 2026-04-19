@@ -13,6 +13,8 @@ import {
 } from "@/components/ui/breadcrumb";
 import Link from "next/link";
 import { routing } from "@/i18n/routing";
+import { SchemaInjector } from "@/components/schema-injector";
+import { buildBreadcrumbSchema } from "@/lib/seo-utils";
 
 
 interface BreadcrumbNavProps {
@@ -135,10 +137,15 @@ export function BreadcrumbNav(props: BreadcrumbNavProps) {
     return null;
   }
 
-
+  const schemaItems = breadcrumbs.map(b => ({
+    name: b.label,
+    url: b.isLast ? pathname : (b.href === "/" ? `/${locale}` : (b.href || pathname))
+  }));
 
   return (
-    <>      <div className={`bg-muted/30 border-b ${className}`}>
+    <>      
+      <SchemaInjector schema={buildBreadcrumbSchema(schemaItems)} />
+      <div className={`bg-muted/30 border-b ${className}`}>
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <Breadcrumb className="py-3 sm:py-4 overflow-hidden">
             <BreadcrumbList className="flex-nowrap overflow-x-auto whitespace-nowrap scrollbar-hide pb-1 -mb-1">

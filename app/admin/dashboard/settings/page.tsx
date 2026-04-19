@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import {  Save } from "lucide-react";
+import {  Save, Sparkles } from "lucide-react";
 import { Spinner } from "@/components/ui/spinner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -20,6 +20,7 @@ export default function SettingsPage() {
   const [settings, setSettings] = useState<SiteSettings>(defaultSettings);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [isTranslating, setTranslating] = useState(false);
 
   useEffect(() => {
     async function fetchSettings() {
@@ -71,6 +72,64 @@ export default function SettingsPage() {
         [locale]: value,
       },
     }));
+  };
+
+  const handleAutoTranslate = async () => {
+    const enDescription = settings.site_description?.en || "";
+    const enAddress = settings.address?.en || "";
+    const enWorkingHours = settings.working_hours?.en || "";
+
+    if (!settings.gemini_api_key) {
+      toast.error("Please configure your Gemini API Key in the settings first!");
+      return;
+    }
+    
+    if (!enDescription && !enAddress && !enWorkingHours) {
+      toast.error("Please fill in the English (EN) fields first to use them as a source.");
+      return;
+    }
+
+    setTranslating(true);
+    const translationToast = toast.loading("Translating using AI...");
+    try {
+      const res = await fetch("/api/admin/translate-settings", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          site_description: enDescription,
+          address: enAddress,
+          working_hours: enWorkingHours
+        }),
+      });
+
+      if (!res.ok) {
+        throw new Error("Translation failed");
+      }
+
+      const rawData = await res.json();
+      
+      const newSettings = { ...settings };
+      if (!newSettings.site_description) newSettings.site_description = {};
+      if (!newSettings.address) newSettings.address = {};
+      if (!newSettings.working_hours) newSettings.working_hours = {};
+
+      const translations = rawData.translations || {};
+
+      Object.keys(translations).forEach((loc) => {
+        if (translations[loc].site_description) newSettings.site_description[loc] = translations[loc].site_description;
+        if (translations[loc].address) newSettings.address[loc] = translations[loc].address;
+        if (translations[loc].working_hours) newSettings.working_hours[loc] = translations[loc].working_hours;
+      });
+
+      setSettings(newSettings);
+      toast.success("Translations generated! Click 'Save Changes' to apply.", { id: translationToast });
+
+    } catch (err: any) {
+      console.error(err);
+      toast.error("An error occurred during translation.", { id: translationToast });
+    } finally {
+      setTranslating(false);
+    }
   };
 
   if (loading) {
@@ -247,8 +306,22 @@ export default function SettingsPage() {
         {/* Localization specific configurations */}
         <Card className="lg:col-span-2">
           <CardHeader>
-            <CardTitle>Translatable Locale Specific Settings</CardTitle>
-            <CardDescription>Configure localized variants for textual globals like address.</CardDescription>
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div>
+                <CardTitle>Translatable Locale Specific Settings</CardTitle>
+                <CardDescription>Configure localized variants for textual globals like address.</CardDescription>
+              </div>
+              <Button 
+                variant="secondary" 
+                size="sm" 
+                onClick={handleAutoTranslate} 
+                disabled={isTranslating}
+                className="w-fit"
+              >
+                {isTranslating ? <Spinner className="w-4 h-4 mr-2" /> : <Sparkles className="w-4 h-4 mr-2 text-yellow-500" />}
+                Auto-Translate (AI)
+              </Button>
+            </div>
           </CardHeader>
           <CardContent>
             <Tabs defaultValue="en" className="w-full">
@@ -400,6 +473,290 @@ export default function SettingsPage() {
                 />
                  <p className="text-xs text-muted-foreground">Injected before the closing &lt;/body&gt; tag.</p>
               </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Payment Gateway (Iyzico) */}
+        <Card className="lg:col-span-2">
+          <CardHeader>
+            <CardTitle>Payment Gateway (Iyzico)</CardTitle>
+            <CardDescription>Configure your secure payment processing via Iyzico.</CardDescription>
+          </CardHeader>
+          <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-2">
+              <Label>Base URL</Label>
+              <Input
+                value={settings.iyzico_base_url || ""}
+                onChange={(e) => updateSetting("iyzico_base_url", e.target.value)}
+                placeholder="https://api.iyzipay.com"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>API Key</Label>
+              <Input
+                value={settings.iyzico_api_key || ""}
+                onChange={(e) => updateSetting("iyzico_api_key", e.target.value)}
+                placeholder="sandbox-xxxx..."
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>Secret Key</Label>
+              <Input
+                type="password"
+                value={settings.iyzico_secret_key || ""}
+                onChange={(e) => updateSetting("iyzico_secret_key", e.target.value)}
+                placeholder="sandbox-xxxx..."
+              />
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Meta / Facebook Integration */}
+        <Card className="lg:col-span-2">
+          <CardHeader>
+            <CardTitle>Meta (Facebook) Tracking</CardTitle>
+            <CardDescription>Configure Pixel, Conversions API, and Instagram authentication.</CardDescription>
+          </CardHeader>
+          <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-2">
+              <Label>Facebook Pixel ID</Label>
+              <Input
+                value={settings.facebook_pixel_id || ""}
+                onChange={(e) => updateSetting("facebook_pixel_id", e.target.value)}
+                placeholder="Your Pixel ID"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>Facebook Dataset ID</Label>
+              <Input
+                value={settings.facebook_dataset_id || ""}
+                onChange={(e) => updateSetting("facebook_dataset_id", e.target.value)}
+                placeholder="Your Dataset ID"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>Conversions API Access Token</Label>
+              <Input
+                type="password"
+                value={settings.facebook_access_token || ""}
+                onChange={(e) => updateSetting("facebook_access_token", e.target.value)}
+                placeholder="EAAR..."
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>Webhook Verify Token</Label>
+              <Input
+                value={settings.facebook_verify_token || ""}
+                onChange={(e) => updateSetting("facebook_verify_token", e.target.value)}
+                placeholder="your_secret_verify_token"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>Instagram Account ID</Label>
+              <Input
+                value={settings.instagram_account_id || ""}
+                onChange={(e) => updateSetting("instagram_account_id", e.target.value)}
+                placeholder="1784..."
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>Instagram Access Token</Label>
+              <Input
+                type="password"
+                value={settings.instagram_access_token || ""}
+                onChange={(e) => updateSetting("instagram_access_token", e.target.value)}
+                placeholder="EAAR..."
+              />
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Global Application Overrides */}
+        <Card className="lg:col-span-2">
+          <CardHeader>
+            <CardTitle>Application Core Variables</CardTitle>
+            <CardDescription>Main website routing variables and absolute backend URLs.</CardDescription>
+          </CardHeader>
+          <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-2">
+              <Label>Absolute App URL</Label>
+              <Input
+                value={settings.app_base_url || ""}
+                onChange={(e) => updateSetting("app_base_url", e.target.value)}
+                placeholder="https://istanbulportrait.com"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>Admin Notification Email</Label>
+              <Input
+                value={settings.admin_email || ""}
+                onChange={(e) => updateSetting("admin_email", e.target.value)}
+                placeholder="info@istanbulportrait.com"
+              />
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Turinvoice Integration */}
+        <Card className="lg:col-span-2">
+          <CardHeader>
+            <CardTitle>Turinvoice (E-Fatura)</CardTitle>
+            <CardDescription>Automated electronic invoicing API keys.</CardDescription>
+          </CardHeader>
+          <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-2">
+              <Label>Base URL</Label>
+              <Input
+                value={settings.turinvoice_base_url || ""}
+                onChange={(e) => updateSetting("turinvoice_base_url", e.target.value)}
+                placeholder="https://hesap.turinvoice.com"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>Login / Phone</Label>
+              <Input
+                value={settings.turinvoice_login || ""}
+                onChange={(e) => updateSetting("turinvoice_login", e.target.value)}
+                placeholder="+90XXXXXXXXX"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>Password</Label>
+              <Input
+                type="password"
+                value={settings.turinvoice_password || ""}
+                onChange={(e) => updateSetting("turinvoice_password", e.target.value)}
+                placeholder="Password"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>ID TSP</Label>
+              <Input
+                value={settings.turinvoice_id_tsp || ""}
+                onChange={(e) => updateSetting("turinvoice_id_tsp", e.target.value)}
+                placeholder="1868"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>Secret Key</Label>
+              <Input
+                type="password"
+                value={settings.turinvoice_secret_key || ""}
+                onChange={(e) => updateSetting("turinvoice_secret_key", e.target.value)}
+                placeholder="0f2f01e0-..."
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>Callback URL</Label>
+              <Input
+                value={settings.turinvoice_callback_url || ""}
+                onChange={(e) => updateSetting("turinvoice_callback_url", e.target.value)}
+                placeholder="https://istanbulportrait.com/api/payment/webhook/turinvoice"
+              />
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Webmasters & Web Tracking */}
+        <Card className="lg:col-span-2">
+          <CardHeader>
+            <CardTitle>Webmasters & Tracking Extended</CardTitle>
+            <CardDescription>Configure GA4 Measurement Protocol, Clarity, Bing, Indexnow.</CardDescription>
+          </CardHeader>
+          <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-2">
+              <Label>GA4 Measurement Protocol Secret</Label>
+              <Input
+                type="password"
+                value={settings.ga4_measurement_protocol_secret || ""}
+                onChange={(e) => updateSetting("ga4_measurement_protocol_secret", e.target.value)}
+                placeholder="da0..."
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>Clarity Project ID</Label>
+              <Input
+                value={settings.clarity_project_id || ""}
+                onChange={(e) => updateSetting("clarity_project_id", e.target.value)}
+                placeholder="tbm..."
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>Yandex Webmaster Key</Label>
+              <Input
+                value={settings.yandex_webmaster_key || ""}
+                onChange={(e) => updateSetting("yandex_webmaster_key", e.target.value)}
+                placeholder="326..."
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>Bing Webmaster Key</Label>
+              <Input
+                value={settings.bing_webmaster_key || ""}
+                onChange={(e) => updateSetting("bing_webmaster_key", e.target.value)}
+                placeholder="02D..."
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>IndexNow API Key</Label>
+              <Input
+                value={settings.indexnow_api_key || ""}
+                onChange={(e) => updateSetting("indexnow_api_key", e.target.value)}
+                placeholder="74aa..."
+              />
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Miscellaneous Integrations */}
+        <Card className="lg:col-span-2">
+          <CardHeader>
+            <CardTitle>Other Integrations</CardTitle>
+            <CardDescription>Prodigi Print API, Featurable, Google Ads.</CardDescription>
+          </CardHeader>
+          <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+            <div className="space-y-2">
+              <Label>Behold URL (Instagram Feed)</Label>
+              <Input
+                value={settings.behold_url || ""}
+                onChange={(e) => updateSetting("behold_url", e.target.value)}
+                placeholder="https://feeds.behold.so/..."
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>Featurable Widget ID</Label>
+              <Input
+                value={settings.featurable_widget_id || ""}
+                onChange={(e) => updateSetting("featurable_widget_id", e.target.value)}
+                placeholder="ce9..."
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>Prodigi API URL</Label>
+              <Input
+                value={settings.prodigi_api_url || ""}
+                onChange={(e) => updateSetting("prodigi_api_url", e.target.value)}
+                placeholder="https://api.sandbox.prodigi.com"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>Prodigi API Key</Label>
+              <Input
+                type="password"
+                value={settings.prodigi_api_key || ""}
+                onChange={(e) => updateSetting("prodigi_api_key", e.target.value)}
+                placeholder="test_..."
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>Google Ads Webhook Key</Label>
+              <Input
+                value={settings.google_ads_webhook_key || ""}
+                onChange={(e) => updateSetting("google_ads_webhook_key", e.target.value)}
+                placeholder="istanbulportrait_google_ads..."
+              />
             </div>
           </CardContent>
         </Card>

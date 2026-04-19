@@ -5,7 +5,12 @@
   "nav": {
     "home": "Главная",
     "selectLanguage": "Выберите язык",
-    "selectLanguageDescription": "Выберите предпочитаемый язык, чтобы познакомиться с Стамбульским портретом."
+    "selectLanguageDescription": "Выберите предпочитаемый язык, чтобы познакомиться с Стамбульским портретом.",
+    "packages": "Пакеты",
+    "locations": "Локации",
+    "blog": "Блог",
+    "about": "О нас",
+    "contact": "Контакты"
   },
   "whatsapp": {
     "button": "WhatsApp",
@@ -109,6 +114,10 @@
       "checking_availability": "Проверка доступности...",
       "availability_confirmed": "Место доступно! Сейчас открываюсь..."
     },
+    "cancellation": {
+      "title": "Бесплатная отмена",
+      "description": "Отмена за 24 часа до начала для полного возврата средств"
+    },
     "payment_breakdown": {
       "pay_now": "Заплатите {amount} сейчас",
       "pay_on_day": "и остаток оплаты {amount} в день фотосессии"
@@ -153,8 +162,8 @@
     },
     "people_count_title": "Количество человек",
     "price_per_person": "Цена на человека",
-    "seasonal_discount_applied": "Распродажа (СКИДКА {percentage}%)",
-    "promo_code": "Промокод",
+    "seasonal_discount_applied": "%{percentage} Seasonal Discount",
+    "promo_code": "Promo Code",
     "apply_promo": "Применить",
     "promo_applied": "Промокод применен!",
     "invalid_promo": "Неверный или просроченный промокод",
@@ -187,14 +196,17 @@
       "try_again": "Попробуйте еще раз"
     },
     "expires_in": "Мы удержим ваше место в течение [TIME] минут.",
-    "expired": "Срок резервирования истек. Пожалуйста, выберите новое время."
+    "expired": "Срок резервирования истек. Пожалуйста, выберите новое время.",
+    "apply": "Apply",
+    "remove": "Remove",
+    "promo_code_applied": "%{percentage} Promo Discount"
   },
   "footer": {
     "description": "Ведущий фотограф Стамбула по профессиональной портретной фотографии. Запечатлейте свои особенные моменты на самых знаковых декорациях города.",
     "quickLinks": "Быстрые ссылки",
-    "services": "Услуги",
+    "services": "Пакеты",
     "followUs": "Следуйте за нами",
-    "copyright": "© 2026 360istanbul.com.tr | Все права защищены.",
+    "copyright": "© 2026 istanbulportrait.com | Все права защищены.",
     "service_items": {
       "portrait": "Портретная Фотография",
       "couples": "Парные сеансы",
@@ -386,7 +398,7 @@
     "bullet_retouching": "• Профессиональная ретушь",
     "need_help": "Нужна помощь?",
     "help_description": "Есть вопросы по бронированию? Свяжитесь с нами в любое время.",
-    "support_email": "info@360istanbul.com.tr",
+    "support_email": "info@istanbulportrait.com",
     "support_phone": "+90 536 709 37 24",
     "people_count": "Количество человек"
   },
@@ -505,6 +517,78 @@
     "summary": {
       "title": "Ключевые выводы",
       "ai_overview": "Обзор ИИ"
+    }
+  },
+  "privacy": {
+    "cookies": {
+      "table": {
+        "title": "Cookies Used on Our Site",
+        "columns": {
+          "name": "Name",
+          "purpose": "Purpose",
+          "type": "Type",
+          "duration": "Duration",
+          "provider": "Provider"
+        },
+        "types": {
+          "essential": "Essential",
+          "analytics": "Analytics",
+          "marketing": "Marketing"
+        },
+        "providers": {
+          "first_party": "First Party",
+          "google": "Google",
+          "yandex": "Yandex",
+          "microsoft": "Microsoft",
+          "facebook": "Facebook"
+        },
+        "essential": {
+          "user_consent": {
+            "purpose": "Stores the user's cookie consent state for the current domain.",
+            "duration": "1 year"
+          }
+        },
+        "analytics": {
+          "ga": {
+            "purpose": "Used by Google Analytics to distinguish users.",
+            "duration": "2 years"
+          },
+          "gid": {
+            "purpose": "Used by Google Analytics to distinguish users.",
+            "duration": "24 hours"
+          },
+          "gat": {
+            "purpose": "Used to throttle request rate.",
+            "duration": "1 minute"
+          },
+          "ym_uid": {
+            "purpose": "Used by Yandex Metrica for identifying site users.",
+            "duration": "1 year"
+          },
+          "ym_d": {
+            "purpose": "Used by Yandex Metrica to store the date of user's first session.",
+            "duration": "1 year"
+          },
+          "clck": {
+            "purpose": "Persists the Microsoft Clarity User ID.",
+            "duration": "1 year"
+          },
+          "clsk": {
+            "purpose": "Connects multiple page views by a user into a single Clarity session.",
+            "duration": "1 day"
+          }
+        },
+        "marketing": {
+          "fbp": {
+            "purpose": "Used by Facebook to deliver advertisement products.",
+            "duration": "3 months"
+          },
+          "fbc": {
+            "purpose": "Used by Facebook to deliver advertisement products when an ad is clicked.",
+            "duration": "3 months"
+          }
+        }
+      }
     }
   }
 }

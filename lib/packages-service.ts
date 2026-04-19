@@ -154,7 +154,8 @@ export const packagesService = {
       .single();
 
     if (error) {
-      console.error("Error creating package:", error);
+      console.error("Error creating package. Message:", error.message, "Details:", error.details, "Hint:", error.hint, "Code:", error.code);
+      console.error("Raw Error Object:", JSON.stringify(error, null, 2));
       return null;
     }
 
@@ -174,7 +175,8 @@ export const packagesService = {
       .single();
 
     if (error) {
-      console.error(`Error updating package ${id}:`, error);
+      console.error(`Error updating package ${id}. Message:`, error.message, "Details:", error.details, "Code:", error.code);
+      console.error("Raw Error Object:", JSON.stringify(error, null, 2));
       return null;
     }
 

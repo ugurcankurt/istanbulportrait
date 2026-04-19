@@ -226,6 +226,7 @@ export function BookingModal({
         selectedPackage,
         basePrice, // Passed from parent
         activeDiscount,
+        null,
         dateValue,
         count,
       );
@@ -296,27 +297,39 @@ export function BookingModal({
 
         try {
           setIsNavigating(true);
-          const bookingResponse = await fetch("/api/booking/create-confirmed", {
+          const draftResponse = await fetch("/api/booking/create-draft", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
               ...data,
               totalAmount: pricing?.totalPrice || basePrice,
-              provider: "cash",
-              eventId,
               locale,
             }),
           });
 
-          if (!bookingResponse.ok) throw new Error("Booking failed");
+          const draftResult = await draftResponse.json();
+          const extraInfo = { isPerPerson, activeDiscount, packageDisplayName, packageDuration, packagePhotos, packageLocations, packageFeatures: packageFeatures || [] };
+          const bookingDataToStore = draftResult.bookingId
+            ? { ...data, ...extraInfo, totalAmount: pricing?.totalPrice || basePrice, basePrice, originalPrice: pricing?.originalPrice, bookingId: draftResult.bookingId }
+            : { ...data, ...extraInfo, totalAmount: pricing?.totalPrice || basePrice, basePrice, originalPrice: pricing?.originalPrice };
 
-          const bookingResult = await bookingResponse.json();
+          sessionStorage.setItem("bookingData", JSON.stringify(bookingDataToStore));
+
           form.reset();
           onClose();
-          router.push(`/${locale}/checkout?bookingId=${bookingResult.booking.id}`);
+          router.push(`/${locale}/checkout`);
         } catch (e) {
-          console.error("Booking creation error:", e);
-          toast.error(t("error.booking_failed") || "Failed to create booking");
+          console.error("Draft creation error:", e);
+          sessionStorage.setItem("bookingData", JSON.stringify({
+              ...data,
+              packageDisplayName, packageDuration, packagePhotos, packageLocations, packageFeatures: packageFeatures || [],
+              totalAmount: pricing?.totalPrice || basePrice,
+              basePrice,
+              originalPrice: pricing?.originalPrice
+          }));
+          form.reset();
+          onClose();
+          router.push(`/${locale}/checkout`);
         } finally {
           setIsNavigating(false);
         }
@@ -564,11 +577,14 @@ export function BookingModal({
             <div className="fixed bottom-0 left-0 right-0 p-6 bg-background border-t shadow-[0_-4px_10px_rgba(0,0,0,0.05)] z-50">
               <div className="max-w-md mx-auto flex items-center justify-between gap-4">
                 <div className="flex flex-col">
-                  <span className="text-xs text-muted-foreground uppercase font-bold tracking-wider">
-                    {t("labels.total_amount")}
+                  <span className="text-[10px] text-muted-foreground font-semibold">
+                    {t("labels.total_amount")}: €{packageInfo.price}
                   </span>
-                  <span className="text-2xl font-black text-primary">
-                    €{packageInfo.price}
+                  <span className="text-xl font-black text-primary leading-none mt-0.5">
+                    €{packageInfo.depositAmount}
+                  </span>
+                  <span className="text-[10px] font-bold text-muted-foreground mt-1">
+                    {t("labels.deposit_amount")} (30%)
                   </span>
                 </div>
                 <Button
@@ -615,12 +631,15 @@ export function BookingModal({
         </div>
 
         <DialogFooter className="p-6 border-t bg-background shadow-[0_-4px_10px_rgba(0,0,0,0.03)] flex flex-row items-center justify-between sm:justify-between gap-4">
-          <div className="flex flex-col text-start">
-            <span className="text-xs text-muted-foreground font-bold">
-              {t("labels.total_amount")}
+          <div className="flex flex-col text-start space-y-1">
+            <span className="text-[11px] text-muted-foreground font-semibold">
+              {t("labels.total_amount")}: €{packageInfo.price}
             </span>
-            <span className="text-2xl font-black text-primary">
-              €{packageInfo.price}
+            <span className="text-xl font-black text-primary leading-none">
+              {t("labels.deposit_amount")} (30%): €{packageInfo.depositAmount}
+            </span>
+            <span className="text-[11px] text-muted-foreground font-bold">
+              {t("labels.remaining_cash")} (70%): €{packageInfo.remainingAmount}
             </span>
           </div>
 

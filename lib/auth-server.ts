@@ -3,6 +3,7 @@ import {
   createServerSupabaseAdminClient,
   createServerSupabaseClient,
 } from "./supabase/server";
+import { settingsService } from "./settings-service";
 
 // Server-side authentication utilities
 // ONLY use these in Server Components, API routes, and middleware
@@ -59,8 +60,10 @@ export async function isServerAdmin(email?: string): Promise<boolean> {
     return false;
   }
 
+  const settings = await settingsService.getSettings();
   const adminEmails = [
-    process.env.NEXT_PUBLIC_ADMIN_EMAIL || "admin@360istanbul.com.tr",
+    settings.admin_email || "info@istanbulportrait.com",
+    "ugurcankurt@gmail.com",
   ];
 
   const isAdmin = adminEmails.includes(email.toLowerCase());

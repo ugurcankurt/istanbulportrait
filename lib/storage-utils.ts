@@ -108,9 +108,17 @@ export async function uploadPackageImage(
     // Optimize the image client-side first
     const optimizedFile = await compressAndConvertToWebp(file, 150);
     
+    // Normalize folder path to ASCII for Supabase Storage (removes ö, ş, ç etc.)
+    const safeSlug = slug
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-zA-Z0-9-]/g, '-')
+      .replace(/-+/g, '-')
+      .toLowerCase();
+
     // Use an epoch + normalized name to avoid caching artifacts
     const uniqueFileName = `${Date.now()}_${optimizedFile.name}`;
-    const filePath = `${slug}/${uniqueFileName}`;
+    const filePath = `${safeSlug}/${uniqueFileName}`;
 
     const { data, error } = await supabase.storage
       .from(bucket)
@@ -182,8 +190,17 @@ export async function uploadLocationImage(
   try {
     const supabase = getSupabaseStorageClient();
     const optimizedFile = await compressAndConvertToWebp(file, 200);
+    
+    // Normalize folder path to ASCII for Supabase Storage
+    const safeSlug = slug
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-zA-Z0-9-]/g, '-')
+      .replace(/-+/g, '-')
+      .toLowerCase();
+
     const uniqueFileName = `${Date.now()}_${optimizedFile.name}`;
-    const filePath = `${slug}/${uniqueFileName}`;
+    const filePath = `${safeSlug}/${uniqueFileName}`;
 
     const { data, error } = await supabase.storage
       .from(LOCATIONS_BUCKET)

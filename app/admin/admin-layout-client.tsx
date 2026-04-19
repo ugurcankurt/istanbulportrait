@@ -12,6 +12,7 @@ import {
   MapPin,
   Settings,
   TicketPercent,
+  Ticket,
 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
@@ -61,6 +62,7 @@ const navigationGroups = [
     items: [
       { name: "Packages", href: "/admin/dashboard/packages", icon: Package },
       { name: "Discounts", href: "/admin/dashboard/discounts", icon: TicketPercent },
+      { name: "Promo Codes", href: "/admin/dashboard/promo-codes", icon: Ticket },
     ],
   },
   {

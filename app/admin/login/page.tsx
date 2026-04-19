@@ -57,7 +57,7 @@ export default function AdminLoginPage() {
           </div>
           <CardTitle className="text-2xl font-bold">Admin Login</CardTitle>
           <p className="text-sm text-muted-foreground">
-            360istanbul.com.tr Admin Panel
+            istanbulportrait.com Admin Panel
           </p>
         </CardHeader>
         <CardContent>
@@ -75,7 +75,7 @@ export default function AdminLoginPage() {
               <Input
                 id="email"
                 type="email"
-                placeholder="admin@360istanbul.com.tr"
+                placeholder="info@istanbulportrait.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required

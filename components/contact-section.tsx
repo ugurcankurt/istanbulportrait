@@ -48,7 +48,7 @@ export function ContactSection({ settings }: { settings?: any } = {}) {
   const tui = useTranslations("ui");
   const locale = useLocale();
 
-  const addressString = settings?.address?.[locale] || settings?.address?.en || "Galata Tower, Istanbul";
+  const addressString = settings?.address?.[locale] || settings?.address?.en || t("info.location");
   const mapUrl = `https://maps.google.com/maps?q=${encodeURIComponent(addressString)}&t=&z=14&ie=UTF8&iwloc=&output=embed`;
 
   return (

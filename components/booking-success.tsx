@@ -71,6 +71,13 @@ export function BookingSuccess({
 
   const discountAmount = baseTotal > 0 ? Math.max(0, baseTotal - paidTotal) : 0;
   const isDiscounted = discountAmount > 0;
+  const depositAmount = Math.round(paidTotal * 0.3 * 100) / 100;
+  const remainingAmount = Math.round((paidTotal - depositAmount) * 100) / 100;
+
+  const depositLabel = locale === "tr" ? "Ödenen Depozito (Online)" : locale === "ru" ? "Оплаченный депозит (Онлайн)" : "Deposit Paid (Online)";
+  const remainingLabel = locale === "tr" ? "Kalan Ödeme (Çekim Günü Nakit)" : locale === "ru" ? "Остаток к оплате (Наличными)" : "Remaining Amount (Cash on site)";
+  const discountLabel = locale === "tr" ? "Uygulanan İndirim / Promo" : locale === "ru" ? "Скидка / Промокод" : "Discount / Promo Applied";
+  const originalLabel = locale === "tr" ? "İndirimsiz Fiyat" : locale === "ru" ? "Базовая цена" : "Original Price";
 
   return (
     <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-24 max-w-6xl">
@@ -107,7 +114,7 @@ export function BookingSuccess({
                     {tsuccess("booking_id")}:
                   </span>
                   <Badge variant="secondary" className="font-mono text-xs">
-                    {displayBookingId.slice(0, 8).toUpperCase()}
+                    {displayBookingId}
                   </Badge>
                 </div>
 
@@ -126,11 +133,11 @@ export function BookingSuccess({
                     {isDiscounted && (
                       <div className="bg-sale/10 rounded-md p-3 mb-2 border border-sale/20 space-y-2">
                         <div className="flex justify-between items-center text-sm">
-                          <span className="text-muted-foreground">Original Price:</span>
+                          <span className="text-muted-foreground">{originalLabel}:</span>
                           <span className="line-through text-muted-foreground">{formatCurrency(baseTotal, locale)}</span>
                         </div>
                         <div className="flex justify-between items-center text-sm text-sale font-bold">
-                          <span>Discount Applied:</span>
+                          <span>{discountLabel}:</span>
                           <span>-{formatCurrency(discountAmount, locale)}</span>
                         </div>
                       </div>
@@ -138,23 +145,36 @@ export function BookingSuccess({
 
                     {/* Total Amount */}
                     <div className="flex justify-between items-center py-2">
-                      <span className="font-bold text-foreground text-base sm:text-lg">
+                      <span className="font-bold text-foreground text-sm sm:text-base">
                         {t("labels.total_amount")}:
                       </span>
                       <div className="flex flex-col items-end">
-                        <span className="font-black text-xl sm:text-2xl text-primary">
+                        <span className="font-bold text-base sm:text-lg text-foreground">
                           {formatCurrency(paidTotal, locale)}
                         </span>
                       </div>
                     </div>
 
+                    <Separator className="my-1" />
+
+                    {/* Deposit Paid */}
+                    <div className="flex justify-between items-center py-2">
+                      <span className="text-muted-foreground text-sm flex items-center gap-2">
+                        <CheckCircle className="w-4 h-4 text-green-500" />
+                        {depositLabel}:
+                      </span>
+                      <span className="font-semibold text-sm flex items-center">
+                        {formatCurrency(depositAmount, locale)}
+                      </span>
+                    </div>
+
                     {/* Payment on Date (Cash) */}
                     <div className="flex justify-between items-center p-3 bg-success/10 rounded border border-success/20 mt-2">
                       <span className="font-bold text-success text-sm sm:text-base">
-                        To pay exactly on event day:
+                        {remainingLabel}:
                       </span>
-                      <span className="font-black text-success text-base sm:text-lg">
-                        {formatCurrency(paidTotal, locale)}
+                      <span className="font-black text-success text-lg sm:text-xl">
+                        {formatCurrency(remainingAmount, locale)}
                       </span>
                     </div>
                   </div>
@@ -322,7 +342,7 @@ export function BookingSuccess({
                     <Mail className="w-4 h-4" />
                   </div>
                   <span className="text-sm font-medium">
-                    {settings?.contact_email || "info@360istanbul.com.tr"}
+                    {settings?.contact_email || "info@istanbulportrait.com"}
                   </span>
                 </div>
                 <div className="flex items-center gap-3 rtl:gap-reverse">

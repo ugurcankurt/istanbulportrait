@@ -8,9 +8,9 @@ import { PackagesPageContent } from "./packages-content";
 import { LocationsPageContent } from "./locations-content";
 import { BlogPageContent } from "./blog-content";
 
-// Detailed Component Imports
 import { LocationDetailPageContent } from "./location-detail-content";
 import { PackageDetailPageContent } from "./package-detail-content";
+import { BlogDetailPageContent } from "./blog-detail-content";
 
 import { getTranslations } from "next-intl/server";
 import { Metadata } from "next";
@@ -123,6 +123,46 @@ export async function generateMetadata(props: {
         openGraph: constructOpenGraph(title, desc, ogImage, fallbackTitle, params.locale),
       };
     }
+
+    if (dbPage.slug === "blog") {
+      const { getBlogPostBySlug, getBlogPostByIdWithAllTranslations } = await import("@/lib/blog/blog-service");
+      const decodedChildSlug = decodeURIComponent(childSlug);
+      const post = await getBlogPostBySlug(decodedChildSlug, params.locale as any);
+      if (!post || post.status !== "published") return { title: "Blog Post Not Found" };
+
+      const title = generateSeoTitle(post.translation.title, params.locale, fallbackTitle);
+      const desc = generateSeoDescription(post.translation.excerpt || post.translation.content);
+      const ogImage = post.featured_image || settings.default_og_image_url || "";
+
+      // Fetch full translation data for correct URL tracking
+      const fullPost = await getBlogPostByIdWithAllTranslations(post.id);
+      const languages: Record<string, string> = {};
+
+      if (fullPost && fullPost.translations) {
+        const enSlug = fullPost.translations["en"]?.slug || childSlug;
+        routing.locales.forEach((loc) => {
+          const key = loc as keyof typeof fullPost.translations;
+          const tSlug = fullPost.translations[key]?.slug || enSlug;
+          const bTitle = dbPage.title?.[loc];
+          const bSeg = bTitle ? generateNativeSlug(bTitle) : "blog";
+          languages[loc] = `${baseUrl}/${loc}/${bSeg}/${tSlug}`;
+        });
+        const xDefaultSeg = dbPage.title?.["en"] ? generateNativeSlug(dbPage.title["en"]) : "blog";
+        languages["x-default"] = `${baseUrl}/en/${xDefaultSeg}/${enSlug}`;
+      }
+
+      const currentSeg = dbPage.title?.[params.locale] ? generateNativeSlug(dbPage.title[params.locale]!) : "blog";
+
+      return {
+        title,
+        description: desc,
+        alternates: {
+          canonical: `${baseUrl}/${params.locale}/${currentSeg}/${post.translation.slug || childSlug}`,
+          languages
+        },
+        openGraph: constructOpenGraph(title, desc, ogImage, fallbackTitle, params.locale),
+      };
+    }
   }
 
   return { title: fallbackTitle || "Website" };
@@ -168,7 +208,9 @@ export default async function GenericCorePage(props: {
         return <LocationDetailPageContent locale={params.locale} slug={childSlug} parentSlug={rootSlug} />;
       case "packages":
         return <PackageDetailPageContent locale={params.locale} slug={childSlug} parentSlug={rootSlug} />;
-      // Additional depth structures (blog) could be added here in the future
+      case "blog":
+        return <BlogDetailPageContent locale={params.locale} slug={childSlug} parentSlug={rootSlug} />;
+      // Additional depth structures could be added here in the future
       default:
         notFound();
     }

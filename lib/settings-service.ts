@@ -37,6 +37,41 @@ export interface SiteSettings {
   opening_time: string | null;
   closing_time: string | null;
   working_days: string[] | null;
+
+  // Modern Dynamic Environment Settings
+  iyzico_base_url: string | null;
+  iyzico_api_key: string | null;
+  iyzico_secret_key: string | null;
+
+  facebook_pixel_id: string | null;
+  facebook_dataset_id: string | null;
+  facebook_access_token: string | null;
+  facebook_verify_token: string | null;
+
+  instagram_access_token: string | null;
+  instagram_account_id: string | null;
+
+  ga4_measurement_protocol_secret: string | null;
+  app_base_url: string | null;
+  admin_email: string | null;
+
+  turinvoice_base_url: string | null;
+  turinvoice_login: string | null;
+  turinvoice_password: string | null;
+  turinvoice_id_tsp: string | null;
+  turinvoice_secret_key: string | null;
+  turinvoice_callback_url: string | null;
+
+  clarity_project_id: string | null;
+  yandex_webmaster_key: string | null;
+  bing_webmaster_key: string | null;
+  indexnow_api_key: string | null;
+
+  behold_url: string | null;
+  prodigi_api_key: string | null;
+  prodigi_api_url: string | null;
+  google_ads_webhook_key: string | null;
+  featurable_widget_id: string | null;
 }
 
 export const defaultSettings: SiteSettings = {
@@ -74,7 +109,35 @@ export const defaultSettings: SiteSettings = {
   longitude: null,
   opening_time: null,
   closing_time: null,
-  working_days: null
+  working_days: null,
+
+  iyzico_base_url: null,
+  iyzico_api_key: null,
+  iyzico_secret_key: null,
+  facebook_pixel_id: null,
+  facebook_dataset_id: null,
+  facebook_access_token: null,
+  facebook_verify_token: null,
+  instagram_access_token: null,
+  instagram_account_id: null,
+  ga4_measurement_protocol_secret: null,
+  app_base_url: null,
+  admin_email: null,
+  turinvoice_base_url: null,
+  turinvoice_login: null,
+  turinvoice_password: null,
+  turinvoice_id_tsp: null,
+  turinvoice_secret_key: null,
+  turinvoice_callback_url: null,
+  clarity_project_id: null,
+  yandex_webmaster_key: null,
+  bing_webmaster_key: null,
+  indexnow_api_key: null,
+  behold_url: null,
+  prodigi_api_key: null,
+  prodigi_api_url: null,
+  google_ads_webhook_key: null,
+  featurable_widget_id: null,
 };
 
 export const settingsService = {
@@ -135,6 +198,34 @@ export const settingsService = {
         opening_time: data.opening_time || defaultSettings.opening_time,
         closing_time: data.closing_time || defaultSettings.closing_time,
         working_days: data.working_days || defaultSettings.working_days,
+
+        iyzico_base_url: data.iyzico_base_url || defaultSettings.iyzico_base_url,
+        iyzico_api_key: data.iyzico_api_key || defaultSettings.iyzico_api_key,
+        iyzico_secret_key: data.iyzico_secret_key || defaultSettings.iyzico_secret_key,
+        facebook_pixel_id: data.facebook_pixel_id || defaultSettings.facebook_pixel_id,
+        facebook_dataset_id: data.facebook_dataset_id || defaultSettings.facebook_dataset_id,
+        facebook_access_token: data.facebook_access_token || defaultSettings.facebook_access_token,
+        facebook_verify_token: data.facebook_verify_token || defaultSettings.facebook_verify_token,
+        instagram_access_token: data.instagram_access_token || defaultSettings.instagram_access_token,
+        instagram_account_id: data.instagram_account_id || defaultSettings.instagram_account_id,
+        ga4_measurement_protocol_secret: data.ga4_measurement_protocol_secret || defaultSettings.ga4_measurement_protocol_secret,
+        app_base_url: data.app_base_url || defaultSettings.app_base_url,
+        admin_email: data.admin_email || defaultSettings.admin_email,
+        turinvoice_base_url: data.turinvoice_base_url || defaultSettings.turinvoice_base_url,
+        turinvoice_login: data.turinvoice_login || defaultSettings.turinvoice_login,
+        turinvoice_password: data.turinvoice_password || defaultSettings.turinvoice_password,
+        turinvoice_id_tsp: data.turinvoice_id_tsp || defaultSettings.turinvoice_id_tsp,
+        turinvoice_secret_key: data.turinvoice_secret_key || defaultSettings.turinvoice_secret_key,
+        turinvoice_callback_url: data.turinvoice_callback_url || defaultSettings.turinvoice_callback_url,
+        clarity_project_id: data.clarity_project_id || defaultSettings.clarity_project_id,
+        yandex_webmaster_key: data.yandex_webmaster_key || defaultSettings.yandex_webmaster_key,
+        bing_webmaster_key: data.bing_webmaster_key || defaultSettings.bing_webmaster_key,
+        indexnow_api_key: data.indexnow_api_key || defaultSettings.indexnow_api_key,
+        behold_url: data.behold_url || defaultSettings.behold_url,
+        prodigi_api_key: data.prodigi_api_key || defaultSettings.prodigi_api_key,
+        prodigi_api_url: data.prodigi_api_url || defaultSettings.prodigi_api_url,
+        google_ads_webhook_key: data.google_ads_webhook_key || defaultSettings.google_ads_webhook_key,
+        featurable_widget_id: data.featurable_widget_id || defaultSettings.featurable_widget_id,
       };
     } catch (error) {
       console.error("Failed to load settings:", error);

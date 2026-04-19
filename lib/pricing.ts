@@ -24,6 +24,8 @@ export interface PriceBreakdown extends TaxBreakdown {
   appliedDiscountPercentage: number;
   depositAmount: number;
   remainingAmount: number;
+  promoCode?: string;
+  promoAmount?: number;
 }
 
 export interface FormattedPriceBreakdown extends FormattedTaxBreakdown {
@@ -35,6 +37,8 @@ export interface FormattedPriceBreakdown extends FormattedTaxBreakdown {
   appliedDiscountPercentage: number;
   depositAmount: string;
   remainingAmount: string;
+  promoCode?: string;
+  promoAmount?: string;
 }
 
 /**
@@ -44,9 +48,12 @@ export interface FormattedPriceBreakdown extends FormattedTaxBreakdown {
  * @param bookingDate - Optional booking date to constrain strictly to discounts window
  * @returns Discounted price and applied percentage
  */
+export interface AppliedPromo { code: string; percentage: number; }
+
 export function calculateDiscountedPrice(
   basePrice: number,
   activeDiscount: DiscountDB | null,
+  appliedPromo?: AppliedPromo | null,
   bookingDate?: Date | string,
 ): {
   price: number;
@@ -54,6 +61,8 @@ export function calculateDiscountedPrice(
   discountPercentage: number;
   discountAmount: number;
   isDiscounted: boolean;
+  promoCode?: string;
+  promoAmount?: number;
 } {
   let currentPrice = basePrice;
   let campaignPercentage = 0;
@@ -67,7 +76,6 @@ export function calculateDiscountedPrice(
       const start = new Date(activeDiscount.start_date);
       const end = new Date(activeDiscount.end_date);
       
-      // Ensure time constraints cover the whole day boundaries appropriately
       start.setHours(0, 0, 0, 0);
       end.setHours(23, 59, 59, 999);
 
@@ -83,15 +91,25 @@ export function calculateDiscountedPrice(
     }
   }
 
-  // Ensure price doesn't go below 0
+  let promoPercentage = 0;
+  let promoAmount = 0;
+
+  if (appliedPromo) {
+    promoPercentage = appliedPromo.percentage / 100;
+    promoAmount = currentPrice * promoPercentage; // multiplicative stack
+    currentPrice -= promoAmount;
+  }
+
   currentPrice = Math.max(0, currentPrice);
 
   return {
     price: currentPrice,
     originalPrice: basePrice,
     discountPercentage: campaignPercentage,
-    discountAmount: campaignAmount,
-    isDiscounted: campaignPercentage > 0,
+    discountAmount: campaignAmount + promoAmount,
+    isDiscounted: campaignPercentage > 0 || promoPercentage > 0,
+    promoCode: appliedPromo?.code,
+    promoAmount: promoAmount
   };
 }
 
@@ -111,6 +129,7 @@ export function getPackagePricing(
   packageId: PackageId,
   basePrice: number,
   activeDiscount: DiscountDB | null,
+  appliedPromo?: AppliedPromo | null,
   bookingDate?: Date | string,
   peopleCount?: number,
   taxRate: number = TAX_RATES.TURKEY,
@@ -118,13 +137,15 @@ export function getPackagePricing(
 ): PriceBreakdown {
   const originalPrice = basePrice;
 
-  // Special handling for rooftop package with per-person pricing
-  if ((packageId === "rooftop" || packageId === "rooftop-swing") && peopleCount && peopleCount >= 1) {
+  // Special handling for packages with per-person pricing
+  if (peopleCount && peopleCount >= 1) {
     // Calculate per-person discounts
     const {
       price: discountedPerPerson,
       discountPercentage,
-    } = calculateDiscountedPrice(originalPrice, activeDiscount, bookingDate);
+      promoCode,
+      promoAmount: perPersonPromoAmount,
+    } = calculateDiscountedPrice(originalPrice, activeDiscount, appliedPromo, bookingDate);
 
     // Calculate total based on people count
     const originalTotal = originalPrice * peopleCount;
@@ -149,6 +170,8 @@ export function getPackagePricing(
       appliedDiscountPercentage: discountPercentage,
       depositAmount,
       remainingAmount,
+      promoCode,
+      promoAmount: perPersonPromoAmount ? perPersonPromoAmount * peopleCount : undefined,
     };
   }
 
@@ -157,7 +180,9 @@ export function getPackagePricing(
     price: totalPrice,
     discountPercentage,
     discountAmount: seasonalAmount,
-  } = calculateDiscountedPrice(originalPrice, activeDiscount, bookingDate);
+    promoCode,
+    promoAmount,
+  } = calculateDiscountedPrice(originalPrice, activeDiscount, appliedPromo, bookingDate);
 
   const taxBreakdown = getTaxBreakdownFromTotal(totalPrice, taxRate);
 
@@ -175,6 +200,8 @@ export function getPackagePricing(
     appliedDiscountPercentage: discountPercentage,
     depositAmount,
     remainingAmount,
+    promoCode,
+    promoAmount,
   };
 }
 
@@ -185,6 +212,7 @@ export function formatPackagePricing(
   packageId: PackageId,
   basePrice: number,
   activeDiscount: DiscountDB | null,
+  appliedPromo?: AppliedPromo | null,
   bookingDate?: Date | string,
   locale: string = "en",
   peopleCount?: number,
@@ -195,6 +223,7 @@ export function formatPackagePricing(
     packageId,
     basePrice,
     activeDiscount,
+    appliedPromo,
     bookingDate,
     peopleCount,
     taxRate,
@@ -218,5 +247,7 @@ export function formatPackagePricing(
     appliedDiscountPercentage: breakdown.appliedDiscountPercentage,
     depositAmount: formatter.format(breakdown.depositAmount),
     remainingAmount: formatter.format(breakdown.remainingAmount),
+    promoCode: breakdown.promoCode,
+    promoAmount: breakdown.promoAmount ? formatter.format(breakdown.promoAmount) : undefined,
   };
 }

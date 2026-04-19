@@ -16,7 +16,7 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
-        hostname: "360istanbul.com.tr",
+        hostname: "istanbulportrait.com",
       },
       {
         protocol: "https",
@@ -32,7 +32,7 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
-        hostname: "fscyriqyqnqjgwgityjg.supabase.co",
+        hostname: "xfntnamwfnqjgqmyxwfz.supabase.co",
       },
       {
         protocol: "https",
@@ -154,41 +154,8 @@ const nextConfig: NextConfig = {
   },
 };
 
-const withPWA = require("@ducanh2912/next-pwa").default({
-  dest: "public",
-  disable: process.env.NODE_ENV === "development",
-  register: true,
-  skipWaiting: true,
-  workboxOptions: {
-    runtimeCaching: [
-      {
-        urlPattern: /^https:\/\/connect\.facebook\.net\/.*/i,
-        handler: "StaleWhileRevalidate",
-        options: {
-          cacheName: "facebook-pixel-cache",
-          expiration: {
-            maxEntries: 10,
-            maxAgeSeconds: 31536000, // 365 days
-          },
-        },
-      },
-      {
-        urlPattern: /^https:\/\/www\.googletagmanager\.com\/.*/i,
-        handler: "StaleWhileRevalidate",
-        options: {
-          cacheName: "google-analytics-cache",
-          expiration: {
-            maxEntries: 10,
-            maxAgeSeconds: 31536000, // 365 days
-          },
-        },
-      },
-    ],
-  },
-});
-
 const withBundleAnalyzer = require("@next/bundle-analyzer")({
   enabled: process.env.ANALYZE === "true",
 });
 
-export default withNextIntl(withBundleAnalyzer(withPWA(nextConfig)));
+export default withNextIntl(withBundleAnalyzer(nextConfig));

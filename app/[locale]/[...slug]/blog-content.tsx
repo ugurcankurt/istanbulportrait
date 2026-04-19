@@ -4,12 +4,14 @@ import { getTranslations } from "next-intl/server";
 import { PageHeroSection } from "@/components/page-hero-section";
 import { BreadcrumbNav } from "@/components/breadcrumb-nav";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
-import Link from "next/link";
+import { Link } from "@/i18n/routing";
+import NextLink from "next/link";
 import { getPublishedBlogPosts } from "@/lib/blog/blog-service";
 import { formatBlogDate } from "@/lib/blog/blog-utils";
 
 import type { Locale } from "@/types/blog";
 import { pagesContentService } from "@/lib/pages-content-service";
+import { generateNativeSlug } from "@/lib/slug-generator";
 
 // Force dynamic rendering for blog list page (uses searchParams)
 export const dynamic = "force-dynamic";
@@ -29,8 +31,9 @@ export async function BlogPageContent({
   const page = Number.parseInt(pageParam || "1", 10);
 
   const dbPage = await pagesContentService.getPageBySlug("blog");
-  const dynamicTitle = dbPage?.title?.[locale] || dbPage?.title?.en || "";
+  const dynamicTitle = dbPage?.title?.[locale] || dbPage?.title?.en || "blog";
   const dynamicSubtitle = dbPage?.subtitle?.[locale] || dbPage?.subtitle?.en || "";
+  const parentSegment = dbPage?.title?.[locale] ? generateNativeSlug(dbPage.title[locale]!) : "blog";
 
   const { posts, pagination } = await getPublishedBlogPosts({
     page,
@@ -59,9 +62,9 @@ export async function BlogPageContent({
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
               {posts.map((post) => (
-                <Link
+                <NextLink
                   key={post.id}
-                  href={`/${locale}/blog/${post.translation.slug}`}
+                  href={`/${locale}/${parentSegment}/${post.translation.slug}`}
                   className="group"
                 >
                   <article className="border rounded-lg overflow-hidden hover:shadow-lg transition-shadow h-full flex flex-col">
@@ -125,7 +128,7 @@ export async function BlogPageContent({
                       )}
                     </div>
                   </article>
-                </Link>
+                </NextLink>
               ))}
             </div>
           )}
@@ -134,23 +137,23 @@ export async function BlogPageContent({
           {pagination.totalPages > 1 && (
             <div className="flex justify-center gap-2 items-center">
               {page > 1 && (
-                <Link
-                  href={`/${locale}/blog?page=${page - 1}`}
+                <NextLink
+                  href={`?page=${page - 1}`}
                   className="px-4 py-2 border rounded-md hover:bg-muted transition-colors"
                 >
                   {t("previous")}
-                </Link>
+                </NextLink>
               )}
               <span className="px-4 py-2 text-sm text-muted-foreground">
                 {t("page", { current: page, total: pagination.totalPages })}
               </span>
               {page < pagination.totalPages && (
-                <Link
-                  href={`/${locale}/blog?page=${page + 1}`}
+                <NextLink
+                  href={`?page=${page + 1}`}
                   className="px-4 py-2 border rounded-md hover:bg-muted transition-colors"
                 >
                   {t("next")}
-                </Link>
+                </NextLink>
               )}
             </div>
           )}

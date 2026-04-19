@@ -11,6 +11,7 @@ import { reviewsService } from "@/lib/reviews-service";
 import { packagesService, type PackageDB } from "@/lib/packages-service";
 
 import { pagesContentService } from "@/lib/pages-content-service";
+import { discountService } from "@/lib/discount-service";
 
 
 
@@ -31,7 +32,8 @@ export async function PackagesPageContent({
   // Fetch fully dynamic packages from DB
   const dbPackages = await packagesService.getActivePackages();
 
-
+  // Fetch active discount
+  const activeDiscount = await discountService.getActiveDiscount();
 
   return (
     <div>
@@ -41,7 +43,7 @@ export async function PackagesPageContent({
       <PageHeroSection title={dynamicTitle} subtitle={dynamicSubtitle} />
       <div className="section-contain-auto">
         {/* Pass the purely dynamic packages object to Section along with parentSlug */}
-        <PackagesSection aggregateRating={aggregateRating} dbPackages={dbPackages} parentSlug={parentSlug} />
+        <PackagesSection aggregateRating={aggregateRating} dbPackages={dbPackages} parentSlug={parentSlug} activeDiscount={activeDiscount} />
       </div>
     </div>
   );

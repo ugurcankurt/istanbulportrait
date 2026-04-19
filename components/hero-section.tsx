@@ -1,15 +1,18 @@
 import { getTranslations } from "next-intl/server";
 import Image from "next/image";
 import { HeroClientWrapper } from "@/components/hero-client-wrapper";
+import type { DiscountDB } from "@/lib/discount-service";
 
 export async function HeroSection({
   title,
   subtitle,
   backgroundImage,
+  activeDiscount,
 }: {
   title?: string;
   subtitle?: string;
   backgroundImage?: string;
+  activeDiscount?: DiscountDB | null;
 } = {}) {
 
   const tui = await getTranslations("ui");
@@ -40,6 +43,7 @@ export async function HeroSection({
           <HeroClientWrapper
             packagesButtonText={tui("packages_button")}
             bookSessionButtonText={tui("book_your_session")}
+            activeDiscount={activeDiscount}
           >
             {/* Main Title - Server Rendered for LCP */}
             <h1 className="text-3xl sm:text-4xl md:text-4xl lg:text-6xl font-bold mb-4 leading-[1.1] tracking-tight drop-shadow-lg text-white">

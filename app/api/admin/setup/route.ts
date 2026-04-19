@@ -13,7 +13,7 @@ export async function GET() {
     auth: { autoRefreshToken: false, persistSession: false },
   });
 
-  const email = process.env.NEXT_PUBLIC_ADMIN_EMAIL || "info@360istanbul.com.tr";
+  const email = process.env.NEXT_PUBLIC_ADMIN_EMAIL || "info@istanbulportrait.com";
   const password = "Istanbul360!Secure";
 
   const { data, error } = await supabase.auth.admin.createUser({

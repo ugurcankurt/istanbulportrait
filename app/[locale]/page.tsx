@@ -17,7 +17,7 @@ import { packagesService } from "@/lib/packages-service";
 import { discountService } from "@/lib/discount-service";
 import { reviewsService } from "@/lib/reviews-service";
 import { Metadata } from "next";
-import { generateSeoDescription, generateSeoTitle, constructOpenGraph, buildFAQSchema, getBaseUrl } from "@/lib/seo-utils";
+import { generateSeoDescription, generateSeoTitle, constructOpenGraph, buildFAQSchema, getBaseUrl, buildLocalBusinessSchema } from "@/lib/seo-utils";
 import { SchemaInjector } from "@/components/schema-injector";
 import { settingsService } from "@/lib/settings-service";
 
@@ -28,12 +28,16 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const allPages = await pagesContentService.getAllPages();
+  const homePage = allPages.find(p => p.slug === "home");
   const heroPage = allPages.find(p => p.slug === "home-hero");
   const { settingsService } = await import("@/lib/settings-service");
   const settings = await settingsService.getSettings();
-  
-  const title = generateSeoTitle(heroPage?.title?.[locale] || heroPage?.title?.en, locale, settings.site_name || "");
-  const rawDesc = heroPage?.subtitle?.[locale] || heroPage?.subtitle?.en || "";
+
+  // Decouple SEO Title from H1 string. The user can configure the 'home' page slug in the Pages Core panel to manage SEO metadata perfectly.
+  const seoSource = (homePage?.title?.[locale] || homePage?.title?.en) ? homePage : heroPage;
+
+  const title = generateSeoTitle(seoSource?.title?.[locale] || seoSource?.title?.en, locale, settings.site_name || "");
+  const rawDesc = seoSource?.subtitle?.[locale] || seoSource?.subtitle?.en || "";
   const desc = generateSeoDescription(rawDesc) || "";
   const ogImage = heroPage?.cover_image || settings.default_og_image_url || "";
 
@@ -111,13 +115,13 @@ export default async function HomePage({
   const getDynamicFaqs = () => {
     const page = pageMap.get("home-faq");
     if (!page || !page.is_active || !page.content?.faqs) return null;
-    
+
     // Transform faqs array focusing on current locale
     return page.content.faqs.map((faq: any, index: number) => ({
       id: `dynamic-faq-${index}`,
       question: faq.question?.[locale] || faq.question?.en || "",
       answer: faq.answer?.[locale] || faq.answer?.en || "",
-      keywords: [] 
+      keywords: []
     })).filter((f: any) => f.question && f.answer);
   };
 
@@ -154,12 +158,17 @@ export default async function HomePage({
           "query-input": "required name=search_term_string"
         }
       }} />
+      <SchemaInjector schema={buildLocalBusinessSchema(settings)} />
+      {dynamicFaqs && dynamicFaqs.length > 0 && (
+        <SchemaInjector schema={buildFAQSchema(dynamicFaqs)} />
+      )}
 
       <div className="overflow-hidden">
         <HeroSection
           title={getDynamicTitle("home-hero", tUi("professional_photographer_in_istanbul"))}
           subtitle={getDynamicSubtitle("home-hero", tUi("portrait_photography"))}
           backgroundImage={getDynamicImage("home-hero", undefined)}
+          activeDiscount={activeDiscount}
         />
 
         <div className="section-contain-auto">

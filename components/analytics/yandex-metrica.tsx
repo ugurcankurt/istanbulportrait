@@ -9,6 +9,7 @@ declare global {
   interface Window {
     ym: (id: number, method: string, ...args: unknown[]) => void;
     dataLayer: Record<string, unknown>[];
+    __YANDEX_ID?: string;
   }
 }
 
@@ -18,7 +19,7 @@ interface YandexMetricaProps {
 }
 
 export function YandexMetrica({
-  id = process.env.NEXT_PUBLIC_YANDEX_METRICA_ID,
+  id,
   enabled = true,
 }: YandexMetricaProps) {
   const pathname = usePathname();
@@ -30,6 +31,7 @@ export function YandexMetrica({
 
     // Track page view
     if (window.ym) {
+      window.__YANDEX_ID = id; // Store ID for client-side hooks dynamically
       window.ym(parseInt(id, 10), "hit", window.location.href);
     }
   }, [pathname, id, enabled]);
@@ -83,7 +85,7 @@ export function YandexMetrica({
 // Hook for tracking custom events
 export function useYandexMetrica() {
   const trackEvent = (eventName: string, params?: Record<string, unknown>) => {
-    const id = process.env.NEXT_PUBLIC_YANDEX_METRICA_ID;
+    const id = typeof window !== "undefined" ? window.__YANDEX_ID : undefined;
 
     if (!id || typeof window === "undefined" || !window.ym) return;
 
@@ -96,7 +98,7 @@ export function useYandexMetrica() {
     amount: number,
     currency: string = "EUR",
   ) => {
-    const id = process.env.NEXT_PUBLIC_YANDEX_METRICA_ID;
+    const id = typeof window !== "undefined" ? window.__YANDEX_ID : undefined;
 
     if (!id || typeof window === "undefined" || !window.ym) return;
 

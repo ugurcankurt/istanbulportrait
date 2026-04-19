@@ -313,6 +313,9 @@ function CategoryDialog({
               <TabsTrigger value="ro" className="flex-1 min-w-[60px]">
                 🇷🇴 RO
               </TabsTrigger>
+              <TabsTrigger value="tr" className="flex-1 min-w-[60px]">
+                🇹🇷 TR
+              </TabsTrigger>
             </TabsList>
 
             {(["en", "ar", "ru", "es", "zh", "fr", "de", "ro", "tr"] as const).map(

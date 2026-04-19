@@ -1,7 +1,4 @@
-// Facebook/Meta Pixel Configuration
-export const FACEBOOK_PIXEL_ID = process.env.NEXT_PUBLIC_FACEBOOK_PIXEL_ID;
-export const FACEBOOK_ACCESS_TOKEN = process.env.FACEBOOK_ACCESS_TOKEN;
-export const FACEBOOK_DATASET_ID = process.env.FACEBOOK_DATASET_ID;
+import { settingsService } from "./settings-service";
 
 // SHA256 hashing for customer data (required by Meta/Facebook)
 // Uses native Web Crypto API (crypto.subtle) which is built-in and saves bundle size.
@@ -87,9 +84,13 @@ export interface FacebookConversionEvent {
 export async function sendToFacebookConversionsAPI(
   events: FacebookConversionEvent[],
 ): Promise<boolean | string> {
+  const settings = await settingsService.getSettings();
+  const FACEBOOK_ACCESS_TOKEN = settings.facebook_access_token;
+  const FACEBOOK_DATASET_ID = settings.facebook_dataset_id;
+
   if (!FACEBOOK_ACCESS_TOKEN || !FACEBOOK_DATASET_ID) {
     const msg =
-      "Facebook Conversions API: Missing FACEBOOK_ACCESS_TOKEN or FACEBOOK_DATASET_ID env vars";
+      "Facebook Conversions API: Missing FACEBOOK_ACCESS_TOKEN or FACEBOOK_DATASET_ID in admin settings";
     console.error(msg);
     return msg;
   }

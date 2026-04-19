@@ -6,7 +6,7 @@ import { generateNativeSlug } from "@/lib/slug-generator";
 type LocalePath = keyof typeof routing.pathnames;
 export function getLocalizedPaths(
   pathname: LocalePath,
-  baseUrl = "https://360istanbul.com.tr",
+  baseUrl = "https://istanbulportrait.com",
 ): {
   canonical: (locale: string) => string;
   languages: Record<string, string>;
@@ -49,7 +49,7 @@ export function getLocalizedPaths(
 }
 export function getBlogPostLocalizedPaths(
   slugs: Record<string, string>,
-  baseUrl = "https://360istanbul.com.tr",
+  baseUrl = "https://istanbulportrait.com",
 ): {
   canonical: (locale: string) => string;
   languages: Record<string, string>;
@@ -92,7 +92,7 @@ export function getBlogPostLocalizedPaths(
  */
 export async function getPackageLocalizedPaths(
   slug: string,
-  baseUrl = "https://360istanbul.com.tr",
+  baseUrl = "https://istanbulportrait.com",
 ): Promise<{
   canonical: (locale: string) => string;
   languages: Record<string, string>;
@@ -150,7 +150,7 @@ export async function getPackageLocalizedPaths(
  */
 export async function getLocationLocalizedPaths(
   slug: string,
-  baseUrl = "https://360istanbul.com.tr",
+  baseUrl = "https://istanbulportrait.com",
 ): Promise<{
   canonical: (locale: string) => string;
   languages: Record<string, string>;
@@ -208,7 +208,7 @@ export async function getLocationLocalizedPaths(
  */
 export function getPrintLocalizedPaths(
   slug: string,
-  baseUrl = "https://360istanbul.com.tr",
+  baseUrl = "https://istanbulportrait.com",
 ): {
   canonical: (locale: string) => string;
   languages: Record<string, string>;
@@ -258,7 +258,7 @@ export function getPrintLocalizedPaths(
 export function getOpenGraphUrl(
   pathname: LocalePath,
   locale: string,
-  baseUrl = "https://360istanbul.com.tr",
+  baseUrl = "https://istanbulportrait.com",
 ) {
   const paths = getLocalizedPaths(pathname, baseUrl);
   return paths.canonical(locale);
@@ -267,7 +267,7 @@ export function getOpenGraphUrl(
 export async function getPackageOpenGraphUrl(
   slug: string,
   locale: string,
-  baseUrl = "https://360istanbul.com.tr",
+  baseUrl = "https://istanbulportrait.com",
 ) {
   const paths = await getPackageLocalizedPaths(slug, baseUrl);
   return paths.canonical(locale);
@@ -279,7 +279,7 @@ export async function getPackageOpenGraphUrl(
 export function getDynamicCoreLocalizedPaths(
   internalSlug: string,
   titleObj: Record<string, string | undefined> | undefined,
-  baseUrl = "https://360istanbul.com.tr",
+  baseUrl = "https://istanbulportrait.com",
 ): {
   canonical: (locale: string) => string;
   languages: Record<string, string>;

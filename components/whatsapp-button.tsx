@@ -207,11 +207,11 @@ export function WhatsAppButton({
               });
 
               // Google Ads Direct Conversion for 2026
-              const adsId = process.env.NEXT_PUBLIC_GOOGLE_ADS_ID;
+              const adsId = (window as any).__ADS_ID;
               if (adsId) {
                 window.gtag("event", "conversion", {
-                  send_to: `${adsId}/contact`, // Contact label
-                  value: 5.0, // Assign a minor value to WhatsApp leads
+                  send_to: `${adsId}/RhizCN2v8p4cELvuquAD`, // WhatsApp specific lead label
+                  value: 1.0, 
                   currency: "EUR",
                 });
               }

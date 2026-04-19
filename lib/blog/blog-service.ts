@@ -535,6 +535,7 @@ export async function getBlogPostByIdWithAllTranslations(
     fr: translationsArray.find((t: any) => t.locale === "fr") || null,
     de: translationsArray.find((t: any) => t.locale === "de") || null,
     ro: translationsArray.find((t: any) => t.locale === "ro") || null,
+    tr: translationsArray.find((t: any) => t.locale === "tr") || null,
   };
 
   // Transform categories and tags
@@ -969,6 +970,7 @@ export async function getCategoryByIdWithAllTranslations(
     fr: translationsArray.find((t: any) => t.locale === "fr") || null,
     de: translationsArray.find((t: any) => t.locale === "de") || null,
     ro: translationsArray.find((t: any) => t.locale === "ro") || null,
+    tr: translationsArray.find((t: any) => t.locale === "tr") || null,
   };
 
   return {
@@ -1212,6 +1214,7 @@ export async function getTagByIdWithAllTranslations(id: string): Promise<any> {
     fr: translationsArray.find((t: any) => t.locale === "fr") || null,
     de: translationsArray.find((t: any) => t.locale === "de") || null,
     ro: translationsArray.find((t: any) => t.locale === "ro") || null,
+    tr: translationsArray.find((t: any) => t.locale === "tr") || null,
   };
 
   return {

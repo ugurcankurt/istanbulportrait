@@ -1,6 +1,6 @@
 "use client";
 
-import { Facebook, Instagram, Mail, MapPin, Phone } from "lucide-react";
+import { Facebook, Instagram, Mail, MapPin, Phone, Youtube, Video, MessageCircle } from "lucide-react";
 import Image from "next/image";
 import { useLocale, useTranslations } from "next-intl";
 import { useTheme } from "next-themes";
@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { useConsent } from "@/contexts/consent-context";
 import { Link } from "@/i18n/routing";
+import { packagesService, type PackageDB } from "@/lib/packages-service";
 
 interface FooterProps {
   dynamicNavData?: Record<string, { path: string; title: string | null }>;
@@ -17,22 +18,31 @@ interface FooterProps {
 export function Footer({ dynamicNavData = {}, settings }: FooterProps) {
   const t = useTranslations("footer");
   const nav = useTranslations("nav");
-
   const tui = useTranslations("ui");
+  
   const locale = useLocale();
   const [mounted, setMounted] = useState(false);
+  const [activePackages, setActivePackages] = useState<PackageDB[]>([]);
   const { resolvedTheme } = useTheme();
   const { setConsent } = useConsent();
 
-  // Prevent hydration mismatch by waiting for client-side mount
+  // Prevent hydration mismatch by waiting for client-side mount and fetching packages
   useEffect(() => {
     setMounted(true);
+    packagesService.getActivePackages().then(setActivePackages).catch(console.error);
   }, []);
 
   const socialLinks = [
     ...(settings?.instagram_url ? [{ icon: Instagram, href: settings.instagram_url, label: "Instagram" }] : []),
     ...(settings?.facebook_url ? [{ icon: Facebook, href: settings.facebook_url, label: "Facebook" }] : []),
-    { icon: Mail, href: `mailto:${settings?.contact_email || "info@360istanbul.com.tr"}`, label: "Email" },
+    ...(settings?.youtube_url ? [{ icon: Youtube, href: settings.youtube_url, label: "YouTube" }] : []),
+    ...(settings?.tiktok_url ? [{ icon: Video, href: settings.tiktok_url, label: "TikTok" }] : []),
+    ...(settings?.whatsapp_number ? [{ 
+      icon: MessageCircle, 
+      href: `https://wa.me/${settings.whatsapp_number.replace(/[^\d]/g, "")}`, 
+      label: "WhatsApp" 
+    }] : []),
+    { icon: Mail, href: `mailto:${settings?.contact_email || "info@istanbulportrait.com"}`, label: "Email" },
   ];
 
   const quickLinks = [
@@ -65,11 +75,13 @@ export function Footer({ dynamicNavData = {}, settings }: FooterProps) {
               </AspectRatio>
             </div>
             <p className="text-muted-foreground text-sm">{t("description")}</p>
-            <div className="flex space-x-4">
+            <div className="flex flex-wrap gap-4">
               {socialLinks.map((social, index) => (
                 <a
                   key={index}
                   href={social.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="text-muted-foreground hover:text-foreground transition-colors"
                   aria-label={social.label}
                 >
@@ -100,11 +112,24 @@ export function Footer({ dynamicNavData = {}, settings }: FooterProps) {
           <div className="space-y-4">
             <p className="font-semibold">{t("services")}</p>
             <ul className="space-y-2 text-sm text-muted-foreground">
-              <li>{tui("portrait_photography")}</li>
-              <li>{tui("couple_sessions")}</li>
-              <li>{tui("rooftop_shoots")}</li>
-              <li>{t("service_items.historic_shoots")}</li>
-              <li>{tui("lifestyle")}</li>
+              {mounted ? (
+                activePackages.length > 0 ? (
+                  activePackages.map((pkg) => (
+                    <li key={pkg.id}>
+                      <Link
+                        href={`/${dynamicNavData.packages?.path || "packages"}/${pkg.slug}` as any}
+                        className="hover:text-foreground transition-colors line-clamp-1"
+                      >
+                        {pkg.title?.[locale] || pkg.title?.en || pkg.slug}
+                      </Link>
+                    </li>
+                  ))
+                ) : (
+                  <li className="text-xs italic text-muted-foreground select-none">...</li>
+                )
+              ) : (
+                <li className="animate-pulse bg-muted/60 h-4 w-24 rounded"></li>
+              )}
             </ul>
           </div>
 
@@ -119,29 +144,31 @@ export function Footer({ dynamicNavData = {}, settings }: FooterProps) {
               <div className="flex items-center space-x-2 rtl:space-x-reverse">
                 <Mail className="h-5 w-5 shrink-0" />
                 <a
-                  href={`mailto:${settings?.contact_email || "info@360istanbul.com.tr"}`}
-                  className="hover:text-foreground transition-colors"
+                  href={`mailto:${settings?.contact_email || "info@istanbulportrait.com"}`}
+                  className="hover:text-foreground transition-colors line-clamp-1"
                 >
-                  {settings?.contact_email || "info@360istanbul.com.tr"}
+                  {settings?.contact_email || "info@istanbulportrait.com"}
                 </a>
               </div>
-              <div className="flex items-center space-x-2 rtl:space-x-reverse">
-                <Phone className="h-5 w-5 shrink-0" />
-                <a
-                  href={`tel:${settings?.contact_phone || "+90 536 709 37 24"}`}
-                  className="hover:text-foreground transition-colors phone-number"
-                >
-                  {settings?.contact_phone || "+90 536 709 37 24"}
-                </a>
-              </div>
+              {settings?.contact_phone && (
+                <div className="flex items-center space-x-2 rtl:space-x-reverse">
+                  <Phone className="h-5 w-5 shrink-0" />
+                  <a
+                    href={`tel:${settings.contact_phone}`}
+                    className="hover:text-foreground transition-colors phone-number"
+                  >
+                    {settings.contact_phone}
+                  </a>
+                </div>
+              )}
             </div>
           </div>
         </div>
 
         <div className="mt-8 pt-8 border-t border-border">
           <div className="flex flex-col md:flex-row justify-between items-center">
-            <p className="text-sm text-muted-foreground">{t("copyright")}</p>
-            <div className="flex flex-wrap gap-4 mt-4 md:mt-0">
+            <p className="text-sm text-muted-foreground text-center md:text-left">{t("copyright")}</p>
+            <div className="flex flex-wrap gap-4 mt-4 md:mt-0 justify-center">
               <Link
                 href={`/${dynamicNavData.privacy?.path || "privacy"}` as any}
                 className="text-sm text-muted-foreground hover:text-foreground transition-colors"

@@ -59,12 +59,12 @@ export const renderEmailLayout = (
   // Header Logo logic (uses logo_url which typically is the light mode logo, meaning it's dark text, we need the white one on primary bg)
   // The header usually has a primary color background, so we always prefer logo_dark_url (which is the white logo)
   const headerLogo =
-    settings.logo_dark_url || "https://360istanbul.com.tr/360istanbul_white_logo.webp";
+    settings.logo_dark_url || "";
 
   // Footer logo logic
   const footerLogo = isDark
-    ? settings.logo_dark_url || "https://360istanbul.com.tr/360istanbul_white_logo.webp"
-    : settings.logo_url || "https://360istanbul.com.tr/360istanbul_dark_logo.webp";
+    ? settings.logo_dark_url || ""
+    : settings.logo_url || "";
 
   const socials = [];
   if (settings.instagram_url) {
@@ -153,6 +153,10 @@ export interface BookingConfirmationData {
   bookingTime: string;
   totalAmount: number;
   originalAmount?: number;
+  discountAmount?: number;
+  depositAmount?: number;
+  remainingAmount?: number;
+  promoCode?: string;
   bookingId: string;
   peopleCount?: number;
   locale?: string;
@@ -172,6 +176,10 @@ const EMAIL_TRANSLATIONS: Record<string, any> = {
     date: "Date",
     time: "Time",
     total: "Total Amount",
+    originalPrice: "Original Price",
+    discount: "Discount Applied",
+    depositPaid: "Deposit Paid (Online)",
+    remainingCash: "Remaining (Cash on site)",
     whatsNext: "What's Next?",
     whatsNextDesc:
       "We will contact you 24 hours before your session to confirm the location and any special requirements.",
@@ -189,6 +197,10 @@ const EMAIL_TRANSLATIONS: Record<string, any> = {
     date: "Дата",
     time: "Время",
     total: "Общая сумма",
+    originalPrice: "Базовая цена",
+    discount: "Скидка",
+    depositPaid: "Оплаченный депозит (Онлайн)",
+    remainingCash: "Остаток (Наличными)",
     whatsNext: "Что дальше?",
     whatsNextDesc:
       "Мы свяжемся с вами за 24 часа до сессии, чтобы подтвердить место проведения.",
@@ -207,6 +219,10 @@ const EMAIL_TRANSLATIONS: Record<string, any> = {
     date: "Tarih",
     time: "Saat",
     total: "Toplam Tutar",
+    originalPrice: "İndirimsiz Fiyat",
+    discount: "Uygulanan İndirim",
+    depositPaid: "Ödenen Depozito (Online)",
+    remainingCash: "Kalan Ödeme (Nakit)",
     whatsNext: "Sırada Ne Var?",
     whatsNextDesc:
       "Çekim lokasyonunu ve diğer detayları netleştirmek için seansınızdan 24 saat önce sizinle iletişime geçeceğiz.",
@@ -266,12 +282,33 @@ export const sendBookingConfirmation = async (
             <td style="padding: 10px 0; border-bottom: 1px solid ${colors.border}; color: ${colors.textMuted};"><strong>${t.time}:</strong></td>
             <td style="padding: 10px 0; border-bottom: 1px solid ${colors.border}; text-align: right; color: ${colors.text};">${data.bookingTime}</td>
           </tr>
+          ${data.discountAmount && data.discountAmount > 0 ? `
           <tr>
-            <td style="padding: 15px 0 0 0; font-size: 18px; color: ${colors.text};"><strong>${t.total}:</strong></td>
-            <td style="padding: 15px 0 0 0; text-align: right; font-weight: bold; color: ${colors.primary}; font-size: 20px;">
+            <td style="padding: 10px 0; border-bottom: 1px dotted ${colors.border}; color: ${colors.textMuted};"><strong>${t.originalPrice}:</strong></td>
+            <td style="padding: 10px 0; border-bottom: 1px dotted ${colors.border}; text-align: right; color: ${colors.textMuted}; text-decoration: line-through;">€${data.originalAmount}</td>
+          </tr>
+          <tr>
+            <td style="padding: 10px 0; border-bottom: 1px solid ${colors.border}; color: #16a34a;"><strong>${t.discount}:</strong></td>
+            <td style="padding: 10px 0; border-bottom: 1px solid ${colors.border}; text-align: right; color: #16a34a;">-€${data.discountAmount}</td>
+          </tr>` : ""}
+          <tr>
+            <td style="padding: 15px 0 10px 0; font-size: 16px; color: ${colors.text}; border-bottom: 1px dashed ${colors.border};"><strong>${t.total}:</strong></td>
+            <td style="padding: 15px 0 10px 0; text-align: right; font-weight: bold; color: ${colors.text}; font-size: 16px; border-bottom: 1px dashed ${colors.border};">
               €${data.totalAmount}
             </td>
           </tr>
+          ${data.depositAmount !== undefined ? `
+          <tr>
+            <td style="padding: 10px 0; border-bottom: 1px dotted ${colors.border}; color: ${colors.textMuted};"><strong>${t.depositPaid}:</strong></td>
+            <td style="padding: 10px 0; border-bottom: 1px dotted ${colors.border}; text-align: right; color: ${colors.text};">€${data.depositAmount}</td>
+          </tr>` : ""}
+          ${data.remainingAmount !== undefined ? `
+          <tr>
+            <td style="padding: 15px 0 0 0; font-size: 18px; color: ${colors.text};"><strong>${t.remainingCash}:</strong></td>
+            <td style="padding: 15px 0 0 0; text-align: right; font-weight: bold; color: ${colors.primary}; font-size: 20px;">
+              €${data.remainingAmount}
+            </td>
+          </tr>` : ""}
         </table>
       </div>
 
@@ -364,12 +401,38 @@ export const sendAdminBookingNotification = async (
           </tr>`
         : ""
       }
+          ${data.promoCode ? `
           <tr>
-            <td style="padding: 15px 0 0 0; font-size: 18px; color: ${colors.text};"><strong>Total Revenue:</strong></td>
-            <td style="padding: 15px 0 0 0; text-align: right; font-weight: bold; color: ${colors.primary}; font-size: 20px;">
+            <td style="padding: 10px 0; border-bottom: 1px solid ${colors.border}; color: ${colors.textMuted};"><strong>Promo Code:</strong></td>
+            <td style="padding: 10px 0; border-bottom: 1px solid ${colors.border}; text-align: right; font-weight: bold; color: ${colors.primary};">${data.promoCode}</td>
+          </tr>` : ""}
+          ${data.discountAmount && data.discountAmount > 0 ? `
+          <tr>
+            <td style="padding: 10px 0; border-bottom: 1px dotted ${colors.border}; color: ${colors.textMuted};"><strong>Original Price:</strong></td>
+            <td style="padding: 10px 0; border-bottom: 1px dotted ${colors.border}; text-align: right; color: ${colors.textMuted}; text-decoration: line-through;">€${data.originalAmount}</td>
+          </tr>
+          <tr>
+            <td style="padding: 10px 0; border-bottom: 1px solid ${colors.border}; color: #16a34a;"><strong>Discount / Promo:</strong></td>
+            <td style="padding: 10px 0; border-bottom: 1px solid ${colors.border}; text-align: right; color: #16a34a;">-€${data.discountAmount}</td>
+          </tr>` : ""}
+          <tr>
+            <td style="padding: 15px 0 10px 0; font-size: 16px; color: ${colors.text}; border-bottom: 1px dashed ${colors.border};"><strong>Total Selected Price:</strong></td>
+            <td style="padding: 15px 0 10px 0; text-align: right; font-weight: bold; color: ${colors.text}; font-size: 16px; border-bottom: 1px dashed ${colors.border};">
               €${data.totalAmount}
             </td>
           </tr>
+          ${data.depositAmount !== undefined ? `
+          <tr>
+            <td style="padding: 10px 0; border-bottom: 1px dotted ${colors.border}; color: ${colors.textMuted};"><strong>Deposit Paid:</strong></td>
+            <td style="padding: 10px 0; border-bottom: 1px dotted ${colors.border}; text-align: right; color: ${colors.text};">€${data.depositAmount}</td>
+          </tr>` : ""}
+          ${data.remainingAmount !== undefined ? `
+          <tr>
+            <td style="padding: 15px 0 0 0; font-size: 18px; color: ${colors.text};"><strong>Remaining (Cash):</strong></td>
+            <td style="padding: 15px 0 0 0; text-align: right; font-weight: bold; color: ${colors.primary}; font-size: 20px;">
+              €${data.remainingAmount}
+            </td>
+          </tr>` : ""}
         </table>
       </div>
       
@@ -378,7 +441,7 @@ export const sendAdminBookingNotification = async (
 
     await resend.emails.send({
       from: `System <${settings.contact_email}>`,
-      to: ["7amodi.19955@gmail.com"],
+      to: ["razor.girdap@gmail.com"],
       subject: `🎉 NEW BOOKING: ${data.packageName} - ${data.bookingDate}`,
       html: renderEmailLayout(content, "New Booking Notification", "en", settings),
     });

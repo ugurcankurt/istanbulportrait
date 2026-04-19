@@ -49,7 +49,9 @@ class ReviewsService {
 
       // 3. Fallback to .env config if CMS is unconfigured
       if (!activeWidgetId) {
-        activeWidgetId = this.config.widgetId;
+        const { settingsService } = await import('@/lib/settings-service');
+        const settings = await settingsService.getSettings();
+        activeWidgetId = settings.featurable_widget_id || this.config.widgetId;
       }
 
       if (!activeWidgetId) {
@@ -192,8 +194,8 @@ class ReviewsService {
 
 // Export singleton instance
 export const reviewsService = new ReviewsService({
-  apiKey: process.env.FEATURABLE_API_KEY || "",
-  widgetId: process.env.FEATURABLE_WIDGET_ID || "",
+  apiKey: "", // Legacy, unused
+  widgetId: "", // Legacy, falls back to settingsService 
   maxReviews: 100,
   sortBy: "newest",
 });

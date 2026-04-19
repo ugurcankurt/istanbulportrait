@@ -1,4 +1,3 @@
-
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
@@ -9,108 +8,30 @@ import { BlogAuthor } from "@/components/blog-author";
 import { BlogSummary } from "@/components/blog-summary";
 import { BreadcrumbNav } from "@/components/breadcrumb-nav";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
-import {
-  getAllPublishedSlugs,
-  getBlogPostBySlug,
-  getBlogPostByIdWithAllTranslations,
-} from "@/lib/blog/blog-service";
+import { getBlogPostBySlug } from "@/lib/blog/blog-service";
 import { formatBlogDate } from "@/lib/blog/blog-utils";
-
 import { settingsService } from "@/lib/settings-service";
 import type { Locale } from "@/types/blog";
-import { Metadata } from "next";
-import { generateSeoDescription, generateSeoTitle, constructOpenGraph, buildArticleSchema } from "@/lib/seo-utils";
+import { generateSeoDescription, buildArticleSchema } from "@/lib/seo-utils";
 import { SchemaInjector } from "@/components/schema-injector";
 
-// Force dynamic rendering to avoid build-time Supabase issues
-export const dynamic = "force-dynamic";
-
-export async function generateMetadata({
-  params,
+export async function BlogDetailPageContent({
+  locale,
+  slug,
+  parentSlug,
 }: {
-  params: Promise<{ slug: string; locale: Locale }>;
-}): Promise<Metadata> {
-  const { slug, locale } = await params;
-  const { getBlogPostBySlug, getBlogPostByIdWithAllTranslations } = await import("@/lib/blog/blog-service");
-  const { pagesContentService } = await import("@/lib/pages-content-service");
-  const post = await getBlogPostBySlug(slug, locale);
-  const settings = await settingsService.getSettings();
-  const fallbackTitle = settings.site_name || "";
-
-  if (!post || post.status !== "published") {
-    return { title: "Blog Post Not Found" };
-  }
-
-  const title = generateSeoTitle(post.translation.title, locale, fallbackTitle);
-  const desc = generateSeoDescription(post.translation.excerpt || post.translation.content);
-  const ogImage = post.featured_image || settings.default_og_image_url || "";
-
-  const { routing } = await import("@/i18n/routing");
-  const { getBaseUrl } = await import("@/lib/seo-utils");
-  const { generateNativeSlug } = await import("@/lib/slug-generator");
-  const baseUrl = getBaseUrl();
-  const allPages = await pagesContentService.getAllPages();
-  const blogParent = allPages.find(p => p.slug === "blog");
-  
-  // Fetch full translation data for correct URL tracking
-  const fullPost = await getBlogPostByIdWithAllTranslations(post.id);
-  const languages: Record<string, string> = {};
-
-  if (fullPost && fullPost.translations) {
-    const enSlug = fullPost.translations["en"]?.slug || slug;
-
-    routing.locales.forEach((loc) => {
-      const tSlug = fullPost.translations[loc as Locale]?.slug || enSlug;
-      const bTitle = blogParent?.title?.[loc];
-      const bSeg = bTitle ? generateNativeSlug(bTitle) : "blog";
-      languages[loc] = `${baseUrl}/${loc}/${bSeg}/${tSlug}`;
-    });
-
-    const xDefaultSeg = blogParent?.title?.["en"] ? generateNativeSlug(blogParent.title["en"]) : "blog";
-    languages["x-default"] = `${baseUrl}/en/${xDefaultSeg}/${enSlug}`;
-  }
-
-  const currentSeg = blogParent?.title?.[locale] ? generateNativeSlug(blogParent.title[locale]) : "blog";
-
-  return {
-    title,
-    description: desc,
-    alternates: {
-      canonical: `${baseUrl}/${locale}/${currentSeg}/${post.translation.slug || slug}`,
-      languages
-    },
-    openGraph: constructOpenGraph(title, desc, ogImage, fallbackTitle, locale),
-  };
-}
-
-export async function generateStaticParams() {
-  try {
-    const slugs = await getAllPublishedSlugs();
-    return slugs.map((slug) => ({ slug }));
-  } catch (error) {
-    console.error("Failed to fetch blog slugs during build:", error);
-    // Return empty array - pages will be generated on-demand at runtime
-    return [];
-  }
-}
-
-
-
-export default async function BlogPostPage({
-  params,
-}: {
-  params: Promise<{ slug: string; locale: Locale }>;
+  locale: string;
+  slug: string;
+  parentSlug: string;
 }) {
-  const { slug, locale } = await params;
-  const post = await getBlogPostBySlug(slug, locale);
+  const decodedSlug = decodeURIComponent(slug);
+  const post = await getBlogPostBySlug(decodedSlug, locale as Locale);
   const settings = await settingsService.getSettings();
   const t = await getTranslations({ locale, namespace: "blog" });
 
   if (!post || post.status !== "published") {
     notFound();
   }
-
-
 
   return (
     <div>
@@ -121,6 +42,7 @@ export default async function BlogPostPage({
         datePublished: post.published_at || post.created_at,
         dateModified: post.updated_at || post.published_at || post.created_at,
         authorName: post.author?.name || settings.founder_name || settings.site_name || "Author",
+        authorUrls: post.author?.social_links ? Object.values(post.author.social_links).filter(Boolean) as string[] : [settings.instagram_url, settings.facebook_url, settings.youtube_url, settings.tiktok_url].filter(Boolean) as string[],
         publisherName: settings.organization_name || settings.site_name || undefined,
         publisherLogo: settings.logo_url || settings.default_og_image_url || undefined,
       })} />
@@ -153,7 +75,7 @@ export default async function BlogPostPage({
 
             <div className="flex flex-wrap gap-4 text-sm text-muted-foreground mb-6">
               <time dateTime={post.published_at || post.created_at}>
-                {formatBlogDate(post.published_at || post.created_at, locale)}
+                {formatBlogDate(post.published_at || post.created_at, locale as Locale)}
               </time>
               <span>•</span>
               <span>

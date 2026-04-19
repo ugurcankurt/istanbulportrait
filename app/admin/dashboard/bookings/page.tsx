@@ -66,6 +66,15 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { type Booking, useBookingsStore } from "@/stores/bookings-store";
 
+const formatCurrency = (amount: number) => {
+  if (typeof amount !== 'number') return `€0.00`;
+  const rounded = Math.round(amount * 100) / 100;
+  return `€${rounded.toLocaleString("en-US", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  })}`;
+};
+
 function StatusBadge({ status }: { status: string }) {
   const config = {
     pending: { color: "bg-yellow-100 text-yellow-800", icon: AlertCircle },
@@ -117,8 +126,15 @@ function BookingDetailsDialog({ booking }: { booking: Booking }) {
             </div>
             <div>
               <Label className="text-sm font-medium">Package & Amount</Label>
-              <p className="text-sm">{booking.package_id} Package</p>
-              <p className="text-lg font-bold">€{booking.total_amount}</p>
+              <p className="text-sm inline-flex items-center gap-2">
+                {booking.package_id} Package
+                {booking.people_count && booking.people_count > 0 && (
+                  <Badge variant="outline" className="text-xs">
+                    {booking.people_count} {booking.people_count === 1 ? "Person" : "People"}
+                  </Badge>
+                )}
+              </p>
+              <p className="text-lg font-bold">{formatCurrency(booking.total_amount)}</p>
               <StatusBadge status={booking.status} />
             </div>
           </div>
@@ -152,17 +168,18 @@ function BookingDetailsDialog({ booking }: { booking: Booking }) {
               <Label className="text-xs font-medium text-muted-foreground uppercase">
                 Total
               </Label>
-              <p className="text-lg font-bold">€{booking.total_amount}</p>
+              <p className="text-lg font-bold">{formatCurrency(booking.total_amount)}</p>
             </div>
             <div>
               <Label className="text-xs font-medium text-muted-foreground uppercase">
                 Paid (Deposit)
               </Label>
               <p className="text-lg font-bold text-success">
-                €
-                {booking.payments
-                  ?.filter((p) => p.status === "success")
-                  .reduce((sum, p) => sum + p.amount, 0) || 0}
+                {formatCurrency(
+                  booking.payments
+                    ?.filter((p) => p.status === "success")
+                    .reduce((sum, p) => sum + p.amount, 0) || 0
+                )}
               </p>
             </div>
             <div>
@@ -170,11 +187,12 @@ function BookingDetailsDialog({ booking }: { booking: Booking }) {
                 Remaining
               </Label>
               <p className="text-lg font-bold text-destructive">
-                €
-                {booking.total_amount -
-                  (booking.payments
-                    ?.filter((p) => p.status === "success")
-                    .reduce((sum, p) => sum + p.amount, 0) || 0)}
+                {formatCurrency(
+                  booking.total_amount -
+                    (booking.payments
+                      ?.filter((p) => p.status === "success")
+                      .reduce((sum, p) => sum + p.amount, 0) || 0)
+                )}
               </p>
             </div>
           </div>
@@ -190,7 +208,7 @@ function BookingDetailsDialog({ booking }: { booking: Booking }) {
                   >
                     <div>
                       <p className="text-sm font-medium">
-                        €{payment.amount} - {payment.status}
+                        {formatCurrency(payment.amount)} - {payment.status}
                       </p>
                       <p className="text-xs text-muted-foreground">
                         {payment.payment_id} •{" "}
@@ -344,8 +362,6 @@ export default function BookingsPage() {
 
     return () => clearTimeout(timeoutId);
   }, [searchInput, search, setFilters]);
-
-  const formatCurrency = (amount: number) => `€${amount.toLocaleString()}`;
 
   // Wrapper for updateBooking that shows success toast
   const handleUpdateBooking = async (

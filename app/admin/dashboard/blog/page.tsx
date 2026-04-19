@@ -270,6 +270,11 @@ export default function BlogManagementPage() {
                 <SelectItem value="ar">Arabic</SelectItem>
                 <SelectItem value="ru">Russian</SelectItem>
                 <SelectItem value="es">Spanish</SelectItem>
+                <SelectItem value="zh">Chinese</SelectItem>
+                <SelectItem value="fr">French</SelectItem>
+                <SelectItem value="de">German</SelectItem>
+                <SelectItem value="ro">Romanian</SelectItem>
+                <SelectItem value="tr">Turkish</SelectItem>
               </SelectContent>
             </Select>
 
@@ -450,10 +455,16 @@ export default function BlogManagementPage() {
                           <DropdownMenuContent align="end">
                             <DropdownMenuGroup>
                               <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                              <DropdownMenuItem render={<Link href={`/${locale}/blog/${post.translation.slug}`} target="_blank" />}>
-                                  <Eye className="w-4 h-4 mr-2" />
-                                  View Post
-                              </DropdownMenuItem>
+                              {(() => {
+                                const pathnames: Record<string, string> = { ar: "/مُدونة", ru: "/блог", zh: "/博客", tr: "/blog", es: "/blog", fr: "/blog", de: "/blog", ro: "/blog", en: "/blog" };
+                                const blogPrefix = pathnames[locale] || "/blog";
+                                return (
+                                  <DropdownMenuItem render={<a href={`/${locale}${blogPrefix}/${post.translation.slug}`} target="_blank" rel="noreferrer" />}>
+                                      <Eye className="w-4 h-4 mr-2" />
+                                      View Post
+                                  </DropdownMenuItem>
+                                );
+                              })()}
                               <DropdownMenuItem render={<Link href={`/admin/dashboard/blog/${post.id}`} />}>
                                   <Edit className="w-4 h-4 mr-2" />
                                   Edit Post

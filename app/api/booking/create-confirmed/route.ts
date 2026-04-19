@@ -8,20 +8,20 @@ import {
   ValidationError,
 } from "@/lib/errors";
 import { getPackagePricing } from "@/lib/pricing";
+import { promoService } from "@/lib/promo-service";
 import {
   checkRateLimit,
   createRateLimitError,
   getClientIP,
 } from "@/lib/rate-limit";
-import { sendBookingConfirmation, sendAdminBookingNotification } from "@/lib/resend";
+import { sendBookingConfirmation } from "@/lib/resend";
+import { settingsService } from "@/lib/settings-service";
 import { supabaseAdmin } from "@/lib/supabase";
 import {
   bookingSchema,
   type PackageId,
+  
 } from "@/lib/validations";
-import { packagesService } from "@/lib/packages-service";
-import { discountService, type DiscountDB } from "@/lib/discount-service";
-import { settingsService } from "@/lib/settings-service";
 
 export async function POST(request: NextRequest) {
   const startTime = Date.now();
@@ -45,7 +45,7 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { locale, provider = "cash", ...bookingData } = body;
+    const { paymentId, conversationId, locale, promoCode, ...bookingData } = body;
 
     // Extract URL origin/referer for Facebook Match Rate
     const origin = request.headers.get("origin") || "";
@@ -73,6 +73,20 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Validate payment information
+    if (!paymentId || !conversationId) {
+      const paymentError = new ValidationError("Payment information required");
+      logError(paymentError, {
+        ip,
+        endpoint: "booking-confirmed",
+        action: "payment_validation",
+      });
+
+      return NextResponse.json(
+        { error: sanitizeErrorForProduction(paymentError) },
+        { status: 400 },
+      );
+    }
 
     const {
       packageId,
@@ -86,28 +100,15 @@ export async function POST(request: NextRequest) {
       peopleCount,
     } = validationResult.data;
 
-    const packageObj = await packagesService.getPackageBySlug(packageId as string);
-    if (!packageObj) {
-      const packageError = new ValidationError("Package not found");
-      return NextResponse.json(
-        { error: sanitizeErrorForProduction(packageError) },
-        { status: 400 },
-      );
-    }
-
-    // Fetch active discount for verification
-    const activeDiscount = await discountService.getActiveDiscount();
-
     // Validate that the totalAmount matches the expected price
-    // We check against the active system discount for correct total
+    // We check against the booking date and promo code for correct discounts
     const packagePricing = getPackagePricing(
-      packageId as string,
-      Number(packageObj.price),
-      activeDiscount,
+      packageId as PackageId,
+      body.basePrice || totalAmount || 0,
+      body.activeDiscount || null,
+      body.appliedPromo,
       bookingDate,
-      peopleCount,
-      undefined, // use TR default taxRate
-      packageObj.title[locale] || packageObj.title["en"] || packageObj.slug
+      body.isPerPerson ? peopleCount : undefined
     );
 
     const expectedTotal = packagePricing.totalPrice;
@@ -123,6 +124,7 @@ export async function POST(request: NextRequest) {
         receivedAmount: totalAmount,
         expectedAmount: expectedTotal,
         bookingDate,
+        promoCode,
       });
 
       return NextResponse.json(
@@ -167,12 +169,13 @@ export async function POST(request: NextRequest) {
               status: "confirmed",
               total_amount: totalAmount,
               notes: notes || null,
+              applied_promo_code: body.appliedPromo?.code || promoCode || null,
               // Update other fields in case they changed during checkout
               user_name: customerName,
               user_phone: customerPhone,
               booking_date: bookingDate,
               booking_time: bookingTime,
-              people_count: packageId === "rooftop" ? peopleCount : null, // Only for rooftop
+              people_count: peopleCount || null,
             })
             .eq("id", bookingId)
             .select()
@@ -187,7 +190,7 @@ export async function POST(request: NextRequest) {
         const { data: newBooking, error: insertError } = await supabaseAdmin
           .from("bookings")
           .insert({
-            package_id: packageObj.id,
+            package_id: packageId,
             user_name: customerName,
             user_email: customerEmail,
             user_phone: customerPhone,
@@ -196,7 +199,8 @@ export async function POST(request: NextRequest) {
             status: "confirmed", // Directly confirmed since payment succeeded
             total_amount: totalAmount,
             notes: notes || null,
-            people_count: packageId === "rooftop" ? peopleCount : null, // Only for rooftop
+            applied_promo_code: body.appliedPromo?.code || promoCode || null,
+            people_count: peopleCount || null,
           })
           .select()
           .single();
@@ -212,13 +216,15 @@ export async function POST(request: NextRequest) {
         .from("payments")
         .insert({
           booking_id: booking.id,
-          payment_id: `cash_${booking.id}`,
-          conversation_id: `cash_${Date.now()}`,
-          status: "pending", // Cash is paid on the day
-          amount: totalAmount, // Record the total amount to be paid
+          payment_id: paymentId,
+          conversation_id: conversationId,
+          status: "success",
+          amount: depositAmount, // Record the DEPOSIT amount, not total
           currency: "EUR",
-          provider: "cash",
-          provider_response: { method: "cash_on_date" },
+          provider: body.provider || "iyzico",
+          provider_response: body.providerResponse || {}, // Save the raw response
+          provider_order_id:
+            body.provider === "turinvoice" ? paymentId : undefined,
         });
 
       if (paymentInsertError) {
@@ -230,11 +236,14 @@ export async function POST(request: NextRequest) {
 
       // Send confirmation email
       try {
-        const settings = await settingsService.getSettings();
+        // Use packagePricing for accurate breakdown
         const emailOriginalPrice = packagePricing.originalPrice;
         const emailSeasonalDiscount = packagePricing.discountAmount;
-        
-        const bookingData = {
+        const emailPromoDiscount = packagePricing.promoAmount;
+
+        const settings = await settingsService.getSettings();
+
+        await sendBookingConfirmation({
           customerName,
           customerEmail,
           customerPhone,
@@ -243,20 +252,15 @@ export async function POST(request: NextRequest) {
           bookingTime,
           totalAmount,
           originalAmount: emailOriginalPrice,
-          discountAmount: emailSeasonalDiscount,
+          discountAmount: emailSeasonalDiscount + (emailPromoDiscount || 0), // Total discount for now, can be split if template supports it
           bookingId: booking.id,
           peopleCount: peopleCount,
           depositAmount,
           remainingAmount,
           locale: locale || "en",
-          notes,
-        };
-
-        // Send to Customer
-        await sendBookingConfirmation(bookingData, settings);
-        
-        // Send Notification to System Admin
-        await sendAdminBookingNotification(bookingData, settings);
+          // Add extra details if needed
+          promoCode: promoCode || undefined,
+        }, settings);
 
         // Track Facebook CAPI Purchase
         // We do this here because we now have a guaranteed Booking ID (Transaction ID)
@@ -303,20 +307,36 @@ export async function POST(request: NextRequest) {
           try {
             const {
               trackGA4ServerPurchase,
+              PACKAGE_DISPLAY_NAMES,
               extractClientIdFromCookie,
             } = await import("@/lib/ga4-server");
+            const { hashCustomerData, hashPhoneNumber } = await import("@/lib/facebook");
 
             // Extract _ga cookie from the request
             const gaCookie = request.cookies.get("_ga")?.value;
             const clientId = extractClientIdFromCookie(gaCookie);
 
+            const nameParts = customerName.split(" ");
+            const firstName = nameParts[0];
+            const lastName = nameParts.length > 1 ? nameParts.slice(1).join(" ") : "";
+
+            const ga4UserData = {
+              sha256_email_address: customerEmail ? await hashCustomerData(customerEmail) : undefined,
+              sha256_phone_number: customerPhone ? await hashPhoneNumber(customerPhone) : undefined,
+              address: {
+                first_name: firstName || undefined,
+                last_name: lastName || undefined,
+              }
+            };
+
             await trackGA4ServerPurchase(
               booking.id,
               packageId,
-              packageObj.title["en"] || packageId, // use dynamic package name
+              PACKAGE_DISPLAY_NAMES[packageId] || packageId,
               totalAmount,
               "EUR",
               clientId,
+              // ga4UserData removed pending signature update
             );
           } catch (ga4Error) {
             console.error("GA4 Measurement Protocol Error:", ga4Error);
@@ -328,7 +348,19 @@ export async function POST(request: NextRequest) {
         // Don't fail the booking creation if email fails
       }
 
-      // Newsletter logic removed intentionally to eliminate spam/marketing.
+      // Add to Resend Audience (Newsletter/Marketing)
+      // Non-blocking: we don't await this or we catch errors internally
+      try {
+        const nameParts = customerName.split(" ");
+        const firstName = nameParts[0];
+        const lastName =
+          nameParts.length > 1 ? nameParts.slice(1).join(" ") : "";
+
+        // Execute in background
+        // addContactToAudience(customerEmail, firstName, lastName);
+      } catch (audienceError) {
+        console.error("Audience sync error:", audienceError);
+      }
 
       return NextResponse.json({
         success: true,
@@ -342,6 +374,7 @@ export async function POST(request: NextRequest) {
           bookingTime: booking.booking_time,
           totalAmount: booking.total_amount,
           status: booking.status,
+          paymentId,
           peopleCount: booking.people_count,
         },
       });

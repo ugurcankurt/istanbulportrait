@@ -5,7 +5,7 @@ export function getBaseUrl() {
   if (process.env.VERCEL_PROJECT_PRODUCTION_URL) return `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`;
   if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`;
   if (process.env.NEXT_PUBLIC_APP_URL) return process.env.NEXT_PUBLIC_APP_URL;
-  return "https://360istanbul.com.tr";
+  return "https://istanbulportrait.com";
 }
 
 // ----------------------------------------------------
@@ -56,16 +56,12 @@ export function optimizeSeoImage(imageUrl: string | null | undefined, width: 120
     ? `${getBaseUrl()}${imageUrl}`
     : imageUrl;
 
-  // WhatsApp and Facebook crawlers are heavily timeout-sensitive and often drop .webp images.
-  // Instead of using an expensive /api/og Satori edge function, we directly serve a processed JPG via wsrv.nl.
-  const height = width === 1200 ? 630 : Math.round((width / 1200) * 630);
-  
-  if (absoluteUrl.toLowerCase().includes(".webp")) {
-    return `https://wsrv.nl/?url=${encodeURIComponent(absoluteUrl)}&output=jpg&w=${width}&h=${height}&fit=cover`;
-  }
-
-  // If it's already jpg/png, we can still use wsrv for fast cropping, or just return it length.
-  return `https://wsrv.nl/?url=${encodeURIComponent(absoluteUrl)}&output=jpg&w=${width}&h=${height}&fit=cover`;
+  // Vercel Native Endpoint: We use Next.js's built-in image optimizer (`/_next/image`).
+  // By passing `w=width` without forcing a height or crop geometry, Vercel natively rescales
+  // the image down to compress it, while preserving the original aspect ratio (NO CROPPING).
+  // Furthermore, Vercel automatically detects the Bot/Crawler's "Accept" header and serves
+  // JPG/PNG instead of WebP if the social media crawler doesn't support modern formats.
+  return `${getBaseUrl()}/_next/image?url=${encodeURIComponent(absoluteUrl)}&w=${width}&q=85`;
 }
 
 /**
@@ -122,7 +118,12 @@ export function buildLocalBusinessSchema(settings: SiteSettings) {
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
     name: settings.organization_name || settings.site_name,
-    image: imageUrl,
+    image: imageUrl ? {
+        "@type": "ImageObject",
+        url: imageUrl,
+        width: 1200,
+        height: 630,
+    } : undefined,
     "@id": getBaseUrl(),
     url: getBaseUrl(),
     telephone: settings.contact_phone || settings.whatsapp_number,
@@ -160,6 +161,55 @@ export function buildLocalBusinessSchema(settings: SiteSettings) {
   };
 }
 
+export function buildOrganizationSchema(settings: SiteSettings) {
+  const imageUrl = optimizeSeoImage(settings.logo_url || settings.default_og_image_url, 1200);
+
+  return {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: settings.organization_name || settings.site_name,
+    "@id": getBaseUrl() + "/#organization",
+    url: getBaseUrl(),
+    logo: imageUrl ? {
+      "@type": "ImageObject",
+      url: imageUrl,
+      width: 1200,
+      height: 630
+    } : undefined,
+    image: imageUrl ? {
+      "@type": "ImageObject",
+      url: imageUrl,
+      width: 1200,
+      height: 630
+    } : undefined,
+    founder: settings.founder_name ? {
+      "@type": "Person",
+      name: settings.founder_name,
+      ...(settings.founder_image_url ? {
+        image: {
+          "@type": "ImageObject",
+          url: optimizeSeoImage(settings.founder_image_url, 1200),
+          width: 1200,
+          height: 630
+        }
+      } : {})
+    } : undefined,
+    foundingDate: settings.organization_founding_date || undefined,
+    contactPoint: {
+      "@type": "ContactPoint",
+      telephone: settings.contact_phone || settings.whatsapp_number,
+      contactType: "customer service",
+      email: settings.contact_email,
+    },
+    sameAs: [
+      settings.instagram_url,
+      settings.facebook_url,
+      settings.youtube_url,
+      settings.tiktok_url,
+    ].filter(Boolean),
+  };
+}
+
 export function buildProductSchema({
   name,
   description,
@@ -181,7 +231,12 @@ export function buildProductSchema({
     "@context": "https://schema.org/",
     "@type": "Product",
     name,
-    image: image ? optimizeSeoImage(image, 1200) : undefined,
+    image: image ? {
+      "@type": "ImageObject",
+      url: optimizeSeoImage(image, 1200),
+      width: 1200,
+      height: 630,
+    } : undefined,
     description,
     offers: {
       "@type": "Offer",
@@ -213,6 +268,7 @@ export function buildArticleSchema({
   datePublished,
   dateModified,
   authorName,
+  authorUrls,
   publisherName,
   publisherLogo,
 }: {
@@ -222,6 +278,7 @@ export function buildArticleSchema({
   datePublished: string;
   dateModified: string;
   authorName: string;
+  authorUrls?: string[];
   publisherName?: string;
   publisherLogo?: string;
 }) {
@@ -229,13 +286,19 @@ export function buildArticleSchema({
     "@context": "https://schema.org",
     "@type": "Article",
     headline: title,
-    image: image ? [optimizeSeoImage(image, 1200)] : [],
+    image: image ? [{
+      "@type": "ImageObject",
+      url: optimizeSeoImage(image, 1200),
+      width: 1200,
+      height: 630,
+    }] : [],
     datePublished,
     dateModified,
     author: [
       {
         "@type": "Person",
         name: authorName,
+        ...(authorUrls && authorUrls.length > 0 ? { sameAs: authorUrls } : {}),
       },
     ],
     publisher: publisherName ? {
@@ -245,6 +308,8 @@ export function buildArticleSchema({
         logo: {
           "@type": "ImageObject",
           url: optimizeSeoImage(publisherLogo, 1200),
+          width: 1200,
+          height: 630,
         },
       } : {}),
     } : undefined,
@@ -265,6 +330,21 @@ export function buildFAQSchema(faqs: Array<{ question: string; answer: string }>
         "@type": "Answer",
         text: faq.answer,
       },
+    })),
+  };
+}
+
+export function buildBreadcrumbSchema(items: Array<{ name: string; url: string }>) {
+  if (!items || items.length === 0) return null;
+
+  return {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: items.map((item, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      name: item.name,
+      item: item.url.startsWith("http") ? item.url : `${getBaseUrl()}${item.url}`,
     })),
   };
 }

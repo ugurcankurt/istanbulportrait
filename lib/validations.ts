@@ -14,23 +14,7 @@ export const baseBookingSchema = z.object({
   peopleCount: z.number().int().min(1).max(10).optional(),
 });
 
-export const bookingSchema = baseBookingSchema.refine(
-  (data) => {
-    // Rooftop package requires peopleCount
-    if (data.packageId.includes("rooftop")) {
-      return (
-        data.peopleCount !== undefined &&
-        data.peopleCount >= 1 &&
-        data.peopleCount <= 10
-      );
-    }
-    return true;
-  },
-  {
-    message: "validation.people_count_required",
-    path: ["peopleCount"],
-  },
-);
+export const bookingSchema = baseBookingSchema;
 
 export const paymentSchema = z.object({
   cardHolderName: z.string().min(2, "validation.cardholder_required"),
@@ -51,35 +35,17 @@ export const paymentSchema = z.object({
 
 // Dynamic schemas with translations
 export const createBookingSchema = (t: any) =>
-  z
-    .object({
-      packageId: z.string().min(1, t("package_required")),
-      customerName: z.string().min(2, t("name_min")),
-      customerEmail: z.string().email({ message: t("email_invalid") }),
-      customerPhone: z.string().min(1, t("phone_required")),
-      bookingDate: z.string().min(1, t("date_required")),
-      bookingTime: z.string().min(1, t("time_required")),
-      notes: z.string().optional(),
-      totalAmount: z.number().positive(t("amount_positive")),
-      peopleCount: z.number().int().min(1).max(10).optional(),
-    })
-    .refine(
-      (data) => {
-        // Rooftop package requires peopleCount
-        if (data.packageId.includes("rooftop")) {
-          return (
-            data.peopleCount !== undefined &&
-            data.peopleCount >= 1 &&
-            data.peopleCount <= 10
-          );
-        }
-        return true;
-      },
-      {
-        message: t("people_count_required"),
-        path: ["peopleCount"],
-      },
-    );
+  z.object({
+    packageId: z.string().min(1, t("package_required")),
+    customerName: z.string().min(2, t("name_min")),
+    customerEmail: z.string().email({ message: t("email_invalid") }),
+    customerPhone: z.string().min(1, t("phone_required")),
+    bookingDate: z.string().min(1, t("date_required")),
+    bookingTime: z.string().min(1, t("time_required")),
+    notes: z.string().optional(),
+    totalAmount: z.number().positive(t("amount_positive")),
+    peopleCount: z.number().int().min(1).max(10).optional(),
+  });
 
 export const createPaymentSchema = (t: any) =>
   z.object({

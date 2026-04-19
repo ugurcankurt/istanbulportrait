@@ -18,6 +18,7 @@ export const localeSchema = z.enum([
   "fr",
   "de",
   "ro",
+  "tr",
 ]);
 export const blogStatusSchema = z.enum(["draft", "published", "archived"]);
 
@@ -34,7 +35,7 @@ export const blogTranslationInputSchema = z.object({
   slug: z
     .string()
     .max(200, "validation.blog.slug_max")
-    .regex(/^[a-z0-9]*(?:-[a-z0-9]+)*$/, "validation.blog.slug_invalid")
+
     .optional()
     .or(z.literal("")),
   excerpt: z
@@ -66,6 +67,7 @@ export const blogFormSchema = z.object({
     fr: blogTranslationInputSchema,
     de: blogTranslationInputSchema,
     ro: blogTranslationInputSchema,
+    tr: blogTranslationInputSchema,
   }),
   category_ids: z.array(z.string().uuid()).default([]),
   tag_ids: z.array(z.string().uuid()).default([]),
@@ -89,7 +91,7 @@ export const createBlogFormSchema = (t: any) =>
         slug: z
           .string()
           .max(200, t("slug_max"))
-          .regex(/^[a-z0-9]*(?:-[a-z0-9]+)*$/, t("slug_invalid"))
+
           .optional()
           .or(z.literal("")),
         title: z.string().min(1, t("title_required")).max(200, t("title_max")),
@@ -104,7 +106,7 @@ export const createBlogFormSchema = (t: any) =>
         slug: z
           .string()
           .max(200, t("slug_max"))
-          .regex(/^[a-z0-9]*(?:-[a-z0-9]+)*$/, t("slug_invalid"))
+
           .optional()
           .or(z.literal("")),
         title: z.string().min(1, t("title_required")).max(200, t("title_max")),
@@ -119,7 +121,7 @@ export const createBlogFormSchema = (t: any) =>
         slug: z
           .string()
           .max(200, t("slug_max"))
-          .regex(/^[a-z0-9]*(?:-[a-z0-9]+)*$/, t("slug_invalid"))
+
           .optional()
           .or(z.literal("")),
         title: z.string().min(1, t("title_required")).max(200, t("title_max")),
@@ -134,7 +136,7 @@ export const createBlogFormSchema = (t: any) =>
         slug: z
           .string()
           .max(200, t("slug_max"))
-          .regex(/^[a-z0-9]*(?:-[a-z0-9]+)*$/, t("slug_invalid"))
+
           .optional()
           .or(z.literal("")),
         title: z.string().min(1, t("title_required")).max(200, t("title_max")),
@@ -149,7 +151,7 @@ export const createBlogFormSchema = (t: any) =>
         slug: z
           .string()
           .max(200, t("slug_max"))
-          .regex(/^[a-z0-9]*(?:-[a-z0-9]+)*$/, t("slug_invalid"))
+
           .optional()
           .or(z.literal("")),
         title: z.string().min(1, t("title_required")).max(200, t("title_max")),
@@ -164,7 +166,7 @@ export const createBlogFormSchema = (t: any) =>
         slug: z
           .string()
           .max(200, t("slug_max"))
-          .regex(/^[a-z0-9]*(?:-[a-z0-9]+)*$/, t("slug_invalid"))
+
           .optional()
           .or(z.literal("")),
         title: z.string().min(1, t("title_required")).max(200, t("title_max")),
@@ -179,7 +181,22 @@ export const createBlogFormSchema = (t: any) =>
         slug: z
           .string()
           .max(200, t("slug_max"))
-          .regex(/^[a-z0-9]*(?:-[a-z0-9]+)*$/, t("slug_invalid"))
+
+          .optional()
+          .or(z.literal("")),
+        title: z.string().min(1, t("title_required")).max(200, t("title_max")),
+        excerpt: z
+          .string()
+          .max(500, t("excerpt_max"))
+          .optional()
+          .or(z.literal("")),
+        content: z.string().min(1, t("content_required")),
+      }),
+      tr: z.object({
+        slug: z
+          .string()
+          .max(200, t("slug_max"))
+
           .optional()
           .or(z.literal("")),
         title: z.string().min(1, t("title_required")).max(200, t("title_max")),
@@ -216,8 +233,8 @@ export const categoryFormSchema = z.object({
   slug: z
     .string()
     .min(1, "validation.blog.slug_required")
-    .max(100, "validation.blog.slug_max")
-    .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, "validation.blog.slug_invalid"),
+    .max(100, "validation.blog.slug_max"),
+
   icon: z.string().optional().nullable(),
   color: z
     .string()
@@ -233,6 +250,7 @@ export const categoryFormSchema = z.object({
     fr: categoryTranslationInputSchema,
     de: categoryTranslationInputSchema,
     ro: categoryTranslationInputSchema,
+    tr: categoryTranslationInputSchema,
   }),
 });
 
@@ -243,8 +261,8 @@ export const createCategoryFormSchema = (t: any) =>
     slug: z
       .string()
       .min(1, t("slug_required"))
-      .max(100, t("slug_max"))
-      .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, t("slug_invalid")),
+      .max(100, t("slug_max")),
+
     icon: z.string().optional().nullable(),
     color: z
       .string()
@@ -308,6 +326,14 @@ export const createCategoryFormSchema = (t: any) =>
           .optional()
           .or(z.literal("")),
       }),
+      tr: z.object({
+        name: z.string().min(1, t("name_required")).max(100, t("name_max")),
+        description: z
+          .string()
+          .max(500, t("description_max"))
+          .optional()
+          .or(z.literal("")),
+      }),
     }),
   });
 
@@ -327,8 +353,8 @@ export const tagFormSchema = z.object({
   slug: z
     .string()
     .min(1, "validation.blog.slug_required")
-    .max(50, "validation.blog.slug_max")
-    .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, "validation.blog.slug_invalid"),
+    .max(50, "validation.blog.slug_max"),
+
   translations: z.object({
     en: tagTranslationInputSchema,
     ar: tagTranslationInputSchema,
@@ -338,6 +364,7 @@ export const tagFormSchema = z.object({
     fr: tagTranslationInputSchema,
     de: tagTranslationInputSchema,
     ro: tagTranslationInputSchema,
+    tr: tagTranslationInputSchema,
   }),
 });
 
@@ -348,8 +375,8 @@ export const createTagFormSchema = (t: any) =>
     slug: z
       .string()
       .min(1, t("slug_required"))
-      .max(50, t("slug_max"))
-      .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, t("slug_invalid")),
+      .max(50, t("slug_max")),
+
     translations: z.object({
       en: z.object({
         name: z.string().min(1, t("name_required")).max(50, t("name_max")),
@@ -370,6 +397,9 @@ export const createTagFormSchema = (t: any) =>
         name: z.string().min(1, t("name_required")).max(50, t("name_max")),
       }),
       ro: z.object({
+        name: z.string().min(1, t("name_required")).max(50, t("name_max")),
+      }),
+      tr: z.object({
         name: z.string().min(1, t("name_required")).max(50, t("name_max")),
       }),
     }),

@@ -7,17 +7,20 @@ import { Link } from "@/i18n/routing";
 import { trackEvent } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
 import { ResumeViewingCard, type LastVisited } from "@/components/resume-viewing-card";
+import type { DiscountDB } from "@/lib/discount-service";
 
 interface HeroClientWrapperProps {
   packagesButtonText: string;
   bookSessionButtonText: string;
   children: React.ReactNode;
+  activeDiscount?: DiscountDB | null;
 }
 
 export function HeroClientWrapper({
   packagesButtonText,
   bookSessionButtonText,
   children,
+  activeDiscount,
 }: HeroClientWrapperProps) {
   const [visitedPackages, setVisitedPackages] = useState<LastVisited[]>([]);
   const [hasVisited, setHasVisited] = useState(false);
@@ -82,6 +85,7 @@ export function HeroClientWrapper({
             showTitle={true}
             withContainer={false}
             isMainTitle={false}
+            activeDiscount={activeDiscount}
           />
         </div>
       )}

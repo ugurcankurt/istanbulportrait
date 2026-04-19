@@ -9,6 +9,7 @@ import { generateNativeSlug } from "@/lib/slug-generator";
 import { calculateDiscountedPrice } from "@/lib/pricing";
 import type { PackageId } from "@/lib/validations";
 import { usePackagesStore } from "@/stores/packages-store";
+import type { DiscountDB } from "@/lib/discount-service";
 import { Card, CardHeader } from "@/components/ui/card";
 import { formatDistanceToNow } from "date-fns";
 import { enUS, tr, de, fr, es, zhCN, ro, arSA, ru } from "date-fns/locale";
@@ -33,13 +34,15 @@ interface ResumeViewingCardProps {
   showTitle?: boolean;
   withContainer?: boolean;
   isMainTitle?: boolean;
+  activeDiscount?: DiscountDB | null;
 }
 
 export function ResumeViewingCard({
   visitedPackages: initialPackages,
   showTitle = true,
   withContainer = true,
-  isMainTitle = false
+  isMainTitle = false,
+  activeDiscount = null,
 }: ResumeViewingCardProps) {
   const [localVisited, setLocalVisited] = useState<LastVisited[]>([]);
   const t = useTranslations("packages");
@@ -137,7 +140,7 @@ export function ResumeViewingCard({
               const packageDb = packages.find((p) => p.slug === packageId);
 
               const basePrice = packageDb ? Number(packageDb.price) : 150;
-              const pricing = calculateDiscountedPrice(basePrice, null, today);
+              const pricing = calculateDiscountedPrice(basePrice, activeDiscount, null, today);
 
               // Use dynamic translations
               const locFeatures = packageDb?.features[locale] || packageDb?.features["en"] || [];
@@ -200,7 +203,7 @@ export function ResumeViewingCard({
                         </div>
 
                         <div className="flex items-end justify-between">
-                          <div className="flex flex-col">
+                          <div className="flex flex-col items-end">
                             <div className="flex items-baseline gap-1">
                               <span className="text-lg sm:text-xl font-bold text-slate-900">
                                 €{pricing.price}
@@ -211,6 +214,11 @@ export function ResumeViewingCard({
                                 </span>
                               )}
                             </div>
+                            {pricing.isDiscounted && activeDiscount && (
+                              <span className="text-[10px] text-sale font-bold animate-pulse -mt-1">
+                                -{Math.round(pricing.discountPercentage * 100)}% {activeDiscount.name}
+                              </span>
+                            )}
                           </div>
                         </div>
                       </CardHeader>

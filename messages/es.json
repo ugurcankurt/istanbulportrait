@@ -5,7 +5,12 @@
   "nav": {
     "home": "Inicio",
     "selectLanguage": "Seleccionar idioma",
-    "selectLanguageDescription": "Elija su idioma preferido para explorar el retrato de Estambul."
+    "selectLanguageDescription": "Elija su idioma preferido para explorar el retrato de Estambul.",
+    "packages": "Paquetes",
+    "locations": "Ubicaciones",
+    "blog": "Blog",
+    "about": "Acerca de",
+    "contact": "Contacto"
   },
   "whatsapp": {
     "button": "WhatsApp",
@@ -109,13 +114,17 @@
       "checking_availability": "Comprobando disponibilidad...",
       "availability_confirmed": "¡Lugar disponible! Abriendo ahora..."
     },
+    "cancellation": {
+      "title": "Cancelación gratuita",
+      "description": "Cancela hasta 24 horas antes para obtener un reembolso completo"
+    },
     "payment_breakdown": {
       "pay_now": "Paga {amount} ahora",
       "pay_on_day": "y resto de pago {amount} el día de la sesión de fotos"
     },
     "success": {
       "title": "¡Reserva confirmada!",
-      "message": "Gracias por reservar con el fotógrafo de Estambul. La confirmación de su reserva ha sido enviada a su correo electrónico.",
+      "message": "Gracias por reservar con el istanbul portrait. La confirmación de su reserva ha sido enviada a su correo electrónico.",
       "booking_id": "ID de reserva",
       "payment_successful": "¡Pago exitoso! Correo electrónico de confirmación enviado."
     },
@@ -153,8 +162,8 @@
     },
     "people_count_title": "Número de personas",
     "price_per_person": "Precio por persona",
-    "seasonal_discount_applied": "Oferta ({percentage}% DE DESCUENTO)",
-    "promo_code": "Código promocional",
+    "seasonal_discount_applied": "%{percentage} Seasonal Discount",
+    "promo_code": "Promo Code",
     "apply_promo": "Aplicar",
     "promo_applied": "¡Código promocional aplicado!",
     "invalid_promo": "Código promocional no válido o caducado",
@@ -187,14 +196,17 @@
       "try_again": "Inténtalo de nuevo"
     },
     "expires_in": "Mantendremos su lugar durante [TIEMPO] minutos.",
-    "expired": "El espacio de reserva expiró. Por favor seleccione una nueva hora."
+    "expired": "El espacio de reserva expiró. Por favor seleccione una nueva hora.",
+    "apply": "Apply",
+    "remove": "Remove",
+    "promo_code_applied": "%{percentage} Promo Discount"
   },
   "footer": {
     "description": "Fotógrafo líder en Estambul para fotografía de retratos profesionales. Capturando tus momentos especiales con los escenarios más emblemáticos de la ciudad.",
     "quickLinks": "Enlaces rápidos",
-    "services": "Servicios",
+    "services": "Paquetes",
     "followUs": "Síguenos",
-    "copyright": "© 2026 360istanbul.com.tr | Reservados todos los derechos.",
+    "copyright": "© 2026 istanbulportrait.com | Reservados todos los derechos.",
     "service_items": {
       "portrait": "Fotografía de retrato",
       "couples": "Sesiones de pareja",
@@ -386,7 +398,7 @@
     "bullet_retouching": "• Retoque profesional",
     "need_help": "¿Necesita ayuda?",
     "help_description": "¿Preguntas sobre su reserva? Contáctenos en cualquier momento.",
-    "support_email": "info@360istanbul.com.tr",
+    "support_email": "info@istanbulportrait.com",
     "support_phone": "+90 536 709 37 24",
     "people_count": "Número de personas"
   },
@@ -505,6 +517,78 @@
     "summary": {
       "title": "Conclusiones clave",
       "ai_overview": "Descripción general de la IA"
+    }
+  },
+  "privacy": {
+    "cookies": {
+      "table": {
+        "title": "Cookies Used on Our Site",
+        "columns": {
+          "name": "Name",
+          "purpose": "Purpose",
+          "type": "Type",
+          "duration": "Duration",
+          "provider": "Provider"
+        },
+        "types": {
+          "essential": "Essential",
+          "analytics": "Analytics",
+          "marketing": "Marketing"
+        },
+        "providers": {
+          "first_party": "First Party",
+          "google": "Google",
+          "yandex": "Yandex",
+          "microsoft": "Microsoft",
+          "facebook": "Facebook"
+        },
+        "essential": {
+          "user_consent": {
+            "purpose": "Stores the user's cookie consent state for the current domain.",
+            "duration": "1 year"
+          }
+        },
+        "analytics": {
+          "ga": {
+            "purpose": "Used by Google Analytics to distinguish users.",
+            "duration": "2 years"
+          },
+          "gid": {
+            "purpose": "Used by Google Analytics to distinguish users.",
+            "duration": "24 hours"
+          },
+          "gat": {
+            "purpose": "Used to throttle request rate.",
+            "duration": "1 minute"
+          },
+          "ym_uid": {
+            "purpose": "Used by Yandex Metrica for identifying site users.",
+            "duration": "1 year"
+          },
+          "ym_d": {
+            "purpose": "Used by Yandex Metrica to store the date of user's first session.",
+            "duration": "1 year"
+          },
+          "clck": {
+            "purpose": "Persists the Microsoft Clarity User ID.",
+            "duration": "1 year"
+          },
+          "clsk": {
+            "purpose": "Connects multiple page views by a user into a single Clarity session.",
+            "duration": "1 day"
+          }
+        },
+        "marketing": {
+          "fbp": {
+            "purpose": "Used by Facebook to deliver advertisement products.",
+            "duration": "3 months"
+          },
+          "fbc": {
+            "purpose": "Used by Facebook to deliver advertisement products when an ad is clicked.",
+            "duration": "3 months"
+          }
+        }
+      }
     }
   }
 }

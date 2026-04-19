@@ -23,6 +23,7 @@ export interface Booking {
   notes?: string;
   created_at: string;
   updated_at?: string;
+  people_count?: number | null;
   payments: Payment[];
 }
 
