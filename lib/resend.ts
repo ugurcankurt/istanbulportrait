@@ -56,15 +56,20 @@ export const renderEmailLayout = (
   const address = resolveLocaleValue(settings.address, locale, "");
   const isDark = settings.color_mode === "dark";
 
-  // Header Logo logic (uses logo_url which typically is the light mode logo, meaning it's dark text, we need the white one on primary bg)
-  // The header usually has a primary color background, so we always prefer logo_dark_url (which is the white logo)
-  const headerLogo =
-    settings.logo_dark_url || "";
+  // Clean the URLs to route through our own domain (to satisfy Resend Domain Verification)
+  const appBaseUrl = settings.app_base_url || process.env.NEXT_PUBLIC_APP_URL || "https://istanbulportrait.com";
+  const supabasePrefix = "https://xfntnamwfnqjgqmyxwfz.supabase.co/storage/v1/object/public";
+  
+  const cleanUrl = (url?: string | null) => {
+    if (!url) return "";
+    return url.replace(supabasePrefix, `${appBaseUrl}/storage`);
+  };
+
+  // Header Logo logic (users dark logo on primary bg)
+  const headerLogo = cleanUrl(settings.logo_dark_url);
 
   // Footer logo logic
-  const footerLogo = isDark
-    ? settings.logo_dark_url || ""
-    : settings.logo_url || "";
+  const footerLogo = cleanUrl(isDark ? settings.logo_dark_url : settings.logo_url);
 
   const socials = [];
   if (settings.instagram_url) {

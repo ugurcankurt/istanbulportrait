@@ -83,6 +83,15 @@ const nextConfig: NextConfig = {
   env: {
     CUSTOM_KEY: process.env.CUSTOM_KEY,
   },
+  // Headers for security and performance
+  async rewrites() {
+    return [
+      {
+        source: "/storage/:path*",
+        destination: "https://xfntnamwfnqjgqmyxwfz.supabase.co/storage/v1/object/public/:path*",
+      },
+    ];
+  },
   // Production optimizations
   ...(process.env.NODE_ENV === "production" && {
     compiler: {

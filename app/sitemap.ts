@@ -22,6 +22,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const sitemapData: MetadataRoute.Sitemap = [];
   const { generateNativeSlug } = await import("@/lib/slug-generator");
 
+  const cleanImage = (url?: string | null) => {
+    if (!url) return "";
+    return url.replace(
+      "https://xfntnamwfnqjgqmyxwfz.supabase.co/storage/v1/object/public",
+      `${baseUrl}/storage`
+    );
+  };
+
   // 1. Home Pages (All Locales)
   locales.forEach((locale) => {
     sitemapData.push({
@@ -53,7 +61,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
           const tLoc = page.title?.[loc];
           return tLoc ? `/${generateNativeSlug(tLoc)}` : `/${page.slug}`;
         }),
-        ...(page.cover_image ? { images: [page.cover_image] } : {}),
+        ...(page.cover_image ? { images: [cleanImage(page.cover_image)] } : {}),
       });
     });
   }
@@ -77,7 +85,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
           const tSeg = tTitle ? generateNativeSlug(tTitle) : "packages";
           return `/${tSeg}/${pkg.slug}`;
         }),
-        ...((pkg.gallery_images && pkg.gallery_images.length > 0) ? { images: [pkg.gallery_images[0]] } : {}),
+        ...((pkg.gallery_images && pkg.gallery_images.length > 0) ? { images: [cleanImage(pkg.gallery_images[0])] } : {}),
       });
     });
   }
@@ -101,7 +109,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
           const tSeg = tTitle ? generateNativeSlug(tTitle) : "locations";
           return `/${tSeg}/${locItem.slug}`;
         }),
-        ...(locItem.cover_image ? { images: [locItem.cover_image] } : {}),
+        ...(locItem.cover_image ? { images: [cleanImage(locItem.cover_image)] } : {}),
       });
     });
   }
@@ -136,7 +144,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
               const bSlug = postTranslations.find((t: any) => t.locale === loc)?.slug || enSlug;
               return `/${bSeg}/${bSlug}`;
             }),
-            ...(bp.featured_image ? { images: [bp.featured_image] } : {}),
+            ...(bp.featured_image ? { images: [cleanImage(bp.featured_image)] } : {}),
           });
         });
       }
