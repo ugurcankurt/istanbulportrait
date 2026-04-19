@@ -137,17 +137,27 @@ export async function POST(request: NextRequest) {
           const lastName = nameParts.length > 1 ? nameParts.slice(1).join(" ") : undefined;
 
           // Perform contact creation asynchronously without blocking the user flow
-          resend.contacts.create({
-            email: customerEmail,
-            firstName: firstName,
-            lastName: lastName,
-            unsubscribed: false,
-            audienceId: audienceId,
-          } as any).catch((resendError) => {
-            console.error("Resend Contacts API failed:", resendError);
-            logError(resendError instanceof Error ? resendError : new Error("Resend Contacts failed"), {
-              action: "resend_contact_create"
-            });
+          fetch(`https://api.resend.com/audiences/${audienceId}/contacts`, {
+            method: "POST",
+            headers: {
+              "Authorization": `Bearer ${apiKey}`,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              email: customerEmail,
+              first_name: firstName,
+              last_name: lastName,
+              unsubscribed: false
+            })
+          })
+          .then(async (res) => {
+            if (!res.ok) {
+              const err = await res.text();
+              console.error("Resend Contacts REST API failed:", err);
+            }
+          })
+          .catch((err) => {
+            console.error("Resend Contacts REST execution failed:", err);
           });
         }
       } catch (contactError) {

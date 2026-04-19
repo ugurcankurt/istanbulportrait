@@ -21,7 +21,8 @@ export async function GET(request: Request) {
     const settings = await settingsService.getSettings();
     
     // We only proceed if Resend is configured
-    if (!settings.resend_api_key || settings.resend_api_key === "demo-resend-key") {
+    const apiKey = settings.resend_api_key || process.env.RESEND_API_KEY;
+    if (!apiKey || apiKey === "demo-resend-key") {
       return NextResponse.json({ skipped: true, reason: "Resend API key not configured" });
     }
 
