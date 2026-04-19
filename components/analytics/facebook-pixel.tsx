@@ -2,7 +2,7 @@
 
 import { usePathname, useSearchParams } from "next/navigation";
 import Script from "next/script";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useConsent } from "@/contexts/consent-context";
 import { getUserDataForAdvancedMatching } from "@/lib/analytics";
 import { hashCustomerData, hashPhoneNumber } from "@/lib/facebook";
@@ -11,6 +11,8 @@ export function FacebookPixel({ pixelId }: { pixelId?: string | null }) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const { consent } = useConsent();
+  const hasInitialized = useRef(false);
+  const advancedMatchingSentRef = useRef(false);
 
   // Sync Meta Consent Mode whenever user makes a choice
   // Must run AFTER fbq is initialized (afterInteractive Script has loaded)
@@ -29,13 +31,13 @@ export function FacebookPixel({ pixelId }: { pixelId?: string | null }) {
   // Track PageView on every route change
   // biome-ignore lint/correctness/useExhaustiveDependencies: Track page views on route change
   useEffect(() => {
-    const initPixelWithAdvancedMatching = async () => {
+    const handlePixel = async () => {
       if (!pixelId || typeof window === "undefined" || !window.fbq) return;
 
-      // Check for persisted user data and re-init with it for Advanced Matching
       const userData = getUserDataForAdvancedMatching();
-      if (userData) {
-        const hashed: Record<string, string> = {};
+      let hashed: Record<string, string> = {};
+
+      if (userData && !advancedMatchingSentRef.current) {
         if (userData.email) hashed.em = await hashCustomerData(userData.email);
         if (userData.phone) hashed.ph = await hashPhoneNumber(userData.phone);
         if (userData.firstName) hashed.fn = await hashCustomerData(userData.firstName);
@@ -44,14 +46,22 @@ export function FacebookPixel({ pixelId }: { pixelId?: string | null }) {
 
         if (Object.keys(hashed).length > 0) {
           window.fbq("init", pixelId, hashed);
+          advancedMatchingSentRef.current = true;
+          hasInitialized.current = true;
         }
+      }
+
+      // Initialize normally if advanced matching wasn't applied
+      if (!hasInitialized.current) {
+        window.fbq("init", pixelId);
+        hasInitialized.current = true;
       }
 
       window.fbq("track", "PageView");
     };
 
-    initPixelWithAdvancedMatching();
-  }, [pathname, searchParams]);
+    handlePixel();
+  }, [pathname, searchParams, pixelId]);
 
   // Don't render if no Pixel ID is configured
   if (!pixelId) {
@@ -81,12 +91,8 @@ export function FacebookPixel({ pixelId }: { pixelId?: string | null }) {
             // fbq('consent', 'grant') will be called by React after user accepts
             fbq('consent', 'revoke');
 
-            fbq('init', '${pixelId}');
-
             // CCPA Compliance: Limited Data Use (LDU) for California
             fbq('dataProcessingOptions', ['LDU'], 0, 0);
-
-            fbq('track', 'PageView');
 
             // Core Web Vitals for Facebook ad quality scoring
             function trackWebVitals() {

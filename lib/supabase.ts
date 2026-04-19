@@ -12,11 +12,24 @@ if (typeof window === "undefined" && !supabaseServiceKey) {
   console.warn("WARNING: SUPABASE_SERVICE_KEY is missing on the server.");
 }
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+const globalForSupabase = globalThis as unknown as {
+  supabase: ReturnType<typeof createClient> | undefined;
+  supabaseAdmin: ReturnType<typeof createClient> | undefined;
+};
 
-export const supabaseAdmin = typeof window === "undefined" && supabaseServiceKey
-  ? createClient(supabaseUrl, supabaseServiceKey)
-  : supabase; // Fallback to prevent client-side crashes if incidentally imported
+export const supabase =
+  globalForSupabase.supabase ?? createClient(supabaseUrl, supabaseAnonKey);
+
+export const supabaseAdmin =
+  globalForSupabase.supabaseAdmin ??
+  (typeof window === "undefined" && supabaseServiceKey
+    ? createClient(supabaseUrl, supabaseServiceKey)
+    : supabase);
+
+if (process.env.NODE_ENV !== "production") {
+  globalForSupabase.supabase = supabase;
+  globalForSupabase.supabaseAdmin = supabaseAdmin;
+}
 
 // Error types for better error handling
 export interface DatabaseError {
