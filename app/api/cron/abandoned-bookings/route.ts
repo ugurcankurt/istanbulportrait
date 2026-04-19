@@ -26,8 +26,8 @@ export async function GET(request: Request) {
       return NextResponse.json({ skipped: true, reason: "Resend API key not configured" });
     }
 
-    // Identify the time threshold (e.g., 1 hour ago)
-    const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000).toISOString();
+    // Identify the time threshold (2 minutes ago)
+    const twoMinutesAgo = new Date(Date.now() - 2 * 60 * 1000).toISOString();
 
     // Fetch abandoned draft bookings
     const { data, error: fetchError } = await supabaseAdmin
@@ -37,8 +37,8 @@ export async function GET(request: Request) {
       .eq("status", "draft")
       // Not yet emailed
       .eq("abandoned_email_sent", false)
-      // Older than 1 hour
-      .lt("created_at", oneHourAgo)
+      // Older than 2 minutes
+      .lt("created_at", twoMinutesAgo)
       // Limit to 50 per run to prevent timeout/rate limits
       .limit(50);
 
