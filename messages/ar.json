@@ -326,7 +326,19 @@
       "delivery": "التسليم المقدر: 3-10 أيام عمل",
       "returns": "سياسة إرجاع لمدة 14 يومًا لراحة البال",
       "quality": "ضمان جودة طباعة عالية الدقة"
-    }
+    },
+    "newsletter_badge": "Special Offer",
+    "newsletter_title": "Get Your Exclusive Promo Code",
+    "newsletter_subtitle": "Subscribe to our newsletter to receive an instant discount code for your next photoshoot, plus seasonal updates and early access to new packages.",
+    "newsletter_placeholder": "Enter your email address...",
+    "newsletter_button": "Subscribe Now",
+    "newsletter_success_title": "You're on the list!",
+    "newsletter_success_desc": "We just sent your promo code to your inbox. Enjoy your discount!",
+    "newsletter_error": "An error occurred. Please try again later.",
+    "newsletter_disclaimer": "By subscribing, you agree to receive marketing emails. You can unsubscribe at any time.",
+    "newsletter_first_name": "الاسم الأول",
+    "newsletter_last_name": "اسم العائلة",
+    "newsletter_success": "لقد اشتركت بنجاح. تحقق من بريدك الإلكتروني للحصول على الرمز الترويجي للخصم!"
   },
   "about_cta": {
     "title": "على استعداد لخلق شيء جميل؟",

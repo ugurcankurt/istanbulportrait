@@ -326,7 +326,19 @@
       "delivery": "预计送达：3-10 个工作日",
       "returns": "14 天退货政策，让您安心无忧",
       "quality": "高分辨率打印质量保证"
-    }
+    },
+    "newsletter_badge": "Special Offer",
+    "newsletter_title": "Get Your Exclusive Promo Code",
+    "newsletter_subtitle": "Subscribe to our newsletter to receive an instant discount code for your next photoshoot, plus seasonal updates and early access to new packages.",
+    "newsletter_placeholder": "Enter your email address...",
+    "newsletter_button": "Subscribe Now",
+    "newsletter_success_title": "You're on the list!",
+    "newsletter_success_desc": "We just sent your promo code to your inbox. Enjoy your discount!",
+    "newsletter_error": "An error occurred. Please try again later.",
+    "newsletter_disclaimer": "By subscribing, you agree to receive marketing emails. You can unsubscribe at any time.",
+    "newsletter_first_name": "名",
+    "newsletter_last_name": "姓",
+    "newsletter_success": "您已成功订阅。请查看您的电子邮件以获取促销代码！"
   },
   "about_cta": {
     "title": "准备好创造美丽的东西了吗？",

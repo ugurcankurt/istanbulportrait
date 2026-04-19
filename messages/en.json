@@ -326,7 +326,19 @@
       "delivery": "Estimated delivery: 3-10 business days",
       "returns": "14-day return policy for peace of mind",
       "quality": "High-resolution print quality guarantee"
-    }
+    },
+    "newsletter_badge": "Special Offer",
+    "newsletter_title": "Get Your Exclusive Promo Code",
+    "newsletter_subtitle": "Subscribe to our newsletter to receive an instant discount code for your next photoshoot, plus seasonal updates and early access to new packages.",
+    "newsletter_placeholder": "Enter your email address...",
+    "newsletter_button": "Subscribe Now",
+    "newsletter_success_title": "You're on the list!",
+    "newsletter_success_desc": "We just sent your promo code to your inbox. Enjoy your discount!",
+    "newsletter_error": "An error occurred. Please try again later.",
+    "newsletter_disclaimer": "By subscribing, you agree to receive marketing emails. You can unsubscribe at any time.",
+    "newsletter_first_name": "First Name",
+    "newsletter_last_name": "Last Name",
+    "newsletter_success": "You've successfully subscribed. Check your email for your promo code!"
   },
   "about_cta": {
     "title": "Ready to Create Something Beautiful?",

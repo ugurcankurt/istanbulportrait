@@ -1,5 +1,6 @@
 import { Resend } from "resend";
 import type { SiteSettings } from "./settings-service";
+import { EMAIL_TRANSLATIONS, NEWSLETTER_TRANSLATIONS, ABANDONED_TRANSLATIONS } from "./email-translations";
 
 export const getEmailColors = (settings: SiteSettings) => {
   const isDark = settings.color_mode === "dark";
@@ -128,7 +129,6 @@ export const renderEmailLayout = (
               <tr>
                 <td align="center" style="padding: 30px; text-align: center; color: ${colors.textMuted}; font-size: 14px;">
                   <img src="${footerLogo}" alt="${siteName} Footer" width="120" style="display: block; margin: 0 auto 15px; opacity: 0.8;">
-                  <p style="margin: 0 0 10px; font-weight: bold; color: ${colors.text};">${orgName}</p>
                   ${address ? `<p style="margin: 0 0 15px;">${address}</p>` : ""}
                   
                   ${socials.length > 0
@@ -169,102 +169,6 @@ export interface BookingConfirmationData {
   packageId?: string;
 }
 
-const EMAIL_TRANSLATIONS: Record<string, any> = {
-  en: {
-    subject: "Booking Confirmation",
-    title: "Booking Confirmation",
-    greeting: "Dear {name},",
-    thankYou: "Thank you for booking with us! Your booking has been confirmed.",
-    detailsTitle: "Booking Details",
-    bookingId: "Booking ID",
-    package: "Package",
-    peopleCount: "Number of People",
-    date: "Date",
-    time: "Time",
-    total: "Total Amount",
-    originalPrice: "Original Price",
-    discount: "Discount Applied",
-    depositPaid: "Deposit Paid (Online)",
-    remainingCash: "Remaining (Cash on site)",
-    whatsNext: "What's Next?",
-    whatsNextDesc:
-      "We will contact you 24 hours before your session to confirm the location and any special requirements.",
-    questions: "Have questions? Contact us at",
-  },
-  ru: {
-    subject: "Подтверждение бронирования",
-    title: "Подтверждение бронирования",
-    greeting: "Уважаемый(ая) {name},",
-    thankYou: "Спасибо за бронирование! Ваше бронирование подтверждено.",
-    detailsTitle: "Детали бронирования",
-    bookingId: "ID бронирования",
-    package: "Пакет",
-    peopleCount: "Количество человек",
-    date: "Дата",
-    time: "Время",
-    total: "Общая сумма",
-    originalPrice: "Базовая цена",
-    discount: "Скидка",
-    depositPaid: "Оплаченный депозит (Онлайн)",
-    remainingCash: "Остаток (Наличными)",
-    whatsNext: "Что дальше?",
-    whatsNextDesc:
-      "Мы свяжемся с вами за 24 часа до сессии, чтобы подтвердить место проведения.",
-    questions: "Есть вопросы? Свяжитесь с нами:",
-  },
-  tr: {
-    subject: "Rezervasyon Onayı",
-    title: "Rezervasyon Onaylandı",
-    greeting: "Merhaba {name},",
-    thankYou:
-      "Bizimle rezervasyon yaptığınız için teşekkürler! Rezervasyonunuz başarıyla onaylandı.",
-    detailsTitle: "Rezervasyon Detayları",
-    bookingId: "Rezervasyon Kodu",
-    package: "Paket",
-    peopleCount: "Kişi Sayısı",
-    date: "Tarih",
-    time: "Saat",
-    total: "Toplam Tutar",
-    originalPrice: "İndirimsiz Fiyat",
-    discount: "Uygulanan İndirim",
-    depositPaid: "Ödenen Depozito (Online)",
-    remainingCash: "Kalan Ödeme (Nakit)",
-    whatsNext: "Sırada Ne Var?",
-    whatsNextDesc:
-      "Çekim lokasyonunu ve diğer detayları netleştirmek için seansınızdan 24 saat önce sizinle iletişime geçeceğiz.",
-    questions: "Sorularınız mı var? Bize ulaşın:",
-  },
-};
-
-const ABANDONED_TRANSLATIONS: Record<string, any> = {
-  en: {
-    subject: "Hurry up! Finish your booking before you lose it ⏳",
-    title: "Complete Your Booking",
-    greeting: "Hi {name},",
-    body1: "We noticed you left something behind! Your booking for the <strong>{package}</strong> package on <strong>{date}</strong> at <strong>{time}</strong> is almost ready.",
-    body2: "To secure your spot, please complete your reservation by finishing the checkout process. Spots fill up fast, so make sure to reserve yours!",
-    button: "Complete My Booking",
-    questions: "Need help? Reply to this email or contact us at",
-  },
-  ru: {
-    subject: "Поторопитесь! Завершите свое бронирование ⏳",
-    title: "Завершите Ваше Бронирование",
-    greeting: "Здравствуйте, {name},",
-    body1: "Мы заметили, что вы не завершили процесс! Ваше бронирование пакета <strong>{package}</strong> на <strong>{date}</strong>, время <strong>{time}</strong>, почти готово.",
-    body2: "Чтобы закрепить за собой место, пожалуйста, завершите оплату. Места быстро заканчиваются, не упустите свой шанс!",
-    button: "Завершить Бронирование",
-    questions: "Нужна помощь? Напишите нам:",
-  },
-  tr: {
-    subject: "Acele Edin! Rezervasyonunuz iptal olmadan tamamlayın ⏳",
-    title: "Rezervasyonunuzu Tamamlayın",
-    greeting: "Merhaba {name},",
-    body1: "Sanki bir şeyleri yarım bıraktınız! <strong>{date}</strong> tarihi <strong>{time}</strong> saati için oluşturduğunuz <strong>{package}</strong> paketi rezervasyonunuz neredeyse hazır.",
-    body2: "Yerinizi garantiye almak için lütfen ödeme adımını tamamlayarak rezervasyonunuzu kesinleştirin. Kontenjanlarımız çok hızlı doluyor, bu fırsatı kaçırmayın!",
-    button: "Rezervasyonumu Tamamla",
-    questions: "Yardıma mı ihtiyacınız var? Bize ulaşın:",
-  },
-};
 
 export const sendBookingConfirmation = async (
   data: BookingConfirmationData,
@@ -552,5 +456,60 @@ export const sendAbandonedBookingEmail = async (
   } catch (error) {
     console.error("Error sending abandoned booking email:", error);
     throw error;
+  }
+};
+// ─── NEWSLETTER WELCOME NOTIFICATION ──────────────────────────
+
+export const sendNewsletterWelcomeEmail = async (
+  email: string,
+  promoCode: string,
+  promoPercentage: number,
+  settings: SiteSettings,
+  locale: string = "en",
+) => {
+  try {
+    const apiKey = settings.resend_api_key || process.env.RESEND_API_KEY || "demo-resend-key";
+    if (!apiKey || apiKey === "demo-resend-key") return;
+
+    const resend = new Resend(apiKey);
+    const colors = getEmailColors(settings);
+    const t = NEWSLETTER_TRANSLATIONS[locale] || NEWSLETTER_TRANSLATIONS["en"];
+
+    const content = `
+      <h2 style="color: ${colors.text}; margin-top: 0; font-size: 24px;">${t.title}</h2>
+      <p style="font-size: 16px; line-height: 1.6; color: ${colors.textMuted};">${t.greeting}</p>
+      
+      <p style="font-size: 16px; line-height: 1.6; color: ${colors.textMuted};">${t.body1}</p>
+
+      <div style="background-color: ${colors.background}; border: 1px dashed ${colors.primary}; padding: 25px; border-radius: 12px; margin: 30px 0; text-align: center;">
+        <p style="font-size: 15px; color: ${colors.textMuted}; margin-top: 0; margin-bottom: 10px;">${t.body2}</p>
+        <div style="font-size: 32px; font-weight: bold; color: ${colors.primary}; letter-spacing: 2px;">
+          ${promoCode}
+        </div>
+        <p style="font-size: 14px; color: #10b981; margin-top: 10px; margin-bottom: 0;">
+          (-%${promoPercentage} Discount)
+        </p>
+      </div>
+
+      <div style="text-align: center; margin: 35px 0;">
+         <a href="${settings.app_base_url || 'https://istanbulportrait.com'}/${locale}/packages" style="background-color: ${colors.primary}; color: #ffffff; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; display: inline-block;">${t.button}</a>
+      </div>
+
+      <div style="text-align: center; margin-top: 40px;">
+        <p style="color: ${colors.textMuted}; font-size: 14px;">
+          ${t.questions} <a href="mailto:${settings.contact_email}" style="color: ${colors.primary}; text-decoration: none; font-weight: bold;">${settings.contact_email}</a>
+        </p>
+      </div>
+    `;
+
+    await resend.emails.send({
+      from: `${settings.site_name || "Photographer"} <${settings.contact_email || 'hello@istanbulportrait.com'}>`, // Needs a verified domain like newsletter@istanbulportrait.com
+      to: [email],
+      subject: t.title,
+      html: renderEmailLayout(content, t.title, locale, settings),
+    });
+    console.log("Newsletter welcome email dispatched successfully.");
+  } catch (error) {
+    console.error("Error sending newsletter welcome email:", error);
   }
 };

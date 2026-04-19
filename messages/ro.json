@@ -326,7 +326,19 @@
       "delivery": "Livrare estimată: 3-10 zile lucrătoare",
       "returns": "Politica de returnare de 14 zile pentru liniște sufletească",
       "quality": "Garanție de calitate a imprimării de înaltă rezoluție"
-    }
+    },
+    "newsletter_badge": "Special Offer",
+    "newsletter_title": "Get Your Exclusive Promo Code",
+    "newsletter_subtitle": "Subscribe to our newsletter to receive an instant discount code for your next photoshoot, plus seasonal updates and early access to new packages.",
+    "newsletter_placeholder": "Enter your email address...",
+    "newsletter_button": "Subscribe Now",
+    "newsletter_success_title": "You're on the list!",
+    "newsletter_success_desc": "We just sent your promo code to your inbox. Enjoy your discount!",
+    "newsletter_error": "An error occurred. Please try again later.",
+    "newsletter_disclaimer": "By subscribing, you agree to receive marketing emails. You can unsubscribe at any time.",
+    "newsletter_first_name": "Prenume",
+    "newsletter_last_name": "Nume",
+    "newsletter_success": "V-ați abonat cu succes. Verificați adresa de e-mail pentru codul promoțional!"
   },
   "about_cta": {
     "title": "Ești gata să creezi ceva frumos?",

@@ -326,7 +326,19 @@
       "delivery": "Tahmini teslim süresi: 3-10 iş günü",
       "returns": "Gönül rahatlığı için 14 günlük iade politikası",
       "quality": "Yüksek çözünürlüklü baskı kalitesi garantisi"
-    }
+    },
+    "newsletter_badge": "Özel Fırsat",
+    "newsletter_title": "Özel İstisna İndirim Kodunuzu Alın",
+    "newsletter_subtitle": "Bültenimize abone olarak bir sonraki fotoğraf çekiminiz için anında indirim kodu kazanın. Ayrıca sezonluk fırsatlar ve yeni paketlerden ilk siz haberdar olun.",
+    "newsletter_placeholder": "E-posta adresinizi girin...",
+    "newsletter_button": "Hemen Abone Ol",
+    "newsletter_success_title": "Listedesiniz!",
+    "newsletter_success_desc": "İndirim kodunuzu e-posta kutunuza gönderdik. İndiriminizin keyfini çıkarın!",
+    "newsletter_error": "Bir hata oluştu. Lütfen daha sonra tekrar deneyin.",
+    "newsletter_disclaimer": "Abone olarak pazarlama e-postaları almayı kabul edersiniz. Dilediğiniz zaman abonelikten çıkabilirsiniz.",
+    "newsletter_first_name": "Adınız",
+    "newsletter_last_name": "Soyadınız",
+    "newsletter_success": "Başarıyla abone oldunuz. Promosyon kodunuz için e-postanızı kontrol edin!"
   },
   "about_cta": {
     "title": "Güzel Bir Şeyler Yaratmaya Hazır Mısınız?",

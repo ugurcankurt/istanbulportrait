@@ -10,6 +10,7 @@ const PackagesSection = dynamic(() => import("@/components/packages-section").th
 const InstagramFeed = dynamic(() => import("@/components/instagram-feed").then(mod => mod.InstagramFeed));
 const FAQSection = dynamic(() => import("@/components/faq-section").then(mod => mod.FAQSection));
 const ReviewsSection = dynamic(() => import("@/components/reviews").then(mod => mod.ReviewsSection));
+const NewsletterSection = dynamic(() => import("@/components/newsletter-section").then(mod => mod.NewsletterSection));
 
 
 import { pagesContentService } from "@/lib/pages-content-service";
@@ -258,6 +259,8 @@ export default async function HomePage({
             }
           />
         </div>
+
+        <NewsletterSection />
       </div>
     </>
   );

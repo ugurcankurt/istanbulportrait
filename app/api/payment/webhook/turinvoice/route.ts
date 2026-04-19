@@ -127,6 +127,7 @@ export async function POST(request: NextRequest) {
               bookingTime: booking.booking_time,
               totalAmount: body.amount,
               bookingId: booking.id,
+              locale: booking.locale || "en",
             }, settings);
           }
         } catch (emailError) {
