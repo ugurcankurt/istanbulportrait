@@ -611,7 +611,7 @@ export function BookingModal({
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent
-        className="max-w-5xl h-[92vh] md:h-[85vh] p-0 overflow-hidden flex flex-col gap-0 rounded-lg max-md:fixed max-md:inset-0 max-md:h-[100dvh] max-md:w-screen max-md:max-w-none max-md:rounded-none max-md:border-none max-md:translate-x-0 max-md:translate-y-0"
+        className="sm:max-w-5xl w-full h-[92vh] md:h-[85vh] p-0 overflow-hidden flex flex-col gap-0 rounded-lg max-md:fixed max-md:inset-0 max-md:h-[100dvh] max-md:w-screen max-md:max-w-none max-md:rounded-none max-md:border-none max-md:translate-x-0 max-md:translate-y-0"
         showCloseButton={true}
       >
         <DialogHeader className="p-6 pb-4 border-b">
