@@ -486,8 +486,18 @@ export const sendAbandonedBookingEmail = async (
   settings: SiteSettings,
 ) => {
   try {
-    const apiKey = settings.resend_api_key || process.env.RESEND_API_KEY;
-    if (!apiKey || apiKey === "demo-resend-key") return;
+    const apiKey =
+      settings.resend_api_key || process.env.RESEND_API_KEY || "demo-resend-key";
+      
+    console.log("Abandoned Email Execution Check:", { 
+      hasApiKey: !!apiKey && apiKey !== "demo-resend-key",
+      contactEmail: settings.contact_email
+    });
+
+    if (!apiKey || apiKey === "demo-resend-key") {
+      console.warn("WARNING: Abandoned Email skipped. API Key is missing or default.");
+      return;
+    }
 
     const resend = new Resend(apiKey);
     const colors = getEmailColors(settings);
@@ -521,12 +531,19 @@ export const sendAbandonedBookingEmail = async (
       </div>
     `;
 
-    await resend.emails.send({
-      from: `${settings.site_name || "Photographer"} <${settings.contact_email}>`,
+    const { data: resendData, error: resendError } = await resend.emails.send({
+      from: `${settings.site_name || "Photographer"} <${settings.contact_email || "onboarding@resend.dev"}>`,
       to: [data.customerEmail],
       subject: t.subject,
       html: renderEmailLayout(content, t.title, locale, settings),
     });
+
+    if (resendError) {
+      console.error("Resend Abandoned Email Error:", resendError);
+      throw resendError;
+    } else {
+      console.log("Resend Abandoned Email Sent Successfully:", resendData);
+    }
   } catch (error) {
     console.error("Error sending abandoned booking email:", error);
     throw error;
