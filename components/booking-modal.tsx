@@ -578,7 +578,7 @@ export function BookingModal({
               <div className="max-w-md mx-auto flex items-center justify-between gap-4">
                 <div className="flex flex-col">
                   <span className="text-[10px] text-muted-foreground font-semibold">
-                    {t("labels.total_amount")}: €{packageInfo.price}
+                    {t("labels.total_amount")} €{packageInfo.price}
                   </span>
                   <span className="text-xl font-black text-primary leading-none mt-0.5">
                     €{packageInfo.depositAmount}
@@ -611,7 +611,7 @@ export function BookingModal({
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent
-        className="max-w-4xl h-[92vh] md:h-[85vh] p-0 overflow-hidden flex flex-col gap-0 rounded-lg max-md:fixed max-md:inset-0 max-md:h-[100dvh] max-md:w-screen max-md:max-w-none max-md:rounded-none max-md:border-none max-md:translate-x-0 max-md:translate-y-0"
+        className="max-w-5xl h-[92vh] md:h-[85vh] p-0 overflow-hidden flex flex-col gap-0 rounded-lg max-md:fixed max-md:inset-0 max-md:h-[100dvh] max-md:w-screen max-md:max-w-none max-md:rounded-none max-md:border-none max-md:translate-x-0 max-md:translate-y-0"
         showCloseButton={true}
       >
         <DialogHeader className="p-6 pb-4 border-b">
@@ -633,13 +633,13 @@ export function BookingModal({
         <DialogFooter className="p-6 border-t bg-background shadow-[0_-4px_10px_rgba(0,0,0,0.03)] flex flex-row items-center justify-between sm:justify-between gap-4">
           <div className="flex flex-col text-start space-y-1">
             <span className="text-[11px] text-muted-foreground font-semibold">
-              {t("labels.total_amount")}: €{packageInfo.price}
+              {t("labels.total_amount")} €{packageInfo.price}
             </span>
             <span className="text-xl font-black text-primary leading-none">
-              {t("labels.deposit_amount")} (30%): €{packageInfo.depositAmount}
+              {t("labels.deposit_amount")} (30%) €{packageInfo.depositAmount}
             </span>
             <span className="text-[11px] text-muted-foreground font-bold">
-              {t("labels.remaining_cash")} (70%): €{packageInfo.remainingAmount}
+              {t("labels.remaining_cash")} (70%) €{packageInfo.remainingAmount}
             </span>
           </div>
 
