@@ -12,8 +12,16 @@ import {
 } from "./tax";
 import { type PackageId } from "./validations";
 import { type DiscountDB } from "./discount-service";
-
 export const DEPOSIT_PERCENTAGE = 0.3;
+
+export function matchActiveSurcharge(timeString: string | undefined | null, timeSurcharges: any[] | undefined | null) {
+  if (!timeString || !timeSurcharges || !Array.isArray(timeSurcharges)) return null;
+  let match = timeSurcharges.find(s => s.time === timeString);
+  if (!match && timeString.endsWith(":30")) {
+    match = timeSurcharges.find(s => s.time === timeString.replace(":30", ":00"));
+  }
+  return match || null;
+}
 
 export interface PriceBreakdown extends TaxBreakdown {
   packageId: PackageId;
@@ -134,8 +142,9 @@ export function getPackagePricing(
   peopleCount?: number,
   taxRate: number = TAX_RATES.TURKEY,
   packageNameOverride?: string,
+  surchargePercentage: number = 0,
 ): PriceBreakdown {
-  const originalPrice = basePrice;
+  const originalPrice = basePrice * (1 + surchargePercentage / 100);
 
   // Special handling for packages with per-person pricing
   if (peopleCount && peopleCount >= 1) {
@@ -218,6 +227,7 @@ export function formatPackagePricing(
   peopleCount?: number,
   taxRate: number = TAX_RATES.TURKEY,
   packageNameOverride?: string,
+  surchargePercentage: number = 0,
 ): FormattedPriceBreakdown {
   const breakdown = getPackagePricing(
     packageId,
@@ -227,7 +237,8 @@ export function formatPackagePricing(
     bookingDate,
     peopleCount,
     taxRate,
-    packageNameOverride
+    packageNameOverride,
+    surchargePercentage
   );
   
   const formatted = formatTaxBreakdown(breakdown, locale);

@@ -6,7 +6,7 @@ import {
   sanitizeErrorForProduction,
   ValidationError,
 } from "@/lib/errors";
-import { getPackagePricing } from "@/lib/pricing";
+import { getPackagePricing, matchActiveSurcharge } from "@/lib/pricing";
 import {
   checkRateLimit,
   createRateLimitError,
@@ -14,6 +14,7 @@ import {
 } from "@/lib/rate-limit";
 import { turinvoiceCreateOrder } from "@/lib/turinvoice";
 import { type PackageId } from "@/lib/validations";
+import { availabilityService } from "@/lib/availability-service";
 
 export async function POST(request: NextRequest) {
   const startTime = Date.now();
@@ -77,6 +78,11 @@ export async function POST(request: NextRequest) {
     // However, for correct pricing, we need it. Checking if it's in customerData.
     const peopleCount = customerData?.peopleCount;
 
+    const tValue = customerData?.bookingTime;
+    const timeSurcharges = await availabilityService.getTimeSurcharges();
+    const activeSurcharge = matchActiveSurcharge(customerData?.bookingTime, timeSurcharges);
+    const surchargePercentage = activeSurcharge ? activeSurcharge.surcharge_percentage : 0;
+
     const packagePricing = getPackagePricing(
       packageId as PackageId,
       customerData?.basePrice || customerData?.totalAmount || 0,
@@ -84,6 +90,9 @@ export async function POST(request: NextRequest) {
       body.appliedPromo,
       bookingDate,
       (customerData as any)?.isPerPerson ? peopleCount : undefined,
+      undefined,
+      undefined,
+      surchargePercentage
     );
 
     const expectedPrice = packagePricing.depositAmount;

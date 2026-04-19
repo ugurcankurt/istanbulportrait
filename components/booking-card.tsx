@@ -11,8 +11,10 @@ import {
   Sun,
   Sunset,
   CreditCard,
+  Info,
+  ShieldCheck,
 } from "lucide-react";
-import { DEPOSIT_PERCENTAGE } from "@/lib/pricing";
+import { DEPOSIT_PERCENTAGE, matchActiveSurcharge } from "@/lib/pricing";
 import { useState, useEffect } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { format } from "date-fns";
@@ -28,6 +30,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
 import { type PackageId } from "@/lib/validations";
 import { type DiscountDB } from "@/lib/discount-service";
+import type { TimeSurcharge } from "@/lib/availability-service";
 
 interface BookingCardProps {
   packageId: PackageId;
@@ -52,6 +55,7 @@ interface BookingCardProps {
   onCheckAvailability: () => void;
   isFlat?: boolean;
   activeDiscount?: DiscountDB | null;
+  timeSurcharges?: TimeSurcharge[];
 }
 
 export function BookingCard({
@@ -73,6 +77,7 @@ export function BookingCard({
   onCheckAvailability,
   isFlat = false,
   activeDiscount = null,
+  timeSurcharges = [],
 }: BookingCardProps) {
   const isMobile = useIsMobile();
   const [isPeoplePopoverOpen, setIsPeoplePopoverOpen] = useState(false);
@@ -284,10 +289,18 @@ export function BookingCard({
                   }}
                   disabled={(date) => date < new Date() || date < new Date("1900-01-01")}
                   modifiers={{ discount: isDateDiscounted }}
-                  modifiersClassNames={{ discount: "font-black underline decoration-primary underline-offset-4" }}
+                  modifiersClassNames={{ discount: "bg-primary/10 text-primary font-black border border-primary/20 rounded-md" }}
                   initialFocus
                   locale={dateFnsLocale}
                 />
+                {activeDiscount && activeDiscount.start_date && activeDiscount.end_date && (
+                  <div className="bg-primary/10 border-t border-primary/20 px-4 py-3 flex items-center justify-center gap-2 w-full mt-2">
+                    <span className="flex h-2 w-2 rounded-full bg-primary animate-pulse shrink-0" />
+                    <p className="text-xs font-bold text-primary">
+                      {tCheckout("seasonal_discount_applied", { percentage: Math.round(activeDiscount.discount_percentage * 100) })}
+                    </p>
+                  </div>
+                )}
               </PopoverContent>
             </Popover>
           </div>
@@ -348,19 +361,30 @@ export function BookingCard({
                           <div className="grid grid-cols-3 gap-2 max-h-[200px] overflow-y-auto pr-2 custom-scrollbar">
                             {slots.map((time) => {
                               const isBlocked = bookedSlots.includes(time);
+                              const activeSurcharge = matchActiveSurcharge(time, timeSurcharges);
+                              
                               return (
                                 <Button
                                   key={time}
                                   variant={selectedTime === time ? "default" : "outline"}
                                   className={cn(
-                                    "h-10 text-xs font-bold",
+                                    "h-10 text-xs font-bold transition-all relative overflow-hidden",
                                     selectedTime === time && "shadow-sm",
-                                    isBlocked && "opacity-40 line-through cursor-not-allowed bg-muted"
+                                    isBlocked && "bg-red-500 text-white border-red-600 cursor-not-allowed hover:bg-red-500 hover:text-white disabled:opacity-90 shadow-sm"
                                   )}
                                   onClick={() => !isBlocked && setSelectedTime(time)}
                                   disabled={isBlocked || isLoadingSlots}
                                 >
-                                  {time}
+                                  {isBlocked ? (dateFnsLocale?.code?.startsWith("tr") ? "Dolu" : "Reserved") : (
+                                    <span className="flex items-center gap-1.5">
+                                      {time}
+                                      {activeSurcharge && (
+                                        <span className="text-[10px] text-amber-500 dark:text-amber-400 font-black tracking-tighter">
+                                          (+%{activeSurcharge.surcharge_percentage})
+                                        </span>
+                                      )}
+                                    </span>
+                                  )}
                                 </Button>
                               );
                             })}

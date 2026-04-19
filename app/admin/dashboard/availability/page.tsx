@@ -3,8 +3,9 @@
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { format } from "date-fns";
-import { Calendar as CalendarIcon, Clock, Plus, Trash2, ShieldAlert } from "lucide-react";
+import { Calendar as CalendarIcon, Clock, Plus, Trash2, ShieldAlert, PercentCircle, TrendingUp } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -14,16 +15,18 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
-import { availabilityService, type AvailabilitySettings, type BlockedSlot } from "@/lib/availability-service";
+import { availabilityService, type AvailabilitySettings, type BlockedSlot, type TimeSurcharge } from "@/lib/availability-service";
 
-const TIME_OPTIONS = Array.from({ length: 17 }, (_, i) => {
-  const hour = i + 6;
-  return `${hour.toString().padStart(2, "0")}:00`;
+const TIME_OPTIONS = Array.from({ length: 17 * 2 }, (_, i) => {
+  const hour = Math.floor(i / 2) + 6;
+  const isHalfHour = i % 2 !== 0;
+  return `${hour.toString().padStart(2, "0")}:${isHalfHour ? "30" : "00"}`;
 });
 
 export default function AvailabilityPage() {
   const [settings, setSettings] = useState<AvailabilitySettings>({ id: "default", start_time: "06:00", end_time: "20:00" });
   const [blockedSlots, setBlockedSlots] = useState<BlockedSlot[]>([]);
+  const [surcharges, setSurcharges] = useState<TimeSurcharge[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
 
@@ -33,6 +36,9 @@ export default function AvailabilityPage() {
   const [newBlockTime, setNewBlockTime] = useState<string>("all");
   const [newBlockReason, setNewBlockReason] = useState("");
 
+  const [newSurchargeTime, setNewSurchargeTime] = useState<string>(TIME_OPTIONS[0]);
+  const [newSurchargePercent, setNewSurchargePercent] = useState<string>("");
+
   useEffect(() => {
     fetchData();
   }, []);
@@ -40,12 +46,14 @@ export default function AvailabilityPage() {
   const fetchData = async () => {
     setIsLoading(true);
     try {
-      const [fetchedSettings, fetchedBlocked] = await Promise.all([
+      const [fetchedSettings, fetchedBlocked, fetchedSurcharges] = await Promise.all([
         availabilityService.getSettings(),
-        availabilityService.getBlockedSlots()
+        availabilityService.getBlockedSlots(),
+        availabilityService.getTimeSurcharges()
       ]);
       setSettings(fetchedSettings);
       setBlockedSlots(fetchedBlocked);
+      setSurcharges(fetchedSurcharges);
     } catch (e) {
       toast.error("Failed to load availability data");
     } finally {
@@ -101,6 +109,35 @@ export default function AvailabilityPage() {
     }
   };
 
+  const handleAddSurcharge = async () => {
+    const p = parseFloat(newSurchargePercent);
+    if (!newSurchargeTime || isNaN(p) || p <= 0) {
+       toast.error("Please provide a valid time and increasing percentage.");
+       return;
+    }
+    setIsSaving(true);
+    try {
+       await availabilityService.addTimeSurcharge(newSurchargeTime, p);
+       toast.success("Surcharge created!");
+       setNewSurchargePercent("");
+       await fetchData();
+    } catch (e: any) {
+       toast.error(e?.message?.includes("unique") ? "This time slot already has a surcharge." : "Failed to add surcharge.");
+    } finally {
+       setIsSaving(false);
+    }
+  };
+
+  const handleDeleteSurcharge = async (id: string) => {
+    try {
+      await availabilityService.deleteTimeSurcharge(id);
+      toast.success("Surcharge removed");
+      setSurcharges(s => s.filter(x => x.id !== id));
+    } catch (e) {
+      toast.error("Failed to remove surcharge");
+    }
+  };
+
   if (isLoading) {
     return <div className="p-8 text-center text-muted-foreground animate-pulse">Loading availability settings...</div>;
   }
@@ -150,8 +187,56 @@ export default function AvailabilityPage() {
           </CardContent>
         </Card>
 
+        {/* Golden Hour / Time Surcharges Panel */}
+        <Card className="lg:col-span-5 xl:col-span-4 shadow-sm border-border">
+          <CardHeader className="bg-amber-500/5 pb-5 border-b">
+            <CardTitle className="text-lg flex items-center gap-2">
+              <TrendingUp className="w-5 h-5 text-amber-500" /> Dynamic Pricing
+            </CardTitle>
+            <CardDescription className="pt-1">Add percentage markups to busy hours (e.g., Golden Hour). Base prices will be dynamically increased.</CardDescription>
+          </CardHeader>
+          <CardContent className="p-6 space-y-6">
+            <div className="flex gap-3 items-end">
+              <div className="space-y-2 flex-1">
+                <Label className="text-xs uppercase font-bold text-muted-foreground tracking-wider">Time</Label>
+                <Select value={newSurchargeTime} onValueChange={(val) => setNewSurchargeTime(val || "")}>
+                  <SelectTrigger className="font-bold h-11 bg-background">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent className="max-h-[250px]">
+                    {TIME_OPTIONS.map(t => <SelectItem key={t} value={t}>{t}</SelectItem>)}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2 flex-1 relative">
+                <Label className="text-xs uppercase font-bold text-muted-foreground tracking-wider">Markup +%</Label>
+                <Input placeholder="e.g. 20" type="number" min="1" max="100" className="pr-8 h-11 font-bold" value={newSurchargePercent} onChange={e => setNewSurchargePercent(e.target.value)} />
+                <PercentCircle className="w-4 h-4 absolute right-3 top-9 text-muted-foreground" />
+              </div>
+            </div>
+            <Button onClick={handleAddSurcharge} disabled={isSaving || !newSurchargePercent} className="w-full h-11 font-bold shadow-sm bg-amber-500 hover:bg-amber-600 text-white">
+              <Plus className="w-4 h-4 mr-2" /> Add Surcharge Rate
+            </Button>
+            
+            {surcharges.length > 0 && (
+              <div className="mt-4 border rounded-md divide-y">
+                {surcharges.map(s => (
+                  <div key={s.id} className="flex items-center justify-between p-3 bg-muted/20">
+                     <div className="flex items-center gap-3">
+                        <Badge variant="outline" className="font-bold border-amber-200 text-amber-600 bg-amber-50">{s.time}</Badge>
+                        <span className="text-sm font-bold text-emerald-600">+{s.surcharge_percentage}% Price</span>
+                     </div>
+                     <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive hover:bg-destructive/10" onClick={() => handleDeleteSurcharge(s.id)}>
+                        <Trash2 className="w-4 h-4" />
+                     </Button>
+                  </div>
+                ))}
+              </div>
+            )}
+          </CardContent>
+        </Card>
         {/* Blocks Table Panel */}
-        <Card className="lg:col-span-7 xl:col-span-8 shadow-sm border-border overflow-hidden">
+        <Card className="lg:col-span-7 xl:col-span-8 shadow-sm border-border overflow-hidden lg:row-span-2">
           <CardHeader className="bg-muted/20 pb-5 border-b flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
               <CardTitle className="text-lg">Blocked Dates & Slots</CardTitle>
@@ -189,7 +274,6 @@ export default function AvailabilityPage() {
                         <SelectContent className="max-h-[300px]">
                           <SelectItem value="all" className="font-bold text-rose-500">All Day (Fully Blocked)</SelectItem>
                           {TIME_OPTIONS.map(t => <SelectItem key={t} value={t}>{t}</SelectItem>)}
-                          {TIME_OPTIONS.map(t => <SelectItem key={t.replace("00", "30")} value={t.replace("00", "30")}>{t.replace("00", "30")}</SelectItem>)}
                         </SelectContent>
                       </Select>
                     </div>

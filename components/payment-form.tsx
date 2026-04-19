@@ -194,6 +194,7 @@ interface PaymentFormProps {
   bookingData: BookingFormData;
   isLoading: boolean;
   appliedPromo?: { code: string; percentage: number } | null;
+  computedSurchargePercentage: number;
 }
 
 export function PaymentForm({
@@ -203,6 +204,7 @@ export function PaymentForm({
   bookingData,
   isLoading,
   appliedPromo,
+  computedSurchargePercentage,
 }: PaymentFormProps) {
   const locale = useLocale();
   const t = useTranslations("checkout");
@@ -222,7 +224,10 @@ export function PaymentForm({
     appliedPromo,
     bookingData.bookingDate,
     locale,
-    (bookingData as any)?.isPerPerson ? bookingData.peopleCount : undefined
+    (bookingData as any)?.isPerPerson ? bookingData.peopleCount : undefined,
+    undefined,
+    undefined,
+    computedSurchargePercentage
   );
 
   const formatCardNumber = (value: string) => {

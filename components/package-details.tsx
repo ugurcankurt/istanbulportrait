@@ -24,19 +24,21 @@ import { PackageGallery } from "@/components/package-gallery";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { trackViewItem } from "@/lib/analytics";
-import { calculateDiscountedPrice, DEPOSIT_PERCENTAGE } from "@/lib/pricing";
+import { calculateDiscountedPrice, matchActiveSurcharge, DEPOSIT_PERCENTAGE } from "@/lib/pricing";
 import { extractPhotosCount } from "@/lib/features-parser";
 import type { PackageDB } from "@/lib/packages-service";
 import type { DiscountDB } from "@/lib/discount-service";
 import { PackageReviews } from "@/components/package-reviews";
 import type { GoogleReview, AggregateRating } from "@/types/reviews";
 import { cn } from "@/lib/utils";
+import type { TimeSurcharge } from "@/lib/availability-service";
 
 export interface PackageDetailsProps {
   packageData: PackageDB;
   aggregateRating: AggregateRating;
   reviews: GoogleReview[];
   activeDiscount: DiscountDB | null;
+  timeSurcharges: TimeSurcharge[];
 }
 
 const getDateFnsLocale = (locale: string) => {
@@ -53,7 +55,7 @@ const getDateFnsLocale = (locale: string) => {
   }
 };
 
-export function PackageDetails({ packageData, aggregateRating, reviews, activeDiscount }: PackageDetailsProps) {
+export function PackageDetails({ packageData, aggregateRating, reviews, activeDiscount, timeSurcharges }: PackageDetailsProps) {
   const t = useTranslations("packages");
   const tReviews = useTranslations("reviews");
   const tui = useTranslations("ui");
@@ -71,9 +73,13 @@ export function PackageDetails({ packageData, aggregateRating, reviews, activeDi
 
   if (!packageData) return null;
 
+  // Calculate surcharge if specific time is selected
+  const activeSurcharge = matchActiveSurcharge(selectedTime, timeSurcharges);
+  const surchargePercentage = activeSurcharge ? activeSurcharge.surcharge_percentage : 0;
+
   // Calculate pricing
   const basePrice = Number(packageData.price);
-  const pricing = calculateDiscountedPrice(basePrice, activeDiscount, null, selectedDate);
+  const pricing = calculateDiscountedPrice(basePrice * (1 + surchargePercentage / 100), activeDiscount, null, selectedDate);
 
   // Price to display (unit price, do not multiply by peopleCount for visual display)
   const displayPrice = pricing.price;
@@ -348,6 +354,7 @@ export function PackageDetails({ packageData, aggregateRating, reviews, activeDi
                 isPerPerson={packageData.is_per_person}
                 onCheckAvailability={() => setIsModalOpen(true)}
                 activeDiscount={activeDiscount}
+                timeSurcharges={timeSurcharges}
               />
             </div>
 
@@ -372,6 +379,7 @@ export function PackageDetails({ packageData, aggregateRating, reviews, activeDi
         packagePhotos={packageData.gallery_images?.length || 15}
         isPerPerson={packageData.is_per_person}
         activeDiscount={activeDiscount}
+        timeSurcharges={timeSurcharges}
       />
 
       {/* Existing Sticky Bottom Bar for Mobile (Hidden on Desktop) */}

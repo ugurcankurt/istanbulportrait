@@ -31,20 +31,14 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { trackLead, trackPackageAddToCart, saveUserDataForAdvancedMatching } from "@/lib/analytics";
-import { getPackagePricing } from "@/lib/pricing";
+import { trackLead, saveUserDataForAdvancedMatching } from "@/lib/analytics";
+import { getPackagePricing, matchActiveSurcharge } from "@/lib/pricing";
 import { cn } from "@/lib/utils";
-import type { BookingFormData, PackageId } from "@/lib/validations";
+import type { BookingFormData } from "@/lib/validations";
 import { createBookingSchema } from "@/lib/validations";
 import type { DiscountDB } from "@/lib/discount-service";
+import type { TimeSurcharge } from "@/lib/availability-service";
 
 import { useIsMobile } from "@/hooks/use-mobile";
 import {
@@ -73,6 +67,7 @@ interface BookingModalProps {
   packagePhotos: number | string;
   isPerPerson: boolean;
   activeDiscount: DiscountDB | null;
+  timeSurcharges?: TimeSurcharge[];
 }
 
 // Generate time slots from 6 AM to 6 PM
@@ -126,6 +121,7 @@ export function BookingModal({
   packagePhotos,
   isPerPerson,
   activeDiscount,
+  timeSurcharges = [],
 }: BookingModalProps) {
   const locale = useLocale();
   const router = useRouter();
@@ -221,6 +217,9 @@ export function BookingModal({
 
       // Use people count for packages with per-person pricing, undefined for others
       const count = isPerPerson ? peopleCount : undefined;
+      const tValue = form.getValues("bookingTime");
+      const activeSurcharge = matchActiveSurcharge(tValue, timeSurcharges);
+      const surchargePercentage = activeSurcharge ? activeSurcharge.surcharge_percentage : 0;
 
       const priceBreakdown = getPackagePricing(
         selectedPackage,
@@ -229,6 +228,9 @@ export function BookingModal({
         null,
         dateValue,
         count,
+        undefined,
+        undefined,
+        surchargePercentage
       );
 
       setPricing({
@@ -565,6 +567,7 @@ export function BookingModal({
                   onCheckAvailability={() => setStep("details")}
                   isFlat={true}
                   activeDiscount={activeDiscount}
+                  timeSurcharges={timeSurcharges}
                 />
               </div>
             ) : (

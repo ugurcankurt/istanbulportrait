@@ -3,6 +3,7 @@ import { Suspense } from "react";
 import { CheckoutForm } from "@/components/checkout-form";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getLocalizedPaths } from "@/lib/localized-url";
+import { availabilityService } from "@/lib/availability-service";
 
 export async function generateMetadata({
   params,
@@ -61,10 +62,11 @@ function CheckoutSkeleton() {
   );
 }
 
-export default function CheckoutPage() {
+export default async function CheckoutPage() {
+  const timeSurcharges = await availabilityService.getTimeSurcharges();
   return (
     <Suspense fallback={<CheckoutSkeleton />}>
-      <CheckoutForm />
+      <CheckoutForm timeSurcharges={timeSurcharges} />
     </Suspense>
   );
 }

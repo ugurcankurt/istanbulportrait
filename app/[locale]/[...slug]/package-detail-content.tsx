@@ -4,6 +4,7 @@ import { PackageDetails } from "@/components/package-details";
 import { packagesService } from "@/lib/packages-service";
 import { discountService } from "@/lib/discount-service";
 import { reviewsService } from "@/lib/reviews-service";
+import { availabilityService } from "@/lib/availability-service";
 import { SchemaInjector } from "@/components/schema-injector";
 import { buildProductSchema, generateSeoDescription } from "@/lib/seo-utils";
 
@@ -32,6 +33,7 @@ export async function PackageDetailPageContent({
   }
 
   const activeDiscount = await discountService.getActiveDiscount();
+  const timeSurcharges = await availabilityService.getTimeSurcharges();
 
 
 
@@ -66,6 +68,7 @@ export async function PackageDetailPageContent({
         aggregateRating={aggregateRating}
         reviews={reviews}
         activeDiscount={activeDiscount}
+        timeSurcharges={timeSurcharges}
       />
     </div>
   );

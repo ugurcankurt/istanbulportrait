@@ -23,6 +23,13 @@ export interface BlockedSlot {
   created_at: string;
 }
 
+export interface TimeSurcharge {
+  id: string;
+  time: string;
+  surcharge_percentage: number;
+  created_at: string;
+}
+
 export const availabilityService = {
   async getSettings(): Promise<AvailabilitySettings> {
     const supabase = getSupabaseClient();
@@ -76,6 +83,36 @@ export const availabilityService = {
     const supabase = getSupabaseClient();
     const { error } = await supabase
       .from("blocked_slots")
+      .delete()
+      .eq("id", id);
+
+    if (error) throw error;
+  },
+
+  async getTimeSurcharges(): Promise<TimeSurcharge[]> {
+    const supabase = getSupabaseClient();
+    const { data, error } = await supabase
+      .from("time_surcharges")
+      .select("*")
+      .order("time", { ascending: true });
+
+    if (error) throw error;
+    return data || [];
+  },
+
+  async addTimeSurcharge(time: string, percentage: number): Promise<void> {
+    const supabase = getSupabaseClient();
+    const { error } = await supabase
+      .from("time_surcharges")
+      .insert({ time, surcharge_percentage: percentage });
+
+    if (error) throw error;
+  },
+
+  async deleteTimeSurcharge(id: string): Promise<void> {
+    const supabase = getSupabaseClient();
+    const { error } = await supabase
+      .from("time_surcharges")
       .delete()
       .eq("id", id);
 

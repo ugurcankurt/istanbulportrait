@@ -46,6 +46,7 @@ import { getIyzicoErrorMessage } from "@/lib/iyzico-errors";
 import {
   formatPackagePricing,
   getPackagePricing,
+  matchActiveSurcharge,
 } from "@/lib/pricing";
 import { cn, formatCurrency } from "@/lib/utils";
 import type {
@@ -58,6 +59,7 @@ import {
   createPaymentSchema,
 } from "@/lib/validations";
 import Link from "next/link";
+import type { TimeSurcharge } from "@/lib/availability-service";
 
 // ─── Step Indicator ───────────────────────────────────────────────────────────
 
@@ -131,6 +133,7 @@ function Step1Summary({
   isLoadingPromo,
   handleApplyPromo,
   onNext,
+  timeSurcharges,
 }: {
   t: (k: string, v?: any) => string;
   tPricing: (k: string, v?: any) => string;
@@ -147,7 +150,11 @@ function Step1Summary({
   isLoadingPromo: boolean;
   handleApplyPromo: () => void;
   onNext: () => void;
+  timeSurcharges?: TimeSurcharge[];
 }) {
+  const activeSurcharge = matchActiveSurcharge(preFilledBookingData?.bookingTime, timeSurcharges);
+  const surchargePercentage = activeSurcharge ? activeSurcharge.surcharge_percentage : 0;
+
   const pricing = formatPackagePricing(
     selectedPackage,
     (preFilledBookingData as any)?.basePrice || preFilledBookingData?.totalAmount || 0,
@@ -155,7 +162,10 @@ function Step1Summary({
     appliedPromo,
     preFilledBookingData?.bookingDate,
     locale,
-    (preFilledBookingData as any)?.isPerPerson ? preFilledBookingData?.peopleCount : undefined
+    (preFilledBookingData as any)?.isPerPerson ? preFilledBookingData?.peopleCount : undefined,
+    undefined,
+    undefined,
+    surchargePercentage
   );
   return (
     <div className="flex flex-col h-full">
@@ -407,6 +417,7 @@ function PriceStrip({
   selectedPackage,
   preFilledBookingData,
   appliedPromo,
+  computedSurchargePercentage,
 }: {
   t: (k: string, v?: any) => string;
   tPricing: (k: string) => string;
@@ -414,6 +425,7 @@ function PriceStrip({
   selectedPackage: PackageId;
   preFilledBookingData: BookingFormData;
   appliedPromo: { code: string; percentage: number } | null;
+  computedSurchargePercentage: number;
 }) {
   const pricing = formatPackagePricing(
     selectedPackage,
@@ -422,7 +434,10 @@ function PriceStrip({
     appliedPromo,
     preFilledBookingData?.bookingDate,
     locale,
-    (preFilledBookingData as any)?.isPerPerson ? preFilledBookingData?.peopleCount : undefined
+    (preFilledBookingData as any)?.isPerPerson ? preFilledBookingData?.peopleCount : undefined,
+    undefined,
+    undefined,
+    computedSurchargePercentage
   );
   return (
     <div className="bg-primary/8 border border-primary/20 rounded-xl px-3 py-2.5">
@@ -453,7 +468,7 @@ function PriceStrip({
 
 // ─── Main CheckoutForm ────────────────────────────────────────────────────────
 
-export function CheckoutForm() {
+export function CheckoutForm({ timeSurcharges = [] }: { timeSurcharges?: TimeSurcharge[] }) {
   const searchParams = useSearchParams();
   const router = useRouter();
   const locale = useLocale();
@@ -467,6 +482,9 @@ export function CheckoutForm() {
   const [bookingId, setBookingId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [preFilledBookingData, setPreFilledBookingData] = useState<BookingFormData | null>(null);
+
+  const activeSurcharge = matchActiveSurcharge(preFilledBookingData?.bookingTime, timeSurcharges);
+  const computedSurchargePercentage = activeSurcharge ? activeSurcharge.surcharge_percentage : 0;
   const [showSuccess, setShowSuccess] = useState(false);
   // Promo code states
   const [promoCodeInput, setPromoCodeInput] = useState("");
@@ -492,6 +510,9 @@ export function CheckoutForm() {
       appliedPromo,
       preFilledBookingData?.bookingDate,
       (preFilledBookingData as any)?.isPerPerson ? preFilledBookingData?.peopleCount : undefined,
+      undefined,
+      undefined,
+      computedSurchargePercentage
     )
     : null;
 
@@ -654,7 +675,10 @@ export function CheckoutForm() {
       (preFilledBookingData as any)?.activeDiscount || null,
       appliedPromo,
       bookingData.bookingDate,
-      (preFilledBookingData as any)?.isPerPerson ? (preFilledBookingData as any)?.peopleCount : undefined
+      (preFilledBookingData as any)?.isPerPerson ? (preFilledBookingData as any)?.peopleCount : undefined,
+      undefined,
+      undefined,
+      computedSurchargePercentage
     );
 
     try {
@@ -782,7 +806,10 @@ export function CheckoutForm() {
       (preFilledBookingData as any)?.activeDiscount || null,
       appliedPromo,
       bookingData.bookingDate,
-      (preFilledBookingData as any)?.isPerPerson ? (preFilledBookingData as any)?.peopleCount : undefined
+      (preFilledBookingData as any)?.isPerPerson ? (preFilledBookingData as any)?.peopleCount : undefined,
+      undefined,
+      undefined,
+      computedSurchargePercentage
     );
 
     try {
@@ -830,7 +857,10 @@ export function CheckoutForm() {
       (preFilledBookingData as any)?.activeDiscount || null,
       appliedPromo,
       bookingData.bookingDate,
-      (preFilledBookingData as any)?.isPerPerson ? (preFilledBookingData as any)?.peopleCount : undefined
+      (preFilledBookingData as any)?.isPerPerson ? (preFilledBookingData as any)?.peopleCount : undefined,
+      undefined,
+      undefined,
+      computedSurchargePercentage
     );
 
     try {
@@ -967,6 +997,7 @@ export function CheckoutForm() {
               isLoadingPromo={isLoadingPromo}
               handleApplyPromo={handleApplyPromo}
               onNext={() => setCurrentStep(2)}
+              timeSurcharges={timeSurcharges}
             />
           )}
 
@@ -993,6 +1024,7 @@ export function CheckoutForm() {
                   selectedPackage={selectedPackage}
                   preFilledBookingData={preFilledBookingData}
                   appliedPromo={appliedPromo}
+                  computedSurchargePercentage={computedSurchargePercentage}
                 />
               )}
 
@@ -1007,6 +1039,7 @@ export function CheckoutForm() {
                       bookingData={preFilledBookingData}
                       isLoading={isLoading}
                       appliedPromo={appliedPromo}
+                      computedSurchargePercentage={computedSurchargePercentage}
                     />
                   </Form>
                 ) : paymentMethod === "turinvoice" ? (

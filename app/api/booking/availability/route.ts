@@ -32,8 +32,28 @@ export async function GET(request: Request) {
   const startHour = settingsData?.start_time ? parseInt(settingsData.start_time.split(":")[0]) : 6;
   const endHour = settingsData?.end_time ? parseInt(settingsData.end_time.split(":")[0]) : 20;
 
+  // Fetch all packages to get exact durations dynamically
+  const { data: allPackages } = await supabaseAdmin.from("packages").select("slug, duration");
+  
+  const dynamicDurations: Record<string, number> = { ...PACKAGE_DURATIONS };
+  
+  if (allPackages) {
+    for (const p of allPackages) {
+       const durStr = (p.duration?.en || "").toLowerCase();
+       let mins = 60;
+       if (durStr.includes("hour")) {
+         const h = parseFloat(durStr);
+         if (!isNaN(h)) mins = h * 60;
+       } else if (durStr.includes("min")) {
+         const m = parseInt(durStr);
+         if (!isNaN(m)) mins = m;
+       }
+       dynamicDurations[p.slug] = mins;
+    }
+  }
+
   // Find duration of the requested package
-  const requestedDuration = PACKAGE_DURATIONS[packageId] || 60;
+  const requestedDuration = dynamicDurations[packageId] || 60;
 
   // Drafts hold for 10 minutes -> created_at >= NOW() - 10 minutes
   const tenMinsAgo = new Date(Date.now() - 10 * 60 * 1000).toISOString();
@@ -108,7 +128,7 @@ export async function GET(request: Request) {
       if (!b.booking_time) continue;
 
       const existingStart = timeToMinutes(b.booking_time);
-      const existingDuration = PACKAGE_DURATIONS[b.package_id as string] || 60;
+      const existingDuration = dynamicDurations[b.package_id as string] || 60;
       const existingEnd = existingStart + existingDuration;
 
       // True Overlap Condition
