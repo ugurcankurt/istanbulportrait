@@ -31,7 +31,7 @@ export async function GET(request: Request) {
     // Fetch abandoned draft bookings
     const { data, error: fetchError } = await supabaseAdmin
       .from("bookings")
-      .select("*, packages(name)")
+      .select("*")
       // Drafts that haven't been completed
       .eq("status", "draft")
       // Not yet emailed
@@ -60,10 +60,7 @@ export async function GET(request: Request) {
       try {
         const locale = booking.locale || "en";
         // Attempt to parse multilingual package name
-        let packageName = "Photography Package";
-        if (booking.packages && typeof booking.packages.name === "object") {
-          packageName = booking.packages.name[locale] || booking.packages.name["en"] || packageName;
-        }
+        let packageName = `${booking.package_id.charAt(0).toUpperCase() + booking.package_id.slice(1)} Package`;
 
         // Send Email
         await sendAbandonedBookingEmail(
