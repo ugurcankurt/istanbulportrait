@@ -7,14 +7,14 @@ export async function GET() {
   try {
     // 1. Fetch the home-instagram page configuration from Supabase
     const pageData = await pagesContentService.getPageBySlug("home-instagram");
-    
+
     // 2. Extract the dynamically configured behold_url
     const beholdUrl = pageData?.content?.behold_url;
 
     if (!beholdUrl || typeof beholdUrl !== "string") {
       // Return graceful empty state if the Administrator hasn't configured a feed yet
       return NextResponse.json({
-        username: "360istanbul",
+        username: "istanbulportrait",
         biography: "Instagram Feed Not Configured",
         profilePictureUrl: "",
         website: "",

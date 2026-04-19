@@ -4,8 +4,11 @@ import { getBaseUrl } from "@/lib/seo-utils";
 
 export default function robots(): MetadataRoute.Robots {
   // Dynamically extract and block all localized checkout/payment pages
-  const checkoutDisallows = Object.values(routing.pathnames["/checkout"]).map(path => `/*${path}*`);
-  const printsCheckoutDisallows = Object.values((routing.pathnames as any)["/prints/checkout"]).map(path => `/*${path}*`);
+  const checkoutRoute = (routing.pathnames as any)["/checkout"];
+  const checkoutDisallows = checkoutRoute ? (typeof checkoutRoute === "string" ? [`/*${checkoutRoute}*`] : Object.values(checkoutRoute).map(path => `/*${path}*`)) : ["/*checkout*"];
+  
+  const printsRoute = (routing.pathnames as any)["/prints/checkout"];
+  const printsCheckoutDisallows = printsRoute ? (typeof printsRoute === "string" ? [`/*${printsRoute}*`] : Object.values(printsRoute).map(path => `/*${path}*`)) : ["/*prints/checkout*"];
 
   return {
     rules: {

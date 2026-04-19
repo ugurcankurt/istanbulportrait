@@ -60,18 +60,20 @@ export function Footer({ dynamicNavData = {}, settings }: FooterProps) {
           <div className="space-y-4">
             <div className="w-32 sm:w-40">
               <AspectRatio ratio={15 / 4}>
+                {mounted && ((resolvedTheme === "dark" ? settings?.logo_dark_url : settings?.logo_url) || settings?.logo_url) ? (
                 <Image
-                  src={
-                    mounted && resolvedTheme === "dark"
-                      ? settings?.logo_dark_url || "/360istanbul_white_logo.webp"
-                      : settings?.logo_url || "/360istanbul_dark_logo.webp"
-                  }
-                  alt="Professional Istanbul photographer - Top photographer in Istanbul"
+                  src={(resolvedTheme === "dark" ? settings?.logo_dark_url : settings?.logo_url) || settings?.logo_url!}
+                  alt={settings?.site_name || "Istanbul photographer"}
                   fill
                   sizes="(max-width: 640px) 128px, 160px"
-                  className="object-contain"
+                  className="object-contain object-left"
                   suppressHydrationWarning
                 />
+                ) : mounted ? (
+                  <div className="w-full h-full flex items-center">
+                    <span className="text-xl font-bold tracking-tight">{settings?.site_name || "Istanbul Portrait"}</span>
+                  </div>
+                ) : null}
               </AspectRatio>
             </div>
             <p className="text-muted-foreground text-sm">{t("description")}</p>

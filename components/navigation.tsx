@@ -98,22 +98,30 @@ export function Navigation({ dynamicNavData = {}, settings }: NavigationProps) {
       <div className="container mx-auto flex h-14 sm:h-16 items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Logo */}
         <Link href={`/${locale}`} className="relative flex items-center w-36 h-10 sm:w-48 sm:h-12 transition-transform hover:opacity-90">
-          <Image
-            src={settings?.logo_url || "/360istanbul_dark_logo.webp"}
-            alt="Photographer in Istanbul - Istanbul Photoshoot"
-            fill
-            sizes="(max-width: 640px) 144px, 192px"
-            className="object-contain object-left dark:hidden"
-            priority
-          />
-          <Image
-            src={settings?.logo_dark_url || "/360istanbul_white_logo.webp"}
-            alt="Photographer in Istanbul - Istanbul Photoshoot"
-            fill
-            sizes="(max-width: 640px) 144px, 192px"
-            className="object-contain object-left hidden dark:block"
-            priority
-          />
+          {settings?.logo_url ? (
+            <Image
+              src={settings.logo_url}
+              alt={settings?.site_name || "Istanbul Photographer"}
+              fill
+              sizes="(max-width: 640px) 144px, 192px"
+              className={cn("object-contain object-left", settings.logo_dark_url && "dark:hidden")}
+              priority
+            />
+          ) : (
+            <span className="text-xl font-bold dark:hidden tracking-tight">{settings?.site_name || "Istanbul Portrait"}</span>
+          )}
+          {settings?.logo_dark_url ? (
+            <Image
+              src={settings.logo_dark_url}
+              alt={settings?.site_name || "Istanbul Photographer"}
+              fill
+              sizes="(max-width: 640px) 144px, 192px"
+              className="object-contain object-left hidden dark:block"
+              priority
+            />
+          ) : !settings?.logo_url && (
+            <span className="text-xl font-bold hidden dark:block tracking-tight">{settings?.site_name || "Istanbul Portrait"}</span>
+          )}
         </Link>
 
         {/* Desktop Navigation */}
@@ -222,20 +230,28 @@ export function Navigation({ dynamicNavData = {}, settings }: NavigationProps) {
             <SheetContent side="right" className="w-80 p-0">
               <SheetHeader className="p-6 pb-4 bg-muted/30">
                 <div className="relative flex items-center justify-center w-32 h-10 mx-auto">
-                  <Image
-                    src={settings?.logo_url || "/360istanbul_dark_logo.webp"}
-                    alt="Best Istanbul photographer - Professional photography services"
-                    fill
-                    sizes="128px"
-                    className="object-contain dark:hidden"
-                  />
-                  <Image
-                    src={settings?.logo_dark_url || "/360istanbul_white_logo.webp"}
-                    alt="Best Istanbul photographer - Professional photography services"
-                    fill
-                    sizes="128px"
-                    className="object-contain hidden dark:block"
-                  />
+                  {settings?.logo_url ? (
+                    <Image
+                      src={settings.logo_url}
+                      alt={settings?.site_name || "Istanbul Photographer"}
+                      fill
+                      sizes="128px"
+                      className={cn("object-contain", settings.logo_dark_url && "dark:hidden")}
+                    />
+                  ) : (
+                    <span className="text-lg font-bold dark:hidden tracking-tight">{settings?.site_name || "Istanbul Portrait"}</span>
+                  )}
+                  {settings?.logo_dark_url ? (
+                    <Image
+                      src={settings.logo_dark_url}
+                      alt={settings?.site_name || "Istanbul Photographer"}
+                      fill
+                      sizes="128px"
+                      className="object-contain hidden dark:block"
+                    />
+                  ) : !settings?.logo_url && (
+                    <span className="text-lg font-bold hidden dark:block tracking-tight">{settings?.site_name || "Istanbul Portrait"}</span>
+                  )}
                   <SheetTitle className="sr-only">
                     Istanbul Photographer
                   </SheetTitle>

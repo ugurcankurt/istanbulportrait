@@ -181,8 +181,7 @@ export function AdminLayoutClient({ children, settings }: AdminLayoutClientProps
               >
                 <Image
                   src={
-                    settings?.logo_url ||
-                    "/360istanbul_dark_logo.webp"
+                    settings?.logo_url
                   }
                   alt={settings?.site_name || "Istanbul Photographer"}
                   fill

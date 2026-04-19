@@ -62,14 +62,20 @@ export function NotFoundContent({
           <div className="mb-6 sm:mb-8 md:mb-10">
             <Link href={`/${locale}`} className="inline-block group">
               <div className="relative transition-transform duration-300 group-hover:scale-105">
-                <Image
-                  src={settings?.logo_dark_url || "/360istanbul_white_logo.webp"}
-                  alt="Istanbul Photographer Logo"
-                  width={200}
-                  height={56}
-                  className="h-6 sm:h-8 md:h-10 lg:h-12 xl:h-14 w-auto mx-auto drop-shadow-lg"
-                  priority
-                />
+                {settings?.logo_dark_url || settings?.logo_url ? (
+                  <Image
+                    src={settings.logo_dark_url || settings.logo_url!}
+                    alt={settings.site_name || "Istanbul Photographer Logo"}
+                    width={200}
+                    height={56}
+                    className="h-6 sm:h-8 md:h-10 lg:h-12 xl:h-14 w-auto mx-auto drop-shadow-lg"
+                    priority
+                  />
+                ) : (
+                  <span className="text-3xl md:text-5xl font-bold text-white drop-shadow-lg tracking-wider">
+                    {settings?.site_name || "Istanbul Portrait"}
+                  </span>
+                )}
               </div>
             </Link>
           </div>

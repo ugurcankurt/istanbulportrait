@@ -26,22 +26,19 @@ export function BlogAuthor({ author, siteSettings }: BlogAuthorProps) {
     setMounted(true);
   }, []);
 
-  // Fallback to static data if no author is provided (E-E-A-T safety)
-  const name = author?.name || t("name");
-  const bio = author?.bio?.[locale] || author?.bio?.en || t("bio");
+  const name = author?.name || siteSettings?.founder_name || t("name");
+  const bio = author?.bio?.[locale] || author?.bio?.en || siteSettings?.site_description?.[locale] || siteSettings?.site_description?.en || t("bio");
   const role = author?.role?.[locale] || author?.role?.en || "";
-  const avatarUrl = author?.avatar_url;
+  const avatarUrl = author?.avatar_url || siteSettings?.founder_image_url;
 
-  // Prefer dynamic global site settings over hardcoded fallbacks
-  const fallbackLightLogo = siteSettings?.logo_url || "/360istanbul_dark_logo.webp";
-  const fallbackDarkLogo = siteSettings?.logo_dark_url || "/360istanbul_white_logo.webp";
+  const fallbackLogo = (mounted && resolvedTheme === "dark" ? siteSettings?.logo_dark_url : siteSettings?.logo_url) || siteSettings?.logo_url;
 
   const socialLinks = {
     ...author?.social_links,
-    instagram: author?.social_links?.instagram || siteSettings?.instagram_url || "https://instagram.com",
+    instagram: author?.social_links?.instagram || siteSettings?.instagram_url,
     twitter: author?.social_links?.twitter,
     linkedin: author?.social_links?.linkedin,
-    website: author?.social_links?.website,
+    website: author?.social_links?.website || siteSettings?.app_base_url,
   };
 
   return (
@@ -57,19 +54,19 @@ export function BlogAuthor({ author, siteSettings }: BlogAuthorProps) {
                 sizes="(max-width: 768px) 96px, 128px"
                 className="object-cover"
               />
-            ) : (
+            ) : fallbackLogo ? (
               <Image
-                src={
-                  mounted && resolvedTheme === "dark"
-                    ? fallbackDarkLogo
-                    : fallbackLightLogo
-                }
+                src={fallbackLogo}
                 alt={name}
                 fill
                 sizes="(max-width: 768px) 96px, 128px"
                 className="object-contain p-4"
                 suppressHydrationWarning
               />
+            ) : (
+                <div className="w-full h-full flex flex-col items-center justify-center p-4">
+                  <span className="text-3xl font-bold uppercase text-muted-foreground">{name.charAt(0)}</span>
+                </div>
             )}
           </div>
         </div>
