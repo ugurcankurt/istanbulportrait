@@ -115,9 +115,10 @@ export function buildLocalBusinessSchema(
   priceRange?: string, 
   reviews?: any[],
   aggregateRatingValue?: number,
-  reviewCount?: number
+  reviewCount?: number,
+  coverImage?: string
 ) {
-  const imageUrl = optimizeSeoImage(settings.logo_url || settings.default_og_image_url, 1200);
+  const imageUrl = optimizeSeoImage(coverImage || settings.logo_url || settings.default_og_image_url, 1200);
 
   const schema: any = {
     "@context": "https://schema.org",

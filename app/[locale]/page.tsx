@@ -44,7 +44,7 @@ export async function generateMetadata({
   const title = generateSeoTitle(seoSource?.title?.[locale] || seoSource?.title?.en, locale, settings.site_name || "");
   const rawDesc = seoSource?.subtitle?.[locale] || seoSource?.subtitle?.en || "";
   const desc = generateSeoDescription(rawDesc) || "";
-  const ogImage = heroPage?.cover_image || settings.default_og_image_url || "";
+  const ogImage = seoSource?.cover_image || heroPage?.cover_image || homePage?.cover_image || settings.default_og_image_url || "";
 
   const { routing } = await import("@/i18n/routing");
   const { getBaseUrl } = await import("@/lib/seo-utils");
@@ -180,7 +180,7 @@ export default async function HomePage({
           "query-input": "required name=search_term_string"
         }
       }} />
-      <SchemaInjector schema={buildLocalBusinessSchema(settings, priceRangeStr, reviews?.reviews, aggregateRating?.average, aggregateRating?.count)} />
+      <SchemaInjector schema={buildLocalBusinessSchema(settings, priceRangeStr, reviews?.reviews, aggregateRating?.average, aggregateRating?.count, getDynamicImage("home-hero", undefined) || getDynamicImage("home", undefined))} />
       {dynamicFaqs && dynamicFaqs.length > 0 && (
         <SchemaInjector schema={buildFAQSchema(dynamicFaqs)} />
       )}
