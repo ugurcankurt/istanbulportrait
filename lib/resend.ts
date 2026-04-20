@@ -513,3 +513,74 @@ export const sendNewsletterWelcomeEmail = async (
     console.error("Error sending newsletter welcome email:", error);
   }
 };
+
+// ─── LEAD NOTIFICATION ────────────────────────────────────────
+
+export interface LeadNotificationData {
+  source: string;
+  campaignId?: string;
+  formId?: string;
+  fields: Record<string, string>;
+}
+
+export const sendAdminLeadNotification = async (
+  data: LeadNotificationData,
+  settings: SiteSettings,
+) => {
+  try {
+    const apiKey = settings.resend_api_key || process.env.RESEND_API_KEY || "demo-resend-key";
+    if (!apiKey || apiKey === "demo-resend-key") return;
+    if (!settings.contact_email) return;
+
+    const resend = new Resend(apiKey);
+    const colors = getEmailColors(settings);
+    const detailsBg = settings.color_mode === "dark" ? "#1e1e24" : "#fafafa";
+
+    const fieldsRows = Object.entries(data.fields)
+      .map(([key, value]) => `
+        <tr>
+          <td style="padding: 10px 0; border-bottom: 1px solid ${colors.border}; color: ${colors.textMuted}; font-size: 14px; word-break: break-all; max-width: 150px;"><strong>${key}:</strong></td>
+          <td style="padding: 10px 0; border-bottom: 1px solid ${colors.border}; text-align: right; color: ${colors.text}; font-weight: 500;">${value}</td>
+        </tr>
+      `)
+      .join("");
+
+    const content = `
+      <h2 style="color: ${colors.text}; margin-top: 0; font-size: 24px;">New Lead Received! 📈</h2>
+      <p style="font-size: 16px; line-height: 1.6; color: ${colors.textMuted};">You have just received an automatic lead submission from <strong>${data.source}</strong>.</p>
+
+      <div style="border: 1px solid ${colors.border}; padding: 25px; border-radius: 12px; margin: 30px 0; background-color: ${detailsBg};">
+        <h3 style="color: ${colors.primary}; margin-top: 0; font-size: 18px; text-transform: uppercase;">Lead Details</h3>
+        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+          ${data.campaignId ? `
+          <tr>
+            <td style="padding: 10px 0; border-bottom: 1px solid ${colors.border}; color: ${colors.textMuted}; font-size: 14px;"><strong>Campaign ID:</strong></td>
+            <td style="padding: 10px 0; border-bottom: 1px solid ${colors.border}; text-align: right; color: ${colors.warning}; font-weight: bold;">${data.campaignId}</td>
+          </tr>` : ""}
+          ${data.formId ? `
+          <tr>
+            <td style="padding: 10px 0; border-bottom: 1px solid ${colors.border}; color: ${colors.textMuted}; font-size: 14px;"><strong>Form ID:</strong></td>
+            <td style="padding: 10px 0; border-bottom: 1px solid ${colors.border}; text-align: right; color: ${colors.primary}; font-weight: bold;">${data.formId}</td>
+          </tr>` : ""}
+          ${fieldsRows}
+        </table>
+      </div>
+      
+      <p style="color: ${colors.textMuted}; font-size: 14px; text-align: center;">You can view more details in your database.</p>
+    `;
+
+    // Only sending to admin_email. Falling back to contact_email.
+    const recipient = settings.admin_email || settings.contact_email;
+    const fromDomainEmail = `System <${settings.contact_email}>`;
+    
+    await resend.emails.send({
+      from: fromDomainEmail,
+      to: [recipient],
+      subject: `🟢 NEW LEAD: ${data.source}`,
+      html: renderEmailLayout(content, "New Lead Notification", "en", settings),
+    });
+  } catch (error) {
+    console.error("Error sending lead admin notification email:", error);
+  }
+};
+
