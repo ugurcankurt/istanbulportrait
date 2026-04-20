@@ -7,6 +7,14 @@ import { useConsent } from "@/contexts/consent-context";
 import { getUserDataForAdvancedMatching } from "@/lib/analytics";
 import { hashCustomerData, hashPhoneNumber } from "@/lib/facebook";
 
+// Extend Window interface locally for global flags
+declare global {
+  interface Window {
+    _fbqInitialized?: boolean;
+    _fbqAdvancedMatchingSent?: boolean;
+  }
+}
+
 export function FacebookPixel({ pixelId }: { pixelId?: string | null }) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -37,7 +45,7 @@ export function FacebookPixel({ pixelId }: { pixelId?: string | null }) {
       const userData = getUserDataForAdvancedMatching();
       let hashed: Record<string, string> = {};
 
-      if (userData && !advancedMatchingSentRef.current) {
+      if (userData && !advancedMatchingSentRef.current && !window._fbqAdvancedMatchingSent) {
         if (userData.email) hashed.em = await hashCustomerData(userData.email);
         if (userData.phone) hashed.ph = await hashPhoneNumber(userData.phone);
         if (userData.firstName) hashed.fn = await hashCustomerData(userData.firstName);
@@ -48,13 +56,16 @@ export function FacebookPixel({ pixelId }: { pixelId?: string | null }) {
           window.fbq("init", pixelId, hashed);
           advancedMatchingSentRef.current = true;
           hasInitialized.current = true;
+          window._fbqAdvancedMatchingSent = true;
+          window._fbqInitialized = true;
         }
       }
 
       // Initialize normally if advanced matching wasn't applied
-      if (!hasInitialized.current) {
+      if (!hasInitialized.current && !window._fbqInitialized) {
         window.fbq("init", pixelId);
         hasInitialized.current = true;
+        window._fbqInitialized = true;
       }
 
       window.fbq("track", "PageView");
