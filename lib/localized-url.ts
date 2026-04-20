@@ -203,54 +203,7 @@ export async function getLocationLocalizedPaths(
   };
 }
 
-/**
- * Generate localized URL paths for print product pages with dynamic slug
- */
-export function getPrintLocalizedPaths(
-  slug: string,
-  baseUrl = "https://istanbulportrait.com",
-): {
-  canonical: (locale: string) => string;
-  languages: Record<string, string>;
-} {
-  const printsPathConfig = routing.pathnames["/prints/[slug]"];
 
-  // Build language alternates for prints with x-default
-  const languages: Record<string, string> = {};
-  routing.locales.forEach((l: string) => {
-    let localizedPrintsPath = `/prints/${slug}`;
-    if (
-      typeof printsPathConfig === "object" &&
-      printsPathConfig !== null &&
-      l in printsPathConfig
-    ) {
-      localizedPrintsPath = (printsPathConfig as Record<string, string>)[
-        l
-      ].replace("[slug]", slug);
-    }
-    languages[l] = `${baseUrl}/${l}${localizedPrintsPath}`;
-  });
-
-  // Add x-default pointing to English version
-  languages["x-default"] = languages["en"];
-
-  return {
-    canonical: (locale: string) => {
-      let localizedPrintsPath = `/prints/${slug}`;
-      if (
-        typeof printsPathConfig === "object" &&
-        printsPathConfig !== null &&
-        locale in printsPathConfig
-      ) {
-        localizedPrintsPath = (printsPathConfig as Record<string, string>)[
-          locale
-        ].replace("[slug]", slug);
-      }
-      return `${baseUrl}/${locale}${localizedPrintsPath}`;
-    },
-    languages,
-  };
-}
 
 /**
  * Get Open Graph URL for current locale

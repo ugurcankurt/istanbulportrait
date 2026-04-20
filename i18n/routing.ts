@@ -18,8 +18,6 @@ export const routing = defineRouting({
     "/packages/[slug]": "/packages/[slug]",
     "/locations": "/locations",
     "/locations/[slug]": "/locations/[slug]",
-    "/prints": "/prints",
-    "/prints/[slug]": "/prints/[slug]",
     "/about": "/about",
     "/privacy": "/privacy",
     "/contact": "/contact",
