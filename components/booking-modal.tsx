@@ -535,7 +535,7 @@ export function BookingModal({
                 {step === "details" ? t("booking_details") : t("form.date_time")}
               </SheetTitle>
             </div>
-            <SheetDescription className="text-muted-foreground mr-10">
+            <SheetDescription className="hidden">
               {step === "details"
                 ? t("modal_description")
                 : t("form.select_booking_details")}{" "}
@@ -624,7 +624,7 @@ export function BookingModal({
           <DialogTitle className="text-xl sm:text-2xl font-bold">
             {t("booking_details")}
           </DialogTitle>
-          <DialogDescription className="text-muted-foreground">
+          <DialogDescription className="hidden">
             {t("modal_description")}{" "}
             <span className="font-semibold text-foreground">
               {packageInfo.name}
