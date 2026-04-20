@@ -144,7 +144,7 @@ export function trackPurchase(
     }
 
     // Google Ads Direct Conversion (AW-1007335227)
-    const adsId = (window as any).__ADS_ID || process.env.NEXT_PUBLIC_GOOGLE_ADS_ID;
+    const adsId = (window as any).__ADS_ID || process.env.NEXT_PUBLIC_GOOGLE_ADS_ID || "AW-1007335227";
     if (adsId && typeof window !== "undefined" && window.gtag) {
       window.gtag("event", "conversion", {
         send_to: `${adsId}/LZkiCJ36iZ8cELvuquAD`, // Specific purchase label from Ads panel
@@ -460,7 +460,7 @@ export function trackLead(
     }
 
     // Direct Google Ads Lead Conversion
-    const adsId = (window as any).__ADS_ID || process.env.NEXT_PUBLIC_GOOGLE_ADS_ID;
+    const adsId = (window as any).__ADS_ID || process.env.NEXT_PUBLIC_GOOGLE_ADS_ID || "AW-1007335227";
     if (adsId) {
       window.gtag("event", "conversion", {
         send_to: `${adsId}/RhizCN2v8p4cELvuquAD`, // Specific lead label from Ads panel

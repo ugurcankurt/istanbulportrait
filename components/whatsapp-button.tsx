@@ -207,7 +207,7 @@ export function WhatsAppButton({
               });
 
               // Google Ads Direct Conversion for 2026
-              const adsId = (window as any).__ADS_ID;
+              const adsId = (window as any).__ADS_ID || "AW-1007335227";
               if (adsId) {
                 window.gtag("event", "conversion", {
                   send_to: `${adsId}/RhizCN2v8p4cELvuquAD`, // WhatsApp specific lead label
