@@ -71,6 +71,7 @@ export interface SiteSettings {
   behold_url: string | null;
   prodigi_api_key: string | null;
   prodigi_api_url: string | null;
+  google_ads_id: string | null;
   google_ads_webhook_key: string | null;
   featurable_widget_id: string | null;
 }
@@ -137,6 +138,7 @@ export const defaultSettings: SiteSettings = {
   behold_url: null,
   prodigi_api_key: null,
   prodigi_api_url: null,
+  google_ads_id: null,
   google_ads_webhook_key: null,
   featurable_widget_id: null,
   resend_audience_id: null,
@@ -229,6 +231,7 @@ export const settingsService = {
         behold_url: rawData.behold_url || defaultSettings.behold_url,
         prodigi_api_key: rawData.prodigi_api_key || defaultSettings.prodigi_api_key,
         prodigi_api_url: rawData.prodigi_api_url || defaultSettings.prodigi_api_url,
+        google_ads_id: rawData.google_ads_id || defaultSettings.google_ads_id,
         google_ads_webhook_key: rawData.google_ads_webhook_key || defaultSettings.google_ads_webhook_key,
         featurable_widget_id: rawData.featurable_widget_id || defaultSettings.featurable_widget_id,
       };

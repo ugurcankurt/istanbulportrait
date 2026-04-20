@@ -178,7 +178,7 @@ export default async function LocaleLayout({
                     {/* Non-critical Analytics — deferred until first interaction to minimize main-thread work */}
                     <InteractionLoader>
                       <FacebookPixel pixelId={settings.facebook_pixel_id} />
-                      <DeferredAnalytics gaId={settings.google_analytics_id} adsId={settings.google_ads_webhook_key} clarityId={settings.clarity_project_id} />
+                      <DeferredAnalytics gaId={settings.google_analytics_id} adsId={settings.google_ads_id} clarityId={settings.clarity_project_id} />
                       <ConsentGate consent="accepted_all">
                         <YandexMetrica id={settings.yandex_metrica_id || undefined} />
                       </ConsentGate>
