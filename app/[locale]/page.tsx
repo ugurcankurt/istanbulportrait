@@ -180,7 +180,7 @@ export default async function HomePage({
           "query-input": "required name=search_term_string"
         }
       }} />
-      <SchemaInjector schema={buildLocalBusinessSchema(settings, priceRangeStr, reviews?.reviews)} />
+      <SchemaInjector schema={buildLocalBusinessSchema(settings, priceRangeStr, reviews?.reviews, aggregateRating?.average, aggregateRating?.count)} />
       {dynamicFaqs && dynamicFaqs.length > 0 && (
         <SchemaInjector schema={buildFAQSchema(dynamicFaqs)} />
       )}

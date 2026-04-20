@@ -110,7 +110,13 @@ export function constructOpenGraph(
 // SCHEMA.ORG (JSON-LD) GENERATORS
 // ----------------------------------------------------
 
-export function buildLocalBusinessSchema(settings: SiteSettings, priceRange?: string, reviews?: any[]) {
+export function buildLocalBusinessSchema(
+  settings: SiteSettings, 
+  priceRange?: string, 
+  reviews?: any[],
+  aggregateRatingValue?: number,
+  reviewCount?: number
+) {
   const imageUrl = optimizeSeoImage(settings.logo_url || settings.default_og_image_url, 1200);
 
   const schema: any = {
@@ -118,12 +124,12 @@ export function buildLocalBusinessSchema(settings: SiteSettings, priceRange?: st
     "@type": "LocalBusiness",
     name: settings.organization_name || settings.site_name,
     image: imageUrl ? {
-        "@type": "ImageObject",
-        url: imageUrl,
-        width: 1200,
-        height: 630,
-        copyrightNotice: "IstanbulPortrait 2026",
-        creator: { "@type": "Organization", name: "Istanbul Portrait" }
+      "@type": "ImageObject",
+      url: imageUrl,
+      width: 1200,
+      height: 630,
+      copyrightNotice: "IstanbulPortrait 2026",
+      creator: { "@type": "Organization", name: "Istanbul Portrait" }
     } : undefined,
     "@id": getBaseUrl(),
     url: getBaseUrl(),
@@ -161,6 +167,16 @@ export function buildLocalBusinessSchema(settings: SiteSettings, priceRange?: st
       settings.tiktok_url,
     ].filter(Boolean),
   };
+
+  if (aggregateRatingValue && aggregateRatingValue > 0 && reviewCount && reviewCount > 0) {
+    schema.aggregateRating = {
+      "@type": "AggregateRating",
+      ratingValue: aggregateRatingValue.toString(),
+      reviewCount: reviewCount.toString(),
+      bestRating: "5",
+      worstRating: "1",
+    };
+  }
 
   if (reviews && reviews.length > 0) {
     schema.review = reviews.slice(0, 5).map((r: any) => ({
@@ -238,12 +254,9 @@ export function buildServiceSchema({
   image,
   price,
   currency = "EUR",
-  aggregateRating,
-  reviewCount,
   providerName,
   providerUrl,
-  discount,
-  reviews,
+  discount
 }: {
   name: string;
   description: string;
@@ -257,8 +270,8 @@ export function buildServiceSchema({
   discount?: { discount_percentage: number; end_date?: string } | null;
   reviews?: any[];
 }) {
-  const finalPrice = discount && discount.discount_percentage > 0 
-    ? price - (price * discount.discount_percentage / 100) 
+  const finalPrice = discount && discount.discount_percentage > 0
+    ? price - (price * discount.discount_percentage / 100)
     : price;
 
   const schema: any = {
@@ -290,7 +303,7 @@ export function buildServiceSchema({
 
   if (discount && discount.discount_percentage > 0) {
     const specs: any[] = [];
-    
+
     // Add original price as StrikethroughPrice
     specs.push({
       "@type": "UnitPriceSpecification",
@@ -304,35 +317,6 @@ export function buildServiceSchema({
     }
 
     schema.offers.priceSpecification = specs;
-  }
-
-  // Only add AggregateRating if we have real data (Prevents schema validation errors)
-  if (aggregateRating && aggregateRating > 0 && reviewCount && reviewCount > 0) {
-    schema.aggregateRating = {
-      "@type": "AggregateRating",
-      ratingValue: aggregateRating.toString(),
-      reviewCount: reviewCount.toString(),
-      bestRating: "5",
-      worstRating: "1",
-    };
-  }
-
-  if (reviews && (reviews as any[]).length > 0) {
-    schema.review = (reviews as any[]).slice(0, 5).map((r: any) => ({
-      "@type": "Review",
-      "author": {
-        "@type": "Person",
-        "name": r.author?.name || "Customer"
-      },
-      "datePublished": r.date ? r.date.split("T")[0] : undefined,
-      "reviewBody": r.text,
-      "reviewRating": {
-        "@type": "Rating",
-        "bestRating": "5",
-        "ratingValue": r.rating?.toString() || "5",
-        "worstRating": "1"
-      }
-    }));
   }
 
   return schema;

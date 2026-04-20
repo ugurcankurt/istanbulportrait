@@ -119,7 +119,7 @@ export async function BlogDetailPageContent({
             <div className="grid md:grid-cols-2 gap-6">
               {post.categories && post.categories.length > 0 && (
                 <div>
-                  <h3 className="text-sm font-semibold mb-3">Categories</h3>
+                  <h2 className="text-sm font-semibold mb-3">Categories</h2>
                   <div className="flex flex-wrap gap-2">
                     {post.categories.map((cat) => (
                       <span
@@ -142,7 +142,7 @@ export async function BlogDetailPageContent({
 
               {post.tags && post.tags.length > 0 && (
                 <div>
-                  <h3 className="text-sm font-semibold mb-3">Tags</h3>
+                  <h2 className="text-sm font-semibold mb-3">Tags</h2>
                   <div className="flex flex-wrap gap-2">
                     {post.tags.map((tag) => (
                       <span

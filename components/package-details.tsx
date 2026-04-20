@@ -262,9 +262,9 @@ export function PackageDetails({ packageData, aggregateRating, reviews, activeDi
                     </Badge>
                   )}
                 </div>
-                <h1 className="text-3xl font-extrabold tracking-tight text-foreground">
+                <div className="text-3xl font-extrabold tracking-tight text-foreground">
                   {packageName}
-                </h1>
+                </div>
                 <div className="flex items-center gap-3">
                   <div className="flex items-center gap-0.5">
                     {[...Array(5)].map((_, i) => (
