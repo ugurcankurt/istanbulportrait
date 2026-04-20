@@ -110,10 +110,10 @@ export function constructOpenGraph(
 // SCHEMA.ORG (JSON-LD) GENERATORS
 // ----------------------------------------------------
 
-export function buildLocalBusinessSchema(settings: SiteSettings) {
+export function buildLocalBusinessSchema(settings: SiteSettings, priceRange?: string, reviews?: any[]) {
   const imageUrl = optimizeSeoImage(settings.logo_url || settings.default_og_image_url, 1200);
 
-  return {
+  const schema: any = {
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
     name: settings.organization_name || settings.site_name,
@@ -122,10 +122,13 @@ export function buildLocalBusinessSchema(settings: SiteSettings) {
         url: imageUrl,
         width: 1200,
         height: 630,
+        copyrightNotice: "IstanbulPortrait 2026",
+        creator: { "@type": "Organization", name: "Istanbul Portrait" }
     } : undefined,
     "@id": getBaseUrl(),
     url: getBaseUrl(),
     telephone: settings.contact_phone || settings.whatsapp_number,
+    priceRange: priceRange || undefined,
     address: {
       "@type": "PostalAddress",
       addressLocality: settings.city || "",
@@ -158,6 +161,26 @@ export function buildLocalBusinessSchema(settings: SiteSettings) {
       settings.tiktok_url,
     ].filter(Boolean),
   };
+
+  if (reviews && reviews.length > 0) {
+    schema.review = reviews.slice(0, 5).map((r: any) => ({
+      "@type": "Review",
+      "author": {
+        "@type": "Person",
+        "name": r.author?.name || "Customer"
+      },
+      "datePublished": r.date ? r.date.split("T")[0] : undefined,
+      "reviewBody": r.text,
+      "reviewRating": {
+        "@type": "Rating",
+        "bestRating": "5",
+        "ratingValue": r.rating?.toString() || "5",
+        "worstRating": "1"
+      }
+    }));
+  }
+
+  return schema;
 }
 
 export function buildOrganizationSchema(settings: SiteSettings) {
@@ -209,7 +232,7 @@ export function buildOrganizationSchema(settings: SiteSettings) {
   };
 }
 
-export function buildProductSchema({
+export function buildServiceSchema({
   name,
   description,
   image,
@@ -217,6 +240,10 @@ export function buildProductSchema({
   currency = "EUR",
   aggregateRating,
   reviewCount,
+  providerName,
+  providerUrl,
+  discount,
+  reviews,
 }: {
   name: string;
   description: string;
@@ -225,26 +252,59 @@ export function buildProductSchema({
   currency?: string;
   aggregateRating?: number;
   reviewCount?: number;
+  providerName?: string | null;
+  providerUrl?: string;
+  discount?: { discount_percentage: number; end_date?: string } | null;
+  reviews?: any[];
 }) {
+  const finalPrice = discount && discount.discount_percentage > 0 
+    ? price - (price * discount.discount_percentage / 100) 
+    : price;
+
   const schema: any = {
     "@context": "https://schema.org/",
-    "@type": "Product",
+    "@type": "Service",
     name,
     image: image ? {
       "@type": "ImageObject",
       url: optimizeSeoImage(image, 1200),
       width: 1200,
       height: 630,
+      copyrightNotice: "IstanbulPortrait 2026",
+      creator: { "@type": "Organization", name: "Istanbul Portrait" }
     } : undefined,
     description,
+    provider: providerName ? {
+      "@type": "LocalBusiness",
+      name: providerName,
+      ...(providerUrl ? { url: providerUrl } : {})
+    } : undefined,
     offers: {
       "@type": "Offer",
-      url: getBaseUrl(),
+      url: providerUrl || getBaseUrl(),
       priceCurrency: currency,
-      price: price,
+      price: finalPrice,
       availability: "https://schema.org/InStock",
     },
   };
+
+  if (discount && discount.discount_percentage > 0) {
+    const specs: any[] = [];
+    
+    // Add original price as StrikethroughPrice
+    specs.push({
+      "@type": "UnitPriceSpecification",
+      priceType: "https://schema.org/StrikethroughPrice",
+      price: price,
+      priceCurrency: currency
+    });
+
+    if (discount.end_date) {
+      schema.offers.priceValidUntil = discount.end_date.split("T")[0]; // YYYY-MM-DD
+    }
+
+    schema.offers.priceSpecification = specs;
+  }
 
   // Only add AggregateRating if we have real data (Prevents schema validation errors)
   if (aggregateRating && aggregateRating > 0 && reviewCount && reviewCount > 0) {
@@ -255,6 +315,24 @@ export function buildProductSchema({
       bestRating: "5",
       worstRating: "1",
     };
+  }
+
+  if (reviews && (reviews as any[]).length > 0) {
+    schema.review = (reviews as any[]).slice(0, 5).map((r: any) => ({
+      "@type": "Review",
+      "author": {
+        "@type": "Person",
+        "name": r.author?.name || "Customer"
+      },
+      "datePublished": r.date ? r.date.split("T")[0] : undefined,
+      "reviewBody": r.text,
+      "reviewRating": {
+        "@type": "Rating",
+        "bestRating": "5",
+        "ratingValue": r.rating?.toString() || "5",
+        "worstRating": "1"
+      }
+    }));
   }
 
   return schema;
@@ -270,6 +348,7 @@ export function buildArticleSchema({
   authorUrls,
   publisherName,
   publisherLogo,
+  inLanguage,
 }: {
   title: string;
   description: string;
@@ -280,16 +359,20 @@ export function buildArticleSchema({
   authorUrls?: string[];
   publisherName?: string;
   publisherLogo?: string;
+  inLanguage?: string;
 }) {
   return {
     "@context": "https://schema.org",
     "@type": "Article",
     headline: title,
+    inLanguage: inLanguage,
     image: image ? [{
       "@type": "ImageObject",
       url: optimizeSeoImage(image, 1200),
       width: 1200,
       height: 630,
+      copyrightNotice: "IstanbulPortrait 2026",
+      creator: { "@type": "Organization", name: "Istanbul Portrait" }
     }] : [],
     datePublished,
     dateModified,
@@ -345,5 +428,117 @@ export function buildBreadcrumbSchema(items: Array<{ name: string; url: string }
       name: item.name,
       item: item.url.startsWith("http") ? item.url : `${getBaseUrl()}${item.url}`,
     })),
+  };
+}
+
+export function buildTouristAttractionSchema({
+  name,
+  description,
+  image,
+  lat,
+  lng,
+  url,
+}: {
+  name: string;
+  description: string;
+  image?: string;
+  lat?: number;
+  lng?: number;
+  url?: string;
+}) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "TouristAttraction",
+    name,
+    description,
+    url: url || getBaseUrl(),
+    image: image ? {
+      "@type": "ImageObject",
+      url: optimizeSeoImage(image, 1200),
+      width: 1200,
+      height: 630,
+      copyrightNotice: "IstanbulPortrait 2026",
+      creator: { "@type": "Organization", name: "Istanbul Portrait" }
+    } : undefined,
+    geo: (lat && lng) ? {
+      "@type": "GeoCoordinates",
+      latitude: lat,
+      longitude: lng,
+    } : undefined,
+  };
+}
+
+export function buildAboutPageSchema({
+  name,
+  description,
+  url,
+  organizationSchema,
+}: {
+  name: string;
+  description: string;
+  url?: string;
+  organizationSchema?: any;
+}) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "AboutPage",
+    name,
+    description,
+    url: url || getBaseUrl(),
+    ...(organizationSchema ? { mainEntity: organizationSchema } : {})
+  };
+}
+
+export function buildContactPageSchema({
+  name,
+  description,
+  url,
+}: {
+  name: string;
+  description: string;
+  url?: string;
+}) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "ContactPage",
+    name,
+    description,
+    url: url || getBaseUrl(),
+  };
+}
+
+export function buildCollectionPageSchema({
+  name,
+  description,
+  url,
+  items,
+}: {
+  name: string;
+  description: string;
+  url?: string;
+  items: Array<{
+    name: string;
+    description?: string;
+    url: string;
+    image?: string;
+  }>;
+}) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name,
+    description,
+    url: url || getBaseUrl(),
+    mainEntity: {
+      "@type": "ItemList",
+      itemListElement: items.map((item, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        url: item.url,
+        name: item.name,
+        ...(item.description ? { description: item.description } : {}),
+        ...(item.image ? { image: optimizeSeoImage(item.image, 1200) } : {}),
+      })),
+    },
   };
 }

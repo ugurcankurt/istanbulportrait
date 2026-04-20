@@ -5,6 +5,8 @@ import { BreadcrumbNav } from "@/components/breadcrumb-nav";
 
 import { pagesContentService } from "@/lib/pages-content-service";
 import { settingsService } from "@/lib/settings-service";
+import { SchemaInjector } from "@/components/schema-injector";
+import { buildAboutPageSchema, buildOrganizationSchema, generateSeoDescription, getBaseUrl } from "@/lib/seo-utils";
 
 
 
@@ -35,8 +37,17 @@ export async function AboutPageContent({
     namespace: "about_cta",
   });
 
+  const organizationSchema = buildOrganizationSchema(settings);
+  const aboutSchema = buildAboutPageSchema({
+    name: dynamicTitle,
+    description: generateSeoDescription(dynamicSubtitle),
+    url: `${getBaseUrl()}/${locale}/about`,
+    organizationSchema: organizationSchema
+  });
+
   return (
     <div>
+      <SchemaInjector schema={aboutSchema} />
 
 
       <BreadcrumbNav customLastLabel={dynamicTitle || undefined} />

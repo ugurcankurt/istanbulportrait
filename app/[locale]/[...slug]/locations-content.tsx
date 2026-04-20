@@ -5,10 +5,8 @@ import { PageHeroSection } from "@/components/page-hero-section";
 import { locationsService } from "@/lib/locations-service";
 
 import { pagesContentService } from "@/lib/pages-content-service";
-
-
-
-export async function LocationsPageContent({
+import { SchemaInjector } from "@/components/schema-injector";
+import { buildCollectionPageSchema, generateSeoDescription, getBaseUrl } from "@/lib/seo-utils";export async function LocationsPageContent({
   params,
 }: {
   params: { locale: string; slug: string };
@@ -20,11 +18,21 @@ export async function LocationsPageContent({
 
   const dbLocations = await locationsService.getLocations();
 
+  const collectionSchema = buildCollectionPageSchema({
+    name: dynamicTitle,
+    description: generateSeoDescription(dynamicSubtitle),
+    url: `${getBaseUrl()}/${locale}/${parentSlug}`,
+    items: dbLocations.map(location => ({
+      name: location.title?.[locale] || location.title?.en || location.slug,
+      description: location.description?.[locale] || location.description?.en ? generateSeoDescription(location.description?.[locale] || location.description?.en || "") : undefined,
+      url: `${getBaseUrl()}/${locale}/${parentSlug}/${location.slug}`,
+      image: location.cover_image || undefined
+    }))
+  });
+
   return (
     <div>
-
-
-      <BreadcrumbNav customLastLabel={dynamicTitle || undefined} />
+      <SchemaInjector schema={collectionSchema} />      <BreadcrumbNav customLastLabel={dynamicTitle || undefined} />
       <PageHeroSection title={dynamicTitle} subtitle={dynamicSubtitle} />
 
       {/* Locations Grid */}

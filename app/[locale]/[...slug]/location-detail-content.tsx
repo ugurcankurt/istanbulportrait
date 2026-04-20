@@ -15,6 +15,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { LocationCard } from "@/components/location-card";
 import { Link } from "@/i18n/routing";
 import { locationsService } from "@/lib/locations-service";
+import { SchemaInjector } from "@/components/schema-injector";
+import { buildTouristAttractionSchema, generateSeoDescription } from "@/lib/seo-utils";
 
 
 // Force dynamic rendering to avoid Vercel build-time issues with next-intl
@@ -52,8 +54,18 @@ export async function LocationDetailPageContent({
 
 
 
+  const touristAttractionSchema = buildTouristAttractionSchema({
+    name: dynamicTitle,
+    description: generateSeoDescription(dynamicDesc),
+    image: heroImage,
+    lat: location.coordinates?.lat,
+    lng: location.coordinates?.lng,
+    url: `${baseUrl}/${locale}/locations/${slug}`,
+  });
+
   return (
     <div className="min-h-screen">
+      <SchemaInjector schema={touristAttractionSchema} />
 
 
       <BreadcrumbNav />

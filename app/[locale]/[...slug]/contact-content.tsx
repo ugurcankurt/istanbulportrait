@@ -3,6 +3,8 @@ import { PageHeroSection } from "@/components/page-hero-section";
 import { ContactSection } from "@/components/contact-section";
 
 import { pagesContentService } from "@/lib/pages-content-service";
+import { SchemaInjector } from "@/components/schema-injector";
+import { buildContactPageSchema, generateSeoDescription, getBaseUrl } from "@/lib/seo-utils";
 
 
 
@@ -22,8 +24,15 @@ export async function ContactPageContent({
   const { settingsService } = await import("@/lib/settings-service");
   const settings = await settingsService.getSettings();
 
+  const contactSchema = buildContactPageSchema({
+    name: dynamicTitle,
+    description: generateSeoDescription(dynamicSubtitle),
+    url: `${getBaseUrl()}/${locale}/contact`,
+  });
+
   return (
     <div>
+      <SchemaInjector schema={contactSchema} />
 
 
       <BreadcrumbNav customLastLabel={dynamicTitle || undefined} />

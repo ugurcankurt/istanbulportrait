@@ -4,7 +4,6 @@ import { getTranslations } from "next-intl/server";
 import { PageHeroSection } from "@/components/page-hero-section";
 import { BreadcrumbNav } from "@/components/breadcrumb-nav";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
-import { Link } from "@/i18n/routing";
 import NextLink from "next/link";
 import { getPublishedBlogPosts } from "@/lib/blog/blog-service";
 import { formatBlogDate } from "@/lib/blog/blog-utils";
@@ -12,6 +11,8 @@ import { formatBlogDate } from "@/lib/blog/blog-utils";
 import type { Locale } from "@/types/blog";
 import { pagesContentService } from "@/lib/pages-content-service";
 import { generateNativeSlug } from "@/lib/slug-generator";
+import { SchemaInjector } from "@/components/schema-injector";
+import { buildCollectionPageSchema, generateSeoDescription, getBaseUrl } from "@/lib/seo-utils";
 
 // Force dynamic rendering for blog list page (uses searchParams)
 export const dynamic = "force-dynamic";
@@ -43,12 +44,21 @@ export async function BlogPageContent({
     sort_order: "desc",
   });
 
-
+  const collectionSchema = buildCollectionPageSchema({
+    name: dynamicTitle,
+    description: generateSeoDescription(dynamicSubtitle),
+    url: `${getBaseUrl()}/${locale}/${parentSegment}`,
+    items: posts.map(post => ({
+      name: post.translation.title,
+      description: post.translation.excerpt ? generateSeoDescription(post.translation.excerpt) : undefined,
+      url: `${getBaseUrl()}/${locale}/${parentSegment}/${post.translation.slug}`,
+      image: post.featured_image || undefined
+    }))
+  });
 
   return (
     <div>
-
-
+      <SchemaInjector schema={collectionSchema} />
       <BreadcrumbNav customLastLabel={dynamicTitle || undefined} />
       <PageHeroSection title={dynamicTitle} subtitle={dynamicSubtitle} />
 

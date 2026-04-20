@@ -156,6 +156,17 @@ export default async function HomePage({
 
   const dynamicFaqs = getDynamicFaqs();
 
+  // Dynamic Price Range Calculation for LocalBusiness Schema (Google April 2026 guidelines)
+  let priceRangeStr = undefined;
+  if (activePackages && activePackages.length > 0) {
+    const prices = activePackages.map(p => p.price).filter(p => !isNaN(p) && p > 0);
+    if (prices.length > 0) {
+      const minPrice = Math.min(...prices);
+      const maxPrice = Math.max(...prices);
+      priceRangeStr = `€${minPrice} - €${maxPrice}`;
+    }
+  }
+
   return (
     <>
       <SchemaInjector schema={{
@@ -169,7 +180,7 @@ export default async function HomePage({
           "query-input": "required name=search_term_string"
         }
       }} />
-      <SchemaInjector schema={buildLocalBusinessSchema(settings)} />
+      <SchemaInjector schema={buildLocalBusinessSchema(settings, priceRangeStr, reviews?.reviews)} />
       {dynamicFaqs && dynamicFaqs.length > 0 && (
         <SchemaInjector schema={buildFAQSchema(dynamicFaqs)} />
       )}

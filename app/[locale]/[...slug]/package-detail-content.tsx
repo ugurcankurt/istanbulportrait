@@ -6,7 +6,7 @@ import { discountService } from "@/lib/discount-service";
 import { reviewsService } from "@/lib/reviews-service";
 import { availabilityService } from "@/lib/availability-service";
 import { SchemaInjector } from "@/components/schema-injector";
-import { buildProductSchema, generateSeoDescription } from "@/lib/seo-utils";
+import { buildServiceSchema, generateSeoDescription, getBaseUrl } from "@/lib/seo-utils";
 
 interface PackagePageProps {
   params: Promise<{
@@ -49,7 +49,7 @@ export async function PackageDetailPageContent({
   const { settingsService } = await import("@/lib/settings-service");
   const settings = await settingsService.getSettings();
 
-  const productSchema = buildProductSchema({
+  const serviceSchema = buildServiceSchema({
     name: title,
     description: generateSeoDescription(desc),
     image: pkg.gallery_images?.[0] || settings.default_og_image_url || "",
@@ -57,11 +57,15 @@ export async function PackageDetailPageContent({
     currency: "EUR",
     aggregateRating: aggregateRating.average,
     reviewCount: aggregateRating.count || 1,
+    providerName: settings.organization_name || settings.site_name,
+    providerUrl: getBaseUrl(),
+    discount: activeDiscount,
+    reviews: reviews,
   });
 
   return (
     <div>
-      <SchemaInjector schema={productSchema} />
+      <SchemaInjector schema={serviceSchema} />
       <BreadcrumbNav customLastLabel={title} />
       <PackageDetails
         packageData={pkg}

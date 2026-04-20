@@ -50,6 +50,7 @@ export async function BlogDetailPageContent({
         authorUrls: post.author?.social_links ? Object.values(post.author.social_links).filter(Boolean) as string[] : [settings.instagram_url, settings.facebook_url, settings.youtube_url, settings.tiktok_url].filter(Boolean) as string[],
         publisherName: settings.organization_name || settings.site_name || undefined,
         publisherLogo: settings.logo_url || settings.default_og_image_url || undefined,
+        inLanguage: locale,
       })} />
 
       <BreadcrumbNav />
