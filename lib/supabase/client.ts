@@ -1,10 +1,13 @@
 import { createBrowserClient } from "@supabase/ssr";
 
-let browserClient: ReturnType<typeof createBrowserClient> | undefined;
+// Use a global variable to preserve the client across HMR (Hot Module Replacement) reloads in development
+const globalForSupabaseClient = globalThis as unknown as {
+  browserClient: ReturnType<typeof createBrowserClient> | undefined;
+};
 
 export function createClientSupabaseClient() {
   // Always return the memoized client if it exists in the browser
-  if (browserClient) return browserClient;
+  if (globalForSupabaseClient.browserClient) return globalForSupabaseClient.browserClient;
 
   const client = createBrowserClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -22,7 +25,7 @@ export function createClientSupabaseClient() {
 
   // Memoize it for subsequent calls in the browser environment
   if (typeof window !== "undefined") {
-    browserClient = client;
+    globalForSupabaseClient.browserClient = client;
   }
 
   return client;
