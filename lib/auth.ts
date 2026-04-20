@@ -1,4 +1,4 @@
-import type { User } from "@supabase/supabase-js";
+import type { User, AuthChangeEvent, Session } from "@supabase/supabase-js";
 import { createClientSupabaseClient } from "./supabase/client";
 
 // Client-side Supabase client - ONLY use in client components
@@ -130,7 +130,7 @@ export async function getSession() {
 export function onAuthStateChange(callback: (user: User | null) => void) {
   // Only use auth state change on client-side
   if (typeof window !== "undefined") {
-    return supabaseAuth.auth.onAuthStateChange((_event, session) => {
+    return supabaseAuth.auth.onAuthStateChange((_event: AuthChangeEvent, session: Session | null) => {
       callback(session?.user || null);
     });
   }
