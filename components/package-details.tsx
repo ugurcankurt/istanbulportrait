@@ -24,7 +24,7 @@ import { PackageGallery } from "@/components/package-gallery";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { trackViewItem } from "@/lib/analytics";
-import { calculateDiscountedPrice, matchActiveSurcharge, DEPOSIT_PERCENTAGE } from "@/lib/pricing";
+import { calculateDiscountedPrice, matchActiveSurcharge, DEPOSIT_PERCENTAGE, getPackagePricing } from "@/lib/pricing";
 import { extractPhotosCount } from "@/lib/features-parser";
 import type { PackageDB } from "@/lib/packages-service";
 import type { DiscountDB } from "@/lib/discount-service";
@@ -79,9 +79,22 @@ export function PackageDetails({ packageData, aggregateRating, reviews, activeDi
   const activeSurcharge = matchActiveSurcharge(selectedTime, timeSurcharges);
   const surchargePercentage = activeSurcharge ? activeSurcharge.surcharge_percentage : 0;
 
-  // Calculate pricing
+  // Calculate generic unit pricing for display
   const basePrice = Number(packageData.price);
   const pricing = calculateDiscountedPrice(basePrice * (1 + surchargePercentage / 100), activeDiscount, null, selectedDate);
+
+  // Calculate full dynamic pricing including people count for the correct deposit logic
+  const fullPricing = getPackagePricing(
+    packageData.slug as any,
+    basePrice,
+    activeDiscount,
+    null,
+    selectedDate,
+    packageData.is_per_person ? peopleCount : undefined,
+    undefined,
+    undefined,
+    surchargePercentage
+  );
 
   // Price to display (unit price, do not multiply by peopleCount for visual display)
   const displayPrice = pricing.price;
@@ -341,7 +354,13 @@ export function PackageDetails({ packageData, aggregateRating, reviews, activeDi
               <BookingCard
                 packageId={packageData.slug as any}
                 basePrice={basePrice}
-                pricing={pricing}
+                pricing={{
+                  price: pricing.price,
+                  isDiscounted: pricing.isDiscounted,
+                  discountPercentage: pricing.discountPercentage,
+                  depositAmount: fullPricing.depositAmount,
+                  remainingAmount: fullPricing.remainingAmount
+                }}
                 displayPrice={displayPrice}
                 selectedDate={selectedDate}
                 setSelectedDate={setSelectedDate}
@@ -410,7 +429,7 @@ export function PackageDetails({ packageData, aggregateRating, reviews, activeDi
               <div>
                 <p className="text-[11px] font-bold text-foreground leading-tight">{tCheckout("security.secure_payment")}</p>
                 <p className="text-[10px] font-medium text-muted-foreground leading-tight">
-                  {tCheckout("payment_breakdown.pay_now", { amount: `${formatPrice(Math.round(displayPrice * DEPOSIT_PERCENTAGE))}` })} {tCheckout("payment_breakdown.pay_on_day", { amount: `${formatPrice(displayPrice - Math.round(displayPrice * DEPOSIT_PERCENTAGE))}` })}
+                  {tCheckout("payment_breakdown.pay_now", { amount: `${formatPrice(fullPricing.depositAmount)}` })} {tCheckout("payment_breakdown.pay_on_day", { amount: `${formatPrice(fullPricing.remainingAmount)}` })}
                 </p>
               </div>
             </div>

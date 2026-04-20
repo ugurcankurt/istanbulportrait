@@ -38,6 +38,8 @@ interface BookingCardProps {
     price: number;
     isDiscounted: boolean;
     discountPercentage: number;
+    depositAmount?: number;
+    remainingAmount?: number;
   };
   displayPrice: number;
   selectedDate: Date | undefined;
@@ -55,6 +57,7 @@ interface BookingCardProps {
   isFlat?: boolean;
   activeDiscount?: DiscountDB | null;
   timeSurcharges?: TimeSurcharge[];
+  isInsideModal?: boolean;
 }
 
 export function BookingCard({
@@ -77,12 +80,15 @@ export function BookingCard({
   isFlat = false,
   activeDiscount = null,
   timeSurcharges = [],
+  isInsideModal = false,
 }: BookingCardProps) {
   const isMobile = useIsMobile();
   const { formatPrice } = useCurrency();
   const [isPeoplePopoverOpen, setIsPeoplePopoverOpen] = useState(false);
   const [isDatePopoverOpen, setIsDatePopoverOpen] = useState(false);
   const [isTimePopoverOpen, setIsTimePopoverOpen] = useState(false);
+
+  const popoverZIndex = isInsideModal ? "z-[60]" : "z-20";
 
   const [bookedSlots, setBookedSlots] = useState<string[]>([]);
   const [isLoadingSlots, setIsLoadingSlots] = useState(false);
@@ -198,7 +204,9 @@ export function BookingCard({
                   <ChevronDown className={cn("h-4 w-4 opacity-50 transition-transform", isPeoplePopoverOpen && "rotate-180")} />
                 </PopoverTrigger>
                 <PopoverContent
-                  className="w-[var(--anchor-width)] p-4"
+                  className={cn("w-[var(--anchor-width)] p-4", popoverZIndex)}
+                  positionerClassName={popoverZIndex}
+                  collisionAvoidance={{ side: "none" }}
                   align="start"
                   side="bottom"
                 >
@@ -263,9 +271,12 @@ export function BookingCard({
               <PopoverContent
                 className={cn(
                   "p-0",
-                  isMobile ? "w-[95vw] max-w-[360px]" : "w-auto"
+                  isMobile ? "w-[95vw] max-w-[360px]" : "w-auto",
+                  popoverZIndex
                 )}
-                align="center"
+                positionerClassName={popoverZIndex}
+                collisionAvoidance={{ side: "none", align: "shift" }}
+                align={isMobile ? "center" : "end"}
                 side="bottom"
                 sideOffset={8}
               >
@@ -289,18 +300,10 @@ export function BookingCard({
                   }}
                   disabled={(date) => date < new Date() || date < new Date("1900-01-01")}
                   modifiers={{ discount: isDateDiscounted }}
-                  modifiersClassNames={{ discount: "bg-primary/10 text-primary font-black border border-primary/20 rounded-md" }}
+                  modifiersClassNames={{ discount: "bg-primary/10 text-primary font-black border border-primary/20 rounded-md relative after:absolute after:top-1 after:right-1 after:content-['%'] after:text-[10px] after:font-black after:text-primary" }}
                   initialFocus
                   locale={dateFnsLocale}
                 />
-                {activeDiscount && activeDiscount.start_date && activeDiscount.end_date && (
-                  <div className="bg-primary/10 border-t border-primary/20 px-4 py-3 flex items-center justify-center gap-2 w-full mt-2">
-                    <span className="flex h-2 w-2 rounded-full bg-primary animate-pulse shrink-0" />
-                    <p className="text-xs font-bold text-primary">
-                      {tCheckout("seasonal_discount_applied", { percentage: Math.round(activeDiscount.discount_percentage * 100) })}
-                    </p>
-                  </div>
-                )}
               </PopoverContent>
             </Popover>
           </div>
@@ -323,8 +326,10 @@ export function BookingCard({
                   <ChevronDown className={cn("h-4 w-4 opacity-50 transition-transform", isTimePopoverOpen && "rotate-180")} />
                 </PopoverTrigger>
                 <PopoverContent
-                  className="w-[var(--anchor-width)] p-3"
-                  align="start"
+                  className={cn("w-[var(--anchor-width)] p-3", popoverZIndex)}
+                  positionerClassName={popoverZIndex}
+                  collisionAvoidance={{ side: "none", align: "shift" }}
+                  align={isMobile ? "center" : "start"}
                   side="bottom"
                 >
                   <Tabs defaultValue="morning" className="w-full">
@@ -483,7 +488,7 @@ export function BookingCard({
               <p className="text-sm font-bold text-foreground">{tCheckout("security.secure_payment")}</p>
               <div className="space-y-1">
                 <p className="text-xs font-medium text-muted-foreground leading-relaxed">
-                  {tCheckout("payment_breakdown.pay_now", { amount: `${formatPrice(Math.round(displayPrice * DEPOSIT_PERCENTAGE))}` })} {tCheckout("payment_breakdown.pay_on_day", { amount: `${formatPrice(displayPrice - Math.round(displayPrice * DEPOSIT_PERCENTAGE))}` })}
+                  {tCheckout("payment_breakdown.pay_now", { amount: `${formatPrice(pricing.depositAmount ?? Math.round(displayPrice * DEPOSIT_PERCENTAGE))}` })} {tCheckout("payment_breakdown.pay_on_day", { amount: `${formatPrice(pricing.remainingAmount ?? (displayPrice - Math.round(displayPrice * DEPOSIT_PERCENTAGE)))}` })}
                 </p>
               </div>
             </div>

@@ -11,7 +11,6 @@ import PhoneInput from "react-phone-number-input";
 import "react-phone-number-input/style.css";
 import { useYandexMetrica } from "@/components/analytics/yandex-metrica";
 import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { BookingCard } from "@/components/booking-card";
 import {
@@ -570,6 +569,7 @@ export function BookingModal({
                   isFlat={true}
                   activeDiscount={activeDiscount}
                   timeSurcharges={timeSurcharges}
+                  isInsideModal={true}
                 />
               </div>
             ) : (
