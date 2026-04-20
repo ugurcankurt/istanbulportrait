@@ -56,12 +56,11 @@ export function optimizeSeoImage(imageUrl: string | null | undefined, width: 120
     ? `${getBaseUrl()}${imageUrl}`
     : imageUrl;
 
-  // Vercel Native Endpoint: We use Next.js's built-in image optimizer (`/_next/image`).
-  // By passing `w=width` without forcing a height or crop geometry, Vercel natively rescales
-  // the image down to compress it, while preserving the original aspect ratio (NO CROPPING).
-  // Furthermore, Vercel automatically detects the Bot/Crawler's "Accept" header and serves
-  // JPG/PNG instead of WebP if the social media crawler doesn't support modern formats.
-  return `${getBaseUrl()}/_next/image?url=${encodeURIComponent(absoluteUrl)}&w=${width}&q=85`;
+  // Social media bots (WhatsApp, Facebook, LinkedIn) strictly require a JPEG/PNG format and often fail
+  // to parse Next.js dynamic /_next/image endpoints emitting AVIF/WebP based on crawler headers.
+  // Using wsrv.nl securely globally caches the image, guarantees a fixed JPG output format, 
+  // and optimally scales it for Open Graph requirements without cropping.
+  return `https://wsrv.nl/?url=${encodeURIComponent(absoluteUrl)}&w=${width}&output=jpg&q=85`;
 }
 
 /**
