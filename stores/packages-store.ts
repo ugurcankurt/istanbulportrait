@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { packagesService, type PackageDB } from "@/lib/packages-service";
-import { createClient } from "@supabase/supabase-js";
+import { createClientSupabaseClient } from "@/lib/supabase/client";
 
 interface PackagesState {
   packages: PackageDB[];
@@ -29,10 +29,7 @@ export const usePackagesStore = create<PackagesState>((set, get) => ({
     set({ loading: true, error: null });
     try {
       // Direct deletion using client to preserve auth context if it's admin
-      const supabase = createClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-      );
+      const supabase = createClientSupabaseClient();
       
       const { error } = await supabase.from("packages").delete().eq("id", id);
       if (error) throw error;

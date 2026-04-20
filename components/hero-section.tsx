@@ -44,7 +44,7 @@ export async function HeroSection({
         <div className="text-left text-white w-full max-w-6xl">
           <HeroClientWrapper
             packagesButtonText={tui("packages_button")}
-            bookSessionButtonText={tui("book_your_session")}
+            checkLocationsButtonText={tui("check_locations")}
             activeDiscount={activeDiscount}
           >
             {/* Main Title - Server Rendered for LCP */}

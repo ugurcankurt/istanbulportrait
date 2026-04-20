@@ -1,7 +1,12 @@
 import { createBrowserClient } from "@supabase/ssr";
 
+let browserClient: ReturnType<typeof createBrowserClient> | undefined;
+
 export function createClientSupabaseClient() {
-  return createBrowserClient(
+  // Always return the memoized client if it exists in the browser
+  if (browserClient) return browserClient;
+
+  const client = createBrowserClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
@@ -14,6 +19,13 @@ export function createClientSupabaseClient() {
       },
     },
   );
+
+  // Memoize it for subsequent calls in the browser environment
+  if (typeof window !== "undefined") {
+    browserClient = client;
+  }
+
+  return client;
 }
 
 // For backwards compatibility with existing code

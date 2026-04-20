@@ -11,14 +11,14 @@ import type { DiscountDB } from "@/lib/discount-service";
 
 interface HeroClientWrapperProps {
   packagesButtonText: string;
-  bookSessionButtonText: string;
+  checkLocationsButtonText: string;
   children: React.ReactNode;
   activeDiscount?: DiscountDB | null;
 }
 
 export function HeroClientWrapper({
   packagesButtonText,
-  bookSessionButtonText,
+  checkLocationsButtonText,
   children,
   activeDiscount,
 }: HeroClientWrapperProps) {
@@ -69,11 +69,11 @@ export function HeroClientWrapper({
           />
 
           <Button nativeButton={false}
-            render={<Link href={"/locations" as any}>{bookSessionButtonText}</Link>}
+            render={<Link href={"/locations" as any}>{checkLocationsButtonText}</Link>}
             variant="outline"
             size="lg"
             className="w-auto min-w-[140px] h-12 font-semibold bg-transparent text-white border-white hover:bg-white/10 hover:text-white"
-            onClick={() => trackEvent("cta_click", "Hero", "Book Session")}
+            onClick={() => trackEvent("cta_click", "Hero", "Check Locations")}
           />
         </div>
       </div>
