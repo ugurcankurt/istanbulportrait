@@ -178,7 +178,7 @@ export function trackPurchase(
       content_ids: [packageId],
       content_name: packageName,
       value: value,
-      currency: "EUR",
+      currency: currency,
       transaction_id: transactionId,
     },
     eventId,
@@ -202,7 +202,7 @@ export function trackPurchase(
         last_name: resolvedUserData?.lastName,
         city: resolvedUserData?.city,
         country: resolvedUserData?.country,
-        custom_data: { content_name: packageName },
+        custom_data: { content_name: packageName, currency: currency },
         event_source_url: window.location.href,
       }),
     }).catch(() => { });
@@ -267,7 +267,7 @@ export function trackViewItem(
         content_type: "product",
         content_name: itemName,
         value: value,
-        currency: "EUR",
+        currency: currency,
       },
       resolvedEventId ? { eventID: resolvedEventId } : undefined,
     );
@@ -293,7 +293,7 @@ export function trackViewItem(
         country: userData?.country,
         dob: userData?.dob,
         gender: userData?.gender,
-        custom_data: { content_name: itemName },
+        custom_data: { content_name: itemName, currency: currency },
         event_source_url: window.location.href,
       }),
     }).catch(() => { });
@@ -332,7 +332,7 @@ export function trackBeginCheckout(
       content_name: packageName,
       content_type: "product",
       value: value,
-      currency: "EUR",
+      currency: currency,
     },
     eventId,
   );
@@ -405,7 +405,7 @@ export function trackAddPaymentInfo(
         content_name: packageName,
         content_type: "product",
         value: value,
-        currency: "EUR",
+        currency: currency,
       },
       resolvedEventId ? { eventID: resolvedEventId } : undefined,
     );
@@ -426,7 +426,7 @@ export function trackAddPaymentInfo(
         customer_phone: userData?.phone,
         first_name: userData?.firstName,
         last_name: userData?.lastName,
-        custom_data: { content_name: packageName, payment_type: paymentType },
+        custom_data: { content_name: packageName, payment_type: paymentType, currency: currency },
         event_source_url: window.location.href,
       }),
     }).catch(() => { });
@@ -492,7 +492,7 @@ export function trackLead(
       content_name: packageName,
       content_type: "product",
       value: value,
-      currency: "EUR",
+      currency: currency,
     },
     resolvedEventId, // Fixed parameter mismatch
   );
@@ -512,7 +512,7 @@ export function trackLead(
         customer_phone: userData?.phone,
         first_name: userData?.firstName,
         last_name: userData?.lastName,
-        custom_data: { content_name: packageName },
+        custom_data: { content_name: packageName, currency: currency },
         event_source_url: window.location.href,
       }),
     }).catch(() => { });
@@ -663,7 +663,7 @@ export function trackPackageAddToCart(
         content_type: "product",
         content_name: packageName,
         value: value,
-        currency: "EUR",
+        currency: currency,
       },
       resolvedEventId ? { eventID: resolvedEventId } : undefined,
     );
@@ -679,7 +679,7 @@ export function trackPackageAddToCart(
         event_id: resolvedEventId,
         package_id: packageId,
         amount: value,
-        custom_data: { content_name: packageName },
+        custom_data: { content_name: packageName, currency: currency },
         event_source_url: window.location.href,
       }),
     }).catch(() => { });
@@ -744,7 +744,7 @@ export function trackPrintViewItem(
         event_id: resolvedEventId,
         package_id: sku,
         amount: price,
-        custom_data: { content_name: name, content_category: category },
+        custom_data: { content_name: name, content_category: category, currency: currency },
         event_source_url: window.location.href,
       }),
     }).catch(() => { });
@@ -807,7 +807,7 @@ export function trackPrintAddToCart(
         event_id: resolvedEventId,
         package_id: sku,
         amount: price,
-        custom_data: { content_name: name, content_category: category },
+        custom_data: { content_name: name, content_category: category, currency: currency },
         event_source_url: window.location.href,
       }),
     }).catch(() => { });

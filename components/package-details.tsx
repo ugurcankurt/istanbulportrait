@@ -62,7 +62,7 @@ export function PackageDetails({ packageData, aggregateRating, reviews, activeDi
   const tui = useTranslations("ui");
   const tCheckout = useTranslations("checkout");
   const locale = useLocale();
-  const { formatPrice } = useCurrency();
+  const { formatPrice, currency, convertPrice } = useCurrency();
   const router = useRouter();
   const dateFnsLocale = useMemo(() => getDateFnsLocale(locale), [locale]);
 
@@ -111,9 +111,10 @@ export function PackageDetails({ packageData, aggregateRating, reviews, activeDi
     trackViewItem(
       packageData.slug,
       packageName,
-      pricing.isDiscounted ? pricing.price : basePrice,
+      convertPrice(pricing.isDiscounted ? pricing.price : basePrice),
+      currency
     );
-  }, [packageData.slug, packageName, pricing.price, pricing.isDiscounted, basePrice]);
+  }, [packageData.slug, packageName, pricing.price, pricing.isDiscounted, basePrice, currency, convertPrice]);
 
   useEffect(() => {
     const savedPackages = JSON.parse(localStorage.getItem("saved_packages") || "[]");

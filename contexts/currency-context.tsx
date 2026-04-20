@@ -6,11 +6,15 @@ import { useLocale } from "next-intl";
 interface CurrencyContextType {
   rate: number;
   formatPrice: (amountEUR: number, forceEur?: boolean) => string;
+  currency: string;
+  convertPrice: (amountEUR: number) => number;
 }
 
 const CurrencyContext = createContext<CurrencyContextType>({
   rate: 36.5,
   formatPrice: (amountEUR: number) => `€${amountEUR}`,
+  currency: "EUR",
+  convertPrice: (amountEUR: number) => amountEUR,
 });
 
 export function CurrencyProvider({
@@ -21,6 +25,15 @@ export function CurrencyProvider({
   rate: number;
 }) {
   const locale = useLocale();
+
+  const currency = locale === "tr" ? "TRY" : "EUR";
+
+  const convertPrice = (amountEUR: number) => {
+    if (locale === "tr") {
+      return Math.round(amountEUR * rate);
+    }
+    return amountEUR;
+  };
 
   const formatPrice = (amountEUR: number, forceEur: boolean = false) => {
     if (!forceEur && locale === "tr") {
@@ -44,7 +57,7 @@ export function CurrencyProvider({
   };
 
   return (
-    <CurrencyContext.Provider value={{ rate, formatPrice }}>
+    <CurrencyContext.Provider value={{ rate, formatPrice, currency, convertPrice }}>
       {children}
     </CurrencyContext.Provider>
   );

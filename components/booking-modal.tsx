@@ -124,7 +124,7 @@ export function BookingModal({
   timeSurcharges = [],
 }: BookingModalProps) {
   const locale = useLocale();
-  const { formatPrice } = useCurrency();
+  const { formatPrice, rate } = useCurrency();
   const router = useRouter();
   const t = useTranslations("checkout");
   const tPackages = useTranslations("packages");
@@ -288,8 +288,8 @@ export function BookingModal({
         trackLead(
           selectedPackage,
           packageInfo.name,
-          packageInfo.price,
-          "EUR",
+          locale === 'tr' ? Math.round(packageInfo.price * rate) : packageInfo.price,
+          locale === 'tr' ? 'TRY' : 'EUR',
           eventId,
         );
 
