@@ -18,7 +18,7 @@ export function BlogSummary({ summary }: BlogSummaryProps) {
       <div className="relative">
         <div className="flex items-center gap-2 mb-4 text-primary font-semibold">
           <Sparkles className="w-5 h-5" />
-          <h3>{t("title")}</h3>
+          <span className="text-lg">{t("ai_overview")}</span>
         </div>
 
         <div className="text-lg leading-relaxed text-foreground/90 font-medium">
@@ -27,7 +27,7 @@ export function BlogSummary({ summary }: BlogSummaryProps) {
 
         <div className="mt-4 flex items-center gap-2 text-xs text-muted-foreground font-medium uppercase tracking-wider">
           <span className="w-1.5 h-1.5 rounded-full bg-primary/50" />
-          {t("ai_overview")}
+          {t("title")}
         </div>
       </div>
     </div>

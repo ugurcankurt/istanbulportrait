@@ -89,11 +89,6 @@ export async function BlogDetailPageContent({
               </span>
             </div>
 
-            {post.translation.excerpt && (
-              <p className="text-xl text-muted-foreground leading-relaxed">
-                {post.translation.excerpt}
-              </p>
-            )}
           </header>
 
           {/* AI Summary / Key Takeaways */}
