@@ -7,8 +7,7 @@ import {
   sanitizeErrorForProduction,
   ValidationError,
 } from "@/lib/errors";
-import { getPackagePricing } from "@/lib/pricing";
-import { promoService } from "@/lib/promo-service";
+import { getPackagePricing, matchActiveSurcharge } from "@/lib/pricing";
 import {
   checkRateLimit,
   createRateLimitError,
@@ -20,7 +19,7 @@ import { supabaseAdmin } from "@/lib/supabase";
 import {
   bookingSchema,
   type PackageId,
-  
+
 } from "@/lib/validations";
 
 export async function POST(request: NextRequest) {
@@ -100,6 +99,15 @@ export async function POST(request: NextRequest) {
       peopleCount,
     } = validationResult.data;
 
+    // Fetch time surcharges for accurate calculation
+    const { data: timeSurcharges } = await supabaseAdmin
+      .from("time_surcharges")
+      .select("*")
+      .order("time", { ascending: true });
+
+    const activeSurcharge = matchActiveSurcharge(bookingTime, timeSurcharges || []);
+    const surchargePercentage = activeSurcharge ? activeSurcharge.surcharge_percentage : 0;
+
     // Validate that the totalAmount matches the expected price
     // We check against the booking date and promo code for correct discounts
     const packagePricing = getPackagePricing(
@@ -108,7 +116,10 @@ export async function POST(request: NextRequest) {
       body.activeDiscount || null,
       body.appliedPromo,
       bookingDate,
-      body.isPerPerson ? peopleCount : undefined
+      body.isPerPerson ? peopleCount : undefined,
+      undefined,
+      undefined,
+      surchargePercentage
     );
 
     const expectedTotal = packagePricing.totalPrice;

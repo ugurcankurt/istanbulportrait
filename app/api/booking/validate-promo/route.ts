@@ -1,5 +1,4 @@
 import { NextResponse } from "next/server";
-import { checkRateLimit, createRateLimitError, getClientIP } from "@/lib/rate-limit";
 import { promoService } from "@/lib/promo-service";
 
 export async function GET(request: Request) {

@@ -250,7 +250,7 @@ export function BookingModal({
         form.setValue("peopleCount", peopleCount);
       }
     }
-  }, [selectedPackage, peopleCount, form.watch("bookingDate"), form]); // Watch date and peopleCount changes
+  }, [selectedPackage, peopleCount, form.watch("bookingDate"), form.watch("bookingTime"), form]); // Watch date, time, and peopleCount changes
 
   const packageInfo = (selectedPackage && basePrice)
     ? {
@@ -547,13 +547,15 @@ export function BookingModal({
               <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
                 <BookingCard
                   packageId={selectedPackage}
-                  basePrice={packageInfo.originalPrice}
+                  basePrice={basePrice}
                   pricing={{
-                    price: packageInfo.price,
+                    price: isPerPerson ? packageInfo.price / (peopleCount || 1) : packageInfo.price,
                     isDiscounted: packageInfo.isDiscounted,
-                    discountPercentage: packageInfo.discountPercentage
+                    discountPercentage: packageInfo.discountPercentage,
+                    depositAmount: packageInfo.depositAmount,
+                    remainingAmount: packageInfo.remainingAmount
                   }}
-                  displayPrice={packageInfo.price}
+                  displayPrice={isPerPerson ? packageInfo.price / (peopleCount || 1) : packageInfo.price}
                   selectedDate={form.watch("bookingDate") ? new Date(form.watch("bookingDate")) : undefined}
                   setSelectedDate={(date) => form.setValue("bookingDate", date ? format(date, "yyyy-MM-dd") : "")}
                   selectedTime={form.watch("bookingTime")}
@@ -583,9 +585,6 @@ export function BookingModal({
             <div className="fixed bottom-0 left-0 right-0 p-6 bg-background border-t shadow-[0_-4px_10px_rgba(0,0,0,0.05)] z-50">
               <div className="max-w-md mx-auto flex items-center justify-between gap-4">
                 <div className="flex flex-col">
-                  <span className="text-[10px] text-muted-foreground font-semibold">
-                    {t("labels.total_amount")} {formatPrice(packageInfo.price)}
-                  </span>
                   <span className="text-xl font-black text-primary leading-none mt-0.5">
                     {formatPrice(packageInfo.depositAmount)}
                   </span>
@@ -638,9 +637,6 @@ export function BookingModal({
 
         <DialogFooter className="p-6 border-t bg-background shadow-[0_-4px_10px_rgba(0,0,0,0.03)] flex flex-row items-center justify-between sm:justify-between gap-4">
           <div className="flex flex-col text-start space-y-1">
-            <span className="text-[11px] text-muted-foreground font-semibold">
-              {t("labels.total_amount")} {formatPrice(packageInfo.price)}
-            </span>
             <span className="text-xl font-black text-primary leading-none">
               {t("labels.deposit_amount")} (30%) {formatPrice(packageInfo.depositAmount)}
             </span>

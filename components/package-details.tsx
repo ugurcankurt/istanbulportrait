@@ -111,7 +111,7 @@ export function PackageDetails({ packageData, aggregateRating, reviews, activeDi
     trackViewItem(
       packageData.slug,
       packageName,
-      convertPrice(pricing.isDiscounted ? pricing.price : basePrice),
+      convertPrice(pricing.price),
       currency
     );
   }, [packageData.slug, packageName, pricing.price, pricing.isDiscounted, basePrice, currency, convertPrice]);
@@ -290,7 +290,7 @@ export function PackageDetails({ packageData, aggregateRating, reviews, activeDi
                 <div className="flex items-center gap-3">
                   <div className="flex items-center gap-3">
                     <div className="text-4xl font-bold text-primary">
-                      {formatPrice(pricing.isDiscounted ? pricing.price : basePrice)}
+                      {formatPrice(pricing.price)}
                     </div>
                     {pricing.isDiscounted && (
                       <div className="flex items-center gap-2">
@@ -447,7 +447,7 @@ export function PackageDetails({ packageData, aggregateRating, reviews, activeDi
             )}
             <div className="flex items-center gap-2">
               <span className="text-2xl font-black text-primary">
-                {formatPrice(pricing.isDiscounted ? pricing.price : basePrice)}
+                {formatPrice(pricing.price)}
               </span>
               {pricing.isDiscounted && (
                 <span className="text-sm line-through text-muted-foreground font-medium opacity-60">
