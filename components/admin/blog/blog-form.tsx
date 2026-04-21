@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Save, Send, Sparkles } from "lucide-react";
+import { Save, Send, Sparkles, Wand } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -26,6 +26,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { calculateReadingTime, generateSlug } from "@/lib/blog/blog-utils";
@@ -64,6 +72,9 @@ export function BlogForm({
   >("en");
   const [isLoadingData, setIsLoadingData] = useState(true);
   const [isTranslating, setIsTranslating] = useState(false);
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [aiPromptOpen, setAiPromptOpen] = useState(false);
+  const [aiTopic, setAiTopic] = useState("");
 
   // Fetch categories and tags
   useEffect(() => {
@@ -223,6 +234,44 @@ export function BlogForm({
     }
   };
 
+  const handleAIGenerate = async () => {
+    if (!aiTopic || aiTopic.trim().length === 0) return;
+    setAiPromptOpen(false);
+
+    setIsGenerating(true);
+    toast.loading("AI is writing a high-quality SEO blog post (may take ~20 seconds)...", { id: "ai-generation" });
+    try {
+      const generateRes = await fetch("/api/admin/generate-blog-post", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ topic: aiTopic }),
+      });
+
+      if (generateRes.ok) {
+        const data = await generateRes.json();
+        if (data.post) {
+          const { title, excerpt, content } = data.post;
+          
+          form.setValue("translations.en" as any, {
+            ...(form.getValues("translations.en") || {}),
+            title: title || "",
+            excerpt: excerpt || "",
+            content: content || "",
+            slug: title ? generateSlug(title, { locale: "en" }) : "",
+          });
+          
+          setActiveTab("en");
+          toast.success("Blog generated perfectly! Use Auto-Translate to fan it out to other languages.", { id: "ai-generation" });
+        }
+      } else {
+        toast.error("AI generation failed. Please try again.", { id: "ai-generation" });
+      }
+    } catch (e) {
+      toast.error("AI generation failed due to a network error.", { id: "ai-generation" });
+    } finally {
+      setIsGenerating(false);
+    }
+  };
 
 
   // Calculate reading time from English content
@@ -247,7 +296,35 @@ export function BlogForm({
   };
 
   return (
-    <Form {...form}>
+    <>
+      <Dialog open={aiPromptOpen} onOpenChange={setAiPromptOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Auto-Write AI Blog</DialogTitle>
+            <DialogDescription>
+              What should the new blog post be about? Be specific for better SEO results.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="py-4">
+            <Input
+              placeholder="e.g. Best places for couple photoshoot in Istanbul"
+              value={aiTopic}
+              onChange={(e) => setAiTopic(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  handleAIGenerate();
+                }
+              }}
+            />
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setAiPromptOpen(false)}>Cancel</Button>
+            <Button onClick={handleAIGenerate} disabled={!aiTopic.trim()}>Generate</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+      <Form {...form}>
       <form onSubmit={form.handleSubmit(handleSubmit)} className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
 
         {/* Main Content Area */}
@@ -262,17 +339,33 @@ export function BlogForm({
                     ~{readingTime} min read
                   </span>
                 </div>
-                <Button
-                  type="button"
-                  variant="secondary"
-                  size="sm"
-                  onClick={handleAITranslate}
-                  disabled={isTranslating}
-                  className="w-fit shrink-0"
-                >
-                  {isTranslating ? <Spinner className="w-4 h-4 mr-2" /> : <Sparkles className="w-4 h-4 mr-2 text-yellow-500" />}
-                  Auto-Translate (AI)
-                </Button>
+                <div className="flex items-center gap-2">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => {
+                        setAiTopic("");
+                        setAiPromptOpen(true);
+                    }}
+                    disabled={isGenerating || isTranslating}
+                    className="w-fit shrink-0 border-blue-200 hover:bg-blue-50/50"
+                  >
+                    {isGenerating ? <Spinner className="w-4 h-4 mr-2" /> : <Wand className="w-4 h-4 mr-2 text-blue-500" />}
+                    Auto-Write (AI)
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="secondary"
+                    size="sm"
+                    onClick={handleAITranslate}
+                    disabled={isTranslating || isGenerating}
+                    className="w-fit shrink-0"
+                  >
+                    {isTranslating ? <Spinner className="w-4 h-4 mr-2" /> : <Sparkles className="w-4 h-4 mr-2 text-yellow-500" />}
+                    Auto-Translate (AI)
+                  </Button>
+                </div>
               </div>
             </CardHeader>
             <CardContent className="pt-6">
@@ -711,5 +804,6 @@ export function BlogForm({
         </div>
       </form>
     </Form>
+    </>
   );
 }
