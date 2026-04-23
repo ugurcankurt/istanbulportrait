@@ -678,7 +678,12 @@
       "description": "Yüksek çözünürlüklü fotoğraflarınız hazır.",
       "loading": "Fotoğraflarınız yükleniyor...",
       "select": "Seç",
-      "submitConfirm": "Düzenleme için bu {count} fotoğrafı göndermek istediğinize emin misiniz? Bu işlemi daha sonra değiştiremezsiniz."
+      "submitConfirm": "Düzenleme için bu {count} fotoğrafı göndermek istediğinize emin misiniz? Bu işlemi daha sonra değiştiremezsiniz.",
+      "limitReached": "Limita Ulaşıldı",
+      "ok": "Tamam",
+      "submitSelections": "Seçimleri Gönder",
+      "cancel": "İptal",
+      "confirm": "Onayla"
     }
   }
 }

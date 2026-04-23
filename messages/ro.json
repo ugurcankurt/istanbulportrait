@@ -649,7 +649,12 @@
       "title": "Galerie Foto",
       "description": "Fotografiile tale de înaltă rezoluție sunt gata.",
       "select": "Selectează",
-      "submitConfirm": "Ești sigur că vrei să trimiți aceste {count} fotografii pentru editare? Nu poți schimba asta mai târziu."
+      "submitConfirm": "Ești sigur că vrei să trimiți aceste {count} fotografii pentru editare? Nu poți schimba asta mai târziu.",
+      "limitReached": "Limită Atingă",
+      "ok": "OK",
+      "submitSelections": "Trimite Selecțiile",
+      "cancel": "Anulează",
+      "confirm": "Confirmă"
     },
     "login": {
       "title": "Bine ai revenit",

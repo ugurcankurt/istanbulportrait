@@ -649,7 +649,12 @@
       "title": "照片库",
       "description": "您的高清照片已准备就绪。",
       "select": "选择",
-      "submitConfirm": "您确定要提交这 {count} 张照片进行后期制作吗？提交后将无法更改。"
+      "submitConfirm": "您确定要提交这 {count} 张照片进行后期制作吗？提交后将无法更改。",
+      "limitReached": "达到限制",
+      "ok": "确定",
+      "submitSelections": "提交选择",
+      "cancel": "取消",
+      "confirm": "确认"
     },
     "login": {
       "title": "欢迎回来",

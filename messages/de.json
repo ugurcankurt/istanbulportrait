@@ -649,7 +649,12 @@
       "title": "Fotogalerie",
       "description": "Ihre hochauflösenden Fotos sind fertig.",
       "select": "Auswählen",
-      "submitConfirm": "Sind Sie sicher, dass Sie diese {count} Fotos zur Bearbeitung einreichen möchten? Dies kann später nicht mehr geändert werden."
+      "submitConfirm": "Sind Sie sicher, dass Sie diese {count} Fotos zur Bearbeitung einreichen möchten? Dies kann später nicht mehr geändert werden.",
+      "limitReached": "Limit Erreicht",
+      "ok": "OK",
+      "submitSelections": "Auswahl senden",
+      "cancel": "Abbrechen",
+      "confirm": "Bestätigen"
     },
     "login": {
       "title": "Willkommen zurück",

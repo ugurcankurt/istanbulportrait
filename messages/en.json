@@ -678,7 +678,12 @@
       "description": "Your high-resolution photos are ready.",
       "loading": "Loading your photos...",
       "select": "Select",
-      "submitConfirm": "Are you sure you want to submit these {count} photos for editing? You cannot change this later."
+      "submitConfirm": "Are you sure you want to submit these {count} photos for editing? You cannot change this later.",
+      "limitReached": "Limit Reached",
+      "ok": "OK",
+      "submitSelections": "Submit Selections",
+      "cancel": "Cancel",
+      "confirm": "Confirm"
     }
   }
 }

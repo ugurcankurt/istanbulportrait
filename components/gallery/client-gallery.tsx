@@ -5,6 +5,16 @@ import { Download, X, Loader2, Image as ImageIcon, CheckCircle2, ChevronLeft, Ch
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
@@ -32,6 +42,8 @@ export default function ClientGallery({ bookingId }: { bookingId: string }) {
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
+  const [limitAlertOpen, setLimitAlertOpen] = useState(false);
+  const [submitConfirmOpen, setSubmitConfirmOpen] = useState(false);
   const thumbnailRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
@@ -165,17 +177,19 @@ export default function ClientGallery({ bookingId }: { bookingId: string }) {
         return prev.filter(id => id !== fileId);
       }
       if (prev.length >= maxSelections) {
-        alert(`${t("selectUpTo")} ${maxSelections} ${t("photosToBeEdited")}`);
+        setLimitAlertOpen(true);
         return prev;
       }
       return [...prev, fileId];
     });
   };
 
-  const submitSelections = async () => {
+  const submitSelections = () => {
     if (selectedFiles.length === 0) return;
-    if (!confirm(t("submitConfirm", { count: selectedFiles.length }))) return;
+    setSubmitConfirmOpen(true);
+  };
 
+  const handleConfirmSubmit = async () => {
     setIsSubmitting(true);
     try {
       const res = await fetch(`/api/account/gallery/${bookingId}/select`, {
@@ -485,42 +499,74 @@ export default function ClientGallery({ bookingId }: { bookingId: string }) {
               </div>
             </div>
           )}
+
+          {/* Sticky Bottom Selection Bar (Only inside Lightbox on raw tab) */}
+          {selectionStatus !== "completed" && activeTab === "raw" && files.length > 0 && isLightboxOpen && (
+            <div className="fixed bottom-6 left-4 right-4 md:left-6 md:right-auto md:w-[420px] p-4 bg-black/60 backdrop-blur-xl border border-white/10 shadow-2xl rounded-2xl z-[60] animate-in slide-in-from-bottom-10 fade-in duration-500">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="bg-white/10 p-2.5 rounded-xl hidden sm:block">
+                    <CheckCircle2 className="w-5 h-5 text-white" />
+                  </div>
+                  <div>
+                    <p className="text-sm text-white/70 font-medium">{t("selectionProgress")}</p>
+                    <p className="font-bold text-lg leading-none mt-0.5 text-white">
+                      <span className={selectedFiles.length === maxSelections ? "text-primary text-xl" : "text-xl"}>{selectedFiles.length}</span>
+                      <span className="text-white/50"> / {maxSelections}</span>
+                    </p>
+                  </div>
+                </div>
+                <Button
+                  onClick={submitSelections}
+                  disabled={selectedFiles.length === 0 || isSubmitting}
+                  className={`rounded-xl h-12 px-6 shadow-md transition-all ${selectedFiles.length === maxSelections ? 'animate-pulse shadow-primary/20' : ''}`}
+                >
+                  {isSubmitting ? (
+                    <>
+                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                      {t("submitting")}
+                    </>
+                  ) : (
+                    t("submitPhotos", { count: selectedFiles.length }) || `Submit ${selectedFiles.length} Photos`
+                  )}
+                </Button>
+              </div>
+            </div>
+          )}
         </DialogContent>
       </Dialog>
 
-      {/* Sticky Bottom Selection Bar (Only inside Lightbox on raw tab) */}
-      {selectionStatus !== "completed" && activeTab === "raw" && files.length > 0 && isLightboxOpen && (
-        <div className="fixed bottom-6 left-4 right-4 md:left-auto md:right-auto md:w-full md:max-w-2xl md:mx-auto p-4 bg-black/60 backdrop-blur-xl border border-white/10 shadow-2xl rounded-2xl z-[60] animate-in slide-in-from-bottom-10 fade-in duration-500">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="bg-white/10 p-2.5 rounded-xl hidden sm:block">
-                <CheckCircle2 className="w-5 h-5 text-white" />
-              </div>
-              <div>
-                <p className="text-sm text-white/70 font-medium">{t("selectionProgress")}</p>
-                <p className="font-bold text-lg leading-none mt-0.5 text-white">
-                  <span className={selectedFiles.length === maxSelections ? "text-primary text-xl" : "text-xl"}>{selectedFiles.length}</span>
-                  <span className="text-white/50"> / {maxSelections}</span>
-                </p>
-              </div>
-            </div>
-            <Button
-              onClick={submitSelections}
-              disabled={selectedFiles.length === 0 || isSubmitting}
-              className={`rounded-xl h-12 px-6 shadow-md transition-all ${selectedFiles.length === maxSelections ? 'animate-pulse shadow-primary/20' : ''}`}
-            >
-              {isSubmitting ? (
-                <>
-                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                  {t("submitting")}
-                </>
-              ) : (
-                t("submitPhotos", { count: selectedFiles.length }) || `Submit ${selectedFiles.length} Photos`
-              )}
-            </Button>
-          </div>
-        </div>
-      )}
+      <AlertDialog open={limitAlertOpen} onOpenChange={setLimitAlertOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>{t("limitReached") || "Limit Reached"}</AlertDialogTitle>
+            <AlertDialogDescription>
+              {t("selectUpTo")} {maxSelections} {t("photosToBeEdited")}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogAction onClick={() => setLimitAlertOpen(false)}>{t("ok") || "OK"}</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      <AlertDialog open={submitConfirmOpen} onOpenChange={setSubmitConfirmOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>{t("submitSelections") || "Submit Selections"}</AlertDialogTitle>
+            <AlertDialogDescription>
+              {t("submitConfirm", { count: selectedFiles.length })}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={isSubmitting}>{t("cancel") || "Cancel"}</AlertDialogCancel>
+            <AlertDialogAction onClick={(e) => { e.preventDefault(); handleConfirmSubmit(); }} disabled={isSubmitting}>
+              {isSubmitting ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : null}
+              {t("confirm") || "Confirm"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

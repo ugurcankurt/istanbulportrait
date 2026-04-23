@@ -649,7 +649,12 @@
       "title": "Galería de fotos",
       "description": "Tus fotos de alta resolución están listas.",
       "select": "Seleccionar",
-      "submitConfirm": "¿Estás seguro de que deseas enviar estas {count} fotos para su edición? No puedes cambiar esto más tarde."
+      "submitConfirm": "¿Estás seguro de que deseas enviar estas {count} fotos para su edición? No puedes cambiar esto más tarde.",
+      "limitReached": "Límite Alcanzado",
+      "ok": "OK",
+      "submitSelections": "Enviar Selecciones",
+      "cancel": "Cancelar",
+      "confirm": "Confirmar"
     },
     "login": {
       "title": "Bienvenido de nuevo",
