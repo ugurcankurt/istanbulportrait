@@ -163,6 +163,23 @@ function BookingDetailsDialog({ booking }: { booking: Booking }) {
             </div>
           )}
 
+          {booking.drive_folder_id && (
+            <div>
+              <Label className="text-sm font-medium">Google Drive Folder</Label>
+              <div className="bg-muted p-3 rounded-md flex items-center justify-between">
+                <p className="text-sm font-mono truncate mr-4">{booking.drive_folder_id}</p>
+                <a 
+                  href={`https://drive.google.com/drive/folders/${booking.drive_folder_id}`} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="text-xs text-blue-500 hover:underline whitespace-nowrap"
+                >
+                  Open in Drive
+                </a>
+              </div>
+            </div>
+          )}
+
           <div className="grid grid-cols-3 gap-4 p-3 bg-muted/20 rounded-lg border">
             <div>
               <Label className="text-xs font-medium text-muted-foreground uppercase">

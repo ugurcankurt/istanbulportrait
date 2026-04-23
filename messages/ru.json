@@ -10,7 +10,8 @@
     "locations": "Локации",
     "blog": "Блог",
     "about": "О нас",
-    "contact": "Контакты"
+    "contact": "Контакты",
+    "myAccount": "Мой аккаунт"
   },
   "whatsapp": {
     "button": "WhatsApp",
@@ -601,6 +602,83 @@
           }
         }
       }
+    }
+  },
+  "account": {
+    "dashboard": {
+      "noReservationsDesc": "Похоже, у вас пока не запланировано никаких фотосессий.",
+      "people": "Люди",
+      "totalAmount": "Общая сумма",
+      "photosProcessing": "Обработка фото...",
+      "title": "Мои бронирования",
+      "description": "Управляйте вашими бронированиями и просматривайте галереи.",
+      "upcoming": "Предстоящие",
+      "past": "Прошедшие",
+      "viewGallery": "Смотреть галерею",
+      "bookingDate": "Дата бронирования",
+      "noReservations": "Бронирования не найдены"
+    },
+    "payments": {
+      "paidAmount": "Оплачено",
+      "remainingBalance": "Остаток",
+      "noRecords": "Записи об оплате не найдены.",
+      "title": "Платежи",
+      "description": "Просматривайте историю ваших транзакций.",
+      "noTransactions": "Транзакции не найдены",
+      "balanceDue": "К оплате",
+      "fullyPaid": "Полностью оплачено",
+      "totalAmount": "Общая сумма"
+    },
+    "gallery": {
+      "rawPhotos": "Исходники",
+      "selectedPhotos": "Выбранные",
+      "finalEdited": "В обработке ✨",
+      "selectionProgress": "Прогресс выбора",
+      "submitPhotos": "Отправить {count} фото",
+      "submitting": "Отправка...",
+      "selectionComplete": "✓ Вы отправили ваш выбор. Фотограф сейчас их обрабатывает.",
+      "selectUpTo": "Выберите до",
+      "photosToBeEdited": "фото для обработки.",
+      "noPhotosYet": "Фотографий пока нет",
+      "noPhotosDesc": "Мы все еще работаем над вашими фото. Загляните позже!",
+      "noPhotosHere": "Здесь пока нет фотографий",
+      "downloadAll": "Скачать все",
+      "download": "Скачать",
+      "backToDashboard": "Назад в панель",
+      "loading": "Загрузка ваших фото...",
+      "title": "Фотогалерея",
+      "description": "Ваши фото в высоком разрешении готовы.",
+      "select": "Выбрать",
+      "submitConfirm": "Вы уверены, что хотите отправить эти {count} фото на обработку? Вы не сможете изменить это позже."
+    },
+    "login": {
+      "title": "С возвращением",
+      "description": "Войдите, чтобы просмотреть ваши фотографии и бронирования.",
+      "email": "Электронная почта",
+      "emailPlaceholder": "name@example.com",
+      "password": "Пароль",
+      "passwordPlaceholder": "Введите ваш пароль",
+      "forgotPassword": "Забыли пароль?",
+      "forgotPasswordAlert": "Пожалуйста, проверьте пригласительное письмо, отправленное при бронировании, или свяжитесь с поддержкой.",
+      "signIn": "Войти",
+      "signingIn": "Вход..."
+    },
+    "updatePassword": {
+      "title": "Установите ваш пароль",
+      "description": "Пожалуйста, обезопасьте вашу учетную запись, установив новый пароль.",
+      "newPassword": "Новый пароль",
+      "newPasswordPlaceholder": "Введите новый пароль",
+      "confirmPassword": "Подтвердите пароль",
+      "confirmPasswordPlaceholder": "Подтвердите новый пароль",
+      "savePassword": "Сохранить пароль",
+      "saving": "Обновление...",
+      "passwordMismatch": "Пароли не совпадают"
+    },
+    "sidebar": {
+      "portal": "Клиентский Портал",
+      "myBookings": "Мои бронирования",
+      "payments": "Платежи",
+      "logout": "Выйти"
     }
   }
 }

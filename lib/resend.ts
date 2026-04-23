@@ -1,6 +1,6 @@
 import { Resend } from "resend";
 import type { SiteSettings } from "./settings-service";
-import { EMAIL_TRANSLATIONS, NEWSLETTER_TRANSLATIONS, ABANDONED_TRANSLATIONS } from "./email-translations";
+import { EMAIL_TRANSLATIONS, NEWSLETTER_TRANSLATIONS, ABANDONED_TRANSLATIONS, RAW_PHOTOS_READY_TRANSLATIONS, FINAL_EDITS_READY_TRANSLATIONS } from "./email-translations";
 
 export const getEmailColors = (settings: SiteSettings) => {
   const isDark = settings.color_mode === "dark";
@@ -60,7 +60,7 @@ export const renderEmailLayout = (
   // Clean the URLs to route through our own domain (to satisfy Resend Domain Verification)
   const appBaseUrl = settings.app_base_url || process.env.NEXT_PUBLIC_APP_URL || "https://istanbulportrait.com";
   const supabasePrefix = "https://xfntnamwfnqjgqmyxwfz.supabase.co/storage/v1/object/public";
-  
+
   const cleanUrl = (url?: string | null) => {
     if (!url) return "";
     return url.replace(supabasePrefix, `${appBaseUrl}/storage`);
@@ -397,8 +397,8 @@ export const sendAbandonedBookingEmail = async (
   try {
     const apiKey =
       settings.resend_api_key || process.env.RESEND_API_KEY || "demo-resend-key";
-      
-    console.log("Abandoned Email Execution Check:", { 
+
+    console.log("Abandoned Email Execution Check:", {
       hasApiKey: !!apiKey && apiKey !== "demo-resend-key",
       contactEmail: settings.contact_email
     });
@@ -572,7 +572,7 @@ export const sendAdminLeadNotification = async (
     // Only sending to admin_email. Falling back to contact_email.
     const recipient = settings.admin_email || settings.contact_email;
     const fromDomainEmail = `System <${settings.contact_email}>`;
-    
+
     await resend.emails.send({
       from: fromDomainEmail,
       to: [recipient],
@@ -581,6 +581,188 @@ export const sendAdminLeadNotification = async (
     });
   } catch (error) {
     console.error("Error sending lead admin notification email:", error);
+  }
+};
+
+
+// ─── RAW PHOTOS READY NOTIFICATION ─────────────────────────
+
+export const sendRawPhotosReadyEmail = async (
+  booking: any,
+  settings: SiteSettings,
+) => {
+  try {
+    const apiKey = settings.resend_api_key || process.env.RESEND_API_KEY || "demo-resend-key";
+    if (!apiKey || apiKey === "demo-resend-key") return;
+
+    const resend = new Resend(apiKey);
+    const locale = booking.locale || "en";
+    const t = RAW_PHOTOS_READY_TRANSLATIONS[locale] || RAW_PHOTOS_READY_TRANSLATIONS["en"];
+    const colors = getEmailColors(settings);
+
+    // Replace dynamic tags
+    const emailTitle = t.title.replace("{name}", booking.user_name);
+    const greetingText = t.greeting.replace("{name}", booking.user_name);
+
+    const appBaseUrl = settings.app_base_url || process.env.NEXT_PUBLIC_APP_URL || "https://istanbulportrait.com";
+    const portalUrl = `${appBaseUrl}/${locale}/account`;
+
+    const content = `
+      <h2 style="color: ${colors.text}; margin-top: 0; font-size: 24px;">${emailTitle}</h2>
+      <p style="font-size: 16px; line-height: 1.6; color: ${colors.text}; margin-bottom: 20px;">
+        ${greetingText}
+      </p>
+      
+      <p style="font-size: 16px; line-height: 1.6; color: ${colors.textMuted}; margin-bottom: 20px;">
+        ${t.body1}
+      </p>
+      
+      <p style="font-size: 16px; line-height: 1.6; color: ${colors.textMuted}; margin-bottom: 30px;">
+        ${t.body2}
+      </p>
+      
+      <div style="text-align: center; margin: 40px 0;">
+        <a href="${portalUrl}" style="display: inline-block; background-color: ${colors.primary}; color: #ffffff; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; transition: opacity 0.2s;">
+          ${t.button}
+        </a>
+      </div>
+      
+      <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid ${colors.border};">
+        <p style="color: ${colors.textMuted}; font-size: 14px; margin: 0;">
+          ${t.questions} <a href="mailto:${settings.contact_email}" style="color: ${colors.primary}; text-decoration: none; font-weight: bold;">${settings.contact_email}</a>
+        </p>
+      </div>
+    `;
+
+    await resend.emails.send({
+      from: `${settings.site_name || "Photographer"} <${settings.contact_email || 'hello@istanbulportrait.com'}>`,
+      to: [booking.user_email],
+      subject: t.subject,
+      html: renderEmailLayout(content, emailTitle, locale, settings),
+    });
+    console.log(`Raw photos ready email dispatched to ${booking.user_email}`);
+  } catch (error) {
+    console.error("Error sending raw photos ready email:", error);
+  }
+};
+
+
+// ─── FINAL EDITS READY NOTIFICATION ────────────────────────
+
+export const sendFinalEditsReadyEmail = async (
+  booking: any,
+  settings: SiteSettings,
+) => {
+  try {
+    const apiKey = settings.resend_api_key || process.env.RESEND_API_KEY || "demo-resend-key";
+    if (!apiKey || apiKey === "demo-resend-key") return;
+
+    const resend = new Resend(apiKey);
+    const locale = booking.locale || "en";
+    const t = FINAL_EDITS_READY_TRANSLATIONS[locale] || FINAL_EDITS_READY_TRANSLATIONS["en"];
+    const colors = getEmailColors(settings);
+
+    // Replace dynamic tags
+    const emailTitle = t.title.replace("{name}", booking.user_name);
+    const greetingText = t.greeting.replace("{name}", booking.user_name);
+
+    const appBaseUrl = settings.app_base_url || process.env.NEXT_PUBLIC_APP_URL || "https://istanbulportrait.com";
+    const portalUrl = `${appBaseUrl}/${locale}/account`;
+
+    const content = `
+      <h2 style="color: ${colors.text}; margin-top: 0; font-size: 24px;">${emailTitle}</h2>
+      <p style="font-size: 16px; line-height: 1.6; color: ${colors.text}; margin-bottom: 20px;">
+        ${greetingText}
+      </p>
+      
+      <p style="font-size: 16px; line-height: 1.6; color: ${colors.textMuted}; margin-bottom: 20px;">
+        ${t.body1}
+      </p>
+      
+      <p style="font-size: 16px; line-height: 1.6; color: ${colors.textMuted}; margin-bottom: 30px;">
+        ${t.body2}
+      </p>
+      
+      <div style="text-align: center; margin: 40px 0;">
+        <a href="${portalUrl}" style="display: inline-block; background-color: ${colors.primary}; color: #ffffff; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; transition: opacity 0.2s;">
+          ${t.button}
+        </a>
+      </div>
+      
+      <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid ${colors.border};">
+        <p style="color: ${colors.textMuted}; font-size: 14px; margin: 0;">
+          ${t.questions} <a href="mailto:${settings.contact_email}" style="color: ${colors.primary}; text-decoration: none; font-weight: bold;">${settings.contact_email}</a>
+        </p>
+      </div>
+    `;
+
+    await resend.emails.send({
+      from: `${settings.site_name || "Photographer"} <${settings.contact_email || 'hello@istanbulportrait.com'}>`,
+      to: [booking.user_email],
+      subject: t.subject,
+      html: renderEmailLayout(content, emailTitle, locale, settings),
+    });
+    console.log(`Final edits ready email dispatched to ${booking.user_email}`);
+  } catch (error) {
+    console.error("Error sending final edits ready email:", error);
+  }
+};
+
+
+// ─── ADMIN NOTIFICATION: CUSTOMER SUBMITTED SELECTIONS ──────
+
+export const sendAdminSelectionNotificationEmail = async (
+  booking: any,
+  fileCount: number,
+  settings: SiteSettings,
+) => {
+  try {
+    const apiKey = settings.resend_api_key || process.env.RESEND_API_KEY || "demo-resend-key";
+    if (!apiKey || apiKey === "demo-resend-key") return;
+
+    const recipient = settings.admin_email || settings.contact_email;
+    if (!recipient) return;
+
+    const resend = new Resend(apiKey);
+    const colors = getEmailColors(settings);
+    const detailsBg = settings.color_mode === "dark" ? "#1e1e24" : "#fafafa";
+
+    const content = `
+      <h2 style="color: ${colors.text}; margin-top: 0; font-size: 24px;">Photo Selections Submitted! 🖼️</h2>
+      <p style="font-size: 16px; line-height: 1.6; color: ${colors.textMuted};">The customer has successfully selected their photos and submitted them for final editing.</p>
+
+      <div style="border: 1px solid ${colors.border}; padding: 25px; border-radius: 12px; margin: 30px 0; background-color: ${detailsBg};">
+        <h3 style="color: ${colors.primary}; margin-top: 0; font-size: 18px; text-transform: uppercase;">Selection Details</h3>
+        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td style="padding: 10px 0; border-bottom: 1px solid ${colors.border}; color: ${colors.textMuted}; font-size: 14px;"><strong>Customer Name:</strong></td>
+            <td style="padding: 10px 0; border-bottom: 1px solid ${colors.border}; text-align: right; color: ${colors.text}; font-weight: 500;">${booking.user_name}</td>
+          </tr>
+          <tr>
+            <td style="padding: 10px 0; border-bottom: 1px solid ${colors.border}; color: ${colors.textMuted}; font-size: 14px;"><strong>Booking ID:</strong></td>
+            <td style="padding: 10px 0; border-bottom: 1px solid ${colors.border}; text-align: right; color: ${colors.text}; font-weight: 500;">${booking.id.split('-')[0].toUpperCase()}</td>
+          </tr>
+          <tr>
+            <td style="padding: 10px 0; border-bottom: 1px solid ${colors.border}; color: ${colors.textMuted}; font-size: 14px;"><strong>Number of Photos:</strong></td>
+            <td style="padding: 10px 0; border-bottom: 1px solid ${colors.border}; text-align: right; color: ${colors.warning}; font-weight: bold;">${fileCount} photos</td>
+          </tr>
+        </table>
+      </div>
+      
+      <p style="color: ${colors.textMuted}; font-size: 14px;">The selected photos have been automatically moved to the "edited" folder in the Google Drive directory for this booking.</p>
+    `;
+
+    const fromDomainEmail = `System <${settings.contact_email}>`;
+
+    await resend.emails.send({
+      from: fromDomainEmail,
+      to: [recipient],
+      subject: `✅ Selections Ready: ${booking.user_name} (${fileCount} photos)`,
+      html: renderEmailLayout(content, "Photo Selections Submitted", "en", settings),
+    });
+    console.log(`Admin selection notification dispatched to ${recipient}`);
+  } catch (error) {
+    console.error("Error sending admin selection notification:", error);
   }
 };
 

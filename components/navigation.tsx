@@ -1,6 +1,6 @@
 "use client";
 
-import { Globe, Menu } from "lucide-react";
+import { Globe, Menu, User } from "lucide-react";
 import Image from "next/image";
 import { useParams } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
@@ -93,6 +93,10 @@ export function Navigation({ dynamicNavData = {}, settings }: NavigationProps) {
 
   const [isLangOpen, setIsLangOpen] = useState(false);
 
+  if (pathname.startsWith("/account")) {
+    return null;
+  }
+
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container mx-auto flex h-14 sm:h-16 items-center justify-between px-4 sm:px-6 lg:px-8">
@@ -151,6 +155,18 @@ export function Navigation({ dynamicNavData = {}, settings }: NavigationProps) {
         </nav>
 
         <div className="flex items-center space-x-2">
+          {/* Customer Portal Login */}
+          <Link 
+            href={`/${locale}/account/login`} 
+            aria-label="Customer Portal" 
+            className={cn(
+              buttonVariants({ variant: "ghost", size: "sm" }), 
+              "hidden md:inline-flex h-9 w-9 p-0 hover:bg-muted/50 hover:scale-105 active:scale-95 transition-all duration-200 border border-transparent hover:border-border/50"
+            )}
+          >
+            <User className="h-4 w-4" />
+          </Link>
+
           {/* Theme Toggle */}
           <ThemeToggle />
 
@@ -284,6 +300,23 @@ export function Navigation({ dynamicNavData = {}, settings }: NavigationProps) {
                     </Link>
                   </div>
                 ))}
+
+                {/* Mobile Login Button */}
+                <div
+                  className="animate-slide-in-right mt-6 border-t border-border/50 pt-4"
+                  style={{ animationDelay: `${navItems.length * 100}ms` }}
+                >
+                  <Link
+                    href={`/${locale}/account/login`}
+                    className="flex items-center justify-center px-5 py-4 rounded-md transition-all duration-300 bg-secondary/50 hover:bg-secondary text-foreground group hover:scale-[1.03] active:scale-[0.98]"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    <User className="w-5 h-5 mr-3 text-primary" />
+                    <span className="text-lg font-semibold tracking-tight">
+                      {t('myAccount') || "My Account"}
+                    </span>
+                  </Link>
+                </div>
               </nav>
             </SheetContent>
           </Sheet>

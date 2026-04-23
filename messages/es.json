@@ -10,7 +10,8 @@
     "locations": "Ubicaciones",
     "blog": "Blog",
     "about": "Acerca de",
-    "contact": "Contacto"
+    "contact": "Contacto",
+    "myAccount": "Mi Cuenta"
   },
   "whatsapp": {
     "button": "WhatsApp",
@@ -601,6 +602,83 @@
           }
         }
       }
+    }
+  },
+  "account": {
+    "dashboard": {
+      "noReservationsDesc": "Parece que aún no tienes ninguna sesión de fotos programada.",
+      "people": "Personas",
+      "totalAmount": "Cantidad total",
+      "photosProcessing": "Procesando fotos...",
+      "title": "Mis Reservas",
+      "description": "Gestiona tus reservas de fotografía y ve tus galerías de fotos.",
+      "upcoming": "Próximas",
+      "past": "Pasadas",
+      "viewGallery": "Ver Galería",
+      "bookingDate": "Fecha de reserva",
+      "noReservations": "No se encontraron reservas"
+    },
+    "payments": {
+      "paidAmount": "Cantidad pagada",
+      "remainingBalance": "Saldo restante",
+      "noRecords": "No se encontraron registros de pago.",
+      "title": "Pagos",
+      "description": "Ve tu historial de transacciones y saldos pendientes.",
+      "noTransactions": "No se encontraron transacciones",
+      "balanceDue": "Saldo a pagar",
+      "fullyPaid": "Pagado por completo",
+      "totalAmount": "Cantidad total"
+    },
+    "gallery": {
+      "rawPhotos": "Fotos sin editar",
+      "selectedPhotos": "Seleccionadas",
+      "finalEdited": "Edición Final ✨",
+      "selectionProgress": "Progreso de selección",
+      "submitPhotos": "Enviar {count} fotos",
+      "submitting": "Enviando...",
+      "selectionComplete": "✓ Has enviado tus selecciones. El fotógrafo las está editando.",
+      "selectUpTo": "Selecciona hasta",
+      "photosToBeEdited": "fotos para ser editadas.",
+      "noPhotosYet": "Todavía no hay fotos",
+      "noPhotosDesc": "Seguimos trabajando en tus hermosas fotos. ¡Vuelve pronto!",
+      "noPhotosHere": "Aún no hay fotos aquí",
+      "downloadAll": "Descargar todo",
+      "download": "Descargar",
+      "backToDashboard": "Volver al panel",
+      "loading": "Cargando tus fotos...",
+      "title": "Galería de fotos",
+      "description": "Tus fotos de alta resolución están listas.",
+      "select": "Seleccionar",
+      "submitConfirm": "¿Estás seguro de que deseas enviar estas {count} fotos para su edición? No puedes cambiar esto más tarde."
+    },
+    "login": {
+      "title": "Bienvenido de nuevo",
+      "description": "Inicia sesión para ver tus fotos y reservas.",
+      "email": "Correo electrónico",
+      "emailPlaceholder": "name@example.com",
+      "password": "Contraseña",
+      "passwordPlaceholder": "Introduce tu contraseña",
+      "forgotPassword": "¿Olvidaste tu contraseña?",
+      "forgotPasswordAlert": "Por favor revisa el correo de invitación enviado cuando completaste tu reserva, o contacta al soporte.",
+      "signIn": "Iniciar sesión",
+      "signingIn": "Iniciando sesión..."
+    },
+    "updatePassword": {
+      "title": "Establece tu contraseña",
+      "description": "Por favor protege tu cuenta del portal de clientes estableciendo una nueva contraseña.",
+      "newPassword": "Nueva contraseña",
+      "newPasswordPlaceholder": "Introduce la nueva contraseña",
+      "confirmPassword": "Confirmar contraseña",
+      "confirmPasswordPlaceholder": "Confirma la nueva contraseña",
+      "savePassword": "Guardar contraseña",
+      "saving": "Actualizando...",
+      "passwordMismatch": "Las contraseñas no coinciden"
+    },
+    "sidebar": {
+      "portal": "Portal del Cliente",
+      "myBookings": "Mis Reservas",
+      "payments": "Pagos",
+      "logout": "Cerrar sesión"
     }
   }
 }

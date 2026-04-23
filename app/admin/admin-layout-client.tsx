@@ -13,6 +13,7 @@ import {
   Settings,
   TicketPercent,
   Ticket,
+  CreditCard,
 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
@@ -55,6 +56,7 @@ const navigationGroups = [
       { name: "Bookings", href: "/admin/dashboard/bookings", icon: Calendar },
       { name: "Customers", href: "/admin/dashboard/customers", icon: Users },
       { name: "Availability", href: "/admin/dashboard/availability", icon: Calendar },
+      { name: "Payments", href: "/admin/dashboard/payments", icon: CreditCard },
     ],
   },
   {

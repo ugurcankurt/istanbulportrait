@@ -10,7 +10,8 @@
     "locations": "地点",
     "blog": "博客",
     "about": "关于我们",
-    "contact": "联系我们"
+    "contact": "联系我们",
+    "myAccount": "我的账户"
   },
   "whatsapp": {
     "button": "WhatsApp",
@@ -601,6 +602,83 @@
           }
         }
       }
+    }
+  },
+  "account": {
+    "dashboard": {
+      "noReservationsDesc": "看起来您目前没有任何预定的拍摄行程。",
+      "people": "人数",
+      "totalAmount": "总金额",
+      "photosProcessing": "照片处理中...",
+      "title": "我的预订",
+      "description": "管理您的摄影预订并查看您的照片库。",
+      "upcoming": "即将到来",
+      "past": "过去",
+      "viewGallery": "查看图库",
+      "bookingDate": "预订日期",
+      "noReservations": "未找到预订"
+    },
+    "payments": {
+      "paidAmount": "已付金额",
+      "remainingBalance": "剩余余额",
+      "noRecords": "未找到付款记录。",
+      "title": "付款",
+      "description": "查看您的交易历史和未结余额。",
+      "noTransactions": "未找到交易",
+      "balanceDue": "应付余额",
+      "fullyPaid": "已全额付款",
+      "totalAmount": "总金额"
+    },
+    "gallery": {
+      "rawPhotos": "原片",
+      "selectedPhotos": "已选",
+      "finalEdited": "最终精修 ✨",
+      "selectionProgress": "选择进度",
+      "submitPhotos": "提交 {count} 张照片",
+      "submitting": "提交中...",
+      "selectionComplete": "✓ 您已提交您的选择。摄影师正在进行后期制作。",
+      "selectUpTo": "最多选择",
+      "photosToBeEdited": "张照片进行精修。",
+      "noPhotosYet": "暂无照片",
+      "noPhotosDesc": "我们仍在处理您的美丽照片，请稍后再来查看！",
+      "noPhotosHere": "这里暂无照片",
+      "downloadAll": "全部下载",
+      "download": "下载",
+      "backToDashboard": "返回控制台",
+      "loading": "正在加载您的照片...",
+      "title": "照片库",
+      "description": "您的高清照片已准备就绪。",
+      "select": "选择",
+      "submitConfirm": "您确定要提交这 {count} 张照片进行后期制作吗？提交后将无法更改。"
+    },
+    "login": {
+      "title": "欢迎回来",
+      "description": "登录以查看您的照片和预订。",
+      "email": "电子邮件",
+      "emailPlaceholder": "name@example.com",
+      "password": "密码",
+      "passwordPlaceholder": "请输入密码",
+      "forgotPassword": "忘记密码？",
+      "forgotPasswordAlert": "请检查您完成预订时收到的邀请邮件，或联系客服。",
+      "signIn": "登录",
+      "signingIn": "登录中..."
+    },
+    "updatePassword": {
+      "title": "设置密码",
+      "description": "请设置新密码以保护您的客户门户账户。",
+      "newPassword": "新密码",
+      "newPasswordPlaceholder": "请输入新密码",
+      "confirmPassword": "确认密码",
+      "confirmPasswordPlaceholder": "请确认新密码",
+      "savePassword": "保存密码",
+      "saving": "更新中...",
+      "passwordMismatch": "密码不匹配"
+    },
+    "sidebar": {
+      "portal": "客户门户",
+      "myBookings": "我的预订",
+      "payments": "付款",
+      "logout": "退出登录"
     }
   }
 }

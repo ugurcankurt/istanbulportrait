@@ -12,6 +12,7 @@ import {
   Sunset,
   CreditCard
 } from "lucide-react";
+import { trackSchedule } from "@/lib/analytics";
 import { DEPOSIT_PERCENTAGE, matchActiveSurcharge } from "@/lib/pricing";
 import { useCurrency } from "@/contexts/currency-context";
 import { useState, useEffect } from "react";
@@ -33,6 +34,7 @@ import type { TimeSurcharge } from "@/lib/availability-service";
 
 interface BookingCardProps {
   packageId: PackageId;
+  packageDisplayName: string;
   basePrice: number;
   pricing: {
     price: number;
@@ -62,6 +64,7 @@ interface BookingCardProps {
 
 export function BookingCard({
   packageId,
+  packageDisplayName,
   basePrice,
   pricing,
   displayPrice,
@@ -145,6 +148,17 @@ export function BookingCard({
         // Progress complete — show success state briefly
         setCheckState("success");
         setCheckingProgress(100);
+
+        // Track the schedule event when availability check succeeds
+        if (selectedDate && selectedTime) {
+          const formattedDate = format(selectedDate, "yyyy-MM-dd");
+          trackSchedule(
+            packageId,
+            packageDisplayName,
+            `${formattedDate} ${selectedTime}`
+          );
+        }
+
         setTimeout(() => {
           setCheckState("idle");
           setCheckingProgress(0);

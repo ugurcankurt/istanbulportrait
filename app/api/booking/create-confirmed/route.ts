@@ -145,15 +145,63 @@ export async function POST(request: NextRequest) {
     }
 
     try {
+      // 1. Create or retrieve Supabase Auth User
+      let authUserId = null;
+      try {
+        const baseUrl = request.headers.get("origin") || process.env.NEXT_PUBLIC_BASE_URL || "https://istanbulportrait.com";
+        const { data: authData, error: authError } = await supabaseAdmin.auth.admin.inviteUserByEmail(customerEmail, {
+          data: { name: customerName, phone: customerPhone },
+          redirectTo: `${baseUrl}/api/auth/confirm?next=/${locale || "en"}/account/update-password`
+        });
+        
+        if (authError) {
+          console.log("Auth invite error (user might exist):", authError.message);
+        } else if (authData.user) {
+          authUserId = authData.user.id;
+        }
+      } catch (err) {
+        console.error("Failed to provision auth user:", err);
+      }
+
+      // 2. Create Google Drive Folder
+      let driveFolderId = null;
+      try {
+        const { createDriveFolder } = await import("@/lib/google-drive");
+        const formattedDate = new Date(bookingDate).toLocaleDateString('tr-TR').replace(/\./g, '-'); 
+        const folderName = `${customerName} - ${formattedDate}`;
+        
+        // You can pass a parentFolderId as a second argument if you have a "Customers" root folder
+        const folder = await createDriveFolder(folderName, "1rKj5qIUzm8nTZ-hm7hspZaWupsKkiOCS");
+        if (folder && folder.id) {
+          driveFolderId = folder.id;
+        }
+      } catch (err) {
+        console.error("Failed to create Google Drive folder:", err);
+      }
+
       // First create/update customer record
+      const customerUpsertData: Record<string, any> = {
+        email: customerEmail,
+        name: customerName,
+        phone: customerPhone,
+      };
+      
+      // We need to fetch the existing customer if we failed to get authUserId
+      if (!authUserId) {
+        const { data: existingCustomer } = await supabaseAdmin.from("customers").select("user_id").eq("email", customerEmail).single();
+        if (existingCustomer?.user_id) {
+          authUserId = existingCustomer.user_id;
+        }
+      }
+      
+      if (authUserId) {
+        customerUpsertData.user_id = authUserId;
+      }
+
       const { error: customerError } = await supabaseAdmin
         .from("customers")
         .upsert(
-          {
-            email: customerEmail,
-            name: customerName,
-            phone: customerPhone,
-          },
+          customerUpsertData,
           { onConflict: "email" },
         )
         .select()
@@ -187,6 +235,8 @@ export async function POST(request: NextRequest) {
               booking_date: bookingDate,
               booking_time: bookingTime,
               people_count: peopleCount || null,
+              user_id: authUserId || null,
+              drive_folder_id: driveFolderId || null,
             })
             .eq("id", bookingId)
             .select()
@@ -212,6 +262,8 @@ export async function POST(request: NextRequest) {
             notes: notes || null,
             applied_promo_code: body.appliedPromo?.code || promoCode || null,
             people_count: peopleCount || null,
+            user_id: authUserId || null,
+            drive_folder_id: driveFolderId || null,
           })
           .select()
           .single();

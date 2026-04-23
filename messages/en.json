@@ -10,7 +10,8 @@
     "locations": "Locations",
     "blog": "Blog",
     "about": "About",
-    "contact": "Contact"
+    "contact": "Contact",
+    "myAccount": "My Account"
   },
   "whatsapp": {
     "button": "WhatsApp",
@@ -601,6 +602,83 @@
           }
         }
       }
+    }
+  },
+  "account": {
+    "login": {
+      "title": "Welcome Back",
+      "description": "Login to view your photos and reservations.",
+      "email": "Email",
+      "emailPlaceholder": "name@example.com",
+      "password": "Password",
+      "passwordPlaceholder": "Enter your password",
+      "forgotPassword": "Forgot password?",
+      "forgotPasswordAlert": "Please check the invite email sent when you completed your reservation, or contact support.",
+      "signIn": "Sign In",
+      "signingIn": "Signing in..."
+    },
+    "updatePassword": {
+      "title": "Set Your Password",
+      "description": "Please secure your customer portal account by setting a new password.",
+      "newPassword": "New Password",
+      "newPasswordPlaceholder": "Enter new password",
+      "confirmPassword": "Confirm Password",
+      "confirmPasswordPlaceholder": "Confirm new password",
+      "savePassword": "Save Password",
+      "saving": "Updating...",
+      "passwordMismatch": "Passwords do not match"
+    },
+    "sidebar": {
+      "portal": "Customer Portal",
+      "myBookings": "My Bookings",
+      "payments": "Payments",
+      "logout": "Log out"
+    },
+    "dashboard": {
+      "noReservationsDesc": "Looks like you don't have any upcoming photography sessions scheduled yet.",
+      "people": "People",
+      "totalAmount": "Total Amount",
+      "photosProcessing": "Photos Processing...",
+      "title": "My Bookings",
+      "description": "Manage your photography reservations and view your photo galleries.",
+      "upcoming": "Upcoming",
+      "past": "Past",
+      "viewGallery": "View Gallery",
+      "bookingDate": "Booking Date",
+      "noReservations": "No reservations found"
+    },
+    "payments": {
+      "paidAmount": "Paid Amount",
+      "remainingBalance": "Remaining Balance",
+      "noRecords": "No payment records found.",
+      "title": "Payments",
+      "description": "View your transaction history and outstanding balances.",
+      "noTransactions": "No transactions found",
+      "balanceDue": "Balance Due",
+      "fullyPaid": "Fully Paid",
+      "totalAmount": "Total Amount"
+    },
+    "gallery": {
+      "rawPhotos": "Raw Photos",
+      "selectedPhotos": "Selected",
+      "finalEdited": "Final Edited ✨",
+      "selectionProgress": "Selection Progress",
+      "submitPhotos": "Submit {count} Photos",
+      "submitting": "Submitting...",
+      "selectionComplete": "✓ You have submitted your selections. The photographer is editing them.",
+      "selectUpTo": "Select up to",
+      "photosToBeEdited": "photos to be edited.",
+      "noPhotosYet": "No photos yet",
+      "noPhotosDesc": "We are still working on your beautiful photos. Check back soon!",
+      "noPhotosHere": "No photos here yet",
+      "downloadAll": "Download All",
+      "download": "Download",
+      "backToDashboard": "Back to Dashboard",
+      "title": "Photo Gallery",
+      "description": "Your high-resolution photos are ready.",
+      "loading": "Loading your photos...",
+      "select": "Select",
+      "submitConfirm": "Are you sure you want to submit these {count} photos for editing? You cannot change this later."
     }
   }
 }

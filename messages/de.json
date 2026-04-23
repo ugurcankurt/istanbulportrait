@@ -10,7 +10,8 @@
     "locations": "Standorte",
     "blog": "Blog",
     "about": "Über uns",
-    "contact": "Kontakt"
+    "contact": "Kontakt",
+    "myAccount": "Mein Konto"
   },
   "whatsapp": {
     "button": "WhatsApp",
@@ -601,6 +602,83 @@
           }
         }
       }
+    }
+  },
+  "account": {
+    "dashboard": {
+      "noReservationsDesc": "Es sieht so aus, als hätten Sie noch keine bevorstehenden Fotoshootings geplant.",
+      "people": "Personen",
+      "totalAmount": "Gesamtbetrag",
+      "photosProcessing": "Fotos werden bearbeitet...",
+      "title": "Meine Buchungen",
+      "description": "Verwalten Sie Ihre Fotoreservierungen und sehen Sie sich Ihre Fotogalerien an.",
+      "upcoming": "Anstehend",
+      "past": "Vergangen",
+      "viewGallery": "Galerie ansehen",
+      "bookingDate": "Buchungsdatum",
+      "noReservations": "Keine Reservierungen gefunden"
+    },
+    "payments": {
+      "paidAmount": "Bezahlter Betrag",
+      "remainingBalance": "Restbetrag",
+      "noRecords": "Keine Zahlungsdatensätze gefunden.",
+      "title": "Zahlungen",
+      "description": "Zeigen Sie Ihren Transaktionsverlauf und offene Beträge an.",
+      "noTransactions": "Keine Transaktionen gefunden",
+      "balanceDue": "Fälliger Betrag",
+      "fullyPaid": "Vollständig bezahlt",
+      "totalAmount": "Gesamtbetrag"
+    },
+    "gallery": {
+      "rawPhotos": "Rohfotos",
+      "selectedPhotos": "Ausgewählt",
+      "finalEdited": "Final bearbeitet ✨",
+      "selectionProgress": "Auswahlfortschritt",
+      "submitPhotos": "{count} Fotos einreichen",
+      "submitting": "Wird eingereicht...",
+      "selectionComplete": "✓ Sie haben Ihre Auswahl eingereicht. Der Fotograf bearbeitet sie nun.",
+      "selectUpTo": "Wählen Sie bis zu",
+      "photosToBeEdited": "Fotos zur Bearbeitung aus.",
+      "noPhotosYet": "Noch keine Fotos",
+      "noPhotosDesc": "Wir arbeiten noch an Ihren schönen Fotos. Schauen Sie bald wieder vorbei!",
+      "noPhotosHere": "Hier sind noch keine Fotos",
+      "downloadAll": "Alle herunterladen",
+      "download": "Herunterladen",
+      "backToDashboard": "Zurück zum Dashboard",
+      "loading": "Ihre Fotos werden geladen...",
+      "title": "Fotogalerie",
+      "description": "Ihre hochauflösenden Fotos sind fertig.",
+      "select": "Auswählen",
+      "submitConfirm": "Sind Sie sicher, dass Sie diese {count} Fotos zur Bearbeitung einreichen möchten? Dies kann später nicht mehr geändert werden."
+    },
+    "login": {
+      "title": "Willkommen zurück",
+      "description": "Melden Sie sich an, um Ihre Fotos und Reservierungen anzuzeigen.",
+      "email": "E-Mail",
+      "emailPlaceholder": "name@example.com",
+      "password": "Passwort",
+      "passwordPlaceholder": "Geben Sie Ihr Passwort ein",
+      "forgotPassword": "Passwort vergessen?",
+      "forgotPasswordAlert": "Bitte überprüfen Sie die Einladungs-E-Mail, die nach der Reservierung gesendet wurde, oder kontaktieren Sie den Support.",
+      "signIn": "Anmelden",
+      "signingIn": "Wird angemeldet..."
+    },
+    "updatePassword": {
+      "title": "Passwort festlegen",
+      "description": "Bitte sichern Sie Ihr Kundenportal-Konto, indem Sie ein neues Passwort festlegen.",
+      "newPassword": "Neues Passwort",
+      "newPasswordPlaceholder": "Neues Passwort eingeben",
+      "confirmPassword": "Passwort bestätigen",
+      "confirmPasswordPlaceholder": "Neues Passwort bestätigen",
+      "savePassword": "Passwort speichern",
+      "saving": "Wird aktualisiert...",
+      "passwordMismatch": "Passwörter stimmen nicht überein"
+    },
+    "sidebar": {
+      "portal": "Kundenportal",
+      "myBookings": "Meine Buchungen",
+      "payments": "Zahlungen",
+      "logout": "Abmelden"
     }
   }
 }

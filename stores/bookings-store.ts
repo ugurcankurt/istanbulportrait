@@ -24,6 +24,7 @@ export interface Booking {
   created_at: string;
   updated_at?: string;
   people_count?: number | null;
+  drive_folder_id?: string | null;
   payments: Payment[];
 }
 

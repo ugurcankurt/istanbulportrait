@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useForm, useFieldArray } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { Trash2, UploadCloud, Plus, Sparkles } from "lucide-react";
+import { Trash2, UploadCloud, Plus, Sparkles, ChevronLeft, ChevronRight } from "lucide-react";
 import { Spinner } from "@/components/ui/spinner";
 import Image from "next/image";
 
@@ -155,6 +155,25 @@ export function PackageForm({ initialData }: PackageFormProps) {
 
     const newGallery = [...currentGallery];
     newGallery.splice(index, 1);
+
+    setGalleryPreviews(newGallery);
+    form.setValue("gallery_images", newGallery, { shouldDirty: true });
+  };
+
+  const handleMoveGalleryImage = (index: number, direction: 'left' | 'right') => {
+    const currentGallery = form.getValues("gallery_images") || [];
+    if (
+      (direction === 'left' && index === 0) || 
+      (direction === 'right' && index === currentGallery.length - 1)
+    ) {
+      return;
+    }
+
+    const newIndex = direction === 'left' ? index - 1 : index + 1;
+    const newGallery = [...currentGallery];
+    
+    // Swap elements
+    [newGallery[index], newGallery[newIndex]] = [newGallery[newIndex], newGallery[index]];
 
     setGalleryPreviews(newGallery);
     form.setValue("gallery_images", newGallery, { shouldDirty: true });
@@ -566,17 +585,39 @@ export function PackageForm({ initialData }: PackageFormProps) {
                   {galleryPreviews.length > 0 && (
                     <div className="grid grid-cols-3 gap-2">
                       {galleryPreviews.map((url, i) => (
-                        <div key={i} className="relative aspect-square rounded-md overflow-hidden border">
+                        <div key={i} className="group relative aspect-square rounded-md overflow-hidden border">
                           <Image src={url} fill className="object-cover" alt={`Gallery ${i}`} />
+                          
                           <Button
                             type="button"
                             variant="destructive"
                             size="icon"
-                            className="absolute top-1 right-1 rounded-full w-6 h-6 opacity-80 hover:opacity-100"
+                            className="absolute top-1 right-1 rounded-full w-6 h-6 opacity-0 group-hover:opacity-100 transition-opacity"
                             onClick={() => handleRemoveGalleryImage(i)}
                           >
                             <Trash2 className="w-3 h-3" />
                           </Button>
+
+                          <div className="absolute bottom-1 left-1 right-1 flex justify-between opacity-0 group-hover:opacity-100 transition-opacity px-1">
+                            <Button
+                              type="button"
+                              variant="secondary"
+                              size="icon"
+                              className={`rounded-full w-6 h-6 bg-background/80 hover:bg-background ${i === 0 ? 'invisible' : ''}`}
+                              onClick={() => handleMoveGalleryImage(i, 'left')}
+                            >
+                              <ChevronLeft className="w-3 h-3" />
+                            </Button>
+                            <Button
+                              type="button"
+                              variant="secondary"
+                              size="icon"
+                              className={`rounded-full w-6 h-6 bg-background/80 hover:bg-background ${i === galleryPreviews.length - 1 ? 'invisible' : ''}`}
+                              onClick={() => handleMoveGalleryImage(i, 'right')}
+                            >
+                              <ChevronRight className="w-3 h-3" />
+                            </Button>
+                          </div>
                         </div>
                       ))}
                     </div>

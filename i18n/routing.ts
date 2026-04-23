@@ -21,6 +21,13 @@ export const routing = defineRouting({
     "/about": "/about",
     "/privacy": "/privacy",
     "/contact": "/contact",
+    "/account": "/account",
+    "/account/login": "/account/login",
+    "/account/dashboard": "/account/dashboard",
+    "/account/update-password": "/account/update-password",
+    "/account/gallery": "/account/gallery",
+    "/account/gallery/[bookingId]": "/account/gallery/[bookingId]",
+    "/account/payments": "/account/payments",
     "/checkout": {
       en: "/checkout",
       ar: "/dafa",

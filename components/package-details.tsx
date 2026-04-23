@@ -354,6 +354,7 @@ export function PackageDetails({ packageData, aggregateRating, reviews, activeDi
             <div className="hidden lg:block lg:sticky lg:top-44">
               <BookingCard
                 packageId={packageData.slug as any}
+                packageDisplayName={packageName}
                 basePrice={basePrice}
                 pricing={{
                   price: pricing.price,

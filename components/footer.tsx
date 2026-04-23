@@ -7,7 +7,7 @@ import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { useConsent } from "@/contexts/consent-context";
-import { Link } from "@/i18n/routing";
+import { Link, usePathname } from "@/i18n/routing";
 import { packagesService, type PackageDB } from "@/lib/packages-service";
 
 interface FooterProps {
@@ -21,6 +21,7 @@ export function Footer({ dynamicNavData = {}, settings }: FooterProps) {
   const tui = useTranslations("ui");
   
   const locale = useLocale();
+  const pathname = usePathname();
   const [mounted, setMounted] = useState(false);
   const [activePackages, setActivePackages] = useState<PackageDB[]>([]);
   const { resolvedTheme } = useTheme();
@@ -51,6 +52,10 @@ export function Footer({ dynamicNavData = {}, settings }: FooterProps) {
     { href: `/${dynamicNavData.about?.path || "about"}` as any, label: dynamicNavData.about?.title || nav("about") },
     { href: `/${dynamicNavData.contact?.path || "contact"}` as any, label: dynamicNavData.contact?.title || nav("contact") },
   ];
+
+  if (pathname.startsWith("/account")) {
+    return null;
+  }
 
   return (
     <footer className="bg-muted/30 border-t">

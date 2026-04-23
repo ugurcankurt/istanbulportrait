@@ -10,7 +10,8 @@
     "locations": "Mekanlar",
     "blog": "Blog",
     "about": "Hakkımızda",
-    "contact": "İletişim"
+    "contact": "İletişim",
+    "myAccount": "Hesabım"
   },
   "whatsapp": {
     "button": "WhatsApp",
@@ -601,6 +602,83 @@
           }
         }
       }
+    }
+  },
+  "account": {
+    "login": {
+      "title": "Tekrar Hoş Geldiniz",
+      "description": "Fotoğraflarınızı ve rezervasyonlarınızı görüntülemek için giriş yapın.",
+      "email": "E-posta",
+      "emailPlaceholder": "isim@ornek.com",
+      "password": "Şifre",
+      "passwordPlaceholder": "Şifrenizi girin",
+      "forgotPassword": "Şifremi unuttum?",
+      "forgotPasswordAlert": "Lütfen rezervasyonunuzu tamamladığınızda gönderilen davet e-postasını kontrol edin veya destek ekibiyle iletişime geçin.",
+      "signIn": "Giriş Yap",
+      "signingIn": "Giriş yapılıyor..."
+    },
+    "updatePassword": {
+      "title": "Şifrenizi Belirleyin",
+      "description": "Lütfen yeni bir şifre belirleyerek müşteri portalı hesabınızı güvene alın.",
+      "newPassword": "Yeni Şifre",
+      "newPasswordPlaceholder": "Yeni şifrenizi girin",
+      "confirmPassword": "Şifreyi Onayla",
+      "confirmPasswordPlaceholder": "Yeni şifrenizi tekrar girin",
+      "savePassword": "Şifreyi Kaydet",
+      "saving": "Güncelleniyor...",
+      "passwordMismatch": "Şifreler eşleşmiyor"
+    },
+    "sidebar": {
+      "portal": "Müşteri Portali",
+      "myBookings": "Rezervasyonlarım",
+      "payments": "Ödemeler",
+      "logout": "Çıkış Yap"
+    },
+    "dashboard": {
+      "noReservationsDesc": "Looks like you don't have any upcoming photography sessions scheduled yet.",
+      "people": "People",
+      "totalAmount": "Total Amount",
+      "photosProcessing": "Photos Processing...",
+      "title": "Rezervasyonlarım",
+      "description": "Fotoğraf çekimi rezervasyonlarınızı yönetin ve galerilerinizi görüntüleyin.",
+      "upcoming": "Yaklaşan",
+      "past": "Geçmiş",
+      "viewGallery": "Galeriyi Görüntüle",
+      "bookingDate": "Rezervasyon Tarihi",
+      "noReservations": "Hiç rezervasyon bulunamadı"
+    },
+    "payments": {
+      "paidAmount": "Paid Amount",
+      "remainingBalance": "Remaining Balance",
+      "noRecords": "No payment records found.",
+      "title": "Ödemeler",
+      "description": "İşlem geçmişinizi ve kalan bakiyelerinizi görüntüleyin.",
+      "noTransactions": "Hiç işlem bulunamadı",
+      "balanceDue": "Kalan Bakiye",
+      "fullyPaid": "Tamamı Ödendi",
+      "totalAmount": "Toplam Tutar"
+    },
+    "gallery": {
+      "rawPhotos": "Ham Fotoğraflar",
+      "selectedPhotos": "Seçilenler",
+      "finalEdited": "Düzenlenmiş ✨",
+      "selectionProgress": "Seçim İlerlemesi",
+      "submitPhotos": "{count} Fotoğrafı Gönder",
+      "submitting": "Gönderiliyor...",
+      "selectionComplete": "✓ Seçimlerinizi gönderdiniz. Fotoğrafçı şu an bunları düzenliyor.",
+      "selectUpTo": "En fazla",
+      "photosToBeEdited": "fotoğraf seçebilirsiniz.",
+      "noPhotosYet": "Henüz fotoğraf yok",
+      "noPhotosDesc": "Harika fotoğraflarınız üzerinde çalışmaya devam ediyoruz. Yakında tekrar kontrol edin!",
+      "noPhotosHere": "Burada henüz fotoğraf yok",
+      "downloadAll": "Tümünü İndir",
+      "download": "İndir",
+      "backToDashboard": "Panele Dön",
+      "title": "Fotoğraf Galerisi",
+      "description": "Yüksek çözünürlüklü fotoğraflarınız hazır.",
+      "loading": "Fotoğraflarınız yükleniyor...",
+      "select": "Seç",
+      "submitConfirm": "Düzenleme için bu {count} fotoğrafı göndermek istediğinize emin misiniz? Bu işlemi daha sonra değiştiremezsiniz."
     }
   }
 }

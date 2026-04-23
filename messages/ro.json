@@ -10,7 +10,8 @@
     "locations": "Locații",
     "blog": "Blog",
     "about": "Despre",
-    "contact": "Contact"
+    "contact": "Contact",
+    "myAccount": "Contul Meu"
   },
   "whatsapp": {
     "button": "WhatsApp",
@@ -601,6 +602,83 @@
           }
         }
       }
+    }
+  },
+  "account": {
+    "dashboard": {
+      "noReservationsDesc": "Se pare că nu ai încă nicio ședință foto programată.",
+      "people": "Persoane",
+      "totalAmount": "Sumă totală",
+      "photosProcessing": "Fotografiile se procesează...",
+      "title": "Rezervările mele",
+      "description": "Gestionează-ți rezervările și vizionează-ți galeriile foto.",
+      "upcoming": "Viitoare",
+      "past": "Trecute",
+      "viewGallery": "Vezi Galeria",
+      "bookingDate": "Data rezervării",
+      "noReservations": "Nicio rezervare găsită"
+    },
+    "payments": {
+      "paidAmount": "Sumă plătită",
+      "remainingBalance": "Sold rămas",
+      "noRecords": "Nu s-au găsit înregistrări de plată.",
+      "title": "Plăți",
+      "description": "Vezi istoricul tranzacțiilor și soldurile restante.",
+      "noTransactions": "Nicio tranzacție găsită",
+      "balanceDue": "De plată",
+      "fullyPaid": "Plătit integral",
+      "totalAmount": "Suma totală"
+    },
+    "gallery": {
+      "rawPhotos": "Fotografii brute",
+      "selectedPhotos": "Selectate",
+      "finalEdited": "Editare finală ✨",
+      "selectionProgress": "Progres selecție",
+      "submitPhotos": "Trimite {count} fotografii",
+      "submitting": "Se trimite...",
+      "selectionComplete": "✓ Ai trimis selecțiile. Fotograful le editează acum.",
+      "selectUpTo": "Selectează până la",
+      "photosToBeEdited": "fotografii pentru editare.",
+      "noPhotosYet": "Încă nu există fotografii",
+      "noPhotosDesc": "Încă lucrăm la fotografiile tale. Revino în curând!",
+      "noPhotosHere": "Nu există fotografii aici",
+      "downloadAll": "Descarcă tot",
+      "download": "Descarcă",
+      "backToDashboard": "Înapoi la panou",
+      "loading": "Fotografiile tale se încarcă...",
+      "title": "Galerie Foto",
+      "description": "Fotografiile tale de înaltă rezoluție sunt gata.",
+      "select": "Selectează",
+      "submitConfirm": "Ești sigur că vrei să trimiți aceste {count} fotografii pentru editare? Nu poți schimba asta mai târziu."
+    },
+    "login": {
+      "title": "Bine ai revenit",
+      "description": "Conectează-te pentru a vedea fotografiile și rezervările tale.",
+      "email": "Email",
+      "emailPlaceholder": "name@example.com",
+      "password": "Parolă",
+      "passwordPlaceholder": "Introdu parola",
+      "forgotPassword": "Ai uitat parola?",
+      "forgotPasswordAlert": "Te rugăm să verifici email-ul de invitație trimis la finalizarea rezervării sau să contactezi suportul.",
+      "signIn": "Autentificare",
+      "signingIn": "Se conectează..."
+    },
+    "updatePassword": {
+      "title": "Setează parola",
+      "description": "Te rugăm să îți securizezi contul setând o parolă nouă.",
+      "newPassword": "Parolă nouă",
+      "newPasswordPlaceholder": "Introdu noua parolă",
+      "confirmPassword": "Confirmă parola",
+      "confirmPasswordPlaceholder": "Confirmă noua parolă",
+      "savePassword": "Salvează parola",
+      "saving": "Se actualizează...",
+      "passwordMismatch": "Parolele nu se potrivesc"
+    },
+    "sidebar": {
+      "portal": "Portal Client",
+      "myBookings": "Rezervările mele",
+      "payments": "Plăți",
+      "logout": "Deconectare"
     }
   }
 }

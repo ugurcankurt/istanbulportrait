@@ -5,7 +5,7 @@ import { format } from "date-fns";
 import { ar, de, enUS, es, fr, ro, ru, tr as trLocale, zhCN } from "date-fns/locale";
 import { useRouter } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useForm } from "react-hook-form";
 import PhoneInput from "react-phone-number-input";
 import "react-phone-number-input/style.css";
@@ -31,7 +31,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { trackLead, saveUserDataForAdvancedMatching } from "@/lib/analytics";
+import { trackLead, saveUserDataForAdvancedMatching, trackPackageAddToCart } from "@/lib/analytics";
 import { getPackagePricing, matchActiveSurcharge } from "@/lib/pricing";
 import { cn } from "@/lib/utils";
 import type { BookingFormData } from "@/lib/validations";
@@ -135,6 +135,7 @@ export function BookingModal({
   const [showTimeSelection, setShowTimeSelection] = useState(false);
   const [peopleCount, setPeopleCount] = useState<number>(1);
   const [isNavigating, setIsNavigating] = useState(false);
+  const hasTrackedOpen = useRef(false);
 
   // Get the appropriate date-fns locale
   const dateFnsLocale = getDateFnsLocale(locale);
@@ -156,13 +157,6 @@ export function BookingModal({
     }
   }, [isOpen, isMobile]);
 
-
-  // Track package view when modal opens
-  useEffect(() => {
-    if (isOpen && selectedPackage) {
-      trackPackageView(selectedPackage);
-    }
-  }, [isOpen, selectedPackage, trackPackageView]);
 
   const form = useForm<BookingFormData>({
     resolver: zodResolver(bookingSchemaWithTranslations),
@@ -267,6 +261,22 @@ export function BookingModal({
       features: packageFeatures,
     }
     : null;
+
+  // Track package view when modal opens
+  useEffect(() => {
+    if (!isOpen) {
+      hasTrackedOpen.current = false;
+    } else if (isOpen && selectedPackage && packageInfo && !hasTrackedOpen.current) {
+      hasTrackedOpen.current = true;
+      trackPackageView(selectedPackage);
+      trackPackageAddToCart(
+        selectedPackage,
+        packageInfo.name,
+        packageInfo.price,
+        "EUR"
+      );
+    }
+  }, [isOpen, selectedPackage, packageInfo, trackPackageView]);
 
   const handleSubmit = form.handleSubmit(
     async (data) => {
@@ -547,6 +557,7 @@ export function BookingModal({
               <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
                 <BookingCard
                   packageId={selectedPackage}
+                  packageDisplayName={packageDisplayName}
                   basePrice={basePrice}
                   pricing={{
                     price: isPerPerson ? packageInfo.price / (peopleCount || 1) : packageInfo.price,

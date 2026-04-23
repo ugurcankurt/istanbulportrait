@@ -1,7 +1,7 @@
 export function extractPhotosCount(features: string[]): number {
   if (!features || !Array.isArray(features) || features.length === 0) return 15;
   
-  const keywords = ["photo", "foto", "bild", "imagen", "картинк", "صورة"];
+  const keywords = ["photo", "foto", "bild", "imagen", "картинк", "صورة", "edit", "image", "kare", "shot", "retouch"];
   
   const photoFeature = features.find(f => {
     const lowerF = f.toLowerCase();

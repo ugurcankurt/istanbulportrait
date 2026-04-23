@@ -29,12 +29,15 @@ const facebookConversionSchema = z.object({
     "Contact",
     "Schedule",
     "PageView",
+    "AddToCart"
   ]),
   event_id: z.string().optional(), // For deduplication with Pixel
   customer_email: z
     .string()
     .email({ message: "Invalid email format" })
-    .optional(),
+    .or(z.literal(""))
+    .optional()
+    .transform(e => e === "" ? undefined : e),
   customer_phone: z.string().optional(),
   first_name: z.string().optional(),
   last_name: z.string().optional(),
@@ -48,7 +51,7 @@ const facebookConversionSchema = z.object({
   amount: z.number().optional(),
   transaction_id: z.string().optional(),
   lead_id: z.number().optional(),
-  event_source_url: z.string().url().optional(),
+  event_source_url: z.string().optional(),
   custom_data: z.record(z.string(), z.unknown()).optional(),
 });
 
@@ -82,6 +85,7 @@ export async function POST(request: NextRequest) {
       const validationError = new ValidationError(
         "Invalid Facebook conversion data",
       );
+      console.error("Facebook API Validation Error:", JSON.stringify(validationResult.error.issues, null, 2));
       logError(validationError, {
         ip,
         endpoint: "facebook-conversions",

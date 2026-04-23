@@ -11,16 +11,7 @@ export function createClientSupabaseClient() {
 
   const client = createBrowserClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      auth: {
-        // Ensure sessions are properly persisted
-        persistSession: true,
-        autoRefreshToken: true,
-        detectSessionInUrl: false,
-        // Remove localStorage storage - let SSR handle cookies automatically
-      },
-    },
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
   );
 
   // Memoize it for subsequent calls in the browser environment
