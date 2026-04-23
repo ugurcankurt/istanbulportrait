@@ -683,7 +683,9 @@
       "ok": "Tamam",
       "submitSelections": "Seçimleri Gönder",
       "cancel": "İptal",
-      "confirm": "Onayla"
+      "confirm": "Onayla",
+      "mobileZipTitle": "Mobilde ZIP İndir",
+      "mobileZipDesc": "Mobil cihazlarda ZIP dosyası indirmek, açmak için bir dosya yöneticisi gerektirebilir. Devam etmek istiyor musunuz?"
     }
   }
 }

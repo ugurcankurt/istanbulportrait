@@ -567,6 +567,24 @@ export default function ClientGallery({ bookingId }: { bookingId: string }) {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      <AlertDialog open={showMobileZipModal} onOpenChange={setShowMobileZipModal}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>{t("mobileZipTitle") || "Download ZIP on Mobile"}</AlertDialogTitle>
+            <AlertDialogDescription>
+              {t("mobileZipDesc") || "Downloading a ZIP file on mobile devices might require a file manager to open. Do you want to proceed?"}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={isZipping}>{t("cancel") || "Cancel"}</AlertDialogCancel>
+            <AlertDialogAction onClick={(e) => { e.preventDefault(); triggerZipDownload(); }} disabled={isZipping}>
+              {isZipping ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : null}
+              {t("download") || "Download"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

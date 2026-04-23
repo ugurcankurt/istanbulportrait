@@ -654,7 +654,9 @@
       "ok": "确定",
       "submitSelections": "提交选择",
       "cancel": "取消",
-      "confirm": "确认"
+      "confirm": "确认",
+      "mobileZipTitle": "在手机上下载 ZIP",
+      "mobileZipDesc": "在移动设备上下载 ZIP 文件可能需要文件管理器来打开。您要继续吗？"
     },
     "login": {
       "title": "欢迎回来",

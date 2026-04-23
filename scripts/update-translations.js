@@ -52,7 +52,9 @@ const enTranslations = {
     description: "Your high-resolution photos are ready.",
     downloadAll: "Download All",
     download: "Download",
-    backToDashboard: "Back to Dashboard"
+    backToDashboard: "Back to Dashboard",
+    mobileZipTitle: "Download ZIP on Mobile",
+    mobileZipDesc: "Downloading a ZIP file on mobile devices might require a file manager to open. Do you want to proceed?"
   }
 };
 
@@ -108,7 +110,9 @@ const trTranslations = {
     description: "Yüksek çözünürlüklü fotoğraflarınız hazır.",
     downloadAll: "Tümünü İndir",
     download: "İndir",
-    backToDashboard: "Panele Dön"
+    backToDashboard: "Panele Dön",
+    mobileZipTitle: "Mobilde ZIP İndir",
+    mobileZipDesc: "Mobil cihazlarda ZIP dosyası indirmek, açmak için bir dosya yöneticisi gerektirebilir. Devam etmek istiyor musunuz?"
   }
 };
 

@@ -654,7 +654,9 @@
       "ok": "OK",
       "submitSelections": "Trimite Selecțiile",
       "cancel": "Anulează",
-      "confirm": "Confirmă"
+      "confirm": "Confirmă",
+      "mobileZipTitle": "Descărcați ZIP pe mobil",
+      "mobileZipDesc": "Descărcarea unui fișier ZIP pe dispozitivele mobile ar putea necesita un manager de fișiere pentru deschidere. Doriți să continuați?"
     },
     "login": {
       "title": "Bine ai revenit",

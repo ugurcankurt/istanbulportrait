@@ -683,7 +683,9 @@
       "ok": "OK",
       "submitSelections": "Submit Selections",
       "cancel": "Cancel",
-      "confirm": "Confirm"
+      "confirm": "Confirm",
+      "mobileZipTitle": "Download ZIP on Mobile",
+      "mobileZipDesc": "Downloading a ZIP file on mobile devices might require a file manager to open. Do you want to proceed?"
     }
   }
 }

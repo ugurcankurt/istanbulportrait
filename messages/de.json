@@ -654,7 +654,9 @@
       "ok": "OK",
       "submitSelections": "Auswahl senden",
       "cancel": "Abbrechen",
-      "confirm": "Bestätigen"
+      "confirm": "Bestätigen",
+      "mobileZipTitle": "ZIP auf dem Handy herunterladen",
+      "mobileZipDesc": "Das Herunterladen einer ZIP-Datei auf mobilen Geräten erfordert möglicherweise einen Dateimanager zum Öffnen. Möchten Sie fortfahren?"
     },
     "login": {
       "title": "Willkommen zurück",

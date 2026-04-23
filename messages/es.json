@@ -654,7 +654,9 @@
       "ok": "OK",
       "submitSelections": "Enviar Selecciones",
       "cancel": "Cancelar",
-      "confirm": "Confirmar"
+      "confirm": "Confirmar",
+      "mobileZipTitle": "Descargar ZIP en el móvil",
+      "mobileZipDesc": "La descarga de un archivo ZIP en dispositivos móviles puede requerir un administrador de archivos para abrirse. ¿Desea continuar?"
     },
     "login": {
       "title": "Bienvenido de nuevo",
