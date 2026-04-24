@@ -1,7 +1,7 @@
 import { reviewsService } from "@/lib/reviews-service";
 import { NextResponse } from "next/server";
 
-export const revalidate = 432000; // 5 days
+export const revalidate = 3600; // 1 hour
 
 export async function GET() {
   try {

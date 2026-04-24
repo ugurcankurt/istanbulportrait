@@ -1,8 +1,7 @@
 import { reviewsService } from "@/lib/reviews-service";
 import { ReviewsClient } from "./reviews-client";
 
-// Revalidate every hour
-export const revalidate = 3600;
+// Server component for Reviews
 
 export async function ReviewsSection({
   locale = "en",

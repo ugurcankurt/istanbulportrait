@@ -70,8 +70,8 @@ class ReviewsService {
           headers: {
             "Content-Type": "application/json",
           },
-          // Cache for 1 hour to stay dynamic while mitigating API limit hits
-          next: { revalidate: 3600 },
+          // Cache for 24 hours to stay dynamic while mitigating API limit hits
+          next: { revalidate: 86400, tags: ["reviews"] },
         },
       );
 
