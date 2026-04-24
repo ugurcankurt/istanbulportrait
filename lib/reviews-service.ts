@@ -1,3 +1,4 @@
+import { unstable_cache } from "next/cache";
 import type {
   AggregateRating,
   GoogleReview,
@@ -24,6 +25,88 @@ function truncateReviewText(text: string, maxLength: number = 150): string {
   return result + (text.length > lastSpace ? "..." : "");
 }
 
+/**
+ * Internal helper to translate a batch of reviews via Gemini.
+ * We use unstable_cache so the translation is persistently cached.
+ * Since 'reviewsStr' is passed as an argument, Next.js automatically includes it in the cache key.
+ * This guarantees that when a new review arrives, the cache key changes and we fetch new translations!
+ */
+const getTranslatedReviews = unstable_cache(
+  async (reviewsStr: string, locale: string) => {
+    if (locale === "en") return JSON.parse(reviewsStr) as GoogleReview[];
+    const reviews: GoogleReview[] = JSON.parse(reviewsStr);
+
+    const reviewsToTranslate = reviews.filter(r => r.text && r.text.trim().length > 0);
+    if (reviewsToTranslate.length === 0) return reviews;
+
+    try {
+      const { settingsService } = await import('@/lib/settings-service');
+      const settings = await settingsService.getSettings();
+      const apiKey = settings.gemini_api_key;
+      
+      if (!apiKey) {
+        console.warn("No Gemini API key found for review translation.");
+        return reviews;
+      }
+
+      // Prepare payload with just IDs and text to save tokens
+      const payload = reviewsToTranslate.map(r => ({ id: r.id, text: r.text }));
+
+      const prompt = `
+You are a professional localization expert. Translate the following user reviews from their original language into the language code: "${locale}".
+Maintain the original tone, which is likely positive and related to a photography business in Istanbul.
+Return ONLY a valid minified JSON object where the keys are the review IDs and the values are the translated texts. Do not include markdown formatting like \`\`\`json.
+Example output format:
+{"review-1": "Harika bir deneyimdi!", "review-2": "Çok profesyonel bir ekip."}
+
+Reviews to translate:
+${JSON.stringify(payload)}
+`;
+
+      const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
+      const response = await fetch(geminiUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: prompt }] }],
+          generationConfig: {
+            temperature: 0.1,
+            responseMimeType: "application/json",
+          }
+        })
+      });
+
+      if (!response.ok) {
+        console.error("Gemini API Error for reviews translation:", await response.text());
+        return reviews;
+      }
+
+      const data = await response.json();
+      let textOutput = data.candidates?.[0]?.content?.parts?.[0]?.text;
+      
+      if (!textOutput) return reviews;
+
+      // Clean markdown block if Gemini still returns it
+      textOutput = textOutput.replace(/```json/g, "").replace(/```/g, "").trim();
+
+      const translatedDict = JSON.parse(textOutput);
+
+      // Map translations back to the reviews array
+      return reviews.map(r => {
+        if (translatedDict[r.id]) {
+          return { ...r, text: translatedDict[r.id] };
+        }
+        return r;
+      });
+    } catch (err) {
+      console.error("Failed to translate reviews:", err);
+      return reviews; // fallback to original if failed
+    }
+  },
+  ['gemini-reviews-translations-v1'],
+  { revalidate: 86400 * 30 } // Cache for 30 days. When reviews change, a new cache key is auto-generated.
+);
+
 class ReviewsService {
   private config: ReviewsServiceConfig;
 
@@ -34,7 +117,7 @@ class ReviewsService {
   /**
    * Fetch reviews from Featurable API dynamically
    */
-  async fetchGoogleReviews(): Promise<{ reviews: GoogleReview[], totalCount: number, averageRating: number }> {
+  async fetchGoogleReviews(locale: string = "en"): Promise<{ reviews: GoogleReview[], totalCount: number, averageRating: number }> {
     try {
       // 1. Fetch dynamic configuration from CMS
       const { pagesContentService } = await import('@/lib/pages-content-service');
@@ -106,8 +189,15 @@ class ReviewsService {
         .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
         .slice(0, this.config.maxReviews || 100);
 
+      // Translating reviews natively using unstable_cache via Gemini
+      let finalReviews = sortedReviews;
+      if (locale !== "en" && finalReviews.length > 0) {
+        const reviewsStr = JSON.stringify(finalReviews);
+        finalReviews = await getTranslatedReviews(reviewsStr, locale);
+      }
+
       return {
-        reviews: sortedReviews,
+        reviews: finalReviews,
         totalCount,
         averageRating,
       };
@@ -128,7 +218,7 @@ class ReviewsService {
    */
   async getAggregateRating(): Promise<AggregateRating> {
     try {
-      const { reviews, totalCount, averageRating } = await this.fetchGoogleReviews();
+      const { totalCount, averageRating } = await this.fetchGoogleReviews("en"); // Aggregate rating doesn't need translations
 
       if (totalCount === 0) {
         return {

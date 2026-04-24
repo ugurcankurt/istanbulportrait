@@ -94,7 +94,7 @@ export default async function HomePage({
     getTranslations({ locale, namespace: "packages" }),
     getTranslations({ locale, namespace: "faq" }),
     reviewsService.getAggregateRating(),
-    reviewsService.fetchGoogleReviews(),
+    reviewsService.fetchGoogleReviews(locale),
     packagesService.getActivePackages(),
     settingsService.getSettings(),
     discountService.getActiveDiscount(),

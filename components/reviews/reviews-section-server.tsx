@@ -12,7 +12,7 @@ export async function ReviewsSection({
 } = {}) {
   try {
     // Fetch reviews on server-side only
-    const { reviews } = await reviewsService.fetchGoogleReviews();
+    const { reviews } = await reviewsService.fetchGoogleReviews(locale);
     const aggregateRating = await reviewsService.getAggregateRating();
 
     // Only render if we have reviews
