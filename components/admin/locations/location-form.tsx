@@ -42,8 +42,18 @@ export function LocationForm({ initialData }: LocationFormProps) {
   const [galleryPreviews, setGalleryPreviews] = useState<string[]>(initialData?.gallery_images || []);
   const [isTranslating, setIsTranslating] = useState(false);
 
+  const formattedInitialData = initialData ? {
+    ...initialData,
+    tags: initialData.tags?.map(t => ({ value: t })) || [],
+    nearby_locations: initialData.nearby_locations?.map(l => ({ value: l })) || [],
+    photography_tips: {
+      ...initialData.photography_tips,
+      en: (initialData.photography_tips?.en || []).map(t => ({ value: t }))
+    }
+  } : undefined;
+
   const form = useForm<any>({
-    defaultValues: initialData || {
+    defaultValues: formattedInitialData || {
       slug: "",
       is_active: true,
       sort_order: 1,
@@ -52,7 +62,7 @@ export function LocationForm({ initialData }: LocationFormProps) {
       title: { en: "" },
       description: { en: "" },
       best_time: { en: "" },
-      photography_tips: { en: [""] },
+      photography_tips: { en: [{ value: "" }] },
       nearby_locations: [],
       tags: [],
       coordinates: { lat: 41.0082, lng: 28.9784 }
@@ -195,7 +205,7 @@ export function LocationForm({ initialData }: LocationFormProps) {
         title: values.title.en,
         description: values.description.en,
         best_time: values.best_time?.en || "",
-        photography_tips: values.photography_tips?.en || [],
+        photography_tips: (values.photography_tips?.en || []).map((t: any) => t?.value ?? t).filter(Boolean),
       };
 
       const response = await fetch("/api/admin/translate-location", {
@@ -249,14 +259,18 @@ export function LocationForm({ initialData }: LocationFormProps) {
         title: data.title,
         description: data.description,
         best_time: data.best_time,
-        photography_tips: data.photography_tips,
-        nearby_locations: data.nearby_locations,
+        photography_tips: Object.keys(data.photography_tips || {}).reduce((acc: any, locale) => {
+          const tips = data.photography_tips[locale];
+          acc[locale] = (Array.isArray(tips) ? tips : []).map((t: any) => t?.value ?? t).filter(Boolean);
+          return acc;
+        }, {}),
+        nearby_locations: (data.nearby_locations || []).map((l: any) => l?.value ?? l).filter(Boolean),
         tags: Array.isArray(data.tags)
-          ? data.tags.flatMap((t: string) => t.split(',').map(s => s.trim()).filter(Boolean))
+          ? data.tags.map((t: any) => t?.value ?? t).flatMap((t: string) => (t && typeof t === 'string') ? t.split(',').map(s => s.trim()).filter(Boolean) : [])
           : [],
         coordinates: {
-          lat: parseFloat(data.coordinates.lat),
-          lng: parseFloat(data.coordinates.lng)
+          lat: parseFloat(data.coordinates.lat) || 0,
+          lng: parseFloat(data.coordinates.lng) || 0
         }
       };
 
@@ -402,13 +416,13 @@ export function LocationForm({ initialData }: LocationFormProps) {
                   <div className="space-y-2">
                     {tagsFields.map((field, index) => (
                       <div key={field.id} className="flex items-center gap-2">
-                        <Input {...form.register(`tags.${index}`)} placeholder="Tag..." />
+                        <Input {...form.register(`tags.${index}.value`)} placeholder="Tag..." />
                         <Button type="button" variant="ghost" size="icon" onClick={() => removeTag(index)}>
                           <Trash2 className="w-4 h-4 text-destructive" />
                         </Button>
                       </div>
                     ))}
-                    <Button type="button" variant="outline" size="sm" onClick={() => appendTag("new-tag")}>
+                    <Button type="button" variant="outline" size="sm" onClick={() => appendTag({ value: "" })}>
                       <Plus className="w-4 h-4 mr-2" /> Add Tag
                     </Button>
                   </div>
@@ -419,13 +433,13 @@ export function LocationForm({ initialData }: LocationFormProps) {
                   <div className="space-y-2">
                     {nearbyFields.map((field, index) => (
                       <div key={field.id} className="flex items-center gap-2">
-                        <Input {...form.register(`nearby_locations.${index}`)} placeholder="galata-bridge" />
+                        <Input {...form.register(`nearby_locations.${index}.value`)} placeholder="galata-bridge" />
                         <Button type="button" variant="ghost" size="icon" onClick={() => removeNearby(index)}>
                           <Trash2 className="w-4 h-4 text-destructive" />
                         </Button>
                       </div>
                     ))}
-                    <Button type="button" variant="outline" size="sm" onClick={() => appendNearby("")}>
+                    <Button type="button" variant="outline" size="sm" onClick={() => appendNearby({ value: "" })}>
                       <Plus className="w-4 h-4 mr-2" /> Add Nearby
                     </Button>
                   </div>
@@ -594,7 +608,7 @@ export function LocationForm({ initialData }: LocationFormProps) {
                           {tipsFieldsEn.map((field, index) => (
                             <div key={field.id} className="flex items-start gap-2">
                               <Input
-                                {...form.register(`photography_tips.en.${index}`)}
+                                {...form.register(`photography_tips.en.${index}.value`)}
                                 placeholder="Enter a photography tip..."
                               />
                               <Button
@@ -612,7 +626,7 @@ export function LocationForm({ initialData }: LocationFormProps) {
                             type="button"
                             variant="outline"
                             size="sm"
-                            onClick={() => appendTip("")}
+                            onClick={() => appendTip({ value: "" })}
                           >
                             <Plus className="w-4 h-4 mr-2" /> Add Tip
                           </Button>
