@@ -56,18 +56,18 @@ export function MultilingualCookieConsent() {
             </p>
           </div>
 
-          <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 rtl:space-x-reverse">
+          <div className="flex flex-row gap-2 sm:gap-3 w-full rtl:space-x-reverse">
             <button
               type="button"
               onClick={handleAcceptAll}
-              className="px-4 py-2 text-sm bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors font-medium"
+              className="flex-1 px-4 py-2 text-xs sm:text-sm bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors font-medium"
             >
               {t("buttons.accept_all")}
             </button>
             <button
               type="button"
               onClick={handleAcceptEssential}
-              className="px-4 py-2 text-sm border rounded-md hover:bg-muted transition-colors"
+              className="flex-1 px-4 py-2 text-xs sm:text-sm border rounded-md hover:bg-muted transition-colors"
             >
               {t("buttons.essential_only")}
             </button>

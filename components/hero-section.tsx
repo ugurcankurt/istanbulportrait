@@ -18,7 +18,7 @@ export async function HeroSection({
   const tui = await getTranslations("ui");
 
   return (
-    <section className="relative min-h-[70vh] sm:min-h-[80vh] overflow-hidden flex items-center justify-center">
+    <section className="relative min-h-[55vh] sm:min-h-[80vh] overflow-hidden flex items-center justify-center">
       {/* Background Image with Gradient Overlay - Critical LCP Element */}
       <div className="absolute inset-0 z-0">
         {backgroundImage && (
@@ -40,7 +40,7 @@ export async function HeroSection({
       </div>
 
       {/* Content Wrapper */}
-      <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 mb-[10vh] mt-[10vh] sm:mt-0 flex lg:justify-start">
+      <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 mb-[5vh] mt-[5vh] sm:mb-[10vh] sm:mt-0 flex lg:justify-start">
         <div className="text-left text-white w-full max-w-6xl">
           <HeroClientWrapper
             packagesButtonText={tui("packages_button")}
