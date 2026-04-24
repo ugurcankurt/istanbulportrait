@@ -77,14 +77,17 @@ ${JSON.stringify(payload)}
       });
 
       if (!response.ok) {
-        console.error("Gemini API Error for reviews translation:", await response.text());
-        return reviews;
+        const errText = await response.text();
+        console.error("Gemini API Error for reviews translation:", errText);
+        throw new Error(`Gemini API Error: ${response.status}`);
       }
 
       const data = await response.json();
       let textOutput = data.candidates?.[0]?.content?.parts?.[0]?.text;
       
-      if (!textOutput) return reviews;
+      if (!textOutput) {
+        throw new Error("Invalid AI response structure");
+      }
 
       // Clean markdown block if Gemini still returns it
       textOutput = textOutput.replace(/```json/g, "").replace(/```/g, "").trim();
@@ -99,8 +102,8 @@ ${JSON.stringify(payload)}
         return r;
       });
     } catch (err) {
-      console.error("Failed to translate reviews:", err);
-      return reviews; // fallback to original if failed
+      console.error("Failed to translate reviews. Cache will not be poisoned.", err);
+      throw err; // Throwing prevents unstable_cache from saving English fallback permanently
     }
   },
   ['gemini-reviews-translations-v1'],
@@ -193,7 +196,12 @@ class ReviewsService {
       let finalReviews = sortedReviews;
       if (locale !== "en" && finalReviews.length > 0) {
         const reviewsStr = JSON.stringify(finalReviews);
-        finalReviews = await getTranslatedReviews(reviewsStr, locale);
+        try {
+          finalReviews = await getTranslatedReviews(reviewsStr, locale);
+        } catch (translationErr) {
+          console.warn(`Translation failed for locale '${locale}', falling back to English for this request only.`);
+          // We keep finalReviews as sortedReviews (English) without poisoning the Next.js cache.
+        }
       }
 
       return {
