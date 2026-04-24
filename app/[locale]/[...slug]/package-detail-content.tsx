@@ -63,9 +63,20 @@ export async function PackageDetailPageContent({
     reviews: reviews,
   });
 
+  const videoSchema = pkg.video_url ? {
+    "@context": "https://schema.org",
+    "@type": "VideoObject",
+    "name": `${title} - Video`,
+    "description": generateSeoDescription(desc),
+    "thumbnailUrl": pkg.gallery_images?.[0] || pkg.cover_image || settings.default_og_image_url || "",
+    "uploadDate": new Date().toISOString(),
+    "contentUrl": pkg.video_url
+  } : null;
+
   return (
     <div>
       <SchemaInjector schema={serviceSchema} />
+      {videoSchema && <SchemaInjector schema={videoSchema} />}
       <BreadcrumbNav customLastLabel={title} />
       <PackageDetails
         packageData={pkg}

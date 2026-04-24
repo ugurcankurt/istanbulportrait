@@ -29,6 +29,7 @@ export interface PackageDB {
   sort_order: number;
   cover_image: string | null;
   gallery_images: string[];
+  video_url: string | null;
   title: PackageTranslations;
   description: PackageTranslations;
   features: PackageFeatures;

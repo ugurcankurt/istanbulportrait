@@ -30,7 +30,66 @@ interface PackageGalleryProps {
   onFavorite?: () => void;
   onBack?: () => void;
   isFavorite?: boolean;
+  videoUrl?: string | null;
 }
+
+const VideoPlayer = ({ url }: { url: string }) => {
+  const embed = React.useMemo(() => {
+    if (!url) return null;
+    try {
+      const parsed = new URL(url);
+      if (parsed.hostname.includes("youtube.com") || parsed.hostname.includes("youtu.be")) {
+        const videoId = parsed.searchParams.get("v") || parsed.pathname.split('/').pop();
+        return { type: "youtube", src: `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&loop=1&playlist=${videoId}&controls=0` };
+      }
+      if (parsed.hostname.includes("vimeo.com")) {
+        const videoId = parsed.pathname.split('/').pop();
+        return { type: "vimeo", src: `https://player.vimeo.com/video/${videoId}?autoplay=1&loop=1&muted=1&background=1` };
+      }
+      if (parsed.hostname.includes("instagram.com")) {
+        let pathname = parsed.pathname;
+        if (pathname.startsWith('/reel/')) {
+          pathname = pathname.replace('/reel/', '/p/');
+        }
+        if (!pathname.endsWith('/')) pathname += '/';
+        return { type: "instagram", src: `https://www.instagram.com${pathname}embed/` };
+      }
+      if (url.endsWith(".mp4") || url.endsWith(".webm") || url.includes("supabase.co")) {
+        return { type: "mp4", src: url };
+      }
+    } catch (e) {
+      return null;
+    }
+    return null;
+  }, [url]);
+
+  if (!embed) return null;
+
+  if (embed.type === "mp4") {
+    return (
+      <video
+        src={embed.src}
+        autoPlay
+        loop
+        muted
+        playsInline
+        className="w-full h-full object-cover"
+      />
+    );
+  }
+
+  return (
+    <iframe
+      src={embed.src}
+      className={cn("w-full h-full", embed.type === "instagram" ? "object-contain bg-black" : "object-cover pointer-events-none")}
+      frameBorder="0"
+      allow="autoplay; encrypted-media"
+      allowFullScreen
+      allowTransparency={true}
+      scrolling="no"
+    />
+  );
+};
 
 export function PackageGallery({
   images,
@@ -39,6 +98,7 @@ export function PackageGallery({
   onFavorite,
   onBack,
   isFavorite,
+  videoUrl,
 }: PackageGalleryProps) {
   const t = useTranslations("ui");
   const [selectedIndex, setSelectedIndex] = React.useState(0);
@@ -47,13 +107,11 @@ export function PackageGallery({
   const locale = useLocale();
   const direction = getTextDirection(locale);
 
-  // Mobile Carousel State
   const [emblaRef, emblaApi] = useEmblaCarousel({
     loop: true,
     direction: direction
   });
 
-  // Lightbox Carousel State
   const [lightboxRef, lightboxApi] = useEmblaCarousel({
     loop: true,
     startIndex: selectedIndex,
@@ -74,30 +132,33 @@ export function PackageGallery({
     lightboxApi.on("select", () => onSelect(lightboxApi));
   }, [lightboxApi, onSelect]);
 
-  // Sync index when opening lightbox
   React.useEffect(() => {
     if (isOpen && lightboxApi) {
       lightboxApi.scrollTo(selectedIndex, true);
     }
   }, [isOpen, lightboxApi, selectedIndex]);
 
-  if (!images || images.length === 0) return null;
+  if ((!images || images.length === 0) && !videoUrl) return null;
 
-  const displayImages = images.slice(0, 5);
-  const totalImages = images.length;
+  const totalItems = images.length + (videoUrl ? 1 : 0);
 
   return (
     <div className="w-full">
       {/* --- MOBILE VIEW: CAROUSEL --- */}
       <div className="md:hidden relative group bg-black rounded-3xl overflow-hidden shadow-md">
         <div className="overflow-hidden" ref={emblaRef}>
-          <div className="flex">
+          <div className="flex items-stretch">
+            {videoUrl && (
+              <div className="flex-[0_0_100%] min-w-0 relative aspect-[4/5] bg-black">
+                <VideoPlayer url={videoUrl} />
+              </div>
+            )}
             {images.map((src, index) => (
               <div
                 className="flex-[0_0_100%] min-w-0 relative aspect-[4/5] cursor-pointer"
                 key={index}
                 onClick={() => {
-                  setSelectedIndex(index);
+                  setSelectedIndex(videoUrl ? index + 1 : index);
                   setIsOpen(true);
                 }}
               >
@@ -107,20 +168,16 @@ export function PackageGallery({
                   fill
                   className="object-cover"
                   sizes="100vw"
-                  priority={index === 0}
+                  priority={!videoUrl && index === 0}
                 />
               </div>
             ))}
           </div>
         </div>
 
-        {/* Top Gradient Overlay */}
         <div className="absolute top-0 inset-x-0 h-24 bg-gradient-to-b from-black/50 to-transparent pointer-events-none z-10" />
-
-        {/* Bottom Gradient Overlay */}
         <div className="absolute bottom-0 inset-x-0 h-32 bg-gradient-to-t from-black/60 to-transparent pointer-events-none z-10" />
 
-        {/* Overlay Top Bar */}
         {(onShare || onFavorite || onBack) && (
           <div className="absolute top-4 inset-x-4 flex justify-between items-start z-20">
             {onBack ? (
@@ -174,16 +231,14 @@ export function PackageGallery({
           </div>
         )}
 
-        {/* Floating Image Counter */}
         <div className="absolute bottom-10 end-4 z-20">
           <Badge variant="secondary" className="bg-primary/40 text-white border-none py-1.5 px-3 text-xs font-semibold backdrop-blur-md">
-            {selectedIndex + 1} / {totalImages}
+            {selectedIndex + 1} / {totalItems}
           </Badge>
         </div>
 
-        {/* Pagination Dots */}
         <div className="absolute bottom-6 inset-x-0 flex justify-center gap-2 z-20 pointer-events-none">
-          {images.map((_, i) => (
+          {Array.from({ length: totalItems }).map((_, i) => (
             <div
               key={i}
               className={cn(
@@ -198,31 +253,37 @@ export function PackageGallery({
       {/* --- DESKTOP VIEW: PREMIUM GRID --- */}
       <div className="hidden md:block">
         <div className="grid grid-cols-4 grid-rows-2 gap-2 h-[360px] lg:h-[470px] w-full overflow-hidden rounded-2xl relative group/grid">
-          {/* Main Image */}
+          {/* Main Hero (Video or Image) */}
           <div
-            className="col-span-2 row-span-2 relative cursor-pointer overflow-hidden"
+            className="col-span-2 row-span-2 relative cursor-pointer overflow-hidden bg-black flex items-center justify-center"
             onClick={() => {
-              setSelectedIndex(0);
-              setIsOpen(true);
+              if (!videoUrl) {
+                setSelectedIndex(0);
+                setIsOpen(true);
+              }
             }}
           >
-            <Image
-              src={images[0]}
-              alt={alt}
-              fill
-              className="object-cover hover:brightness-90 transition-all duration-700 hover:scale-105"
-              sizes="(max-width: 1024px) 50vw, (max-width: 1536px) 50vw, 800px"
-              priority
-            />
+            {videoUrl ? (
+              <VideoPlayer url={videoUrl} />
+            ) : (
+              <Image
+                src={images[0]}
+                alt={alt}
+                fill
+                className="object-cover hover:brightness-90 transition-all duration-700 hover:scale-105"
+                sizes="(max-width: 1024px) 50vw, (max-width: 1536px) 50vw, 800px"
+                priority
+              />
+            )}
           </div>
 
           {/* Secondary Images (Grid) */}
-          {images.slice(1, 5).map((src, index) => (
+          {images.slice(videoUrl ? 0 : 1, videoUrl ? 4 : 5).map((src, index) => (
             <div
               key={index}
               className="relative cursor-pointer overflow-hidden"
               onClick={() => {
-                setSelectedIndex(index + 1);
+                setSelectedIndex(videoUrl ? index + 1 : index + 1);
                 setIsOpen(true);
               }}
             >
@@ -237,7 +298,6 @@ export function PackageGallery({
             </div>
           ))}
 
-          {/* Global "View all photos" button */}
           <div className="absolute bottom-4 end-4 z-20">
             <Button className="primary"
               onClick={() => {
@@ -259,16 +319,12 @@ export function PackageGallery({
           <DialogPrimitive.Popup className="fixed inset-0 z-[120] w-screen h-screen flex flex-col items-center justify-center outline-none bg-background data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 duration-200">
             <DialogTitle className="sr-only">Photo Gallery</DialogTitle>
 
-            {/* Header Controls */}
             <div className="absolute top-0 inset-x-0 h-24 flex items-center justify-end px-4 sm:px-10 z-[130]">
-              {/* Counter Top Center */}
               <div className="absolute left-1/2 -translate-x-1/2">
                 <span className="text-slate-900 font-bold text-sm sm:text-base tracking-tight">
-                  {selectedIndex + 1} / {totalImages}
+                  {selectedIndex + 1} / {totalItems}
                 </span>
               </div>
-
-              {/* Close Button Top Right */}
               <DialogClose
                 className={cn(buttonVariants({ variant: "outline", size: "icon" }), "h-10 w-10 sm:h-12 sm:w-12 rounded-full bg-white dark:bg-slate-900 shadow-lg border-slate-100 dark:border-slate-800 text-slate-900 dark:text-slate-100 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all hover:scale-110")}
               >
@@ -276,10 +332,16 @@ export function PackageGallery({
               </DialogClose>
             </div>
 
-            {/* Lightbox Carousel Content */}
             <div className="w-full h-full flex items-center justify-center relative">
               <div className="overflow-hidden w-full h-full" ref={lightboxRef}>
                 <div className="flex h-full">
+                  {videoUrl && (
+                    <div className="flex-[0_0_100%] min-w-0 h-full relative flex items-center justify-center bg-black">
+                      <div className="w-full h-full max-w-4xl relative">
+                         <VideoPlayer url={videoUrl} />
+                      </div>
+                    </div>
+                  )}
                   {images.map((src, index) => (
                     <div className="flex-[0_0_100%] min-w-0 h-full relative" key={index}>
                       <div className="relative w-full h-full flex items-center justify-center">
@@ -289,7 +351,7 @@ export function PackageGallery({
                           fill
                           className="object-contain"
                           sizes="100vw"
-                          priority={index === selectedIndex}
+                          priority={Boolean((!videoUrl && index === selectedIndex) || (videoUrl && index + 1 === selectedIndex))}
                         />
                       </div>
                     </div>
@@ -297,7 +359,6 @@ export function PackageGallery({
                 </div>
               </div>
 
-              {/* Desktop Side Navigation */}
               <div className="absolute start-4 sm:start-10 top-1/2 -translate-y-1/2 z-[130]">
                 <Button
                   variant="outline"

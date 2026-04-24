@@ -52,6 +52,7 @@ export function PackageForm({ initialData }: PackageFormProps) {
       is_popular: false,
       sort_order: 1,
       cover_image: null,
+      video_url: null,
       gallery_images: [],
       title: { en: "" },
       description: { en: "" },
@@ -238,6 +239,7 @@ export function PackageForm({ initialData }: PackageFormProps) {
         is_popular: Boolean(data.is_popular),
         sort_order: Number(data.sort_order),
         cover_image: data.cover_image,
+        video_url: data.video_url || null,
         gallery_images: data.gallery_images,
         title: data.title,
         description: data.description,
@@ -578,6 +580,22 @@ export function PackageForm({ initialData }: PackageFormProps) {
                     </Label>
                   )}
                 </Field>
+
+                <FormField
+                  control={form.control}
+                  name="video_url"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Gallery Video URL (Optional)</FormLabel>
+                      <FormControl>
+                        <Input placeholder="e.g. YouTube, Vimeo, or Instagram Reel URL" {...field} value={field.value || ''} />
+                      </FormControl>
+                      <FormDescription>
+                        Paste an Instagram Reel, YouTube, or Vimeo link. It will be shown at the beginning of the gallery.
+                      </FormDescription>
+                    </FormItem>
+                  )}
+                />
 
                 <Field className="space-y-4">
                   <FieldLabel>Gallery Images</FieldLabel>

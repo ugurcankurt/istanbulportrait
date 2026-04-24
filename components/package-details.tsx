@@ -248,6 +248,7 @@ export function PackageDetails({ packageData, aggregateRating, reviews, activeDi
               onFavorite={toggleSave}
               onBack={() => router.back()}
               isFavorite={isSaved}
+              videoUrl={packageData.video_url}
             />
 
             {/* Content Mobile Header (Only visible on mobile) */}
