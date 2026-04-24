@@ -104,7 +104,7 @@ ${JSON.stringify(payload)}
     }
   },
   ['gemini-reviews-translations-v1'],
-  { revalidate: 86400 * 30 } // Cache for 30 days. When reviews change, a new cache key is auto-generated.
+  { revalidate: 86400 * 7 } // Cache for 7 days. When reviews change, a new cache key is auto-generated.
 );
 
 class ReviewsService {

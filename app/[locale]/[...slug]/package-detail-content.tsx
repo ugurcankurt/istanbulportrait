@@ -39,7 +39,7 @@ export async function PackageDetailPageContent({
 
   // Fetch real reviews data
   const aggregateRating = await reviewsService.getAggregateRating();
-  const { reviews } = await reviewsService.fetchGoogleReviews();
+  const { reviews } = await reviewsService.fetchGoogleReviews(locale);
 
 
   const title = pkg.title[locale] || pkg.title["en"] || pkg.slug;
