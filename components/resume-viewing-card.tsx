@@ -114,9 +114,9 @@ export function ResumeViewingCard({
     <div className={cn("flex flex-col gap-8", !withContainer && "w-full")}>
       {showTitle && (
         isMainTitle ? (
-          <h1 className="text-2xl sm:text-3xl md:text-5xl font-bold text-white drop-shadow-lg text-center tracking-tight">
+          <h2 className="text-2xl sm:text-3xl md:text-5xl font-bold text-white drop-shadow-lg text-center tracking-tight">
             {thero("resume_title")}
-          </h1>
+          </h2>
         ) : (
           <div className="text-2xl sm:text-3xl md:text-5xl font-bold text-white drop-shadow-lg text-center tracking-tight">
             {thero("resume_title")}

@@ -981,9 +981,9 @@ export function CheckoutForm({ timeSurcharges = [] }: { timeSurcharges?: TimeSur
           <span className="hidden sm:inline">{t("buttons.back") || "Back"}</span>
         </Link>
 
-        <h1 className="text-sm font-bold text-foreground absolute left-1/2 -translate-x-1/2">
+        <div className="text-sm font-bold text-foreground absolute left-1/2 -translate-x-1/2">
           {t("title")}
-        </h1>
+        </div>
 
         <div className="flex items-center gap-1.5">
           <Lock className="w-3.5 h-3.5 text-success" />

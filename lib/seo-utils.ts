@@ -166,6 +166,7 @@ export function buildLocalBusinessSchema(
       settings.facebook_url,
       settings.youtube_url,
       settings.tiktok_url,
+      "https://www.linkedin.com/company/istanbulportrait",
     ].filter(Boolean),
   };
 
@@ -245,6 +246,7 @@ export function buildOrganizationSchema(settings: SiteSettings) {
       settings.facebook_url,
       settings.youtube_url,
       settings.tiktok_url,
+      "https://www.linkedin.com/company/istanbulportrait",
     ].filter(Boolean),
   };
 }

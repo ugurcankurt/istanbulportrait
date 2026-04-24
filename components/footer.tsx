@@ -1,6 +1,6 @@
 "use client";
 
-import { Facebook, Instagram, Mail, MapPin, Phone, Youtube, Video, MessageCircle } from "lucide-react";
+import { Facebook, Instagram, Mail, MapPin, Phone, Youtube, Video, MessageCircle, Linkedin } from "lucide-react";
 import Image from "next/image";
 import { useLocale, useTranslations } from "next-intl";
 import { useTheme } from "next-themes";
@@ -34,6 +34,7 @@ export function Footer({ dynamicNavData = {}, settings }: FooterProps) {
   }, []);
 
   const socialLinks = [
+    { icon: Linkedin, href: "https://www.linkedin.com/company/istanbulportrait", label: "LinkedIn" },
     ...(settings?.instagram_url ? [{ icon: Instagram, href: settings.instagram_url, label: "Instagram" }] : []),
     ...(settings?.facebook_url ? [{ icon: Facebook, href: settings.facebook_url, label: "Facebook" }] : []),
     ...(settings?.youtube_url ? [{ icon: Youtube, href: settings.youtube_url, label: "YouTube" }] : []),
