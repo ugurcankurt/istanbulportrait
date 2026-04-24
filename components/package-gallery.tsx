@@ -85,7 +85,6 @@ const VideoPlayer = ({ url }: { url: string }) => {
       frameBorder="0"
       allow="autoplay; encrypted-media"
       allowFullScreen
-      allowTransparency={true}
       scrolling="no"
     />
   );
@@ -338,7 +337,7 @@ export function PackageGallery({
                   {videoUrl && (
                     <div className="flex-[0_0_100%] min-w-0 h-full relative flex items-center justify-center bg-black">
                       <div className="w-full h-full max-w-4xl relative">
-                         <VideoPlayer url={videoUrl} />
+                        <VideoPlayer url={videoUrl} />
                       </div>
                     </div>
                   )}

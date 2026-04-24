@@ -142,6 +142,56 @@ export async function uploadPackageImage(
 }
 
 /**
+ * Uploads a video for a package to Supabase Storage without compression.
+ *
+ * @param slug The package slug (folder name)
+ * @param file The File object to upload
+ * @param bucket (Optional) The Supabase storage bucket names
+ * @returns Object indicating success and public URL of the uploaded video
+ */
+export async function uploadPackageVideo(
+  slug: string,
+  file: File,
+  bucket: string = PACKAGES_BUCKET
+): Promise<{ success: boolean; url?: string; error?: string }> {
+  try {
+    const supabase = getSupabaseStorageClient();
+    
+    // Normalize folder path to ASCII for Supabase Storage
+    const safeSlug = slug
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-zA-Z0-9-]/g, '-')
+      .replace(/-+/g, '-')
+      .toLowerCase();
+
+    // Use an epoch + normalized name to avoid caching artifacts
+    const safeName = file.name.replace(/[^a-z0-9.]/gi, "_").toLowerCase();
+    const uniqueFileName = `${Date.now()}_${safeName}`;
+    const filePath = `${safeSlug}/videos/${uniqueFileName}`;
+
+    const { data, error } = await supabase.storage
+      .from(bucket)
+      .upload(filePath, file, {
+        cacheControl: "3600",
+        upsert: false,
+      });
+
+    if (error) throw error;
+
+    // Retrieve public URL
+    const { data: publicUrlData } = supabase.storage
+      .from(bucket)
+      .getPublicUrl(data.path);
+
+    return { success: true, url: publicUrlData.publicUrl };
+  } catch (err: any) {
+    console.error("Storage upload error:", err);
+    return { success: false, error: err.message || "Failed to upload video" };
+  }
+}
+
+/**
  * Extracts relative path correctly for Supabase Storage delete function
  * Uses the URL of an image stored in our bucket to extract its object path
  */

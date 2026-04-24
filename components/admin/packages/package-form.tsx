@@ -28,7 +28,7 @@ import {
 } from "@/components/ui/form";
 
 import { packagesService, type PackageDB } from "@/lib/packages-service";
-import { uploadPackageImage, deletePackageImage } from "@/lib/storage-utils";
+import { uploadPackageImage, deletePackageImage, uploadPackageVideo } from "@/lib/storage-utils";
 
 interface PackageFormProps {
   initialData?: PackageDB;
@@ -111,6 +111,35 @@ export function PackageForm({ initialData }: PackageFormProps) {
     }
     setCoverImagePreview(null);
     form.setValue("cover_image", null, { shouldDirty: true });
+  };
+
+  const handleVideoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const slug = form.getValues("slug");
+    if (!slug) {
+      toast.error("Please enter a slug first before uploading a video!");
+      return;
+    }
+
+    try {
+      setIsSubmitting(true);
+      toast.loading("Uploading video...", { id: "upload-video" });
+
+      const { success, url, error } = await uploadPackageVideo(slug, file);
+
+      if (success && url) {
+        form.setValue("video_url", url, { shouldDirty: true });
+        toast.success("Video uploaded successfully!", { id: "upload-video" });
+      } else {
+        throw new Error(error || "Upload failed");
+      }
+    } catch (error: any) {
+      toast.error(error.message, { id: "upload-video" });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleGalleryUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -587,11 +616,28 @@ export function PackageForm({ initialData }: PackageFormProps) {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Gallery Video URL (Optional)</FormLabel>
-                      <FormControl>
-                        <Input placeholder="e.g. YouTube, Vimeo, or Instagram Reel URL" {...field} value={field.value || ''} />
-                      </FormControl>
+                      <div className="flex gap-2">
+                        <FormControl>
+                          <Input placeholder="e.g. YouTube, Vimeo, or Instagram URL" {...field} value={field.value || ''} />
+                        </FormControl>
+                        <Label
+                          htmlFor="video-upload"
+                          className="flex items-center justify-center px-4 border rounded-md cursor-pointer bg-muted hover:bg-muted/80 transition-colors shrink-0 text-sm font-medium"
+                        >
+                          <UploadCloud className="w-4 h-4 mr-2" />
+                          Upload .mp4
+                          <Input
+                            id="video-upload"
+                            type="file"
+                            accept="video/mp4,video/webm"
+                            className="hidden"
+                            onChange={handleVideoUpload}
+                            disabled={isSubmitting}
+                          />
+                        </Label>
+                      </div>
                       <FormDescription>
-                        Paste an Instagram Reel, YouTube, or Vimeo link. It will be shown at the beginning of the gallery.
+                        Paste a link OR upload a direct .mp4 video for seamless autoplay.
                       </FormDescription>
                     </FormItem>
                   )}
