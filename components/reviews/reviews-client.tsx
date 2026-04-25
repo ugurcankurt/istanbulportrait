@@ -121,7 +121,7 @@ export function ReviewsClient({
                               </strong>
                               <div className="flex items-center gap-2 mb-1">
                                 {renderStars(review.rating, "sm")}
-                                <span className="text-xs font-medium text-primary/80">
+                                <span className="text-xs font-medium text-foreground">
                                   {review.rating}/5
                                 </span>
                               </div>

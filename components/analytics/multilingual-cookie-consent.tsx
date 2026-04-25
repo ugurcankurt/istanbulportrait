@@ -9,6 +9,7 @@ import { Link } from "@/i18n/routing";
 export function MultilingualCookieConsent() {
   const locale = useLocale();
   const t = useTranslations("cookies");
+  const tFooter = useTranslations("footer");
   const { consent, setConsent } = useConsent();
 
   const handleAcceptAll = async () => {
@@ -50,8 +51,10 @@ export function MultilingualCookieConsent() {
               <Link
                 href={"/privacy" as any}
                 className="underline hover:text-foreground ml-1 rtl:mr-1 rtl:ml-0"
+                aria-label={`${t("banner.privacy_link")} - ${tFooter("privacy_policy")}`}
               >
                 {t("banner.privacy_link")}
+                <span className="sr-only"> - {tFooter("privacy_policy")}</span>
               </Link>
             </p>
           </div>
