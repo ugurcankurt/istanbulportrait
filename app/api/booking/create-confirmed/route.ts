@@ -366,45 +366,7 @@ export async function POST(request: NextRequest) {
             // Non-blocking error
           }
 
-          // ── GA4 Measurement Protocol (server-side, 100% reliable) ──
-          try {
-            const {
-              trackGA4ServerPurchase,
-              PACKAGE_DISPLAY_NAMES,
-              extractClientIdFromCookie,
-            } = await import("@/lib/ga4-server");
-            const { hashCustomerData, hashPhoneNumber } = await import("@/lib/facebook");
-
-            // Extract _ga cookie from the request
-            const gaCookie = request.cookies.get("_ga")?.value;
-            const clientId = extractClientIdFromCookie(gaCookie);
-
-            const nameParts = customerName.split(" ");
-            const firstName = nameParts[0];
-            const lastName = nameParts.length > 1 ? nameParts.slice(1).join(" ") : "";
-
-            const ga4UserData = {
-              sha256_email_address: customerEmail ? await hashCustomerData(customerEmail) : undefined,
-              sha256_phone_number: customerPhone ? await hashPhoneNumber(customerPhone) : undefined,
-              address: {
-                first_name: firstName || undefined,
-                last_name: lastName || undefined,
-              }
-            };
-
-            await trackGA4ServerPurchase(
-              booking.id,
-              packageId,
-              PACKAGE_DISPLAY_NAMES[packageId] || packageId,
-              totalAmount,
-              "EUR",
-              clientId,
-              // ga4UserData removed pending signature update
-            );
-          } catch (ga4Error) {
-            console.error("GA4 Measurement Protocol Error:", ga4Error);
-            // Non-blocking error
-          }
+          // Server-side GA4 tracking removed to prevent duplicate "purchase" events since frontend already handles it perfectly.
         }
       } catch (emailError) {
         console.error("❌ Failed to send confirmation email:", emailError);

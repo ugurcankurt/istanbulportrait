@@ -772,12 +772,6 @@ export function CheckoutForm({ timeSurcharges = [] }: { timeSurcharges?: TimeSur
           },
           eventId
         );
-        fbPixel.trackPurchase(selectedPackage, actualTotal, bookingResult.booking.id, eventId);
-        trackFacebookEvent("Purchase", {
-          email: bookingData.customerEmail, phone: bookingData.customerPhone,
-          packageId: selectedPackage, amount: actualTotal,
-          transactionId: bookingResult.booking.id,
-        }, eventId);
         trackYandexPurchase(bookingResult.booking.id, selectedPackage, actualTotal);
 
         if (typeof window !== "undefined") {
@@ -930,7 +924,6 @@ export function CheckoutForm({ timeSurcharges = [] }: { timeSurcharges?: TimeSur
         },
         eventId
       );
-      fbPixel.trackPurchase(selectedPackage, actualTotal, bookingResult.booking.id, eventId);
       trackYandexPurchase(bookingResult.booking.id, selectedPackage, actualTotal);
     } catch (error) {
       console.error("Booking creation error:", error);

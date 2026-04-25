@@ -8,7 +8,7 @@ import { useEffect } from "react";
 declare global {
   interface Window {
     ym: (id: number, method: string, ...args: unknown[]) => void;
-    dataLayer: Record<string, unknown>[];
+    ymDataLayer: Record<string, unknown>[];
     __YANDEX_ID?: string;
   }
 }
@@ -60,7 +60,7 @@ export function YandexMetrica({
                 ssr: true,
                 webvisor: true,
                 clickmap: true,
-                ecommerce: "dataLayer",
+                ecommerce: "ymDataLayer",
                 referrer: document.referrer,
                 url: location.href,
                 accurateTrackBounce: true,
@@ -118,9 +118,9 @@ export function useYandexMetrica() {
       ],
     });
 
-    // 2. Standard E-commerce dataLayer tracking
-    window.dataLayer = window.dataLayer || [];
-    window.dataLayer.push({
+    // 2. Standard E-commerce tracking for Yandex
+    window.ymDataLayer = window.ymDataLayer || [];
+    window.ymDataLayer.push({
       ecommerce: {
         purchase: {
           actionField: {
@@ -149,8 +149,8 @@ export function useYandexMetrica() {
     if (typeof window !== "undefined") {
 
 
-      window.dataLayer = window.dataLayer || [];
-      window.dataLayer.push({
+      window.ymDataLayer = window.ymDataLayer || [];
+      window.ymDataLayer.push({
         ecommerce: {
           add: {
             products: [
@@ -175,8 +175,8 @@ export function useYandexMetrica() {
     if (typeof window !== "undefined") {
 
 
-      window.dataLayer = window.dataLayer || [];
-      window.dataLayer.push({
+      window.ymDataLayer = window.ymDataLayer || [];
+      window.ymDataLayer.push({
         ecommerce: {
           detail: {
             products: [
