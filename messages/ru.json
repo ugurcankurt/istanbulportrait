@@ -129,7 +129,7 @@
     "success": {
       "title": "Бронирование подтверждено!",
       "message": "Спасибо за бронирование у Стамбульского фотографа. Подтверждение бронирования было отправлено на вашу электронную почту.",
-      "booking_id": "Идентификатор бронирования",
+      "booking_id": "ID брони",
       "payment_successful": "Оплата прошла успешно! Письмо с подтверждением отправлено."
     },
     "error": {
@@ -166,8 +166,8 @@
     },
     "people_count_title": "Количество человек",
     "price_per_person": "Цена на человека",
-    "seasonal_discount_applied": "%{percentage} Seasonal Discount",
-    "promo_code": "Promo Code",
+    "seasonal_discount_applied": "Сезонная скидка %{percentage}",
+    "promo_code": "Промокод",
     "apply_promo": "Применить",
     "promo_applied": "Промокод применен!",
     "invalid_promo": "Неверный или просроченный промокод",
@@ -201,9 +201,9 @@
     },
     "expires_in": "Мы удержим ваше место в течение [TIME] минут.",
     "expired": "Срок резервирования истек. Пожалуйста, выберите новое время.",
-    "apply": "Apply",
-    "remove": "Remove",
-    "promo_code_applied": "%{percentage} Promo Discount"
+    "apply": "Применить",
+    "remove": "Удалить",
+    "promo_code_applied": "Скидка %{percentage}"
   },
   "footer": {
     "description": "Ведущий фотограф Стамбула по профессиональной портретной фотографии. Запечатлейте свои особенные моменты на самых знаковых декорациях города.",
@@ -539,21 +539,21 @@
   "privacy": {
     "cookies": {
       "table": {
-        "title": "Cookies Used on Our Site",
+        "title": "Файлы cookie на нашем сайте",
         "columns": {
           "name": "Name",
-          "purpose": "Purpose",
+          "purpose": "Цель",
           "type": "Type",
-          "duration": "Duration",
-          "provider": "Provider"
+          "duration": "Продолжительность",
+          "provider": "Провайдер"
         },
         "types": {
-          "essential": "Essential",
-          "analytics": "Analytics",
-          "marketing": "Marketing"
+          "essential": "Необходимые",
+          "analytics": "Аналитика",
+          "marketing": "Маркетинг"
         },
         "providers": {
-          "first_party": "First Party",
+          "first_party": "Собственные",
           "google": "Google",
           "yandex": "Yandex",
           "microsoft": "Microsoft",
@@ -561,48 +561,48 @@
         },
         "essential": {
           "user_consent": {
-            "purpose": "Stores the user's cookie consent state for the current domain.",
-            "duration": "1 year"
+            "purpose": "Хранит состояние согласия пользователя на использование файлов cookie.",
+            "duration": "1 год"
           }
         },
         "analytics": {
           "ga": {
             "purpose": "Used by Google Analytics to distinguish users.",
-            "duration": "2 years"
+            "duration": "2 года"
           },
           "gid": {
             "purpose": "Used by Google Analytics to distinguish users.",
-            "duration": "24 hours"
+            "duration": "24 часа"
           },
           "gat": {
-            "purpose": "Used to throttle request rate.",
-            "duration": "1 minute"
+            "purpose": "Используется для ограничения частоты запросов.",
+            "duration": "1 минута"
           },
           "ym_uid": {
-            "purpose": "Used by Yandex Metrica for identifying site users.",
-            "duration": "1 year"
+            "purpose": "Используется Яндекс Метрикой для идентификации.",
+            "duration": "1 год"
           },
           "ym_d": {
-            "purpose": "Used by Yandex Metrica to store the date of user's first session.",
-            "duration": "1 year"
+            "purpose": "Хранит дату первой сессии.",
+            "duration": "1 год"
           },
           "clck": {
-            "purpose": "Persists the Microsoft Clarity User ID.",
-            "duration": "1 year"
+            "purpose": "Сохраняет идентификатор пользователя Microsoft Clarity.",
+            "duration": "1 год"
           },
           "clsk": {
-            "purpose": "Connects multiple page views by a user into a single Clarity session.",
-            "duration": "1 day"
+            "purpose": "Связывает просмотры страниц в один сеанс.",
+            "duration": "1 день"
           }
         },
         "marketing": {
           "fbp": {
             "purpose": "Used by Facebook to deliver advertisement products.",
-            "duration": "3 months"
+            "duration": "3 месяца"
           },
           "fbc": {
             "purpose": "Used by Facebook to deliver advertisement products when an ad is clicked.",
-            "duration": "3 months"
+            "duration": "3 месяца"
           }
         }
       }

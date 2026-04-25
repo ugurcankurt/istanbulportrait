@@ -98,7 +98,7 @@
       "card_number": "رقم البطاقة",
       "expire_month": "مم",
       "expire_year": "ص",
-      "cvc": "رمز التحقق من البطاقة",
+      "cvc": "CVC",
       "terms": "أنا أوافق على الشروط والأحكام",
       "month_short": "مم",
       "year_short": "ص"
@@ -166,8 +166,8 @@
     },
     "people_count_title": "عدد الأشخاص",
     "price_per_person": "السعر للشخص الواحد",
-    "seasonal_discount_applied": "%{percentage} Seasonal Discount",
-    "promo_code": "Promo Code",
+    "seasonal_discount_applied": "خصم موسمي %{percentage}",
+    "promo_code": "الرمز الترويجي",
     "apply_promo": "تطبيق",
     "promo_applied": "تم تطبيق الرمز الترويجي!",
     "invalid_promo": "الرمز الترويجي غير صالح أو منتهي الصلاحية",
@@ -201,9 +201,9 @@
     },
     "expires_in": "سنحتفظ بمكانك لمدة [TIME] دقيقة.",
     "expired": "انتهت فترة الحجز. الرجاء تحديد وقت جديد.",
-    "apply": "Apply",
-    "remove": "Remove",
-    "promo_code_applied": "%{percentage} Promo Discount"
+    "apply": "تطبيق",
+    "remove": "إزالة",
+    "promo_code_applied": "خصم %{percentage}"
   },
   "footer": {
     "description": "مصور فوتوغرافي رائد في اسطنبول لتصوير البورتريه الاحترافي. التقط لحظاتك الخاصة مع الخلفيات الأكثر شهرة في المدينة.",
@@ -499,7 +499,7 @@
     "tax_inclusive": "شامل الضريبة",
     "price_breakdown": "انهيار الأسعار",
     "subtotal": "المجموع الفرعي",
-    "vat": "ضريبة القيمة المضافة",
+    "vat": "ضريبة (VAT)",
     "final_total": "المجموع النهائي"
   },
   "notfound": {
@@ -515,7 +515,7 @@
     "subtitle": "نصائح وأدلة وقصص من اسطنبول",
     "read_more": "اقرأ المزيد",
     "reading_time": "قراءة {minutes} دقيقة",
-    "published_on": "تم النشر",
+    "published_on": "تم النشر في {date}",
     "by_author": "بواسطة {author}",
     "categories": "الفئات",
     "tags": "العلامات",
@@ -533,27 +533,27 @@
     },
     "summary": {
       "title": "الوجبات السريعة الرئيسية",
-      "ai_overview": "نظرة عامة على الذكاء الاصطناعي"
+      "ai_overview": "ملخص الذكاء الاصطناعي"
     }
   },
   "privacy": {
     "cookies": {
       "table": {
-        "title": "Cookies Used on Our Site",
+        "title": "ملفات تعريف الارتباط المستخدمة على موقعنا",
         "columns": {
           "name": "Name",
-          "purpose": "Purpose",
+          "purpose": "الغرض",
           "type": "Type",
-          "duration": "Duration",
-          "provider": "Provider"
+          "duration": "المدة",
+          "provider": "المزود"
         },
         "types": {
-          "essential": "Essential",
-          "analytics": "Analytics",
-          "marketing": "Marketing"
+          "essential": "أساسية",
+          "analytics": "تحليلية",
+          "marketing": "تسويق"
         },
         "providers": {
-          "first_party": "First Party",
+          "first_party": "الطرف الأول",
           "google": "Google",
           "yandex": "Yandex",
           "microsoft": "Microsoft",
@@ -561,48 +561,48 @@
         },
         "essential": {
           "user_consent": {
-            "purpose": "Stores the user's cookie consent state for the current domain.",
-            "duration": "1 year"
+            "purpose": "يخزن حالة موافقة المستخدم على ملفات تعريف الارتباط.",
+            "duration": "سنة واحدة"
           }
         },
         "analytics": {
           "ga": {
             "purpose": "Used by Google Analytics to distinguish users.",
-            "duration": "2 years"
+            "duration": "سنتان"
           },
           "gid": {
             "purpose": "Used by Google Analytics to distinguish users.",
-            "duration": "24 hours"
+            "duration": "24 ساعة"
           },
           "gat": {
-            "purpose": "Used to throttle request rate.",
-            "duration": "1 minute"
+            "purpose": "يستخدم لتقييد معدل الطلبات.",
+            "duration": "دقيقة واحدة"
           },
           "ym_uid": {
-            "purpose": "Used by Yandex Metrica for identifying site users.",
-            "duration": "1 year"
+            "purpose": "يستخدم بواسطة Yandex Metrica لتحديد المستخدمين.",
+            "duration": "سنة واحدة"
           },
           "ym_d": {
-            "purpose": "Used by Yandex Metrica to store the date of user's first session.",
-            "duration": "1 year"
+            "purpose": "يخزن تاريخ الجلسة الأولى للمستخدم.",
+            "duration": "سنة واحدة"
           },
           "clck": {
-            "purpose": "Persists the Microsoft Clarity User ID.",
-            "duration": "1 year"
+            "purpose": "يحافظ على معرف مستخدم Microsoft Clarity.",
+            "duration": "سنة واحدة"
           },
           "clsk": {
-            "purpose": "Connects multiple page views by a user into a single Clarity session.",
-            "duration": "1 day"
+            "purpose": "يربط مشاهدات الصفحات المتعددة في جلسة واحدة.",
+            "duration": "يوم واحد"
           }
         },
         "marketing": {
           "fbp": {
             "purpose": "Used by Facebook to deliver advertisement products.",
-            "duration": "3 months"
+            "duration": "3 أشهر"
           },
           "fbc": {
             "purpose": "Used by Facebook to deliver advertisement products when an ad is clicked.",
-            "duration": "3 months"
+            "duration": "3 أشهر"
           }
         }
       }

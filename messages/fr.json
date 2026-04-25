@@ -62,7 +62,7 @@
     "title": "Réservez votre séance",
     "description": "Complétez votre réservation pour une expérience de séance photo parfaite à Istanbul",
     "payment_description": "Vérifiez les détails de votre réservation et effectuez le paiement",
-    "booking_summary": "Récapitulatif de la réservation",
+    "booking_summary": "Résumé de réservation",
     "modal_description": "Remplissez vos coordonnées pour réserver",
     "booking": {
       "review_details": "Vérifiez vos informations de réservation"
@@ -166,8 +166,8 @@
     },
     "people_count_title": "Nombre de personnes",
     "price_per_person": "Prix par personne",
-    "seasonal_discount_applied": "%{percentage} Seasonal Discount",
-    "promo_code": "Promo Code",
+    "seasonal_discount_applied": "%{percentage} de remise saisonnière",
+    "promo_code": "Code promo",
     "apply_promo": "Postuler",
     "promo_applied": "Code promo appliqué !",
     "invalid_promo": "Code promo invalide ou expiré",
@@ -201,9 +201,9 @@
     },
     "expires_in": "Nous garderons votre place pendant [TIME] minutes.",
     "expired": "Emplacement de réservation expiré. Veuillez sélectionner une nouvelle heure.",
-    "apply": "Apply",
-    "remove": "Remove",
-    "promo_code_applied": "%{percentage} Promo Discount"
+    "apply": "Appliquer",
+    "remove": "Retirer",
+    "promo_code_applied": "%{percentage} de réduction promo"
   },
   "footer": {
     "description": "Photographe leader à Istanbul pour la photographie de portrait professionnelle. Capturez vos moments privilégiés avec les décors les plus emblématiques de la ville.",
@@ -234,7 +234,7 @@
     "card_number_required": "Le numéro de carte est requis",
     "month_required": "Le mois est requis",
     "year_required": "L'année est requise",
-    "cvc_required": "Le CVC doit être composé de 3 chiffres",
+    "cvc_required": "Le CVC doit avoir 3 chiffres",
     "name_min": "Le nom doit comporter au moins 2 caractères",
     "phone_min": "Le numéro de téléphone doit comporter au moins 10 chiffres",
     "message_min": "Le message doit contenir au moins 10 caractères",
@@ -401,7 +401,7 @@
     "customer_email": "Courriel",
     "customer_phone": "Téléphone",
     "notes": "Demandes spéciales",
-    "whats_next": "Quelle est la prochaine étape ?",
+    "whats_next": "Et ensuite ?",
     "confirmation_email": "E-mail de confirmation envoyé",
     "email_description": "Vérifiez votre boîte de réception pour des informations détaillées sur la réservation",
     "pre_session_contact": "Contact pré-session",
@@ -442,7 +442,7 @@
     "subtitle": "Trouvez des réponses à vos questions"
   },
   "locations": {
-    "locationInfo": "Informations sur l'emplacement",
+    "locationInfo": "Infos sur le lieu",
     "photographyTips": "Conseils de photographie",
     "aboutLocation": "À propos de l'emplacement",
     "gallery": "Galerie",
@@ -539,21 +539,21 @@
   "privacy": {
     "cookies": {
       "table": {
-        "title": "Cookies Used on Our Site",
+        "title": "Cookies utilisés sur notre site",
         "columns": {
           "name": "Name",
-          "purpose": "Purpose",
+          "purpose": "Objectif",
           "type": "Type",
-          "duration": "Duration",
-          "provider": "Provider"
+          "duration": "Durée",
+          "provider": "Fournisseur"
         },
         "types": {
-          "essential": "Essential",
-          "analytics": "Analytics",
+          "essential": "Essentiels",
+          "analytics": "Analytique",
           "marketing": "Marketing"
         },
         "providers": {
-          "first_party": "First Party",
+          "first_party": "Première partie",
           "google": "Google",
           "yandex": "Yandex",
           "microsoft": "Microsoft",
@@ -561,48 +561,48 @@
         },
         "essential": {
           "user_consent": {
-            "purpose": "Stores the user's cookie consent state for the current domain.",
-            "duration": "1 year"
+            "purpose": "Stocke l'état de consentement aux cookies de l'utilisateur.",
+            "duration": "1 an"
           }
         },
         "analytics": {
           "ga": {
             "purpose": "Used by Google Analytics to distinguish users.",
-            "duration": "2 years"
+            "duration": "2 ans"
           },
           "gid": {
             "purpose": "Used by Google Analytics to distinguish users.",
-            "duration": "24 hours"
+            "duration": "24 heures"
           },
           "gat": {
-            "purpose": "Used to throttle request rate.",
+            "purpose": "Utilisé pour limiter le taux de requêtes.",
             "duration": "1 minute"
           },
           "ym_uid": {
-            "purpose": "Used by Yandex Metrica for identifying site users.",
-            "duration": "1 year"
+            "purpose": "Utilisé par Yandex Metrica pour identifier les utilisateurs.",
+            "duration": "1 an"
           },
           "ym_d": {
-            "purpose": "Used by Yandex Metrica to store the date of user's first session.",
-            "duration": "1 year"
+            "purpose": "Stocke la date de la première session.",
+            "duration": "1 an"
           },
           "clck": {
-            "purpose": "Persists the Microsoft Clarity User ID.",
-            "duration": "1 year"
+            "purpose": "Conserve l'ID utilisateur de Microsoft Clarity.",
+            "duration": "1 an"
           },
           "clsk": {
-            "purpose": "Connects multiple page views by a user into a single Clarity session.",
-            "duration": "1 day"
+            "purpose": "Connecte plusieurs vues de page en une seule session.",
+            "duration": "1 jour"
           }
         },
         "marketing": {
           "fbp": {
             "purpose": "Used by Facebook to deliver advertisement products.",
-            "duration": "3 months"
+            "duration": "3 mois"
           },
           "fbc": {
             "purpose": "Used by Facebook to deliver advertisement products when an ad is clicked.",
-            "duration": "3 months"
+            "duration": "3 mois"
           }
         }
       }

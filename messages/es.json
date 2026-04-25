@@ -38,7 +38,7 @@
     "quality_description": "Fotografías editadas en alta resolución entregadas digitalmente",
     "form": {
       "name": "Nombre completo",
-      "email": "Dirección de correo electrónico",
+      "email": "Email",
       "phone": "Número de teléfono",
       "date": "Fecha preferida",
       "package": "Seleccionar paquete",
@@ -83,7 +83,7 @@
     "form": {
       "people_count": "Número de personas",
       "name": "Nombre completo",
-      "email": "Dirección de correo electrónico",
+      "email": "Email",
       "phone": "Número de teléfono",
       "date": "Seleccionar fecha",
       "date_time": "Seleccionar fecha y hora",
@@ -94,7 +94,7 @@
       "noon": "Mediodía",
       "afternoon": "tarde",
       "notes": "Solicitudes especiales (opcional)",
-      "card_holder": "Nombre del titular de la tarjeta",
+      "card_holder": "Titular de la tarjeta",
       "card_number": "Número de tarjeta",
       "expire_month": "MM",
       "expire_year": "AA",
@@ -166,8 +166,8 @@
     },
     "people_count_title": "Número de personas",
     "price_per_person": "Precio por persona",
-    "seasonal_discount_applied": "%{percentage} Seasonal Discount",
-    "promo_code": "Promo Code",
+    "seasonal_discount_applied": "%{percentage} de descuento de temporada",
+    "promo_code": "Código promocional",
     "apply_promo": "Aplicar",
     "promo_applied": "¡Código promocional aplicado!",
     "invalid_promo": "Código promocional no válido o caducado",
@@ -201,9 +201,9 @@
     },
     "expires_in": "Mantendremos su lugar durante [TIEMPO] minutos.",
     "expired": "El espacio de reserva expiró. Por favor seleccione una nueva hora.",
-    "apply": "Apply",
-    "remove": "Remove",
-    "promo_code_applied": "%{percentage} Promo Discount"
+    "apply": "Aplicar",
+    "remove": "Eliminar",
+    "promo_code_applied": "%{percentage} de descuento promocional"
   },
   "footer": {
     "description": "Fotógrafo líder en Estambul para fotografía de retratos profesionales. Capturando tus momentos especiales con los escenarios más emblemáticos de la ciudad.",
@@ -225,7 +225,7 @@
   "validation": {
     "people_count_required": "Se requiere recuento de personas para el paquete en la azotea",
     "package_required": "Se requiere selección de paquete",
-    "email_invalid": "Por favor introduce una dirección de correo electrónico válida",
+    "email_invalid": "Introduce un email válido",
     "phone_invalid": "Por favor ingresa un número de teléfono válido",
     "date_required": "Por favor seleccione una fecha",
     "time_required": "Por favor seleccione una hora",
@@ -402,7 +402,7 @@
     "customer_phone": "Teléfono",
     "notes": "Solicitudes especiales",
     "whats_next": "¿Qué sigue?",
-    "confirmation_email": "Correo electrónico de confirmación enviado",
+    "confirmation_email": "Email de confirmación enviado",
     "email_description": "Revisa tu bandeja de entrada para obtener información detallada sobre la reserva.",
     "pre_session_contact": "Contacto previo a la sesión",
     "contact_description": "Nos comunicaremos contigo 24 horas antes de tu sesión para confirmar los detalles.",
@@ -539,21 +539,21 @@
   "privacy": {
     "cookies": {
       "table": {
-        "title": "Cookies Used on Our Site",
+        "title": "Cookies utilizadas en nuestro sitio",
         "columns": {
           "name": "Name",
-          "purpose": "Purpose",
+          "purpose": "Propósito",
           "type": "Type",
-          "duration": "Duration",
-          "provider": "Provider"
+          "duration": "Duración",
+          "provider": "Proveedor"
         },
         "types": {
-          "essential": "Essential",
-          "analytics": "Analytics",
+          "essential": "Esenciales",
+          "analytics": "Análisis",
           "marketing": "Marketing"
         },
         "providers": {
-          "first_party": "First Party",
+          "first_party": "Propias",
           "google": "Google",
           "yandex": "Yandex",
           "microsoft": "Microsoft",
@@ -561,48 +561,48 @@
         },
         "essential": {
           "user_consent": {
-            "purpose": "Stores the user's cookie consent state for the current domain.",
-            "duration": "1 year"
+            "purpose": "Almacena el estado de consentimiento de cookies del usuario.",
+            "duration": "1 año"
           }
         },
         "analytics": {
           "ga": {
             "purpose": "Used by Google Analytics to distinguish users.",
-            "duration": "2 years"
+            "duration": "2 años"
           },
           "gid": {
             "purpose": "Used by Google Analytics to distinguish users.",
-            "duration": "24 hours"
+            "duration": "24 horas"
           },
           "gat": {
-            "purpose": "Used to throttle request rate.",
-            "duration": "1 minute"
+            "purpose": "Se usa para limitar la tasa de solicitudes.",
+            "duration": "1 minuto"
           },
           "ym_uid": {
-            "purpose": "Used by Yandex Metrica for identifying site users.",
-            "duration": "1 year"
+            "purpose": "Utilizado por Yandex Metrica para identificar usuarios.",
+            "duration": "1 año"
           },
           "ym_d": {
-            "purpose": "Used by Yandex Metrica to store the date of user's first session.",
-            "duration": "1 year"
+            "purpose": "Almacena la fecha de la primera sesión.",
+            "duration": "1 año"
           },
           "clck": {
-            "purpose": "Persists the Microsoft Clarity User ID.",
-            "duration": "1 year"
+            "purpose": "Mantiene el ID de usuario de Microsoft Clarity.",
+            "duration": "1 año"
           },
           "clsk": {
-            "purpose": "Connects multiple page views by a user into a single Clarity session.",
-            "duration": "1 day"
+            "purpose": "Conecta múltiples vistas de página en una sola sesión.",
+            "duration": "1 día"
           }
         },
         "marketing": {
           "fbp": {
             "purpose": "Used by Facebook to deliver advertisement products.",
-            "duration": "3 months"
+            "duration": "3 meses"
           },
           "fbc": {
             "purpose": "Used by Facebook to deliver advertisement products when an ad is clicked.",
-            "duration": "3 months"
+            "duration": "3 meses"
           }
         }
       }

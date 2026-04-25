@@ -166,8 +166,8 @@
     },
     "people_count_title": "Anzahl der Personen",
     "price_per_person": "Preis pro Person",
-    "seasonal_discount_applied": "%{percentage} Seasonal Discount",
-    "promo_code": "Promo Code",
+    "seasonal_discount_applied": "%{percentage} Saisonrabatt",
+    "promo_code": "Gutscheincode",
     "apply_promo": "Bewerben",
     "promo_applied": "Aktionscode angewendet!",
     "invalid_promo": "Ungültiger oder abgelaufener Aktionscode",
@@ -192,7 +192,7 @@
       "security_notice": "Sichere Zahlung über Turinvoice",
       "status_paying": "Warten auf Zahlung...",
       "status_paid": "Zahlung erfolgreich!",
-      "status_timeout": "Zeitüberschreitung bei der Zahlung",
+      "status_timeout": "Zahlungs-Timeout",
       "success_message": "Ihre Zahlung wurde bestätigt.",
       "redirect_message": "Weiterleitung...",
       "timeout_message": "Die Zahlungssitzung ist abgelaufen.",
@@ -201,9 +201,9 @@
     },
     "expires_in": "Wir behalten Ihren Platz für [TIME] Minuten.",
     "expired": "Der Reservierungsslot ist abgelaufen. Bitte wählen Sie eine neue Uhrzeit aus.",
-    "apply": "Apply",
-    "remove": "Remove",
-    "promo_code_applied": "%{percentage} Promo Discount"
+    "apply": "Anwenden",
+    "remove": "Entfernen",
+    "promo_code_applied": "%{percentage} Aktionsrabatt"
   },
   "footer": {
     "description": "Führender Fotograf in Istanbul für professionelle Porträtfotografie. Halten Sie Ihre besonderen Momente vor den berühmtesten Kulissen der Stadt fest.",
@@ -250,8 +250,8 @@
     "select_package": "Wählen Sie ein Paket aus",
     "tell_us_vision": "Erzählen Sie uns von Ihrer Vision für das Fotoshooting ...",
     "test_card": "5528790000000008 (Verwenden Sie diese Testkarte für eine erfolgreiche Demozahlung)",
-    "enter_full_name": "Geben Sie Ihren vollständigen Namen ein",
-    "enter_email": "Geben Sie Ihre E-Mail-Adresse ein",
+    "enter_full_name": "Vollständiger Name",
+    "enter_email": "E-Mail eingeben",
     "phone_number": "+90 555 123 45 67",
     "pick_date": "Wählen Sie ein Datum",
     "select_time": "Wählen Sie die Uhrzeit aus",
@@ -296,12 +296,12 @@
     "couple_sessions": "Paarsitzungen",
     "lifestyle": "Lebensstil",
     "rooftop_shoots": "Shootings auf dem Dach",
-    "view_my_work": "Sehen Sie sich meine Arbeit an",
+    "view_my_work": "Portfolio ansehen",
     "book_your_session": "Buchen Sie Ihre Sitzung",
     "check_locations": "Überprüfen Sie die Standorte",
     "view_packages": "Pakete anzeigen",
     "packages_button": "Pakete",
-    "book_package": "Überprüfen Sie die Verfügbarkeit",
+    "book_package": "Verfügbarkeit prüfen",
     "show_all_photos": "Alle Fotos anzeigen",
     "back_to_home": "Zurück nach Hause",
     "selected": "Ausgewählt",
@@ -312,7 +312,7 @@
     "tryAgain": "Versuchen Sie es erneut",
     "loading": "Laden...",
     "error": "Fehler",
-    "retry": "Versuchen Sie es noch einmal",
+    "retry": "Wiederholen",
     "breadcrumbs": {
       "photography_locations": "Fotostandorte",
       "checkout": "Kasse",
@@ -350,7 +350,7 @@
     "description": "Lassen Sie uns Ihre Geschichte vor der atemberaubenden Kulisse Istanbuls festhalten."
   },
   "about_highlights": {
-    "title": "Warum sollten Sie sich für uns entscheiden?",
+    "title": "Warum Wir?",
     "professional_quality": "Professionelle Qualität",
     "professional_quality_desc": "Hochwertige Ausstattung und jahrelange Expertise.",
     "local_knowledge": "Lokales Wissen",
@@ -539,21 +539,21 @@
   "privacy": {
     "cookies": {
       "table": {
-        "title": "Cookies Used on Our Site",
+        "title": "Auf unserer Website verwendete Cookies",
         "columns": {
           "name": "Name",
-          "purpose": "Purpose",
+          "purpose": "Zweck",
           "type": "Type",
-          "duration": "Duration",
-          "provider": "Provider"
+          "duration": "Dauer",
+          "provider": "Anbieter"
         },
         "types": {
-          "essential": "Essential",
-          "analytics": "Analytics",
+          "essential": "Erforderlich",
+          "analytics": "Analyse",
           "marketing": "Marketing"
         },
         "providers": {
-          "first_party": "First Party",
+          "first_party": "Erstanbieter",
           "google": "Google",
           "yandex": "Yandex",
           "microsoft": "Microsoft",
@@ -561,48 +561,48 @@
         },
         "essential": {
           "user_consent": {
-            "purpose": "Stores the user's cookie consent state for the current domain.",
-            "duration": "1 year"
+            "purpose": "Speichert den Cookie-Zustimmungsstatus des Benutzers.",
+            "duration": "1 Jahr"
           }
         },
         "analytics": {
           "ga": {
             "purpose": "Used by Google Analytics to distinguish users.",
-            "duration": "2 years"
+            "duration": "2 Jahre"
           },
           "gid": {
             "purpose": "Used by Google Analytics to distinguish users.",
-            "duration": "24 hours"
+            "duration": "24 Stunden"
           },
           "gat": {
-            "purpose": "Used to throttle request rate.",
-            "duration": "1 minute"
+            "purpose": "Wird verwendet, um die Anforderungsrate zu drosseln.",
+            "duration": "1 Minute"
           },
           "ym_uid": {
-            "purpose": "Used by Yandex Metrica for identifying site users.",
-            "duration": "1 year"
+            "purpose": "Wird von Yandex Metrica zur Identifizierung verwendet.",
+            "duration": "1 Jahr"
           },
           "ym_d": {
-            "purpose": "Used by Yandex Metrica to store the date of user's first session.",
-            "duration": "1 year"
+            "purpose": "Speichert das Datum der ersten Sitzung.",
+            "duration": "1 Jahr"
           },
           "clck": {
-            "purpose": "Persists the Microsoft Clarity User ID.",
-            "duration": "1 year"
+            "purpose": "Speichert die Microsoft Clarity-Benutzer-ID.",
+            "duration": "1 Jahr"
           },
           "clsk": {
-            "purpose": "Connects multiple page views by a user into a single Clarity session.",
-            "duration": "1 day"
+            "purpose": "Verbindet mehrere Seitenaufrufe zu einer einzigen Sitzung.",
+            "duration": "1 Tag"
           }
         },
         "marketing": {
           "fbp": {
             "purpose": "Used by Facebook to deliver advertisement products.",
-            "duration": "3 months"
+            "duration": "3 Monate"
           },
           "fbc": {
             "purpose": "Used by Facebook to deliver advertisement products when an ad is clicked.",
-            "duration": "3 months"
+            "duration": "3 Monate"
           }
         }
       }

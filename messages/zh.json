@@ -166,8 +166,8 @@
     },
     "people_count_title": "人数",
     "price_per_person": "每人价格",
-    "seasonal_discount_applied": "%{percentage} Seasonal Discount",
-    "promo_code": "Promo Code",
+    "seasonal_discount_applied": "%{percentage} 季节性折扣",
+    "promo_code": "促销代码",
     "apply_promo": "申请",
     "promo_applied": "促销代码已应用！",
     "invalid_promo": "促销代码无效或过期",
@@ -201,9 +201,9 @@
     },
     "expires_in": "我们将保留您的位置 [TIME] 分钟。",
     "expired": "预订时段已过期。请选择新时间。",
-    "apply": "Apply",
-    "remove": "Remove",
-    "promo_code_applied": "%{percentage} Promo Discount"
+    "apply": "应用",
+    "remove": "移除",
+    "promo_code_applied": "%{percentage} 促销折扣"
   },
   "footer": {
     "description": "伊斯坦布尔专业肖像摄影的领先摄影师。在这座城市最具标志性的背景下捕捉您的特殊时刻。",
@@ -369,12 +369,12 @@
     "rate_limit": "请求太多。请稍后重试。",
     "payment_rate_limit": "付款尝试次数过多。请稍后重试。",
     "invalid_data": "请求数据无效",
-    "missing_payment_data": "Missing required payment data",
+    "missing_payment_data": "缺少必要的付款数据",
     "invalid_amount": "付款金额无效",
     "booking_not_found": "未找到预订。 Please create a booking first.",
     "invalid_package_price": "套餐价格无效",
-    "duplicate_booking": "A similar booking was recently created. Please check your email or wait a few minutes.",
-    "booking_config_error": "Unable to process booking. Please check your Supabase configuration.",
+    "duplicate_booking": "最近创建了类似的预订。请检查您的电子邮件或稍等片刻。",
+    "booking_config_error": "无法处理预订。请检查您的配置。",
     "internal_error": "服务器内部错误",
     "payment_processing_failed": "Payment processing failed.请稍后重试。",
     "unknown_error": "未知错误"
@@ -539,21 +539,21 @@
   "privacy": {
     "cookies": {
       "table": {
-        "title": "Cookies Used on Our Site",
+        "title": "我们网站上使用的 Cookie",
         "columns": {
           "name": "Name",
-          "purpose": "Purpose",
+          "purpose": "目的",
           "type": "Type",
-          "duration": "Duration",
-          "provider": "Provider"
+          "duration": "持续时间",
+          "provider": "提供商"
         },
         "types": {
-          "essential": "Essential",
-          "analytics": "Analytics",
-          "marketing": "Marketing"
+          "essential": "必要的",
+          "analytics": "分析",
+          "marketing": "营销"
         },
         "providers": {
-          "first_party": "First Party",
+          "first_party": "第一方",
           "google": "Google",
           "yandex": "Yandex",
           "microsoft": "Microsoft",
@@ -561,48 +561,48 @@
         },
         "essential": {
           "user_consent": {
-            "purpose": "Stores the user's cookie consent state for the current domain.",
-            "duration": "1 year"
+            "purpose": "存储用户的 cookie 同意状态。",
+            "duration": "1年"
           }
         },
         "analytics": {
           "ga": {
             "purpose": "Used by Google Analytics to distinguish users.",
-            "duration": "2 years"
+            "duration": "2年"
           },
           "gid": {
             "purpose": "Used by Google Analytics to distinguish users.",
-            "duration": "24 hours"
+            "duration": "24小时"
           },
           "gat": {
-            "purpose": "Used to throttle request rate.",
-            "duration": "1 minute"
+            "purpose": "用于限制请求速率。",
+            "duration": "1分钟"
           },
           "ym_uid": {
-            "purpose": "Used by Yandex Metrica for identifying site users.",
-            "duration": "1 year"
+            "purpose": "Yandex Metrica 用于识别网站用户。",
+            "duration": "1年"
           },
           "ym_d": {
-            "purpose": "Used by Yandex Metrica to store the date of user's first session.",
-            "duration": "1 year"
+            "purpose": "存储用户首次访问的日期。",
+            "duration": "1年"
           },
           "clck": {
-            "purpose": "Persists the Microsoft Clarity User ID.",
-            "duration": "1 year"
+            "purpose": "保留 Microsoft Clarity 用户 ID。",
+            "duration": "1年"
           },
           "clsk": {
-            "purpose": "Connects multiple page views by a user into a single Clarity session.",
-            "duration": "1 day"
+            "purpose": "将用户的多个页面视图连接到单个会话中。",
+            "duration": "1天"
           }
         },
         "marketing": {
           "fbp": {
             "purpose": "Used by Facebook to deliver advertisement products.",
-            "duration": "3 months"
+            "duration": "3个月"
           },
           "fbc": {
             "purpose": "Used by Facebook to deliver advertisement products when an ad is clicked.",
-            "duration": "3 months"
+            "duration": "3个月"
           }
         }
       }

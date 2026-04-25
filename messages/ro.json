@@ -166,8 +166,8 @@
     },
     "people_count_title": "Numărul de persoane",
     "price_per_person": "Pret per persoana",
-    "seasonal_discount_applied": "%{percentage} Seasonal Discount",
-    "promo_code": "Promo Code",
+    "seasonal_discount_applied": "%{percentage} Reducere de sezon",
+    "promo_code": "Cod promoțional",
     "apply_promo": "Aplicați",
     "promo_applied": "Cod promoțional aplicat!",
     "invalid_promo": "Cod promoțional nevalid sau expirat",
@@ -201,9 +201,9 @@
     },
     "expires_in": "Vă vom păstra locul timp de [TIME] minute.",
     "expired": "Slot de rezervare a expirat. Vă rugăm să selectați o nouă oră.",
-    "apply": "Apply",
-    "remove": "Remove",
-    "promo_code_applied": "%{percentage} Promo Discount"
+    "apply": "Aplică",
+    "remove": "Elimină",
+    "promo_code_applied": "%{percentage} Reducere promoțională"
   },
   "footer": {
     "description": "Fotograf de top din Istanbul pentru fotografii profesionale de portret. Surprindeți-vă momentele speciale cu cele mai emblematice fundaluri ale orașului.",
@@ -251,7 +251,7 @@
     "tell_us_vision": "Povestește-ne despre viziunea ta pentru ședința foto...",
     "test_card": "5528790000000008 (Folosiți acest card de test pentru plata demonstrativă cu succes)",
     "enter_full_name": "Introduceți numele dvs. complet",
-    "enter_email": "Introduceți adresa dvs. de e-mail",
+    "enter_email": "Introduceți emailul",
     "phone_number": "+90 555 123 45 67",
     "pick_date": "Alegeți o dată",
     "select_time": "Selectați ora",
@@ -539,21 +539,21 @@
   "privacy": {
     "cookies": {
       "table": {
-        "title": "Cookies Used on Our Site",
+        "title": "Cookie-uri utilizate pe site-ul nostru",
         "columns": {
           "name": "Name",
-          "purpose": "Purpose",
+          "purpose": "Scop",
           "type": "Type",
-          "duration": "Duration",
-          "provider": "Provider"
+          "duration": "Durată",
+          "provider": "Furnizor"
         },
         "types": {
-          "essential": "Essential",
-          "analytics": "Analytics",
+          "essential": "Esențiale",
+          "analytics": "Analitice",
           "marketing": "Marketing"
         },
         "providers": {
-          "first_party": "First Party",
+          "first_party": "Primă parte",
           "google": "Google",
           "yandex": "Yandex",
           "microsoft": "Microsoft",
@@ -561,48 +561,48 @@
         },
         "essential": {
           "user_consent": {
-            "purpose": "Stores the user's cookie consent state for the current domain.",
-            "duration": "1 year"
+            "purpose": "Stochează starea de consimțământ pentru cookie-uri a utilizatorului.",
+            "duration": "1 an"
           }
         },
         "analytics": {
           "ga": {
             "purpose": "Used by Google Analytics to distinguish users.",
-            "duration": "2 years"
+            "duration": "2 ani"
           },
           "gid": {
             "purpose": "Used by Google Analytics to distinguish users.",
-            "duration": "24 hours"
+            "duration": "24 ore"
           },
           "gat": {
-            "purpose": "Used to throttle request rate.",
-            "duration": "1 minute"
+            "purpose": "Utilizat pentru a limita rata cererilor.",
+            "duration": "1 minut"
           },
           "ym_uid": {
-            "purpose": "Used by Yandex Metrica for identifying site users.",
-            "duration": "1 year"
+            "purpose": "Utilizat de Yandex Metrica pentru a identifica utilizatorii.",
+            "duration": "1 an"
           },
           "ym_d": {
-            "purpose": "Used by Yandex Metrica to store the date of user's first session.",
-            "duration": "1 year"
+            "purpose": "Stochează data primei sesiuni.",
+            "duration": "1 an"
           },
           "clck": {
-            "purpose": "Persists the Microsoft Clarity User ID.",
-            "duration": "1 year"
+            "purpose": "Păstrează ID-ul de utilizator Microsoft Clarity.",
+            "duration": "1 an"
           },
           "clsk": {
-            "purpose": "Connects multiple page views by a user into a single Clarity session.",
-            "duration": "1 day"
+            "purpose": "Conectează mai multe vizualizări de pagină într-o singură sesiune.",
+            "duration": "1 zi"
           }
         },
         "marketing": {
           "fbp": {
             "purpose": "Used by Facebook to deliver advertisement products.",
-            "duration": "3 months"
+            "duration": "3 luni"
           },
           "fbc": {
             "purpose": "Used by Facebook to deliver advertisement products when an ad is clicked.",
-            "duration": "3 months"
+            "duration": "3 luni"
           }
         }
       }

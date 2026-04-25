@@ -203,7 +203,7 @@
     "expired": "Rezervasyon süresi doldu. Lütfen yeni bir saat seçin.",
     "apply": "Uygula",
     "remove": "Kaldır",
-    "promo_code_applied": "%{percentage} Promosyon"
+    "promo_code_applied": "%{percentage} Promosyon İndirimi"
   },
   "footer": {
     "description": "Profesyonel portre fotoğrafçılığında İstanbul'un önde gelen fotoğrafçısı. Özel anlarınızı şehrin en simgesel arka planlarıyla ölümsüzleştiriyoruz.",
@@ -413,7 +413,7 @@
     "bullet_photos": "• Yüksek çözünürlüklü düzenlenmiş fotoğraflar",
     "bullet_gallery": "• Online galeri teslimatı",
     "bullet_retouching": "• Profesyonel rötuşlama",
-    "need_help": "Yardıma Mı İhtiyacınız Var?",
+    "need_help": "Yardım Lazım Mı?",
     "help_description": "Rezervasyonunuzla ilgili sorularınız mı var? Bize istediğiniz zaman ulaşabilirsiniz.",
     "support_email": "info@istanbulportrait.com",
     "support_phone": "+90 536 709 37 24",
@@ -482,7 +482,7 @@
     "clear_filter": "Temizle",
     "show_all": "Tüm yorumları göster",
     "show_more": "Daha fazla göster",
-    "rating_only": "Sadece derecelendirme (metin yok)",
+    "rating_only": "Sadece puanlama",
     "rating_no_text": "Yazılı yorum olmadan sağlanan derecelendirme",
     "filter_hint": "Yorumları yıldız sayısına göre filtrelemek için bir çubuğa tıklayın.",
     "excellent": "Mükemmel",
@@ -548,7 +548,7 @@
           "provider": "Sağlayıcı"
         },
         "types": {
-          "essential": "Zorunlu",
+          "essential": "Gerekli",
           "analytics": "Analitik",
           "marketing": "Pazarlama"
         },
@@ -561,7 +561,7 @@
         },
         "essential": {
           "user_consent": {
-            "purpose": "Kullanıcının mevcut alan adı için çerez izin durumunu saklar.",
+            "purpose": "Mevcut alan adı için kullanıcının çerez onay durumunu saklar.",
             "duration": "1 yıl"
           }
         },
@@ -575,15 +575,15 @@
             "duration": "24 saat"
           },
           "gat": {
-            "purpose": "İstek hızını sınırlamak için kullanılır.",
+            "purpose": "İstek oranını sınırlamak için kullanılır.",
             "duration": "1 dakika"
           },
           "ym_uid": {
-            "purpose": "Yandex Metrica tarafından site kullanıcılarını tanımlamak için kullanılır.",
+            "purpose": "Site kullanıcılarını tanımlamak için Yandex Metrica tarafından kullanılır.",
             "duration": "1 yıl"
           },
           "ym_d": {
-            "purpose": "Yandex Metrica tarafından kullanıcının ilk oturum tarihini saklamak için kullanılır.",
+            "purpose": "Kullanıcının ilk oturumunun tarihini saklamak için kullanılır.",
             "duration": "1 yıl"
           },
           "clck": {
@@ -591,7 +591,7 @@
             "duration": "1 yıl"
           },
           "clsk": {
-            "purpose": "Kullanıcının birden fazla sayfa görünümünü tek bir Clarity oturumunda birleştirir.",
+            "purpose": "Kullanıcının birden fazla sayfa görüntülemesini tek bir oturumda birleştirir.",
             "duration": "1 gün"
           }
         },
@@ -639,10 +639,10 @@
       "logout": "Çıkış Yap"
     },
     "dashboard": {
-      "noReservationsDesc": "Looks like you don't have any upcoming photography sessions scheduled yet.",
-      "people": "People",
-      "totalAmount": "Total Amount",
-      "photosProcessing": "Photos Processing...",
+      "noReservationsDesc": "Görünüşe göre henüz planlanmış bir fotoğraf çekiminiz yok.",
+      "people": "Kişi",
+      "totalAmount": "Toplam Tutar",
+      "photosProcessing": "Fotoğraflar İşleniyor...",
       "title": "Rezervasyonlarım",
       "description": "Fotoğraf çekimi rezervasyonlarınızı yönetin ve galerilerinizi görüntüleyin.",
       "upcoming": "Yaklaşan",
@@ -652,9 +652,9 @@
       "noReservations": "Hiç rezervasyon bulunamadı"
     },
     "payments": {
-      "paidAmount": "Paid Amount",
-      "remainingBalance": "Remaining Balance",
-      "noRecords": "No payment records found.",
+      "paidAmount": "Ödenen Tutar",
+      "remainingBalance": "Kalan Bakiye",
+      "noRecords": "Ödeme kaydı bulunamadı.",
       "title": "Ödemeler",
       "description": "İşlem geçmişinizi ve kalan bakiyelerinizi görüntüleyin.",
       "noTransactions": "Hiç işlem bulunamadı",
