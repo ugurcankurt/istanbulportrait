@@ -24,7 +24,19 @@ export const paymentSchema = z.object({
     .refine(
       (val) => {
         const digitsOnly = val.replace(/\D/g, "");
-        return digitsOnly.length >= 13 && digitsOnly.length <= 19;
+        if (digitsOnly.length < 13 || digitsOnly.length > 19) return false;
+        let sum = 0;
+        let isEven = false;
+        for (let i = digitsOnly.length - 1; i >= 0; i--) {
+          let digit = parseInt(digitsOnly.charAt(i), 10);
+          if (isEven) {
+            digit *= 2;
+            if (digit > 9) digit -= 9;
+          }
+          sum += digit;
+          isEven = !isEven;
+        }
+        return sum % 10 === 0;
       },
       { message: "validation.card_number_invalid" },
     ),
@@ -56,7 +68,19 @@ export const createPaymentSchema = (t: any) =>
       .refine(
         (val) => {
           const digitsOnly = val.replace(/\D/g, "");
-          return digitsOnly.length >= 13 && digitsOnly.length <= 19;
+          if (digitsOnly.length < 13 || digitsOnly.length > 19) return false;
+          let sum = 0;
+          let isEven = false;
+          for (let i = digitsOnly.length - 1; i >= 0; i--) {
+            let digit = parseInt(digitsOnly.charAt(i), 10);
+            if (isEven) {
+              digit *= 2;
+              if (digit > 9) digit -= 9;
+            }
+            sum += digit;
+            isEven = !isEven;
+          }
+          return sum % 10 === 0;
         },
         { message: t("card_number_invalid") },
       ),

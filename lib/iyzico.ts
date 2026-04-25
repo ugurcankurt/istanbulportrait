@@ -142,11 +142,11 @@ export const initializePayment = async (
 
       return result;
     } catch (apiError) {
-      console.error("Iyzico API Call Failed:", apiError);
+      console.error("Iyzico API Call Failed (Sensitive data masked)");
       throw new Error("Payment API call failed");
     }
   } catch (error) {
-    console.error("Iyzico: Payment initialization error:", error);
+    console.error("Iyzico: Payment initialization error");
     throw new Error("Payment processing failed");
   }
 };
