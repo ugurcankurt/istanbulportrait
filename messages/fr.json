@@ -52,7 +52,10 @@
       "email": "E-mail",
       "address": "Adresse",
       "whatsapp": "WhatsApp",
-      "instagram": "Instagram"
+      "instagram": "Instagram",
+      "company_name": "Nom de l'Entreprise: Uğur Cankurt (Entreprise Individuelle)",
+      "tax_office": "Bureau des Impôts: Küçükçekmece V.D.",
+      "tax_number": "Numéro d'Impôt: 2010535259"
     }
   },
   "checkout": {
@@ -339,7 +342,8 @@
     "newsletter_disclaimer": "En vous abonnant, vous acceptez de recevoir des e-mails marketing. Vous pouvez vous désabonner à tout moment.",
     "newsletter_first_name": "Prénom",
     "newsletter_last_name": "Nom de famille",
-    "newsletter_success": "Vous vous êtes abonné avec succès. Vérifiez vos e-mails pour votre code promo !"
+    "newsletter_success": "Vous vous êtes abonné avec succès. Vérifiez vos e-mails pour votre code promo !",
+    "company_info": "Informations sur l'Entreprise"
   },
   "about_cta": {
     "title": "Prêt à créer quelque chose de beau ?",

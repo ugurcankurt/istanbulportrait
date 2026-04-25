@@ -52,7 +52,10 @@
       "email": "Email",
       "address": "Address",
       "whatsapp": "WhatsApp",
-      "instagram": "Instagram"
+      "instagram": "Instagram",
+      "company_name": "Company Name: Uğur Cankurt (Sole Proprietorship)",
+      "tax_office": "Tax Office: Küçükçekmece V.D.",
+      "tax_number": "Tax Number: 2010535259"
     }
   },
   "checkout": {
@@ -339,7 +342,8 @@
     "newsletter_disclaimer": "By subscribing, you agree to receive marketing emails. You can unsubscribe at any time.",
     "newsletter_first_name": "First Name",
     "newsletter_last_name": "Last Name",
-    "newsletter_success": "You've successfully subscribed. Check your email for your promo code!"
+    "newsletter_success": "You've successfully subscribed. Check your email for your promo code!",
+    "company_info": "Company Information"
   },
   "about_cta": {
     "title": "Ready to Create Something Beautiful?",

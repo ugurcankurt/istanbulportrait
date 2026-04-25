@@ -52,7 +52,10 @@
       "email": "E-mail",
       "address": "Adresă",
       "whatsapp": "WhatsApp",
-      "instagram": "Instagram"
+      "instagram": "Instagram",
+      "company_name": "Numele Companiei: Uğur Cankurt (Întreprindere Individuală)",
+      "tax_office": "Biroul Fiscal: Küçükçekmece V.D.",
+      "tax_number": "Cod Fiscal: 2010535259"
     }
   },
   "checkout": {
@@ -339,7 +342,8 @@
     "newsletter_disclaimer": "Prin abonare, sunteți de acord să primiți e-mailuri de marketing. Vă puteți dezabona în orice moment.",
     "newsletter_first_name": "Prenume",
     "newsletter_last_name": "Nume",
-    "newsletter_success": "V-ați abonat cu succes. Verificați adresa de e-mail pentru codul promoțional!"
+    "newsletter_success": "V-ați abonat cu succes. Verificați adresa de e-mail pentru codul promoțional!",
+    "company_info": "Informații despre Companie"
   },
   "about_cta": {
     "title": "Ești gata să creezi ceva frumos?",

@@ -1,6 +1,6 @@
 "use client";
 
-import { Clock, Mail, MapPin, Phone } from "lucide-react";
+import { Clock, Mail, MapPin, Phone, Building } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
@@ -126,6 +126,22 @@ export function ContactSection({ settings }: { settings?: any } = {}) {
                       <p className="text-muted-foreground text-sm">
                         {settings?.working_hours?.[locale] || settings?.working_hours?.en || t("info.hours")}
                       </p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start space-x-4 sm:space-x-5 rtl:space-x-reverse">
+                    <div className="p-3 bg-primary/10 rounded-full flex-shrink-0">
+                      <Building className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
+                    </div>
+                    <div className="flex-1 min-w-0 pt-1">
+                      <h3 className="font-semibold mb-1 text-sm sm:text-base text-card-foreground">
+                        {tui("company_info")}
+                      </h3>
+                      <div className="text-muted-foreground text-sm space-y-1">
+                        <p>{t("info.company_name")}</p>
+                        <p>{t("info.tax_office")}</p>
+                        <p>{t("info.tax_number")}</p>
+                      </div>
                     </div>
                   </div>
                 </div>

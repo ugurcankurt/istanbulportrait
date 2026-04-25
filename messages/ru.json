@@ -52,7 +52,10 @@
       "email": "Email",
       "address": "Адрес",
       "whatsapp": "WhatsApp",
-      "instagram": "Instagram"
+      "instagram": "Instagram",
+      "company_name": "Название Компании: Uğur Cankurt (Индивидуальный Предприниматель)",
+      "tax_office": "Налоговое Управление: Küçükçekmece V.D.",
+      "tax_number": "Налоговый Номер: 2010535259"
     }
   },
   "checkout": {
@@ -339,7 +342,8 @@
     "newsletter_disclaimer": "Подписываясь, вы соглашаетесь получать маркетинговые письма. Вы можете отписаться в любое время.",
     "newsletter_first_name": "Имя",
     "newsletter_last_name": "Фамилия",
-    "newsletter_success": "Вы успешно подписались. Проверьте вашу электронную почту на наличие промокода!"
+    "newsletter_success": "Вы успешно подписались. Проверьте вашу электронную почту на наличие промокода!",
+    "company_info": "Информация о Компании"
   },
   "about_cta": {
     "title": "Готовы создать что-то красивое?",

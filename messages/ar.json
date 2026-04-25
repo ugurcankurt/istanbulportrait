@@ -52,7 +52,10 @@
       "email": "بريد إلكتروني",
       "address": "عنوان",
       "whatsapp": "WhatsApp",
-      "instagram": "Instagram"
+      "instagram": "Instagram",
+      "company_name": "اسم الشركة: Uğur Cankurt (ملكية فردية)",
+      "tax_office": "مكتب الضرائب: Küçükçekmece V.D.",
+      "tax_number": "الرقم الضريبي: 2010535259"
     }
   },
   "checkout": {
@@ -339,7 +342,8 @@
     "newsletter_disclaimer": "من خلال الاشتراك، فإنك توافق على تلقي رسائل البريد الإلكتروني التسويقية. يمكنك إلغاء الاشتراك في أي وقت.",
     "newsletter_first_name": "الاسم الأول",
     "newsletter_last_name": "اسم العائلة",
-    "newsletter_success": "لقد اشتركت بنجاح. تحقق من بريدك الإلكتروني للحصول على الرمز الترويجي للخصم!"
+    "newsletter_success": "لقد اشتركت بنجاح. تحقق من بريدك الإلكتروني للحصول على الرمز الترويجي للخصم!",
+    "company_info": "معلومات الشركة"
   },
   "about_cta": {
     "title": "على استعداد لخلق شيء جميل؟",

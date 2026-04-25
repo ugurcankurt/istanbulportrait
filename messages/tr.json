@@ -52,7 +52,10 @@
       "email": "E-posta",
       "address": "Adres",
       "whatsapp": "WhatsApp",
-      "instagram": "Instagram"
+      "instagram": "Instagram",
+      "company_name": "Firma Ünvanı: Uğur Cankurt (Şahıs İşletmesi)",
+      "tax_office": "Vergi Dairesi: Küçükçekmece V.D.",
+      "tax_number": "Vergi Numarası: 2010535259"
     }
   },
   "checkout": {
@@ -339,7 +342,8 @@
     "newsletter_disclaimer": "Abone olarak pazarlama e-postaları almayı kabul edersiniz. Dilediğiniz zaman abonelikten çıkabilirsiniz.",
     "newsletter_first_name": "Adınız",
     "newsletter_last_name": "Soyadınız",
-    "newsletter_success": "Başarıyla abone oldunuz. Promosyon kodunuz için e-postanızı kontrol edin!"
+    "newsletter_success": "Başarıyla abone oldunuz. Promosyon kodunuz için e-postanızı kontrol edin!",
+    "company_info": "Firma Bilgileri"
   },
   "about_cta": {
     "title": "Güzel Bir Şeyler Yaratmaya Hazır Mısınız?",
