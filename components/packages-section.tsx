@@ -25,6 +25,7 @@ import { extractPhotosCount } from "@/lib/features-parser";
 import type { PackageDB } from "@/lib/packages-service";
 import type { DiscountDB } from "@/lib/discount-service";
 import { generateNativeSlug } from "@/lib/slug-generator";
+import { useSearchIntent } from "@/hooks/use-search-intent";
 
 interface PackagesSectionProps {
   header?: React.ReactNode;
@@ -41,6 +42,7 @@ export function PackagesSection({ header, customCtaHeader, aggregateRating, dbPa
   const tui = useTranslations("ui");
   const locale = useLocale();
   const { formatPrice } = useCurrency();
+  const { intentSlug } = useSearchIntent();
 
   const packages = useMemo(() => {
     const today = new Date();
@@ -58,6 +60,7 @@ export function PackagesSection({ header, customCtaHeader, aggregateRating, dbPa
 
         return {
           id: nativeSlug,
+          dbSlug: pkg.slug,
           name: locName,
           basePrice: pkg.price,
           pricing: calculateDiscountedPrice(pkg.price, activeDiscount),
@@ -75,11 +78,21 @@ export function PackagesSection({ header, customCtaHeader, aggregateRating, dbPa
     return [];
   }, [dbPackages, locale]);
 
+  const sortedPackages = useMemo(() => {
+    if (!intentSlug) return packages;
+    return [...packages].sort((a, b) => {
+      // AI Recommended package goes first
+      if (a.dbSlug === intentSlug && b.dbSlug !== intentSlug) return -1;
+      if (b.dbSlug === intentSlug && a.dbSlug !== intentSlug) return 1;
+      return 0;
+    });
+  }, [packages, intentSlug]);
+
   // Track view_item_list (GA4 funnel step 1)
   useEffect(() => {
     // GA4 Enhanced Ecommerce — view_item_list
     trackViewItemList(
-      packages.map((pkg) => ({
+      sortedPackages.map((pkg) => ({
         id: pkg.id,
         name: pkg.name,
         price: pkg.pricing.price,
@@ -160,11 +173,11 @@ export function PackagesSection({ header, customCtaHeader, aggregateRating, dbPa
 
           <CardHeader className="text-left pb-2 sm:pb-2 px-3 sm:px-4 pt-4">
             {asHeading ? (
-              <h3 className="text-xl sm:text-xl font-bold mb-1 sm:mb-2">
+              <h3 className="text-xl sm:text-xl font-bold mb-1 sm:mb-2 line-clamp-2">
                 {pkg.name}
               </h3>
             ) : (
-              <div className="text-xl sm:text-xl font-bold mb-1 sm:mb-2">
+              <div className="text-xl sm:text-xl font-bold mb-1 sm:mb-2 line-clamp-2">
                 {pkg.name}
               </div>
             )}
@@ -228,7 +241,7 @@ export function PackagesSection({ header, customCtaHeader, aggregateRating, dbPa
             >
               {/* Added py-4 to prevent ring/shadow clipping */}
               <CarouselContent className="-ms-4 px-4 py-4">
-                {packages.map((pkg) => (
+                {sortedPackages.map((pkg) => (
                   <CarouselItem key={pkg.id} className="ps-4 basis-[78%]">
                     <div className="h-full px-0.5"> {/* Extra tiny padding for ring/shadow */}
                       {renderPackageCard(pkg, false)}
@@ -241,7 +254,7 @@ export function PackagesSection({ header, customCtaHeader, aggregateRating, dbPa
 
           {/* Desktop & Tablet Grid View (Hidden on mobile) */}
           <div className="hidden sm:grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8 mx-auto">
-            {packages.map((pkg) => (
+            {sortedPackages.map((pkg) => (
               <div key={pkg.id}>
                 {renderPackageCard(pkg, true)}
               </div>
