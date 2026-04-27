@@ -41,26 +41,21 @@ export async function GET(request: Request) {
     });
   };
 
-  const localeToOverride: Record<string, string> = {
-    tr: "tr_TR",
-    ru: "ru_RU",
-    es: "es_ES",
-    de: "de_DE",
-    fr: "fr_FR",
-    ro: "ro_RO",
-    ar: "ar_AE",
-    zh: "zh_CN",
-    en: "en_US",
-  };
-
   if (format === "csv") {
     let csv = "id,override,title,description,link\n";
     for (const pkg of packages) {
-      const title = pkg.title?.[locale] || pkg.title?.en || "";
+      let title = pkg.title?.[locale] || pkg.title?.en || "";
+      // Meta secondary feeds have a strict 65-character limit for titles
+      if (title.length > 65) {
+        title = title.substring(0, 62) + "...";
+      }
+      
       const desc = pkg.description?.[locale] || pkg.description?.en || "";
       const cleanDesc = desc.replace(/<[^>]*>?/gm, "").trim();
       const link = `${baseUrl}/${locale}/packages/${pkg.slug}`;
-      const override = localeToOverride[locale] || `${locale}_${locale.toUpperCase()}`;
+      
+      // For language-only localized feeds, Meta requires the ISO 639-1 language code (e.g., "es", "tr")
+      const override = locale;
       
       const escapeCsv = (str: string) => `"${str.replace(/"/g, '""')}"`;
       
