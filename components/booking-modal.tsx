@@ -40,7 +40,6 @@ import type { DiscountDB } from "@/lib/discount-service";
 import type { TimeSurcharge } from "@/lib/availability-service";
 import { useCurrency } from "@/contexts/currency-context";
 
-import { useIsMobile } from "@/hooks/use-mobile";
 import {
   Sheet,
   SheetContent,
@@ -144,19 +143,27 @@ export function BookingModal({
   const bookingSchemaWithTranslations = createBookingSchema(tValidation);
   const { trackBookingStart, trackPackageView } = useYandexMetrica();
   const [step, setStep] = useState<"selection" | "details" | "summary">("details");
-  const isMobile = useIsMobile();
+  
+  // Custom hook logic for < 1024px (tablet & mobile) because Tailwind 'lg' breakpoint is 1024px.
+  // The inline booking card is hidden below 1024px, so we must show the selection step in the modal.
+  const [isTabletOrMobile, setIsTabletOrMobile] = useState(false);
 
-  // Set initial step for mobile
   useEffect(() => {
-    if (isOpen && isMobile) {
-      // If date and time are already selected (e.g. from a previous interaction), 
-      // maybe stay at details, but usually start at selection for clarity
+    const checkSize = () => setIsTabletOrMobile(window.innerWidth < 1024);
+    checkSize();
+    window.addEventListener("resize", checkSize);
+    return () => window.removeEventListener("resize", checkSize);
+  }, []);
+
+  // Set initial step for mobile/tablet
+  useEffect(() => {
+    if (isOpen && isTabletOrMobile) {
+      // Start at selection for clarity since inline selection was hidden
       setStep("selection");
     } else if (isOpen) {
       setStep("details");
     }
-  }, [isOpen, isMobile]);
-
+  }, [isOpen, isTabletOrMobile]);
 
   const form = useForm<BookingFormData>({
     resolver: zodResolver(bookingSchemaWithTranslations),
@@ -522,9 +529,8 @@ export function BookingModal({
     </div>
   );
 
-  // isMobile is already declared above
-
-  if (isMobile) {
+  // Using isTabletOrMobile to render the Selection Sheet for both mobile and tablet (< 1024px)
+  if (isTabletOrMobile) {
     return (
       <Sheet open={isOpen} onOpenChange={handleClose}>
         <SheetContent side="bottom" className="h-[100dvh] w-screen p-0 flex flex-col rounded-none border-none inset-0">
