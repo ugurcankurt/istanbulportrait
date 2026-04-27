@@ -70,7 +70,7 @@ export async function BlogPageContent({
               <p className="text-muted-foreground">{t("no_posts")}</p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 mb-12">
               {posts.map((post) => (
                 <NextLink
                   key={post.id}
