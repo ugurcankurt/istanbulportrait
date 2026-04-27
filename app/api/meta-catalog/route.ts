@@ -9,6 +9,7 @@ export const dynamic = "force-dynamic";
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const locale = searchParams.get("locale") || "en";
+  const format = searchParams.get("format") || "xml";
 
   const baseUrl = getBaseUrl();
   const packages = await packagesService.getAllPackages();
@@ -39,6 +40,40 @@ export async function GET(request: Request) {
       }
     });
   };
+
+  const localeToOverride: Record<string, string> = {
+    tr: "tr_TR",
+    ru: "ru_RU",
+    es: "es_ES",
+    de: "de_DE",
+    fr: "fr_FR",
+    ro: "ro_RO",
+    ar: "ar_AE",
+    zh: "zh_CN",
+    en: "en_US",
+  };
+
+  if (format === "csv") {
+    let csv = "id,override,title,description,link\n";
+    for (const pkg of packages) {
+      const title = pkg.title?.[locale] || pkg.title?.en || "";
+      const desc = pkg.description?.[locale] || pkg.description?.en || "";
+      const cleanDesc = desc.replace(/<[^>]*>?/gm, "").trim();
+      const link = `${baseUrl}/${locale}/packages/${pkg.slug}`;
+      const override = localeToOverride[locale] || `${locale}_${locale.toUpperCase()}`;
+      
+      const escapeCsv = (str: string) => `"${str.replace(/"/g, '""')}"`;
+      
+      csv += `${escapeCsv(pkg.id)},${escapeCsv(override)},${escapeCsv(title)},${escapeCsv(cleanDesc)},${escapeCsv(link)}\n`;
+    }
+
+    return new NextResponse(csv, {
+      headers: {
+        "Content-Type": "text/csv; charset=utf-8",
+        "Content-Disposition": `attachment; filename="meta_catalog_${locale}.csv"`,
+      },
+    });
+  }
 
   let xml = `<?xml version="1.0" encoding="utf-8"?>
 <rss version="2.0" xmlns:g="http://base.google.com/ns/1.0">
