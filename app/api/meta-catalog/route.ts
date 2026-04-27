@@ -89,6 +89,8 @@ export async function GET(request: Request) {
       <g:description>${escapeXml(cleanDesc)}</g:description>
       <g:availability>${pkg.is_active ? 'in stock' : 'out of stock'}</g:availability>
       <g:condition>new</g:condition>
+      <g:identifier_exists>no</g:identifier_exists>
+      <g:product_type>Photography Services &gt; Photoshoots</g:product_type>
       <g:price>${finalBasePrice} EUR</g:price>`;
 
     if (finalSalePrice !== null) {
