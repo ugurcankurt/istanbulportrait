@@ -307,7 +307,7 @@ export default function ClientGallery({ bookingId }: { bookingId: string }) {
 
 
   return (
-    <div className="flex flex-col h-[calc(100vh-8rem)] min-h-[600px]">
+    <div className="flex flex-col h-[calc(100dvh-8rem)] min-h-[600px]">
       <div className="flex justify-between items-center mb-4 shrink-0">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">{t("title") || "Your Gallery"}</h1>

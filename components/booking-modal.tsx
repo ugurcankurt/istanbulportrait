@@ -599,7 +599,7 @@ export function BookingModal({
           </div>
 
           {step !== "selection" && (
-            <div className="fixed bottom-0 left-0 right-0 p-6 bg-background border-t shadow-[0_-4px_10px_rgba(0,0,0,0.05)] z-50">
+            <div className="fixed bottom-0 left-0 right-0 p-6 pb-[calc(1.5rem+env(safe-area-inset-bottom))] bg-background border-t shadow-[0_-4px_10px_rgba(0,0,0,0.05)] z-50">
               <div className="max-w-md mx-auto flex items-center justify-between gap-4">
                 <div className="flex flex-col">
                   <span className="text-xl font-black text-primary leading-none mt-0.5">

@@ -315,7 +315,7 @@ export function PackageGallery({
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogPrimitive.Portal>
           <DialogPrimitive.Backdrop className="fixed inset-0 z-[110] bg-background data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0" />
-          <DialogPrimitive.Popup className="fixed inset-0 z-[120] w-screen h-screen flex flex-col items-center justify-center outline-none bg-background data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 duration-200">
+          <DialogPrimitive.Popup className="fixed inset-0 z-[120] w-screen h-[100dvh] flex flex-col items-center justify-center outline-none bg-background data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 duration-200">
             <DialogTitle className="sr-only">Photo Gallery</DialogTitle>
 
             <div className="absolute top-0 inset-x-0 h-24 flex items-center justify-end px-4 sm:px-10 z-[130]">

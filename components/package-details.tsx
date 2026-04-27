@@ -171,7 +171,7 @@ export function PackageDetails({ packageData, aggregateRating, reviews, activeDi
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-background">
+    <div className="flex flex-col min-h-[100dvh] bg-background">
       {/* --- DESKTOP HEADER (md:block) --- */}
       <div className="hidden md:block border-b bg-background/85 backdrop-blur-sm sticky top-16 z-30">
         <div className="container mx-auto px-4 py-4 lg:px-8">
@@ -443,7 +443,7 @@ export function PackageDetails({ packageData, aggregateRating, reviews, activeDi
         </div>
 
         {/* Action Bar */}
-        <div className="p-4 flex items-center justify-between gap-4 pb-safe-offset-4">
+        <div className="p-4 flex items-center justify-between gap-4 pb-[calc(1rem+env(safe-area-inset-bottom))]">
           <div className="flex flex-col">
             {packageData.is_per_person && (
               <span className="text-[14px] capitalize font-black text-muted-foreground mb-1">

@@ -171,7 +171,7 @@ export default async function LocaleLayout({
             <NextIntlClientProvider messages={messages}>
               <CurrencyProvider rate={tryRate}>
                 <TooltipProvider>
-                  <div className="flex min-h-screen flex-col">
+                  <div className="flex min-h-[100dvh] flex-col">
                     <Navigation dynamicNavData={dynamicNavData} settings={settings} />
                     <main className="flex-1">{children}</main>
 

@@ -32,7 +32,7 @@ export function NotFoundContent({
   const bgImage = settings?.default_og_image_url || settings?.founder_image_url;
 
   return (
-    <div className="relative min-h-screen md:min-h-[calc(100vh-140px)] flex items-center justify-center overflow-hidden">
+    <div className="relative min-h-[100dvh] md:min-h-[calc(100dvh-140px)] flex items-center justify-center overflow-hidden">
       {/* Background Image */}
       <div className="absolute inset-0 z-0">
         {!imgError && bgImage && (
