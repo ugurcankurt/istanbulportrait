@@ -5,12 +5,35 @@ import { FacebookPixelConsentUpdate } from "@/components/analytics/facebook-pixe
 import { GoogleAnalyticsConsentUpdate } from "@/components/analytics/google-analytics";
 import { useConsent } from "@/contexts/consent-context";
 import { Link } from "@/i18n/routing";
+import { useEffect, useRef } from "react";
 
 export function MultilingualCookieConsent() {
   const locale = useLocale();
   const t = useTranslations("cookies");
   const tFooter = useTranslations("footer");
   const { consent, setConsent } = useConsent();
+  const bannerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (consent === null && bannerRef.current) {
+      const height = bannerRef.current.offsetHeight;
+      document.documentElement.style.setProperty("--cookie-banner-height", `${height}px`);
+    } else {
+      document.documentElement.style.setProperty("--cookie-banner-height", "0px");
+    }
+    
+    // Resize observer to handle dynamic height changes (e.g. orientation change)
+    if (consent === null && bannerRef.current) {
+      const resizeObserver = new ResizeObserver((entries) => {
+        for (let entry of entries) {
+          const newHeight = entry.target.getBoundingClientRect().height;
+          document.documentElement.style.setProperty("--cookie-banner-height", `${newHeight}px`);
+        }
+      });
+      resizeObserver.observe(bannerRef.current);
+      return () => resizeObserver.disconnect();
+    }
+  }, [consent]);
 
   const handleAcceptAll = async () => {
     console.log("Accept All clicked. Starting processes...");
@@ -38,6 +61,7 @@ export function MultilingualCookieConsent() {
 
   return (
     <div
+      ref={bannerRef}
       id="multilingual-cookie-consent-banner"
       className="fixed bottom-0 left-0 right-0 bg-background/95 backdrop-blur-sm border-t p-4 z-50 shadow-lg"
       dir={locale === "ar" ? "rtl" : "ltr"}

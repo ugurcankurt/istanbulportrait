@@ -141,11 +141,16 @@ export function WhatsAppButton({
         isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10",
         mounted && isMobile
           ? isMinimized
-            ? "bottom-36 right-0"
-            : "bottom-4 right-4"
+            ? "right-0"
+            : "right-4"
           : "bottom-8 right-8",
         className,
       )}
+      style={mounted && isMobile ? {
+        bottom: isMinimized 
+          ? `calc(9rem + var(--cookie-banner-height, 0px))` 
+          : `calc(1rem + var(--cookie-banner-height, 0px))`
+      } : undefined}
     >
       {/* First-time visitor notification popover */}
       {showNotification && (

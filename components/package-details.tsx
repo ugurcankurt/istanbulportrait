@@ -408,7 +408,10 @@ export function PackageDetails({ packageData, aggregateRating, reviews, activeDi
 
       {/* Existing Sticky Bottom Bar for Mobile (Hidden on Desktop) */}
       {/* Mobile Sticky Booking Interface */}
-      <div className="lg:hidden fixed bottom-0 inset-x-0 z-40 bg-background/95 backdrop-blur-xl supports-[backdrop-filter]:bg-background/80 border-t shadow-[0_-10px_40px_rgba(0,0,0,0.1)]">
+      <div 
+        className="lg:hidden fixed inset-x-0 z-40 bg-background/95 backdrop-blur-xl supports-[backdrop-filter]:bg-background/80 border-t shadow-[0_-10px_40px_rgba(0,0,0,0.1)] transition-all duration-300"
+        style={{ bottom: "var(--cookie-banner-height, 0px)" }}
+      >
         {/* Info Rows - Collapsible on Scroll */}
         <div className={cn(
           "transition-all duration-500 ease-in-out overflow-hidden border-b border-border/50 px-4",
