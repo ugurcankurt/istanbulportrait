@@ -612,7 +612,7 @@ export function BookingModal({
                 <Button
                   type="submit"
                   size="lg"
-                  className="h-14 px-8 text-lg font-bold flex-1"
+                  className="h-14 px-6 sm:px-8 text-lg font-bold min-w-[180px]"
                   onClick={handleSubmit}
                   disabled={isNavigating || form.formState.isSubmitting}
                 >
@@ -664,7 +664,7 @@ export function BookingModal({
 
           <Button
             type="submit"
-            className="h-12 px-10 text-md font-bold min-w-[200px]"
+            className="h-12 px-8 text-md font-bold min-w-[180px]"
             onClick={handleSubmit}
             disabled={isNavigating || form.formState.isSubmitting}
           >
