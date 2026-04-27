@@ -61,16 +61,16 @@ export async function GET(request: Request) {
       if (title.length > 65) {
         title = title.substring(0, 62) + "...";
       }
-      
+
       const desc = pkg.description?.[locale] || pkg.description?.en || "";
       const cleanDesc = desc.replace(/<[^>]*>?/gm, "").trim();
       const link = `${baseUrl}/${locale}/packages/${pkg.slug}`;
-      
+
       const override = localeToOverride[locale] || `${locale}_${locale.toUpperCase()}`;
-      
+
       const escapeCsv = (str: string) => `"${str.replace(/"/g, '""')}"`;
-      
-      csv += `${escapeCsv(pkg.id)},${escapeCsv(override)},${escapeCsv(title)},${escapeCsv(cleanDesc)},${escapeCsv(link)}\n`;
+
+      csv += `${escapeCsv(pkg.slug)},${escapeCsv(override)},${escapeCsv(title)},${escapeCsv(cleanDesc)},${escapeCsv(link)}\n`;
     }
 
     return new NextResponse(csv, {
@@ -92,14 +92,14 @@ export async function GET(request: Request) {
   packages.forEach((pkg) => {
     // Dynamically pull translated titles and descriptions based on the requested locale
     const title = pkg.title?.[locale] || pkg.title?.en || "Photography Package";
-    
+
     // We need a clean text description without HTML tags for the feed
     const rawDesc = pkg.description?.[locale] || pkg.description?.en || title;
-    const cleanDesc = generateSeoDescription(rawDesc, 500); 
+    const cleanDesc = generateSeoDescription(rawDesc, 500);
 
     const imageUrl = cleanImage(pkg.cover_image || (pkg.gallery_images && pkg.gallery_images[0]));
     const videoUrl = cleanImage(pkg.video_url);
-    
+
     // Create language-specific URL
     const itemUrl = `${baseUrl}/${locale}/packages/${pkg.slug}`;
 
@@ -125,7 +125,7 @@ export async function GET(request: Request) {
     }
 
     xml += `    <item>
-      <g:id>${escapeXml(pkg.id)}</g:id>
+      <g:id>${escapeXml(pkg.slug)}</g:id>
       <g:title>${escapeXml(title)}</g:title>
       <g:description>${escapeXml(cleanDesc)}</g:description>
       <g:availability>${pkg.is_active ? 'in stock' : 'out of stock'}</g:availability>
