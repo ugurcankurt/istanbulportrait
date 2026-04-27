@@ -105,7 +105,7 @@ export async function GET(request: Request) {
     }
 
     if (videoUrl) {
-      xml += `\n      <g:video_link>${escapeXml(videoUrl)}</g:video_link>`;
+      xml += `\n      <video>\n        <url>${escapeXml(videoUrl)}</url>\n      </video>`;
     }
 
     xml += `\n      <g:brand>IstanbulPortrait</g:brand>
