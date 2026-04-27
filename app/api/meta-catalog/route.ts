@@ -43,14 +43,14 @@ export async function GET(request: Request) {
 
   if (format === "csv") {
     const localeToOverride: Record<string, string> = {
-      tr: "tr_XX",
-      ru: "ru_XX",
+      tr: "tr_TR",
+      ru: "ru_RU",
       es: "es_XX",
-      de: "de_XX",
+      de: "de_DE",
       fr: "fr_XX",
-      ro: "ro_XX",
-      ar: "ar_XX",
-      zh: "zh_XX",
+      ro: "ro_RO",
+      ar: "ar_AR",
+      zh: "zh_CN",
       en: "en_XX"
     };
 
