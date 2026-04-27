@@ -42,6 +42,18 @@ export async function GET(request: Request) {
   };
 
   if (format === "csv") {
+    const localeToOverride: Record<string, string> = {
+      tr: "tr_TR",
+      ru: "ru_RU",
+      es: "es_ES",
+      de: "de_DE",
+      fr: "fr_FR",
+      ro: "ro_RO",
+      ar: "ar_AE",
+      zh: "zh_CN",
+      en: "en_US"
+    };
+
     let csv = "id,override,title,description,link\n";
     for (const pkg of packages) {
       let title = pkg.title?.[locale] || pkg.title?.en || "";
@@ -54,8 +66,7 @@ export async function GET(request: Request) {
       const cleanDesc = desc.replace(/<[^>]*>?/gm, "").trim();
       const link = `${baseUrl}/${locale}/packages/${pkg.slug}`;
       
-      // For language-only localized feeds, Meta requires the ISO 639-1 language code (e.g., "es", "tr")
-      const override = locale;
+      const override = localeToOverride[locale] || `${locale}_${locale.toUpperCase()}`;
       
       const escapeCsv = (str: string) => `"${str.replace(/"/g, '""')}"`;
       
