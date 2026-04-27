@@ -376,7 +376,7 @@ export function BookingModal({
     <div className="max-w-5xl mx-auto space-y-6">
       <Form {...form}>
         <form onSubmit={handleSubmit} className="space-y-6">
-          <Card className="shadow-none border border-border overflow-hidden rounded-lg">
+          <Card className="shadow-none border border-border overflow-hidden">
             <CardHeader className="bg-muted/30 pb-4">
               <CardTitle className="text-lg flex items-center gap-2">
                 <Users className="w-5 h-5 text-primary" />
@@ -395,7 +395,7 @@ export function BookingModal({
                       </FormLabel>
                       <FormControl>
                         <Input
-                          className="h-11 rounded-md bg-muted/50 border-input focus:bg-background transition-all"
+                          className="h-11 bg-muted/50 border-input focus:bg-background transition-all"
                           placeholder={tplaceholders("enter_full_name")}
                           {...field}
                         />
@@ -414,7 +414,7 @@ export function BookingModal({
                       </FormLabel>
                       <FormControl>
                         <Input
-                          className="h-11 rounded-md bg-muted/50 border-input focus:bg-background transition-all"
+                          className="h-11 bg-muted/50 border-input focus:bg-background transition-all"
                           type="email"
                           placeholder={tplaceholders("enter_email")}
                           {...field}
@@ -439,7 +439,7 @@ export function BookingModal({
                         onChange={field.onChange}
                         defaultCountry="TR"
                         placeholder={tplaceholders("phone_number")}
-                        className="flex h-11 w-full rounded-md border border-input bg-muted/50 px-3 py-2 text-base ring-offset-background placeholder:text-muted-foreground focus-within:ring-2 focus-within:ring-primary focus-within:bg-background focus-within:ring-offset-0 disabled:cursor-not-allowed disabled:opacity-50 transition-all font-medium"
+                        className="flex h-11 w-full rounded-3xl border border-input bg-muted/50 px-3 py-2 text-base ring-offset-background placeholder:text-muted-foreground focus-within:ring-2 focus-within:ring-primary focus-within:bg-background focus-within:ring-offset-0 disabled:cursor-not-allowed disabled:opacity-50 transition-all font-medium"
                       />
                     </FormControl>
                     <FormMessage className="text-[11px]" />
@@ -458,7 +458,7 @@ export function BookingModal({
                     <FormControl>
                       <Textarea
                         placeholder={tplaceholders("special_requests")}
-                        className="min-h-[100px] rounded-md bg-muted/50 border-input focus:bg-background transition-all resize-none"
+                        className="min-h-[100px] bg-muted/50 border-input focus:bg-background transition-all resize-none"
                         {...field}
                       />
                     </FormControl>
@@ -472,10 +472,10 @@ export function BookingModal({
       </Form>
 
       {/* Selected Information Summary */}
-      <Card className="shadow-none border border-primary/20 bg-primary/5 overflow-hidden rounded-lg">
+      <Card className="shadow-none border border-primary/20 bg-primary/5 overflow-hidden">
         <div className="px-6 py-4 bg-primary/10 border-b border-primary/10 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="p-1.5 bg-primary rounded-md text-primary-foreground">
+            <div className="p-1.5 bg-primary rounded-2xl text-primary-foreground">
               <ImageIcon className="w-4 h-4" />
             </div>
             <span className="font-bold text-primary truncate max-w-[180px] sm:max-w-none">
@@ -488,7 +488,7 @@ export function BookingModal({
         </div>
         <CardContent className="p-6 grid grid-cols-1 gap-6">
           <div className="flex items-start gap-3">
-            <div className="mt-1 p-2 bg-background rounded-md border border-border shadow-sm">
+            <div className="mt-1 p-2 bg-background rounded-2xl border border-border shadow-sm">
               <CalendarIcon className="w-4 h-4 text-primary" />
             </div>
             <div>
@@ -500,7 +500,7 @@ export function BookingModal({
           </div>
 
           <div className="flex items-start gap-3">
-            <div className="mt-1 p-2 bg-background rounded-md border border-border shadow-sm">
+            <div className="mt-1 p-2 bg-background rounded-2xl border border-border shadow-sm">
               <Clock className="w-4 h-4 text-primary" />
             </div>
             <div>
@@ -513,7 +513,7 @@ export function BookingModal({
 
           {isPerPerson && (
             <div className="flex items-start gap-3">
-              <div className="mt-1 p-2 bg-background rounded-md border border-border shadow-sm">
+              <div className="mt-1 p-2 bg-background rounded-2xl border border-border shadow-sm">
                 <Users className="w-4 h-4 text-primary" />
               </div>
               <div>
@@ -633,7 +633,7 @@ export function BookingModal({
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent
-        className="sm:max-w-xl w-full h-[92vh] md:h-[85vh] p-0 overflow-hidden flex flex-col gap-0 rounded-lg max-md:fixed max-md:inset-0 max-md:h-[100dvh] max-md:w-screen max-md:max-w-none max-md:rounded-none max-md:border-none max-md:translate-x-0 max-md:translate-y-0"
+        className="sm:max-w-xl w-full h-[92vh] md:h-[85vh] p-0 overflow-hidden flex flex-col gap-0 max-md:fixed max-md:inset-0 max-md:h-[100dvh] max-md:w-screen max-md:max-w-none max-md:rounded-none max-md:border-none max-md:translate-x-0 max-md:translate-y-0"
         showCloseButton={true}
       >
         <DialogHeader className="p-6 pb-4 border-b">
