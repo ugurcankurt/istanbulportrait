@@ -75,7 +75,7 @@ export async function GET(request: Request) {
     // 2. Check if there is a global dynamic discount running
     if (activeDiscount && activeDiscount.discount_percentage > 0) {
       finalBasePrice = pkg.price; // The regular price is what's on the package
-      const calculatedSalePrice = pkg.price - (pkg.price * activeDiscount.discount_percentage / 100);
+      const calculatedSalePrice = pkg.price - (pkg.price * activeDiscount.discount_percentage);
       finalSalePrice = parseFloat(calculatedSalePrice.toFixed(2));
 
       if (activeDiscount.start_date && activeDiscount.end_date) {
