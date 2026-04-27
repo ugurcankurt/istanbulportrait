@@ -77,7 +77,7 @@ export async function BlogPageContent({
                   href={`/${locale}/${parentSegment}/${post.translation.slug}`}
                   className="group"
                 >
-                  <article className="border rounded-lg overflow-hidden hover:shadow-lg transition-shadow h-full flex flex-col">
+                  <article className="border rounded-4xl overflow-hidden hover:shadow-lg transition-shadow h-full flex flex-col">
                     {post.featured_image && (
                       <AspectRatio
                         ratio={16 / 9}
@@ -149,7 +149,7 @@ export async function BlogPageContent({
               {page > 1 && (
                 <NextLink
                   href={`?page=${page - 1}`}
-                  className="px-4 py-2 border rounded-md hover:bg-muted transition-colors"
+                  className="px-4 py-2 border rounded-4xl hover:bg-muted transition-colors"
                 >
                   {t("previous")}
                 </NextLink>
@@ -160,7 +160,7 @@ export async function BlogPageContent({
               {page < pagination.totalPages && (
                 <NextLink
                   href={`?page=${page + 1}`}
-                  className="px-4 py-2 border rounded-md hover:bg-muted transition-colors"
+                  className="px-4 py-2 border rounded-4xl hover:bg-muted transition-colors"
                 >
                   {t("next")}
                 </NextLink>

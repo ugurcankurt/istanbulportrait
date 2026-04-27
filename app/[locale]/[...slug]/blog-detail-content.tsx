@@ -62,7 +62,7 @@ export async function BlogDetailPageContent({
             {post.featured_image && (
               <AspectRatio
                 ratio={16 / 9}
-                className="mb-8 rounded-lg overflow-hidden"
+                className="mb-8 rounded-4xl overflow-hidden"
               >
                 <Image
                   src={post.featured_image}
