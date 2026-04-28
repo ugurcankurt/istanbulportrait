@@ -87,6 +87,13 @@ export async function generateMetadata({
     alternates: {
       canonical: "./",
     },
+    robots: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
     openGraph: constructOpenGraph(title, desc, ogImage, title, locale),
     twitter: {
       card: "summary_large_image",

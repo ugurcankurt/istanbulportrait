@@ -69,7 +69,10 @@ export async function PackageDetailPageContent({
     "name": `${title} - Video`,
     "description": generateSeoDescription(desc),
     "thumbnailUrl": pkg.gallery_images?.[0] || pkg.cover_image || settings.default_og_image_url || "",
-    "uploadDate": new Date().toISOString(),
+    "uploadDate": pkg.created_at || pkg.updated_at || new Date().toISOString(),
+    "duration": "PT59S",
+    "width": 1080,
+    "height": 1920,
     "contentUrl": pkg.video_url
   } : null;
 
