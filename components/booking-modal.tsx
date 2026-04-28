@@ -3,7 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
 import { ar, de, enUS, es, fr, ro, ru, tr as trLocale, zhCN } from "date-fns/locale";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import { useEffect, useState, useRef } from "react";
 import { useForm } from "react-hook-form";
@@ -125,6 +125,7 @@ export function BookingModal({
   const locale = useLocale();
   const { formatPrice, rate } = useCurrency();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const t = useTranslations("checkout");
   const tPackages = useTranslations("packages");
   const tui = useTranslations("ui");
@@ -337,7 +338,12 @@ export function BookingModal({
 
           form.reset();
           onClose();
-          router.push(`/${locale}/checkout`);
+          const coupon = searchParams.get("coupon");
+          if (coupon) {
+            router.push(`/${locale}/checkout?coupon=${coupon}`);
+          } else {
+            router.push(`/${locale}/checkout`);
+          }
         } catch (e) {
           console.error("Draft creation error:", e);
           sessionStorage.setItem("bookingData", JSON.stringify({
@@ -349,7 +355,12 @@ export function BookingModal({
           }));
           form.reset();
           onClose();
-          router.push(`/${locale}/checkout`);
+          const coupon = searchParams.get("coupon");
+          if (coupon) {
+            router.push(`/${locale}/checkout?coupon=${coupon}`);
+          } else {
+            router.push(`/${locale}/checkout`);
+          }
         } finally {
           setIsNavigating(false);
         }

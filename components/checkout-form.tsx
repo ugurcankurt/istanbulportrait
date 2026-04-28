@@ -633,6 +633,38 @@ export function CheckoutForm({ timeSurcharges = [] }: { timeSurcharges?: TimeSur
     }
   }, [searchParams, bookingForm, router, eventId, locale]);
 
+  // Auto-apply promo code from URL
+  useEffect(() => {
+    const coupon = searchParams.get("coupon");
+    if (coupon && selectedPackage && !appliedPromo && !isLoadingPromo && !promoError && !promoCodeInput) {
+      const upperCoupon = coupon.toUpperCase();
+      setPromoCodeInput(upperCoupon);
+      
+      const autoApply = async () => {
+        setIsLoadingPromo(true);
+        setPromoError("");
+        try {
+          const response = await fetch(`/api/booking/validate-promo?code=${encodeURIComponent(upperCoupon)}&packageId=${selectedPackage}`);
+          const data = await response.json();
+          if (!response.ok) {
+            setPromoError(data.error || "Invalid promo code from URL");
+            return;
+          }
+          setAppliedPromo({
+            code: data.code,
+            percentage: data.discount_percentage
+          });
+        } catch (error) {
+          setPromoError("Failed to validate promo code");
+        } finally {
+          setIsLoadingPromo(false);
+        }
+      };
+      
+      autoApply();
+    }
+  }, [searchParams, selectedPackage, appliedPromo]);
+
   const packageInfo = selectedPackage
     ? {
       name: (preFilledBookingData as any)?.packageDisplayName || selectedPackage,

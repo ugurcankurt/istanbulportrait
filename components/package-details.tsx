@@ -14,7 +14,7 @@ import {
   Heart,
 } from "lucide-react";
 import { useTranslations, useLocale } from "next-intl";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState, useMemo } from "react";
 import { format } from "date-fns";
 import { ar, de, enUS, es, fr, ro, ru, tr as trLocale, zhCN } from "date-fns/locale";
@@ -64,6 +64,7 @@ export function PackageDetails({ packageData, aggregateRating, reviews, activeDi
   const locale = useLocale();
   const { formatPrice, currency, convertPrice } = useCurrency();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const dateFnsLocale = useMemo(() => getDateFnsLocale(locale), [locale]);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -72,6 +73,12 @@ export function PackageDetails({ packageData, aggregateRating, reviews, activeDi
   const [peopleCount, setPeopleCount] = useState<number>(1);
   const [isSaved, setIsSaved] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    if (searchParams.get("book") === "true") {
+      setIsModalOpen(true);
+    }
+  }, [searchParams]);
 
   if (!packageData) return null;
 
