@@ -28,16 +28,14 @@ function truncateReviewText(text: string, maxLength: number = 150): string {
 /**
  * Internal helper to translate a batch of reviews via Gemini.
  * We use unstable_cache so the translation is persistently cached.
- * Since 'reviewsStr' is passed as an argument, Next.js automatically includes it in the cache key.
- * This guarantees that when a new review arrives, the cache key changes and we fetch new translations!
+ * We ONLY pass a payload of {id, text} to prevent cache busting from dynamic dates or relative times.
  */
-const getTranslatedReviews = unstable_cache(
-  async (reviewsStr: string, locale: string) => {
-    if (locale === "en") return JSON.parse(reviewsStr) as GoogleReview[];
-    const reviews: GoogleReview[] = JSON.parse(reviewsStr);
+const getTranslatedReviewsBatch = unstable_cache(
+  async (payloadStr: string, locale: string) => {
+    if (locale === "en") return {};
+    const payload: {id: string, text: string}[] = JSON.parse(payloadStr);
 
-    const reviewsToTranslate = reviews.filter(r => r.text && r.text.trim().length > 0);
-    if (reviewsToTranslate.length === 0) return reviews;
+    if (payload.length === 0) return {};
 
     try {
       const { settingsService } = await import('@/lib/settings-service');
@@ -46,11 +44,8 @@ const getTranslatedReviews = unstable_cache(
       
       if (!apiKey) {
         console.warn("No Gemini API key found for review translation.");
-        return reviews;
+        return {};
       }
-
-      // Prepare payload with just IDs and text to save tokens
-      const payload = reviewsToTranslate.map(r => ({ id: r.id, text: r.text }));
 
       const prompt = `
 You are a professional localization expert. Translate the following user reviews from their original language into the language code: "${locale}".
@@ -60,7 +55,7 @@ Example output format:
 {"review-1": "Harika bir deneyimdi!", "review-2": "Çok profesyonel bir ekip."}
 
 Reviews to translate:
-${JSON.stringify(payload)}
+${payloadStr}
 `;
 
       const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
@@ -93,21 +88,14 @@ ${JSON.stringify(payload)}
       textOutput = textOutput.replace(/```json/g, "").replace(/```/g, "").trim();
 
       const translatedDict = JSON.parse(textOutput);
-
-      // Map translations back to the reviews array
-      return reviews.map(r => {
-        if (translatedDict[r.id]) {
-          return { ...r, text: translatedDict[r.id] };
-        }
-        return r;
-      });
+      return translatedDict as Record<string, string>;
     } catch (err) {
       console.error("Failed to translate reviews. Cache will not be poisoned.", err);
       throw err; // Throwing prevents unstable_cache from saving English fallback permanently
     }
   },
-  ['gemini-reviews-translations-v1'],
-  { revalidate: 86400 * 7 } // Cache for 7 days. When reviews change, a new cache key is auto-generated.
+  ['gemini-reviews-translations-batch-v3'],
+  { revalidate: 86400 * 7 } // Cache for 7 days.
 );
 
 class ReviewsService {
@@ -195,12 +183,24 @@ class ReviewsService {
       // Translating reviews natively using unstable_cache via Gemini
       let finalReviews = sortedReviews;
       if (locale !== "en" && finalReviews.length > 0) {
-        const reviewsStr = JSON.stringify(finalReviews);
-        try {
-          finalReviews = await getTranslatedReviews(reviewsStr, locale);
-        } catch (translationErr) {
-          console.warn(`Translation failed for locale '${locale}', falling back to English for this request only.`);
-          // We keep finalReviews as sortedReviews (English) without poisoning the Next.js cache.
+        const reviewsToTranslate = finalReviews
+          .filter(r => r.text && r.text.trim().length > 0)
+          .map(r => ({ id: r.id, text: r.text }));
+
+        if (reviewsToTranslate.length > 0) {
+          const payloadStr = JSON.stringify(reviewsToTranslate);
+          try {
+            const translatedDict = await getTranslatedReviewsBatch(payloadStr, locale);
+            finalReviews = finalReviews.map(r => {
+              if (translatedDict[r.id]) {
+                return { ...r, text: translatedDict[r.id] };
+              }
+              return r;
+            });
+          } catch (translationErr) {
+            console.warn(`Translation failed for locale '${locale}', falling back to English for this request only.`);
+            // We keep finalReviews as sortedReviews (English) without poisoning the Next.js cache.
+          }
         }
       }
 
