@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import { packagesService } from "@/lib/packages-service";
 import { getBaseUrl, generateSeoDescription } from "@/lib/seo-utils";
-import { settingsService } from "@/lib/settings-service";
 import { discountService } from "@/lib/discount-service";
 import { reviewsService } from "@/lib/reviews-service";
 
@@ -14,7 +13,7 @@ export async function GET(request: Request) {
   const baseUrl = getBaseUrl();
   const packages = await packagesService.getAllPackages();
   const activeDiscount = await discountService.getActiveDiscount();
-  
+
   // Fetch real Google Reviews aggregate data for the dynamic images
   const { average, count } = await reviewsService.getAggregateRating();
 
@@ -29,7 +28,8 @@ export async function GET(request: Request) {
 
   // Google Ads strictly requires exactly these header names for a Custom feed
   // Reference: https://support.google.com/google-ads/answer/6053288 (Custom feed)
-  let csv = "ID,Item title,Item description,Final URL,Image URL,Price,Sale price\n";
+  // Add UTF-8 BOM to ensure Google Ads correctly parses Turkish characters
+  let csv = "\uFEFFID,Item title,Item description,Final URL,Image URL,Price,Sale price\n";
 
   for (const pkg of packages) {
     if (!pkg.is_active) continue; // Skip inactive packages
@@ -39,7 +39,7 @@ export async function GET(request: Request) {
 
     // 2. Title
     let title = pkg.title?.[locale] || pkg.title?.en || "Photography Package";
-    
+
     // 3. Description
     const rawDesc = pkg.description?.[locale] || pkg.description?.en || title;
     const cleanDesc = generateSeoDescription(rawDesc, 500);
