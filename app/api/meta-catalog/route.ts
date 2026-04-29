@@ -3,6 +3,7 @@ import { packagesService } from "@/lib/packages-service";
 import { getBaseUrl, generateSeoDescription } from "@/lib/seo-utils";
 import { settingsService } from "@/lib/settings-service";
 import { discountService } from "@/lib/discount-service";
+import { reviewsService } from "@/lib/reviews-service";
 
 export const dynamic = "force-dynamic";
 
@@ -15,6 +16,9 @@ export async function GET(request: Request) {
   const packages = await packagesService.getAllPackages();
   const settings = await settingsService.getSettings();
   const activeDiscount = await discountService.getActiveDiscount();
+  
+  // Fetch real Google Reviews aggregate data
+  const { average, count } = await reviewsService.getAggregateRating();
 
   const channelTitle = settings.site_name || "Istanbul Portrait Packages";
   const channelDesc = settings.site_description?.[locale] || settings.site_description?.en || "Photography and Tour Packages in Istanbul";
@@ -102,11 +106,11 @@ export async function GET(request: Request) {
 
     // Generate GetYourGuide style dynamic ad image if we have a base image
     if (rawImageUrl) {
-      // Create a stable, pseudo-random rating (4.7-4.9) and review count based on the package slug
-      const pseudoRating = 4.7 + (pkg.slug.length % 3) * 0.1; 
-      const pseudoReviews = 85 + (pkg.slug.length * 3);
+      // Use real reviews data fetched from Google Reviews
+      const rating = average > 0 ? average.toFixed(1) : "5.0";
+      const reviewsCount = count > 0 ? count : 124;
       
-      imageUrl = `${baseUrl}/api/og-catalog?image=${encodeURIComponent(rawImageUrl)}&title=${encodeURIComponent(title)}&rating=${pseudoRating.toFixed(1)}&reviews=${pseudoReviews}`;
+      imageUrl = `${baseUrl}/api/og-catalog?image=${encodeURIComponent(rawImageUrl)}&title=${encodeURIComponent(title)}&rating=${rating}&reviews=${reviewsCount}`;
     }
 
     const videoUrl = cleanImage(pkg.video_url);

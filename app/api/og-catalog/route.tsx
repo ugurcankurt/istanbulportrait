@@ -10,7 +10,7 @@ export async function GET(req: NextRequest) {
     const image = searchParams.get("image");
     const rating = searchParams.get("rating") || "4.9";
     const reviews = searchParams.get("reviews") || "124";
-    const location = searchParams.get("location") || "Türkiye";
+    const location = searchParams.get("location") || "Istanbul, Türkiye";
 
     if (!image) {
       return new Response("Missing image URL", { status: 400 });
@@ -76,7 +76,7 @@ export async function GET(req: NextRequest) {
           <div
             style={{
               position: "absolute",
-              bottom: "40px",
+              bottom: "60px",
               left: "40px",
               right: "40px",
               display: "flex",
@@ -85,6 +85,7 @@ export async function GET(req: NextRequest) {
               borderRadius: "16px",
               padding: "40px",
               boxShadow: "0 20px 40px rgba(0,0,0,0.3)",
+              transform: "rotate(-2deg)",
             }}
           >
             {/* Top row: Location & Rating */}
@@ -94,7 +95,9 @@ export async function GET(req: NextRequest) {
               </span>
               <div style={{ display: "flex", alignItems: "center" }}>
                  {/* Star Icon */}
-                 <span style={{ fontSize: "40px", color: "#6e1d2c", marginRight: "12px", marginBottom: "4px" }}>★</span>
+                 <svg width="40" height="40" viewBox="0 0 24 24" fill="#6e1d2c" style={{ marginRight: "12px", marginBottom: "4px" }}>
+                   <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                 </svg>
                  <span style={{ fontSize: "40px", fontWeight: 700, color: "#444" }}>{rating}</span>
                  <span style={{ fontSize: "36px", color: "#999", marginLeft: "12px" }}>({reviews})</span>
               </div>
