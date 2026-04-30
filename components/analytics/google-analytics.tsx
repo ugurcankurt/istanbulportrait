@@ -1,6 +1,6 @@
 "use client";
 
-import { GoogleAnalytics as NextGoogleAnalytics } from "@next/third-parties/google";
+import Script from "next/script";
 
 export function GoogleAnalytics({ gaId, adsId }: { gaId?: string | null, adsId?: string | null }) {
   if (!gaId) {
@@ -9,10 +9,24 @@ export function GoogleAnalytics({ gaId, adsId }: { gaId?: string | null, adsId?:
 
   return (
     <>
-      <NextGoogleAnalytics gaId={gaId} />
+      <Script
+        id="google-analytics"
+        strategy="afterInteractive"
+        src={`/metrics/gtag/js?id=${gaId}`}
+      />
       <script
         dangerouslySetInnerHTML={{
-          __html: `window.__GA_ID = '${gaId}';`,
+          __html: `
+            window.__GA_ID = '${gaId}';
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            
+            // Set First-Party Proxy globally for all events and configs
+            gtag('set', 'transport_url', window.location.origin);
+            
+            gtag('config', '${gaId}');
+          `,
         }}
       />
       {adsId && (
@@ -20,7 +34,7 @@ export function GoogleAnalytics({ gaId, adsId }: { gaId?: string | null, adsId?:
           dangerouslySetInnerHTML={{
             __html: `
               window.__ADS_ID = '${adsId}';
-              window.gtag('config', '${adsId}', {
+              gtag('config', '${adsId}', {
                 'allow_enhanced_conversions': true
               });
             `,

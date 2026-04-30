@@ -90,6 +90,15 @@ const nextConfig: NextConfig = {
         source: "/storage/:path*",
         destination: "https://xfntnamwfnqjgqmyxwfz.supabase.co/storage/v1/object/public/:path*",
       },
+      // Google Tag Gateway (First-Party Tracking Proxy)
+      {
+        source: "/metrics/gtag/js",
+        destination: "https://www.googletagmanager.com/gtag/js",
+      },
+      {
+        source: "/g/collect/:path*",
+        destination: "https://www.google-analytics.com/g/collect/:path*",
+      },
     ];
   },
   // Production optimizations
