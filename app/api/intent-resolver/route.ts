@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { unstable_cache } from "next/cache";
 import { packagesService } from "@/lib/packages-service";
 
 // Define a stable cache time for identical search intents (e.g. 30 days)
@@ -36,15 +37,20 @@ export async function POST(req: Request) {
       return `- Slug: "${pkg.slug}" | Name: "${name}" | Description: "${desc.substring(0, 150)}..."`;
     }).join("\n");
 
-    // 3. Build the prompt
-    const prompt = `
+    // Normalize query to increase cache hits (lowercase, trim)
+    const normalizedQuery = query.toLowerCase().trim();
+
+    // 3. Build the AI resolution logic wrapped in unstable_cache
+    const resolveIntentWithAI = unstable_cache(
+      async (q: string, context: string, key: string) => {
+        const prompt = `
 You are an intelligent e-commerce personalization assistant for a photography website in Istanbul.
 Your task is to map a user's search intent/query to the most appropriate photography package from our available catalog.
 
 Available Packages:
-${packagesContext}
+${context}
 
-User's Search Query: "${query}"
+User's Search Query: "${q}"
 
 Instructions:
 1. Analyze the semantic meaning of the user's search query (it might be in Turkish, English, Arabic, Russian, etc.).
@@ -58,46 +64,49 @@ OR
 {"slug": null}
 `;
 
-    // 4. Connect to Google Gemini REST API (gemini-2.5-flash)
-    const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
-    
-    const response = await fetch(geminiUrl, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        contents: [{
-          parts: [{ text: prompt }]
-        }],
-        generationConfig: {
-          temperature: 0.1, // Keep it highly deterministic
-          responseMimeType: "application/json",
+        const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${key}`;
+        
+        const response = await fetch(geminiUrl, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            contents: [{ parts: [{ text: prompt }] }],
+            generationConfig: {
+              temperature: 0.1,
+              responseMimeType: "application/json",
+            }
+          })
+        });
+
+        if (!response.ok) {
+          console.error("Gemini Intent API Error:", await response.text());
+          return null;
         }
-      })
-    });
 
-    if (!response.ok) {
-      console.error("Gemini Intent API Error:", await response.text());
-      return NextResponse.json({ slug: null });
-    }
+        const data = await response.json();
+        const textOutput = data.candidates?.[0]?.content?.parts?.[0]?.text;
 
-    const data = await response.json();
-    const textOutput = data.candidates?.[0]?.content?.parts?.[0]?.text;
+        if (!textOutput) return null;
 
-    if (!textOutput) {
-      return NextResponse.json({ slug: null });
-    }
+        try {
+          const parsedResult = JSON.parse(textOutput);
+          return parsedResult.slug || null;
+        } catch (e) {
+          console.error("Failed to parse Gemini JSON for intent:", textOutput);
+          return null;
+        }
+      },
+      [`intent-resolution-${normalizedQuery}`], // Cache key based on normalized query
+      { revalidate: 2592000, tags: ['intent-cache'] } // Cache for 30 days
+    );
 
-    let parsedResult = { slug: null };
-    try {
-      parsedResult = JSON.parse(textOutput);
-    } catch (e) {
-      console.error("Failed to parse Gemini JSON for intent:", textOutput);
-    }
+    // Execute the cached function
+    const resolvedSlug = await resolveIntentWithAI(normalizedQuery, packagesContext, apiKey);
 
     // Double check that the returned slug actually exists in our DB
-    const validSlug = activePackages.some(p => p.slug === parsedResult.slug) ? parsedResult.slug : null;
+    const validSlug = activePackages.some(p => p.slug === resolvedSlug) ? resolvedSlug : null;
 
     return NextResponse.json({ slug: validSlug });
 
