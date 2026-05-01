@@ -77,9 +77,10 @@ export async function POST(request: NextRequest) {
       }
       
       // If the agency sent pricing, we could validate it here. For now, we trust our own DB source of truth.
-      // E.g., if it's 2 people, we multiply by people count if package is per_person. 
-      // OCTO usually sends total items in unitItems array.
-      totalAmount = slotRetailPrice * unitItems.length;
+      // B2B Bookings (Both local and global) get the NET price.
+      // Net Price = Retail Price - 10% Commission
+      const netPrice = slotRetailPrice * 0.9;
+      totalAmount = netPrice * unitItems.length;
     }
 
     // 2.d. Insert booking
