@@ -19,7 +19,7 @@ export async function POST(request: NextRequest) {
 
     if (!productId || !localDateStart || !localDateEnd) {
       return NextResponse.json(
-        { error: "Bad Request", message: "Missing required fields (productId, localDateStart, localDateEnd)" },
+        { error: "BAD_REQUEST", errorMessage: "Missing required fields (productId, localDateStart, localDateEnd)" },
         { status: 400 }
       );
     }
@@ -32,7 +32,11 @@ export async function POST(request: NextRequest) {
       .single();
 
     if (pkgError || !pkgData) {
-      return NextResponse.json({ error: "Not Found", message: "Product not found" }, { status: 404 });
+      return NextResponse.json({ error: "INVALID_PRODUCT_ID", errorMessage: "Product not found", productId }, { status: 400 });
+    }
+
+    if (optionId && optionId !== "DEFAULT" && optionId !== `opt_${productId}`) {
+      return NextResponse.json({ error: "INVALID_OPTION_ID", errorMessage: "Option not found", optionId }, { status: 400 });
     }
 
     const basePrice = pkgData.price || 0;
