@@ -17,7 +17,7 @@ export async function POST(
   try {
     if (!uuid) {
       return NextResponse.json(
-        { error: "INVALID_BOOKING_UUID", errorMessage: "The booking UUID was invalid or missing" },
+        { error: "INVALID_BOOKING_UUID", errorMessage: "The booking UUID was invalid or missing", uuid: "" },
         { status: 400 }
       );
     }
@@ -41,7 +41,7 @@ export async function POST(
 
     if (fetchError || !booking) {
       return NextResponse.json(
-        { error: "INVALID_BOOKING_UUID", errorMessage: "The booking UUID was invalid or missing" },
+        { error: "INVALID_BOOKING_UUID", errorMessage: "The booking UUID was invalid or missing", uuid: uuid || "" },
         { status: 400 }
       );
     }

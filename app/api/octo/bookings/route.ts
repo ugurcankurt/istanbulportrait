@@ -29,7 +29,7 @@ export async function POST(request: NextRequest) {
     }
 
     if (!productId) {
-      return NextResponse.json({ error: "INVALID_PRODUCT_ID", errorMessage: "Missing productId" }, { status: 400 });
+      return NextResponse.json({ error: "INVALID_PRODUCT_ID", errorMessage: "Missing productId", productId: "" }, { status: 400 });
     }
 
     const { data: pkgData, error: pkgError } = await supabaseAdmin
@@ -39,20 +39,20 @@ export async function POST(request: NextRequest) {
       .single();
 
     if (pkgError || !pkgData) {
-      return NextResponse.json({ error: "INVALID_PRODUCT_ID", errorMessage: "Product not found", productId }, { status: 400 });
+      return NextResponse.json({ error: "INVALID_PRODUCT_ID", errorMessage: "Product not found", productId: productId || "" }, { status: 400 });
     }
 
     if (!optionId || (optionId !== "DEFAULT" && optionId !== `opt_${productId}`)) {
-      return NextResponse.json({ error: "INVALID_OPTION_ID", errorMessage: "Option not found", ...(optionId ? { optionId } : {}) }, { status: 400 });
+      return NextResponse.json({ error: "INVALID_OPTION_ID", errorMessage: "Option not found", optionId: optionId || "" }, { status: 400 });
     }
 
     if (!availabilityId) {
-      return NextResponse.json({ error: "INVALID_AVAILABILITY_ID", errorMessage: "Missing availabilityId" }, { status: 400 });
+      return NextResponse.json({ error: "INVALID_AVAILABILITY_ID", errorMessage: "Missing availabilityId", availabilityId: "" }, { status: 400 });
     }
 
     const [bookingDate, bookingTime] = availabilityId.split("T");
-    if (!bookingDate || !bookingTime || !availabilityId.includes("+03:00") && !availabilityId.includes("Z")) {
-      return NextResponse.json({ error: "INVALID_AVAILABILITY_ID", errorMessage: "Invalid availabilityId format", availabilityId }, { status: 400 });
+    if (!bookingDate || !bookingTime || (!availabilityId.includes("+03:00") && !availabilityId.includes("Z"))) {
+      return NextResponse.json({ error: "INVALID_AVAILABILITY_ID", errorMessage: "Invalid availabilityId format", availabilityId: availabilityId || "" }, { status: 400 });
     }
 
     if (!unitItems || !Array.isArray(unitItems) || unitItems.length === 0) {
@@ -61,7 +61,7 @@ export async function POST(request: NextRequest) {
 
     for (const item of unitItems) {
       if (!item.unitId || item.unitId !== `unit_${productId}_adult`) {
-        return NextResponse.json({ error: "INVALID_UNIT_ID", errorMessage: "Unit ID not found or invalid", ...(item.unitId ? { unitId: item.unitId } : {}) }, { status: 400 });
+        return NextResponse.json({ error: "INVALID_UNIT_ID", errorMessage: "Unit ID not found or invalid", unitId: item.unitId || "" }, { status: 400 });
       }
     }
 
@@ -126,8 +126,8 @@ export async function POST(request: NextRequest) {
         user_phone: contact.phoneNumber,
         booking_date: bookingDate,
         booking_time: bookingTime ? bookingTime.substring(0, 5) : null,
-        // Automatically confirm B2B bookings if global agency. If local, wait for payment.
-        status: authType === "local" ? "pending" : "confirmed", 
+        // All OCTO reservations start as ON_HOLD (pending) until confirmed via the /confirm endpoint
+        status: "pending", 
         total_amount: totalAmount, // Calculated dynamically from base price + time surcharges
         notes: `OCTO B2B Booking. Ref: ${resellerReference || "None"}. Type: ${authType}`,
         people_count: unitItems.length,
@@ -141,8 +141,7 @@ export async function POST(request: NextRequest) {
     }
 
     // 3. Construct OCTO Booking Response
-    const octoStatus = authType === "local" ? BookingStatus.ON_HOLD : BookingStatus.CONFIRMED;
-    const paymentUrl = authType === "local" ? `https://istanbulportrait.com/en/checkout/b2b-pay?bookingId=${booking.id}` : null;
+    const octoStatus = BookingStatus.ON_HOLD;
     
     const octoBooking: Booking = {
       id: booking.id,
@@ -153,9 +152,9 @@ export async function POST(request: NextRequest) {
       status: octoStatus,
       utcCreatedAt: new Date().toISOString(),
       utcUpdatedAt: new Date().toISOString(),
-      utcExpiresAt: authType === "local" ? new Date(Date.now() + 60 * 60 * 1000).toISOString() : null, // 1 hour to pay
+      utcExpiresAt: new Date(Date.now() + 60 * 60 * 1000).toISOString(), // 1 hour hold
       utcRedeemedAt: null,
-      utcConfirmedAt: authType === "global" ? new Date().toISOString() : null,
+      utcConfirmedAt: null,
       productId: productId,
       optionId: optionId || "standard",
       cancellable: true,
@@ -172,9 +171,9 @@ export async function POST(request: NextRequest) {
         locales: contact.locales || ["en"],
         country: contact.country || null,
         notes: contact.notes || null,
-        postalCode: null
+        postalCode: contact.postalCode || null
       },
-      notes: paymentUrl ? `PAYMENT_REQUIRED: Please pay via this link to confirm: ${paymentUrl}` : null,
+      notes: body.notes || null,
       deliveryMethods: [DeliveryMethod.VOUCHER],
       voucher: null, // E-ticket object
       unitItems: unitItems.map((item: any) => ({
@@ -184,7 +183,17 @@ export async function POST(request: NextRequest) {
         supplierReference: null,
         status: octoStatus,
         utcRedeemedAt: null,
-        contact: item.contact || null,
+        contact: {
+          fullName: item.contact?.fullName || null,
+          firstName: item.contact?.firstName || null,
+          lastName: item.contact?.lastName || null,
+          emailAddress: item.contact?.emailAddress || null,
+          phoneNumber: item.contact?.phoneNumber || null,
+          locales: item.contact?.locales || ["en"],
+          country: item.contact?.country || null,
+          notes: item.contact?.notes || null,
+          postalCode: item.contact?.postalCode || null
+        },
         ticket: null
       }))
     };
@@ -193,7 +202,7 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error("OCTO API Error - Bookings:", error);
     return NextResponse.json(
-      { error: "Internal Server Error", message: "Failed to create booking" },
+      { error: "Internal Server Error", errorMessage: "Failed to create booking" },
       { status: 500 }
     );
   }

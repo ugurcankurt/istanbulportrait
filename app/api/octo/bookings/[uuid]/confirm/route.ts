@@ -28,8 +28,11 @@ export async function POST(
       .eq("id", uuid) // Matching by ID for simplicity if OTA sent ID as UUID
       .single();
 
-    if (fetchError && fetchError.code !== 'PGRST116') {
-      throw fetchError;
+    if (fetchError || !booking) {
+      return NextResponse.json(
+        { error: "INVALID_BOOKING_UUID", errorMessage: "The booking UUID was invalid or missing", uuid: uuid || "" },
+        { status: 400 }
+      );
     }
 
     // Update status to CONFIRMED
