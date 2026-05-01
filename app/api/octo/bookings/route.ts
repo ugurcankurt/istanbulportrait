@@ -194,8 +194,9 @@ export async function GET(request: NextRequest) {
 
     // Simple filters
     if (resellerReference) {
-      // First try to match via octo_data jsonb, fallback to ilike notes
-      query = query.or(`octo_data->>resellerReference.eq.${resellerReference},notes.ilike.%${resellerReference}%`);
+      // JSON operators inside .or() string can throw parsing errors in PostgREST. 
+      // We rely on 'notes' ilike match which we appended in POST and confirm endpoints.
+      query = query.ilike("notes", `%${resellerReference}%`);
     }
     if (supplierReference) {
       query = query.eq("id", supplierReference);
