@@ -22,11 +22,13 @@ export async function POST(
     // NOTE: In a real production DB, you should add a `uuid` column to the `bookings` table.
     // For now, we simulate finding the booking and updating it.
     
-    const { data: booking, error: fetchError } = await supabaseAdmin
+    const { data: bookings, error: fetchError } = await supabaseAdmin
       .from("bookings")
       .select("*")
-      .eq("id", uuid) // Matching by ID for simplicity if OTA sent ID as UUID
-      .single();
+      .or(`id.eq.${uuid},octo_uuid.eq.${uuid}`)
+      .limit(1);
+
+    const booking = bookings?.[0];
 
     if (fetchError || !booking) {
       return NextResponse.json(
@@ -40,11 +42,13 @@ export async function POST(
       body = await request.json();
     } catch(e) {}
 
-    let finalUuid = booking.id;
+    let finalUuid = booking.octo_uuid || booking.id;
     let currentUnitItems: any[] = [];
     let cleanNotes = booking.notes || "";
     
-    if (booking.notes && booking.notes.includes("---OCTO_META---")) {
+    if (booking.octo_data && booking.octo_data.unitItems) {
+      currentUnitItems = booking.octo_data.unitItems;
+    } else if (booking.notes && booking.notes.includes("---OCTO_META---")) {
       cleanNotes = booking.notes.split("\n---OCTO_META---")[0];
       try {
         const metaStr = booking.notes.split("---OCTO_META---\n")[1];
@@ -72,7 +76,9 @@ export async function POST(
     }
 
     const newMeta = { uuid: finalUuid, unitItems: currentUnitItems };
-    updates.notes = `${cleanNotes}\n---OCTO_META---\n${JSON.stringify(newMeta)}`;
+    updates.octo_uuid = finalUuid;
+    updates.octo_data = newMeta;
+    updates.notes = cleanNotes;
 
     await supabaseAdmin
       .from("bookings")

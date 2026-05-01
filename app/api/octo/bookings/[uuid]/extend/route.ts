@@ -36,7 +36,7 @@ export async function POST(
     const { data: bookings, error: fetchError } = await supabaseAdmin
       .from("bookings")
       .select("*")
-      .or(`id.eq.${uuid},notes.ilike.%${uuid}%`)
+      .or(`id.eq.${uuid},octo_uuid.eq.${uuid}`)
       .limit(1);
 
     const booking = bookings?.[0];
@@ -59,9 +59,11 @@ export async function POST(
     }
 
     let unitItems: any[] = [];
-    let finalUuid = uuid;
+    let finalUuid = booking.octo_uuid || uuid;
     
-    if (booking.notes && booking.notes.includes("---OCTO_META---")) {
+    if (booking.octo_data && booking.octo_data.unitItems) {
+      unitItems = booking.octo_data.unitItems;
+    } else if (booking.notes && booking.notes.includes("---OCTO_META---")) {
       try {
         const metaStr = booking.notes.split("---OCTO_META---\n")[1];
         const meta = JSON.parse(metaStr);

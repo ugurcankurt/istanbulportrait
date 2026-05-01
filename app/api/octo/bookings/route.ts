@@ -132,7 +132,9 @@ export async function POST(request: NextRequest) {
         // All OCTO reservations start as ON_HOLD (pending) until confirmed via the /confirm endpoint
         status: "pending", 
         total_amount: totalAmount, // Calculated dynamically from base price + time surcharges
-        notes: `OCTO B2B Booking. Ref: ${resellerReference || "None"}. Type: ${authType}\n---OCTO_META---\n${JSON.stringify(internalPayload)}`,
+        notes: `OCTO B2B Booking. Ref: ${resellerReference || "None"}. Type: ${authType}`,
+        octo_uuid: finalUuid,
+        octo_data: internalPayload,
         people_count: unitItems.length,
         locale: safeContact.locales?.[0] || "en",
       })
@@ -278,9 +280,11 @@ export async function GET(request: NextRequest) {
       if (b.status === "cancelled" || b.status === "failed") status = BookingStatus.CANCELLED;
 
       let unitItems: any[] = [];
-      let finalUuid = b.id;
+      let finalUuid = b.octo_uuid || b.id;
       
-      if (b.notes && b.notes.includes("---OCTO_META---")) {
+      if (b.octo_data && b.octo_data.unitItems) {
+        unitItems = b.octo_data.unitItems;
+      } else if (b.notes && b.notes.includes("---OCTO_META---")) {
         try {
           const metaStr = b.notes.split("---OCTO_META---\n")[1];
           const meta = JSON.parse(metaStr);

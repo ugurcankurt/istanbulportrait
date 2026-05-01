@@ -24,7 +24,7 @@ export async function GET(
     const { data: bookings, error: fetchError } = await supabaseAdmin
       .from("bookings")
       .select("*")
-      .or(`id.eq.${uuid},notes.ilike.%${uuid}%`)
+      .or(`id.eq.${uuid},octo_uuid.eq.${uuid}`)
       .limit(1);
 
     const b = bookings?.[0];
@@ -41,9 +41,11 @@ export async function GET(
     if (b.status === "cancelled" || b.status === "failed") status = BookingStatus.CANCELLED;
 
     let unitItems: any[] = [];
-    let finalUuid = uuid;
+    let finalUuid = b.octo_uuid || uuid;
     
-    if (b.notes && b.notes.includes("---OCTO_META---")) {
+    if (b.octo_data && b.octo_data.unitItems) {
+      unitItems = b.octo_data.unitItems;
+    } else if (b.notes && b.notes.includes("---OCTO_META---")) {
       try {
         const metaStr = b.notes.split("---OCTO_META---\n")[1];
         const meta = JSON.parse(metaStr);
@@ -172,7 +174,7 @@ export async function PATCH(
     const { data: bookings, error: fetchError } = await supabaseAdmin
       .from("bookings")
       .select("*")
-      .or(`id.eq.${uuid},notes.ilike.%${uuid}%`)
+      .or(`id.eq.${uuid},octo_uuid.eq.${uuid}`)
       .limit(1);
 
     const b = bookings?.[0];
@@ -185,11 +187,13 @@ export async function PATCH(
     }
 
     // Process update
-    let finalUuid = b.id;
+    let finalUuid = b.octo_uuid || b.id;
     let currentUnitItems: any[] = [];
     let cleanNotes = b.notes || "";
     
-    if (b.notes && b.notes.includes("---OCTO_META---")) {
+    if (b.octo_data && b.octo_data.unitItems) {
+      currentUnitItems = b.octo_data.unitItems;
+    } else if (b.notes && b.notes.includes("---OCTO_META---")) {
       cleanNotes = b.notes.split("\n---OCTO_META---")[0];
       try {
         const metaStr = b.notes.split("---OCTO_META---\n")[1];
@@ -214,9 +218,11 @@ export async function PATCH(
       currentUnitItems = body.unitItems;
     }
 
-    // Always re-save meta
+    // Save metadata properly
     const newMeta = { uuid: finalUuid, unitItems: currentUnitItems };
-    updates.notes = `${cleanNotes}\n---OCTO_META---\n${JSON.stringify(newMeta)}`;
+    updates.octo_uuid = finalUuid;
+    updates.octo_data = newMeta;
+    updates.notes = cleanNotes;
 
     await supabaseAdmin.from("bookings").update(updates).eq("id", b.id);
 

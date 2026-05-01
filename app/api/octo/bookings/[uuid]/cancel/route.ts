@@ -26,11 +26,13 @@ export async function POST(
       body = await request.json();
     } catch(e) {}
 
-    const { data: b, error: fetchError } = await supabaseAdmin
+    const { data: bookings, error: fetchError } = await supabaseAdmin
       .from("bookings")
       .select("*")
-      .eq("id", uuid)
-      .single();
+      .or(`id.eq.${uuid},octo_uuid.eq.${uuid}`)
+      .limit(1);
+
+    const b = bookings?.[0];
 
     if (fetchError || !b) {
       return NextResponse.json(
@@ -50,9 +52,11 @@ export async function POST(
     const status = BookingStatus.CANCELLED;
 
     let unitItems: any[] = [];
-    let finalUuid = b.id;
+    let finalUuid = b.octo_uuid || b.id;
     
-    if (b.notes && b.notes.includes("---OCTO_META---")) {
+    if (b.octo_data && b.octo_data.unitItems) {
+      unitItems = b.octo_data.unitItems;
+    } else if (b.notes && b.notes.includes("---OCTO_META---")) {
       try {
         const metaStr = b.notes.split("---OCTO_META---\n")[1];
         const meta = JSON.parse(metaStr);
