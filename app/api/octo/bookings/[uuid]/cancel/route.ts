@@ -87,6 +87,8 @@ export async function POST(
       unitItems = unitItems.map(item => ({ ...item, status: status }));
     }
 
+    const availabilityIdStr = b.booking_date && b.booking_time ? `${b.booking_date}T${b.booking_time}:00+03:00` : null;
+
     const octoBooking: Booking = {
       id: b.id,
       uuid: finalUuid,
@@ -108,8 +110,20 @@ export async function POST(
         utcCancelledAt: new Date().toISOString()
       },
       freesale: false,
-      availabilityId: b.booking_date && b.booking_time ? `${b.booking_date}T${b.booking_time}:00+03:00` : null,
-      availability: null,
+      availabilityId: availabilityIdStr,
+      availability: availabilityIdStr ? {
+        id: availabilityIdStr,
+        localDateTimeStart: availabilityIdStr,
+        localDateTimeEnd: availabilityIdStr.replace(/T(\d{2}):/, (match: string, h: string) => `T${String(Math.min(23, parseInt(h)+2)).padStart(2, "0")}:`),
+        allDay: false,
+        status: "AVAILABLE" as any,
+        vacancies: 1,
+        capacity: 1,
+        maxUnits: 10,
+        utcCutoffAt: new Date().toISOString(),
+        available: true,
+        openingHours: []
+      } : null,
       contact: {
         fullName: b.user_name || "Unknown",
         firstName: null,
@@ -123,7 +137,11 @@ export async function POST(
       },
       notes: b.notes ? b.notes.split("\n---OCTO_META---")[0] : null,
       deliveryMethods: [DeliveryMethod.VOUCHER],
-      voucher: null,
+      voucher: {
+        redemptionMethod: "DIGITAL" as any,
+        utcRedeemedAt: null,
+        deliveryOptions: []
+      },
       unitItems: unitItems
     };
 

@@ -94,6 +94,8 @@ export async function POST(
       unitItems = unitItems.map(item => ({ ...item, status: octoStatus }));
     }
 
+    const availabilityIdStr = booking.booking_date && booking.booking_time ? `${booking.booking_date}T${booking.booking_time}:00+03:00` : null;
+
     // 4. Construct response
     const octoBooking: Booking = {
       id: booking.id,
@@ -112,8 +114,20 @@ export async function POST(
       cancellable: true,
       cancellation: null,
       freesale: false,
-      availabilityId: booking.booking_date && booking.booking_time ? `${booking.booking_date}T${booking.booking_time}:00+03:00` : null,
-      availability: null,
+      availabilityId: availabilityIdStr,
+      availability: availabilityIdStr ? {
+        id: availabilityIdStr,
+        localDateTimeStart: availabilityIdStr,
+        localDateTimeEnd: availabilityIdStr.replace(/T(\d{2}):/, (match: string, h: string) => `T${String(Math.min(23, parseInt(h)+2)).padStart(2, "0")}:`),
+        allDay: false,
+        status: "AVAILABLE" as any,
+        vacancies: 1,
+        capacity: 1,
+        maxUnits: 10,
+        utcCutoffAt: new Date().toISOString(),
+        available: true,
+        openingHours: []
+      } : null,
       contact: {
         fullName: booking.user_name || "Unknown",
         firstName: null,
@@ -127,7 +141,11 @@ export async function POST(
       },
       notes: booking.notes ? booking.notes.split("\n---OCTO_META---")[0] : null,
       deliveryMethods: [DeliveryMethod.VOUCHER],
-      voucher: null,
+      voucher: {
+        redemptionMethod: "DIGITAL" as any,
+        utcRedeemedAt: null,
+        deliveryOptions: []
+      },
       unitItems: unitItems
     };
 
