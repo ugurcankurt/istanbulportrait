@@ -2,7 +2,7 @@
 
 import Script from "next/script";
 
-export function GoogleAnalytics({ gaId, adsId }: { gaId?: string | null, adsId?: string | null }) {
+export function GoogleAnalytics({ gaId, adsId, userId }: { gaId?: string | null, adsId?: string | null, userId?: string | null }) {
   if (!gaId) {
     return null;
   }
@@ -25,7 +25,9 @@ export function GoogleAnalytics({ gaId, adsId }: { gaId?: string | null, adsId?:
             // Set First-Party Proxy globally for all events and configs
             gtag('set', 'transport_url', window.location.origin);
             
-            gtag('config', '${gaId}');
+            ${userId ? `gtag('set', 'user_id', '${userId}');` : ''}
+            
+            gtag('config', '${gaId}'${userId ? `, { 'user_id': '${userId}' }` : ''});
           `,
         }}
       />

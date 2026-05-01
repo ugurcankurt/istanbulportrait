@@ -127,6 +127,8 @@ export default async function LocaleLayout({
   const { settingsService } = await import("@/lib/settings-service");
   const settings = await settingsService.getSettings();
   const tryRate = await getEURtoTRYRate();
+  const { getServerUser } = await import("@/lib/auth-server");
+  const user = await getServerUser();
 
   return (
     <html
@@ -185,7 +187,7 @@ export default async function LocaleLayout({
                     {/* Non-critical Analytics — deferred until first interaction to minimize main-thread work */}
                     <InteractionLoader>
                       <FacebookPixel pixelId={settings.facebook_pixel_id} />
-                      <DeferredAnalytics gaId={settings.google_analytics_id} adsId={settings.google_ads_id} clarityId={settings.clarity_project_id} />
+                      <DeferredAnalytics gaId={settings.google_analytics_id} adsId={settings.google_ads_id} clarityId={settings.clarity_project_id} userId={user?.id} />
                       <ConsentGate consent="accepted_all">
                         <YandexMetrica id={settings.yandex_metrica_id || undefined} />
                       </ConsentGate>
