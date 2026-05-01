@@ -45,7 +45,42 @@ export async function POST(request: NextRequest) {
       throw customerError;
     }
 
-    // 2.b. Insert booking
+    // 2.c. Calculate exact pricing based on time surcharges
+    let totalAmount = 0;
+    const { data: pkgData } = await supabaseAdmin
+      .from("packages")
+      .select("price")
+      .eq("id", productId)
+      .single();
+
+    if (pkgData) {
+      const basePrice = pkgData.price || 0;
+      let slotRetailPrice = basePrice;
+      
+      if (bookingTime) {
+        const slot = bookingTime.substring(0, 5); // "06:00"
+        const { data: surcharges } = await supabaseAdmin
+          .from("time_surcharges")
+          .select("time, surcharge_percentage");
+          
+        if (surcharges && surcharges.length > 0) {
+          const exactMatch = surcharges.find((s: any) => s.time === slot);
+          const genericMatch = surcharges.find((s: any) => s.time === slot.replace(":30", ":00"));
+          const activeSurcharge = exactMatch || genericMatch;
+          
+          if (activeSurcharge) {
+            slotRetailPrice = basePrice * (1 + activeSurcharge.surcharge_percentage / 100);
+          }
+        }
+      }
+      
+      // If the agency sent pricing, we could validate it here. For now, we trust our own DB source of truth.
+      // E.g., if it's 2 people, we multiply by people count if package is per_person. 
+      // OCTO usually sends total items in unitItems array.
+      totalAmount = slotRetailPrice * unitItems.length;
+    }
+
+    // 2.d. Insert booking
     const { data: booking, error } = await supabaseAdmin
       .from("bookings")
       .insert({
@@ -57,7 +92,7 @@ export async function POST(request: NextRequest) {
         booking_time: bookingTime ? bookingTime.substring(0, 5) : null,
         // Automatically confirm B2B bookings because the agency already collected payment
         status: "confirmed", 
-        total_amount: 0, // In B2B, the agency handles the money. 
+        total_amount: totalAmount, // Calculated dynamically from base price + time surcharges
         notes: `OCTO B2B Booking. Ref: ${resellerReference || "None"}`,
         people_count: unitItems.length,
         locale: contact.locales?.[0] || "en",

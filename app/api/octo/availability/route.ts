@@ -24,16 +24,18 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // 1. Get package details (duration)
+    // 1. Get package details (duration & base price)
     const { data: pkgData, error: pkgError } = await supabaseAdmin
       .from("packages")
-      .select("id, slug, duration")
+      .select("id, slug, duration, price")
       .eq("id", productId)
       .single();
 
     if (pkgError || !pkgData) {
       return NextResponse.json({ error: "Not Found", message: "Product not found" }, { status: 404 });
     }
+
+    const basePrice = pkgData.price || 0;
 
     // Parse duration
     const durStr = (pkgData.duration?.en || "").toLowerCase();
@@ -97,6 +99,11 @@ export async function POST(request: NextRequest) {
       .select("date, time")
       .in("date", dates);
 
+    // 5.b Fetch time surcharges for dynamic pricing
+    const { data: surcharges } = await supabaseAdmin
+      .from("time_surcharges")
+      .select("time, surcharge_percentage");
+
     const availableSlots: Availability[] = [];
 
     // 6. Calculate Availability per Date
@@ -156,6 +163,21 @@ export async function POST(request: NextRequest) {
             // Calculate UTC Cutoff (e.g. 24 hours before)
             const cutoffDate = new Date(new Date(startDateTime).getTime() - 24 * 60 * 60 * 1000);
 
+            // Calculate Dynamic Pricing based on Time Surcharges
+            let slotRetailPrice = basePrice;
+            if (surcharges && surcharges.length > 0) {
+              const exactMatch = surcharges.find((s: any) => s.time === slot);
+              const genericMatch = surcharges.find((s: any) => s.time === slot.replace(":30", ":00"));
+              const activeSurcharge = exactMatch || genericMatch;
+              
+              if (activeSurcharge) {
+                slotRetailPrice = basePrice * (1 + activeSurcharge.surcharge_percentage / 100);
+              }
+            }
+
+            const retailCents = Math.round(slotRetailPrice * 100);
+            const netCents = Math.round(slotRetailPrice * 0.9 * 100); // 10% commission
+
             availableSlots.push({
               id: startDateTime,
               localDateTimeStart: startDateTime,
@@ -167,7 +189,15 @@ export async function POST(request: NextRequest) {
               maxUnits: 10,
               utcCutoffAt: cutoffDate.toISOString(),
               available: true,
-              openingHours: []
+              openingHours: [],
+              pricing: {
+                original: retailCents,
+                retail: retailCents,
+                net: netCents,
+                currency: "EUR",
+                currencyPrecision: 2,
+                includedTaxes: []
+              }
             });
           }
         }

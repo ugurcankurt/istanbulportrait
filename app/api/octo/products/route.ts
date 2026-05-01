@@ -75,6 +75,14 @@ export async function GET(request: NextRequest) {
           cancellationCutoff: "24 hours before the activity",
           cancellationCutoffAmount: 24,
           cancellationCutoffUnit: DurationUnit.HOUR,
+          pricingFrom: [{
+            original: Math.round(pkg.price * 100),
+            retail: Math.round(pkg.price * 100),
+            net: Math.round(pkg.price * 0.9 * 100),
+            currency: "EUR",
+            currencyPrecision: 2,
+            includedTaxes: []
+          }],
           requiredContactFields: [
             ContactField.FIRST_NAME, 
             ContactField.LAST_NAME, 
@@ -106,7 +114,15 @@ export async function GET(request: NextRequest) {
                 maxQuantity: 10,
                 paxCount: 1,
                 accompaniedBy: []
-              }
+              },
+              pricingFrom: [{
+                original: Math.round(pkg.price * 100),
+                retail: Math.round(pkg.price * 100),
+                net: Math.round(pkg.price * 0.9 * 100),
+                currency: "EUR",
+                currencyPrecision: 2,
+                includedTaxes: []
+              }]
             }
           ]
         }
