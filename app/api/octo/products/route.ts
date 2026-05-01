@@ -9,7 +9,10 @@ import {
   AvailabilityType,
   DurationUnit,
   ContactField,
-  UnitType
+  UnitType,
+  FeatureType,
+  MediaType,
+  MediaRel
 } from "@octocloud/types";
 
 export async function GET(request: NextRequest) {
@@ -37,12 +40,37 @@ export async function GET(request: NextRequest) {
       deliveryFormats: [DeliveryFormat.PDF_URL, DeliveryFormat.QRCODE],
       deliveryMethods: [DeliveryMethod.VOUCHER],
       redemptionMethod: RedemptionMethod.DIGITAL,
+      
+      // -- OCTO CONTENT CAPABILITY FIELDS --
+      title: pkg.title?.en || "Photography Package",
+      description: pkg.description?.en || "Beautiful photography experience in Istanbul.",
+      shortDescription: pkg.description?.en ? pkg.description.en.substring(0, 150) + "..." : "Photography experience in Istanbul.",
+      durationMinutesFrom: 120, // Defaulting to 2 hours
+      durationMinutesTo: 180,
+      features: pkg.features?.en ? pkg.features.en.map(f => ({
+        type: FeatureType.INCLUSION,
+        description: f,
+        shortDescription: null
+      })) : [],
+      media: pkg.cover_image ? [{
+        url: pkg.cover_image,
+        type: MediaType.IMAGE_JPEG,
+        primary: true,
+        src: pkg.cover_image,
+        rel: MediaRel.COVER,
+        title: pkg.title?.en || "Cover Image",
+        caption: pkg.title?.en || "Cover Image",
+        copyright: "Istanbul Portrait"
+      }] : [],
+      // ------------------------------------
+
       options: [
         {
           id: `opt_${pkg.id}`,
           default: true,
           internalName: "Standard",
           reference: "standard",
+          title: "Standard Shoot", // Added title for content
           availabilityLocalStartTimes: ["10:00", "14:00", "16:00"],
           cancellationCutoff: "24 hours before the activity",
           cancellationCutoffAmount: 24,
