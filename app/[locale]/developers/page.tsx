@@ -152,6 +152,8 @@ export default function DevelopersPage() {
                 </div>
                 <p className="text-slate-600 dark:text-slate-400 mb-6">
                   Returns a list of all active photography packages, including descriptions, inclusions, gallery images, and base pricing details.
+                  <br /><br />
+                  <strong className="text-slate-200">Localization Support:</strong> This endpoint fully supports the BCP 47 standard. You can pass an <code className="bg-slate-800 px-1 rounded text-sky-400">Accept-Language</code> header (e.g., <code>es</code>, <code>ru</code>, <code>tr</code>, <code>ar</code>) to receive localized package titles, descriptions, and features.
                 </p>
                 <div className="bg-slate-950 rounded-xl p-6 border border-slate-800">
                   <div className="text-slate-400 text-xs font-mono mb-2 uppercase tracking-wider">Example Response</div>
