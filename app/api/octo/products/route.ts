@@ -16,6 +16,126 @@ import {
   MediaRel
 } from "@octocloud/types";
 
+// Moved outside GET to be exported and used by [id]/route.ts
+export function mapPackageToOctoProduct(pkg: any, reqLocale: string, dynamicStartTimes: string[]): Product {
+  // Helper to safely get localized text or fallback to English
+  const getText = (field: any) => field?.[reqLocale] || field?.en || "";
+
+  // Parse duration from string (e.g. "2 hours" or "45 mins")
+  const durStr = (getText(pkg.duration)).toLowerCase();
+  let durationMins = 120; // fallback
+  if (durStr.includes("hour") || durStr.includes("saat") || durStr.includes("час") || durStr.includes("hora")) {
+    const h = parseFloat(durStr);
+    if (!isNaN(h)) durationMins = h * 60;
+  } else if (durStr.includes("min") || durStr.includes("dak")) {
+    const m = parseInt(durStr);
+    if (!isNaN(m)) durationMins = m;
+  }
+  
+  const pkgTitle = getText(pkg.title) || "Photography Package";
+  const pkgDesc = getText(pkg.description) || "Beautiful photography experience in Istanbul.";
+  
+  const featureList = (pkg.features as any)?.[reqLocale] || (pkg.features as any)?.en || [];
+
+  return {
+    id: pkg.id,
+    internalName: pkg.title?.en || "Photography Package", // Internal name usually stays en
+    reference: pkg.slug,
+    locale: reqLocale,
+    timeZone: "Europe/Istanbul",
+    allowFreesale: false,
+    instantConfirmation: true,
+    instantDelivery: true,
+    availabilityRequired: true,
+    availabilityType: AvailabilityType.START_TIME,
+    deliveryFormats: [DeliveryFormat.PDF_URL, DeliveryFormat.QRCODE],
+    deliveryMethods: [DeliveryMethod.VOUCHER],
+    redemptionMethod: RedemptionMethod.DIGITAL,
+    
+    // -- OCTO CONTENT CAPABILITY FIELDS --
+    title: pkgTitle,
+    description: pkgDesc,
+    shortDescription: pkgDesc.substring(0, 150) + "...",
+    durationMinutesFrom: durationMins, 
+    durationMinutesTo: durationMins,
+    features: featureList.map((f: string) => ({
+      type: FeatureType.INCLUSION,
+      description: f,
+      shortDescription: null
+    })),
+    media: pkg.cover_image ? [{
+      type: MediaType.IMAGE_JPEG,
+      src: pkg.cover_image,
+      rel: MediaRel.COVER,
+      title: pkgTitle,
+      caption: pkgTitle,
+      copyright: "Istanbul Portrait"
+    }] : [],
+    // ------------------------------------
+
+    options: [
+      {
+        id: `opt_${pkg.id}`,
+        default: true,
+        internalName: "Standard",
+        reference: "standard",
+        title: "Standard Shoot", // Or getText if options had translations
+        availabilityLocalStartTimes: dynamicStartTimes,
+        cancellationCutoff: "24 hours before the activity",
+        cancellationCutoffAmount: 24,
+        cancellationCutoffUnit: DurationUnit.HOUR,
+        pricingFrom: [{
+          original: Math.round(pkg.price * 100),
+          retail: Math.round(pkg.price * 100),
+          net: Math.round(pkg.price * 0.9 * 100),
+          currency: "EUR",
+          currencyPrecision: 2,
+          includedTaxes: []
+        }],
+        requiredContactFields: [
+          ContactField.FIRST_NAME, 
+          ContactField.LAST_NAME, 
+          ContactField.EMAIL_ADDRESS, 
+          ContactField.PHONE_NUMBER
+        ],
+        restrictions: {
+          minUnits: 1,
+          maxUnits: 10
+        },
+        units: [
+          {
+            id: `unit_${pkg.id}_adult`,
+            internalName: "Adult",
+            reference: "adult",
+            type: UnitType.ADULT,
+            requiredContactFields: [
+              ContactField.FIRST_NAME, 
+              ContactField.LAST_NAME
+            ],
+            restrictions: {
+              minAge: 18,
+              maxAge: 99,
+              idRequired: false,
+              minQuantity: 1,
+              maxQuantity: 10,
+              paxCount: 1,
+              accompaniedBy: []
+            },
+            pricingFrom: [{
+              original: Math.round(pkg.price * 100),
+              retail: Math.round(pkg.price * 100),
+              net: Math.round(pkg.price * 0.9 * 100),
+              currency: "EUR",
+              currencyPrecision: 2,
+              includedTaxes: []
+            }]
+          }
+        ]
+      }
+    ]
+  };
+}
+
 export async function GET(request: NextRequest) {
   // 1. Authenticate Request
   if (!requireOctoAuth(request)) {
@@ -52,129 +172,7 @@ export async function GET(request: NextRequest) {
     }
 
     // 4. Map to OCTO Product Schema
-    const octoProducts: Product[] = packages.map((pkg) => {
-      // Helper to safely get localized text or fallback to English
-      const getText = (field: any) => field?.[reqLocale] || field?.en || "";
-
-      // Parse duration from string (e.g. "2 hours" or "45 mins")
-      const durStr = (getText(pkg.duration)).toLowerCase();
-      let durationMins = 120; // fallback
-      if (durStr.includes("hour") || durStr.includes("saat") || durStr.includes("час") || durStr.includes("hora")) {
-        const h = parseFloat(durStr);
-        if (!isNaN(h)) durationMins = h * 60;
-      } else if (durStr.includes("min") || durStr.includes("dak")) {
-        const m = parseInt(durStr);
-        if (!isNaN(m)) durationMins = m;
-      }
-      
-      const pkgTitle = getText(pkg.title) || "Photography Package";
-      const pkgDesc = getText(pkg.description) || "Beautiful photography experience in Istanbul.";
-      
-      const featureList = (pkg.features as any)?.[reqLocale] || (pkg.features as any)?.en || [];
-
-      return {
-        id: pkg.id,
-        internalName: pkg.title?.en || "Photography Package", // Internal name usually stays en
-        reference: pkg.slug,
-        locale: reqLocale,
-        timeZone: "Europe/Istanbul",
-        allowFreesale: false,
-        instantConfirmation: true,
-        instantDelivery: true,
-        availabilityRequired: true,
-        availabilityType: AvailabilityType.START_TIME,
-        deliveryFormats: [DeliveryFormat.PDF_URL, DeliveryFormat.QRCODE],
-        deliveryMethods: [DeliveryMethod.VOUCHER],
-        redemptionMethod: RedemptionMethod.DIGITAL,
-        
-        // -- OCTO CONTENT CAPABILITY FIELDS --
-        title: pkgTitle,
-        description: pkgDesc,
-        shortDescription: pkgDesc.substring(0, 150) + "...",
-        durationMinutesFrom: durationMins, 
-        durationMinutesTo: durationMins,
-        features: featureList.map((f: string) => ({
-          type: FeatureType.INCLUSION,
-          description: f,
-          shortDescription: null
-        })),
-        media: pkg.cover_image ? [{
-          url: pkg.cover_image,
-          type: MediaType.IMAGE_JPEG,
-          primary: true,
-          src: pkg.cover_image,
-          rel: MediaRel.COVER,
-          title: pkgTitle,
-          caption: pkgTitle,
-          copyright: "Istanbul Portrait"
-        }] : [],
-        // ------------------------------------
-
-        options: [
-          {
-            id: `opt_${pkg.id}`,
-            default: true,
-            internalName: "Standard",
-            reference: "standard",
-            title: "Standard Shoot", // Or getText if options had translations
-            availabilityLocalStartTimes: dynamicStartTimes,
-            cancellationCutoff: "24 hours before the activity",
-            cancellationCutoffAmount: 24,
-            cancellationCutoffUnit: DurationUnit.HOUR,
-            pricingFrom: [{
-              original: Math.round(pkg.price * 100),
-              retail: Math.round(pkg.price * 100),
-              net: Math.round(pkg.price * 0.9 * 100),
-              currency: "EUR",
-              currencyPrecision: 2,
-              includedTaxes: []
-            }],
-            requiredContactFields: [
-              ContactField.FIRST_NAME, 
-              ContactField.LAST_NAME, 
-              ContactField.EMAIL_ADDRESS, 
-              ContactField.PHONE_NUMBER
-            ],
-            restrictions: {
-              minPaxCount: 1,
-              maxPaxCount: 10,
-              hasAdultRequirement: false,
-              minUnits: 1,
-              maxUnits: 10
-            },
-            units: [
-              {
-                id: `unit_${pkg.id}_adult`,
-                internalName: "Adult",
-                reference: "adult",
-                type: UnitType.ADULT,
-                requiredContactFields: [
-                  ContactField.FIRST_NAME, 
-                  ContactField.LAST_NAME
-                ],
-                restrictions: {
-                  minAge: 18,
-                  maxAge: 99,
-                  idRequired: false,
-                  minQuantity: 1,
-                  maxQuantity: 10,
-                  paxCount: 1,
-                  accompaniedBy: []
-                },
-                pricingFrom: [{
-                  original: Math.round(pkg.price * 100),
-                  retail: Math.round(pkg.price * 100),
-                  net: Math.round(pkg.price * 0.9 * 100),
-                  currency: "EUR",
-                  currencyPrecision: 2,
-                  includedTaxes: []
-                }]
-              }
-            ]
-          }
-        ]
-      };
-    });
+    const octoProducts: Product[] = packages.map((pkg) => mapPackageToOctoProduct(pkg, reqLocale, dynamicStartTimes));
 
     // We must return the response with Content-Language header according to BCP47
     return NextResponse.json(octoProducts, {
