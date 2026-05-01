@@ -6,7 +6,7 @@ import { mapPackageToOctoProduct } from "../route";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  props: { params: Promise<{ id: string }> }
 ) {
   // 1. Authenticate Request
   if (!requireOctoAuth(request)) {
@@ -14,6 +14,8 @@ export async function GET(
   }
 
   try {
+    const params = await props.params;
+    
     // 2. Fetch the specific package and availability settings
     const [pkg, settings] = await Promise.all([
       packagesService.getPackageById(params.id),
@@ -64,7 +66,7 @@ export async function GET(
     });
 
   } catch (error) {
-    console.error(`OCTO API Error - Get Product ${params.id}:`, error);
+    console.error(`OCTO API Error - Get Product:`, error);
     return NextResponse.json(
       { error: "Internal Server Error", message: "Failed to fetch product" },
       { status: 500 }
