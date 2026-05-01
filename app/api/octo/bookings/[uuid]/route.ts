@@ -38,31 +38,47 @@ export async function GET(
     if (b.status === "confirmed" || b.status === "completed") status = BookingStatus.CONFIRMED;
     if (b.status === "cancelled" || b.status === "failed") status = BookingStatus.CANCELLED;
 
-    const count = b.people_count || 1;
-    const unitItems = Array.from({ length: count }).map((_, i) => ({
-      uuid: `${b.id.substring(0, 8)}-unit-${i}`,
-      unitId: `unit_${b.package_id}_adult`,
-      resellerReference: null,
-      supplierReference: null,
-      status: status,
-      utcRedeemedAt: null,
-      contact: {
-        fullName: b.user_name || "Unknown",
-        firstName: null,
-        lastName: null,
-        emailAddress: b.user_email || null,
-        phoneNumber: b.user_phone || null,
-        locales: b.locale ? [b.locale] : ["en"],
-        country: null,
-        notes: null,
-        postalCode: null
-      },
-      ticket: null
-    }));
+    let unitItems: any[] = [];
+    let finalUuid = uuid;
+    
+    if (b.notes && b.notes.includes("---OCTO_META---")) {
+      try {
+        const metaStr = b.notes.split("---OCTO_META---\n")[1];
+        const meta = JSON.parse(metaStr);
+        if (meta.unitItems && Array.isArray(meta.unitItems)) unitItems = meta.unitItems;
+        if (meta.uuid) finalUuid = meta.uuid;
+      } catch (e) {}
+    }
+
+    if (unitItems.length === 0) {
+      const count = b.people_count || 1;
+      unitItems = Array.from({ length: count }).map((_, i) => ({
+        uuid: `${b.id.substring(0, 8)}-unit-${i}`,
+        unitId: `unit_${b.package_id}_adult`,
+        resellerReference: null,
+        supplierReference: null,
+        status: status,
+        utcRedeemedAt: null,
+        contact: {
+          fullName: b.user_name || "Unknown",
+          firstName: null,
+          lastName: null,
+          emailAddress: b.user_email || null,
+          phoneNumber: b.user_phone || null,
+          locales: b.locale ? [b.locale] : ["en"],
+          country: null,
+          notes: null,
+          postalCode: null
+        },
+        ticket: null
+      }));
+    } else {
+      unitItems = unitItems.map(item => ({ ...item, status }));
+    }
 
     const octoBooking: Booking = {
       id: b.id,
-      uuid: b.id,
+      uuid: finalUuid,
       testMode: false,
       resellerReference: null,
       supplierReference: b.id,
@@ -73,7 +89,7 @@ export async function GET(
       utcRedeemedAt: null,
       utcConfirmedAt: status === BookingStatus.CONFIRMED ? b.created_at : null,
       productId: b.package_id || "unknown",
-      optionId: "standard",
+      optionId: `opt_${b.package_id || "unknown"}`,
       cancellable: true,
       cancellation: status === BookingStatus.CANCELLED ? {
         refund: "FULL" as any,
@@ -94,7 +110,7 @@ export async function GET(
         notes: null,
         postalCode: null
       },
-      notes: b.notes || null,
+      notes: b.notes ? b.notes.split("\n---OCTO_META---")[0] : null,
       deliveryMethods: [DeliveryMethod.VOUCHER],
       voucher: null,
       unitItems: unitItems
@@ -147,21 +163,40 @@ export async function PATCH(
     }
 
     // Process update
+    let finalUuid = b.id;
+    let currentUnitItems: any[] = [];
+    let cleanNotes = b.notes || "";
+    
+    if (b.notes && b.notes.includes("---OCTO_META---")) {
+      cleanNotes = b.notes.split("\n---OCTO_META---")[0];
+      try {
+        const metaStr = b.notes.split("---OCTO_META---\n")[1];
+        const meta = JSON.parse(metaStr);
+        if (meta.unitItems && Array.isArray(meta.unitItems)) currentUnitItems = meta.unitItems;
+        if (meta.uuid) finalUuid = meta.uuid;
+      } catch (e) {}
+    }
+
     const updates: any = {};
-    if (body.notes !== undefined) updates.notes = body.notes;
+    if (body.notes !== undefined) cleanNotes = body.notes;
+    
     if (body.contact) {
       if (body.contact.fullName) updates.user_name = body.contact.fullName;
       if (body.contact.emailAddress) updates.user_email = body.contact.emailAddress;
       if (body.contact.phoneNumber) updates.user_phone = body.contact.phoneNumber;
       if (body.contact.locales && body.contact.locales.length > 0) updates.locale = body.contact.locales[0];
     }
+    
     if (body.unitItems && Array.isArray(body.unitItems)) {
       updates.people_count = body.unitItems.length;
+      currentUnitItems = body.unitItems;
     }
 
-    if (Object.keys(updates).length > 0) {
-      await supabaseAdmin.from("bookings").update(updates).eq("id", b.id);
-    }
+    // Always re-save meta
+    const newMeta = { uuid: finalUuid, unitItems: currentUnitItems };
+    updates.notes = `${cleanNotes}\n---OCTO_META---\n${JSON.stringify(newMeta)}`;
+
+    await supabaseAdmin.from("bookings").update(updates).eq("id", b.id);
 
     // Re-fetch or simulate updated object
     const updatedB = { ...b, ...updates };
@@ -170,31 +205,36 @@ export async function PATCH(
     if (updatedB.status === "confirmed" || updatedB.status === "completed") status = BookingStatus.CONFIRMED;
     if (updatedB.status === "cancelled" || updatedB.status === "failed") status = BookingStatus.CANCELLED;
 
-    const count = updatedB.people_count || 1;
-    const unitItems = Array.from({ length: count }).map((_, i) => ({
-      uuid: `${updatedB.id.substring(0, 8)}-unit-${i}`,
-      unitId: `unit_${updatedB.package_id}_adult`,
-      resellerReference: null,
-      supplierReference: null,
-      status: status,
-      utcRedeemedAt: null,
-      contact: {
-        fullName: updatedB.user_name || "Unknown",
-        firstName: null,
-        lastName: null,
-        emailAddress: updatedB.user_email || null,
-        phoneNumber: updatedB.user_phone || null,
-        locales: updatedB.locale ? [updatedB.locale] : ["en"],
-        country: null,
-        notes: null,
-        postalCode: null
-      },
-      ticket: null
-    }));
+    let unitItems = currentUnitItems;
+    if (unitItems.length === 0) {
+      const count = updatedB.people_count || 1;
+      unitItems = Array.from({ length: count }).map((_, i) => ({
+        uuid: `${updatedB.id.substring(0, 8)}-unit-${i}`,
+        unitId: `unit_${updatedB.package_id}_adult`,
+        resellerReference: null,
+        supplierReference: null,
+        status: status,
+        utcRedeemedAt: null,
+        contact: {
+          fullName: updatedB.user_name || "Unknown",
+          firstName: null,
+          lastName: null,
+          emailAddress: updatedB.user_email || null,
+          phoneNumber: updatedB.user_phone || null,
+          locales: updatedB.locale ? [updatedB.locale] : ["en"],
+          country: null,
+          notes: null,
+          postalCode: null
+        },
+        ticket: null
+      }));
+    } else {
+      unitItems = unitItems.map(item => ({ ...item, status }));
+    }
 
     const octoBooking: Booking = {
       id: updatedB.id,
-      uuid: updatedB.id,
+      uuid: finalUuid,
       testMode: false,
       resellerReference: body.resellerReference || null,
       supplierReference: updatedB.id,
@@ -205,7 +245,7 @@ export async function PATCH(
       utcRedeemedAt: null,
       utcConfirmedAt: status === BookingStatus.CONFIRMED ? updatedB.created_at : null,
       productId: updatedB.package_id || "unknown",
-      optionId: body.optionId || "standard",
+      optionId: body.optionId || `opt_${updatedB.package_id || "unknown"}`,
       cancellable: true,
       cancellation: status === BookingStatus.CANCELLED ? {
         refund: "FULL" as any,
@@ -226,7 +266,7 @@ export async function PATCH(
         notes: null,
         postalCode: null
       },
-      notes: updatedB.notes || null,
+      notes: cleanNotes,
       deliveryMethods: [DeliveryMethod.VOUCHER],
       voucher: null,
       unitItems: unitItems

@@ -56,32 +56,48 @@ export async function POST(
       octoStatus = BookingStatus.CANCELLED;
     }
 
-    const count = booking.people_count || 1;
-    const unitItems = Array.from({ length: count }).map((_, i) => ({
-      uuid: `${booking.id.substring(0, 8)}-unit-${i}`,
-      unitId: `unit_${booking.package_id}_adult`,
-      resellerReference: null,
-      supplierReference: null,
-      status: octoStatus,
-      utcRedeemedAt: null,
-      contact: {
-        fullName: booking.user_name || "Unknown",
-        firstName: null,
-        lastName: null,
-        emailAddress: booking.user_email || null,
-        phoneNumber: booking.user_phone || null,
-        locales: booking.locale ? [booking.locale] : ["en"],
-        country: null,
-        notes: null,
-        postalCode: null
-      },
-      ticket: null
-    }));
+    let unitItems: any[] = [];
+    let finalUuid = uuid;
+    
+    if (booking.notes && booking.notes.includes("---OCTO_META---")) {
+      try {
+        const metaStr = booking.notes.split("---OCTO_META---\n")[1];
+        const meta = JSON.parse(metaStr);
+        if (meta.unitItems && Array.isArray(meta.unitItems)) unitItems = meta.unitItems;
+        if (meta.uuid) finalUuid = meta.uuid;
+      } catch (e) {}
+    }
+
+    if (unitItems.length === 0) {
+      const count = booking.people_count || 1;
+      unitItems = Array.from({ length: count }).map((_, i) => ({
+        uuid: `${booking.id.substring(0, 8)}-unit-${i}`,
+        unitId: `unit_${booking.package_id}_adult`,
+        resellerReference: null,
+        supplierReference: null,
+        status: octoStatus,
+        utcRedeemedAt: null,
+        contact: {
+          fullName: booking.user_name || "Unknown",
+          firstName: null,
+          lastName: null,
+          emailAddress: booking.user_email || null,
+          phoneNumber: booking.user_phone || null,
+          locales: booking.locale ? [booking.locale] : ["en"],
+          country: null,
+          notes: null,
+          postalCode: null
+        },
+        ticket: null
+      }));
+    } else {
+      unitItems = unitItems.map(item => ({ ...item, status: octoStatus }));
+    }
 
     // 4. Construct response
     const octoBooking: Booking = {
       id: booking.id,
-      uuid: uuid,
+      uuid: finalUuid,
       testMode: false,
       resellerReference: "RES-" + uuid.substring(0, 5),
       supplierReference: booking.id,
@@ -92,7 +108,7 @@ export async function POST(
       utcRedeemedAt: null,
       utcConfirmedAt: octoStatus === BookingStatus.CONFIRMED ? (booking.created_at || new Date().toISOString()) : null,
       productId: booking.package_id || "unknown",
-      optionId: "standard",
+      optionId: `opt_${booking.package_id || "unknown"}`,
       cancellable: true,
       cancellation: null,
       freesale: false,
@@ -109,7 +125,7 @@ export async function POST(
         notes: null,
         postalCode: null
       },
-      notes: booking.notes || null,
+      notes: booking.notes ? booking.notes.split("\n---OCTO_META---")[0] : null,
       deliveryMethods: [DeliveryMethod.VOUCHER],
       voucher: null,
       unitItems: unitItems

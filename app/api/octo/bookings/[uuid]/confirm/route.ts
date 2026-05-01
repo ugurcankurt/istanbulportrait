@@ -40,6 +40,20 @@ export async function POST(
       body = await request.json();
     } catch(e) {}
 
+    let finalUuid = booking.id;
+    let currentUnitItems: any[] = [];
+    let cleanNotes = booking.notes || "";
+    
+    if (booking.notes && booking.notes.includes("---OCTO_META---")) {
+      cleanNotes = booking.notes.split("\n---OCTO_META---")[0];
+      try {
+        const metaStr = booking.notes.split("---OCTO_META---\n")[1];
+        const meta = JSON.parse(metaStr);
+        if (meta.unitItems && Array.isArray(meta.unitItems)) currentUnitItems = meta.unitItems;
+        if (meta.uuid) finalUuid = meta.uuid;
+      } catch (e) {}
+    }
+
     // Process confirm updates if contact provided
     const updates: any = { status: "confirmed" };
     if (body.contact) {
@@ -49,8 +63,16 @@ export async function POST(
       if (body.contact.locales && body.contact.locales.length > 0) updates.locale = body.contact.locales[0];
     }
     if (body.resellerReference) {
-      updates.notes = (booking.notes ? booking.notes + " | " : "") + `Reseller Ref: ${body.resellerReference}`;
+      cleanNotes = (cleanNotes ? cleanNotes + " | " : "") + `Reseller Ref: ${body.resellerReference}`;
     }
+    
+    if (body.unitItems && Array.isArray(body.unitItems)) {
+      updates.people_count = body.unitItems.length;
+      currentUnitItems = body.unitItems;
+    }
+
+    const newMeta = { uuid: finalUuid, unitItems: currentUnitItems };
+    updates.notes = `${cleanNotes}\n---OCTO_META---\n${JSON.stringify(newMeta)}`;
 
     await supabaseAdmin
       .from("bookings")
@@ -60,32 +82,37 @@ export async function POST(
     const updatedB = { ...booking, ...updates };
     const status = BookingStatus.CONFIRMED;
 
-    const count = updatedB.people_count || 1;
-    const unitItems = Array.from({ length: count }).map((_, i) => ({
-      uuid: `${updatedB.id.substring(0, 8)}-unit-${i}`,
-      unitId: `unit_${updatedB.package_id}_adult`,
-      resellerReference: null,
-      supplierReference: null,
-      status: status,
-      utcRedeemedAt: null,
-      contact: {
-        fullName: updatedB.user_name || "Unknown",
-        firstName: null,
-        lastName: null,
-        emailAddress: updatedB.user_email || null,
-        phoneNumber: updatedB.user_phone || null,
-        locales: updatedB.locale ? [updatedB.locale] : ["en"],
-        country: null,
-        notes: null,
-        postalCode: null
-      },
-      ticket: null
-    }));
+    let unitItems = currentUnitItems;
+    if (unitItems.length === 0) {
+      const count = updatedB.people_count || 1;
+      unitItems = Array.from({ length: count }).map((_, i) => ({
+        uuid: `${updatedB.id.substring(0, 8)}-unit-${i}`,
+        unitId: `unit_${updatedB.package_id}_adult`,
+        resellerReference: null,
+        supplierReference: null,
+        status: status,
+        utcRedeemedAt: null,
+        contact: {
+          fullName: updatedB.user_name || "Unknown",
+          firstName: null,
+          lastName: null,
+          emailAddress: updatedB.user_email || null,
+          phoneNumber: updatedB.user_phone || null,
+          locales: updatedB.locale ? [updatedB.locale] : ["en"],
+          country: null,
+          notes: null,
+          postalCode: null
+        },
+        ticket: null
+      }));
+    } else {
+      unitItems = unitItems.map(item => ({ ...item, status }));
+    }
 
     // 3. Construct response
     const octoBooking: Booking = {
       id: updatedB.id,
-      uuid: updatedB.id,
+      uuid: finalUuid,
       testMode: false,
       resellerReference: body.resellerReference || null,
       supplierReference: updatedB.id,
@@ -96,7 +123,7 @@ export async function POST(
       utcRedeemedAt: null,
       utcConfirmedAt: updatedB.created_at || new Date().toISOString(),
       productId: updatedB.package_id || "unknown",
-      optionId: "standard",
+      optionId: `opt_${updatedB.package_id || "unknown"}`,
       cancellable: true,
       cancellation: null,
       freesale: false,

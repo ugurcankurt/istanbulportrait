@@ -24,9 +24,7 @@ export async function POST(request: NextRequest) {
     } = body;
 
     // 1.a. OCTO Core Validation
-    if (!uuid) {
-      return NextResponse.json({ error: "BAD_REQUEST", errorMessage: "Missing required field: uuid" }, { status: 400 });
-    }
+    const finalUuid = uuid || crypto.randomUUID();
 
     if (!productId) {
       return NextResponse.json({ error: "INVALID_PRODUCT_ID", errorMessage: "Missing productId", productId: "" }, { status: 400 });
@@ -125,6 +123,7 @@ export async function POST(request: NextRequest) {
     }
 
     // 2.d. Insert booking
+    const internalPayload = { unitItems, uuid: finalUuid };
     const { data: booking, error } = await supabaseAdmin
       .from("bookings")
       .insert({
@@ -137,7 +136,7 @@ export async function POST(request: NextRequest) {
         // All OCTO reservations start as ON_HOLD (pending) until confirmed via the /confirm endpoint
         status: "pending", 
         total_amount: totalAmount, // Calculated dynamically from base price + time surcharges
-        notes: `OCTO B2B Booking. Ref: ${resellerReference || "None"}. Type: ${authType}`,
+        notes: `OCTO B2B Booking. Ref: ${resellerReference || "None"}. Type: ${authType}\n---OCTO_META---\n${JSON.stringify(internalPayload)}`,
         people_count: unitItems.length,
         locale: contact.locales?.[0] || "en",
       })
@@ -153,7 +152,7 @@ export async function POST(request: NextRequest) {
     
     const octoBooking: Booking = {
       id: booking.id,
-      uuid: uuid,
+      uuid: finalUuid,
       testMode: false,
       resellerReference: resellerReference || null,
       supplierReference: booking.id,
@@ -164,7 +163,7 @@ export async function POST(request: NextRequest) {
       utcRedeemedAt: null,
       utcConfirmedAt: null,
       productId: productId,
-      optionId: optionId || "standard",
+      optionId: optionId || `opt_${productId}`,
       cancellable: true,
       cancellation: null,
       freesale: false,
@@ -225,6 +224,15 @@ export async function GET(request: NextRequest) {
   const resellerReference = searchParams.get("resellerReference");
   const supplierReference = searchParams.get("supplierReference");
   const productId = searchParams.get("productId");
+  const localDateStart = searchParams.get("localDateStart");
+  const localDateEnd = searchParams.get("localDateEnd");
+  
+  if (localDateStart && isNaN(Date.parse(localDateStart))) {
+    return NextResponse.json({ error: "BAD_REQUEST", errorMessage: "Invalid localDateStart" }, { status: 400 });
+  }
+  if (localDateEnd && isNaN(Date.parse(localDateEnd))) {
+    return NextResponse.json({ error: "BAD_REQUEST", errorMessage: "Invalid localDateEnd" }, { status: 400 });
+  }
   
   try {
     let query = supabaseAdmin
@@ -257,32 +265,48 @@ export async function GET(request: NextRequest) {
       if (b.status === "confirmed" || b.status === "completed") status = BookingStatus.CONFIRMED;
       if (b.status === "cancelled" || b.status === "failed") status = BookingStatus.CANCELLED;
 
-      // Deterministic units based on people_count
-      const count = b.people_count || 1;
-      const unitItems = Array.from({ length: count }).map((_, i) => ({
-        uuid: `${b.id.substring(0, 8)}-unit-${i}`,
-        unitId: `unit_${b.package_id}_adult`,
-        resellerReference: null,
-        supplierReference: null,
-        status: status,
-        utcRedeemedAt: null,
-        contact: {
-          fullName: b.user_name || "Unknown",
-          firstName: null,
-          lastName: null,
-          emailAddress: b.user_email || null,
-          phoneNumber: b.user_phone || null,
-          locales: ["en"],
-          country: null,
-          notes: null,
-          postalCode: null
-        },
-        ticket: null
-      }));
+      let unitItems: any[] = [];
+      let finalUuid = b.id;
+      
+      if (b.notes && b.notes.includes("---OCTO_META---")) {
+        try {
+          const metaStr = b.notes.split("---OCTO_META---\n")[1];
+          const meta = JSON.parse(metaStr);
+          if (meta.unitItems && Array.isArray(meta.unitItems)) unitItems = meta.unitItems;
+          if (meta.uuid) finalUuid = meta.uuid;
+        } catch (e) {}
+      }
+
+      if (unitItems.length === 0) {
+        const count = b.people_count || 1;
+        unitItems = Array.from({ length: count }).map((_, i) => ({
+          uuid: `${b.id.substring(0, 8)}-unit-${i}`,
+          unitId: `unit_${b.package_id}_adult`,
+          resellerReference: null,
+          supplierReference: null,
+          status: status,
+          utcRedeemedAt: null,
+          contact: {
+            fullName: b.user_name || "Unknown",
+            firstName: null,
+            lastName: null,
+            emailAddress: b.user_email || null,
+            phoneNumber: b.user_phone || null,
+            locales: ["en"],
+            country: null,
+            notes: null,
+            postalCode: null
+          },
+          ticket: null
+        }));
+      } else {
+        // Sync status for unitItems
+        unitItems = unitItems.map(item => ({ ...item, status }));
+      }
 
       return {
         id: b.id,
-        uuid: b.id,
+        uuid: finalUuid,
         testMode: false,
         resellerReference: null,
         supplierReference: b.id,
@@ -293,7 +317,7 @@ export async function GET(request: NextRequest) {
         utcRedeemedAt: null,
         utcConfirmedAt: status === BookingStatus.CONFIRMED ? b.created_at : null,
         productId: b.package_id || "unknown",
-        optionId: "standard",
+        optionId: `opt_${b.package_id || "unknown"}`,
         cancellable: true,
         cancellation: status === BookingStatus.CANCELLED ? {
           refund: "FULL" as any,
