@@ -40,15 +40,15 @@ export function mapBookingToOcto(b: any, requestUuid?: string): Booking {
       status: status,
       utcRedeemedAt: null,
       contact: {
-        fullName: b.user_name || null,
-        firstName: null,
-        lastName: null,
-        emailAddress: b.user_email || null,
-        phoneNumber: b.user_phone || null,
+        fullName: b.user_name || undefined,
+        firstName: undefined,
+        lastName: undefined,
+        emailAddress: b.user_email || undefined,
+        phoneNumber: b.user_phone || undefined,
         locales: b.locale ? [b.locale] : ["en"],
-        country: null,
-        notes: null,
-        postalCode: null
+        country: undefined,
+        notes: undefined,
+        postalCode: undefined
       },
       ticket: null
     }));
@@ -62,15 +62,15 @@ export function mapBookingToOcto(b: any, requestUuid?: string): Booking {
       status: status,
       utcRedeemedAt: null,
       contact: {
-        fullName: item.contact?.fullName || b.user_name || null,
-        firstName: item.contact?.firstName || null,
-        lastName: item.contact?.lastName || null,
-        emailAddress: item.contact?.emailAddress || b.user_email || null,
-        phoneNumber: item.contact?.phoneNumber || b.user_phone || null,
+        fullName: item.contact?.fullName || b.user_name || undefined,
+        firstName: item.contact?.firstName || undefined,
+        lastName: item.contact?.lastName || undefined,
+        emailAddress: item.contact?.emailAddress || b.user_email || undefined,
+        phoneNumber: item.contact?.phoneNumber || b.user_phone || undefined,
         locales: item.contact?.locales || (b.locale ? [b.locale] : ["en"]),
-        country: item.contact?.country || null,
-        notes: item.contact?.notes || null,
-        postalCode: item.contact?.postalCode || null
+        country: item.contact?.country || undefined,
+        notes: item.contact?.notes || undefined,
+        postalCode: item.contact?.postalCode || undefined
       },
       ticket: null
     }));
@@ -128,15 +128,15 @@ export function mapBookingToOcto(b: any, requestUuid?: string): Booking {
     availabilityId: availabilityIdStr,
     availability: availabilityObj,
     contact: {
-      fullName: b.user_name || null,
-      firstName: null,
-      lastName: null,
-      emailAddress: b.user_email || null,
-      phoneNumber: b.user_phone || null,
+      fullName: b.user_name || undefined,
+      firstName: b.octo_data?.contact?.firstName || undefined,
+      lastName: b.octo_data?.contact?.lastName || undefined,
+      emailAddress: b.user_email || undefined,
+      phoneNumber: b.user_phone || undefined,
       locales: b.locale ? [b.locale] : ["en"],
-      country: null,
-      notes: null,
-      postalCode: null
+      country: b.octo_data?.contact?.country || undefined,
+      notes: b.octo_data?.contact?.notes || undefined,
+      postalCode: b.octo_data?.contact?.postalCode || undefined
     },
     notes: b.notes || null,
     deliveryMethods: [DeliveryMethod.VOUCHER],

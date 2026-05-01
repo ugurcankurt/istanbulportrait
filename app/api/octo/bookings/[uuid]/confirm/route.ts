@@ -72,11 +72,25 @@ export async function POST(
     }
     
     if (body.unitItems && Array.isArray(body.unitItems)) {
+      // Validate unit IDs
+      for (const item of body.unitItems) {
+        if (item.unitId && item.unitId !== `unit_${booking.package_id}_adult`) {
+          return NextResponse.json(
+            { error: "INVALID_UNIT_ID", errorMessage: "Unit ID not found or invalid", unitId: item.unitId },
+            { status: 400 }
+          );
+        }
+      }
       updates.people_count = body.unitItems.length;
       currentUnitItems = body.unitItems;
     }
 
-    const newMeta = { uuid: finalUuid, unitItems: currentUnitItems };
+    const newMeta = { 
+      uuid: finalUuid, 
+      unitItems: currentUnitItems,
+      resellerReference: body.resellerReference || booking.octo_data?.resellerReference || null,
+      contact: body.contact || booking.octo_data?.contact || null
+    };
     updates.octo_uuid = finalUuid;
     updates.octo_data = newMeta;
     updates.notes = cleanNotes;
