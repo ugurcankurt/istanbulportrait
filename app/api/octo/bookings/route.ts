@@ -53,13 +53,9 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "INVALID_AVAILABILITY_ID", errorMessage: "Invalid availabilityId format", availabilityId: availabilityId || "" }, { status: 400 });
     }
 
-    // Verify that the requested time slot actually exists in our system
     const slotTimeStr = bookingTime.substring(0, 5);
-    const { data: surcharges } = await supabaseAdmin
-      .from("time_surcharges")
-      .select("time, surcharge_percentage");
-      
-    if (!surcharges || !surcharges.some((s: any) => s.time.substring(0, 5) === slotTimeStr)) {
+    const h = parseInt(slotTimeStr.substring(0, 2));
+    if (isNaN(h) || h < 6 || h > 22) {
       return NextResponse.json({ error: "INVALID_AVAILABILITY_ID", errorMessage: "Availability ID (slot) does not exist", availabilityId: availabilityId || "" }, { status: 400 });
     }
 
