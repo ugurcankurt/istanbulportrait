@@ -55,6 +55,16 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "INVALID_AVAILABILITY_ID", errorMessage: "Invalid availabilityId format", availabilityId: availabilityId || "" }, { status: 400 });
     }
 
+    // Verify that the requested time slot actually exists in our system
+    const slotTimeStr = bookingTime.substring(0, 5);
+    const { data: surcharges } = await supabaseAdmin
+      .from("time_surcharges")
+      .select("time, surcharge_percentage");
+      
+    if (!surcharges || !surcharges.some(s => s.time.substring(0, 5) === slotTimeStr)) {
+      return NextResponse.json({ error: "INVALID_AVAILABILITY_ID", errorMessage: "Availability ID (slot) does not exist", availabilityId: availabilityId || "" }, { status: 400 });
+    }
+
     if (!unitItems || !Array.isArray(unitItems) || unitItems.length === 0) {
       return NextResponse.json({ error: "UNPROCESSABLE_ENTITY", errorMessage: "Missing or empty unitItems" }, { status: 400 });
     }
