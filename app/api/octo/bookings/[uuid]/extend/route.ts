@@ -56,6 +56,28 @@ export async function POST(
       octoStatus = BookingStatus.CANCELLED;
     }
 
+    const count = booking.people_count || 1;
+    const unitItems = Array.from({ length: count }).map((_, i) => ({
+      uuid: `${booking.id.substring(0, 8)}-unit-${i}`,
+      unitId: `unit_${booking.package_id}_adult`,
+      resellerReference: null,
+      supplierReference: null,
+      status: octoStatus,
+      utcRedeemedAt: null,
+      contact: {
+        fullName: booking.user_name || "Unknown",
+        firstName: null,
+        lastName: null,
+        emailAddress: booking.user_email || null,
+        phoneNumber: booking.user_phone || null,
+        locales: booking.locale ? [booking.locale] : ["en"],
+        country: null,
+        notes: null,
+        postalCode: null
+      },
+      ticket: null
+    }));
+
     // 4. Construct response
     const octoBooking: Booking = {
       id: booking.id,
@@ -82,7 +104,7 @@ export async function POST(
         lastName: null,
         emailAddress: booking.user_email || null,
         phoneNumber: booking.user_phone || null,
-        locales: ["en"],
+        locales: booking.locale ? [booking.locale] : ["en"],
         country: null,
         notes: null,
         postalCode: null
@@ -90,7 +112,7 @@ export async function POST(
       notes: booking.notes || null,
       deliveryMethods: [DeliveryMethod.VOUCHER],
       voucher: null,
-      unitItems: []
+      unitItems: unitItems
     };
 
     return NextResponse.json(octoBooking);
