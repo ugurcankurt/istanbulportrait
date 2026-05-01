@@ -32,10 +32,13 @@ export async function GET(request: NextRequest) {
     // Parse requested locale from Accept-Language header
     const acceptLanguage = request.headers.get("accept-language")?.toLowerCase() || "";
     let reqLocale = "en";
-    if (acceptLanguage.includes("tr")) reqLocale = "tr";
-    else if (acceptLanguage.includes("ru")) reqLocale = "ru";
-    else if (acceptLanguage.includes("es")) reqLocale = "es";
-    else if (acceptLanguage.includes("ar")) reqLocale = "ar";
+    const supportedLocales = ["tr", "ru", "es", "ar", "de", "fr", "ro", "zh"];
+    for (const loc of supportedLocales) {
+      if (acceptLanguage.includes(loc)) {
+        reqLocale = loc;
+        break;
+      }
+    }
 
     // 3. Generate dynamic start times (every 30 mins) based on settings
     const startHour = parseInt(settings.start_time.split(":")[0]) || 6;
