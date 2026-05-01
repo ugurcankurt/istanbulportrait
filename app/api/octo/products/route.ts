@@ -29,6 +29,14 @@ export async function GET(request: NextRequest) {
       availabilityService.getSettings()
     ]);
 
+    // Parse requested locale from Accept-Language header
+    const acceptLanguage = request.headers.get("accept-language")?.toLowerCase() || "";
+    let reqLocale = "en";
+    if (acceptLanguage.includes("tr")) reqLocale = "tr";
+    else if (acceptLanguage.includes("ru")) reqLocale = "ru";
+    else if (acceptLanguage.includes("es")) reqLocale = "es";
+    else if (acceptLanguage.includes("ar")) reqLocale = "ar";
+
     // 3. Generate dynamic start times (every 30 mins) based on settings
     const startHour = parseInt(settings.start_time.split(":")[0]) || 6;
     const endHour = parseInt(settings.end_time.split(":")[0]) || 20;
@@ -42,22 +50,30 @@ export async function GET(request: NextRequest) {
 
     // 4. Map to OCTO Product Schema
     const octoProducts: Product[] = packages.map((pkg) => {
+      // Helper to safely get localized text or fallback to English
+      const getText = (field: any) => field?.[reqLocale] || field?.en || "";
+
       // Parse duration from string (e.g. "2 hours" or "45 mins")
-      const durStr = (pkg.duration?.en || "").toLowerCase();
+      const durStr = (getText(pkg.duration)).toLowerCase();
       let durationMins = 120; // fallback
-      if (durStr.includes("hour")) {
+      if (durStr.includes("hour") || durStr.includes("saat") || durStr.includes("час") || durStr.includes("hora")) {
         const h = parseFloat(durStr);
         if (!isNaN(h)) durationMins = h * 60;
-      } else if (durStr.includes("min")) {
+      } else if (durStr.includes("min") || durStr.includes("dak")) {
         const m = parseInt(durStr);
         if (!isNaN(m)) durationMins = m;
       }
+      
+      const pkgTitle = getText(pkg.title) || "Photography Package";
+      const pkgDesc = getText(pkg.description) || "Beautiful photography experience in Istanbul.";
+      
+      const featureList = (pkg.features as any)?.[reqLocale] || (pkg.features as any)?.en || [];
 
       return {
         id: pkg.id,
-        internalName: pkg.title?.en || "Photography Package",
+        internalName: pkg.title?.en || "Photography Package", // Internal name usually stays en
         reference: pkg.slug,
-        locale: "en",
+        locale: reqLocale,
         timeZone: "Europe/Istanbul",
         allowFreesale: false,
         instantConfirmation: true,
@@ -69,24 +85,24 @@ export async function GET(request: NextRequest) {
         redemptionMethod: RedemptionMethod.DIGITAL,
         
         // -- OCTO CONTENT CAPABILITY FIELDS --
-        title: pkg.title?.en || "Photography Package",
-        description: pkg.description?.en || "Beautiful photography experience in Istanbul.",
-        shortDescription: pkg.description?.en ? pkg.description.en.substring(0, 150) + "..." : "Photography experience in Istanbul.",
+        title: pkgTitle,
+        description: pkgDesc,
+        shortDescription: pkgDesc.substring(0, 150) + "...",
         durationMinutesFrom: durationMins, 
         durationMinutesTo: durationMins,
-        features: pkg.features?.en ? pkg.features.en.map((f: string) => ({
+        features: featureList.map((f: string) => ({
           type: FeatureType.INCLUSION,
           description: f,
           shortDescription: null
-        })) : [],
+        })),
         media: pkg.cover_image ? [{
           url: pkg.cover_image,
           type: MediaType.IMAGE_JPEG,
           primary: true,
           src: pkg.cover_image,
           rel: MediaRel.COVER,
-          title: pkg.title?.en || "Cover Image",
-          caption: pkg.title?.en || "Cover Image",
+          title: pkgTitle,
+          caption: pkgTitle,
           copyright: "Istanbul Portrait"
         }] : [],
         // ------------------------------------
@@ -97,7 +113,7 @@ export async function GET(request: NextRequest) {
             default: true,
             internalName: "Standard",
             reference: "standard",
-            title: "Standard Shoot",
+            title: "Standard Shoot", // Or getText if options had translations
             availabilityLocalStartTimes: dynamicStartTimes,
             cancellationCutoff: "24 hours before the activity",
             cancellationCutoffAmount: 24,
@@ -157,7 +173,12 @@ export async function GET(request: NextRequest) {
       };
     });
 
-    return NextResponse.json(octoProducts);
+    // We must return the response with Content-Language header according to BCP47
+    return NextResponse.json(octoProducts, {
+      headers: {
+        "Content-Language": reqLocale
+      }
+    });
   } catch (error) {
     console.error("OCTO API Error - Products:", error);
     return NextResponse.json(
