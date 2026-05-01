@@ -1,10 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireOctoAuth, octoUnauthorizedResponse } from "@/lib/octo-auth";
-import { availabilityService } from "@/lib/availability-service";
+import { supabaseAdmin } from "@/lib/supabase";
 import { Availability, AvailabilityStatus } from "@octocloud/types";
 
+function timeToMinutes(timeStr: string): number {
+  const [h, m] = timeStr.split(":").map(Number);
+  return h * 60 + m;
+}
+
 export async function POST(request: NextRequest) {
-  // 1. Authenticate Request
   if (!requireOctoAuth(request)) {
     return octoUnauthorizedResponse();
   }
@@ -20,29 +24,155 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // 2. Fetch Availability Data from DB
-    const settings = await availabilityService.getSettings();
-    const blockedSlots = await availabilityService.getBlockedSlots();
+    // 1. Get package details (duration)
+    const { data: pkgData, error: pkgError } = await supabaseAdmin
+      .from("packages")
+      .select("id, slug, duration")
+      .eq("id", productId)
+      .single();
 
-    // In a full implementation, you would generate dates between localDateStart and localDateEnd
-    // and check them against settings.start_time / end_time and blockedSlots.
+    if (pkgError || !pkgData) {
+      return NextResponse.json({ error: "Not Found", message: "Product not found" }, { status: 404 });
+    }
+
+    // Parse duration
+    const durStr = (pkgData.duration?.en || "").toLowerCase();
+    let durationMins = 60;
+    if (durStr.includes("hour")) {
+      const h = parseFloat(durStr);
+      if (!isNaN(h)) durationMins = h * 60;
+    } else if (durStr.includes("min")) {
+      const m = parseInt(durStr);
+      if (!isNaN(m)) durationMins = m;
+    }
+
+    // 2. Fetch Settings
+    const { data: settingsData } = await supabaseAdmin
+      .from("availability_settings")
+      .select("start_time, end_time")
+      .eq("id", "default")
+      .single();
+      
+    const startHour = settingsData?.start_time ? parseInt(settingsData.start_time.split(":")[0]) : 6;
+    const endHour = settingsData?.end_time ? parseInt(settingsData.end_time.split(":")[0]) : 20;
+
+    // 3. Generate Dates Array
+    const dates: string[] = [];
+    let currentDate = new Date(localDateStart);
+    const endDate = new Date(localDateEnd);
     
+    // Safety check to prevent infinite loops (max 31 days)
+    let daysCount = 0;
+    while (currentDate <= endDate && daysCount < 31) {
+      dates.push(currentDate.toISOString().split("T")[0]);
+      currentDate.setDate(currentDate.getDate() + 1);
+      daysCount++;
+    }
+
+    // 4. Fetch all bookings for the date range
+    const tenMinsAgo = new Date(Date.now() - 10 * 60 * 1000).toISOString();
+    const { data: allBookings } = await supabaseAdmin
+      .from("bookings")
+      .select("booking_date, booking_time, package_id, status, created_at")
+      .in("booking_date", dates)
+      .neq("status", "cancelled")
+      .neq("status", "failed");
+
+    // Fetch all packages for dynamic overlapping durations
+    const { data: allPackages } = await supabaseAdmin.from("packages").select("slug, duration, id");
+    const dynamicDurations: Record<string, number> = {};
+    if (allPackages) {
+      for (const p of allPackages) {
+        const dStr = (p.duration?.en || "").toLowerCase();
+        let m = 60;
+        if (dStr.includes("hour")) m = parseFloat(dStr) * 60 || 60;
+        else if (dStr.includes("min")) m = parseInt(dStr) || 60;
+        dynamicDurations[p.id] = m;
+      }
+    }
+
+    // 5. Fetch all blocked slots for the date range
+    const { data: allBlockedData } = await supabaseAdmin
+      .from("blocked_slots")
+      .select("date, time")
+      .in("date", dates);
+
     const availableSlots: Availability[] = [];
-    
-    // Simulate generating slots for the requested date range
-    availableSlots.push({
-      id: `${localDateStart}T10:00:00+03:00`,
-      localDateTimeStart: `${localDateStart}T10:00:00+03:00`,
-      localDateTimeEnd: `${localDateStart}T11:00:00+03:00`,
-      allDay: false,
-      status: AvailabilityStatus.AVAILABLE,
-      vacancies: 1,
-      capacity: 1,
-      maxUnits: 1,
-      utcCutoffAt: `${localDateStart}T06:00:00Z`, // OCTO requirement: when booking cuts off
-      available: true,
-      openingHours: []
-    });
+
+    // 6. Calculate Availability per Date
+    for (const date of dates) {
+      let isDayFullyBlocked = false;
+      const manualBlockedSlots = new Set<string>();
+
+      const dayBlockedData = (allBlockedData || []).filter((b: any) => b.date === date);
+      for (const b of dayBlockedData) {
+        if (!b.time) {
+          isDayFullyBlocked = true;
+          break;
+        }
+        manualBlockedSlots.add(b.time);
+      }
+
+      if (isDayFullyBlocked) continue;
+
+      // Filter valid bookings for this date
+      const validBookings = (allBookings || []).filter((b: any) => {
+        if (b.booking_date !== date) return false;
+        if (["pending", "confirmed", "completed"].includes(b.status)) return true;
+        if (b.status === "draft") return new Date(b.created_at) >= new Date(tenMinsAgo);
+        return false;
+      });
+
+      // Check every 30-min slot between startHour and endHour
+      for (let h = startHour; h <= endHour; h++) {
+        for (const m of ["00", "30"]) {
+          const slot = `${h.toString().padStart(2, "0")}:${m}`;
+          
+          const requestedStart = timeToMinutes(slot);
+          const requestedEnd = requestedStart + durationMins;
+
+          if (manualBlockedSlots.has(slot)) continue;
+
+          let isOverlapping = false;
+          for (const b of validBookings) {
+            if (!b.booking_time) continue;
+            const existingStart = timeToMinutes(b.booking_time);
+            const existingDuration = dynamicDurations[b.package_id as string] || 60;
+            const existingEnd = existingStart + existingDuration;
+
+            if (requestedStart < existingEnd && requestedEnd > existingStart) {
+              isOverlapping = true;
+              break;
+            }
+          }
+
+          if (!isOverlapping) {
+            // Found a valid, completely open slot! Map to OCTO Availability
+            const startDateTime = `${date}T${slot}:00+03:00`; // Istanbul TZ
+            const endH = Math.floor(requestedEnd / 60);
+            const endM = requestedEnd % 60;
+            const endDateTime = `${date}T${endH.toString().padStart(2, "0")}:${endM.toString().padStart(2, "0")}:00+03:00`;
+
+            // Calculate UTC Cutoff (e.g. 24 hours before)
+            const cutoffDate = new Date(new Date(startDateTime).getTime() - 24 * 60 * 60 * 1000);
+
+            availableSlots.push({
+              id: startDateTime,
+              localDateTimeStart: startDateTime,
+              localDateTimeEnd: endDateTime,
+              allDay: false,
+              status: AvailabilityStatus.AVAILABLE,
+              vacancies: 1, // Assume 1 package slot per time
+              capacity: 1,
+              maxUnits: 10,
+              utcCutoffAt: cutoffDate.toISOString(),
+              available: true,
+              openingHours: []
+            });
+          }
+        }
+      }
+    }
 
     return NextResponse.json(availableSlots);
   } catch (error) {
