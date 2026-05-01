@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireOctoAuth, octoUnauthorizedResponse } from "@/lib/octo-auth";
 import { supabaseAdmin } from "@/lib/supabase";
-import { Booking, BookingStatus, DeliveryMethod } from "@octocloud/types";
+import { BookingStatus } from "@octocloud/types";
+import { mapBookingToOcto } from "@/lib/octo-mapper";
 
 export async function POST(
   request: NextRequest,
@@ -86,89 +87,8 @@ export async function POST(
       .eq("id", booking.id);
 
     const updatedB = { ...booking, ...updates };
-    const status = BookingStatus.CONFIRMED;
-
-    let unitItems = currentUnitItems;
-    if (unitItems.length === 0) {
-      const count = updatedB.people_count || 1;
-      unitItems = Array.from({ length: count }).map((_, i) => ({
-        uuid: `${updatedB.id.substring(0, 8)}-unit-${i}`,
-        unitId: `unit_${updatedB.package_id}_adult`,
-        resellerReference: null,
-        supplierReference: null,
-        status: status,
-        utcRedeemedAt: null,
-        contact: {
-          fullName: updatedB.user_name || "Unknown",
-          firstName: null,
-          lastName: null,
-          emailAddress: updatedB.user_email || null,
-          phoneNumber: updatedB.user_phone || null,
-          locales: updatedB.locale ? [updatedB.locale] : ["en"],
-          country: null,
-          notes: null,
-          postalCode: null
-        },
-        ticket: null
-      }));
-    } else {
-      unitItems = unitItems.map(item => ({ ...item, status }));
-    }
-
-    const availabilityIdStr = updatedB.booking_date && updatedB.booking_time ? `${updatedB.booking_date}T${updatedB.booking_time}:00+03:00` : null;
-
     // 3. Construct response
-    const octoBooking: Booking = {
-      id: updatedB.id,
-      uuid: finalUuid,
-      testMode: false,
-      resellerReference: body.resellerReference || null,
-      supplierReference: updatedB.id,
-      status: status,
-      utcCreatedAt: updatedB.created_at || new Date().toISOString(),
-      utcUpdatedAt: new Date().toISOString(),
-      utcExpiresAt: null,
-      utcRedeemedAt: null,
-      utcConfirmedAt: updatedB.created_at || new Date().toISOString(),
-      productId: updatedB.package_id || "unknown",
-      optionId: `opt_${updatedB.package_id || "unknown"}`,
-      cancellable: true,
-      cancellation: null,
-      freesale: false,
-      availabilityId: availabilityIdStr,
-      availability: availabilityIdStr ? {
-        id: availabilityIdStr,
-        localDateTimeStart: availabilityIdStr,
-        localDateTimeEnd: availabilityIdStr.replace(/T(\d{2}):/, (match: string, h: string) => `T${String(Math.min(23, parseInt(h)+2)).padStart(2, "0")}:`),
-        allDay: false,
-        status: "AVAILABLE" as any,
-        vacancies: 1,
-        capacity: 1,
-        maxUnits: 10,
-        utcCutoffAt: new Date().toISOString(),
-        available: true,
-        openingHours: []
-      } : null,
-      contact: {
-        fullName: updatedB.user_name || "Unknown",
-        firstName: null,
-        lastName: null,
-        emailAddress: updatedB.user_email || null,
-        phoneNumber: updatedB.user_phone || null,
-        locales: updatedB.locale ? [updatedB.locale] : ["en"],
-        country: null,
-        notes: null,
-        postalCode: null
-      },
-      notes: updatedB.notes ? updatedB.notes.split("\n---OCTO_META---")[0] : null,
-      deliveryMethods: [DeliveryMethod.VOUCHER],
-      voucher: {
-        redemptionMethod: "DIGITAL" as any,
-        utcRedeemedAt: null,
-        deliveryOptions: []
-      },
-      unitItems: unitItems
-    };
+    const octoBooking = mapBookingToOcto(updatedB, finalUuid);
 
     return NextResponse.json(octoBooking);
   } catch (error) {

@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireOctoAuth, octoUnauthorizedResponse, getOctoAuthType } from "@/lib/octo-auth";
 import { supabaseAdmin } from "@/lib/supabase";
-import { Booking, BookingStatus, DeliveryMethod } from "@octocloud/types";
+import { Booking, BookingStatus } from "@octocloud/types";
+import { mapBookingToOcto } from "@/lib/octo-mapper";
 
 export async function POST(request: NextRequest) {
   // 1. Authenticate Request
@@ -148,76 +149,7 @@ export async function POST(request: NextRequest) {
     // 3. Construct OCTO Booking Response
     const octoStatus = BookingStatus.ON_HOLD;
     
-    const octoBooking: Booking = {
-      id: booking.id,
-      uuid: finalUuid,
-      testMode: false,
-      resellerReference: resellerReference || null,
-      supplierReference: booking.id,
-      status: octoStatus,
-      utcCreatedAt: new Date().toISOString(),
-      utcUpdatedAt: new Date().toISOString(),
-      utcExpiresAt: new Date(Date.now() + 60 * 60 * 1000).toISOString(), // 1 hour hold
-      utcRedeemedAt: null,
-      utcConfirmedAt: null,
-      productId: productId,
-      optionId: optionId || `opt_${productId}`,
-      cancellable: true,
-      cancellation: null,
-      freesale: false,
-      availabilityId: availabilityId,
-      availability: availabilityId ? {
-        id: availabilityId,
-        localDateTimeStart: availabilityId,
-        localDateTimeEnd: availabilityId.replace(/T(\d{2}):/, (match: string, h: string) => `T${String(Math.min(23, parseInt(h)+2)).padStart(2, "0")}:`),
-        allDay: false,
-        status: "AVAILABLE" as any,
-        vacancies: 1,
-        capacity: 1,
-        maxUnits: 10,
-        utcCutoffAt: new Date().toISOString(),
-        available: true,
-        openingHours: []
-      } : null,
-      contact: {
-        fullName: safeContact.fullName || null,
-        firstName: safeContact.firstName || null,
-        lastName: safeContact.lastName || null,
-        emailAddress: safeContact.emailAddress || null,
-        phoneNumber: safeContact.phoneNumber || null,
-        locales: safeContact.locales || ["en"],
-        country: safeContact.country || null,
-        notes: safeContact.notes || null,
-        postalCode: safeContact.postalCode || null
-      },
-      notes: body.notes || null,
-      deliveryMethods: [DeliveryMethod.VOUCHER],
-      voucher: {
-        redemptionMethod: "DIGITAL" as any,
-        utcRedeemedAt: null,
-        deliveryOptions: []
-      },
-      unitItems: unitItems.map((item: any) => ({
-        uuid: item.uuid || crypto.randomUUID(),
-        unitId: item.unitId,
-        resellerReference: item.resellerReference || null,
-        supplierReference: null,
-        status: octoStatus,
-        utcRedeemedAt: null,
-        contact: {
-          fullName: item.contact?.fullName || null,
-          firstName: item.contact?.firstName || null,
-          lastName: item.contact?.lastName || null,
-          emailAddress: item.contact?.emailAddress || null,
-          phoneNumber: item.contact?.phoneNumber || null,
-          locales: item.contact?.locales || ["en"],
-          country: item.contact?.country || null,
-          notes: item.contact?.notes || null,
-          postalCode: item.contact?.postalCode || null
-        },
-        ticket: null
-      }))
-    };
+    const octoBooking = mapBookingToOcto(booking, finalUuid);
 
     return NextResponse.json(octoBooking);
   } catch (error: any) {
@@ -320,63 +252,8 @@ export async function GET(request: NextRequest) {
         unitItems = unitItems.map(item => ({ ...item, status }));
       }
 
-        const availabilityIdStr = b.booking_date && b.booking_time ? `${b.booking_date}T${b.booking_time}:00+03:00` : null;
-        
-        return {
-          id: b.id,
-          uuid: finalUuid,
-          testMode: false,
-          resellerReference: null,
-          supplierReference: b.id,
-          status: status,
-          utcCreatedAt: b.created_at || new Date().toISOString(),
-          utcUpdatedAt: b.created_at || new Date().toISOString(),
-          utcExpiresAt: status === BookingStatus.ON_HOLD ? new Date(new Date(b.created_at).getTime() + 60 * 60 * 1000).toISOString() : null,
-          utcRedeemedAt: null,
-          utcConfirmedAt: status === BookingStatus.CONFIRMED ? b.created_at : null,
-          productId: b.package_id || "unknown",
-          optionId: `opt_${b.package_id || "unknown"}`,
-          cancellable: true,
-          cancellation: status === BookingStatus.CANCELLED ? {
-            refund: "FULL" as any,
-            reason: "Cancelled",
-            utcCancelledAt: new Date().toISOString()
-          } : null,
-          freesale: false,
-          availabilityId: availabilityIdStr,
-          availability: availabilityIdStr ? {
-            id: availabilityIdStr,
-            localDateTimeStart: availabilityIdStr,
-            localDateTimeEnd: availabilityIdStr.replace(/T(\d{2}):/, (match: string, h: string) => `T${String(Math.min(23, parseInt(h)+2)).padStart(2, "0")}:`),
-            allDay: false,
-            status: "AVAILABLE" as any,
-            vacancies: 1,
-            capacity: 1,
-            maxUnits: 10,
-            utcCutoffAt: new Date().toISOString(),
-            available: true,
-            openingHours: []
-          } : null,
-          contact: {
-            fullName: b.user_name || "Unknown",
-            firstName: null,
-            lastName: null,
-            emailAddress: b.user_email || null,
-            phoneNumber: b.user_phone || null,
-            locales: b.locale ? [b.locale] : ["en"],
-            country: null,
-            notes: null,
-            postalCode: null
-          },
-          notes: b.notes ? b.notes.split("\n---OCTO_META---")[0] : null,
-          deliveryMethods: [DeliveryMethod.VOUCHER],
-          voucher: {
-            redemptionMethod: "DIGITAL" as any,
-            utcRedeemedAt: null,
-            deliveryOptions: []
-          },
-        unitItems: unitItems
-      };
+        const octoBooking = mapBookingToOcto(b, finalUuid);
+        return octoBooking;
     });
 
     return NextResponse.json(octoBookings);

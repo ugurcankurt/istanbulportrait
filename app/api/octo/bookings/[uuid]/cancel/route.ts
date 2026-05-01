@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireOctoAuth, octoUnauthorizedResponse } from "@/lib/octo-auth";
 import { supabaseAdmin } from "@/lib/supabase";
-import { Booking, BookingStatus, DeliveryMethod } from "@octocloud/types";
+import { BookingStatus } from "@octocloud/types";
+import { mapBookingToOcto } from "@/lib/octo-mapper";
 
 export async function POST(
   request: NextRequest,
@@ -43,111 +44,17 @@ export async function POST(
 
     const reason = body.reason || "Cancelled by API Request";
 
-    // Update status to CANCELLED
+    // Update status to CANCELLED in DB and save cancellation reason to octo_data
+    const updatedOctoData = { ...(b.octo_data || {}), cancellationReason: reason };
     await supabaseAdmin
       .from("bookings")
-      .update({ status: "cancelled" })
+      .update({ status: "cancelled", octo_data: updatedOctoData })
       .eq("id", b.id);
 
-    const status = BookingStatus.CANCELLED;
+    b.status = "cancelled";
+    b.octo_data = updatedOctoData;
 
-    let unitItems: any[] = [];
-    let finalUuid = b.octo_uuid || b.id;
-    
-    if (b.octo_data && b.octo_data.unitItems) {
-      unitItems = b.octo_data.unitItems;
-    } else if (b.notes && b.notes.includes("---OCTO_META---")) {
-      try {
-        const metaStr = b.notes.split("---OCTO_META---\n")[1];
-        const meta = JSON.parse(metaStr);
-        if (meta.unitItems && Array.isArray(meta.unitItems)) unitItems = meta.unitItems;
-        if (meta.uuid) finalUuid = meta.uuid;
-      } catch (e) {}
-    }
-
-    if (unitItems.length === 0) {
-      const count = b.people_count || 1;
-      unitItems = Array.from({ length: count }).map((_, i) => ({
-        uuid: `${b.id.substring(0, 8)}-unit-${i}`,
-        unitId: `unit_${b.package_id}_adult`,
-        resellerReference: null,
-        supplierReference: null,
-        status: status,
-        utcRedeemedAt: null,
-        contact: {
-          fullName: b.user_name || "Unknown",
-          firstName: null,
-          lastName: null,
-          emailAddress: b.user_email || null,
-          phoneNumber: b.user_phone || null,
-          locales: b.locale ? [b.locale] : ["en"],
-          country: null,
-          notes: null,
-          postalCode: null
-        },
-        ticket: null
-      }));
-    } else {
-      unitItems = unitItems.map(item => ({ ...item, status: status }));
-    }
-
-    const availabilityIdStr = b.booking_date && b.booking_time ? `${b.booking_date}T${b.booking_time}:00+03:00` : null;
-
-    const octoBooking: Booking = {
-      id: b.id,
-      uuid: finalUuid,
-      testMode: false,
-      resellerReference: null,
-      supplierReference: b.id,
-      status: status,
-      utcCreatedAt: b.created_at || new Date().toISOString(),
-      utcUpdatedAt: new Date().toISOString(),
-      utcExpiresAt: null,
-      utcRedeemedAt: null,
-      utcConfirmedAt: b.status === "confirmed" ? b.created_at : null,
-      productId: b.package_id || "unknown",
-      optionId: `opt_${b.package_id || "unknown"}`,
-      cancellable: false,
-      cancellation: {
-        refund: "FULL" as any,
-        reason: reason,
-        utcCancelledAt: new Date().toISOString()
-      },
-      freesale: false,
-      availabilityId: availabilityIdStr,
-      availability: availabilityIdStr ? {
-        id: availabilityIdStr,
-        localDateTimeStart: availabilityIdStr,
-        localDateTimeEnd: availabilityIdStr.replace(/T(\d{2}):/, (match: string, h: string) => `T${String(Math.min(23, parseInt(h)+2)).padStart(2, "0")}:`),
-        allDay: false,
-        status: "AVAILABLE" as any,
-        vacancies: 1,
-        capacity: 1,
-        maxUnits: 10,
-        utcCutoffAt: new Date().toISOString(),
-        available: true,
-        openingHours: []
-      } : null,
-      contact: {
-        fullName: b.user_name || "Unknown",
-        firstName: null,
-        lastName: null,
-        emailAddress: b.user_email || null,
-        phoneNumber: b.user_phone || null,
-        locales: b.locale ? [b.locale] : ["en"],
-        country: null,
-        notes: null,
-        postalCode: null
-      },
-      notes: b.notes ? b.notes.split("\n---OCTO_META---")[0] : null,
-      deliveryMethods: [DeliveryMethod.VOUCHER],
-      voucher: {
-        redemptionMethod: "DIGITAL" as any,
-        utcRedeemedAt: null,
-        deliveryOptions: []
-      },
-      unitItems: unitItems
-    };
+    const octoBooking = mapBookingToOcto(b, uuid);
 
     return NextResponse.json(octoBooking);
   } catch (error) {
