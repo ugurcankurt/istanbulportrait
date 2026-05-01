@@ -26,34 +26,36 @@ export async function GET(request: Request) {
     });
 
     // 3. Define Meta Offers CSV Feed headers
-    // Meta requires specific headers for offer data feeds
-    let csv = "offer_id,title,coupon_codes,start_time,end_time,offer_type,discount_type,discount_percentage\n";
+    // Meta's parser can be very strict. Using 'id' instead of 'offer_id', adding 'description' and 'target_selection'.
+    let csv = "id,title,description,coupon_codes,start_time,end_time,offer_type,discount_type,discount_value,target_selection\n";
 
     // 4. Map database promos to CSV rows
     for (const promo of activePromos) {
-      const offer_id = promo.id;
-      // You can format the title however you prefer.
+      const id = promo.id;
       const title = `${promo.discount_percentage}% Off Istanbul Photography`;
-      const coupon_codes = promo.code; // The actual code they will use
+      const description = `Apply code ${promo.code} at checkout to get ${promo.discount_percentage}% off.`;
+      const coupon_codes = promo.code; 
       
-      // Meta requires both start and end times in ISO format.
-      // If none are set in the database, we provide default valid ranges.
       const now = new Date();
       const defaultStart = promo.start_date ? new Date(promo.start_date) : now;
       const defaultEnd = promo.end_date ? new Date(promo.end_date) : new Date(now.getTime() + 365 * 24 * 60 * 60 * 1000);
       
-      const start_time = defaultStart.toISOString();
-      const end_time = defaultEnd.toISOString();
+      // Fix: Facebook's CSV parser often rejects ISO dates if they contain milliseconds (.000Z).
+      // We strip the milliseconds format to be strictly YYYY-MM-DDThh:mm:ssZ
+      const start_time = defaultStart.toISOString().split('.')[0] + 'Z';
+      const end_time = defaultEnd.toISOString().split('.')[0] + 'Z';
       
-      // Specific to Facebook Commerce promotions
       const offer_type = "BUYER_APPLIED"; 
       const discount_type = "PERCENTAGE_OFF";
-      const discount_percentage = promo.discount_percentage.toString();
+      const discount_value = promo.discount_percentage.toString();
+      
+      // Fix: Meta Offers must know what they apply to. Defaulting to all products in catalog.
+      const target_selection = "ALL_PRODUCTS";
 
       // Escape helper to prevent CSV breaking with commas
       const escapeCsv = (str: string) => `"${str.replace(/"/g, '""')}"`;
 
-      csv += `${escapeCsv(offer_id)},${escapeCsv(title)},${escapeCsv(coupon_codes)},${escapeCsv(start_time)},${escapeCsv(end_time)},${escapeCsv(offer_type)},${escapeCsv(discount_type)},${escapeCsv(discount_percentage)}\n`;
+      csv += `${escapeCsv(id)},${escapeCsv(title)},${escapeCsv(description)},${escapeCsv(coupon_codes)},${escapeCsv(start_time)},${escapeCsv(end_time)},${escapeCsv(offer_type)},${escapeCsv(discount_type)},${escapeCsv(discount_value)},${escapeCsv(target_selection)}\n`;
     }
 
     // 5. Return the generated CSV
