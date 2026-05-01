@@ -79,7 +79,7 @@ export async function POST(request: NextRequest) {
     const { error: customerError } = await supabaseAdmin
       .from("customers")
       .upsert(
-        { email: email, name: fullName, phone: contact.phoneNumber },
+        { email: email, name: fullName, phone: safeContact.phoneNumber || "" },
         { onConflict: "email" }
       );
       
@@ -126,7 +126,7 @@ export async function POST(request: NextRequest) {
         package_id: productId,
         user_name: fullName,
         user_email: email,
-        user_phone: contact.phoneNumber,
+        user_phone: safeContact.phoneNumber || "",
         booking_date: bookingDate,
         booking_time: bookingTime ? bookingTime.substring(0, 5) : null,
         // All OCTO reservations start as ON_HOLD (pending) until confirmed via the /confirm endpoint
@@ -134,7 +134,7 @@ export async function POST(request: NextRequest) {
         total_amount: totalAmount, // Calculated dynamically from base price + time surcharges
         notes: `OCTO B2B Booking. Ref: ${resellerReference || "None"}. Type: ${authType}\n---OCTO_META---\n${JSON.stringify(internalPayload)}`,
         people_count: unitItems.length,
-        locale: contact.locales?.[0] || "en",
+        locale: safeContact.locales?.[0] || "en",
       })
       .select()
       .single();
@@ -166,15 +166,15 @@ export async function POST(request: NextRequest) {
       availabilityId: availabilityId,
       availability: null, // Should return the Availability object if queried
       contact: {
-        fullName: contact.fullName || null,
-        firstName: contact.firstName || null,
-        lastName: contact.lastName || null,
-        emailAddress: contact.emailAddress || null,
-        phoneNumber: contact.phoneNumber || null,
-        locales: contact.locales || ["en"],
-        country: contact.country || null,
-        notes: contact.notes || null,
-        postalCode: contact.postalCode || null
+        fullName: safeContact.fullName || null,
+        firstName: safeContact.firstName || null,
+        lastName: safeContact.lastName || null,
+        emailAddress: safeContact.emailAddress || null,
+        phoneNumber: safeContact.phoneNumber || null,
+        locales: safeContact.locales || ["en"],
+        country: safeContact.country || null,
+        notes: safeContact.notes || null,
+        postalCode: safeContact.postalCode || null
       },
       notes: body.notes || null,
       deliveryMethods: [DeliveryMethod.VOUCHER],
@@ -202,10 +202,10 @@ export async function POST(request: NextRequest) {
     };
 
     return NextResponse.json(octoBooking);
-  } catch (error) {
+  } catch (error: any) {
     console.error("OCTO API Error - Bookings:", error);
     return NextResponse.json(
-      { error: "Internal Server Error", errorMessage: "Failed to create booking" },
+      { error: "Internal Server Error", errorMessage: error?.message || "Failed to create booking", stack: error?.stack },
       { status: 500 }
     );
   }
