@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { requireOctoAuth, octoUnauthorizedResponse } from "@/lib/octo-auth";
+import { requireOctoAuth, octoUnauthorizedResponse, getOctoAuthType } from "@/lib/octo-auth";
 import { supabaseAdmin } from "@/lib/supabase";
 import { Booking, BookingStatus, DeliveryMethod } from "@octocloud/types";
 
@@ -8,6 +8,8 @@ export async function POST(request: NextRequest) {
   if (!requireOctoAuth(request)) {
     return octoUnauthorizedResponse();
   }
+  
+  const authType = getOctoAuthType(request); // "global" | "local"
 
   try {
     const body = await request.json();
@@ -90,10 +92,10 @@ export async function POST(request: NextRequest) {
         user_phone: contact.phoneNumber,
         booking_date: bookingDate,
         booking_time: bookingTime ? bookingTime.substring(0, 5) : null,
-        // Automatically confirm B2B bookings because the agency already collected payment
-        status: "confirmed", 
+        // Automatically confirm B2B bookings if global agency. If local, wait for payment.
+        status: authType === "local" ? "pending" : "confirmed", 
         total_amount: totalAmount, // Calculated dynamically from base price + time surcharges
-        notes: `OCTO B2B Booking. Ref: ${resellerReference || "None"}`,
+        notes: `OCTO B2B Booking. Ref: ${resellerReference || "None"}. Type: ${authType}`,
         people_count: unitItems.length,
         locale: contact.locales?.[0] || "en",
       })
@@ -105,18 +107,21 @@ export async function POST(request: NextRequest) {
     }
 
     // 3. Construct OCTO Booking Response
-    const octoBooking: Booking = {
+    const octoStatus = authType === "local" ? BookingStatus.ON_HOLD : BookingStatus.CONFIRMED;
+    const paymentUrl = authType === "local" ? `https://istanbulportrait.com/en/checkout/b2b-pay?bookingId=${booking.id}` : null;
+    
+    const octoBooking: Booking & { paymentUrl?: string } = {
       id: booking.id,
       uuid: uuid,
       testMode: false,
       resellerReference: resellerReference || null,
       supplierReference: booking.id,
-      status: BookingStatus.CONFIRMED,
+      status: octoStatus,
       utcCreatedAt: new Date().toISOString(),
       utcUpdatedAt: new Date().toISOString(),
-      utcExpiresAt: null,
+      utcExpiresAt: authType === "local" ? new Date(Date.now() + 60 * 60 * 1000).toISOString() : null, // 1 hour to pay
       utcRedeemedAt: null,
-      utcConfirmedAt: new Date().toISOString(),
+      utcConfirmedAt: authType === "global" ? new Date().toISOString() : null,
       productId: productId,
       optionId: optionId || "standard",
       cancellable: true,
@@ -135,7 +140,8 @@ export async function POST(request: NextRequest) {
         notes: contact.notes || null,
         postalCode: null
       },
-      notes: null,
+      notes: paymentUrl ? `PAYMENT_REQUIRED: Please pay via this link to confirm: ${paymentUrl}` : null,
+      paymentUrl: paymentUrl || undefined, // Custom extension field for ease of use
       deliveryMethods: [DeliveryMethod.VOUCHER],
       voucher: null, // E-ticket object
       unitItems: unitItems.map((item: any) => ({

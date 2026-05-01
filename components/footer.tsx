@@ -52,6 +52,7 @@ export function Footer({ dynamicNavData = {}, settings }: FooterProps) {
     { href: `/${dynamicNavData.packages?.path || "packages"}` as any, label: dynamicNavData.packages?.title || nav("packages") },
     { href: `/${dynamicNavData.about?.path || "about"}` as any, label: dynamicNavData.about?.title || nav("about") },
     { href: `/${dynamicNavData.contact?.path || "contact"}` as any, label: dynamicNavData.contact?.title || nav("contact") },
+    { href: "/developers" as any, label: "Developers (B2B API)" },
   ];
 
   if (pathname.startsWith("/account")) {

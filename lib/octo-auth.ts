@@ -1,21 +1,29 @@
 import { NextRequest, NextResponse } from "next/server";
 
-export function requireOctoAuth(req: NextRequest) {
+export function getOctoAuthType(req: NextRequest): "global" | "local" | null {
   const authHeader = req.headers.get("Authorization");
-  const expectedKey = process.env.OCTO_API_KEY;
-
-  if (!expectedKey) {
-    // If not configured in env, fail safely
-    console.error("OCTO_API_KEY is not set in environment variables.");
-    return false;
-  }
+  const globalKey = process.env.OCTO_API_KEY;
+  const localKey = process.env.OCTO_LOCAL_API_KEY;
 
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
-    return false;
+    return null;
   }
 
   const token = authHeader.split(" ")[1];
-  return token === expectedKey;
+  
+  if (globalKey && token === globalKey) {
+    return "global";
+  }
+  
+  if (localKey && token === localKey) {
+    return "local";
+  }
+
+  return null;
+}
+
+export function requireOctoAuth(req: NextRequest): boolean {
+  return getOctoAuthType(req) !== null;
 }
 
 export function octoUnauthorizedResponse() {
