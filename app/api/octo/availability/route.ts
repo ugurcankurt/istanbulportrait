@@ -28,9 +28,14 @@ export async function POST(request: NextRequest) {
     const hasLocalDate = !!localDate;
     const hasAvailabilityIds = Array.isArray(availabilityIds) && availabilityIds.length > 0;
 
-    if (!hasDateRange && !hasLocalDate && !hasAvailabilityIds) {
+    let combinationCount = 0;
+    if (hasDateRange) combinationCount++;
+    if (hasLocalDate) combinationCount++;
+    if (hasAvailabilityIds) combinationCount++;
+
+    if (combinationCount !== 1) {
       return NextResponse.json(
-        { error: "BAD_REQUEST", errorMessage: "Must provide localDate, localDateStart/End, or availabilityIds" },
+        { error: "BAD_REQUEST", errorMessage: "Must provide exactly ONE OF: localDate, localDateStart/End, or availabilityIds" },
         { status: 400 }
       );
     }
