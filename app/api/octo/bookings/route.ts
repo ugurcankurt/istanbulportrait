@@ -65,13 +65,11 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    if (!contact) {
-      return NextResponse.json({ error: "BAD_REQUEST", errorMessage: "Missing contact details" }, { status: 400 });
-    }
-
     // 2. Map OCTO request to your Supabase schema
-    const fullName = contact.fullName || `${contact.firstName || ""} ${contact.lastName || ""}`.trim() || "Unknown B2B Guest";
-    const email = contact.emailAddress || `b2b-${uuid}@octotravel.com`;
+    // Note: contact is completely optional in Booking Reservation.
+    const safeContact = contact || {};
+    const fullName = safeContact.fullName || `${safeContact.firstName || ""} ${safeContact.lastName || ""}`.trim() || "Unknown B2B Guest";
+    const email = safeContact.emailAddress || `b2b-${uuid}@octotravel.com`;
 
     // 2.a. Ensure customer exists to satisfy foreign key constraint
     const { error: customerError } = await supabaseAdmin
