@@ -29,7 +29,7 @@ export async function POST(request: NextRequest) {
     }
 
     if (!productId) {
-      return NextResponse.json({ error: "INVALID_PRODUCT_ID", errorMessage: "Missing productId", productId: null }, { status: 400 });
+      return NextResponse.json({ error: "INVALID_PRODUCT_ID", errorMessage: "Missing productId" }, { status: 400 });
     }
 
     const { data: pkgData, error: pkgError } = await supabaseAdmin
@@ -43,15 +43,15 @@ export async function POST(request: NextRequest) {
     }
 
     if (!optionId || (optionId !== "DEFAULT" && optionId !== `opt_${productId}`)) {
-      return NextResponse.json({ error: "INVALID_OPTION_ID", errorMessage: "Option not found", optionId: optionId || null }, { status: 400 });
+      return NextResponse.json({ error: "INVALID_OPTION_ID", errorMessage: "Option not found", ...(optionId ? { optionId } : {}) }, { status: 400 });
     }
 
     if (!availabilityId) {
-      return NextResponse.json({ error: "INVALID_AVAILABILITY_ID", errorMessage: "Missing availabilityId", availabilityId: null }, { status: 400 });
+      return NextResponse.json({ error: "INVALID_AVAILABILITY_ID", errorMessage: "Missing availabilityId" }, { status: 400 });
     }
 
     const [bookingDate, bookingTime] = availabilityId.split("T");
-    if (!bookingDate || !bookingTime) {
+    if (!bookingDate || !bookingTime || !availabilityId.includes("+03:00") && !availabilityId.includes("Z")) {
       return NextResponse.json({ error: "INVALID_AVAILABILITY_ID", errorMessage: "Invalid availabilityId format", availabilityId }, { status: 400 });
     }
 
@@ -61,7 +61,7 @@ export async function POST(request: NextRequest) {
 
     for (const item of unitItems) {
       if (!item.unitId || item.unitId !== `unit_${productId}_adult`) {
-        return NextResponse.json({ error: "INVALID_UNIT_ID", errorMessage: "Unit ID not found or invalid", unitId: item.unitId || null }, { status: 400 });
+        return NextResponse.json({ error: "INVALID_UNIT_ID", errorMessage: "Unit ID not found or invalid", ...(item.unitId ? { unitId: item.unitId } : {}) }, { status: 400 });
       }
     }
 
@@ -144,7 +144,7 @@ export async function POST(request: NextRequest) {
     const octoStatus = authType === "local" ? BookingStatus.ON_HOLD : BookingStatus.CONFIRMED;
     const paymentUrl = authType === "local" ? `https://istanbulportrait.com/en/checkout/b2b-pay?bookingId=${booking.id}` : null;
     
-    const octoBooking: Booking & { paymentUrl?: string } = {
+    const octoBooking: Booking = {
       id: booking.id,
       uuid: uuid,
       testMode: false,
@@ -175,7 +175,6 @@ export async function POST(request: NextRequest) {
         postalCode: null
       },
       notes: paymentUrl ? `PAYMENT_REQUIRED: Please pay via this link to confirm: ${paymentUrl}` : null,
-      paymentUrl: paymentUrl || undefined, // Custom extension field for ease of use
       deliveryMethods: [DeliveryMethod.VOUCHER],
       voucher: null, // E-ticket object
       unitItems: unitItems.map((item: any) => ({
