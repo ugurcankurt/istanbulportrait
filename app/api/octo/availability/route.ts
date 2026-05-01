@@ -15,11 +15,22 @@ export async function POST(request: NextRequest) {
 
   try {
     const body = await request.json();
-    const { productId, optionId, localDateStart, localDateEnd } = body;
+    const { productId, optionId, localDateStart, localDateEnd, localDate, availabilityIds } = body;
 
-    if (!productId || !localDateStart || !localDateEnd) {
+    if (!productId) {
       return NextResponse.json(
-        { error: "BAD_REQUEST", errorMessage: "Missing required fields (productId, localDateStart, localDateEnd)" },
+        { error: "BAD_REQUEST", errorMessage: "Missing required field: productId" },
+        { status: 400 }
+      );
+    }
+
+    const hasDateRange = !!(localDateStart && localDateEnd);
+    const hasLocalDate = !!localDate;
+    const hasAvailabilityIds = Array.isArray(availabilityIds) && availabilityIds.length > 0;
+
+    if (!hasDateRange && !hasLocalDate && !hasAvailabilityIds) {
+      return NextResponse.json(
+        { error: "BAD_REQUEST", errorMessage: "Must provide localDate, localDateStart/End, or availabilityIds" },
         { status: 400 }
       );
     }
@@ -63,16 +74,25 @@ export async function POST(request: NextRequest) {
     const endHour = settingsData?.end_time ? parseInt(settingsData.end_time.split(":")[0]) : 20;
 
     // 3. Generate Dates Array
-    const dates: string[] = [];
-    let currentDate = new Date(localDateStart);
-    const endDate = new Date(localDateEnd);
+    let dates: string[] = [];
     
-    // Safety check to prevent infinite loops (max 31 days)
-    let daysCount = 0;
-    while (currentDate <= endDate && daysCount < 31) {
-      dates.push(currentDate.toISOString().split("T")[0]);
-      currentDate.setDate(currentDate.getDate() + 1);
-      daysCount++;
+    if (hasDateRange) {
+      let currentDate = new Date(localDateStart);
+      const endDate = new Date(localDateEnd);
+      let daysCount = 0;
+      while (currentDate <= endDate && daysCount < 31) {
+        dates.push(currentDate.toISOString().split("T")[0]);
+        currentDate.setDate(currentDate.getDate() + 1);
+        daysCount++;
+      }
+    } else if (hasLocalDate) {
+      dates.push(localDate);
+    } else if (hasAvailabilityIds) {
+      const uniqueDates = new Set<string>();
+      for (const id of availabilityIds) {
+        uniqueDates.add(id.split("T")[0]);
+      }
+      dates = Array.from(uniqueDates);
     }
 
     // 4. Fetch all bookings for the date range
@@ -208,7 +228,12 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    return NextResponse.json(availableSlots);
+    let finalSlots = availableSlots;
+    if (hasAvailabilityIds) {
+      finalSlots = availableSlots.filter(slot => availabilityIds.includes(slot.id));
+    }
+
+    return NextResponse.json(finalSlots);
   } catch (error) {
     console.error("OCTO API Error - Availability:", error);
     return NextResponse.json(
