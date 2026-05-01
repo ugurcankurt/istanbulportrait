@@ -120,7 +120,7 @@ export async function POST(request: NextRequest) {
     }
 
     // 2.d. Insert booking
-    const internalPayload = { unitItems, uuid: finalUuid };
+    const internalPayload = { unitItems, uuid: finalUuid, resellerReference: resellerReference || null };
     const { data: booking, error } = await supabaseAdmin
       .from("bookings")
       .insert({
@@ -179,6 +179,11 @@ export async function GET(request: NextRequest) {
   if (localDateEnd && isNaN(Date.parse(localDateEnd))) {
     return NextResponse.json({ error: "BAD_REQUEST", errorMessage: "Invalid localDateEnd" }, { status: 400 });
   }
+
+  // OCTO requires at least one of these to be present
+  if (!resellerReference && !supplierReference && !(localDateStart && localDateEnd)) {
+    return NextResponse.json({ error: "BAD_REQUEST", errorMessage: "Must provide resellerReference, supplierReference, or localDateStart/End" }, { status: 400 });
+  }
   
   try {
     let query = supabaseAdmin
@@ -189,9 +194,8 @@ export async function GET(request: NextRequest) {
 
     // Simple filters
     if (resellerReference) {
-      // We don't store resellerReference explicitly except in notes, but let's try to match it if we can.
-      // For simplicity, we just filter loosely if needed, or ignore it if not strictly required by tests.
-      query = query.ilike("notes", `%${resellerReference}%`);
+      // First try to match via octo_data jsonb, fallback to ilike notes
+      query = query.or(`octo_data->>resellerReference.eq.${resellerReference},notes.ilike.%${resellerReference}%`);
     }
     if (supplierReference) {
       query = query.eq("id", supplierReference);

@@ -33,7 +33,7 @@ export function mapBookingToOcto(b: any, requestUuid?: string): Booking {
   if (unitItems.length === 0) {
     const count = b.people_count || 1;
     unitItems = Array.from({ length: count }).map((_, i) => ({
-      uuid: `${b.id.substring(0, 8)}-unit-${i}`,
+      uuid: crypto.randomUUID(),
       unitId: `unit_${b.package_id}_adult`,
       resellerReference: null,
       supplierReference: null,
@@ -55,7 +55,7 @@ export function mapBookingToOcto(b: any, requestUuid?: string): Booking {
   } else {
     // Map existing unitItems to ensure they have the full strict schema
     unitItems = unitItems.map((item, i) => ({
-      uuid: item.uuid || `${b.id.substring(0, 8)}-unit-${i}`,
+      uuid: item.uuid || crypto.randomUUID(),
       unitId: item.unitId || `unit_${b.package_id}_adult`,
       resellerReference: item.resellerReference || null,
       supplierReference: item.supplierReference || null,
