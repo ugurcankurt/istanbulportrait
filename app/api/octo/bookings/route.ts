@@ -23,15 +23,53 @@ export async function POST(request: NextRequest) {
       resellerReference 
     } = body;
 
-    if (!uuid || !productId || !unitItems || !contact) {
-      return NextResponse.json(
-        { error: "Bad Request", message: "Missing required booking fields" },
-        { status: 400 }
-      );
+    // 1.a. OCTO Core Validation
+    if (!uuid) {
+      return NextResponse.json({ error: "BAD_REQUEST", errorMessage: "Missing required field: uuid" }, { status: 400 });
+    }
+
+    if (!productId) {
+      return NextResponse.json({ error: "INVALID_PRODUCT_ID", errorMessage: "Missing productId", productId: null }, { status: 400 });
+    }
+
+    const { data: pkgData, error: pkgError } = await supabaseAdmin
+      .from("packages")
+      .select("price")
+      .eq("id", productId)
+      .single();
+
+    if (pkgError || !pkgData) {
+      return NextResponse.json({ error: "INVALID_PRODUCT_ID", errorMessage: "Product not found", productId }, { status: 400 });
+    }
+
+    if (!optionId || (optionId !== "DEFAULT" && optionId !== `opt_${productId}`)) {
+      return NextResponse.json({ error: "INVALID_OPTION_ID", errorMessage: "Option not found", optionId: optionId || null }, { status: 400 });
+    }
+
+    if (!availabilityId) {
+      return NextResponse.json({ error: "INVALID_AVAILABILITY_ID", errorMessage: "Missing availabilityId", availabilityId: null }, { status: 400 });
+    }
+
+    const [bookingDate, bookingTime] = availabilityId.split("T");
+    if (!bookingDate || !bookingTime) {
+      return NextResponse.json({ error: "INVALID_AVAILABILITY_ID", errorMessage: "Invalid availabilityId format", availabilityId }, { status: 400 });
+    }
+
+    if (!unitItems || !Array.isArray(unitItems) || unitItems.length === 0) {
+      return NextResponse.json({ error: "UNPROCESSABLE_ENTITY", errorMessage: "Missing or empty unitItems" }, { status: 400 });
+    }
+
+    for (const item of unitItems) {
+      if (!item.unitId || item.unitId !== `unit_${productId}_adult`) {
+        return NextResponse.json({ error: "INVALID_UNIT_ID", errorMessage: "Unit ID not found or invalid", unitId: item.unitId || null }, { status: 400 });
+      }
+    }
+
+    if (!contact) {
+      return NextResponse.json({ error: "BAD_REQUEST", errorMessage: "Missing contact details" }, { status: 400 });
     }
 
     // 2. Map OCTO request to your Supabase schema
-    const [bookingDate, bookingTime] = availabilityId ? availabilityId.split("T") : [null, null];
     const fullName = contact.fullName || `${contact.firstName || ""} ${contact.lastName || ""}`.trim() || "Unknown B2B Guest";
     const email = contact.emailAddress || `b2b-${uuid}@octotravel.com`;
 
@@ -49,11 +87,6 @@ export async function POST(request: NextRequest) {
 
     // 2.c. Calculate exact pricing based on time surcharges
     let totalAmount = 0;
-    const { data: pkgData } = await supabaseAdmin
-      .from("packages")
-      .select("price")
-      .eq("id", productId)
-      .single();
 
     if (pkgData) {
       const basePrice = pkgData.price || 0;
@@ -149,7 +182,11 @@ export async function POST(request: NextRequest) {
         uuid: item.uuid || crypto.randomUUID(),
         unitId: item.unitId,
         resellerReference: item.resellerReference || null,
-        contact: item.contact || null
+        supplierReference: null,
+        status: octoStatus,
+        utcRedeemedAt: null,
+        contact: item.contact || null,
+        ticket: null
       }))
     };
 
