@@ -21,11 +21,13 @@ export async function GET(
   }
 
   try {
-    const { data: b, error: fetchError } = await supabaseAdmin
+    const { data: bookings, error: fetchError } = await supabaseAdmin
       .from("bookings")
       .select("*")
-      .eq("id", uuid)
-      .single();
+      .or(`id.eq.${uuid},notes.ilike.%${uuid}%`)
+      .limit(1);
+
+    const b = bookings?.[0];
 
     if (fetchError || !b) {
       return NextResponse.json(
@@ -167,11 +169,13 @@ export async function PATCH(
       body = await request.json();
     } catch(e) {}
 
-    const { data: b, error: fetchError } = await supabaseAdmin
+    const { data: bookings, error: fetchError } = await supabaseAdmin
       .from("bookings")
       .select("*")
-      .eq("id", uuid)
-      .single();
+      .or(`id.eq.${uuid},notes.ilike.%${uuid}%`)
+      .limit(1);
+
+    const b = bookings?.[0];
 
     if (fetchError || !b) {
       return NextResponse.json(

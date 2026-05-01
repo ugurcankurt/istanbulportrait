@@ -32,12 +32,14 @@ export async function POST(
     // Default to 30 minutes if not provided
     const expirationMinutes = typeof body.expirationMinutes === "number" ? body.expirationMinutes : 30;
 
-    // 2. Fetch existing booking by uuid
-    const { data: booking, error: fetchError } = await supabaseAdmin
+    // 2. Fetch existing booking by uuid (might be in id or inside notes as OCTO_META)
+    const { data: bookings, error: fetchError } = await supabaseAdmin
       .from("bookings")
       .select("*")
-      .eq("id", uuid)
-      .single();
+      .or(`id.eq.${uuid},notes.ilike.%${uuid}%`)
+      .limit(1);
+
+    const booking = bookings?.[0];
 
     if (fetchError || !booking) {
       return NextResponse.json(
