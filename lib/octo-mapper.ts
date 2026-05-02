@@ -29,6 +29,33 @@ export function mapBookingToOcto(b: any, requestUuid?: string): Booking {
     } catch (e) {}
   }
 
+  // Calculate pricing
+  const totalAmount = b.total_amount || 0;
+  const netTotalCents = Math.round(totalAmount * 100);
+  const retailTotalCents = Math.round(netTotalCents / 0.9);
+  
+  const unitCount = unitItems.length > 0 ? unitItems.length : (b.people_count || 1);
+  const unitNetCents = Math.round(netTotalCents / unitCount);
+  const unitRetailCents = Math.round(retailTotalCents / unitCount);
+
+  const pricingObj = {
+    original: retailTotalCents,
+    retail: retailTotalCents,
+    net: netTotalCents,
+    currency: "EUR",
+    currencyPrecision: 2,
+    includedTaxes: []
+  };
+
+  const unitPricingObj = {
+    original: unitRetailCents,
+    retail: unitRetailCents,
+    net: unitNetCents,
+    currency: "EUR",
+    currencyPrecision: 2,
+    includedTaxes: []
+  };
+
   // Ensure unitItems has required schema fields
   if (unitItems.length === 0) {
     const count = b.people_count || 1;
@@ -40,16 +67,17 @@ export function mapBookingToOcto(b: any, requestUuid?: string): Booking {
       status: status,
       utcRedeemedAt: null,
       contact: {
-        fullName: b.user_name || undefined,
-        firstName: undefined,
-        lastName: undefined,
-        emailAddress: b.user_email || undefined,
-        phoneNumber: b.user_phone || undefined,
+        fullName: b.user_name || null,
+        firstName: null,
+        lastName: null,
+        emailAddress: b.user_email || null,
+        phoneNumber: b.user_phone || null,
         locales: b.locale ? [b.locale] : ["en"],
-        country: undefined,
-        notes: undefined,
-        postalCode: undefined
+        country: null,
+        notes: null,
+        postalCode: null
       },
+      pricing: unitPricingObj,
       ticket: null
     }));
   } else {
@@ -62,37 +90,40 @@ export function mapBookingToOcto(b: any, requestUuid?: string): Booking {
       status: status,
       utcRedeemedAt: null,
       contact: {
-        fullName: item.contact?.fullName || b.user_name || undefined,
-        firstName: item.contact?.firstName || undefined,
-        lastName: item.contact?.lastName || undefined,
-        emailAddress: item.contact?.emailAddress || b.user_email || undefined,
-        phoneNumber: item.contact?.phoneNumber || b.user_phone || undefined,
+        fullName: item.contact?.fullName || b.user_name || null,
+        firstName: item.contact?.firstName || null,
+        lastName: item.contact?.lastName || null,
+        emailAddress: item.contact?.emailAddress || b.user_email || null,
+        phoneNumber: item.contact?.phoneNumber || b.user_phone || null,
         locales: item.contact?.locales || (b.locale ? [b.locale] : ["en"]),
-        country: item.contact?.country || undefined,
-        notes: item.contact?.notes || undefined,
-        postalCode: item.contact?.postalCode || undefined
+        country: item.contact?.country || null,
+        notes: item.contact?.notes || null,
+        postalCode: item.contact?.postalCode || null
       },
+      pricing: unitPricingObj,
       ticket: null
     }));
   }
 
   let availabilityIdStr: string | null = null;
+  let localDateTimeStartStr: string | null = null;
   if (b.booking_date && b.booking_time) {
     const slotTime = b.booking_time.substring(0, 5); // ensure HH:mm
     availabilityIdStr = `${b.booking_date}T${slotTime}:00+03:00`;
+    localDateTimeStartStr = `${b.booking_date}T${slotTime}:00`;
   }
 
   let availabilityObj: any = null;
-  if (availabilityIdStr) {
+  if (availabilityIdStr && localDateTimeStartStr) {
     const pad = (n: number) => String(n).padStart(2, "0");
     const startHour = parseInt(b.booking_time.substring(0, 2));
     const endHour = Math.min(23, startHour + 1);
-    const safeEndStr = `${b.booking_date}T${pad(endHour)}:${b.booking_time.substring(3, 5)}:00+03:00`;
+    const safeEndStrLocal = `${b.booking_date}T${pad(endHour)}:${b.booking_time.substring(3, 5)}:00`;
 
     availabilityObj = {
       id: availabilityIdStr,
-      localDateTimeStart: availabilityIdStr,
-      localDateTimeEnd: safeEndStr,
+      localDateTimeStart: localDateTimeStartStr,
+      localDateTimeEnd: safeEndStrLocal,
       allDay: false,
       status: "AVAILABLE",
       vacancies: 1,
@@ -128,15 +159,15 @@ export function mapBookingToOcto(b: any, requestUuid?: string): Booking {
     availabilityId: availabilityIdStr,
     availability: availabilityObj,
     contact: {
-      fullName: b.user_name || undefined,
-      firstName: b.octo_data?.contact?.firstName || undefined,
-      lastName: b.octo_data?.contact?.lastName || undefined,
-      emailAddress: b.user_email || undefined,
-      phoneNumber: b.user_phone || undefined,
+      fullName: b.user_name || null,
+      firstName: b.octo_data?.contact?.firstName || null,
+      lastName: b.octo_data?.contact?.lastName || null,
+      emailAddress: b.user_email || null,
+      phoneNumber: b.user_phone || null,
       locales: b.locale ? [b.locale] : ["en"],
-      country: b.octo_data?.contact?.country || undefined,
-      notes: b.octo_data?.contact?.notes || undefined,
-      postalCode: b.octo_data?.contact?.postalCode || undefined
+      country: b.octo_data?.contact?.country || null,
+      notes: b.octo_data?.contact?.notes || null,
+      postalCode: b.octo_data?.contact?.postalCode || null
     },
     notes: b.notes || null,
     deliveryMethods: [DeliveryMethod.VOUCHER],
@@ -145,7 +176,8 @@ export function mapBookingToOcto(b: any, requestUuid?: string): Booking {
       utcRedeemedAt: null,
       deliveryOptions: []
     },
-    unitItems: unitItems
+    unitItems: unitItems,
+    pricing: pricingObj
   };
 
   return octoBooking;
