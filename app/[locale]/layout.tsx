@@ -130,6 +130,11 @@ export default async function LocaleLayout({
   const { getServerUser } = await import("@/lib/auth-server");
   const user = await getServerUser();
 
+  // Server-Side Cookie Reading for Google Consent Mode V2 (Next.js 16 / EEA Compliant)
+  const { getConsentCookie } = await import("@/app/actions/consent");
+  const consentData = await getConsentCookie();
+  const isGranted = consentData?.consent === "accepted_all" ? "granted" : "denied";
+
   return (
     <html
       lang={locale}
@@ -151,10 +156,10 @@ export default async function LocaleLayout({
               window.dataLayer = window.dataLayer || [];
               function gtag(){dataLayer.push(arguments);}
               gtag('consent', 'default', {
-                'analytics_storage': 'denied',
-                'ad_storage': 'denied',
-                'ad_user_data': 'denied',
-                'ad_personalization': 'denied',
+                'analytics_storage': '${isGranted}',
+                'ad_storage': '${isGranted}',
+                'ad_user_data': '${isGranted}',
+                'ad_personalization': '${isGranted}',
                 'functionality_storage': 'granted',
                 'security_storage': 'granted',
                 'wait_for_update': 500
