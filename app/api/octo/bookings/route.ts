@@ -211,17 +211,15 @@ export async function GET(request: NextRequest) {
       throw error;
     }
 
-    let filteredBookings = bookings || [];
-    if (resellerReference) {
-      filteredBookings = filteredBookings.filter((b: any) => 
-        b.octo_data?.resellerReference === resellerReference || 
-        (b.notes && b.notes.includes(resellerReference))
-      );
-    }
-
-    const octoBookings: Booking[] = filteredBookings.map((b: any) => {
+    let octoBookings: Booking[] = (bookings || []).map((b: any) => {
       return mapBookingToOcto(b);
     });
+
+    // In-memory filter on the fully mapped objects to guarantee 100% consistency
+    // This perfectly bypasses any DB typing issues (e.g. if octo_data is returned as a string).
+    if (resellerReference) {
+      octoBookings = octoBookings.filter(b => b.resellerReference === resellerReference);
+    }
 
     return NextResponse.json(octoBookings);
   } catch (error) {
