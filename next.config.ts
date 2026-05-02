@@ -92,8 +92,16 @@ const nextConfig: NextConfig = {
       },
       // Google Tag Gateway (First-Party Tracking Proxy)
       {
+        source: "/:locale(en|tr|ar|ru|es|fr|de|zh|ro)?/metrics/gtag/js",
+        destination: "https://www.googletagmanager.com/gtag/js",
+      },
+      {
         source: "/metrics/gtag/js",
         destination: "https://www.googletagmanager.com/gtag/js",
+      },
+      {
+        source: "/:locale(en|tr|ar|ru|es|fr|de|zh|ro)?/g/collect/:path*",
+        destination: "https://www.google-analytics.com/g/collect/:path*",
       },
       {
         source: "/g/collect/:path*",
