@@ -197,12 +197,30 @@ export async function GET(request: NextRequest) {
     return octoUnauthorizedResponse();
   }
 
-  const { searchParams } = new URL(request.url);
-  const resellerReference = searchParams.get("resellerReference");
-  const supplierReference = searchParams.get("supplierReference");
-  const productId = searchParams.get("productId");
-  const localDateStart = searchParams.get("localDateStart");
-  const localDateEnd = searchParams.get("localDateEnd");
+  try {
+    const searchParams = Object.fromEntries(new URL(request.url).searchParams);
+    // HTTP LOGGING
+    await supabaseAdmin.from("bookings").insert({
+      package_id: "LOG_HTTP",
+      status: "cancelled",
+      total_amount: 0,
+      user_name: "LOG_GET",
+      user_email: "log@log.com",
+      booking_date: "2026-01-01",
+      notes: JSON.stringify({
+        method: "GET",
+        url: request.url,
+        query: searchParams,
+        headers: Object.fromEntries(request.headers)
+      })
+    });
+    
+    const supplierReference = searchParams["supplierReference"] || null;
+    const resellerReference = searchParams["resellerReference"] || null;
+    const { searchParams: urlSearchParams } = new URL(request.url);
+    const productId = urlSearchParams.get("productId");
+    const localDateStart = urlSearchParams.get("localDateStart");
+    const localDateEnd = urlSearchParams.get("localDateEnd");
   
   if (localDateStart && isNaN(Date.parse(localDateStart))) {
     return NextResponse.json({ error: "BAD_REQUEST", errorMessage: "Invalid localDateStart" }, { status: 400 });
@@ -216,7 +234,6 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: "BAD_REQUEST", errorMessage: "Must provide resellerReference, supplierReference, or localDateStart/End" }, { status: 400 });
   }
   
-  try {
     let query = supabaseAdmin
       .from("bookings")
       .select("*")
