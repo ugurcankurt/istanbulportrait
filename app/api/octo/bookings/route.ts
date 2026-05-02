@@ -194,15 +194,18 @@ export async function GET(request: NextRequest) {
 
     // Simple filters
     if (resellerReference) {
-      // JSON operators inside .or() string can throw parsing errors in PostgREST. 
-      // We rely on 'notes' ilike match which we appended in POST and confirm endpoints.
-      query = query.ilike("notes", `%${resellerReference}%`);
+      query = query.eq("octo_data->>resellerReference", resellerReference);
     }
     if (supplierReference) {
       query = query.eq("id", supplierReference);
     }
     if (productId) {
       query = query.eq("package_id", productId);
+    }
+    if (localDateStart && localDateEnd) {
+      const startStr = localDateStart.split("T")[0];
+      const endStr = localDateEnd.split("T")[0];
+      query = query.gte("booking_date", startStr).lte("booking_date", endStr);
     }
 
     const { data: bookings, error } = await query;

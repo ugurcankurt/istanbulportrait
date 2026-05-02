@@ -86,14 +86,17 @@ export async function POST(
     }
 
     const newMeta = { 
+      ...(booking.octo_data || {}),
       uuid: finalUuid, 
       unitItems: currentUnitItems,
-      resellerReference: body.resellerReference || booking.octo_data?.resellerReference || null,
       contact: {
         ...(booking.octo_data?.contact || {}),
         ...(body.contact || {})
       }
     };
+    if (body.resellerReference !== undefined) {
+      newMeta.resellerReference = body.resellerReference;
+    }
     updates.octo_uuid = finalUuid;
     updates.octo_data = newMeta;
     updates.notes = cleanNotes;

@@ -123,6 +123,7 @@ export async function PATCH(
 
     // Save metadata properly
     const newMeta = { 
+      ...(b.octo_data || {}),
       uuid: finalUuid, 
       unitItems: currentUnitItems,
       contact: {
@@ -130,6 +131,10 @@ export async function PATCH(
         ...(body.contact || {})
       }
     };
+    if (body.resellerReference !== undefined) {
+      newMeta.resellerReference = body.resellerReference;
+    }
+    
     updates.octo_uuid = finalUuid;
     updates.octo_data = newMeta;
     updates.notes = cleanNotes;
