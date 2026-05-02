@@ -167,7 +167,17 @@ export async function PATCH(
     updates.octo_data = newMeta;
     updates.notes = cleanNotes;
 
-    await supabaseAdmin.from("bookings").update(updates).eq("id", b.id);
+    if (updates.user_email) {
+      const { error: customerError } = await supabaseAdmin.from("customers").upsert({
+        email: updates.user_email,
+        name: updates.user_name || "Unknown B2B Guest",
+        phone: updates.user_phone || ""
+      }, { onConflict: "email" });
+      if (customerError) throw customerError;
+    }
+
+    const { error: updateError } = await supabaseAdmin.from("bookings").update(updates).eq("id", b.id);
+    if (updateError) throw updateError;
 
     // Re-fetch or simulate updated object
     const updatedB = { ...b, ...updates };

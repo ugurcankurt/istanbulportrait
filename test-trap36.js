@@ -10,7 +10,7 @@ envFile.split('\n').forEach(line => {
 });
 const supabase = createClient(env.NEXT_PUBLIC_SUPABASE_URL, env.SUPABASE_SERVICE_ROLE_KEY || env.SUPABASE_SERVICE_KEY);
 async function check() {
-  const { data } = await supabase.from("bookings").select("id").order("created_at", { ascending: false }).limit(5);
-  console.log(data);
+  const { data, error } = await supabase.rpc("execute_sql", { query: "SELECT trigger_name FROM information_schema.triggers WHERE event_object_table = 'bookings';" });
+  console.log(error || data);
 }
 check();

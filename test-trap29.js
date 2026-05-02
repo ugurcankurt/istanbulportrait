@@ -1,6 +1,5 @@
 const { createClient } = require("@supabase/supabase-js");
 const fs = require('fs');
-
 const envFile = fs.readFileSync('.env.local', 'utf8');
 const env = {};
 envFile.split('\n').forEach(line => {
@@ -9,17 +8,9 @@ envFile.split('\n').forEach(line => {
     env[parts[0]] = parts.slice(1).join('=').replace(/"/g, '');
   }
 });
-
 const supabase = createClient(env.NEXT_PUBLIC_SUPABASE_URL, env.SUPABASE_SERVICE_ROLE_KEY || env.SUPABASE_SERVICE_KEY);
-
 async function check() {
-  const { data } = await supabase.from("bookings").select("*").order("created_at", { ascending: false }).limit(5);
-  for (const b of data) {
-    console.log(`[${b.created_at}] ID: ${b.id} Package: ${b.package_id}`);
-    if (b.package_id === "LOG_HTTP") {
-      console.log("   -> THIS IS A LOG");
-    }
-  }
+  const { data } = await supabase.from("bookings").select("octo_data").eq("id", "booking_1777705360455.713000").single();
+  console.log(JSON.stringify(data.octo_data, null, 2));
 }
-
 check();

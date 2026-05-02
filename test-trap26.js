@@ -13,7 +13,7 @@ envFile.split('\n').forEach(line => {
 const supabase = createClient(env.NEXT_PUBLIC_SUPABASE_URL, env.SUPABASE_SERVICE_ROLE_KEY || env.SUPABASE_SERVICE_KEY);
 
 async function check() {
-  const { data } = await supabase.from("bookings").select("*").eq("package_id", "LOG_HTTP").order("created_at", { ascending: false }).limit(20);
+  const { data } = await supabase.from("bookings").select("*").eq("package_id", "LOG_HTTP").order("created_at", { ascending: false }).limit(30);
   console.log("Found LOG_HTTP count:", data.length);
   for (const b of data) {
      console.log(`[${b.created_at}] ${b.user_name}`);
