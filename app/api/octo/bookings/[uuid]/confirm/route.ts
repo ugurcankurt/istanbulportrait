@@ -4,6 +4,10 @@ import { supabaseAdmin } from "@/lib/supabase";
 import { BookingStatus } from "@octocloud/types";
 import { mapBookingToOcto } from "@/lib/octo-mapper";
 
+export const dynamic = "force-dynamic";
+export const fetchCache = "force-no-store";
+export const revalidate = 0;
+
 export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ uuid: string }> }
