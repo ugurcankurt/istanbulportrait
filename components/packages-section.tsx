@@ -54,7 +54,7 @@ export function PackagesSection({ header, customCtaHeader, aggregateRating, dbPa
         const locName = pkg.title[locale] || pkg.title["en"] || pkg.slug;
         const locDuration = pkg.duration[locale] || pkg.duration["en"] || "";
         const locFeatures = pkg.features[locale] || pkg.features["en"] || [];
-        
+
         // Generate native slug if translation exists, otherwise strict fallback
         const nativeSlug = pkg.title[locale] ? generateNativeSlug(pkg.title[locale]) : pkg.slug;
 
@@ -118,9 +118,10 @@ export function PackagesSection({ header, customCtaHeader, aggregateRating, dbPa
         className="block h-full group"
       >
         <Card
-          className={`h-full flex flex-col overflow-hidden p-0 gap-0 pt-0 ${pkg.popular ? "ring-2 ring-primary shadow-xl sm:scale-105 bg-gradient-to-b from-background to-primary/5" : "border-2 hover:border-primary/20"}`}
+          className={`aspect-[3/4] w-full flex flex-col overflow-hidden p-0 gap-0 pt-0 ${pkg.popular ? "ring-2 ring-primary shadow-xl sm:scale-105 bg-gradient-to-b from-background to-primary/5" : "border-2 hover:border-primary/20"}`}
         >
-          <div className="relative h-50 w-full overflow-hidden">
+          {/* Image taking 85% */}
+          <div className="relative h-[85%] w-full overflow-hidden">
             {pkg.image ? (
               <Image
                 src={pkg.image}
@@ -131,94 +132,77 @@ export function PackagesSection({ header, customCtaHeader, aggregateRating, dbPa
                 quality={50}
               />
             ) : (
-                <div className="w-full h-full bg-muted flex flex-col items-center justify-center text-muted-foreground/30">
-                  <ImageIcon className="w-12 h-12 mb-2" />
-                </div>
+              <div className="w-full h-full bg-muted flex flex-col items-center justify-center text-muted-foreground/30">
+                <ImageIcon className="w-12 h-12 mb-2" />
+              </div>
             )}
-            <div className="absolute top-2 start-2 z-10 bg-background/85 backdrop-blur-md text-foreground px-3 py-1 rounded-lg font-bold text-lg sm:text-xl shadow-lg border border-border/50 flex flex-col items-center">
-              <span
-                className={
-                  pkg.pricing.isDiscounted
-                    ? "text-xs opacity-80 line-through mb-[-4px]"
-                    : ""
-                }
-              >
-                {formatPrice(pkg.basePrice)}
-              </span>
-              {pkg.pricing.isDiscounted && (
-                <span>{formatPrice(pkg.pricing.price)}</span>
+
+            {/* Title Overlay at bottom of image */}
+            <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent pt-12 pb-3 px-4 z-10">
+              {asHeading ? (
+                <h3 className="text-xl sm:text-2xl font-bold text-white line-clamp-2 drop-shadow-md">
+                  {pkg.name}
+                </h3>
+              ) : (
+                <div className="text-xl sm:text-2xl font-bold text-white line-clamp-2 drop-shadow-md">
+                  {pkg.name}
+                </div>
               )}
+            </div>
+
+            {/* Seasonal Discount Badge (Top Right) */}
+            <div className="absolute top-2 end-2 z-10 flex flex-col gap-2 items-end">
+              {pkg.popular && (
+                <Badge className="bg-primary text-primary-foreground px-2 sm:px-4 py-1 text-xs sm:text-sm shadow-md">
+                  {tui("most_popular")}
+                </Badge>
+              )}
+              {pkg.pricing.isDiscounted && activeDiscount && (
+                <Badge className="bg-sale text-sale-foreground px-2 py-0.5 text-[10px] sm:text-xs shadow-md animate-pulse border-0">
+                  -{Math.round(pkg.pricing.discountPercentage * 100)}%{" "}
+                  {activeDiscount.name}
+                </Badge>
+              )}
+            </div>
+          </div>
+
+          {/* Footer taking 15% */}
+          <div className="h-[15%] flex flex-row items-center justify-between p-0 px-4 bg-background">
+            {/* Left: Review Rating */}
+            <div className="flex items-center">
+              {aggregateRating ? (
+                <div className="flex items-center gap-1.5">
+                  <Star className="h-4 w-4 fill-primary text-primary" />
+                  <span className="text-sm font-bold text-foreground">{aggregateRating.average}</span>
+                  <span className="text-xs text-muted-foreground font-medium">({aggregateRating.count})</span>
+                </div>
+              ) : (
+                <div className="flex items-center gap-1.5">
+                  <Star className="h-4 w-4 fill-primary text-primary" />
+                  <span className="text-sm font-bold text-foreground">5.0</span>
+                </div>
+              )}
+            </div>
+
+            {/* Right: Price */}
+            <div className="flex flex-col items-end justify-center leading-none">
+              <div className="flex items-center gap-1.5">
+                {pkg.pricing.isDiscounted && (
+                  <span className="text-xs text-muted-foreground line-through">
+                    {formatPrice(pkg.basePrice)}
+                  </span>
+                )}
+                <span className="text-lg font-bold text-foreground">
+                  {formatPrice(pkg.pricing.isDiscounted ? pkg.pricing.price : pkg.basePrice)}
+                </span>
+              </div>
               {pkg.isPerPerson && (
-                <span className="text-[10px] sm:text-xs font-normal opacity-90 -mt-1">
+                <span className="text-[10px] text-muted-foreground font-normal mt-0.5">
                   {t("per_person")}
                 </span>
               )}
             </div>
           </div>
-
-          {/* Seasonal Discount Badge */}
-          <div className="absolute top-2 end-2 z-10 flex flex-col gap-2 items-end">
-            {pkg.popular && (
-              <Badge className="bg-primary text-primary-foreground px-2 sm:px-4 py-1 text-xs sm:text-sm shadow-md">
-                {tui("most_popular")}
-              </Badge>
-            )}
-            {pkg.pricing.isDiscounted && activeDiscount && (
-              <Badge className="bg-sale text-sale-foreground px-2 py-0.5 text-[10px] sm:text-xs shadow-md animate-pulse border-0">
-                -{Math.round(pkg.pricing.discountPercentage * 100)}%{" "}
-                {activeDiscount.name}
-              </Badge>
-            )}
-          </div>
-
-          <CardHeader className="text-left pb-2 sm:pb-2 px-3 sm:px-4 pt-4">
-            {asHeading ? (
-              <h3 className="text-xl sm:text-xl font-bold mb-1 sm:mb-2 line-clamp-2">
-                {pkg.name}
-              </h3>
-            ) : (
-              <div className="text-xl sm:text-xl font-bold mb-1 sm:mb-2 line-clamp-2">
-                {pkg.name}
-              </div>
-            )}
-
-            {/* Review Rating */}
-            {aggregateRating && (
-              <div className="flex items-center gap-1.5 mb-2">
-                <div className="flex items-center">
-                  {[...Array(5)].map((_, i) => (
-                    <Star
-                      key={i}
-                      className={cn(
-                        "h-3.5 w-3.5",
-                        i < Math.floor(aggregateRating.average)
-                          ? "fill-primary text-primary"
-                          : "text-muted-foreground/30"
-                      )}
-                    />
-                  ))}
-                </div>
-                <span className="text-sm font-bold text-foreground">{aggregateRating.average}</span>
-                <span className="text-xs text-muted-foreground font-medium">({aggregateRating.count})</span>
-              </div>
-            )}
-
-            <div className="flex flex-wrap justify-start gap-x-2 gap-y-1">
-              <div className="flex items-center justify-center space-x-2 rtl:space-x-reverse text-lg sm:text-sm">
-                <Clock className="w-4 h-4 sm:w-4 sm:h-4 text-primary" />
-                <span className="font-medium whitespace-nowrap">{pkg.duration}</span>
-              </div>
-              <div className="flex items-center justify-center space-x-2 rtl:space-x-reverse text-lg sm:text-sm">
-                <ImageIcon className="w-4 h-4 sm:w-4 sm:h-4 text-primary" />
-                <span className="font-medium whitespace-nowrap">{pkg.photos} {tui("photos")}</span>
-              </div>
-              <div className="flex items-center justify-center space-x-2 rtl:space-x-reverse text-lg sm:text-sm">
-                <MapPin className="w-4 h-4 sm:w-4 sm:h-4 text-primary" />
-                <span className="font-medium whitespace-nowrap">{pkg.locations} {tui("locations")}</span>
-              </div>
-            </div>
-            <div />
-          </CardHeader>
         </Card>
       </Link>
     </div>

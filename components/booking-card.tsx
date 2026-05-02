@@ -391,7 +391,12 @@ export function BookingCard({
                                     selectedTime === time && "shadow-sm",
                                     isBlocked && "bg-red-500 text-white border-red-600 cursor-not-allowed hover:bg-red-500 hover:text-white disabled:opacity-90 shadow-sm"
                                   )}
-                                  onClick={() => !isBlocked && setSelectedTime(time)}
+                                  onClick={() => {
+                                    if (!isBlocked) {
+                                      setSelectedTime(time);
+                                      setIsTimePopoverOpen(false);
+                                    }
+                                  }}
                                   disabled={isBlocked || isLoadingSlots}
                                 >
                                   {isBlocked ? (dateFnsLocale?.code?.startsWith("tr") ? "Dolu" : "Reserved") : (
@@ -412,15 +417,6 @@ export function BookingCard({
                       );
                     })}
                   </Tabs>
-                  <div className="pt-2 border-t border-border/50 mt-0">
-                    <Button
-                      className="w-full h-10 bg-primary text-primary-foreground font-bold"
-                      onClick={() => setIsTimePopoverOpen(false)}
-                      disabled={!selectedTime}
-                    >
-                      {tCheckout("buttons.continue")}
-                    </Button>
-                  </div>
                 </PopoverContent>
               </Popover>
             </div>
