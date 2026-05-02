@@ -122,7 +122,14 @@ export async function PATCH(
     }
 
     // Save metadata properly
-    const newMeta = { uuid: finalUuid, unitItems: currentUnitItems };
+    const newMeta = { 
+      uuid: finalUuid, 
+      unitItems: currentUnitItems,
+      contact: {
+        ...(b.octo_data?.contact || {}),
+        ...(body.contact || {})
+      }
+    };
     updates.octo_uuid = finalUuid;
     updates.octo_data = newMeta;
     updates.notes = cleanNotes;

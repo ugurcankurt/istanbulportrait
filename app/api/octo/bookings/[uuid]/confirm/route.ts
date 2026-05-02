@@ -89,7 +89,10 @@ export async function POST(
       uuid: finalUuid, 
       unitItems: currentUnitItems,
       resellerReference: body.resellerReference || booking.octo_data?.resellerReference || null,
-      contact: body.contact || booking.octo_data?.contact || null
+      contact: {
+        ...(booking.octo_data?.contact || {}),
+        ...(body.contact || {})
+      }
     };
     updates.octo_uuid = finalUuid;
     updates.octo_data = newMeta;

@@ -67,15 +67,15 @@ export function mapBookingToOcto(b: any, requestUuid?: string): Booking {
       status: status,
       utcRedeemedAt: null,
       contact: {
-        fullName: b.user_name || null,
-        firstName: null,
-        lastName: null,
-        emailAddress: b.user_email || null,
-        phoneNumber: b.user_phone || null,
+        fullName: b.user_name || "Unknown",
+        firstName: "",
+        lastName: "",
+        emailAddress: b.user_email || "",
+        phoneNumber: b.user_phone || "",
         locales: b.locale ? [b.locale] : ["en"],
-        country: null,
-        notes: null,
-        postalCode: null
+        country: "",
+        notes: "",
+        postalCode: ""
       },
       pricing: unitPricingObj,
       ticket: null
@@ -90,15 +90,15 @@ export function mapBookingToOcto(b: any, requestUuid?: string): Booking {
       status: status,
       utcRedeemedAt: null,
       contact: {
-        fullName: item.contact?.fullName || b.user_name || null,
-        firstName: item.contact?.firstName || null,
-        lastName: item.contact?.lastName || null,
-        emailAddress: item.contact?.emailAddress || b.user_email || null,
-        phoneNumber: item.contact?.phoneNumber || b.user_phone || null,
+        fullName: item.contact?.fullName || b.user_name || "Unknown",
+        firstName: item.contact?.firstName || "",
+        lastName: item.contact?.lastName || "",
+        emailAddress: item.contact?.emailAddress || b.user_email || "",
+        phoneNumber: item.contact?.phoneNumber || b.user_phone || "",
         locales: item.contact?.locales || (b.locale ? [b.locale] : ["en"]),
-        country: item.contact?.country || null,
-        notes: item.contact?.notes || null,
-        postalCode: item.contact?.postalCode || null
+        country: item.contact?.country || "",
+        notes: item.contact?.notes || "",
+        postalCode: item.contact?.postalCode || ""
       },
       pricing: unitPricingObj,
       ticket: null
@@ -106,24 +106,22 @@ export function mapBookingToOcto(b: any, requestUuid?: string): Booking {
   }
 
   let availabilityIdStr: string | null = null;
-  let localDateTimeStartStr: string | null = null;
   if (b.booking_date && b.booking_time) {
     const slotTime = b.booking_time.substring(0, 5); // ensure HH:mm
     availabilityIdStr = `${b.booking_date}T${slotTime}:00+03:00`;
-    localDateTimeStartStr = `${b.booking_date}T${slotTime}:00`;
   }
 
   let availabilityObj: any = null;
-  if (availabilityIdStr && localDateTimeStartStr) {
+  if (availabilityIdStr) {
     const pad = (n: number) => String(n).padStart(2, "0");
     const startHour = parseInt(b.booking_time.substring(0, 2));
     const endHour = Math.min(23, startHour + 1);
-    const safeEndStrLocal = `${b.booking_date}T${pad(endHour)}:${b.booking_time.substring(3, 5)}:00`;
+    const safeEndStr = `${b.booking_date}T${pad(endHour)}:${b.booking_time.substring(3, 5)}:00+03:00`;
 
     availabilityObj = {
       id: availabilityIdStr,
-      localDateTimeStart: localDateTimeStartStr,
-      localDateTimeEnd: safeEndStrLocal,
+      localDateTimeStart: availabilityIdStr,
+      localDateTimeEnd: safeEndStr,
       allDay: false,
       status: "AVAILABLE",
       vacancies: 1,
@@ -159,15 +157,15 @@ export function mapBookingToOcto(b: any, requestUuid?: string): Booking {
     availabilityId: availabilityIdStr,
     availability: availabilityObj,
     contact: {
-      fullName: b.user_name || null,
-      firstName: b.octo_data?.contact?.firstName || null,
-      lastName: b.octo_data?.contact?.lastName || null,
-      emailAddress: b.user_email || null,
-      phoneNumber: b.user_phone || null,
+      fullName: b.user_name || "Unknown",
+      firstName: b.octo_data?.contact?.firstName || "",
+      lastName: b.octo_data?.contact?.lastName || "",
+      emailAddress: b.user_email || "",
+      phoneNumber: b.user_phone || "",
       locales: b.locale ? [b.locale] : ["en"],
-      country: b.octo_data?.contact?.country || null,
-      notes: b.octo_data?.contact?.notes || null,
-      postalCode: b.octo_data?.contact?.postalCode || null
+      country: b.octo_data?.contact?.country || "",
+      notes: b.octo_data?.contact?.notes || "",
+      postalCode: b.octo_data?.contact?.postalCode || ""
     },
     notes: b.notes || null,
     deliveryMethods: [DeliveryMethod.VOUCHER],

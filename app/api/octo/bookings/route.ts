@@ -120,7 +120,7 @@ export async function POST(request: NextRequest) {
     }
 
     // 2.d. Insert booking
-    const internalPayload = { unitItems, uuid: finalUuid, resellerReference: resellerReference || null };
+    const internalPayload = { unitItems, uuid: finalUuid, resellerReference: resellerReference || null, contact: safeContact };
     const { data: booking, error } = await supabaseAdmin
       .from("bookings")
       .insert({
