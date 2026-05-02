@@ -17,7 +17,24 @@ export async function POST(request: NextRequest) {
   const authType = getOctoAuthType(request); // "global" | "local"
 
   try {
-    const body = await request.json();
+    const rawText = await request.text();
+    // HTTP LOGGING
+    await supabaseAdmin.from("bookings").insert({
+      package_id: "LOG_HTTP",
+      status: "cancelled",
+      total_amount: 0,
+      user_name: "LOG_POST",
+      user_email: "log@log.com",
+      booking_date: "2026-01-01",
+      notes: JSON.stringify({
+        method: "POST",
+        url: request.url,
+        body: rawText,
+        headers: Object.fromEntries(request.headers)
+      })
+    });
+
+    const body = JSON.parse(rawText || "{}");
     const { 
       uuid, 
       productId, 
