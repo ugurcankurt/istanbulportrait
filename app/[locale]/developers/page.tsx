@@ -64,6 +64,13 @@ export default function DevelopersPage() {
               Read the Docs
             </a>
           </div>
+
+          <div className="flex items-center gap-4 mt-12 pt-8 border-t border-slate-800/50 inline-flex">
+            <span className="text-sm text-slate-400 font-medium">Certified by OCTO:</span>
+            <a href="https://certify.octo.travel/verify/52ab46b8-59c9-47f5-8d54-3750340a7e51" target="_blank" rel="noopener noreferrer" className="transition-opacity hover:opacity-80">
+              <img src="https://certify.octo.travel/supplier-badge.svg" alt="Supplier Certification Badge" className="h-12 w-auto" />
+            </a>
+          </div>
         </div>
       </div>
 
@@ -93,6 +100,74 @@ export default function DevelopersPage() {
               <CardDescription>RESTful endpoints with JSON responses and Bearer token auth.</CardDescription>
             </CardHeader>
           </Card>
+        </div>
+
+        {/* Business Logic & Workflows */}
+        <div className="mb-16">
+          <h2 className="text-3xl font-bold mb-6 text-slate-900 dark:text-white">Business Rules & Workflows</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <Card className="border-slate-200 dark:border-slate-800 bg-white/50 dark:bg-slate-950/50">
+              <CardHeader>
+                <div className="h-10 w-10 rounded-full bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center mb-4">
+                  <span className="text-emerald-600 dark:text-emerald-400 font-bold text-lg">%</span>
+                </div>
+                <CardTitle className="text-xl">10% Agency Commission</CardTitle>
+                <CardDescription className="text-sm mt-2 text-slate-600 dark:text-slate-400 leading-relaxed">
+                  Our standard B2B commission rate is exactly 10%. In all API responses, you will see two prices: <code className="bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded text-pink-500 font-mono text-xs">retail</code> (the price the customer pays) and <code className="bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded text-sky-500 font-mono text-xs">net</code> (the price you pay us). The net price is automatically calculated as 90% of the retail price in real-time.
+                </CardDescription>
+              </CardHeader>
+            </Card>
+
+            <Card className="border-slate-200 dark:border-slate-800 bg-white/50 dark:bg-slate-950/50">
+              <CardHeader>
+                <div className="h-10 w-10 rounded-full bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center mb-4">
+                  <Zap className="h-5 w-5 text-amber-600 dark:text-amber-400" />
+                </div>
+                <CardTitle className="text-xl">Dynamic Time Surcharges</CardTitle>
+                <CardDescription className="text-sm mt-2 text-slate-600 dark:text-slate-400 leading-relaxed">
+                  High-demand slots (like Sunrise shoots) automatically apply time-based surcharges. Our API natively handles this logic; simply call the <code className="bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded font-mono text-xs">/availability</code> endpoint and the exact <code className="bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded font-mono text-xs">retail</code> and <code className="bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded font-mono text-xs">net</code> pricing for that specific hour will be returned.
+                </CardDescription>
+              </CardHeader>
+            </Card>
+
+            <Card className="border-slate-200 dark:border-slate-800 bg-white/50 dark:bg-slate-950/50">
+              <CardHeader>
+                <div className="h-10 w-10 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center mb-4">
+                  <CheckCircle2 className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                </div>
+                <CardTitle className="text-xl">Instant Sync (Source of Truth)</CardTitle>
+                <CardDescription className="text-sm mt-2 text-slate-600 dark:text-slate-400 leading-relaxed">
+                  The API queries our live core database. If a customer books a slot on our main B2C website, that slot instantly becomes unavailable via the OCTO API, completely eliminating the risk of double-bookings or latency issues.
+                </CardDescription>
+              </CardHeader>
+            </Card>
+
+            <Card className="border-slate-200 dark:border-slate-800 bg-white/50 dark:bg-slate-950/50">
+              <CardHeader>
+                <div className="h-10 w-10 rounded-full bg-violet-100 dark:bg-violet-900/30 flex items-center justify-center mb-4">
+                  <Code2 className="h-5 w-5 text-violet-600 dark:text-violet-400" />
+                </div>
+                <CardTitle className="text-xl">Booking Lifecycle</CardTitle>
+                <CardDescription className="text-sm mt-2 text-slate-600 dark:text-slate-400 leading-relaxed">
+                  Per the OCTO standard, when you create a reservation, it is placed <code className="bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded font-mono text-xs text-amber-500">ON_HOLD</code>. You must call the <code className="bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded font-mono text-xs">/confirm</code> endpoint to finalize it. Once confirmed, customer details are synced securely into our CRM with your agency reference.
+                </CardDescription>
+              </CardHeader>
+            </Card>
+
+            <Card className="md:col-span-2 border-slate-200 dark:border-slate-800 bg-gradient-to-r from-violet-500/10 to-fuchsia-500/10 dark:from-violet-900/20 dark:to-fuchsia-900/20">
+              <CardHeader>
+                <div className="h-10 w-10 rounded-full bg-pink-100 dark:bg-pink-900/30 flex items-center justify-center mb-4">
+                  <Terminal className="h-5 w-5 text-pink-600 dark:text-pink-400" />
+                </div>
+                <CardTitle className="text-xl">Merchant of Record & Payouts</CardTitle>
+                <CardDescription className="text-sm mt-2 text-slate-600 dark:text-slate-400 leading-relaxed max-w-4xl">
+                  <strong>You are the Merchant of Record.</strong> Our API does not process end-customer payments. You are responsible for collecting the <code className="bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded font-mono text-xs text-pink-500">retail</code> price directly from your customers on your own website using your own payment gateway. 
+                  <br /><br />
+                  Once you successfully charge your customer, you call our API to secure the booking. To settle the <code className="bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded font-mono text-xs text-sky-500">net</code> balance and confirm the reservation, you can instantly pay the net price for individual ON_HOLD bookings using a credit card via our secure B2B gateway: <code className="bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded font-mono text-xs">/checkout/b2b-pay?bookingId=[UUID]</code>. Successful payment will automatically set the booking to CONFIRMED.
+                </CardDescription>
+              </CardHeader>
+            </Card>
+          </div>
         </div>
 
         {/* Authentication Section */}
@@ -239,13 +314,18 @@ export default function DevelopersPage() {
                   <span className="bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400 font-bold px-3 py-1 rounded text-sm">POST</span>
                   <code className="text-slate-900 dark:text-slate-100 font-mono bg-slate-100 dark:bg-slate-900 px-2 py-1 rounded">/api/octo/bookings</code>
                 </div>
-                <p className="text-slate-600 dark:text-slate-400 mb-6">
-                  Create a booking. We support two different payment models depending on your agency type:
+                <div className="text-slate-600 dark:text-slate-400 mb-6 leading-relaxed">
+                  Create a booking reservation. According to the OCTO standard, all bookings start in the <code className="bg-slate-800 px-1 rounded text-amber-400">ON_HOLD</code> status.
                   <br /><br />
-                  <strong className="text-slate-200">1. Global Agencies (OTAs):</strong> Bookings are instantly marked as <code className="bg-slate-800 px-1 rounded text-emerald-400">CONFIRMED</code>. You collect the payment from the customer and remit the net amount.
-                  <br /><br />
-                  <strong className="text-slate-200">2. Local Agencies:</strong> Bookings are marked as <code className="bg-slate-800 px-1 rounded text-amber-400">ON_HOLD</code>. A <code className="bg-slate-800 px-1 rounded text-blue-400">paymentUrl</code> will be returned in the response. You must visit this URL to pay the Net Price via credit card to instantly confirm the booking.
-                </p>
+                  <strong>How to Finalize (Confirm) a Booking:</strong>
+                  <p className="mt-2">
+                    Extract the <code className="bg-slate-800 px-1 rounded text-sky-400">uuid</code> from the reservation response, and dynamically redirect your sales agent to our secure B2B checkout gateway to settle the net payment:
+                    <code className="block bg-slate-900 text-pink-400 p-3 rounded-lg mt-2 mb-2 text-sm border border-slate-800 font-mono shadow-inner">
+                      window.location.href = `https://istanbulportrait.com/en/checkout/b2b-pay?bookingId={'{response.uuid}'}`;
+                    </code>
+                    Once the credit card payment is successful, our system will automatically mark the booking as <code className="bg-slate-800 px-1 rounded text-emerald-400">CONFIRMED</code>. No further API calls are required!
+                  </p>
+                </div>
                 <div className="bg-slate-950 rounded-xl p-6 border border-slate-800">
                   <div className="text-slate-400 text-xs font-mono mb-2 uppercase tracking-wider">Request Body</div>
                   <pre className="text-sky-400 font-mono text-sm overflow-x-auto">
