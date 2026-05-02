@@ -193,9 +193,6 @@ export async function GET(request: NextRequest) {
       .limit(100);
 
     // Simple filters
-    if (resellerReference) {
-      query = query.eq("octo_data->>resellerReference", resellerReference);
-    }
     if (supplierReference) {
       query = query.eq("id", supplierReference);
     }
@@ -209,12 +206,20 @@ export async function GET(request: NextRequest) {
     }
 
     const { data: bookings, error } = await query;
-
+    
     if (error) {
       throw error;
     }
 
-    const octoBookings: Booking[] = (bookings || []).map((b: any) => {
+    let filteredBookings = bookings || [];
+    if (resellerReference) {
+      filteredBookings = filteredBookings.filter((b: any) => 
+        b.octo_data?.resellerReference === resellerReference || 
+        (b.notes && b.notes.includes(resellerReference))
+      );
+    }
+
+    const octoBookings: Booking[] = filteredBookings.map((b: any) => {
       return mapBookingToOcto(b);
     });
 
