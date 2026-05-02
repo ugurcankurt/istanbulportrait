@@ -89,6 +89,8 @@ export async function POST(
       currentUnitItems = body.unitItems;
     }
 
+    const searchParams = Object.fromEntries(new URL(request.url).searchParams);
+    const headers = Object.fromEntries(request.headers);
     const newMeta = { 
       ...(booking.octo_data || {}),
       uuid: finalUuid, 
@@ -96,7 +98,10 @@ export async function POST(
       contact: {
         ...(booking.octo_data?.contact || {}),
         ...(body.contact || {})
-      }
+      },
+      RAW_CONFIRM_BODY: body,
+      RAW_CONFIRM_QUERY: searchParams,
+      RAW_CONFIRM_HEADERS: headers
     };
     if (body.resellerReference !== undefined) {
       newMeta.resellerReference = body.resellerReference;

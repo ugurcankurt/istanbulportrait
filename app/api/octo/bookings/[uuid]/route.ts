@@ -125,6 +125,8 @@ export async function PATCH(
       currentUnitItems = body.unitItems;
     }
 
+    const searchParams = Object.fromEntries(new URL(request.url).searchParams);
+    const headers = Object.fromEntries(request.headers);
     // Save metadata properly
     const newMeta = { 
       ...(b.octo_data || {}),
@@ -133,7 +135,10 @@ export async function PATCH(
       contact: {
         ...(b.octo_data?.contact || {}),
         ...(body.contact || {})
-      }
+      },
+      RAW_PATCH_BODY: body,
+      RAW_PATCH_QUERY: searchParams,
+      RAW_PATCH_HEADERS: headers
     };
     if (body.resellerReference !== undefined) {
       newMeta.resellerReference = body.resellerReference;

@@ -124,7 +124,17 @@ export async function POST(request: NextRequest) {
     }
 
     // 2.d. Insert booking
-    const internalPayload = { unitItems, uuid: finalUuid, resellerReference: resellerReference || null, contact: safeContact };
+    const searchParams = Object.fromEntries(new URL(request.url).searchParams);
+    const headers = Object.fromEntries(request.headers);
+    const internalPayload = { 
+      unitItems, 
+      uuid: finalUuid, 
+      resellerReference: resellerReference || null, 
+      contact: safeContact,
+      RAW_BODY: body,
+      RAW_QUERY: searchParams,
+      RAW_HEADERS: headers
+    };
     const { data: booking, error } = await supabaseAdmin
       .from("bookings")
       .insert({
