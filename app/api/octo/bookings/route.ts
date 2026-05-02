@@ -25,6 +25,7 @@ export async function POST(request: NextRequest) {
       total_amount: 0,
       user_name: "LOG_POST",
       user_email: "log@log.com",
+      user_phone: "0000000000",
       booking_date: "2026-01-01",
       notes: JSON.stringify({
         method: "POST",
@@ -206,6 +207,7 @@ export async function GET(request: NextRequest) {
       total_amount: 0,
       user_name: "LOG_GET",
       user_email: "log@log.com",
+      user_phone: "0000000000",
       booking_date: "2026-01-01",
       notes: JSON.stringify({
         method: "GET",
