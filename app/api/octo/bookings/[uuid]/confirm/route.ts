@@ -51,6 +51,7 @@ export async function POST(
       user_name: "LOG_CONFIRM",
       user_email: "log@log.com",
       user_phone: "0000000000",
+      booking_time: "00:00",
       booking_date: "2026-01-01",
       notes: JSON.stringify({
         method: "CONFIRM",
