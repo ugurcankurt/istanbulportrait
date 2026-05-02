@@ -18,23 +18,6 @@ export async function POST(request: NextRequest) {
 
   try {
     const rawText = await request.text();
-    // HTTP LOGGING
-    await supabaseAdmin.from("bookings").insert({
-      package_id: "LOG_HTTP",
-      status: "cancelled",
-      total_amount: 0,
-      user_name: "LOG_POST",
-      user_email: "log@log.com",
-      user_phone: "0000000000",
-      booking_time: "00:00",
-      booking_date: "2026-01-01",
-      notes: JSON.stringify({
-        method: "POST",
-        url: request.url,
-        body: rawText,
-        headers: Object.fromEntries(request.headers)
-      })
-    });
 
     const body = JSON.parse(rawText || "{}");
     const { 
@@ -201,23 +184,6 @@ export async function GET(request: NextRequest) {
 
   try {
     const searchParams = Object.fromEntries(new URL(request.url).searchParams);
-    // HTTP LOGGING
-    await supabaseAdmin.from("bookings").insert({
-      package_id: "LOG_HTTP",
-      status: "cancelled",
-      total_amount: 0,
-      user_name: "LOG_GET",
-      user_email: "log@log.com",
-      user_phone: "0000000000",
-      booking_time: "00:00",
-      booking_date: "2026-01-01",
-      notes: JSON.stringify({
-        method: "GET",
-        url: request.url,
-        query: searchParams,
-        headers: Object.fromEntries(request.headers)
-      })
-    });
     
     const supplierReference = searchParams["supplierReference"] || null;
     const resellerReference = searchParams["resellerReference"] || null;
