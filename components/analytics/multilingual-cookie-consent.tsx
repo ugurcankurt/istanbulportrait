@@ -11,10 +11,12 @@ export function MultilingualCookieConsent() {
   const locale = useLocale();
   const t = useTranslations("cookies");
   const tFooter = useTranslations("footer");
-  const { consent, setConsent } = useConsent();
+  const { consent, setConsent, isLoading } = useConsent();
   const bannerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    if (isLoading) return; // Don't adjust height while loading
+
     if (consent === null && bannerRef.current) {
       const height = bannerRef.current.offsetHeight;
       document.documentElement.style.setProperty("--cookie-banner-height", `${height}px`);
@@ -33,7 +35,7 @@ export function MultilingualCookieConsent() {
       resizeObserver.observe(bannerRef.current);
       return () => resizeObserver.disconnect();
     }
-  }, [consent]);
+  }, [consent, isLoading]);
 
   const handleAcceptAll = async () => {
     console.log("Accept All clicked. Starting processes...");
@@ -54,8 +56,8 @@ export function MultilingualCookieConsent() {
     GoogleAnalyticsConsentUpdate(false);
   };
 
-  // Don't show banner if user has already made a choice
-  if (consent !== null) {
+  // Don't show banner if still loading or if user has already made a choice
+  if (isLoading || consent !== null) {
     return null;
   }
 
