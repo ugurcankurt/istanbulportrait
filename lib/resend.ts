@@ -1,6 +1,6 @@
 import { Resend } from "resend";
 import type { SiteSettings } from "./settings-service";
-import { EMAIL_TRANSLATIONS, NEWSLETTER_TRANSLATIONS, ABANDONED_TRANSLATIONS, RAW_PHOTOS_READY_TRANSLATIONS, FINAL_EDITS_READY_TRANSLATIONS } from "./email-translations";
+import { EMAIL_TRANSLATIONS, NEWSLETTER_TRANSLATIONS, ABANDONED_TRANSLATIONS, RAW_PHOTOS_READY_TRANSLATIONS, FINAL_EDITS_READY_TRANSLATIONS, CANCELLATION_TRANSLATIONS } from "./email-translations";
 
 export const getEmailColors = (settings: SiteSettings) => {
   const isDark = settings.color_mode === "dark";
@@ -765,4 +765,86 @@ export const sendAdminSelectionNotificationEmail = async (
     console.error("Error sending admin selection notification:", error);
   }
 };
+
+
+// ─── CANCELLATION NOTIFICATION ───────────────────────────────
+
+export const sendBookingCancellationEmail = async (
+  booking: any,
+  settings: SiteSettings,
+) => {
+  try {
+    const apiKey = settings.resend_api_key || process.env.RESEND_API_KEY || "demo-resend-key";
+    if (!apiKey || apiKey === "demo-resend-key") return;
+
+    const resend = new Resend(apiKey);
+    const locale = booking.locale || "en";
+    const t = CANCELLATION_TRANSLATIONS[locale] || CANCELLATION_TRANSLATIONS["en"];
+    const colors = getEmailColors(settings);
+
+    // Replace dynamic tags
+    const emailTitle = t.title;
+    const greetingText = t.greeting.replace("{name}", booking.user_name);
+    
+    // Formatting body parts
+    const packageName = booking.package_name || (booking.packages ? booking.packages.name : "Photography");
+    let body1Text = t.body1
+      .replace("{package}", packageName)
+      .replace("{date}", booking.booking_date)
+      .replace("{time}", booking.booking_time);
+      
+    // Determine deposit amount
+    let deposit = "0 EUR";
+    if (booking.deposit_amount) {
+      deposit = `€${booking.deposit_amount}`;
+    } else if (booking.payments && booking.payments.length > 0) {
+      deposit = `€${booking.payments[0].amount}`;
+    }
+    
+    const body2Text = t.body2.replace("{deposit}", deposit);
+
+    const appBaseUrl = settings.app_base_url || process.env.NEXT_PUBLIC_APP_URL || "https://istanbulportrait.com";
+    const newBookingUrl = `${appBaseUrl}/${locale}/packages`;
+
+    const content = `
+      <h2 style="color: ${colors.text}; margin-top: 0; font-size: 24px;">${emailTitle}</h2>
+      <p style="font-size: 16px; line-height: 1.6; color: ${colors.text}; margin-bottom: 20px;">
+        ${greetingText}
+      </p>
+      
+      <div style="background-color: #fef2f2; border-left: 4px solid #ef4444; padding: 20px; border-radius: 0 8px 8px 0; margin-bottom: 25px;">
+        <p style="font-size: 16px; line-height: 1.6; color: #991b1b; margin: 0;">
+          ${body1Text}
+        </p>
+      </div>
+      
+      <p style="font-size: 16px; line-height: 1.6; color: ${colors.textMuted}; margin-bottom: 30px;">
+        ${body2Text}
+      </p>
+      
+      <div style="text-align: center; margin: 40px 0;">
+        <a href="${newBookingUrl}" style="display: inline-block; background-color: ${colors.primary}; color: #ffffff; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; transition: opacity 0.2s;">
+          ${t.button}
+        </a>
+      </div>
+      
+      <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid ${colors.border};">
+        <p style="color: ${colors.textMuted}; font-size: 14px; margin: 0;">
+          ${t.questions} <a href="mailto:${settings.contact_email}" style="color: ${colors.primary}; text-decoration: none; font-weight: bold;">${settings.contact_email}</a>
+        </p>
+      </div>
+    `;
+
+    await resend.emails.send({
+      from: `${settings.site_name || "Photographer"} <${settings.contact_email || 'hello@istanbulportrait.com'}>`,
+      to: [booking.user_email],
+      subject: t.subject,
+      html: renderEmailLayout(content, emailTitle, locale, settings),
+    });
+    console.log(`Cancellation email dispatched to ${booking.user_email}`);
+  } catch (error) {
+    console.error("Error sending cancellation email:", error);
+  }
+};
+
 

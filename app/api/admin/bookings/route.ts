@@ -8,6 +8,8 @@ import {
   sanitizeErrorForProduction,
   ValidationError,
 } from "@/lib/errors";
+import { settingsService } from "@/lib/settings-service";
+import { sendBookingCancellationEmail } from "@/lib/resend";
 
 export async function GET(request: NextRequest) {
   try {
@@ -136,6 +138,27 @@ export async function PATCH(request: NextRequest) {
     const supabase = await createServerAdminClient();
 
     try {
+      // Fetch the current booking to see its previous status and data
+      const { data: currentBooking, error: fetchError } = await supabase
+        .from("bookings")
+        .select(`
+          *,
+          packages (
+            id,
+            name
+          ),
+          payments (
+            id,
+            amount
+          )
+        `)
+        .eq("id", bookingId)
+        .single();
+
+      if (fetchError) {
+        throw fetchError;
+      }
+
       const updateData: Record<string, unknown> = {
         status,
         updated_at: new Date().toISOString(),
@@ -154,6 +177,16 @@ export async function PATCH(request: NextRequest) {
 
       if (error) {
         throw error;
+      }
+
+      // If status is changed to cancelled from something else, send email
+      if (status === "cancelled" && currentBooking.status !== "cancelled") {
+        try {
+          const settings = await settingsService.getSettings();
+          await sendBookingCancellationEmail(currentBooking, settings);
+        } catch (emailError) {
+          console.error("Failed to send cancellation email:", emailError);
+        }
       }
 
       return NextResponse.json({
