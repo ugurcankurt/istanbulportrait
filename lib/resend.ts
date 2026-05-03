@@ -787,7 +787,11 @@ export const sendBookingCancellationEmail = async (
     const greetingText = t.greeting.replace("{name}", booking.user_name);
     
     // Formatting body parts
-    const packageName = booking.package_name || (booking.packages ? booking.packages.name : "Photography");
+    let formattedPackageId = booking.package_id || "Photography";
+    if (typeof formattedPackageId === "string" && formattedPackageId !== "Photography") {
+      formattedPackageId = formattedPackageId.charAt(0).toUpperCase() + formattedPackageId.slice(1) + " Package";
+    }
+    const packageName = booking.package_name || (booking.packages ? booking.packages.name : formattedPackageId);
     let body1Text = t.body1
       .replace("{package}", packageName)
       .replace("{date}", booking.booking_date)

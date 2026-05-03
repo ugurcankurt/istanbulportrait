@@ -143,10 +143,6 @@ export async function PATCH(request: NextRequest) {
         .from("bookings")
         .select(`
           *,
-          packages (
-            id,
-            name
-          ),
           payments (
             id,
             amount
