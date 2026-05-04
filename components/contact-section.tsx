@@ -4,44 +4,7 @@ import { Clock, Mail, MapPin, Phone, Building } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
-function trackContactEvent(method: string) {
-  if (typeof window !== "undefined") {
-    // Generate unique event_id for Pixel/CAPI deduplication
-    const eventId =
-      typeof crypto !== "undefined" ? crypto.randomUUID() : undefined;
-
-    // Facebook Contact event — AEM Priority 7
-    if (window.fbq) {
-      window.fbq(
-        "track",
-        "Contact",
-        {
-          content_name: method,
-          content_category: "Photography Inquiry",
-        },
-        eventId ? { eventID: eventId } : undefined,
-      );
-    }
-    // GA4
-    if (window.gtag) {
-      window.gtag("event", "contact", {
-        event_category: "Engagement",
-        event_label: method,
-      });
-    }
-    // CAPI — Contact server-side
-    fetch("/api/facebook/conversions", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        event_name: "Contact",
-        event_id: eventId,
-        package_id: "general",
-        custom_data: { contact_method: method },
-      }),
-    }).catch(() => {});
-  }
-}
+import { trackContact } from "@/lib/analytics";
 
 export function ContactSection({ settings }: { settings?: any } = {}) {
   const t = useTranslations("contact");
@@ -90,7 +53,7 @@ export function ContactSection({ settings }: { settings?: any } = {}) {
                       <a
                         href={`mailto:${settings?.contact_email || t("info.email")}`}
                         className="text-muted-foreground hover:text-primary transition-colors text-sm break-all font-medium"
-                        onClick={() => trackContactEvent("Email")}
+                        onClick={() => trackContact("Email")}
                       >
                         {settings?.contact_email || t("info.email")}
                       </a>
@@ -108,7 +71,7 @@ export function ContactSection({ settings }: { settings?: any } = {}) {
                       <a
                         href={`tel:${settings?.contact_phone || t("info.phone")}`}
                         className="text-muted-foreground hover:text-primary transition-colors text-sm phone-number font-medium"
-                        onClick={() => trackContactEvent("Phone")}
+                        onClick={() => trackContact("Phone")}
                       >
                         {settings?.contact_phone || t("info.phone")}
                       </a>

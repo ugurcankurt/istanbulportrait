@@ -330,10 +330,14 @@ export async function POST(request: NextRequest) {
         // and we are running server-side.
         if (body.eventId) {
           // Extract EMQ parameters for Meta CAPI
-          const fbc = request.cookies.get("_fbc")?.value;
-          const fbp = request.cookies.get("_fbp")?.value;
+          const fbc = body.fbc || request.cookies.get("_fbc")?.value;
+          const fbp = body.fbp || request.cookies.get("_fbp")?.value;
           const clientUserAgent = request.headers.get("user-agent") || undefined;
           const clientIpAddress = ip; // Already extracted via getClientIP at the top
+
+          const nameParts = customerName.split(" ");
+          const firstName = nameParts[0];
+          const lastName = nameParts.length > 1 ? nameParts.slice(1).join(" ") : undefined;
 
           try {
             const { trackFacebookPurchase } = await import("@/lib/facebook");
@@ -344,7 +348,7 @@ export async function POST(request: NextRequest) {
               totalAmount,
               booking.id, // Transaction ID
               body.eventId, // Deduplication Key
-              { eventSourceUrl, fbc, fbp, clientIpAddress, clientUserAgent },
+              { eventSourceUrl, fbc, fbp, clientIpAddress, clientUserAgent, firstName, lastName },
             );
           } catch (facebookError) {
             console.error("Facebook CAPI Error:", facebookError);
@@ -359,7 +363,7 @@ export async function POST(request: NextRequest) {
               customerPhone,
               booking.id,
               body.eventId ? `crm_${body.eventId}` : undefined,
-              { eventSourceUrl, fbc, fbp, clientIpAddress, clientUserAgent },
+              { eventSourceUrl, fbc, fbp, clientIpAddress, clientUserAgent, firstName, lastName },
             );
           } catch (crmError) {
             console.error("Meta CRM Lead Event Error:", crmError);

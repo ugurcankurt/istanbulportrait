@@ -737,6 +737,16 @@ export function CheckoutForm({ timeSurcharges = [] }: { timeSurcharges?: TimeSur
     );
 
     try {
+      const getCookie = (name: string) => {
+        if (typeof document === "undefined") return undefined;
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop()?.split(';').shift();
+        return undefined;
+      };
+      const fbc = getCookie("_fbc");
+      const fbp = getCookie("_fbp");
+
       const paymentResponse = await fetch("/api/payment/initialize", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -771,6 +781,7 @@ export function CheckoutForm({ timeSurcharges = [] }: { timeSurcharges?: TimeSur
             conversationId: paymentResult.conversationId,
             providerResponse: paymentResult.providerResponse,
             eventId, bookingId: bookingId || undefined, locale,
+            fbc, fbp,
           }),
         });
 
@@ -862,6 +873,16 @@ export function CheckoutForm({ timeSurcharges = [] }: { timeSurcharges?: TimeSur
     );
 
     try {
+      const getCookie = (name: string) => {
+        if (typeof document === "undefined") return undefined;
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop()?.split(';').shift();
+        return undefined;
+      };
+      const fbc = getCookie("_fbc");
+      const fbp = getCookie("_fbp");
+
       const response = await fetch("/api/payment/initialize/turinvoice", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -874,6 +895,7 @@ export function CheckoutForm({ timeSurcharges = [] }: { timeSurcharges?: TimeSur
           },
           amount: pricingCalc.depositAmount,
           packageId: selectedPackage, locale, eventId,
+          fbc, fbp,
         }),
       });
 
@@ -913,6 +935,16 @@ export function CheckoutForm({ timeSurcharges = [] }: { timeSurcharges?: TimeSur
     );
 
     try {
+      const getCookie = (name: string) => {
+        if (typeof document === "undefined") return undefined;
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop()?.split(';').shift();
+        return undefined;
+      };
+      const fbc = getCookie("_fbc");
+      const fbp = getCookie("_fbp");
+
       const bookingResponse = await fetch("/api/booking/create-confirmed", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -922,7 +954,7 @@ export function CheckoutForm({ timeSurcharges = [] }: { timeSurcharges?: TimeSur
           paymentId: turinvoiceOrder.idOrder.toString(),
           conversationId: `turinvoice_${turinvoiceOrder.idOrder}`,
           provider: "turinvoice", eventId, bookingId: bookingId || undefined,
-          locale,
+          locale, fbc, fbp,
         }),
       });
 

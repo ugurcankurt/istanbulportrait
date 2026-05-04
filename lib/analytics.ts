@@ -56,6 +56,17 @@ export function getUserDataForAdvancedMatching(): AnalyticsUserData | undefined 
   }
 }
 
+/**
+ * Reads a cookie value safely from the document
+ */
+export function getCookie(name: string): string | undefined {
+  if (typeof document === "undefined") return undefined;
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length === 2) return parts.pop()?.split(';').shift();
+  return undefined;
+}
+
 // Google Analytics event tracking //
 export function trackEvent(
   action: string,
@@ -204,6 +215,8 @@ export function trackPurchase(
         country: resolvedUserData?.country,
         custom_data: { content_name: packageName, currency: currency },
         event_source_url: window.location.href,
+        fbc: getCookie("_fbc"),
+        fbp: getCookie("_fbp"),
       }),
     }).catch(() => { });
   }
@@ -295,6 +308,8 @@ export function trackViewItem(
         gender: userData?.gender,
         custom_data: { content_name: itemName, currency: currency },
         event_source_url: window.location.href,
+        fbc: getCookie("_fbc"),
+        fbp: getCookie("_fbp"),
       }),
     }).catch(() => { });
   }
@@ -357,6 +372,8 @@ export function trackBeginCheckout(
           content_name: packageName,
         },
         event_source_url: window.location.href,
+        fbc: getCookie("_fbc"),
+        fbp: getCookie("_fbp"),
       }),
     }).catch(() => {
       // Non-blocking — pixel already fired above
@@ -428,6 +445,8 @@ export function trackAddPaymentInfo(
         last_name: userData?.lastName,
         custom_data: { content_name: packageName, payment_type: paymentType, currency: currency },
         event_source_url: window.location.href,
+        fbc: getCookie("_fbc"),
+        fbp: getCookie("_fbp"),
       }),
     }).catch(() => { });
   }
@@ -514,6 +533,8 @@ export function trackLead(
         last_name: userData?.lastName,
         custom_data: { content_name: packageName, currency: currency },
         event_source_url: window.location.href,
+        fbc: getCookie("_fbc"),
+        fbp: getCookie("_fbp"),
       }),
     }).catch(() => { });
   }
@@ -554,6 +575,7 @@ export function trackSchedule(
 
   // Facebook CAPI — Schedule
   if (typeof window !== "undefined") {
+    const userData = getUserDataForAdvancedMatching();
     fetch("/api/facebook/conversions", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -561,12 +583,77 @@ export function trackSchedule(
         event_name: "Schedule",
         event_id: resolvedEventId,
         package_id: packageId,
+        customer_email: userData?.email,
+        customer_phone: userData?.phone,
+        first_name: userData?.firstName,
+        last_name: userData?.lastName,
         custom_data: {
           content_name: packageName,
           scheduled_date: scheduledDate,
           content_type: "product",
         },
         event_source_url: window.location.href,
+        fbc: getCookie("_fbc"),
+        fbp: getCookie("_fbp"),
+      }),
+    }).catch(() => { });
+  }
+}
+
+export function trackContact(method: string) {
+  const eventId = typeof crypto !== "undefined" ? crypto.randomUUID() : undefined;
+
+  // Facebook Pixel — Contact
+  if (typeof window !== "undefined" && window.fbq) {
+    window.fbq(
+      "track",
+      "Contact",
+      {
+        content_name: method,
+        content_category: "Photography Inquiry",
+      },
+      eventId ? { eventID: eventId } : undefined,
+    );
+  }
+
+  // Google Analytics
+  if (typeof window !== "undefined" && window.gtag) {
+    window.gtag("event", "contact", {
+      event_category: "Engagement",
+      event_label: method,
+    });
+
+    // Google Ads Direct Conversion for 2026 (WhatsApp specific)
+    if (method === "WhatsApp") {
+      const adsId = (window as any).__ADS_ID || "AW-1007335227";
+      if (adsId) {
+        window.gtag("event", "conversion", {
+          send_to: `${adsId}/RhizCN2v8p4cELvuquAD`,
+          value: 1.0,
+          currency: "EUR",
+        });
+      }
+    }
+  }
+
+  // Facebook CAPI — Contact
+  if (typeof window !== "undefined") {
+    const userData = getUserDataForAdvancedMatching();
+    fetch("/api/facebook/conversions", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        event_name: "Contact",
+        event_id: eventId,
+        package_id: "general",
+        customer_email: userData?.email,
+        customer_phone: userData?.phone,
+        first_name: userData?.firstName,
+        last_name: userData?.lastName,
+        custom_data: { contact_method: method },
+        event_source_url: window.location.href,
+        fbc: getCookie("_fbc"),
+        fbp: getCookie("_fbp"),
       }),
     }).catch(() => { });
   }
@@ -681,6 +768,8 @@ export function trackPackageAddToCart(
         amount: value,
         custom_data: { content_name: packageName, currency: currency },
         event_source_url: window.location.href,
+        fbc: getCookie("_fbc"),
+        fbp: getCookie("_fbp"),
       }),
     }).catch(() => { });
   }
@@ -746,6 +835,8 @@ export function trackPrintViewItem(
         amount: price,
         custom_data: { content_name: name, content_category: category, currency: currency },
         event_source_url: window.location.href,
+        fbc: getCookie("_fbc"),
+        fbp: getCookie("_fbp"),
       }),
     }).catch(() => { });
   }
@@ -809,6 +900,8 @@ export function trackPrintAddToCart(
         amount: price,
         custom_data: { content_name: name, content_category: category, currency: currency },
         event_source_url: window.location.href,
+        fbc: getCookie("_fbc"),
+        fbp: getCookie("_fbp"),
       }),
     }).catch(() => { });
   }
@@ -878,6 +971,8 @@ export function trackPrintBeginCheckout(
           num_items: items.reduce((acc, curr) => acc + curr.quantity, 0),
         },
         event_source_url: window.location.href,
+        fbc: getCookie("_fbc"),
+        fbp: getCookie("_fbp"),
       }),
     }).catch(() => { });
   }

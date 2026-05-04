@@ -236,6 +236,14 @@ export interface FacebookEventOptions {
   clientIpAddress?: string;
   clientUserAgent?: string;
   eventSourceUrl?: string;
+  firstName?: string;
+  lastName?: string;
+  city?: string;
+  state?: string;
+  zip?: string;
+  country?: string;
+  dateOfBirth?: string;
+  gender?: string;
 }
 
 // Istanbul Portrait specific tracking functions
@@ -253,6 +261,14 @@ export const trackFacebookLead = async (
   // Prepare hashed data
   const hashedEmail = customerEmail ? [await hashCustomerData(customerEmail)] : [];
   const hashedPhone = customerPhone ? [await hashPhoneNumber(customerPhone)] : [];
+  const hashedFirstName = options?.firstName ? [await hashCustomerData(options.firstName)] : undefined;
+  const hashedLastName = options?.lastName ? [await hashCustomerData(options.lastName)] : undefined;
+  const hashedCity = options?.city ? [await hashCustomerData(options.city)] : undefined;
+  const hashedState = options?.state ? [await hashCustomerData(options.state)] : undefined;
+  const hashedZip = options?.zip ? [await hashCustomerData(options.zip)] : undefined;
+  const hashedCountry = options?.country ? [await hashCustomerData(options.country)] : undefined;
+  const hashedDob = options?.dateOfBirth ? [await hashCustomerData(options.dateOfBirth)] : undefined;
+  const hashedGender = options?.gender ? [await hashCustomerData(options.gender)] : undefined;
 
   // Prepare event for Conversions API
   const event: FacebookConversionEvent = {
@@ -260,13 +276,23 @@ export const trackFacebookLead = async (
     event_time: Math.floor(Date.now() / 1000),
     event_id: eventId,
     event_source_url: options?.eventSourceUrl,
-    action_source: "system_generated",
+    action_source: "website", // Usually lead from a web form
     user_data: {
       em: hashedEmail,
       ph: hashedPhone,
+      fn: hashedFirstName,
+      ln: hashedLastName,
+      ct: hashedCity,
+      st: hashedState,
+      zp: hashedZip,
+      country: hashedCountry,
+      db: hashedDob,
+      ge: hashedGender,
       lead_id: generatedLeadId,
       fbc: options?.fbc,
       fbp: options?.fbp,
+      client_ip_address: options?.clientIpAddress,
+      client_user_agent: options?.clientUserAgent,
       external_id: options?.externalId ? [options.externalId] : undefined,
     },
     custom_data: {
@@ -304,6 +330,14 @@ export const trackFacebookPurchase = async (
   // Prepare hashed data
   const hashedEmail = customerEmail ? [await hashCustomerData(customerEmail)] : [];
   const hashedPhone = customerPhone ? [await hashPhoneNumber(customerPhone)] : [];
+  const hashedFirstName = options?.firstName ? [await hashCustomerData(options.firstName)] : undefined;
+  const hashedLastName = options?.lastName ? [await hashCustomerData(options.lastName)] : undefined;
+  const hashedCity = options?.city ? [await hashCustomerData(options.city)] : undefined;
+  const hashedState = options?.state ? [await hashCustomerData(options.state)] : undefined;
+  const hashedZip = options?.zip ? [await hashCustomerData(options.zip)] : undefined;
+  const hashedCountry = options?.country ? [await hashCustomerData(options.country)] : undefined;
+  const hashedDob = options?.dateOfBirth ? [await hashCustomerData(options.dateOfBirth)] : undefined;
+  const hashedGender = options?.gender ? [await hashCustomerData(options.gender)] : undefined;
 
   // Prepare event for Conversions API
   const event: FacebookConversionEvent = {
@@ -311,12 +345,22 @@ export const trackFacebookPurchase = async (
     event_time: Math.floor(Date.now() / 1000),
     event_id: eventId,
     event_source_url: options?.eventSourceUrl,
-    action_source: "system_generated",
+    action_source: "website",
     user_data: {
       em: hashedEmail,
       ph: hashedPhone,
+      fn: hashedFirstName,
+      ln: hashedLastName,
+      ct: hashedCity,
+      st: hashedState,
+      zp: hashedZip,
+      country: hashedCountry,
+      db: hashedDob,
+      ge: hashedGender,
       fbc: options?.fbc,
       fbp: options?.fbp,
+      client_ip_address: options?.clientIpAddress,
+      client_user_agent: options?.clientUserAgent,
       external_id: options?.externalId ? [options.externalId] : undefined,
     },
     custom_data: {
@@ -357,6 +401,14 @@ export const trackFacebookPrintPurchase = async (
   // Prepare hashed data
   const hashedEmail = customerEmail ? [await hashCustomerData(customerEmail)] : [];
   const hashedPhone = customerPhone ? [await hashPhoneNumber(customerPhone)] : [];
+  const hashedFirstName = options?.firstName ? [await hashCustomerData(options.firstName)] : undefined;
+  const hashedLastName = options?.lastName ? [await hashCustomerData(options.lastName)] : undefined;
+  const hashedCity = options?.city ? [await hashCustomerData(options.city)] : undefined;
+  const hashedState = options?.state ? [await hashCustomerData(options.state)] : undefined;
+  const hashedZip = options?.zip ? [await hashCustomerData(options.zip)] : undefined;
+  const hashedCountry = options?.country ? [await hashCustomerData(options.country)] : undefined;
+  const hashedDob = options?.dateOfBirth ? [await hashCustomerData(options.dateOfBirth)] : undefined;
+  const hashedGender = options?.gender ? [await hashCustomerData(options.gender)] : undefined;
 
   // Prepare event for Conversions API
   const event: FacebookConversionEvent = {
@@ -364,10 +416,18 @@ export const trackFacebookPrintPurchase = async (
     event_time: Math.floor(Date.now() / 1000),
     event_id: eventId,
     event_source_url: options?.eventSourceUrl,
-    action_source: "website", // Or system_generated
+    action_source: "website",
     user_data: {
       em: hashedEmail,
       ph: hashedPhone,
+      fn: hashedFirstName,
+      ln: hashedLastName,
+      ct: hashedCity,
+      st: hashedState,
+      zp: hashedZip,
+      country: hashedCountry,
+      db: hashedDob,
+      ge: hashedGender,
       fbc: options?.fbc,
       fbp: options?.fbp,
       client_ip_address: options?.clientIpAddress,
@@ -416,6 +476,14 @@ export const trackMetaCRMLeadEvent = async (
     // Prepare hashed data
     const hashedEmail = customerEmail ? [await hashCustomerData(customerEmail)] : [];
     const hashedPhone = customerPhone ? [await hashPhoneNumber(customerPhone)] : [];
+    const hashedFirstName = options?.firstName ? [await hashCustomerData(options.firstName)] : undefined;
+    const hashedLastName = options?.lastName ? [await hashCustomerData(options.lastName)] : undefined;
+    const hashedCity = options?.city ? [await hashCustomerData(options.city)] : undefined;
+    const hashedState = options?.state ? [await hashCustomerData(options.state)] : undefined;
+    const hashedZip = options?.zip ? [await hashCustomerData(options.zip)] : undefined;
+    const hashedCountry = options?.country ? [await hashCustomerData(options.country)] : undefined;
+    const hashedDob = options?.dateOfBirth ? [await hashCustomerData(options.dateOfBirth)] : undefined;
+    const hashedGender = options?.gender ? [await hashCustomerData(options.gender)] : undefined;
 
     const event: FacebookConversionEvent = {
       event_name: "Lead",
@@ -426,7 +494,19 @@ export const trackMetaCRMLeadEvent = async (
       user_data: {
         em: hashedEmail,
         ph: hashedPhone,
+        fn: hashedFirstName,
+        ln: hashedLastName,
+        ct: hashedCity,
+        st: hashedState,
+        zp: hashedZip,
+        country: hashedCountry,
+        db: hashedDob,
+        ge: hashedGender,
         lead_id: leadId,
+        fbc: options?.fbc,
+        fbp: options?.fbp,
+        client_ip_address: options?.clientIpAddress,
+        client_user_agent: options?.clientUserAgent,
       },
       custom_data: {
         event_source: "crm",

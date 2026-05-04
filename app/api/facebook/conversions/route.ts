@@ -52,6 +52,8 @@ const facebookConversionSchema = z.object({
   transaction_id: z.string().optional(),
   lead_id: z.number().optional(),
   event_source_url: z.string().optional(),
+  fbc: z.string().optional(),
+  fbp: z.string().optional(),
   custom_data: z.record(z.string(), z.unknown()).optional(),
 });
 
@@ -122,12 +124,14 @@ export async function POST(request: NextRequest) {
       transaction_id,
       lead_id,
       event_source_url,
+      fbc: bodyFbc,
+      fbp: bodyFbp,
       custom_data = {},
     } = validationResult.data;
 
     // Extract Meta matching parameters directly from cookies
-    const fbc = request.cookies.get("_fbc")?.value;
-    const fbp = request.cookies.get("_fbp")?.value;
+    const fbc = bodyFbc || request.cookies.get("_fbc")?.value;
+    const fbp = bodyFbp || request.cookies.get("_fbp")?.value;
     const clientIpAddress = ip;
 
     // Prepare user data with hashed customer information

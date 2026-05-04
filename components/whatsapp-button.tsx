@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useInView } from "react-intersection-observer";
 import { cn } from "@/lib/utils";
+import { trackContact } from "@/lib/analytics";
 
 interface WhatsAppButtonProps {
   phoneNumber: string;
@@ -197,41 +198,8 @@ export function WhatsAppButton({
         aria-label={t("tooltip")}
         onClick={() => {
           dismissNotification();
-          const eventId = typeof crypto !== "undefined" ? crypto.randomUUID() : undefined;
-
-          if (typeof window !== "undefined" && window.fbq) {
-            window.fbq("track", "Contact", {
-              content_name: "WhatsApp",
-              content_category: "Photography Inquiry",
-            }, eventId ? { eventID: eventId } : undefined);
-          }
-            if (typeof window !== "undefined" && window.gtag) {
-              window.gtag("event", "contact", {
-                event_category: "Engagement",
-                event_label: "WhatsApp",
-              });
-
-              // Google Ads Direct Conversion for 2026
-              const adsId = (window as any).__ADS_ID || "AW-1007335227";
-              if (adsId) {
-                window.gtag("event", "conversion", {
-                  send_to: `${adsId}/RhizCN2v8p4cELvuquAD`, // WhatsApp specific lead label
-                  value: 1.0, 
-                  currency: "EUR",
-                });
-              }
-            }
-            fetch("/api/facebook/conversions", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                event_name: "Contact",
-                event_id: eventId,
-                package_id: "general",
-                custom_data: { contact_method: "WhatsApp" },
-              }),
-            }).catch(() => { });
-          }}
+          trackContact("WhatsApp");
+        }}
       >
         <div
           className={cn(
