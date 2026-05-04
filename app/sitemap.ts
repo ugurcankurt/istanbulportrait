@@ -16,6 +16,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     locales.forEach((loc) => {
       languages[loc] = `${baseUrl}/${loc}${pathResolver(loc)}`;
     });
+    // Fallback for unmatched languages
+    languages["x-default"] = `${baseUrl}/en${pathResolver("en")}`;
     return { languages };
   };
 
@@ -30,7 +32,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     );
   };
 
-  // 1. Home Pages (All Locales)
+  // 1. Root Domain (x-default fallback)
+  sitemapData.push({
+    url: `${baseUrl}/`,
+    lastModified: new Date(),
+    changeFrequency: "daily",
+    priority: 1.0,
+    alternates: getAlternates(() => ""),
+  });
+
+  // 2. Home Pages (All Locales)
   locales.forEach((locale) => {
     sitemapData.push({
       url: `${baseUrl}/${locale}`,
