@@ -33,7 +33,7 @@ interface PackageGalleryProps {
   videoUrl?: string | null;
 }
 
-const VideoPlayer = ({ url }: { url: string }) => {
+const VideoPlayer = ({ url, fit = "cover" }: { url: string; fit?: "cover" | "contain" }) => {
   const embed = React.useMemo(() => {
     if (!url) return null;
     try {
@@ -73,7 +73,34 @@ const VideoPlayer = ({ url }: { url: string }) => {
         loop
         muted
         playsInline
-        className="w-full h-full object-cover"
+        className={cn("w-full h-full", fit === "cover" ? "object-cover" : "object-contain")}
+      />
+    );
+  }
+
+  if (embed.type === "youtube" || embed.type === "vimeo") {
+    if (fit === "cover") {
+      return (
+        <div className="absolute inset-0 overflow-hidden pointer-events-none flex items-center justify-center">
+          <iframe
+            src={embed.src}
+            className="w-[300%] h-[300%] max-w-none"
+            frameBorder="0"
+            allow="autoplay; encrypted-media"
+            allowFullScreen
+            scrolling="no"
+          />
+        </div>
+      );
+    }
+    return (
+      <iframe
+        src={embed.src}
+        className="w-full h-full object-contain pointer-events-none"
+        frameBorder="0"
+        allow="autoplay; encrypted-media"
+        allowFullScreen
+        scrolling="no"
       />
     );
   }
@@ -337,7 +364,7 @@ export function PackageGallery({
                   {videoUrl && (
                     <div className="flex-[0_0_100%] min-w-0 h-full relative flex items-center justify-center bg-black">
                       <div className="w-full h-full max-w-4xl relative">
-                        <VideoPlayer url={videoUrl} />
+                        <VideoPlayer url={videoUrl} fit="contain" />
                       </div>
                     </div>
                   )}
