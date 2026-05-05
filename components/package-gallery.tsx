@@ -258,7 +258,7 @@ export function PackageGallery({
         )}
 
         <div className="absolute bottom-10 end-4 z-20">
-          <Badge variant="secondary" className="bg-primary/40 text-white border-none py-1.5 px-3 text-xs font-semibold backdrop-blur-md">
+          <Badge variant="secondary" className="bg-black/30 text-white border border-white/20 py-1.5 px-3 text-xs font-semibold backdrop-blur-md shadow-luxury">
             {selectedIndex + 1} / {totalItems}
           </Badge>
         </div>
@@ -325,7 +325,7 @@ export function PackageGallery({
           ))}
 
           <div className="absolute bottom-4 end-4 z-20">
-            <Button className="primary"
+            <Button className="bg-white/90 text-black shadow-luxury hover:bg-white backdrop-blur-md border border-white/20 transition-all duration-700 hover:scale-105"
               onClick={() => {
                 setSelectedIndex(0);
                 setIsOpen(true);

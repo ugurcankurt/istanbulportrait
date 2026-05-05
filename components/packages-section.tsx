@@ -118,89 +118,93 @@ export function PackagesSection({ header, customCtaHeader, aggregateRating, dbPa
         className="block h-full group"
       >
         <Card
-          className={`aspect-[3/4] w-full flex flex-col overflow-hidden p-0 gap-0 pt-0 ${pkg.popular ? "ring-2 ring-primary shadow-xl sm:scale-105 bg-gradient-to-b from-background to-primary/5" : "border-2 hover:border-primary/20"}`}
+          className={cn(
+            "relative w-full aspect-[3/4] sm:aspect-[4/5] overflow-hidden bg-card border-none transition-all duration-700 hover:-translate-y-2 group-hover:shadow-luxury",
+            pkg.popular ? "shadow-luxury sm:scale-[1.02]" : "shadow-sm"
+          )}
         >
-          {/* Image taking 85% */}
-          <div className="relative h-[85%] w-full overflow-hidden">
-            {pkg.image ? (
-              <Image
-                src={pkg.image}
-                alt={pkg.name}
-                fill
-                className="object-cover transition-transform duration-500 hover:scale-110"
-                sizes="(max-width: 639px) 80vw, (max-width: 1023px) 45vw, 22vw"
-                quality={50}
-              />
+          {/* Background Image */}
+          {pkg.image ? (
+            <Image
+              src={pkg.image}
+              alt={pkg.name}
+              fill
+              className="object-cover transition-transform duration-700 ease-out group-hover:scale-110"
+              sizes="(max-width: 639px) 80vw, (max-width: 1023px) 45vw, 22vw"
+              quality={60}
+            />
+          ) : (
+            <div className="w-full h-full bg-muted flex flex-col items-center justify-center text-muted-foreground/30">
+              <ImageIcon className="w-12 h-12 mb-2" />
+            </div>
+          )}
+
+          {/* Gradients for text readability and top badges */}
+          <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-black/60 to-transparent z-0 pointer-events-none" />
+          <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/95 via-black/50 to-transparent z-0 pointer-events-none" />
+
+          {/* Seasonal Discount Badge (Top Right) */}
+          <div className="absolute top-3 end-3 z-10 flex flex-col gap-2 items-end">
+            {pkg.popular && (
+              <Badge className="bg-white/20 backdrop-blur-md border border-white/30 text-white px-3 py-1 text-[10px] sm:text-xs tracking-widest uppercase shadow-sm font-serif">
+                {tui("most_popular")}
+              </Badge>
+            )}
+            {pkg.pricing.isDiscounted && activeDiscount && (
+              <Badge className="bg-sale/90 backdrop-blur-md border border-white/30 text-white px-2 py-0.5 text-[10px] shadow-sm animate-pulse">
+                -{Math.round(pkg.pricing.discountPercentage * 100)}%{" "}
+                {activeDiscount.name}
+              </Badge>
+            )}
+          </div>
+
+          {/* Footer Content Area Overlaid on Image */}
+          <div className="absolute inset-0 z-10 flex flex-col justify-end p-4 sm:p-5">
+            {asHeading ? (
+              <h3 className="text-xl sm:text-2xl font-serif font-medium text-white line-clamp-2 mb-2 leading-tight drop-shadow-md">
+                {pkg.name}
+              </h3>
             ) : (
-              <div className="w-full h-full bg-muted flex flex-col items-center justify-center text-muted-foreground/30">
-                <ImageIcon className="w-12 h-12 mb-2" />
+              <div className="text-xl sm:text-2xl font-serif font-medium text-white line-clamp-2 mb-2 leading-tight drop-shadow-md">
+                {pkg.name}
               </div>
             )}
 
-            {/* Title Overlay at bottom of image */}
-            <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent pt-12 pb-3 px-4 z-10">
-              {asHeading ? (
-                <h3 className="text-xl sm:text-2xl font-bold text-white line-clamp-2 drop-shadow-md">
-                  {pkg.name}
-                </h3>
-              ) : (
-                <div className="text-xl sm:text-2xl font-bold text-white line-clamp-2 drop-shadow-md">
-                  {pkg.name}
-                </div>
-              )}
-            </div>
+            <div className="flex flex-row items-end justify-between pt-2 border-t border-white/20">
+              {/* Left: Review Rating */}
+              <div className="flex items-center">
+                {aggregateRating ? (
+                  <div className="flex items-center gap-1.5">
+                    <Star className="h-4 w-4 fill-white text-white drop-shadow-sm" />
+                    <span className="text-sm font-medium text-white drop-shadow-sm">{aggregateRating.average}</span>
+                    <span className="text-xs text-white/80">({aggregateRating.count})</span>
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-1.5">
+                    <Star className="h-4 w-4 fill-white text-white drop-shadow-sm" />
+                    <span className="text-sm font-medium text-white drop-shadow-sm">5.0</span>
+                  </div>
+                )}
+              </div>
 
-            {/* Seasonal Discount Badge (Top Right) */}
-            <div className="absolute top-2 end-2 z-10 flex flex-col gap-2 items-end">
-              {pkg.popular && (
-                <Badge className="bg-primary text-primary-foreground px-2 sm:px-4 py-1 text-xs sm:text-sm shadow-md">
-                  {tui("most_popular")}
-                </Badge>
-              )}
-              {pkg.pricing.isDiscounted && activeDiscount && (
-                <Badge className="bg-sale text-sale-foreground px-2 py-0.5 text-[10px] sm:text-xs shadow-md animate-pulse border-0">
-                  -{Math.round(pkg.pricing.discountPercentage * 100)}%{" "}
-                  {activeDiscount.name}
-                </Badge>
-              )}
-            </div>
-          </div>
-
-          {/* Footer taking 15% */}
-          <div className="h-[15%] flex flex-row items-center justify-between p-0 px-4 bg-background">
-            {/* Left: Review Rating */}
-            <div className="flex items-center">
-              {aggregateRating ? (
+              {/* Right: Price */}
+              <div className="flex flex-col items-end justify-center leading-none">
                 <div className="flex items-center gap-1.5">
-                  <Star className="h-4 w-4 fill-primary text-primary" />
-                  <span className="text-sm font-bold text-foreground">{aggregateRating.average}</span>
-                  <span className="text-xs text-muted-foreground font-medium">({aggregateRating.count})</span>
+                  {pkg.pricing.isDiscounted && (
+                    <span className="text-[10px] sm:text-xs text-white/70 line-through">
+                      {formatPrice(pkg.basePrice)}
+                    </span>
+                  )}
+                  <span className="text-lg sm:text-xl font-serif font-semibold text-white drop-shadow-md">
+                    {formatPrice(pkg.pricing.isDiscounted ? pkg.pricing.price : pkg.basePrice)}
+                  </span>
                 </div>
-              ) : (
-                <div className="flex items-center gap-1.5">
-                  <Star className="h-4 w-4 fill-primary text-primary" />
-                  <span className="text-sm font-bold text-foreground">5.0</span>
-                </div>
-              )}
-            </div>
-
-            {/* Right: Price */}
-            <div className="flex flex-col items-end justify-center leading-none">
-              <div className="flex items-center gap-1.5">
-                {pkg.pricing.isDiscounted && (
-                  <span className="text-xs text-muted-foreground line-through">
-                    {formatPrice(pkg.basePrice)}
+                {pkg.isPerPerson && (
+                  <span className="text-[9px] text-white/80 mt-1 uppercase tracking-wider drop-shadow-sm">
+                    {t("per_person")}
                   </span>
                 )}
-                <span className="text-lg font-bold text-foreground">
-                  {formatPrice(pkg.pricing.isDiscounted ? pkg.pricing.price : pkg.basePrice)}
-                </span>
               </div>
-              {pkg.isPerPerson && (
-                <span className="text-[10px] text-muted-foreground font-normal mt-0.5">
-                  {t("per_person")}
-                </span>
-              )}
             </div>
           </div>
         </Card>

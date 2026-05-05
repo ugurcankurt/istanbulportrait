@@ -40,6 +40,7 @@ export interface PackageDetailsProps {
   reviews: GoogleReview[];
   activeDiscount: DiscountDB | null;
   timeSurcharges: TimeSurcharge[];
+  whatsappNumber?: string;
 }
 
 const getDateFnsLocale = (locale: string) => {
@@ -56,7 +57,7 @@ const getDateFnsLocale = (locale: string) => {
   }
 };
 
-export function PackageDetails({ packageData, aggregateRating, reviews, activeDiscount, timeSurcharges }: PackageDetailsProps) {
+export function PackageDetails({ packageData, aggregateRating, reviews, activeDiscount, timeSurcharges, whatsappNumber }: PackageDetailsProps) {
   const t = useTranslations("packages");
   const tReviews = useTranslations("reviews");
   const tui = useTranslations("ui");
@@ -180,16 +181,16 @@ export function PackageDetails({ packageData, aggregateRating, reviews, activeDi
   return (
     <div className="flex flex-col min-h-[100dvh] bg-background">
       {/* --- DESKTOP HEADER (md:block) --- */}
-      <div className="hidden md:block border-b bg-background/85 backdrop-blur-sm sticky top-16 z-30">
-        <div className="container mx-auto px-4 py-4 lg:px-8">
+      <div className="hidden md:block pt-6 pb-2">
+        <div className="container mx-auto px-4 lg:px-8">
           <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
             <div className="space-y-2">
-              <h1 className="text-3xl lg:text-4xl font-black tracking-tight text-foreground leading-tight">
+              <h1 className="text-4xl lg:text-5xl font-serif text-foreground leading-tight">
                 {packageName}
               </h1>
               <div className="flex flex-wrap items-center gap-x-2 gap-y-2 text-sm">
                 {pricing.isDiscounted && (
-                  <Badge variant="default" className="bg-sale border-none text-white animate-pulse">
+                  <Badge variant="default" className="bg-black/80 backdrop-blur-md text-white border border-white/20 animate-pulse font-serif tracking-widest uppercase text-xs px-3 py-1 shadow-luxury">
                     {tui("save_percentage", { percentage: Math.round(pricing.discountPercentage * 100) })}
                   </Badge>
                 )}
@@ -261,17 +262,17 @@ export function PackageDetails({ packageData, aggregateRating, reviews, activeDi
             {/* Content Mobile Header (Only visible on mobile) */}
             <div className="md:hidden space-y-6">
               <div className="space-y-4">
-                <div className="flex items-center gap-2">
-                  <Badge variant="secondary" className="bg-primary/10 text-primary border-none font-semibold px-3 py-1">
+                <div className="flex flex-wrap items-center gap-x-2 gap-y-2 text-sm">
+                  <Badge variant="secondary" className="bg-primary/5 text-primary border-[0.5px] border-primary/20 font-serif tracking-widest uppercase text-[10px] px-3 py-1 shadow-sm">
                     {tui("professional_photographer")}
                   </Badge>
                   {packageData.is_popular && (
-                    <Badge className="bg-primary text-primary-foreground font-semibold px-3 py-1 shadow-sm">
+                    <Badge className="bg-black/80 backdrop-blur-md text-white border border-white/20 font-serif tracking-widest uppercase text-[10px] px-3 py-1 shadow-luxury">
                       {tui("most_popular")}
                     </Badge>
                   )}
                 </div>
-                <div className="text-3xl font-extrabold tracking-tight text-foreground">
+                <div className="text-4xl font-serif text-foreground leading-tight">
                   {packageName}
                 </div>
                 <div className="flex items-center gap-3">
@@ -339,17 +340,17 @@ export function PackageDetails({ packageData, aggregateRating, reviews, activeDi
               </div>
 
               <div className="space-y-6 border-t pt-8">
-                <h3 className="text-2xl font-black flex items-center gap-3">
+                <h3 className="text-3xl font-serif flex items-center gap-3">
                   <Telescope className="h-6 w-6 text-primary" />
                   {tui("what_to_expect")}
                 </h3>
                 <ul className="grid grid-cols-1 sm:grid-cols-2 gap-y-5 gap-x-12">
                   {features.map((feature, index) => (
                     <li key={index} className="flex items-start gap-4 group">
-                      <div className="mt-1 bg-primary p-1.5 rounded-full group-hover:bg-primary/70 transition-colors">
-                        <Check className="h-3.5 w-3.5 text-primary-foreground stroke-[3]" />
+                      <div className="mt-1 bg-primary/10 p-1.5 rounded-full group-hover:bg-primary/20 transition-colors">
+                        <Check className="h-3.5 w-3.5 text-primary stroke-[3]" />
                       </div>
-                      <span className="text-lg font-semibold text-foreground">{feature}</span>
+                      <span className="text-lg font-medium text-foreground">{feature}</span>
                     </li>
                   ))}
                 </ul>
@@ -359,7 +360,7 @@ export function PackageDetails({ packageData, aggregateRating, reviews, activeDi
 
           <div className="lg:col-span-4">
             {/* Booking Card (Inline only on Desktop) */}
-            <div className="hidden lg:block lg:sticky lg:top-44">
+            <div className="hidden lg:block lg:sticky lg:top-28">
               <BookingCard
                 packageId={packageData.slug as any}
                 packageDisplayName={packageName}
@@ -386,6 +387,7 @@ export function PackageDetails({ packageData, aggregateRating, reviews, activeDi
                 onCheckAvailability={() => setIsModalOpen(true)}
                 activeDiscount={activeDiscount}
                 timeSurcharges={timeSurcharges}
+                whatsappNumber={whatsappNumber}
               />
             </div>
 
@@ -411,6 +413,7 @@ export function PackageDetails({ packageData, aggregateRating, reviews, activeDi
         isPerPerson={packageData.is_per_person}
         activeDiscount={activeDiscount}
         timeSurcharges={timeSurcharges}
+        whatsappNumber={whatsappNumber}
       />
 
       {/* Existing Sticky Bottom Bar for Mobile (Hidden on Desktop) */}

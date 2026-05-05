@@ -87,6 +87,7 @@ export async function PackageDetailPageContent({
         reviews={reviews}
         activeDiscount={activeDiscount}
         timeSurcharges={timeSurcharges}
+        whatsappNumber={settings.whatsapp_number}
       />
     </div>
   );

@@ -114,11 +114,11 @@ export function ResumeViewingCard({
     <div className={cn("flex flex-col gap-8", !withContainer && "w-full")}>
       {showTitle && (
         isMainTitle ? (
-          <h2 className="text-2xl sm:text-3xl md:text-5xl font-bold text-white drop-shadow-lg text-center tracking-tight">
+          <h2 className="font-serif text-3xl sm:text-4xl text-white drop-shadow-lg text-center tracking-tight">
             {thero("resume_title")}
           </h2>
         ) : (
-          <div className="text-2xl sm:text-3xl md:text-5xl font-bold text-white drop-shadow-lg text-center tracking-tight">
+          <div className="font-serif text-3xl sm:text-4xl text-white drop-shadow-lg text-center tracking-tight">
             {thero("resume_title")}
           </div>
         )
@@ -159,9 +159,9 @@ export function ResumeViewingCard({
                     href={`/${locale}/packages/${nativeSlug}`}
                     className="group block w-full"
                   >
-                    <Card className="relative flex flex-row overflow-hidden p-2 gap-4 border-none bg-white text-black transition-all shadow-lg hover:shadow-xl rounded-2xl h-[120px] sm:h-[140px]">
+                    <Card className="relative flex flex-row overflow-hidden p-2 gap-4 border-[0.5px] border-border/50 bg-white text-black transition-all duration-500 shadow-lg hover:shadow-xl rounded-[2rem] h-[120px] sm:h-[140px]">
                       {/* History Badge - Absolute Top Left */}
-                      <div className="absolute top-2 start-2 flex items-center gap-1 text-[10px] text-white font-medium bg-primary backdrop-blur-md px-2 py-0.5 rounded-full z-10 border border-white/20">
+                      <div className="absolute top-3 start-3 flex items-center gap-1 text-[9px] font-bold uppercase tracking-widest bg-black/60 text-white backdrop-blur-md px-3 py-1.5 rounded-full z-10 border border-white/20">
                         <History className="w-3 h-3" />
                         <span>
                           {formatDistanceToNow(visited.timestamp, {
@@ -188,7 +188,7 @@ export function ResumeViewingCard({
                       </div>
                       <CardHeader className="flex-1 flex flex-col justify-between p-0 py-1 pe-2 uppercase-none">
                         <div className="space-y-1">
-                          <div className="text-sm sm:text-lg font-bold leading-tight group-hover:text-primary transition-colors line-clamp-2 text-slate-900">
+                          <div className="font-serif text-base sm:text-lg leading-tight group-hover:text-primary transition-colors line-clamp-2 text-slate-900">
                             {locName}
                           </div>
 
@@ -204,24 +204,22 @@ export function ResumeViewingCard({
                           </div>
                         </div>
 
-                        <div className="flex items-end justify-between">
-                          <div className="flex flex-col items-end">
-                            <div className="flex items-baseline gap-1">
-                              <span className="text-lg sm:text-xl font-bold text-slate-900">
-                                {formatPrice(pricing.price)}
-                              </span>
-                              {pricing.isDiscounted && (
-                                <span className="text-xs text-slate-400 line-through">
-                                  {formatPrice(basePrice)}
-                                </span>
-                              )}
-                            </div>
-                            {pricing.isDiscounted && activeDiscount && (
-                              <span className="text-[10px] text-sale font-bold animate-pulse -mt-1">
-                                -{Math.round(pricing.discountPercentage * 100)}% {activeDiscount.name}
+                        <div className="flex items-center flex-wrap gap-2 mt-1">
+                          <div className="flex items-baseline gap-1.5">
+                            <span className="text-lg sm:text-xl font-bold text-slate-900">
+                              {formatPrice(pricing.price)}
+                            </span>
+                            {pricing.isDiscounted && (
+                              <span className="text-xs text-slate-400 line-through">
+                                {formatPrice(basePrice)}
                               </span>
                             )}
                           </div>
+                          {pricing.isDiscounted && activeDiscount && (
+                            <span className="text-[10px] font-bold text-sale bg-sale/10 px-2 py-0.5 rounded-full animate-pulse whitespace-nowrap">
+                              -{Math.round(pricing.discountPercentage * 100)}% {activeDiscount.name}
+                            </span>
+                          )}
                         </div>
                       </CardHeader>
                     </Card>

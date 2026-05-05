@@ -183,7 +183,7 @@ function Step1Summary({
     <div className="flex flex-col h-full">
       <div className="flex-1 overflow-y-auto space-y-3 pb-2 min-h-0">
         {/* Package info row */}
-        <div className="rounded-xl border border-primary/20 bg-primary/5 p-3">
+        <div className="rounded-2xl border-[0.5px] border-primary/20 bg-primary/5 p-4">
           <div className="flex items-start justify-between gap-2">
             <div className="min-w-0">
               <p className="font-bold text-sm text-foreground truncate">{packageInfo?.name}</p>
@@ -204,7 +204,7 @@ function Step1Summary({
         </div>
 
         {/* Booking details */}
-        <div className="rounded-xl border bg-muted/20 overflow-hidden">
+        <div className="rounded-2xl border-[0.5px] border-border/50 bg-background overflow-hidden mt-4">
           <div className="grid grid-cols-2 divide-x divide-y divide-border/50">
             {[
               { label: t("labels.customer"), value: preFilledBookingData?.customerName },
@@ -224,7 +224,7 @@ function Step1Summary({
         </div>
         
         {/* Promo code */}
-        <div className="rounded-xl border bg-background overflow-hidden p-4 space-y-3">
+        <div className="rounded-2xl border-[0.5px] border-border/50 bg-background overflow-hidden p-4 space-y-3 mt-4">
           <label className="text-sm font-semibold">{t("promo_code") || "Promo Code"}</label>
           <div className="flex gap-2">
             <Input 
@@ -232,9 +232,10 @@ function Step1Summary({
               onChange={(e) => setPromoCodeInput(e.target.value.toUpperCase())}
               placeholder="e.g. SPRING20"
               disabled={!!appliedPromo}
+              className="rounded-xl h-11 bg-muted/40 border-none focus:bg-background focus:ring-1 focus:ring-primary/30"
             />
             {!appliedPromo ? (
-              <Button onClick={handleApplyPromo} disabled={!promoCodeInput.trim() || isLoadingPromo}>
+              <Button onClick={handleApplyPromo} disabled={!promoCodeInput.trim() || isLoadingPromo} className="h-11 rounded-xl">
                 {isLoadingPromo ? <Loader2 className="w-4 h-4 animate-spin" /> : t("apply") || "Apply"}
               </Button>
             ) : (
@@ -247,7 +248,7 @@ function Step1Summary({
         </div>
 
         {/* Pricing breakdown */}
-        <div className="rounded-xl border bg-background overflow-hidden">
+        <div className="rounded-2xl border-[0.5px] border-border/50 bg-background overflow-hidden mt-4">
           <div className="px-3 py-2 space-y-1.5">
             <div className="flex justify-between text-xs">
               <span className="text-muted-foreground">{tPricing("subtotal")}</span>
@@ -295,10 +296,10 @@ function Step1Summary({
       </div>
 
       {/* CTA */}
-      <div className="pt-3 shrink-0">
-        <Button onClick={onNext} className="w-full h-12 rounded-xl font-semibold">
+      <div className="pt-4 shrink-0">
+        <Button onClick={onNext} className="w-full h-14 rounded-2xl font-bold text-base shadow-sm">
           {t("payment_method") || "Choose Payment"}
-          <ChevronRight className="w-4 h-4 ms-1 rtl:rotate-180" />
+          <ChevronRight className="w-5 h-5 ms-1 rtl:rotate-180" />
         </Button>
       </div>
     </div>
@@ -328,17 +329,17 @@ function Step2Method({
           type="button"
           onClick={() => setPaymentMethod("iyzico")}
           className={cn(
-            "w-full rounded-xl border-2 p-4 text-start transition-all duration-200 flex items-center gap-4",
+            "w-full rounded-2xl border-[0.5px] p-5 text-start transition-all duration-500 flex items-center gap-5 shadow-sm hover:shadow-md",
             paymentMethod === "iyzico"
-              ? "border-primary bg-primary/5"
-              : "border-border bg-muted/20 hover:border-primary/30"
+              ? "border-primary/50 bg-primary/5 ring-1 ring-primary/20"
+              : "border-border/50 bg-background hover:border-primary/30"
           )}
         >
           <div className={cn(
-            "w-11 h-11 rounded-xl flex items-center justify-center border-2 shrink-0 transition-all",
-            paymentMethod === "iyzico" ? "border-primary bg-primary/10" : "border-border bg-background"
+            "w-12 h-12 rounded-xl flex items-center justify-center border-[0.5px] shrink-0 transition-all duration-500",
+            paymentMethod === "iyzico" ? "border-primary/30 bg-primary/10 shadow-inner" : "border-border/50 bg-muted/30"
           )}>
-            <CreditCard className={cn("w-5 h-5", paymentMethod === "iyzico" ? "text-primary" : "text-muted-foreground")} />
+            <CreditCard className={cn("w-6 h-6 transition-colors duration-500", paymentMethod === "iyzico" ? "text-primary" : "text-muted-foreground")} />
           </div>
           <div className="flex-1 min-w-0">
             <div className="flex items-center justify-between">
@@ -363,15 +364,15 @@ function Step2Method({
           type="button"
           onClick={() => setPaymentMethod("turinvoice")}
           className={cn(
-            "w-full rounded-xl border-2 p-4 text-start transition-all duration-200 flex items-center gap-4",
+            "w-full rounded-2xl border-[0.5px] p-5 text-start transition-all duration-500 flex items-center gap-5 shadow-sm hover:shadow-md",
             paymentMethod === "turinvoice"
-              ? "border-primary bg-primary/5"
-              : "border-border bg-muted/20 hover:border-primary/30"
+              ? "border-primary/50 bg-primary/5 ring-1 ring-primary/20"
+              : "border-border/50 bg-background hover:border-primary/30"
           )}
         >
           <div className={cn(
-            "w-11 h-11 rounded-xl flex items-center justify-center border-2 shrink-0 overflow-hidden transition-all",
-            paymentMethod === "turinvoice" ? "border-primary bg-primary/10" : "border-border bg-background"
+            "w-12 h-12 rounded-xl flex items-center justify-center border-[0.5px] shrink-0 overflow-hidden transition-all duration-500",
+            paymentMethod === "turinvoice" ? "border-primary/30 bg-primary/10 shadow-inner" : "border-border/50 bg-muted/30"
           )}>
             <img src="/turinvoice_logo.webp" alt="Turinvoice" className="w-8 h-8 object-contain" />
           </div>
@@ -407,13 +408,13 @@ function Step2Method({
       </div>
 
       {/* CTA */}
-      <div className="pt-3 flex gap-3 shrink-0">
-        <Button type="button" variant="outline" onClick={onBack} className="h-12 rounded-xl px-4">
-          <ChevronLeft className="w-4 h-4 rtl:rotate-180" />
+      <div className="pt-4 flex gap-3 shrink-0">
+        <Button type="button" variant="outline" onClick={onBack} className="h-14 rounded-2xl px-5 border-border/50 hover:bg-muted/50">
+          <ChevronLeft className="w-5 h-5 rtl:rotate-180" />
         </Button>
-        <Button onClick={onNext} className="flex-1 h-12 rounded-xl font-semibold">
+        <Button onClick={onNext} className="flex-1 h-14 rounded-2xl font-bold text-base shadow-sm">
           {t("payment_details") || "Continue"}
-          <ChevronRight className="w-4 h-4 ms-1 rtl:rotate-180" />
+          <ChevronRight className="w-5 h-5 ms-1 rtl:rotate-180" />
         </Button>
       </div>
     </div>
@@ -471,7 +472,7 @@ function PriceStrip({
           {/* Seasonal discount — only show when percentage is actually > 0 */}
           {pricing.isDiscounted && pricing.appliedDiscountPercentage > 0 && (
             <p className="text-[10px] text-success mt-1">
-              {(pricing.appliedDiscountPercentage * 100).toFixed(0)}% {t("seasonal_discount_applied", { percentage: (pricing.appliedDiscountPercentage * 100).toFixed(0) })}
+              {t("seasonal_discount_applied", { percentage: (pricing.appliedDiscountPercentage * 100).toFixed(0) })}
             </p>
           )}
           {pricing.promoAmount && (

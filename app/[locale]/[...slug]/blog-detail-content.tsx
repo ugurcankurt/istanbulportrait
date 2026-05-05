@@ -58,11 +58,27 @@ export async function BlogDetailPageContent({
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
         <article className="mx-auto">
           {/* Header */}
-          <header className="mb-8">
+          <header className="mb-12">
+            <div className="text-center max-w-4xl mx-auto px-4 mb-8">
+              <div className="flex flex-wrap justify-center items-center gap-3 text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-6">
+                <time dateTime={post.published_at || post.created_at}>
+                  {formatBlogDate(post.published_at || post.created_at, locale as Locale)}
+                </time>
+                <span>•</span>
+                <span>
+                  {t("reading_time", { minutes: post.reading_time_minutes })}
+                </span>
+              </div>
+              
+              <h1 className="text-4xl md:text-6xl lg:text-7xl font-serif leading-tight text-foreground mb-8">
+                {post.translation.title}
+              </h1>
+            </div>
+
             {post.featured_image && (
               <AspectRatio
                 ratio={16 / 9}
-                className="mb-8 rounded-4xl overflow-hidden"
+                className="mb-8 rounded-[2rem] overflow-hidden shadow-md border-[0.5px] border-border/50 bg-muted/20"
               >
                 <Image
                   src={post.featured_image}
@@ -74,21 +90,6 @@ export async function BlogDetailPageContent({
                 />
               </AspectRatio>
             )}
-
-            <h1 className="text-4xl md:text-5xl font-bold mb-4">
-              {post.translation.title}
-            </h1>
-
-            <div className="flex flex-wrap gap-4 text-sm text-muted-foreground mb-6">
-              <time dateTime={post.published_at || post.created_at}>
-                {formatBlogDate(post.published_at || post.created_at, locale as Locale)}
-              </time>
-              <span>•</span>
-              <span>
-                {t("reading_time", { minutes: post.reading_time_minutes })}
-              </span>
-            </div>
-
           </header>
 
           {/* AI Summary / Key Takeaways */}
@@ -97,7 +98,7 @@ export async function BlogDetailPageContent({
           )}
 
           {/* Content */}
-          <div className="prose prose-lg dark:prose-invert max-w-none">
+          <div className="prose prose-lg dark:prose-invert max-w-none prose-headings:font-serif prose-headings:font-normal prose-h2:text-4xl prose-h3:text-2xl prose-p:leading-relaxed prose-p:text-muted-foreground/90 prose-a:text-primary prose-a:underline-offset-4 hover:prose-a:decoration-primary prose-img:rounded-[2rem] prose-img:border-[0.5px] prose-img:border-border/50 prose-img:shadow-sm">
             <ReactMarkdown
               remarkPlugins={[remarkGfm]}
               rehypePlugins={[rehypeRaw]}
@@ -119,9 +120,9 @@ export async function BlogDetailPageContent({
                     {post.categories.map((cat) => (
                       <span
                         key={cat.category.id}
-                        className="px-3 py-1 rounded-full text-sm font-medium"
+                        className="px-3 py-1.5 rounded-xl text-[10px] font-bold uppercase tracking-widest border-[0.5px] border-border/30 shadow-sm"
                         style={{
-                          backgroundColor: `${cat.category.color}20`,
+                          backgroundColor: `${cat.category.color}15`,
                           color: cat.category.color,
                         }}
                       >
@@ -142,7 +143,7 @@ export async function BlogDetailPageContent({
                     {post.tags.map((tag) => (
                       <span
                         key={tag.tag.id}
-                        className="px-3 py-1 bg-muted hover:bg-muted/80 rounded-full text-sm transition-colors"
+                        className="px-4 py-1.5 border-[0.5px] border-border/50 bg-muted/20 hover:bg-primary/5 rounded-xl text-[10px] font-bold uppercase tracking-widest transition-colors shadow-sm"
                       >
                         #{tag.tag.translation?.name || tag.tag.slug}
                       </span>

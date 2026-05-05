@@ -77,7 +77,7 @@ export function AboutSection({
         <div className="grid lg:grid-cols-2 gap-8 sm:gap-12 lg:gap-16 items-center mx-auto mb-12 sm:mb-16 lg:mb-20">
           {/* Image */}
           <div className="relative">
-            <div className="relative aspect-[4/5] rounded-2xl overflow-hidden bg-muted flex flex-col items-center justify-center">
+            <div className="relative aspect-[4/5] rounded-[2.5rem] border-[0.5px] border-border/50 shadow-md overflow-hidden bg-muted flex flex-col items-center justify-center">
               {(!imgError && (dbPage?.cover_image || founderImageUrl)) ? (
                 <Image
                   src={dbPage?.cover_image || founderImageUrl || ""}
@@ -97,7 +97,7 @@ export function AboutSection({
               )}
               <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent pointer-events-none" />
             </div>
-            <div className="absolute -bottom-2 sm:-bottom-4 -right-2 sm:-right-4 bg-primary text-primary-foreground p-3 sm:p-4 rounded-lg shadow-lg">
+            <div className="absolute -bottom-4 sm:-bottom-6 -right-4 sm:-right-6 bg-primary text-primary-foreground p-4 sm:p-5 rounded-2xl shadow-xl border-4 border-background">
               <Camera className="w-6 h-6 sm:w-8 sm:h-8" />
             </div>
           </div>
@@ -105,7 +105,7 @@ export function AboutSection({
           {/* Content */}
           <div className="space-y-4 sm:space-y-6">
             <div className="space-y-3">
-              <p className="text-sm sm:text-base lg:text-lg leading-relaxed whitespace-pre-wrap">
+              <p className="text-muted-foreground/90 font-light text-base md:text-lg lg:text-xl leading-relaxed lg:leading-loose whitespace-pre-wrap">
                 {dynAbout?.description?.[locale] || tabout("description")}
               </p>
             </div>
@@ -141,9 +141,9 @@ export function AboutSection({
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 mx-auto mb-12 sm:mb-16 lg:mb-20">
           {stats.map((stat, i) => (
             <div key={`stat-${stat.label}-${i}`} className="group">
-              <Card className="text-center p-4 sm:p-6 lg:p-8 transition-colors group-hover:border-primary/30">
+              <Card className="text-center p-6 sm:p-8 lg:p-10 rounded-[2rem] border-[0.5px] border-border/50 shadow-sm transition-all duration-500 hover:shadow-md hover:border-primary/30 bg-background">
                 <CardContent className="p-0">
-                  <div className="w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 mx-auto mb-3 sm:mb-4 rounded-full bg-primary/10 flex items-center justify-center transition-transform duration-500 group-hover:scale-110">
+                  <div className="w-14 h-14 sm:w-16 sm:h-16 mx-auto mb-4 sm:mb-6 rounded-[1.5rem] bg-primary/5 border-[0.5px] border-primary/20 shadow-sm flex items-center justify-center transition-transform duration-500 group-hover:scale-110">
                     <stat.icon className="w-6 h-6 sm:w-7 sm:h-7 lg:w-8 lg:h-8 text-primary" />
                   </div>
                   <div className="text-2xl sm:text-3xl font-bold text-primary mb-2">
@@ -165,9 +165,9 @@ export function AboutSection({
           <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
             {highlights.map((highlight, i) => (
               <div key={`highlight-${highlight.title}-${i}`} className="group">
-                <Card className="text-center p-4 sm:p-5 lg:p-6 transition-colors group-hover:border-primary/30">
-                  <CardContent className="p-0">
-                    <div className="w-10 h-10 sm:w-12 sm:h-12 mx-auto mb-3 sm:mb-4 rounded-full bg-primary/10 flex items-center justify-center transition-transform duration-500 group-hover:scale-110">
+                <Card className="text-center p-6 sm:p-8 rounded-[2rem] border-[0.5px] border-border/50 shadow-sm transition-all duration-500 hover:shadow-md hover:border-primary/30 bg-background h-full flex flex-col justify-center">
+                  <CardContent className="p-0 flex flex-col items-center flex-1">
+                    <div className="w-12 h-12 sm:w-14 sm:h-14 mx-auto mb-4 sm:mb-6 rounded-2xl bg-primary/5 border-[0.5px] border-primary/20 shadow-sm flex items-center justify-center transition-transform duration-500 group-hover:scale-110">
                       <highlight.icon className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
                     </div>
                     <h3 className="text-lg sm:text-xl font-semibold mb-2 sm:mb-3">
@@ -185,21 +185,21 @@ export function AboutSection({
 
         {/* CTA */}
         <div className="text-center mt-12 sm:mt-16 lg:mt-20">
-          <div className="bg-muted/30 rounded-lg sm:rounded-xl lg:rounded-2xl p-6 sm:p-8 lg:p-12 mx-auto">
+          <div className="border-[0.5px] border-border/50 bg-primary/5 shadow-sm rounded-[2rem] lg:rounded-[3rem] p-10 sm:p-12 lg:p-16 mx-auto max-w-4xl">
             {ctaHeader}
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
               <Button nativeButton={false}
                 render={<Link href={"/locations" as any} />}
-                size="sm"
-                className="sm:size-lg text-xs sm:text-sm"
+                size="lg"
+                className="h-12 px-8 rounded-xl font-bold"
               >
                 {tui("check_locations")}
               </Button>
               <Button nativeButton={false}
                 render={<Link href={"/packages" as any} />}
                 variant="outline"
-                size="sm"
-                className="sm:size-lg text-xs sm:text-sm"
+                size="lg"
+                className="h-12 px-8 rounded-xl font-bold bg-background/50 border-border/50"
               >
                 {tui("view_packages")}
               </Button>

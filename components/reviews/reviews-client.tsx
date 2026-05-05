@@ -92,20 +92,20 @@ export function ReviewsClient({
                   key={review.id}
                   className="ps-2 md:ps-4 md:basis-1/2 lg:basis-1/3"
                 >
-                  <div className="h-full">
-                    <Card className="h-full min-h-[280px] flex flex-col">
-                      <CardHeader className="relative pb-4">
+                  <div className="h-full p-2 sm:p-3 py-4 sm:py-6">
+                    <Card className="h-full min-h-[300px] flex flex-col gap-2 rounded-[2rem] border-[0.5px] border-border/50 bg-background shadow-md hover:shadow-xl transition-all duration-500">
+                      <CardHeader className="relative pb-0">
                         <div className="flex items-start justify-between">
                           <div className="flex items-start gap-3">
                             {/* User Avatar */}
-                            <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center overflow-hidden shrink-0">
+                            <div className="w-12 h-12 rounded-[1.25rem] bg-muted flex items-center justify-center overflow-hidden shrink-0">
                               {review.author.photoUrl ? (
                                 <Image
                                   src={review.author.photoUrl}
                                   alt={review.author.name}
                                   width={48}
                                   height={48}
-                                  className="rounded-full object-cover"
+                                  className="rounded-[1.25rem] object-cover"
                                 />
                               ) : (
                                 <span className="text-sm font-bold text-muted-foreground">
@@ -116,16 +116,16 @@ export function ReviewsClient({
 
                             {/* User Info */}
                             <div className="flex-1 min-w-0">
-                              <strong className="text-base font-bold text-foreground mb-2 block">
+                              <strong className="text-base font-bold text-foreground mb-1.5 block">
                                 {review.author.name}
                               </strong>
-                              <div className="flex items-center gap-2 mb-1">
+                              <div className="flex items-center gap-2 mb-1.5">
                                 {renderStars(review.rating, "sm")}
                                 <span className="text-xs font-medium text-foreground">
                                   {review.rating}/5
                                 </span>
                               </div>
-                              <span className="text-xs text-muted-foreground font-medium">
+                              <span className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold">
                                 {formatDate(review.date)}
                               </span>
                             </div>
@@ -136,10 +136,10 @@ export function ReviewsClient({
                         </div>
                       </CardHeader>
 
-                      <CardContent className="relative pt-0 flex-1 flex flex-col justify-center">
+                      <CardContent className="relative pt-0 flex-1 flex flex-col justify-start">
                         <div className="relative">
                           {/* Quote */}
-                          <blockquote className="text-sm leading-relaxed text-muted-foreground italic font-medium relative pl-4 min-h-[4rem] flex items-center">
+                          <blockquote className="font-serif text-base lg:text-lg leading-relaxed text-foreground/90 italic relative pl-5">
                             <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-border" />
                             <span className="relative z-10 line-clamp-4 md:line-clamp-5">
                               "{review.text}"
@@ -164,7 +164,7 @@ export function ReviewsClient({
           <Button nativeButton={false}
             variant="outline"
             size="lg"
-            className="group"
+            className="group h-14 px-8 rounded-full font-semibold shadow-sm hover:scale-105 transition-transform border-[0.5px] border-primary/20 bg-primary/5 hover:bg-primary/10 text-primary"
             render={
               <a
                 href="https://maps.app.goo.gl/Q2v1FDMw5LJHBBCA9"

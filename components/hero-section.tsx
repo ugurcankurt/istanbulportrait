@@ -36,7 +36,7 @@ export async function HeroSection({
           />
         )}
         {/* Modern Gradient Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/80" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/30 to-black/70" />
       </div>
 
       {/* Content Wrapper */}
@@ -48,12 +48,12 @@ export async function HeroSection({
             activeDiscount={activeDiscount}
           >
             {/* Main Title - Server Rendered for LCP */}
-            <h1 className="text-3xl sm:text-4xl md:text-4xl lg:text-6xl font-bold mb-4 leading-[1.1] tracking-tight drop-shadow-lg text-white">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-serif font-normal mb-6 leading-[1.1] tracking-tight drop-shadow-2xl text-white">
               {title}
             </h1>
 
             {/* Subtitle - Server Rendered */}
-            <p className="text-lg sm:text-xl md:text-2xl mb-4 text-white/90 leading-[1.3] tracking-tight font-light drop-shadow-md">
+            <p className="text-lg md:text-xl lg:text-2xl mb-8 text-white/90 leading-relaxed font-light drop-shadow-md max-w-2xl">
               {subtitle}
             </p>
           </HeroClientWrapper>

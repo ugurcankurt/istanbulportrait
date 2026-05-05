@@ -72,11 +72,11 @@ export function PackageReviews({ reviews, aggregateRating }: PackageReviewsProps
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-16">
 
         {/* LEFT SIDEBAR - Overall Rating & Summary */}
-        <div className="lg:col-span-1 space-y-10 lg:sticky lg:top-44 h-fit">
+        <div className="lg:col-span-1 space-y-10 lg:sticky lg:top-28 h-fit">
           <div className="space-y-6">
-            <h3 className="text-xl font-bold text-foreground">{t("overall_rating")}</h3>
+            <h3 className="text-2xl font-serif text-foreground">{t("overall_rating")}</h3>
             <div className="flex items-center gap-4">
-              <div className="text-4xl font-extrabold text-primary">{Number(aggregateRating.average || 0).toFixed(1)}</div>
+              <div className="text-6xl font-serif text-primary leading-none">{Number(aggregateRating.average || 0).toFixed(1)}</div>
               <div className="text-xl font-bold text-muted-foreground">/ 5</div>
             </div>
             {renderStars(Math.round(aggregateRating.average || 5), "lg")}
@@ -193,7 +193,7 @@ export function PackageReviews({ reviews, aggregateRating }: PackageReviewsProps
                           )}
                         </div>
                         <div className="space-y-0.5">
-                          <div className="text-sm font-bold text-foreground flex items-center gap-2">
+                          <div className="text-base font-serif font-medium text-foreground flex items-center gap-2">
                             {review.author.name}
                             <span title="Verified Customer">
                               <CheckCircle className="w-3.5 h-3.5 text-blue-500 fill-blue-500/10" />

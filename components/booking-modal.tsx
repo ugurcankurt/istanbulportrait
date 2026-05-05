@@ -16,7 +16,6 @@ import { BookingCard } from "@/components/booking-card";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -67,6 +66,7 @@ interface BookingModalProps {
   isPerPerson: boolean;
   activeDiscount: DiscountDB | null;
   timeSurcharges?: TimeSurcharge[];
+  whatsappNumber?: string;
 }
 
 // Generate time slots from 6 AM to 6 PM
@@ -121,6 +121,7 @@ export function BookingModal({
   isPerPerson,
   activeDiscount,
   timeSurcharges = [],
+  whatsappNumber,
 }: BookingModalProps) {
   const locale = useLocale();
   const { formatPrice, rate } = useCurrency();
@@ -144,7 +145,7 @@ export function BookingModal({
   const bookingSchemaWithTranslations = createBookingSchema(tValidation);
   const { trackBookingStart, trackPackageView } = useYandexMetrica();
   const [step, setStep] = useState<"selection" | "details" | "summary">("details");
-  
+
   // Custom hook logic for < 1024px (tablet & mobile) because Tailwind 'lg' breakpoint is 1024px.
   // The inline booking card is hidden below 1024px, so we must show the selection step in the modal.
   const [isTabletOrMobile, setIsTabletOrMobile] = useState(false);
@@ -384,92 +385,25 @@ export function BookingModal({
   }
 
   const FormContent = () => (
-    <div className="max-w-5xl mx-auto space-y-6">
+    <div className="max-w-5xl mx-auto w-full">
       <Form {...form}>
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <Card className="shadow-none border border-border overflow-hidden">
-            <CardHeader className="bg-muted/30 pb-4">
-              <CardTitle className="text-lg flex items-center gap-2">
-                <Users className="w-5 h-5 text-primary" />
-                {t("customer_details")}
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="p-6 space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <FormField
-                  control={form.control}
-                  name="customerName"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-xs font-bold uppercase text-muted-foreground tracking-wide">
-                        {t("form.name")}
-                      </FormLabel>
-                      <FormControl>
-                        <Input
-                          className="h-11 bg-muted/50 border-input focus:bg-background transition-all"
-                          placeholder={tplaceholders("enter_full_name")}
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage className="text-[11px]" />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="customerEmail"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-xs font-bold uppercase text-muted-foreground tracking-wide">
-                        {t("form.email")}
-                      </FormLabel>
-                      <FormControl>
-                        <Input
-                          className="h-11 bg-muted/50 border-input focus:bg-background transition-all"
-                          type="email"
-                          placeholder={tplaceholders("enter_email")}
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage className="text-[11px]" />
-                    </FormItem>
-                  )}
-                />
-              </div>
+        <form onSubmit={handleSubmit} className="space-y-8">
+          {/* Customer Details Section */}
+          <div className="space-y-6">
+            <h3 className="text-sm font-bold uppercase tracking-widest text-muted-foreground">{t("customer_details")}</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <FormField
                 control={form.control}
-                name="customerPhone"
+                name="customerName"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-xs font-bold uppercase text-muted-foreground tracking-wide">
-                      {t("form.phone")}
+                      {t("form.name")}
                     </FormLabel>
                     <FormControl>
-                      <PhoneInput
-                        value={field.value}
-                        onChange={field.onChange}
-                        defaultCountry="TR"
-                        placeholder={tplaceholders("phone_number")}
-                        className="flex h-11 w-full rounded-3xl border border-input bg-muted/50 px-3 py-2 text-base ring-offset-background placeholder:text-muted-foreground focus-within:ring-2 focus-within:ring-primary focus-within:bg-background focus-within:ring-offset-0 disabled:cursor-not-allowed disabled:opacity-50 transition-all font-medium"
-                      />
-                    </FormControl>
-                    <FormMessage className="text-[11px]" />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="notes"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-xs font-bold uppercase text-muted-foreground tracking-wide">
-                      {t("form.notes")}
-                    </FormLabel>
-                    <FormControl>
-                      <Textarea
-                        placeholder={tplaceholders("special_requests")}
-                        className="min-h-[100px] bg-muted/50 border-input focus:bg-background transition-all resize-none"
+                      <Input
+                        className="h-12 rounded-xl bg-muted/40 border-none focus:bg-background focus:ring-1 focus:ring-primary/30 transition-all"
+                        placeholder={tplaceholders("enter_full_name")}
                         {...field}
                       />
                     </FormControl>
@@ -477,29 +411,90 @@ export function BookingModal({
                   </FormItem>
                 )}
               />
-            </CardContent>
-          </Card>
+              <FormField
+                control={form.control}
+                name="customerEmail"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-xs font-bold uppercase text-muted-foreground tracking-wide">
+                      {t("form.email")}
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        className="h-12 rounded-xl bg-muted/40 border-none focus:bg-background focus:ring-1 focus:ring-primary/30 transition-all"
+                        type="email"
+                        placeholder={tplaceholders("enter_email")}
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage className="text-[11px]" />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <FormField
+              control={form.control}
+              name="customerPhone"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-xs font-bold uppercase text-muted-foreground tracking-wide">
+                    {t("form.phone")}
+                  </FormLabel>
+                  <FormControl>
+                    <PhoneInput
+                      value={field.value}
+                      onChange={field.onChange}
+                      defaultCountry="TR"
+                      placeholder={tplaceholders("phone_number")}
+                      className="flex h-12 w-full rounded-xl bg-muted/40 border-none focus-within:bg-background focus-within:ring-1 focus-within:ring-primary/30 focus-within:ring-offset-0 transition-all font-medium"
+                    />
+                  </FormControl>
+                  <FormMessage className="text-[11px]" />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="notes"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-xs font-bold uppercase text-muted-foreground tracking-wide">
+                    {t("form.notes")}
+                  </FormLabel>
+                  <FormControl>
+                    <Textarea
+                      placeholder={tplaceholders("special_requests")}
+                      className="min-h-[100px] rounded-xl bg-muted/40 border-none focus:bg-background focus:ring-1 focus:ring-primary/30 transition-all resize-none"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage className="text-[11px]" />
+                </FormItem>
+              )}
+            />
+          </div>
         </form>
       </Form>
 
       {/* Selected Information Summary */}
-      <Card className="shadow-none border border-primary/20 bg-primary/5 overflow-hidden">
+      <Card className="shadow-sm border-[0.5px] border-primary/20 bg-primary/5 overflow-hidden rounded-[1.5rem]">
         <div className="px-6 py-4 bg-primary/10 border-b border-primary/10 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="p-1.5 bg-primary rounded-2xl text-primary-foreground">
+            <div className="p-1.5 bg-primary rounded-xl text-primary-foreground shadow-sm">
               <ImageIcon className="w-4 h-4" />
             </div>
             <span className="font-bold text-primary truncate max-w-[180px] sm:max-w-none">
               {packageInfo.name}
             </span>
           </div>
-          <Badge variant="outline" className="bg-background/50 border-primary/20 text-primary font-bold">
+          <Badge variant="secondary" className="bg-background border-primary/20 text-primary font-bold shadow-sm">
             {packageInfo.duration}
           </Badge>
         </div>
         <CardContent className="p-6 grid grid-cols-1 gap-6">
           <div className="flex items-start gap-3">
-            <div className="mt-1 p-2 bg-background rounded-2xl border border-border shadow-sm">
+            <div className="mt-1 p-2 bg-background rounded-xl border-[0.5px] border-border shadow-sm">
               <CalendarIcon className="w-4 h-4 text-primary" />
             </div>
             <div>
@@ -511,7 +506,7 @@ export function BookingModal({
           </div>
 
           <div className="flex items-start gap-3">
-            <div className="mt-1 p-2 bg-background rounded-2xl border border-border shadow-sm">
+            <div className="mt-1 p-2 bg-background rounded-xl border-[0.5px] border-border shadow-sm">
               <Clock className="w-4 h-4 text-primary" />
             </div>
             <div>
@@ -524,7 +519,7 @@ export function BookingModal({
 
           {isPerPerson && (
             <div className="flex items-start gap-3">
-              <div className="mt-1 p-2 bg-background rounded-2xl border border-border shadow-sm">
+              <div className="mt-1 p-2 bg-background rounded-xl border-[0.5px] border-border shadow-sm">
                 <Users className="w-4 h-4 text-primary" />
               </div>
               <div>
@@ -545,98 +540,90 @@ export function BookingModal({
     return (
       <Sheet open={isOpen} onOpenChange={handleClose}>
         <SheetContent side="bottom" className="h-[100dvh] w-screen p-0 flex flex-col rounded-none border-none inset-0">
-          <SheetHeader className="p-6 border-b shrink-0">
-            <div className="flex items-center gap-4">
-              {step === "details" && (
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="-ms-2 h-8 w-8"
-                  onClick={() => setStep("selection")}
-                >
-                  <ChevronLeft className="h-5 w-5 rtl:rotate-180" />
-                </Button>
-              )}
-              <SheetTitle className="text-xl font-bold">
-                {step === "details" ? t("booking_details") : t("form.date_time")}
-              </SheetTitle>
+          <SheetHeader className="px-6 py-8 border-b shrink-0 text-center flex flex-col items-center justify-center">
+            <span className="text-xs font-bold text-muted-foreground uppercase tracking-widest">
+              {step === "details" ? t("booking_details") : t("form.date_time")}
+            </span>
+            <SheetTitle className="text-2xl font-serif leading-tight text-foreground mt-2 max-w-[90%]">
+              {packageDisplayName}
+            </SheetTitle>
+          <SheetDescription className="hidden">
+            {step === "details"
+              ? t("modal_description")
+              : t("form.select_booking_details")}{" "}
+            <span className="font-semibold">{packageInfo.name}</span>
+          </SheetDescription>
+        </SheetHeader>
+
+        <div className={cn("flex-1 overflow-y-auto", step === "selection" ? "p-0" : "p-6 pb-32")}>
+          {step === "selection" ? (
+            <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+              <BookingCard
+                packageId={selectedPackage}
+                packageDisplayName={packageDisplayName}
+                basePrice={basePrice}
+                pricing={{
+                  price: isPerPerson ? packageInfo.price / (peopleCount || 1) : packageInfo.price,
+                  isDiscounted: packageInfo.isDiscounted,
+                  discountPercentage: packageInfo.discountPercentage,
+                  depositAmount: packageInfo.depositAmount,
+                  remainingAmount: packageInfo.remainingAmount
+                }}
+                displayPrice={isPerPerson ? packageInfo.price / (peopleCount || 1) : packageInfo.price}
+                selectedDate={form.watch("bookingDate") ? new Date(form.watch("bookingDate")) : undefined}
+                setSelectedDate={(date) => form.setValue("bookingDate", date ? format(date, "yyyy-MM-dd") : "")}
+                selectedTime={form.watch("bookingTime")}
+                setSelectedTime={(time) => form.setValue("bookingTime", time || "")}
+                peopleCount={peopleCount}
+                setPeopleCount={setPeopleCount}
+                dateFnsLocale={dateFnsLocale}
+                tCheckout={t}
+                t={tPackages}
+                packageDuration={String(packageInfo.duration)}
+                isPerPerson={isPerPerson}
+                onCheckAvailability={() => setStep("details")}
+                isFlat={true}
+                activeDiscount={activeDiscount}
+                timeSurcharges={timeSurcharges}
+                isInsideModal={true}
+                whatsappNumber={whatsappNumber}
+              />
             </div>
-            <SheetDescription className="hidden">
-              {step === "details"
-                ? t("modal_description")
-                : t("form.select_booking_details")}{" "}
-              <span className="font-semibold">{packageInfo.name}</span>
-            </SheetDescription>
-          </SheetHeader>
-
-          <div className={cn("flex-1 overflow-y-auto", step === "selection" ? "p-0" : "p-6 pb-32")}>
-            {step === "selection" ? (
-              <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-                <BookingCard
-                  packageId={selectedPackage}
-                  packageDisplayName={packageDisplayName}
-                  basePrice={basePrice}
-                  pricing={{
-                    price: isPerPerson ? packageInfo.price / (peopleCount || 1) : packageInfo.price,
-                    isDiscounted: packageInfo.isDiscounted,
-                    discountPercentage: packageInfo.discountPercentage,
-                    depositAmount: packageInfo.depositAmount,
-                    remainingAmount: packageInfo.remainingAmount
-                  }}
-                  displayPrice={isPerPerson ? packageInfo.price / (peopleCount || 1) : packageInfo.price}
-                  selectedDate={form.watch("bookingDate") ? new Date(form.watch("bookingDate")) : undefined}
-                  setSelectedDate={(date) => form.setValue("bookingDate", date ? format(date, "yyyy-MM-dd") : "")}
-                  selectedTime={form.watch("bookingTime")}
-                  setSelectedTime={(time) => form.setValue("bookingTime", time || "")}
-                  peopleCount={peopleCount}
-                  setPeopleCount={setPeopleCount}
-                  dateFnsLocale={dateFnsLocale}
-                  tCheckout={t}
-                  t={tPackages}
-                  packageDuration={String(packageInfo.duration)}
-                  isPerPerson={isPerPerson}
-                  onCheckAvailability={() => setStep("details")}
-                  isFlat={true}
-                  activeDiscount={activeDiscount}
-                  timeSurcharges={timeSurcharges}
-                  isInsideModal={true}
-                />
-              </div>
-            ) : (
-              <div className="animate-in fade-in slide-in-from-right-4 duration-500">
-                <FormContent />
-              </div>
-            )}
-          </div>
-
-          {step !== "selection" && (
-            <div className="fixed bottom-0 left-0 right-0 p-6 pb-[calc(1.5rem+env(safe-area-inset-bottom))] bg-background border-t shadow-[0_-4px_10px_rgba(0,0,0,0.05)] z-50">
-              <div className="max-w-md mx-auto flex items-center justify-between gap-4">
-                <div className="flex flex-col">
-                  <span className="text-xl font-black text-primary leading-none mt-0.5">
-                    {formatPrice(packageInfo.depositAmount)}
-                  </span>
-                  <span className="text-[10px] font-bold text-muted-foreground mt-1">
-                    {t("labels.deposit_amount")} (30%)
-                  </span>
-                </div>
-                <Button
-                  type="submit"
-                  size="lg"
-                  className="h-14 px-6 sm:px-8 text-lg font-bold min-w-[180px]"
-                  onClick={handleSubmit}
-                  disabled={isNavigating || form.formState.isSubmitting}
-                >
-                  {isNavigating || form.formState.isSubmitting ? (
-                    <Spinner className="h-5 w-5 animate-spin" />
-                  ) : (
-                    t("buttons.complete_booking")
-                  )}
-                </Button>
-              </div>
+          ) : (
+            <div className="animate-in fade-in slide-in-from-right-4 duration-500">
+              <FormContent />
             </div>
           )}
-        </SheetContent>
+        </div>
+
+        {step !== "selection" && (
+          <div className="fixed bottom-0 left-0 right-0 p-6 pb-[calc(1.5rem+env(safe-area-inset-bottom))] bg-background border-t shadow-[0_-4px_10px_rgba(0,0,0,0.05)] z-50">
+            <div className="max-w-md mx-auto flex items-center justify-between gap-4">
+              <div className="flex flex-col">
+                <span className="text-xl font-black text-primary leading-none mt-0.5">
+                  {formatPrice(packageInfo.depositAmount)}
+                </span>
+                <span className="text-[10px] font-bold text-muted-foreground mt-1">
+                  {t("labels.deposit_amount")} (30%)
+                </span>
+              </div>
+              <Button
+                type="submit"
+                size="lg"
+                className="h-14 px-6 sm:px-8 text-lg font-bold min-w-[180px]"
+                onClick={handleSubmit}
+                disabled={isNavigating || form.formState.isSubmitting}
+              >
+                {isNavigating || form.formState.isSubmitting ? (
+                  <Spinner className="h-5 w-5 animate-spin" />
+                ) : (
+                  t("buttons.complete_booking")
+                )}
+              </Button>
+            </div>
+          </div>
+        )}
+      </SheetContent>
       </Sheet>
     );
   }
@@ -647,16 +634,11 @@ export function BookingModal({
         className="sm:max-w-xl w-full h-[92vh] md:h-[85vh] p-0 overflow-hidden flex flex-col gap-0 max-md:fixed max-md:inset-0 max-md:h-[100dvh] max-md:w-screen max-md:max-w-none max-md:rounded-none max-md:border-none max-md:translate-x-0 max-md:translate-y-0"
         showCloseButton={true}
       >
-        <DialogHeader className="p-6 pb-4 border-b">
-          <DialogTitle className="text-xl sm:text-2xl font-bold">
-            {t("booking_details")}
+        <DialogHeader className="px-6 py-8 border-b bg-background text-center flex flex-col items-center justify-center">
+          <span className="text-xs font-bold text-muted-foreground uppercase tracking-widest">{t("booking_details")}</span>
+          <DialogTitle className="text-3xl font-serif leading-tight text-foreground mt-2 px-8">
+            {packageDisplayName}
           </DialogTitle>
-          <DialogDescription className="hidden">
-            {t("modal_description")}{" "}
-            <span className="font-semibold text-foreground">
-              {packageInfo.name}
-            </span>
-          </DialogDescription>
         </DialogHeader>
 
         <div className="flex-1 overflow-y-auto p-6 bg-muted/5">

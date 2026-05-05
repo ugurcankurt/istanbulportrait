@@ -18,7 +18,7 @@ export function FAQSection({ header, dynamicFaqs }: FAQSectionProps) {
         {header}
 
         <div className="mx-auto">
-          <Accordion className="w-full bg-card">
+          <Accordion className="w-full bg-transparent">
             {dynamicFaqs.map((faq) => (
               <AccordionItem key={faq.id} value={faq.id}>
                 <AccordionTrigger className="text-left hover:text-primary">

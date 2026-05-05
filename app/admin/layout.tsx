@@ -1,11 +1,11 @@
-import { Outfit, Geist_Mono } from "next/font/google";
+import { Outfit, Geist_Mono, Playfair_Display } from "next/font/google";
 import { AdminLayoutClient } from "./admin-layout-client";
 import { settingsService } from "@/lib/settings-service";
 import "../globals.css";
 
 import { ThemeProvider } from "next-themes";
 
-const fontHeading = Outfit({
+const fontHeading = Playfair_Display({
   variable: "--font-heading",
   subsets: ["latin"],
 });

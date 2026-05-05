@@ -61,13 +61,13 @@ export async function AboutPageContent({
           locale={locale}
           founderImageUrl={settings.founder_image_url}
           highlightsHeader={
-            <h2 key="highlights-header" className="text-xl sm:text-2xl lg:text-3xl font-bold text-center mb-8 sm:mb-10 lg:mb-12">
+            <h2 key="highlights-header" className="text-3xl sm:text-4xl lg:text-5xl font-serif leading-tight text-center mb-8 sm:mb-10 lg:mb-12">
               {tAboutHighlights("title")}
             </h2>
           }
           ctaHeader={
             <div key="cta-header">
-              <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold mb-3 sm:mb-4">
+              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-serif leading-tight mb-4 sm:mb-6">
                 {tAboutCta("title")}
               </h2>
               <p className="text-muted-foreground mb-6 sm:mb-8 text-sm sm:text-base lg:text-lg px-2">

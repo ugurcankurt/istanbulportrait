@@ -20,39 +20,39 @@ export function ContactSection({ settings }: { settings?: any } = {}) {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 mx-auto">
           {/* Contact Information */}
           <div className="group">
-            <Card className="h-full flex flex-col transition-all duration-300 shadow-sm hover:shadow-md">
-              <CardHeader className="px-6 lg:px-8 pt-6 lg:pt-8 pb-4">
-                <CardTitle className="text-xl sm:text-2xl text-center lg:text-left text-primary">
+            <Card className="h-full flex flex-col rounded-[2rem] border-[0.5px] border-border/50 bg-background transition-all duration-500 shadow-sm hover:shadow-md">
+              <CardHeader className="px-8 lg:px-12 pt-8 lg:pt-12 pb-6">
+                <CardTitle className="text-3xl sm:text-4xl font-serif text-center lg:text-left text-foreground leading-tight">
                   {tui("contact_information")}
                 </CardTitle>
               </CardHeader>
-              <CardContent className="flex-1 px-6 lg:px-8 pb-8 pt-0">
+              <CardContent className="flex-1 px-8 lg:px-12 pb-8 lg:pb-12 pt-0">
                 <div className="space-y-6 sm:space-y-8 mt-2">
                   <div className="flex items-start space-x-4 sm:space-x-5 rtl:space-x-reverse">
-                    <div className="p-3 bg-primary/10 rounded-full flex-shrink-0">
+                    <div className="p-4 bg-primary/5 border-[0.5px] border-primary/20 shadow-sm rounded-[1.25rem] flex-shrink-0">
                       <MapPin className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
                     </div>
                     <div className="flex-1 min-w-0 pt-1">
-                      <h3 className="font-semibold mb-1 text-sm sm:text-base text-card-foreground">
+                      <h3 className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-1.5">
                         {tui("location")}
                       </h3>
-                      <p className="text-muted-foreground text-sm leading-relaxed">
+                      <p className="text-foreground/90 font-medium text-sm sm:text-base leading-relaxed">
                         {settings?.address?.[locale] || settings?.address?.en || t("info.location")}
                       </p>
                     </div>
                   </div>
 
                   <div className="flex items-start space-x-4 sm:space-x-5 rtl:space-x-reverse">
-                    <div className="p-3 bg-primary/10 rounded-full flex-shrink-0">
+                    <div className="p-4 bg-primary/5 border-[0.5px] border-primary/20 shadow-sm rounded-[1.25rem] flex-shrink-0">
                       <Mail className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
                     </div>
                     <div className="flex-1 min-w-0 pt-1">
-                      <h3 className="font-semibold mb-1 text-sm sm:text-base text-card-foreground">
+                      <h3 className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-1.5">
                         {tui("email")}
                       </h3>
                       <a
                         href={`mailto:${settings?.contact_email || t("info.email")}`}
-                        className="text-muted-foreground hover:text-primary transition-colors text-sm break-all font-medium"
+                        className="text-foreground/90 hover:text-primary transition-colors text-sm sm:text-base break-all font-medium block"
                         onClick={() => trackContact("Email")}
                       >
                         {settings?.contact_email || t("info.email")}
@@ -61,16 +61,16 @@ export function ContactSection({ settings }: { settings?: any } = {}) {
                   </div>
 
                   <div className="flex items-start space-x-4 sm:space-x-5 rtl:space-x-reverse">
-                    <div className="p-3 bg-primary/10 rounded-full flex-shrink-0">
+                    <div className="p-4 bg-primary/5 border-[0.5px] border-primary/20 shadow-sm rounded-[1.25rem] flex-shrink-0">
                       <Phone className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
                     </div>
                     <div className="flex-1 min-w-0 pt-1">
-                      <h3 className="font-semibold mb-1 text-sm sm:text-base text-card-foreground">
+                      <h3 className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-1.5">
                         {tui("phone")}
                       </h3>
                       <a
                         href={`tel:${settings?.contact_phone || t("info.phone")}`}
-                        className="text-muted-foreground hover:text-primary transition-colors text-sm phone-number font-medium"
+                        className="text-foreground/90 hover:text-primary transition-colors text-sm sm:text-base phone-number font-medium block"
                         onClick={() => trackContact("Phone")}
                       >
                         {settings?.contact_phone || t("info.phone")}
@@ -79,28 +79,28 @@ export function ContactSection({ settings }: { settings?: any } = {}) {
                   </div>
 
                   <div className="flex items-start space-x-4 sm:space-x-5 rtl:space-x-reverse">
-                    <div className="p-3 bg-primary/10 rounded-full flex-shrink-0">
+                    <div className="p-4 bg-primary/5 border-[0.5px] border-primary/20 shadow-sm rounded-[1.25rem] flex-shrink-0">
                       <Clock className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
                     </div>
                     <div className="flex-1 min-w-0 pt-1">
-                      <h3 className="font-semibold mb-1 text-sm sm:text-base text-card-foreground">
+                      <h3 className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-1.5">
                         {tui("availability")}
                       </h3>
-                      <p className="text-muted-foreground text-sm">
+                      <p className="text-foreground/90 font-medium text-sm sm:text-base">
                         {settings?.working_hours?.[locale] || settings?.working_hours?.en || t("info.hours")}
                       </p>
                     </div>
                   </div>
 
                   <div className="flex items-start space-x-4 sm:space-x-5 rtl:space-x-reverse">
-                    <div className="p-3 bg-primary/10 rounded-full flex-shrink-0">
+                    <div className="p-4 bg-primary/5 border-[0.5px] border-primary/20 shadow-sm rounded-[1.25rem] flex-shrink-0">
                       <Building className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
                     </div>
                     <div className="flex-1 min-w-0 pt-1">
-                      <h3 className="font-semibold mb-1 text-sm sm:text-base text-card-foreground">
+                      <h3 className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-1.5">
                         {tui("company_info")}
                       </h3>
-                      <div className="text-muted-foreground text-sm space-y-1">
+                      <div className="text-foreground/90 font-medium text-sm sm:text-base space-y-1">
                         <p>{t("info.company_name")}</p>
                         <p>{t("info.tax_office")}</p>
                         <p>{t("info.tax_number")}</p>
@@ -114,7 +114,7 @@ export function ContactSection({ settings }: { settings?: any } = {}) {
 
           {/* Dynamic Map Embed */}
           <div className="group h-full min-h-[350px] lg:min-h-full">
-            <Card className="h-full w-full overflow-hidden shadow-sm hover:shadow-md border-muted/30 flex p-0">
+            <Card className="h-full w-full rounded-[2rem] border-[0.5px] border-border/50 bg-background shadow-sm overflow-hidden flex p-0 hover:shadow-md transition-all duration-500">
               <iframe
                 src={mapUrl}
                 width="100%"

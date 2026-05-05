@@ -60,6 +60,7 @@ interface BookingCardProps {
   activeDiscount?: DiscountDB | null;
   timeSurcharges?: TimeSurcharge[];
   isInsideModal?: boolean;
+  whatsappNumber?: string;
 }
 
 export function BookingCard({
@@ -84,6 +85,7 @@ export function BookingCard({
   activeDiscount = null,
   timeSurcharges = [],
   isInsideModal = false,
+  whatsappNumber,
 }: BookingCardProps) {
   const isMobile = useIsMobile();
   const { formatPrice } = useCurrency();
@@ -95,8 +97,15 @@ export function BookingCard({
 
   const [bookedSlots, setBookedSlots] = useState<string[]>([]);
   const [isLoadingSlots, setIsLoadingSlots] = useState(false);
-  const [checkState, setCheckState] = useState<"idle" | "checking" | "success">("idle");
+  const [checkState, setCheckState] = useState<"idle" | "checking" | "success" | "ready">("idle");
   const [checkingProgress, setCheckingProgress] = useState(0);
+
+  // Reset state when selection changes
+  useEffect(() => {
+    if (checkState === "ready" || checkState === "success") {
+      setCheckState("idle");
+    }
+  }, [selectedDate, selectedTime, peopleCount]);
 
   useEffect(() => {
     if (!selectedDate || !packageId) {
@@ -160,14 +169,25 @@ export function BookingCard({
         }
 
         setTimeout(() => {
-          setCheckState("idle");
+          setCheckState("ready");
           setCheckingProgress(0);
-          onCheckAvailability();
         }, 900);
       }
     };
 
     requestAnimationFrame(tick);
+  };
+
+  const handleWhatsApp = () => {
+    const formattedDate = selectedDate ? format(selectedDate, "PPP", { locale: dateFnsLocale }) : "";
+    const isTr = dateFnsLocale?.code?.startsWith("tr");
+    const msg = isTr 
+      ? `Merhaba, ${packageDisplayName} paketi için ${formattedDate} tarihi ve ${selectedTime} saati uygun mu? Bilgi almak istiyorum.`
+      : `Hi! I would like to inquire about the ${packageDisplayName} package on ${formattedDate} at ${selectedTime}. Is it available?`;
+    
+    const encoded = encodeURIComponent(msg);
+    const number = (whatsappNumber || "905367093724").replace(/[^\d]/g, "");
+    window.open(`https://wa.me/${number}?text=${encoded}`, "_blank");
   };
 
   const isDateDiscounted = (date: Date) => {
@@ -182,13 +202,13 @@ export function BookingCard({
 
   return (
     <Card className={cn(
-      "overflow-hidden bg-card p-0",
-      isFlat ? "border-none shadow-none" : "shadow-none border border-border"
+      "overflow-hidden bg-card p-0 transition-all duration-700",
+      isFlat ? "border-none shadow-none" : "shadow-luxury rounded-3xl border-[0.5px] border-border/50 bg-background/50 backdrop-blur-sm"
     )}>
       <CardContent className="p-6 space-y-4">
         <div className="space-y-4">
           <div className="flex items-baseline gap-1">
-            <span className="text-4xl font-bold text-foreground leading-none">
+            <span className="text-5xl font-serif text-foreground leading-none">
               {formatPrice(displayPrice)}
             </span>
             {pricing.isDiscounted && (
@@ -209,7 +229,7 @@ export function BookingCard({
             <div className="space-y-2">
               <Popover open={isPeoplePopoverOpen} onOpenChange={setIsPeoplePopoverOpen} modal={false}>
                 <PopoverTrigger
-                  className={cn(buttonVariants({ variant: "outline" }), "w-full h-12 px-6 font-bold flex items-center justify-between")}
+                  className={cn(buttonVariants({ variant: "secondary" }), "w-full h-14 px-6 font-bold flex items-center justify-between")}
                 >
                   <div className="flex items-center gap-3">
                     <User2 className="h-5 w-5 text-primary stroke-[2.5]" />
@@ -271,8 +291,8 @@ export function BookingCard({
             <Popover open={isDatePopoverOpen} onOpenChange={setIsDatePopoverOpen} modal={false}>
               <PopoverTrigger
                 className={cn(
-                  buttonVariants({ variant: "outline" }),
-                  "w-full h-12 px-6 font-bold flex items-center justify-between",
+                  buttonVariants({ variant: "secondary" }),
+                  "w-full h-14 px-6 font-bold flex items-center justify-between",
                   !selectedDate && "text-muted-foreground/60"
                 )}
               >
@@ -328,8 +348,8 @@ export function BookingCard({
               <Popover open={isTimePopoverOpen} onOpenChange={setIsTimePopoverOpen} modal={false}>
                 <PopoverTrigger
                   className={cn(
-                    buttonVariants({ variant: "outline" }),
-                    "w-full h-12 px-6 font-bold flex items-center justify-between",
+                    buttonVariants({ variant: "secondary" }),
+                    "w-full h-14 px-6 font-bold flex items-center justify-between",
                     !selectedTime && "text-muted-foreground/60"
                   )}
                 >
@@ -477,6 +497,26 @@ export function BookingCard({
           >
             {tCheckout("buttons.check_availability")}
           </Button>
+        )}
+
+        {checkState === "ready" && (
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 animate-in fade-in slide-in-from-bottom-2 duration-300">
+            <Button
+              variant="secondary"
+              className="w-full h-12 font-bold bg-emerald-50 text-emerald-700 hover:bg-emerald-100 dark:bg-emerald-950/30 dark:text-emerald-400 dark:hover:bg-emerald-900/40 transition-colors"
+              onClick={handleWhatsApp}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" className="w-5 h-5 mr-2 fill-current"><path d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zM223.9 411.9c-31.5 0-62.5-8.4-89.6-24.5l-6.4-3.8-66.5 17.4 17.7-64.8-4.2-6.7c-17.7-28-27.1-60-27.1-92.4 0-97 79-176 176.1-176 47.1 0 91.4 18.4 124.7 51.7s51.7 77.6 51.7 124.7c0 97-79 176-176.1 176zM320.6 288.5c-5.3-2.7-31.3-15.5-36.2-17.2-4.9-1.7-8.4-2.7-12 2.7-3.6 5.3-13.8 17.2-16.9 20.7-3.1 3.6-6.2 4-11.5 1.3-5.3-2.7-22.4-8.3-42.6-26.3-15.7-14-26.3-31.3-29.4-36.6-3.1-5.3-.3-8.2 2.4-10.8 2.4-2.4 5.3-6.2 8-9.3 2.7-3.1 3.6-5.3 5.3-8.9 1.7-3.6 .9-6.7-.4-9.3-1.3-2.7-12-28.9-16.4-39.6-4.3-10.5-8.7-9.1-12-9.3-3.1-.2-6.7-.2-10.2-.2-3.6 0-9.3 1.3-14.2 6.7-4.9 5.3-18.6 18.2-18.6 44.4s19.1 51.5 21.8 55.1c2.7 3.6 37.6 57.4 91.1 80.5 12.7 5.5 22.6 8.7 30.4 11.2 12.7 4 24.3 3.4 33.4 2.1 10.2-1.5 31.3-12.8 35.7-25.2 4.4-12.4 4.4-23.1 3.1-25.2-1.3-2.1-4.9-3.4-10.2-6.1z"/></svg>
+              WhatsApp
+            </Button>
+            <Button
+              variant="default"
+              className="w-full h-12 font-bold shadow-sm"
+              onClick={onCheckAvailability}
+            >
+              {tCheckout("buttons.continue")}
+            </Button>
+          </div>
         )}
 
         <div className="space-y-4 pt-4 border-t border-border">
