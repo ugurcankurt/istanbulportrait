@@ -205,18 +205,18 @@ export function BookingCard({
       "overflow-hidden bg-card p-0 transition-all duration-700",
       isFlat ? "border-none shadow-none" : "shadow-luxury rounded-3xl border-[0.5px] border-border/50 bg-background/50 backdrop-blur-sm"
     )}>
-      <CardContent className="p-6 space-y-4">
+      <CardContent className={cn("space-y-4", isInsideModal ? "p-4 pt-2" : "p-6")}>
         <div className="space-y-4">
           <div className="flex items-baseline gap-1">
-            <span className="text-5xl font-serif text-foreground leading-none">
+            <span className={cn("font-serif text-foreground leading-none", isInsideModal ? "text-3xl" : "text-5xl")}>
               {formatPrice(displayPrice)}
             </span>
             {pricing.isDiscounted && (
-              <span className="text-lg text-muted-foreground line-through font-medium leading-none">
+              <span className={cn("text-muted-foreground line-through font-medium leading-none", isInsideModal ? "text-base" : "text-lg")}>
                 {formatPrice(basePrice)}
               </span>
             )}
-            <span className="text-sm text-primary font-bold text-muted-foreground">
+            <span className="text-sm font-bold text-muted-foreground">
               {isPerPerson ? `/ ${t("per_person")}` : `/ ${packageDuration}`}
             </span>
           </div>
@@ -316,6 +316,7 @@ export function BookingCard({
               >
                 <Calendar
                   mode="single"
+                  showOutsideDays={false}
                   className="w-full"
                   classNames={isMobile ? {
                     root: "w-full p-4 pt-8",

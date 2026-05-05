@@ -390,7 +390,6 @@ export function BookingModal({
         <form onSubmit={handleSubmit} className="space-y-8">
           {/* Customer Details Section */}
           <div className="space-y-6">
-            <h3 className="text-sm font-bold uppercase tracking-widest text-muted-foreground">{t("customer_details")}</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <FormField
                 control={form.control}
@@ -446,7 +445,7 @@ export function BookingModal({
                       onChange={field.onChange}
                       defaultCountry="TR"
                       placeholder={tplaceholders("phone_number")}
-                      className="flex h-12 w-full rounded-xl bg-muted/40 border-none focus-within:bg-background focus-within:ring-1 focus-within:ring-primary/30 focus-within:ring-offset-0 transition-all font-medium"
+                      className="flex h-12 w-full rounded-xl bg-muted/40 border-none focus-within:bg-background focus-within:ring-1 focus-within:ring-primary/30 focus-within:ring-offset-0 transition-all font-medium px-4"
                     />
                   </FormControl>
                   <FormMessage className="text-[11px]" />
@@ -477,61 +476,7 @@ export function BookingModal({
         </form>
       </Form>
 
-      {/* Selected Information Summary */}
-      <Card className="shadow-sm border-[0.5px] border-primary/20 bg-primary/5 overflow-hidden rounded-[1.5rem]">
-        <div className="px-6 py-4 bg-primary/10 border-b border-primary/10 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="p-1.5 bg-primary rounded-xl text-primary-foreground shadow-sm">
-              <ImageIcon className="w-4 h-4" />
-            </div>
-            <span className="font-bold text-primary truncate max-w-[180px] sm:max-w-none">
-              {packageInfo.name}
-            </span>
-          </div>
-          <Badge variant="secondary" className="bg-background border-primary/20 text-primary font-bold shadow-sm">
-            {packageInfo.duration}
-          </Badge>
-        </div>
-        <CardContent className="p-6 grid grid-cols-1 gap-6">
-          <div className="flex items-start gap-3">
-            <div className="mt-1 p-2 bg-background rounded-xl border-[0.5px] border-border shadow-sm">
-              <CalendarIcon className="w-4 h-4 text-primary" />
-            </div>
-            <div>
-              <p className="text-[10px] text-muted-foreground font-black uppercase tracking-wider">{t("form.date")}</p>
-              <p className="font-bold text-foreground text-sm">
-                {form.getValues("bookingDate") ? format(new Date(form.getValues("bookingDate")), "PPP", { locale: dateFnsLocale }) : "---"}
-              </p>
-            </div>
-          </div>
 
-          <div className="flex items-start gap-3">
-            <div className="mt-1 p-2 bg-background rounded-xl border-[0.5px] border-border shadow-sm">
-              <Clock className="w-4 h-4 text-primary" />
-            </div>
-            <div>
-              <p className="text-[10px] text-muted-foreground font-black uppercase tracking-wider">{t("form.select_time")}</p>
-              <p className="font-bold text-foreground text-sm">
-                {form.getValues("bookingTime") || "---"}
-              </p>
-            </div>
-          </div>
-
-          {isPerPerson && (
-            <div className="flex items-start gap-3">
-              <div className="mt-1 p-2 bg-background rounded-xl border-[0.5px] border-border shadow-sm">
-                <Users className="w-4 h-4 text-primary" />
-              </div>
-              <div>
-                <p className="text-[10px] text-muted-foreground font-black uppercase tracking-wider">{t("form.people_count")}</p>
-                <p className="font-bold text-foreground text-sm">
-                  {peopleCount} {peopleCount === 1 ? t("person") : t("people")}
-                </p>
-              </div>
-            </div>
-          )}
-        </CardContent>
-      </Card>
     </div>
   );
 
@@ -540,12 +485,9 @@ export function BookingModal({
     return (
       <Sheet open={isOpen} onOpenChange={handleClose}>
         <SheetContent side="bottom" className="h-[100dvh] w-screen p-0 flex flex-col rounded-none border-none inset-0">
-          <SheetHeader className="px-6 py-8 border-b shrink-0 text-center flex flex-col items-center justify-center">
-            <span className="text-xs font-bold text-muted-foreground uppercase tracking-widest">
+          <SheetHeader className="px-4 py-3 border-b shrink-0 text-center flex flex-col items-center justify-center relative">
+            <SheetTitle className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
               {step === "details" ? t("booking_details") : t("form.date_time")}
-            </span>
-            <SheetTitle className="text-2xl font-serif leading-tight text-foreground mt-2 max-w-[90%]">
-              {packageDisplayName}
             </SheetTitle>
           <SheetDescription className="hidden">
             {step === "details"
