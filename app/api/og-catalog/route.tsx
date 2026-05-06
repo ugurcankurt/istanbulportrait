@@ -42,10 +42,10 @@ export async function GET(req: NextRequest) {
             flexDirection: "column",
             position: "relative",
             fontFamily: "sans-serif",
-            backgroundColor: "#fff",
+            backgroundColor: "#000",
           }}
         >
-          {/* Background Image Container */}
+          {/* Background Image */}
           <div style={{ display: "flex", width: "100%", height: "100%", position: "absolute", top: 0, left: 0 }}>
              {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
@@ -59,62 +59,95 @@ export async function GET(req: NextRequest) {
             />
           </div>
 
-          {/* Decorative Bottom Gradient for Contrast (optional, but makes card pop) */}
+          {/* Luxury Inner Border */}
+          <div style={{
+            position: "absolute",
+            top: "24px",
+            left: "24px",
+            right: "24px",
+            bottom: "24px",
+            border: "1px solid rgba(255,255,255,0.3)",
+            display: "flex",
+          }} />
+
+          {/* Top Center Branding */}
+          <div style={{
+            position: "absolute",
+            top: "60px",
+            left: 0,
+            right: 0,
+            display: "flex",
+            justifyContent: "center",
+          }}>
+            <span style={{
+              fontSize: "20px",
+              fontWeight: 400,
+              color: "rgba(255,255,255,0.9)",
+              textTransform: "uppercase",
+              letterSpacing: "12px",
+              textShadow: "0 4px 12px rgba(0,0,0,0.8)",
+            }}>
+              Istanbul Portrait
+            </span>
+          </div>
+
+          {/* Dark Premium Gradient at the bottom */}
           <div
             style={{
               position: "absolute",
               bottom: 0,
               left: 0,
               right: 0,
-              height: "40%",
-              background: "linear-gradient(to top, rgba(0,0,0,0.6), rgba(0,0,0,0))",
-              display: "flex",
-            }}
-          />
-
-          {/* GetYourGuide Style White Floating Card */}
-          <div
-            style={{
-              position: "absolute",
-              bottom: "60px",
-              left: "40px",
-              right: "40px",
+              height: "60%",
+              background: "linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.7) 40%, rgba(0,0,0,0) 100%)",
               display: "flex",
               flexDirection: "column",
-              backgroundColor: "#fff",
-              borderRadius: "16px",
-              padding: "40px",
-              boxShadow: "0 20px 40px rgba(0,0,0,0.3)",
-              transform: "rotate(-2deg)",
+              justifyContent: "flex-end",
+              padding: "60px",
+              paddingBottom: "70px",
             }}
           >
             {/* Top row: Location & Rating */}
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%", marginBottom: "20px" }}>
-              <span style={{ fontSize: "36px", fontWeight: 700, color: "#333", textTransform: "uppercase", letterSpacing: "1px" }}>
+              <span style={{ 
+                fontSize: "28px", 
+                fontWeight: 400, 
+                color: "rgba(255,255,255,0.8)", 
+                textTransform: "uppercase", 
+                letterSpacing: "6px" 
+              }}>
                 {location}
               </span>
               <div style={{ display: "flex", alignItems: "center" }}>
-                 {/* Star Icon */}
-                 <svg width="40" height="40" viewBox="0 0 24 24" fill="#6e1d2c" style={{ marginRight: "12px", marginBottom: "4px" }}>
+                 <svg width="28" height="28" viewBox="0 0 24 24" fill="#D4AF37" style={{ marginRight: "12px", marginBottom: "4px" }}>
                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
                  </svg>
-                 <span style={{ fontSize: "40px", fontWeight: 700, color: "#444" }}>{rating}</span>
-                 <span style={{ fontSize: "36px", color: "#999", marginLeft: "12px" }}>({reviews})</span>
+                 <span style={{ fontSize: "32px", fontWeight: 300, color: "#fff" }}>{rating}</span>
+                 <span style={{ fontSize: "24px", color: "rgba(255,255,255,0.5)", marginLeft: "12px", fontWeight: 300 }}>({reviews})</span>
               </div>
             </div>
             
             {/* Package Title */}
             <div style={{ 
-                fontSize: "56px", 
-                fontWeight: 800, 
-                color: "#222", 
+                fontSize: "64px", 
+                fontWeight: 300, 
+                color: "#fff", 
                 lineHeight: 1.1,
                 display: "flex",
                 flexWrap: "wrap",
-                letterSpacing: "-1px"
+                letterSpacing: "-0.5px",
+                textShadow: "0 2px 10px rgba(0,0,0,0.5)",
             }}>
               {title.length > 55 ? title.substring(0, 52) + "..." : title}
             </div>
+
+            {/* Subtle Divider */}
+            <div style={{
+              width: "60px",
+              height: "2px",
+              backgroundColor: "#D4AF37",
+              marginTop: "40px",
+            }} />
           </div>
         </div>
       ),
