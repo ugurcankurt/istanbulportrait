@@ -162,7 +162,9 @@ export async function GET(request: Request) {
       xml += `\n      <g:image_link>${escapeXml(imageUrl)}</g:image_link>`;
     }
 
-    if (videoUrl) {
+    // Meta requires direct video files (.mp4). YouTube URLs will cause a catalog error.
+    const isYouTubeVideo = videoUrl && (videoUrl.includes('youtube.com') || videoUrl.includes('youtu.be'));
+    if (videoUrl && !isYouTubeVideo) {
       xml += `\n      <video>\n        <url>${escapeXml(videoUrl)}</url>\n      </video>`;
     }
 
