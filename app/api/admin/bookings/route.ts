@@ -185,6 +185,42 @@ export async function PATCH(request: NextRequest) {
         }
       }
 
+      // If status is changed to completed, update the cash payment amount to total_amount
+      if (status === "completed" && currentBooking.status !== "completed") {
+        try {
+          // Check if there is an existing cash payment
+          const { data: payments } = await supabase
+            .from("payments")
+            .select("*")
+            .eq("booking_id", bookingId)
+            .eq("provider", "cash");
+          
+          if (payments && payments.length > 0) {
+            // Update existing cash payment
+            await supabase
+              .from("payments")
+              .update({ amount: currentBooking.total_amount, status: "success" })
+              .eq("id", payments[0].id);
+          } else {
+            // Create a new cash payment record
+            await supabase
+              .from("payments")
+              .insert({
+                booking_id: bookingId,
+                payment_id: "cash_" + Date.now(),
+                conversation_id: "cash_" + Date.now(),
+                status: "success",
+                amount: currentBooking.total_amount,
+                currency: "EUR",
+                provider: "cash",
+                provider_response: { method: "cash", auto_completed: true }
+              });
+          }
+        } catch (paymentError) {
+          console.error("Failed to process payment on completion:", paymentError);
+        }
+      }
+
       return NextResponse.json({
         success: true,
         booking,
