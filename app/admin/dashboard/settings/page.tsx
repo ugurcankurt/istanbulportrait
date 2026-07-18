@@ -665,6 +665,14 @@ export default function SettingsPage() {
             </div>
 
             <div className="space-y-2">
+              <Label>Google Ads ID</Label>
+              <Input
+                value={settings.google_ads_id || ""}
+                onChange={(e) => updateSetting("google_ads_id", e.target.value)}
+                placeholder="AW-XXXXXXXXXX"
+              />
+            </div>
+            <div className="space-y-2">
               <Label>Google Ads Webhook Key</Label>
               <Input
                 value={settings.google_ads_webhook_key || ""}
