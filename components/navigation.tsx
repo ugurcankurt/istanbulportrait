@@ -179,12 +179,21 @@ export function Navigation({ dynamicNavData = {}, settings }: NavigationProps) {
               )}
               aria-label="Change language or currency"
             >
-              <span className="text-lg leading-none">
-                {locales.find((l) => l.code === locale)?.flag || (
-                  <Globe className="h-4 w-4" />
-                )}
-              </span>
-              <span className="text-xs font-medium uppercase hidden sm:inline-block">
+              <div className="flex items-center gap-1.5">
+                <span className="text-lg leading-none">
+                  {locales.find((l) => l.code === locale)?.flag || (
+                    <Globe className="h-4 w-4" />
+                  )}
+                </span>
+                <span className="text-sm font-bold text-foreground">
+                  {(() => {
+                    const curr = typeof document !== 'undefined' ? (document.cookie.replace(/(?:(?:^|.*;\s*)NEXT_CURRENCY\s*\=\s*([^;]*).*$)|^.*$/, "$1") || "EUR") : "EUR";
+                    const symbols: Record<string, string> = { EUR: "€", USD: "$", GBP: "£", TRY: "₺", AED: "د.إ", SEK: "kr", CNY: "¥", RUB: "₽" };
+                    return symbols[curr] || "€";
+                  })()}
+                </span>
+              </div>
+              <span className="text-xs font-medium uppercase hidden sm:inline-block ml-1">
                 {locale} / {typeof document !== 'undefined' ? (document.cookie.replace(/(?:(?:^|.*;\s*)NEXT_CURRENCY\s*\=\s*([^;]*).*$)|^.*$/, "$1") || "EUR") : "EUR"}
               </span>
               <span className="sr-only">Change settings</span>
