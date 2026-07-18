@@ -1,0 +1,10 @@
+allowBuilds:
+  '@tailwindcss/oxide': true
+  '@vercel/speed-insights': true
+  msw: true
+  sharp: true
+ignoredBuiltDependencies:
+  - '@tailwindcss/oxide'
+  - '@vercel/speed-insights'
+  - msw
+  - sharp

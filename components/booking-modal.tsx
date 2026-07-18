@@ -1,0 +1,596 @@
+"use client";
+
+import { zodResolver } from "@hookform/resolvers/zod";
+import { format } from "date-fns";
+import { ar, de, enUS, es, fr, ro, ru, tr as trLocale, zhCN } from "date-fns/locale";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useLocale, useTranslations } from "next-intl";
+import { useEffect, useState, useRef } from "react";
+import { useForm } from "react-hook-form";
+import PhoneInput from "react-phone-number-input";
+import "react-phone-number-input/style.css";
+import { useYandexMetrica } from "@/components/analytics/yandex-metrica";
+import { Button } from "@/components/ui/button";
+import { BookingCard } from "@/components/booking-card";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { trackLead, saveUserDataForAdvancedMatching, trackPackageAddToCart } from "@/lib/analytics";
+import { getPackagePricing, matchActiveSurcharge } from "@/lib/pricing";
+import { cn } from "@/lib/utils";
+import type { BookingFormData } from "@/lib/validations";
+import { createBookingSchema } from "@/lib/validations";
+import type { DiscountDB } from "@/lib/discount-service";
+import type { TimeSurcharge } from "@/lib/availability-service";
+import { useCurrency } from "@/contexts/currency-context";
+
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
+import { Spinner } from "@/components/ui/spinner";
+
+interface BookingModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  selectedPackage: string | null;
+  basePrice: number; // dynamically supplied from caller
+  packageDisplayName: string; // dynamically supplied from caller
+  initialDate?: string;
+  initialTime?: string;
+  initialPeopleCount?: number;
+  packageDuration: string | number;
+  packageLocations: number | string;
+  packageFeatures: string[];
+  packagePhotos: number | string;
+  isPerPerson: boolean;
+  activeDiscount: DiscountDB | null;
+  timeSurcharges?: TimeSurcharge[];
+  whatsappNumber?: string;
+}
+
+// Generate time slots from 6 AM to 6 PM
+const generateTimeSlots = () => {
+  const slots = [];
+  for (let hour = 6; hour <= 20; hour++) {
+    slots.push(`${hour.toString().padStart(2, "0")}:00`);
+    slots.push(`${hour.toString().padStart(2, "0")}:30`);
+  }
+  return slots;
+};
+
+const timeSlots = generateTimeSlots();
+
+// Locale mapping for date-fns
+const getDateFnsLocale = (locale: string) => {
+  switch (locale) {
+    case "ar":
+      return ar;
+    case "es":
+      return es;
+    case "ru":
+      return ru;
+    case "fr":
+      return fr;
+    case "de":
+      return de;
+    case "zh":
+      return zhCN;
+    case "ro":
+      return ro;
+    case "tr":
+      return trLocale;
+    default:
+      return enUS;
+  }
+};
+
+export function BookingModal({
+  isOpen,
+  onClose,
+  selectedPackage,
+  basePrice,
+  packageDisplayName,
+  initialDate,
+  initialTime,
+  initialPeopleCount = 1,
+  packageDuration,
+  packageLocations,
+  packageFeatures,
+  packagePhotos,
+  isPerPerson,
+  activeDiscount,
+  timeSurcharges = [],
+  whatsappNumber,
+}: BookingModalProps) {
+  const locale = useLocale();
+  const { formatPrice, rate } = useCurrency();
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const t = useTranslations("checkout");
+  const tPackages = useTranslations("packages");
+  const tui = useTranslations("ui");
+  const tplaceholders = useTranslations("placeholders");
+  const tValidation = useTranslations("validation");
+
+  const [showTimeSelection, setShowTimeSelection] = useState(false);
+  const [peopleCount, setPeopleCount] = useState<number>(1);
+  const [isNavigating, setIsNavigating] = useState(false);
+  const hasTrackedOpen = useRef(false);
+
+  // Get the appropriate date-fns locale
+  const dateFnsLocale = getDateFnsLocale(locale);
+
+  // Create schema with translations
+  const bookingSchemaWithTranslations = createBookingSchema(tValidation);
+  const { trackBookingStart, trackPackageView } = useYandexMetrica();
+  const [step, setStep] = useState<"selection" | "details" | "summary">("details");
+
+  // Custom hook logic for < 1024px (tablet & mobile) because Tailwind 'lg' breakpoint is 1024px.
+  // The inline booking card is hidden below 1024px, so we must show the selection step in the modal.
+  const [isTabletOrMobile, setIsTabletOrMobile] = useState(false);
+
+  useEffect(() => {
+    const checkSize = () => setIsTabletOrMobile(window.innerWidth < 1024);
+    checkSize();
+    window.addEventListener("resize", checkSize);
+    return () => window.removeEventListener("resize", checkSize);
+  }, []);
+
+  // Set initial step for mobile/tablet
+  useEffect(() => {
+    if (isOpen && isTabletOrMobile) {
+      // Start at selection for clarity since inline selection was hidden
+      setStep("selection");
+    } else if (isOpen) {
+      setStep("details");
+    }
+  }, [isOpen, isTabletOrMobile]);
+
+  const form = useForm<BookingFormData>({
+    resolver: zodResolver(bookingSchemaWithTranslations),
+    defaultValues: {
+      packageId: selectedPackage || "",
+      customerName: "",
+      customerEmail: "",
+      customerPhone: "",
+      bookingDate: initialDate || "",
+      bookingTime: initialTime || "",
+      notes: "",
+      totalAmount: 0,
+      peopleCount: initialPeopleCount || 1,
+    },
+  });
+
+  // Sync initial props when modal opens or props change
+  useEffect(() => {
+    if (isOpen) {
+      if (initialDate) {
+        form.setValue("bookingDate", initialDate);
+        setShowTimeSelection(true);
+      }
+      if (initialTime) {
+        form.setValue("bookingTime", initialTime);
+      }
+      if (initialPeopleCount) {
+        form.setValue("peopleCount", initialPeopleCount);
+        setPeopleCount(initialPeopleCount);
+      }
+      if (selectedPackage) {
+        form.setValue("packageId", selectedPackage);
+      }
+    }
+  }, [isOpen, initialDate, initialTime, initialPeopleCount, selectedPackage, form]);
+
+  // Update form values when selectedPackage changes
+  // Calculate pricing based on selected package and date
+  const [pricing, setPricing] = useState<{
+    totalPrice: number;
+    originalPrice: number;
+    isDiscounted: boolean;
+    discountPercentage: number;
+    depositAmount: number;
+    remainingAmount: number;
+  } | null>(null);
+
+  // Update pricing when package or date changes
+  useEffect(() => {
+    if (selectedPackage) {
+      form.setValue("packageId", selectedPackage);
+      const dateValue = form.getValues("bookingDate");
+
+      // Use people count for packages with per-person pricing, undefined for others
+      const count = isPerPerson ? peopleCount : undefined;
+      const tValue = form.getValues("bookingTime");
+      const activeSurcharge = matchActiveSurcharge(tValue, timeSurcharges);
+      const surchargePercentage = activeSurcharge ? activeSurcharge.surcharge_percentage : 0;
+
+      const priceBreakdown = getPackagePricing(
+        selectedPackage,
+        basePrice, // Passed from parent
+        activeDiscount,
+        null,
+        dateValue,
+        count,
+        undefined,
+        undefined,
+        surchargePercentage
+      );
+
+      setPricing({
+        totalPrice: priceBreakdown.totalPrice,
+        originalPrice: priceBreakdown.originalPrice,
+        isDiscounted: priceBreakdown.isDiscounted,
+        discountPercentage: priceBreakdown.appliedDiscountPercentage,
+        depositAmount: priceBreakdown.depositAmount,
+        remainingAmount: priceBreakdown.remainingAmount,
+      });
+
+      form.setValue("totalAmount", priceBreakdown.totalPrice); // Full price is stored in form
+
+      // Set peopleCount for per-person packages
+      if (isPerPerson) {
+        form.setValue("peopleCount", peopleCount);
+      }
+    }
+  }, [selectedPackage, peopleCount, form.watch("bookingDate"), form.watch("bookingTime"), form]); // Watch date, time, and peopleCount changes
+
+  const packageInfo = (selectedPackage && basePrice)
+    ? {
+      name: packageDisplayName || tPackages(`${selectedPackage}.title`), // Fallback just in case
+      price: pricing?.totalPrice || basePrice,
+      originalPrice: pricing?.originalPrice || basePrice,
+      isDiscounted: pricing?.isDiscounted || false,
+      discountPercentage: pricing?.discountPercentage || 0,
+      depositAmount: pricing?.depositAmount || 0,
+      remainingAmount: pricing?.remainingAmount || 0,
+      duration: packageDuration,
+      photos: packagePhotos,
+      locations: packageLocations,
+      features: packageFeatures,
+    }
+    : null;
+
+  // Track package view when modal opens
+  useEffect(() => {
+    if (!isOpen) {
+      hasTrackedOpen.current = false;
+    } else if (isOpen && selectedPackage && packageInfo && !hasTrackedOpen.current) {
+      hasTrackedOpen.current = true;
+      trackPackageView(selectedPackage);
+      trackPackageAddToCart(
+        selectedPackage,
+        packageInfo.name,
+        packageInfo.price,
+        "EUR"
+      );
+    }
+  }, [isOpen, selectedPackage, packageInfo, trackPackageView]);
+
+  const handleSubmit = form.handleSubmit(
+    async (data) => {
+      // Track lead conversion - user filled booking form
+      if (selectedPackage && packageInfo) {
+        // Save user data for advanced matching (Lead/Purchase Enhanced Conversions)
+        const nameParts = data.customerName.split(" ");
+        saveUserDataForAdvancedMatching({
+          email: data.customerEmail,
+          phone: data.customerPhone,
+          firstName: nameParts[0],
+          lastName: nameParts.length > 1 ? nameParts.slice(1).join(" ") : "",
+        });
+
+        // Generate unique event ID for deduplication
+        const eventId = crypto.randomUUID();
+
+        // GA4 Lead Event
+        trackLead(
+          selectedPackage,
+          packageInfo.name,
+          locale === 'tr' ? Math.round(packageInfo.price * rate) : packageInfo.price,
+          locale === 'tr' ? 'TRY' : 'EUR',
+          eventId,
+        );
+
+        // Track Booking Start Event
+        trackBookingStart(selectedPackage);
+
+        // Note: InitiateCheckout is handled exclusively by checkout-form.tsx to prevent duplication
+
+        try {
+          setIsNavigating(true);
+          const draftResponse = await fetch("/api/booking/create-draft", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              ...data,
+              totalAmount: pricing?.totalPrice || basePrice,
+              locale,
+            }),
+          });
+
+          const draftResult = await draftResponse.json();
+          const extraInfo = { isPerPerson, activeDiscount, packageDisplayName, packageDuration, packagePhotos, packageLocations, packageFeatures: packageFeatures || [] };
+          const bookingDataToStore = draftResult.bookingId
+            ? { ...data, ...extraInfo, totalAmount: pricing?.totalPrice || basePrice, basePrice, originalPrice: pricing?.originalPrice, bookingId: draftResult.bookingId }
+            : { ...data, ...extraInfo, totalAmount: pricing?.totalPrice || basePrice, basePrice, originalPrice: pricing?.originalPrice };
+
+          sessionStorage.setItem("bookingData", JSON.stringify(bookingDataToStore));
+
+          form.reset();
+          onClose();
+          const coupon = searchParams.get("coupon");
+          if (coupon) {
+            router.push(`/${locale}/checkout?coupon=${coupon}`);
+          } else {
+            router.push(`/${locale}/checkout`);
+          }
+        } catch (e) {
+          console.error("Draft creation error:", e);
+          sessionStorage.setItem("bookingData", JSON.stringify({
+            ...data,
+            packageDisplayName, packageDuration, packagePhotos, packageLocations, packageFeatures: packageFeatures || [],
+            totalAmount: pricing?.totalPrice || basePrice,
+            basePrice,
+            originalPrice: pricing?.originalPrice
+          }));
+          form.reset();
+          onClose();
+          const coupon = searchParams.get("coupon");
+          if (coupon) {
+            router.push(`/${locale}/checkout?coupon=${coupon}`);
+          } else {
+            router.push(`/${locale}/checkout`);
+          }
+        } finally {
+          setIsNavigating(false);
+        }
+      }
+    },
+    (errors) => {
+      // Form validation errors
+      console.error(errors);
+    },
+  );
+
+  const handleClose = () => {
+    form.reset();
+    setShowTimeSelection(false);
+    setIsNavigating(false);
+    onClose();
+  };
+
+  if (!selectedPackage || !packageInfo) {
+    return null;
+  }
+
+  const FormContent = () => (
+    <div className="max-w-5xl mx-auto w-full">
+      <Form {...form}>
+        <form onSubmit={handleSubmit} className="space-y-8">
+          {/* Customer Details Section */}
+          <div className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <FormField
+                control={form.control}
+                name="customerName"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-xs font-bold uppercase text-muted-foreground tracking-wide">
+                      {t("form.name")}
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        className="h-12 rounded-xl bg-muted/40 border-none focus:bg-background focus:ring-1 focus:ring-primary/30 transition-all"
+                        placeholder={tplaceholders("enter_full_name")}
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage className="text-[11px]" />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="customerEmail"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-xs font-bold uppercase text-muted-foreground tracking-wide">
+                      {t("form.email")}
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        className="h-12 rounded-xl bg-muted/40 border-none focus:bg-background focus:ring-1 focus:ring-primary/30 transition-all"
+                        type="email"
+                        placeholder={tplaceholders("enter_email")}
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage className="text-[11px]" />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <FormField
+              control={form.control}
+              name="customerPhone"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-xs font-bold uppercase text-muted-foreground tracking-wide">
+                    {t("form.phone")}
+                  </FormLabel>
+                  <FormControl>
+                    <PhoneInput
+                      value={field.value}
+                      onChange={field.onChange}
+                      defaultCountry="TR"
+                      placeholder={tplaceholders("phone_number")}
+                      className="flex h-12 w-full rounded-xl bg-muted/40 border-none focus-within:bg-background focus-within:ring-1 focus-within:ring-primary/30 focus-within:ring-offset-0 transition-all font-medium px-4"
+                    />
+                  </FormControl>
+                  <FormMessage className="text-[11px]" />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="notes"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-xs font-bold uppercase text-muted-foreground tracking-wide">
+                    {t("form.notes")}
+                  </FormLabel>
+                  <FormControl>
+                    <Textarea
+                      placeholder={tplaceholders("special_requests")}
+                      className="min-h-[100px] rounded-xl bg-muted/40 border-none focus:bg-background focus:ring-1 focus:ring-primary/30 transition-all resize-none"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage className="text-[11px]" />
+                </FormItem>
+              )}
+            />
+          </div>
+        </form>
+      </Form>
+
+
+    </div>
+  );
+
+  // Using isTabletOrMobile to render the Selection Sheet for both mobile and tablet (< 1024px)
+  if (isTabletOrMobile) {
+    return (
+      <Sheet open={isOpen} onOpenChange={handleClose}>
+        <SheetContent side="bottom" className="h-[100dvh] w-screen p-0 flex flex-col rounded-none border-none inset-0">
+          <SheetHeader className="px-4 py-3 border-b shrink-0 text-center flex flex-col items-center justify-center relative">
+            <SheetTitle className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
+              {step === "details" ? t("booking_details") : t("form.date_time")}
+            </SheetTitle>
+            <SheetDescription className="hidden">
+              {step === "details"
+                ? t("modal_description")
+                : t("form.select_booking_details")}{" "}
+              <span className="font-semibold">{packageInfo.name}</span>
+            </SheetDescription>
+          </SheetHeader>
+
+          <div className={cn("flex-1 overflow-y-auto", step === "selection" ? "p-0" : "p-6 pb-32")}>
+            {step === "selection" ? (
+              <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+                <BookingCard
+                  packageId={selectedPackage}
+                  packageDisplayName={packageDisplayName}
+                  basePrice={basePrice}
+                  pricing={{
+                    price: isPerPerson ? packageInfo.price / (peopleCount || 1) : packageInfo.price,
+                    isDiscounted: packageInfo.isDiscounted,
+                    discountPercentage: packageInfo.discountPercentage,
+                    depositAmount: packageInfo.depositAmount,
+                    remainingAmount: packageInfo.remainingAmount
+                  }}
+                  displayPrice={isPerPerson ? packageInfo.price / (peopleCount || 1) : packageInfo.price}
+                  selectedDate={form.watch("bookingDate") ? new Date(form.watch("bookingDate")) : undefined}
+                  setSelectedDate={(date) => form.setValue("bookingDate", date ? format(date, "yyyy-MM-dd") : "")}
+                  selectedTime={form.watch("bookingTime")}
+                  setSelectedTime={(time) => form.setValue("bookingTime", time || "")}
+                  peopleCount={peopleCount}
+                  setPeopleCount={setPeopleCount}
+                  dateFnsLocale={dateFnsLocale}
+                  tCheckout={t}
+                  t={tPackages}
+                  packageDuration={String(packageInfo.duration)}
+                  isPerPerson={isPerPerson}
+                  onCheckAvailability={() => setStep("details")}
+                  isFlat={true}
+                  activeDiscount={activeDiscount}
+                  timeSurcharges={timeSurcharges}
+                  isInsideModal={true}
+                  whatsappNumber={whatsappNumber}
+                />
+              </div>
+            ) : (
+              <div className="animate-in fade-in slide-in-from-right-4 duration-500">
+                <FormContent />
+              </div>
+            )}
+          </div>
+
+          {step !== "selection" && (
+            <div className="fixed bottom-0 left-0 right-0 p-6 pb-[calc(1.5rem+env(safe-area-inset-bottom))] bg-background border-t shadow-[0_-4px_10px_rgba(0,0,0,0.05)] z-50">
+              <div className="max-w-md mx-auto flex items-center justify-center gap-4">
+                <Button
+                  type="submit"
+                  size="lg"
+                  className="h-14 px-6 sm:px-8 text-lg font-bold w-full"
+                  onClick={handleSubmit}
+                  disabled={isNavigating || form.formState.isSubmitting}
+                >
+                  {isNavigating || form.formState.isSubmitting ? (
+                    <Spinner className="h-5 w-5 animate-spin" />
+                  ) : (
+                    t("buttons.complete_booking")
+                  )}
+                </Button>
+              </div>
+            </div>
+          )}
+        </SheetContent>
+      </Sheet>
+    );
+  }
+
+  return (
+    <Dialog open={isOpen} onOpenChange={handleClose}>
+      <DialogContent
+        className="sm:max-w-xl w-full h-[92vh] md:h-[85vh] p-0 overflow-hidden flex flex-col gap-0 max-md:fixed max-md:inset-0 max-md:h-[100dvh] max-md:w-screen max-md:max-w-none max-md:rounded-none max-md:border-none max-md:translate-x-0 max-md:translate-y-0"
+        showCloseButton={true}
+      >
+        <DialogHeader className="px-6 py-8 border-b bg-background text-center flex flex-col items-center justify-center">
+          <span className="text-xs font-bold text-muted-foreground uppercase tracking-widest">{t("booking_details")}</span>
+          <DialogTitle className="text-3xl font-serif leading-tight text-foreground mt-2 px-8">
+            {packageDisplayName}
+          </DialogTitle>
+        </DialogHeader>
+
+        <div className="flex-1 overflow-y-auto p-6 bg-muted/5">
+          <FormContent />
+        </div>
+
+        <DialogFooter className="p-6 border-t bg-background shadow-[0_-4px_10px_rgba(0,0,0,0.03)] flex flex-row items-center justify-center gap-4">
+          <Button
+            type="submit"
+            className="h-12 px-8 text-md font-bold w-full max-w-md"
+            onClick={handleSubmit}
+            disabled={isNavigating || form.formState.isSubmitting}
+          >
+            {isNavigating || form.formState.isSubmitting ? (
+              <Spinner className="h-5 w-5 animate-spin" />
+            ) : (
+              t("buttons.complete_booking")
+            )}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}

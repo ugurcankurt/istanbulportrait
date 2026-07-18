@@ -1,0 +1,116 @@
+import { z } from "zod";
+
+// Static schemas (original)
+// Static schemas (original)
+export const baseBookingSchema = z.object({
+  packageId: z.string().min(1, "validation.package_required"),
+  customerName: z.string().min(2, "validation.name_min"),
+  customerEmail: z.string().email({ message: "validation.email_invalid" }),
+  customerPhone: z.string().min(1, "validation.phone_required"),
+  bookingDate: z.string().min(1, "validation.date_required"),
+  bookingTime: z.string().min(1, "validation.time_required"),
+  notes: z.string().optional(),
+  totalAmount: z.number().positive("validation.amount_positive"),
+  peopleCount: z.number().int().min(1).max(10).optional(),
+});
+
+export const bookingSchema = baseBookingSchema;
+
+export const paymentSchema = z.object({
+  cardHolderName: z.string().min(2, "validation.cardholder_required"),
+  cardNumber: z
+    .string()
+    .min(1, "validation.card_number_required")
+    .refine(
+      (val) => {
+        const digitsOnly = val.replace(/\D/g, "");
+        if (digitsOnly.length < 13 || digitsOnly.length > 19) return false;
+        let sum = 0;
+        let isEven = false;
+        for (let i = digitsOnly.length - 1; i >= 0; i--) {
+          let digit = parseInt(digitsOnly.charAt(i), 10);
+          if (isEven) {
+            digit *= 2;
+            if (digit > 9) digit -= 9;
+          }
+          sum += digit;
+          isEven = !isEven;
+        }
+        return sum % 10 === 0;
+      },
+      { message: "validation.card_number_invalid" },
+    ),
+  expireMonth: z.string().min(2, "validation.month_required").max(2),
+  expireYear: z.string().min(2, "validation.year_required").max(2),
+  cvc: z.string().min(3, "validation.cvc_required").max(4),
+});
+
+// Dynamic schemas with translations
+export const createBookingSchema = (t: any) =>
+  z.object({
+    packageId: z.string().min(1, t("package_required")),
+    customerName: z.string().min(2, t("name_min")),
+    customerEmail: z.string().email({ message: t("email_invalid") }),
+    customerPhone: z.string().min(1, t("phone_required")),
+    bookingDate: z.string().min(1, t("date_required")),
+    bookingTime: z.string().min(1, t("time_required")),
+    notes: z.string().optional(),
+    totalAmount: z.number().positive(t("amount_positive")),
+    peopleCount: z.number().int().min(1).max(10).optional(),
+  });
+
+export const createPaymentSchema = (t: any) =>
+  z.object({
+    cardHolderName: z.string().min(2, t("cardholder_required")),
+    cardNumber: z
+      .string()
+      .min(1, t("card_number_required"))
+      .refine(
+        (val) => {
+          const digitsOnly = val.replace(/\D/g, "");
+          if (digitsOnly.length < 13 || digitsOnly.length > 19) return false;
+          let sum = 0;
+          let isEven = false;
+          for (let i = digitsOnly.length - 1; i >= 0; i--) {
+            let digit = parseInt(digitsOnly.charAt(i), 10);
+            if (isEven) {
+              digit *= 2;
+              if (digit > 9) digit -= 9;
+            }
+            sum += digit;
+            isEven = !isEven;
+          }
+          return sum % 10 === 0;
+        },
+        { message: t("card_number_invalid") },
+      ),
+    expireMonth: z.string().min(2, t("month_required")).max(2),
+    expireYear: z.string().min(2, t("year_required")).max(2),
+    cvc: z.string().min(3, t("cvc_required")).max(4),
+  });
+
+export type BookingFormData = z.infer<typeof bookingSchema>;
+export type PaymentFormData = z.infer<typeof paymentSchema>;
+
+// No static packagePrices anymore, pricing is completely dynamic
+export type PackageId = string;
+
+// Tax-related types
+export interface TaxInfo {
+  rate: number;
+  amount: number;
+  included: boolean;
+}
+
+export interface PricingData {
+  packageId: PackageId;
+  basePrice: number;
+  taxInfo: TaxInfo;
+  totalPrice: number;
+  currency: "EUR";
+}
+
+// Extended booking data with pricing breakdown
+export interface BookingFormDataWithPricing extends BookingFormData {
+  pricingData: PricingData;
+}
