@@ -188,7 +188,7 @@ export function Navigation({ dynamicNavData = {}, settings }: NavigationProps) {
                 <span className="text-sm font-bold text-foreground">
                   {(() => {
                     const curr = typeof document !== 'undefined' ? (document.cookie.replace(/(?:(?:^|.*;\s*)NEXT_CURRENCY\s*\=\s*([^;]*).*$)|^.*$/, "$1") || "EUR") : "EUR";
-                    const symbols: Record<string, string> = { EUR: "€", USD: "$", GBP: "£", TRY: "₺", AED: "د.إ", SEK: "kr", CNY: "¥", RUB: "₽" };
+                    const symbols: Record<string, string> = { EUR: "€", USD: "$", GBP: "£", TRY: "₺", AED: "د.إ", CHF: "CHF", CNY: "¥", RUB: "₽" };
                     return symbols[curr] || "€";
                   })()}
                 </span>
@@ -244,7 +244,7 @@ export function Navigation({ dynamicNavData = {}, settings }: NavigationProps) {
                       { code: "GBP", symbol: "£" },
                       { code: "TRY", symbol: "₺" },
                       { code: "AED", symbol: "د.إ" },
-                      { code: "SEK", symbol: "kr" },
+                      { code: "CHF", symbol: "CHF" },
                       { code: "CNY", symbol: "¥" },
                       { code: "RUB", symbol: "₽" },
                     ].map((curr) => {
