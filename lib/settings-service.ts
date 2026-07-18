@@ -40,9 +40,6 @@ export interface SiteSettings {
   working_days: string[] | null;
 
   // Modern Dynamic Environment Settings
-  iyzico_base_url: string | null;
-  iyzico_api_key: string | null;
-  iyzico_secret_key: string | null;
 
   facebook_pixel_id: string | null;
   facebook_dataset_id: string | null;
@@ -56,12 +53,6 @@ export interface SiteSettings {
   app_base_url: string | null;
   admin_email: string | null;
 
-  turinvoice_base_url: string | null;
-  turinvoice_login: string | null;
-  turinvoice_password: string | null;
-  turinvoice_id_tsp: string | null;
-  turinvoice_secret_key: string | null;
-  turinvoice_callback_url: string | null;
 
   clarity_project_id: string | null;
   yandex_webmaster_key: string | null;
@@ -113,9 +104,6 @@ export const defaultSettings: SiteSettings = {
   closing_time: null,
   working_days: null,
 
-  iyzico_base_url: null,
-  iyzico_api_key: null,
-  iyzico_secret_key: null,
   facebook_pixel_id: null,
   facebook_dataset_id: null,
   facebook_access_token: null,
@@ -125,12 +113,6 @@ export const defaultSettings: SiteSettings = {
   ga4_measurement_protocol_secret: null,
   app_base_url: null,
   admin_email: null,
-  turinvoice_base_url: null,
-  turinvoice_login: null,
-  turinvoice_password: null,
-  turinvoice_id_tsp: null,
-  turinvoice_secret_key: null,
-  turinvoice_callback_url: null,
   clarity_project_id: null,
   yandex_webmaster_key: null,
   bing_webmaster_key: null,
@@ -206,9 +188,6 @@ export const settingsService = {
         closing_time: rawData.closing_time || defaultSettings.closing_time,
         working_days: rawData.working_days || defaultSettings.working_days,
 
-        iyzico_base_url: rawData.iyzico_base_url || defaultSettings.iyzico_base_url,
-        iyzico_api_key: rawData.iyzico_api_key || defaultSettings.iyzico_api_key,
-        iyzico_secret_key: rawData.iyzico_secret_key || defaultSettings.iyzico_secret_key,
         facebook_pixel_id: rawData.facebook_pixel_id || defaultSettings.facebook_pixel_id,
         facebook_dataset_id: rawData.facebook_dataset_id || defaultSettings.facebook_dataset_id,
         facebook_access_token: rawData.facebook_access_token || defaultSettings.facebook_access_token,
@@ -218,12 +197,6 @@ export const settingsService = {
         ga4_measurement_protocol_secret: rawData.ga4_measurement_protocol_secret || defaultSettings.ga4_measurement_protocol_secret,
         app_base_url: rawData.app_base_url || defaultSettings.app_base_url,
         admin_email: rawData.admin_email || defaultSettings.admin_email,
-        turinvoice_base_url: rawData.turinvoice_base_url || defaultSettings.turinvoice_base_url,
-        turinvoice_login: rawData.turinvoice_login || defaultSettings.turinvoice_login,
-        turinvoice_password: rawData.turinvoice_password || defaultSettings.turinvoice_password,
-        turinvoice_id_tsp: rawData.turinvoice_id_tsp || defaultSettings.turinvoice_id_tsp,
-        turinvoice_secret_key: rawData.turinvoice_secret_key || defaultSettings.turinvoice_secret_key,
-        turinvoice_callback_url: rawData.turinvoice_callback_url || defaultSettings.turinvoice_callback_url,
         clarity_project_id: rawData.clarity_project_id || defaultSettings.clarity_project_id,
         yandex_webmaster_key: rawData.yandex_webmaster_key || defaultSettings.yandex_webmaster_key,
         bing_webmaster_key: rawData.bing_webmaster_key || defaultSettings.bing_webmaster_key,

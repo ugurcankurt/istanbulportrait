@@ -5,7 +5,7 @@ import {
   Check,
   CheckCircle2,
   Clock,
-  CreditCard,
+  Banknote,
   Image as ImageIcon,
   MapPin,
   Telescope,
@@ -440,12 +440,12 @@ export function PackageDetails({ packageData, aggregateRating, reviews, activeDi
 
             <div className="flex items-start gap-3">
               <div className="mt-0.5">
-                <CreditCard className="h-4 w-4 text-primary" />
+                <Banknote className="h-4 w-4 text-primary" />
               </div>
               <div>
-                <p className="text-[11px] font-bold text-foreground leading-tight">{tCheckout("security.secure_payment")}</p>
+                <p className="text-[11px] font-bold text-foreground leading-tight">{tCheckout("payment_methods.cash")}</p>
                 <p className="text-[10px] font-medium text-muted-foreground leading-tight">
-                  {tCheckout("security.payment_options_info")}
+                  {tCheckout("payment_methods.cash_description")}
                 </p>
               </div>
             </div>

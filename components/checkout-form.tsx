@@ -22,8 +22,6 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { useYandexMetrica } from "@/components/analytics/yandex-metrica";
 import { BookingSuccess } from "@/components/booking-success";
-import { PaymentForm } from "@/components/payment-form";
-import { TurinvoicePayment } from "@/components/turinvoice-payment";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -31,8 +29,7 @@ import { Form } from "@/components/ui/form";
 import { Separator } from "@/components/ui/separator";
 import {
   saveUserDataForAdvancedMatching,
-  trackAddPaymentInfo,
-  trackBeginCheckout,
+    trackBeginCheckout,
   trackFacebookEvent,
   trackPaymentEvent,
   trackPurchase,
@@ -43,7 +40,6 @@ import {
   hashPhoneNumber,
 } from "@/lib/facebook";
 import { settingsService } from "@/lib/settings-service";
-import { getIyzicoErrorMessage } from "@/lib/iyzico-errors";
 import {
   formatPackagePricing,
   getPackagePricing,
@@ -53,68 +49,12 @@ import { cn, formatCurrency } from "@/lib/utils";
 import type {
   BookingFormData,
   PackageId,
-  PaymentFormData,
 } from "@/lib/validations";
 import {
   createBookingSchema,
-  createPaymentSchema,
 } from "@/lib/validations";
 import Link from "next/link";
 import type { TimeSurcharge } from "@/lib/availability-service";
-
-// ─── Step Indicator ───────────────────────────────────────────────────────────
-
-function StepIndicator({
-  currentStep,
-  labels,
-}: {
-  currentStep: number;
-  labels: string[];
-}) {
-  return (
-    <div className="flex items-center justify-center gap-0">
-      {labels.map((label, i) => {
-        const n = i + 1;
-        const done = n < currentStep;
-        const active = n === currentStep;
-        return (
-          <div key={n} className="flex items-center">
-            <div className="flex flex-col items-center gap-1">
-              <div
-                className={cn(
-                  "w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-all duration-300 border-2",
-                  done
-                    ? "bg-primary border-primary text-primary-foreground"
-                    : active
-                      ? "bg-primary border-primary text-primary-foreground scale-110 shadow-md shadow-primary/30"
-                      : "bg-background border-border text-muted-foreground"
-                )}
-              >
-                {done ? <Check className="w-3.5 h-3.5" /> : n}
-              </div>
-              <span
-                className={cn(
-                  "text-[10px] font-medium hidden sm:block max-w-[70px] text-center leading-tight",
-                  active ? "text-primary" : "text-muted-foreground/60"
-                )}
-              >
-                {label}
-              </span>
-            </div>
-            {i < labels.length - 1 && (
-              <div className="w-12 sm:w-16 h-0.5 mx-1 mb-3 sm:mb-4 bg-border relative overflow-hidden">
-                <div
-                  className="absolute inset-0 bg-primary transition-all duration-500"
-                  style={{ width: done ? "100%" : "0%" }}
-                />
-              </div>
-            )}
-          </div>
-        );
-      })}
-    </div>
-  );
-}
 
 // ─── Step 1: Booking Summary ──────────────────────────────────────────────────
 
@@ -133,7 +73,8 @@ function Step1Summary({
   promoError,
   isLoadingPromo,
   handleApplyPromo,
-  onNext,
+  onSubmit,
+  isSubmitting,
   timeSurcharges,
 }: {
   t: (k: string, v?: any) => string;
@@ -150,7 +91,8 @@ function Step1Summary({
   promoError: string;
   isLoadingPromo: boolean;
   handleApplyPromo: () => void;
-  onNext: () => void;
+  onSubmit: () => void;
+  isSubmitting: boolean;
   timeSurcharges?: TimeSurcharge[];
 }) {
   const { formatPrice } = useCurrency();
@@ -284,230 +226,9 @@ function Step1Summary({
 
       {/* CTA */}
       <div className="pt-4 shrink-0">
-        <Button onClick={onNext} className="w-full h-14 rounded-2xl font-bold text-base shadow-sm">
-          {t("payment_method") || "Choose Payment"}
-          <ChevronRight className="w-5 h-5 ms-1 rtl:rotate-180" />
+        <Button onClick={onSubmit} disabled={isSubmitting} className="w-full h-14 rounded-2xl font-bold text-base shadow-sm">
+          {isSubmitting ? <Loader2 className="w-5 h-5 animate-spin" /> : (t("buttons.complete_booking") || "Complete Booking")}
         </Button>
-      </div>
-    </div>
-  );
-}
-
-// ─── Step 2: Payment Method ───────────────────────────────────────────────────
-
-function Step2Method({
-  t,
-  paymentMethod,
-  setPaymentMethod,
-  onBack,
-  onNext,
-  isLoading,
-  onCompleteCashBooking,
-}: {
-  t: (k: string) => string;
-  paymentMethod: "iyzico" | "turinvoice" | "cash";
-  setPaymentMethod: (v: "iyzico" | "turinvoice" | "cash") => void;
-  onBack: () => void;
-  onNext: () => void;
-  isLoading?: boolean;
-  onCompleteCashBooking?: () => void;
-}) {
-  return (
-    <div className="flex flex-col h-full">
-      <div className="flex-1 space-y-3 min-h-0">
-        {/* Cash Payment */}
-        <button
-          type="button"
-          onClick={() => setPaymentMethod("cash")}
-          className={cn(
-            "w-full rounded-2xl border-[0.5px] p-5 text-start transition-all duration-500 flex items-center gap-5 shadow-sm hover:shadow-md",
-            paymentMethod === "cash"
-              ? "border-primary/50 bg-primary/5 ring-1 ring-primary/20"
-              : "border-border/50 bg-background hover:border-primary/30"
-          )}
-        >
-          <div className={cn(
-            "w-12 h-12 rounded-xl flex items-center justify-center border-[0.5px] shrink-0 transition-all duration-500",
-            paymentMethod === "cash" ? "border-primary/30 bg-primary/10 shadow-inner" : "border-border/50 bg-muted/30"
-          )}>
-            <span className={cn("text-2xl transition-colors duration-500", paymentMethod === "cash" ? "text-primary" : "text-muted-foreground grayscale")}>💵</span>
-          </div>
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center justify-between">
-              <p className="font-semibold text-sm">{t("payment_methods.cash")}</p>
-              {paymentMethod === "cash" && (
-                <div className="w-5 h-5 rounded-full bg-primary flex items-center justify-center">
-                  <Check className="w-3 h-3 text-primary-foreground" />
-                </div>
-              )}
-            </div>
-            <p className="text-[11px] text-muted-foreground mt-1">
-              {t("payment_methods.cash_description")}
-            </p>
-          </div>
-        </button>
-
-        {/* Iyzico */}
-        <button
-          type="button"
-          onClick={() => setPaymentMethod("iyzico")}
-          className={cn(
-            "w-full rounded-2xl border-[0.5px] p-5 text-start transition-all duration-500 flex items-center gap-5 shadow-sm hover:shadow-md",
-            paymentMethod === "iyzico"
-              ? "border-primary/50 bg-primary/5 ring-1 ring-primary/20"
-              : "border-border/50 bg-background hover:border-primary/30"
-          )}
-        >
-          <div className={cn(
-            "w-12 h-12 rounded-xl flex items-center justify-center border-[0.5px] shrink-0 transition-all duration-500",
-            paymentMethod === "iyzico" ? "border-primary/30 bg-primary/10 shadow-inner" : "border-border/50 bg-muted/30"
-          )}>
-            <CreditCard className={cn("w-6 h-6 transition-colors duration-500", paymentMethod === "iyzico" ? "text-primary" : "text-muted-foreground")} />
-          </div>
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center justify-between">
-              <p className="font-semibold text-sm">{t("payment_methods.credit_card")}</p>
-              {paymentMethod === "iyzico" && (
-                <div className="w-5 h-5 rounded-full bg-primary flex items-center justify-center">
-                  <Check className="w-3 h-3 text-primary-foreground" />
-                </div>
-              )}
-            </div>
-            <div className="flex items-center gap-2 mt-1.5">
-              <img src="/pay_with_iyzico_colored.svg" alt="Iyzico" className="h-4 w-auto object-contain" />
-            </div>
-            <p className="text-[10px] text-muted-foreground mt-1 flex items-center gap-1">
-              <ShieldCheck className="w-3 h-3 text-success" /> Visa · Mastercard · 3D Secure
-            </p>
-          </div>
-        </button>
-
-        {/* Turinvoice */}
-        <button
-          type="button"
-          onClick={() => setPaymentMethod("turinvoice")}
-          className={cn(
-            "w-full rounded-2xl border-[0.5px] p-5 text-start transition-all duration-500 flex items-center gap-5 shadow-sm hover:shadow-md",
-            paymentMethod === "turinvoice"
-              ? "border-primary/50 bg-primary/5 ring-1 ring-primary/20"
-              : "border-border/50 bg-background hover:border-primary/30"
-          )}
-        >
-          <div className={cn(
-            "w-12 h-12 rounded-xl flex items-center justify-center border-[0.5px] shrink-0 overflow-hidden transition-all duration-500",
-            paymentMethod === "turinvoice" ? "border-primary/30 bg-primary/10 shadow-inner" : "border-border/50 bg-muted/30"
-          )}>
-            <img src="/turinvoice_logo.webp" alt="Turinvoice" className="w-8 h-8 object-contain" />
-          </div>
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center justify-between">
-              <p className="font-semibold text-sm">{t("payment_methods.russian_banks")}</p>
-              {paymentMethod === "turinvoice" && (
-                <div className="w-5 h-5 rounded-full bg-primary flex items-center justify-center">
-                  <Check className="w-3 h-3 text-primary-foreground" />
-                </div>
-              )}
-            </div>
-            <img src="/turinvoice_logo.webp" alt="Turinvoice" className="h-4 w-auto object-contain mt-1.5" />
-            <p className="text-[10px] text-muted-foreground mt-1 flex items-center gap-1">
-              <ShieldCheck className="w-3 h-3 text-success" /> MIR · SBP · Russian Banks
-            </p>
-          </div>
-        </button>
-
-        {/* Trust badges */}
-        <div className="grid grid-cols-3 gap-2">
-          {[
-            { icon: "🔒", label: "SSL 256-bit" },
-            { icon: "🛡️", label: "3D Secure" },
-            { icon: "✓", label: "PCI DSS" },
-          ].map((b) => (
-            <div key={b.label} className="flex flex-col items-center gap-1 p-2.5 rounded-xl bg-muted/30 border border-border/50">
-              <span className="text-base">{b.icon}</span>
-              <span className="text-[10px] text-muted-foreground font-medium">{b.label}</span>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* CTA */}
-      <div className="pt-4 flex gap-3 shrink-0">
-        <Button type="button" variant="outline" onClick={onBack} disabled={isLoading} className="h-14 rounded-2xl px-5 border-border/50 hover:bg-muted/50">
-          <ChevronLeft className="w-5 h-5 rtl:rotate-180" />
-        </Button>
-        <Button onClick={paymentMethod === "cash" ? onCompleteCashBooking : onNext} disabled={isLoading} className="flex-1 h-14 rounded-2xl font-bold text-base shadow-sm">
-          {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : paymentMethod === "cash" ? (t("buttons.complete_booking") || "Complete Booking") : (t("payment_details") || "Continue")}
-          {paymentMethod !== "cash" && !isLoading && <ChevronRight className="w-5 h-5 ms-1 rtl:rotate-180" />}
-        </Button>
-      </div>
-    </div>
-  );
-}
-
-// ─── Step 3: Payment Detail (compact price strip) ─────────────────────────────
-
-function PriceStrip({
-  t,
-  tPricing,
-  locale,
-  selectedPackage,
-  preFilledBookingData,
-  appliedPromo,
-  computedSurchargePercentage,
-}: {
-  t: (k: string, v?: any) => string;
-  tPricing: (k: string) => string;
-  locale: string;
-  selectedPackage: PackageId;
-  preFilledBookingData: BookingFormData;
-  appliedPromo: { code: string; percentage: number } | null;
-  computedSurchargePercentage: number;
-}) {
-  const { formatPrice } = useCurrency();
-  const rawPricing = getPackagePricing(
-    selectedPackage,
-    (preFilledBookingData as any)?.basePrice || preFilledBookingData?.totalAmount || 0,
-    (preFilledBookingData as any)?.activeDiscount || null,
-    appliedPromo,
-    preFilledBookingData?.bookingDate,
-    (preFilledBookingData as any)?.isPerPerson ? preFilledBookingData?.peopleCount : undefined,
-    undefined,
-    undefined,
-    computedSurchargePercentage
-  );
-
-  const pricing = {
-    ...rawPricing,
-    originalPrice: formatPrice(rawPricing.originalPrice),
-    discountAmount: formatPrice(rawPricing.discountAmount),
-    depositAmount: formatPrice(rawPricing.depositAmount),
-    remainingAmount: formatPrice(rawPricing.remainingAmount),
-    totalPrice: formatPrice(rawPricing.totalPrice),
-    taxAmount: formatPrice(rawPricing.taxAmount),
-    promoAmount: rawPricing.promoAmount ? formatPrice(rawPricing.promoAmount) : undefined
-  };
-  return (
-    <div className="bg-primary/8 border border-primary/20 rounded-xl px-3 py-2.5">
-      <div className="flex items-center justify-between">
-        <div>
-          <p className="text-[11px] font-bold text-primary uppercase tracking-wide">{t("labels.deposit_amount")} (30%)</p>
-          <p className="text-[10px] text-muted-foreground font-medium mt-0.5">{t("labels.remaining_cash")} (70%): {pricing.remainingAmount}</p>
-          {/* Seasonal discount — only show when percentage is actually > 0 */}
-          {pricing.isDiscounted && pricing.appliedDiscountPercentage > 0 && (
-            <p className="text-[10px] text-success mt-1">
-              {t("seasonal_discount_applied", { percentage: (pricing.appliedDiscountPercentage * 100).toFixed(0) })}
-            </p>
-          )}
-          {pricing.promoAmount && (
-            <p className="text-[10px] text-blue-600 dark:text-blue-400 mt-0.5">
-              {t("promo_code") || "Promo Code"} ({pricing.promoCode}): -{pricing.promoAmount}
-            </p>
-          )}
-        </div>
-        <div className="text-end">
-          <p className="text-xl font-bold text-primary">{pricing.depositAmount}</p>
-          <p className="text-[10px] text-muted-foreground">{tPricing("final_total")}: {pricing.totalPrice}</p>
-        </div>
       </div>
     </div>
   );
@@ -524,8 +245,7 @@ export function CheckoutForm({ timeSurcharges = [] }: { timeSurcharges?: TimeSur
   const tValidation = useTranslations("validation");
   const tPricing = useTranslations("pricing");
 
-  const [currentStep, setCurrentStep] = useState(1);
-  const [selectedPackage, setSelectedPackage] = useState<PackageId | null>(null);
+    const [selectedPackage, setSelectedPackage] = useState<PackageId | null>(null);
   const [bookingId, setBookingId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [preFilledBookingData, setPreFilledBookingData] = useState<BookingFormData | null>(null);
@@ -538,8 +258,7 @@ export function CheckoutForm({ timeSurcharges = [] }: { timeSurcharges?: TimeSur
   const [appliedPromo, setAppliedPromo] = useState<{ code: string; percentage: number } | null>(null);
   const [promoError, setPromoError] = useState("");
   const [isLoadingPromo, setIsLoadingPromo] = useState(false);
-  const [paymentMethod, setPaymentMethod] = useState<"iyzico" | "turinvoice" | "cash">("cash");
-  const [turinvoiceOrder, setTurinvoiceOrder] = useState<{
+    const [turinvoiceOrder, setTurinvoiceOrder] = useState<{
     idOrder: number;
     paymentUrl: string;
     amountTRY: number;
@@ -594,8 +313,7 @@ export function CheckoutForm({ timeSurcharges = [] }: { timeSurcharges?: TimeSur
   };
 
   const bookingSchemaWithTranslations = createBookingSchema(tValidation);
-  const paymentSchemaWithTranslations = createPaymentSchema(tValidation);
-
+  
   const bookingForm = useForm<BookingFormData>({
     resolver: zodResolver(bookingSchemaWithTranslations),
     defaultValues: {
@@ -610,17 +328,7 @@ export function CheckoutForm({ timeSurcharges = [] }: { timeSurcharges?: TimeSur
     },
   });
 
-  const paymentForm = useForm<PaymentFormData>({
-    resolver: zodResolver(paymentSchemaWithTranslations),
-    defaultValues: {
-      cardHolderName: "",
-      cardNumber: "",
-      expireMonth: "",
-      expireYear: "",
-      cvc: "",
-    },
-  });
-
+  
 
   useEffect(() => {
     if (!eventId) setEventId(crypto.randomUUID());
@@ -741,144 +449,6 @@ export function CheckoutForm({ timeSurcharges = [] }: { timeSurcharges?: TimeSur
     initFBWithAdvancedMatching();
   }, [customerEmail, customerPhone, customerName]);
 
-  const handlePaymentSubmit = async (paymentData: PaymentFormData) => {
-    if (!selectedPackage || !packageInfo) return;
-    setIsLoading(true);
-    const bookingData = bookingForm.getValues();
-
-    trackAddPaymentInfo(selectedPackage, packageInfo.name, packageInfo.price, "credit_card", "EUR", eventId);
-
-    const pricingCalc = getPackagePricing(
-      selectedPackage,
-      (preFilledBookingData as any)?.basePrice || preFilledBookingData?.totalAmount || 0,
-      (preFilledBookingData as any)?.activeDiscount || null,
-      appliedPromo,
-      bookingData.bookingDate,
-      (preFilledBookingData as any)?.isPerPerson ? (preFilledBookingData as any)?.peopleCount : undefined,
-      undefined,
-      undefined,
-      computedSurchargePercentage
-    );
-
-    try {
-      const getCookie = (name: string) => {
-        if (typeof document === "undefined") return undefined;
-        const value = `; ${document.cookie}`;
-        const parts = value.split(`; ${name}=`);
-        if (parts.length === 2) return parts.pop()?.split(';').shift();
-        return undefined;
-      };
-      const fbc = getCookie("_fbc");
-      const fbp = getCookie("_fbp");
-
-      const paymentResponse = await fetch("/api/payment/initialize", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          appliedPromo,
-          paymentData, 
-          customerData: {
-            ...bookingData,
-            activeDiscount: (preFilledBookingData as any)?.activeDiscount,
-            isPerPerson: (preFilledBookingData as any)?.isPerPerson
-          },
-          amount: pricingCalc.depositAmount,
-          packageId: selectedPackage, locale, eventId,
-        }),
-      });
-
-      if (!paymentResponse.ok) throw new Error(t("error.payment_init_failed"));
-
-      const paymentResult = await paymentResponse.json();
-
-      if (paymentResult.status === "success") {
-        const bookingResponse = await fetch("/api/booking/create-confirmed", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            appliedPromo,
-            activeDiscount: (preFilledBookingData as any)?.activeDiscount,
-            isPerPerson: (preFilledBookingData as any)?.isPerPerson,
-            ...bookingData,
-            totalAmount: pricingCalc.totalPrice,
-            paymentId: paymentResult.paymentId,
-            conversationId: paymentResult.conversationId,
-            providerResponse: paymentResult.providerResponse,
-            eventId, bookingId: bookingId || undefined, locale,
-            fbc, fbp,
-          }),
-        });
-
-        if (!bookingResponse.ok) throw new Error(t("error.booking_failed"));
-
-        const bookingResult = await bookingResponse.json();
-        setBookingId(bookingResult.booking.id);
-        setConfirmedBooking(bookingResult.booking);
-        setShowSuccess(true);
-        toast.success(t("success.payment_successful"));
-        sessionStorage.removeItem("bookingData");
-        
-
-        const actualTotal = bookingResult.booking.totalAmount;
-        const nameParts = bookingData.customerName.split(" ");
-        const firstName = nameParts[0];
-        const lastName = nameParts.length > 1 ? nameParts.slice(1).join(" ") : "";
-
-        trackPaymentEvent(selectedPackage, actualTotal, "success");
-        trackPurchase(
-          bookingResult.booking.id,
-          selectedPackage,
-          packageInfo.name,
-          actualTotal,
-          "EUR",
-          {
-            email: bookingData.customerEmail,
-            phone: bookingData.customerPhone,
-            firstName,
-            lastName,
-          },
-          eventId
-        );
-        trackYandexPurchase(bookingResult.booking.id, selectedPackage, actualTotal);
-
-        if (typeof window !== "undefined") {
-          window.dispatchEvent(new CustomEvent("booking_confirmed", {
-            detail: { customerName: bookingData.customerName, bookingDate: bookingData.bookingDate, packageId: selectedPackage },
-          }));
-        }
-      } else {
-        trackPaymentEvent(selectedPackage, preFilledBookingData?.totalAmount || 0, "failure");
-        const errorCode = paymentResult.errorCode;
-        if (errorCode) {
-          const iyzicoError = getIyzicoErrorMessage(errorCode, locale);
-          throw new Error(`${iyzicoError.message}|${iyzicoError.suggestion}`);
-        }
-        throw new Error(paymentResult.errorMessage || t("error.payment_failed"));
-      }
-    } catch (error) {
-      console.error("Payment error:", error);
-      let errorMessage = t("error.payment_failed");
-      if (error instanceof Error) {
-        if (error.message.includes("|")) {
-          const [message, suggestion] = error.message.split("|");
-          toast.error(
-            <div className="space-y-1">
-              <div className="font-medium">{message}</div>
-              <div className="text-sm text-muted-foreground">{suggestion}</div>
-            </div>,
-            { duration: 8000, style: { maxWidth: "400px" } },
-          );
-          return;
-        }
-        errorMessage = error.message;
-      }
-      toast.error(errorMessage);
-      if (selectedPackage) trackPaymentEvent(selectedPackage, preFilledBookingData?.totalAmount || 0, "failure");
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   const handleCashPaymentSubmit = async () => {
     if (!selectedPackage || !packageInfo) return;
     setIsLoading(true);
@@ -971,146 +541,6 @@ export function CheckoutForm({ timeSurcharges = [] }: { timeSurcharges?: TimeSur
     }
   };
 
-  const handleTurinvoiceInitialize = async () => {
-    if (!selectedPackage || !packageInfo) return;
-    setIsLoading(true);
-    const bookingData = bookingForm.getValues();
-
-    const pricingCalc = getPackagePricing(
-      selectedPackage,
-      (preFilledBookingData as any)?.basePrice || preFilledBookingData?.totalAmount || 0,
-      (preFilledBookingData as any)?.activeDiscount || null,
-      appliedPromo,
-      bookingData.bookingDate,
-      (preFilledBookingData as any)?.isPerPerson ? (preFilledBookingData as any)?.peopleCount : undefined,
-      undefined,
-      undefined,
-      computedSurchargePercentage
-    );
-
-    try {
-      const getCookie = (name: string) => {
-        if (typeof document === "undefined") return undefined;
-        const value = `; ${document.cookie}`;
-        const parts = value.split(`; ${name}=`);
-        if (parts.length === 2) return parts.pop()?.split(';').shift();
-        return undefined;
-      };
-      const fbc = getCookie("_fbc");
-      const fbp = getCookie("_fbp");
-
-      const response = await fetch("/api/payment/initialize/turinvoice", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          appliedPromo,
-          customerData: {
-            ...bookingData,
-            activeDiscount: (preFilledBookingData as any)?.activeDiscount,
-            isPerPerson: (preFilledBookingData as any)?.isPerPerson
-          },
-          amount: pricingCalc.depositAmount,
-          packageId: selectedPackage, locale, eventId,
-          fbc, fbp,
-        }),
-      });
-
-      if (!response.ok) throw new Error(t("error.payment_init_failed"));
-
-      const data = await response.json();
-      if (data.success) {
-        setTurinvoiceOrder({
-          idOrder: data.idOrder, paymentUrl: data.paymentUrl,
-          amountTRY: data.amountTRY, amountEUR: data.amountEUR,
-          exchangeRate: data.exchangeRate,
-        });
-      } else {
-        throw new Error(data.error || t("error.payment_init_failed"));
-      }
-    } catch (error) {
-      console.error("Turinvoice init error:", error);
-      toast.error(t("error.payment_init_failed"));
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleTurinvoiceSuccess = async () => {
-    if (!turinvoiceOrder || !selectedPackage || !packageInfo) return;
-    const bookingData = bookingForm.getValues();
-    const pricingCalc = getPackagePricing(
-      selectedPackage,
-      (preFilledBookingData as any)?.basePrice || preFilledBookingData?.totalAmount || 0,
-      (preFilledBookingData as any)?.activeDiscount || null,
-      appliedPromo,
-      bookingData.bookingDate,
-      (preFilledBookingData as any)?.isPerPerson ? (preFilledBookingData as any)?.peopleCount : undefined,
-      undefined,
-      undefined,
-      computedSurchargePercentage
-    );
-
-    try {
-      const getCookie = (name: string) => {
-        if (typeof document === "undefined") return undefined;
-        const value = `; ${document.cookie}`;
-        const parts = value.split(`; ${name}=`);
-        if (parts.length === 2) return parts.pop()?.split(';').shift();
-        return undefined;
-      };
-      const fbc = getCookie("_fbc");
-      const fbp = getCookie("_fbp");
-
-      const bookingResponse = await fetch("/api/booking/create-confirmed", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          appliedPromo,
-          ...bookingData, totalAmount: pricingCalc.totalPrice,
-          paymentId: turinvoiceOrder.idOrder.toString(),
-          conversationId: `turinvoice_${turinvoiceOrder.idOrder}`,
-          provider: "turinvoice", eventId, bookingId: bookingId || undefined,
-          locale, fbc, fbp,
-        }),
-      });
-
-      if (!bookingResponse.ok) throw new Error(t("error.booking_failed"));
-
-      const bookingResult = await bookingResponse.json();
-      setBookingId(bookingResult.booking.id);
-      setConfirmedBooking(bookingResult.booking);
-      setShowSuccess(true);
-      toast.success(t("success.payment_successful"));
-      sessionStorage.removeItem("bookingData");
-      
-
-      const actualTotal = bookingResult.booking.totalAmount;
-      const nameParts = bookingData.customerName.split(" ");
-      const firstName = nameParts[0];
-      const lastName = nameParts.length > 1 ? nameParts.slice(1).join(" ") : "";
-
-      trackPaymentEvent(selectedPackage, actualTotal, "success");
-      trackPurchase(
-        bookingResult.booking.id,
-        selectedPackage,
-        packageInfo.name,
-        actualTotal,
-        "EUR",
-        {
-          email: bookingData.customerEmail,
-          phone: bookingData.customerPhone,
-          firstName,
-          lastName,
-        },
-        eventId
-      );
-      trackYandexPurchase(bookingResult.booking.id, selectedPackage, actualTotal);
-    } catch (error) {
-      console.error("Booking creation error:", error);
-      toast.error(t("error.booking_failed"));
-    }
-  };
-
   // ── Success screen ──
   if (showSuccess && bookingId && selectedPackage) {
     return (
@@ -1139,12 +569,7 @@ export function CheckoutForm({ timeSurcharges = [] }: { timeSurcharges?: TimeSur
     router.push(`/${locale}/packages`);
   };
 
-  const stepLabels = [
-    t("booking_summary"),
-    t("payment_method"),
-    t("payment_details"),
-  ];
-
+  
   return (
     <div className="fixed inset-0 z-[9999] flex flex-col bg-background overflow-hidden">
       {/* ── Mini Header ── */}
@@ -1166,129 +591,30 @@ export function CheckoutForm({ timeSurcharges = [] }: { timeSurcharges?: TimeSur
 
       
 
-      {/* ── Step Indicator ── */}
-      <div className="shrink-0 px-4 py-3 border-b bg-muted/20">
-        <StepIndicator currentStep={currentStep} labels={stepLabels} />
-      </div>
+      
 
       {/* ── Step Content ── */}
       <main className="flex-1 overflow-y-auto px-4 py-4 min-h-0">
         <div className="max-w-lg mx-auto h-full flex flex-col">
-
-          {/* Step 1 */}
-          {currentStep === 1 && (
-            <Step1Summary
-              t={t}
-              tPricing={tPricing}
-              tui={tui}
-              locale={locale}
-              preFilledBookingData={preFilledBookingData}
-              packageInfo={packageInfo}
-              selectedPackage={selectedPackage}
-              promoCodeInput={promoCodeInput}
-              setPromoCodeInput={setPromoCodeInput}
-              appliedPromo={appliedPromo}
-              setAppliedPromo={setAppliedPromo}
-              promoError={promoError}
-              isLoadingPromo={isLoadingPromo}
-              handleApplyPromo={handleApplyPromo}
-              onNext={() => setCurrentStep(2)}
-              timeSurcharges={timeSurcharges}
-            />
-          )}
-
-          {/* Step 2 */}
-          {currentStep === 2 && (
-            <Step2Method
-              t={t}
-              paymentMethod={paymentMethod}
-              setPaymentMethod={setPaymentMethod}
-              onBack={() => setCurrentStep(1)}
-              onNext={() => setCurrentStep(3)}
-              isLoading={isLoading}
-              onCompleteCashBooking={handleCashPaymentSubmit}
-            />
-          )}
-
-          {/* Step 3 */}
-          {currentStep === 3 && (
-            <div className="flex flex-col h-full space-y-3">
-              {/* Price strip */}
-              {pricing && (
-                <PriceStrip
-                  t={t}
-                  tPricing={tPricing}
-                  locale={locale}
-                  selectedPackage={selectedPackage}
-                  preFilledBookingData={preFilledBookingData}
-                  appliedPromo={appliedPromo}
-                  computedSurchargePercentage={computedSurchargePercentage}
-                />
-              )}
-
-              {/* Payment form / Turinvoice */}
-              <div className="flex-1 min-h-0">
-                {paymentMethod === "iyzico" ? (
-                  <Form {...paymentForm}>
-                    <PaymentForm
-                      form={paymentForm}
-                      onSubmit={handlePaymentSubmit}
-                      selectedPackage={selectedPackage}
-                      bookingData={preFilledBookingData}
-                      isLoading={isLoading}
-                      appliedPromo={appliedPromo}
-                      computedSurchargePercentage={computedSurchargePercentage}
-                    />
-                  </Form>
-                ) : paymentMethod === "turinvoice" ? (
-                  <div className="space-y-4">
-                    {!turinvoiceOrder ? (
-                      <div className="text-center space-y-4 py-4">
-                        <div className="w-16 h-16 mx-auto rounded-2xl bg-muted/40 flex items-center justify-center border">
-                          <img src="/turinvoice_logo.webp" alt="Turinvoice" className="w-12 h-12 object-contain" />
-                        </div>
-                        <p className="text-sm text-muted-foreground">{t("turinvoice_description")}</p>
-                        <Button
-                          size="lg"
-                          className="w-full rounded-xl h-12"
-                          onClick={handleTurinvoiceInitialize}
-                          disabled={isLoading}
-                        >
-                          {isLoading ? (
-                            <><Loader2 className="w-4 h-4 mr-2 animate-spin" />{t("buttons.processing")}</>
-                          ) : (
-                            t("buttons.pay_amount", { amount: pricing ? formatCurrency(pricing.depositAmount, locale) : "" })
-                          )}
-                        </Button>
-                      </div>
-                    ) : (
-                      <TurinvoicePayment
-                        idOrder={turinvoiceOrder.idOrder}
-                        paymentUrl={turinvoiceOrder.paymentUrl}
-                        amountTRY={turinvoiceOrder.amountTRY}
-                        amountEUR={turinvoiceOrder.amountEUR}
-                        exchangeRate={turinvoiceOrder.exchangeRate}
-                        onSuccess={handleTurinvoiceSuccess}
-                        onTimeout={() => setTurinvoiceOrder(null)}
-                      />
-                    )}
-                  </div>
-                ) : null}
-              </div>
-
-              {/* Back link */}
-              {!turinvoiceOrder && (
-                <button
-                  type="button"
-                  onClick={() => setCurrentStep(2)}
-                  className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors shrink-0"
-                >
-                  <ChevronLeft className="w-3.5 h-3.5" />
-                  {t("buttons.back") || "Back to payment method"}
-                </button>
-              )}
-            </div>
-          )}
+          <Step1Summary
+            t={t}
+            tPricing={tPricing}
+            tui={tui}
+            locale={locale}
+            preFilledBookingData={preFilledBookingData}
+            packageInfo={packageInfo}
+            selectedPackage={selectedPackage}
+            promoCodeInput={promoCodeInput}
+            setPromoCodeInput={setPromoCodeInput}
+            appliedPromo={appliedPromo}
+            setAppliedPromo={setAppliedPromo}
+            promoError={promoError}
+            isLoadingPromo={isLoadingPromo}
+            handleApplyPromo={handleApplyPromo}
+            onSubmit={handleCashPaymentSubmit}
+            isSubmitting={isLoading}
+            timeSurcharges={timeSurcharges}
+          />
         </div>
       </main>
     </div>

@@ -12,7 +12,7 @@ import {
 } from "./tax";
 import { type PackageId } from "./validations";
 import { type DiscountDB } from "./discount-service";
-export const DEPOSIT_PERCENTAGE = 0.3;
+export const DEPOSIT_PERCENTAGE = 0;
 
 export function matchActiveSurcharge(timeString: string | undefined | null, timeSurcharges: any[] | undefined | null) {
   if (!timeString || !timeSurcharges || !Array.isArray(timeSurcharges)) return null;

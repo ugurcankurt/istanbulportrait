@@ -485,41 +485,6 @@ export default function SettingsPage() {
           </CardContent>
         </Card>
 
-        {/* Payment Gateway (Iyzico) */}
-        <Card className="lg:col-span-2">
-          <CardHeader>
-            <CardTitle>Payment Gateway (Iyzico)</CardTitle>
-            <CardDescription>Configure your secure payment processing via Iyzico.</CardDescription>
-          </CardHeader>
-          <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="space-y-2">
-              <Label>Base URL</Label>
-              <Input
-                value={settings.iyzico_base_url || ""}
-                onChange={(e) => updateSetting("iyzico_base_url", e.target.value)}
-                placeholder="https://api.iyzipay.com"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label>API Key</Label>
-              <Input
-                value={settings.iyzico_api_key || ""}
-                onChange={(e) => updateSetting("iyzico_api_key", e.target.value)}
-                placeholder="sandbox-xxxx..."
-              />
-            </div>
-            <div className="space-y-2">
-              <Label>Secret Key</Label>
-              <Input
-                type="password"
-                value={settings.iyzico_secret_key || ""}
-                onChange={(e) => updateSetting("iyzico_secret_key", e.target.value)}
-                placeholder="sandbox-xxxx..."
-              />
-            </div>
-          </CardContent>
-        </Card>
-
         {/* Meta / Facebook Integration */}
         <Card className="lg:col-span-2">
           <CardHeader>
@@ -601,66 +566,6 @@ export default function SettingsPage() {
                 value={settings.admin_email || ""}
                 onChange={(e) => updateSetting("admin_email", e.target.value)}
                 placeholder="info@istanbulportrait.com"
-              />
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Turinvoice Integration */}
-        <Card className="lg:col-span-2">
-          <CardHeader>
-            <CardTitle>Turinvoice (E-Fatura)</CardTitle>
-            <CardDescription>Automated electronic invoicing API keys.</CardDescription>
-          </CardHeader>
-          <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="space-y-2">
-              <Label>Base URL</Label>
-              <Input
-                value={settings.turinvoice_base_url || ""}
-                onChange={(e) => updateSetting("turinvoice_base_url", e.target.value)}
-                placeholder="https://hesap.turinvoice.com"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label>Login / Phone</Label>
-              <Input
-                value={settings.turinvoice_login || ""}
-                onChange={(e) => updateSetting("turinvoice_login", e.target.value)}
-                placeholder="+90XXXXXXXXX"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label>Password</Label>
-              <Input
-                type="password"
-                value={settings.turinvoice_password || ""}
-                onChange={(e) => updateSetting("turinvoice_password", e.target.value)}
-                placeholder="Password"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label>ID TSP</Label>
-              <Input
-                value={settings.turinvoice_id_tsp || ""}
-                onChange={(e) => updateSetting("turinvoice_id_tsp", e.target.value)}
-                placeholder="1868"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label>Secret Key</Label>
-              <Input
-                type="password"
-                value={settings.turinvoice_secret_key || ""}
-                onChange={(e) => updateSetting("turinvoice_secret_key", e.target.value)}
-                placeholder="0f2f01e0-..."
-              />
-            </div>
-            <div className="space-y-2">
-              <Label>Callback URL</Label>
-              <Input
-                value={settings.turinvoice_callback_url || ""}
-                onChange={(e) => updateSetting("turinvoice_callback_url", e.target.value)}
-                placeholder="https://istanbulportrait.com/api/payment/webhook/turinvoice"
               />
             </div>
           </CardContent>

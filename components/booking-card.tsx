@@ -10,7 +10,7 @@ import {
   Sunrise,
   Sun,
   Sunset,
-  CreditCard
+  Banknote
 } from "lucide-react";
 import { trackSchedule } from "@/lib/analytics";
 import { DEPOSIT_PERCENTAGE, matchActiveSurcharge } from "@/lib/pricing";
@@ -537,13 +537,13 @@ export function BookingCard({
 
           <div className="flex items-start gap-3 group">
             <div className="mt-1">
-              <CreditCard className="h-5 w-5 text-primary" />
+              <Banknote className="h-5 w-5 text-primary" />
             </div>
             <div>
-              <p className="text-sm font-bold text-foreground">{tCheckout("security.secure_payment")}</p>
+              <p className="text-sm font-bold text-foreground">{tCheckout("payment_methods.cash")}</p>
               <div className="space-y-1">
                 <p className="text-xs font-medium text-muted-foreground leading-relaxed">
-                  {tCheckout("security.payment_options_info")}
+                  {tCheckout("payment_methods.cash_description")}
                 </p>
               </div>
             </div>
