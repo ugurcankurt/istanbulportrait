@@ -169,6 +169,17 @@ export function trackPurchase(
         },
       ],
     });
+
+    const googleAdsId = (window as any).__GOOGLE_ADS_ID__;
+    const googleAdsLabel = (window as any).__GOOGLE_ADS_LABEL__;
+    if (googleAdsId && googleAdsLabel) {
+      window.gtag("event", "conversion", {
+        send_to: `${googleAdsId}/${googleAdsLabel}`,
+        value: value,
+        currency: currency,
+        transaction_id: transactionId,
+      });
+    }
   }
 
   // Track Facebook Purchase (client-side)
@@ -480,6 +491,16 @@ export function trackLead(
         },
       ],
     });
+
+    const googleAdsId = (window as any).__GOOGLE_ADS_ID__;
+    const googleAdsLabel = (window as any).__GOOGLE_ADS_LABEL__;
+    if (googleAdsId && googleAdsLabel) {
+      window.gtag("event", "conversion", {
+        send_to: `${googleAdsId}/${googleAdsLabel}`,
+        value: value || 0,
+        currency: currency,
+      });
+    }
   }
 
   // Facebook Pixel — Lead

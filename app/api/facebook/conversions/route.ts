@@ -272,23 +272,20 @@ export async function POST(request: NextRequest) {
 // Health check endpoint for Facebook Conversions API
 export async function GET() {
   try {
-    // Check if required environment variables are set
-    const requiredEnvVars = [
-      "FACEBOOK_ACCESS_TOKEN",
-      "FACEBOOK_DATASET_ID",
-      "NEXT_PUBLIC_FACEBOOK_PIXEL_ID",
-    ];
+    const { settingsService } = await import("@/lib/settings-service");
+    const settings = await settingsService.getSettings();
 
-    const missingVars = requiredEnvVars.filter(
-      (varName) => !process.env[varName],
-    );
+    const missingVars = [];
+    if (!settings.facebook_access_token) missingVars.push("facebook_access_token");
+    if (!settings.facebook_dataset_id) missingVars.push("facebook_dataset_id");
+    if (!settings.facebook_pixel_id) missingVars.push("facebook_pixel_id");
 
     if (missingVars.length > 0) {
       return NextResponse.json(
         {
           status: "error",
           message: "Facebook Conversions API not properly configured",
-          missing_environment_variables: missingVars,
+          missing_settings: missingVars,
         },
         { status: 500 },
       );
@@ -297,9 +294,9 @@ export async function GET() {
     return NextResponse.json({
       status: "healthy",
       message: "Facebook Conversions API endpoint is ready",
-      pixel_id: process.env.NEXT_PUBLIC_FACEBOOK_PIXEL_ID,
-      dataset_configured: !!process.env.FACEBOOK_DATASET_ID,
-      access_token_configured: !!process.env.FACEBOOK_ACCESS_TOKEN,
+      pixel_id: settings.facebook_pixel_id,
+      dataset_configured: !!settings.facebook_dataset_id,
+      access_token_configured: !!settings.facebook_access_token,
     });
   } catch (error) {
     return NextResponse.json(

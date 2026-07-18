@@ -23,10 +23,10 @@ const MultilingualCookieConsent = dynamic(() =>
   { ssr: false }
 );
 
-export function DeferredAnalytics({ gaId, clarityId, userId }: { gaId?: string | null, clarityId?: string | null, userId?: string | null }) {
+export function DeferredAnalytics({ gaId, clarityId, userId, googleAdsId }: { gaId?: string | null, clarityId?: string | null, userId?: string | null, googleAdsId?: string | null }) {
   return (
     <>
-      {gaId && <GoogleAnalytics gaId={gaId} userId={userId} />}
+      {gaId && <GoogleAnalytics gaId={gaId} userId={userId} googleAdsId={googleAdsId} />}
       {clarityId && <MicrosoftClarity clarityId={clarityId} />}
     </>
   );

@@ -204,8 +204,18 @@ export default async function LocaleLayout({
 
                     {/* Non-critical Analytics — deferred until first interaction to minimize main-thread work */}
                     <InteractionLoader>
+                      <Script
+                        id="google-ads-config"
+                        strategy="afterInteractive"
+                        dangerouslySetInnerHTML={{
+                          __html: `
+                            window.__GOOGLE_ADS_ID__ = "${settings.google_ads_id || ''}";
+                            window.__GOOGLE_ADS_LABEL__ = "${settings.google_ads_webhook_key || ''}";
+                          `
+                        }}
+                      />
                       <FacebookPixel pixelId={settings.facebook_pixel_id} />
-                      <DeferredAnalytics gaId={settings.google_analytics_id} clarityId={settings.clarity_project_id} userId={user?.id} />
+                      <DeferredAnalytics gaId={settings.google_analytics_id} clarityId={settings.clarity_project_id} userId={user?.id} googleAdsId={settings.google_ads_id} />
                       <ConsentGate consent="accepted_all">
                         <YandexMetrica id={settings.yandex_metrica_id || undefined} />
                       </ConsentGate>
