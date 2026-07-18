@@ -45,12 +45,32 @@ export function FacebookPixel({ pixelId }: { pixelId?: string | null }) {
       const userData = getUserDataForAdvancedMatching();
       let hashed: Record<string, string> = {};
 
-      if (userData && !advancedMatchingSentRef.current && !window._fbqAdvancedMatchingSent) {
-        if (userData.email) hashed.em = await hashCustomerData(userData.email);
-        if (userData.phone) hashed.ph = await hashPhoneNumber(userData.phone);
-        if (userData.firstName) hashed.fn = await hashCustomerData(userData.firstName);
-        if (userData.lastName) hashed.ln = await hashCustomerData(userData.lastName);
-        if (userData.country) hashed.country = await hashCustomerData(userData.country);
+      // Check URL for advanced matching parameters passed from email campaigns
+      let updatedUserData = { ...userData };
+      let hasUrlUserData = false;
+      
+      const urlEm = searchParams.get("em");
+      const urlPh = searchParams.get("ph");
+      const urlFn = searchParams.get("fn");
+      const urlLn = searchParams.get("ln");
+      
+      if (urlEm) { updatedUserData.email = urlEm; hasUrlUserData = true; }
+      if (urlPh) { updatedUserData.phone = urlPh; hasUrlUserData = true; }
+      if (urlFn) { updatedUserData.firstName = urlFn; hasUrlUserData = true; }
+      if (urlLn) { updatedUserData.lastName = urlLn; hasUrlUserData = true; }
+      
+      if (hasUrlUserData) {
+        import("@/lib/analytics").then(({ saveUserDataForAdvancedMatching }) => {
+          saveUserDataForAdvancedMatching(updatedUserData);
+        });
+      }
+
+      if (updatedUserData && !advancedMatchingSentRef.current && !window._fbqAdvancedMatchingSent) {
+        if (updatedUserData.email) hashed.em = await hashCustomerData(updatedUserData.email);
+        if (updatedUserData.phone) hashed.ph = await hashPhoneNumber(updatedUserData.phone);
+        if (updatedUserData.firstName) hashed.fn = await hashCustomerData(updatedUserData.firstName);
+        if (updatedUserData.lastName) hashed.ln = await hashCustomerData(updatedUserData.lastName);
+        if (updatedUserData.country) hashed.country = await hashCustomerData(updatedUserData.country);
 
         if (Object.keys(hashed).length > 0) {
           window.fbq("init", pixelId, hashed);
@@ -70,6 +90,20 @@ export function FacebookPixel({ pixelId }: { pixelId?: string | null }) {
 
       window.fbq("track", "PageView");
     };
+
+    // Ensure _fbc and _fbp cookies exist before firing events
+    if (typeof window !== "undefined") {
+      const fbclid = searchParams.get("fbclid");
+      if (fbclid && !document.cookie.includes("_fbc=")) {
+        const fbc = `fb.1.${Date.now()}.${fbclid}`;
+        document.cookie = `_fbc=${fbc}; path=/; max-age=7776000; SameSite=Lax`;
+      }
+
+      if (!document.cookie.includes("_fbp=")) {
+        const fbp = `fb.1.${Date.now()}.${Math.floor(Math.random() * 10000000000)}`;
+        document.cookie = `_fbp=${fbp}; path=/; max-age=7776000; SameSite=Lax`;
+      }
+    }
 
     handlePixel();
   }, [pathname, searchParams, pixelId]);

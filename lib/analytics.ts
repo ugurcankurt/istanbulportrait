@@ -215,8 +215,8 @@ export function trackPurchase(
         country: resolvedUserData?.country,
         custom_data: { content_name: packageName, currency: currency },
         event_source_url: window.location.href,
-        fbc: getCookie("_fbc"),
-        fbp: getCookie("_fbp"),
+        fbc: getCookie("_fbc") || (typeof window !== "undefined" && new URLSearchParams(window.location.search).get("fbclid") ? `fb.1.${Date.now()}.${new URLSearchParams(window.location.search).get("fbclid")}` : undefined),
+        fbp: getCookie("_fbp") || `fb.1.${Date.now()}.${Math.floor(Math.random() * 10000000000)}`,
       }),
     }).catch(() => { });
   }
@@ -308,8 +308,8 @@ export function trackViewItem(
         gender: userData?.gender,
         custom_data: { content_name: itemName, currency: currency },
         event_source_url: window.location.href,
-        fbc: getCookie("_fbc"),
-        fbp: getCookie("_fbp"),
+        fbc: getCookie("_fbc") || (typeof window !== "undefined" && new URLSearchParams(window.location.search).get("fbclid") ? `fb.1.${Date.now()}.${new URLSearchParams(window.location.search).get("fbclid")}` : undefined),
+        fbp: getCookie("_fbp") || `fb.1.${Date.now()}.${Math.floor(Math.random() * 10000000000)}`,
       }),
     }).catch(() => { });
   }
@@ -372,8 +372,8 @@ export function trackBeginCheckout(
           content_name: packageName,
         },
         event_source_url: window.location.href,
-        fbc: getCookie("_fbc"),
-        fbp: getCookie("_fbp"),
+        fbc: getCookie("_fbc") || (typeof window !== "undefined" && new URLSearchParams(window.location.search).get("fbclid") ? `fb.1.${Date.now()}.${new URLSearchParams(window.location.search).get("fbclid")}` : undefined),
+        fbp: getCookie("_fbp") || `fb.1.${Date.now()}.${Math.floor(Math.random() * 10000000000)}`,
       }),
     }).catch(() => {
       // Non-blocking — pixel already fired above
@@ -445,8 +445,8 @@ export function trackAddPaymentInfo(
         last_name: userData?.lastName,
         custom_data: { content_name: packageName, payment_type: paymentType, currency: currency },
         event_source_url: window.location.href,
-        fbc: getCookie("_fbc"),
-        fbp: getCookie("_fbp"),
+        fbc: getCookie("_fbc") || (typeof window !== "undefined" && new URLSearchParams(window.location.search).get("fbclid") ? `fb.1.${Date.now()}.${new URLSearchParams(window.location.search).get("fbclid")}` : undefined),
+        fbp: getCookie("_fbp") || `fb.1.${Date.now()}.${Math.floor(Math.random() * 10000000000)}`,
       }),
     }).catch(() => { });
   }
@@ -533,8 +533,8 @@ export function trackLead(
         last_name: userData?.lastName,
         custom_data: { content_name: packageName, currency: currency },
         event_source_url: window.location.href,
-        fbc: getCookie("_fbc"),
-        fbp: getCookie("_fbp"),
+        fbc: getCookie("_fbc") || (typeof window !== "undefined" && new URLSearchParams(window.location.search).get("fbclid") ? `fb.1.${Date.now()}.${new URLSearchParams(window.location.search).get("fbclid")}` : undefined),
+        fbp: getCookie("_fbp") || `fb.1.${Date.now()}.${Math.floor(Math.random() * 10000000000)}`,
       }),
     }).catch(() => { });
   }
@@ -568,6 +568,8 @@ export function trackSchedule(
         content_name: packageName,
         content_category: "Photography Session",
         content_type: "product",
+        value: 0,
+        currency: "EUR",
       },
       resolvedEventId ? { eventID: resolvedEventId } : undefined,
     );
@@ -583,6 +585,7 @@ export function trackSchedule(
         event_name: "Schedule",
         event_id: resolvedEventId,
         package_id: packageId,
+        amount: 0,
         customer_email: userData?.email,
         customer_phone: userData?.phone,
         first_name: userData?.firstName,
@@ -591,10 +594,11 @@ export function trackSchedule(
           content_name: packageName,
           scheduled_date: scheduledDate,
           content_type: "product",
+          currency: "EUR",
         },
         event_source_url: window.location.href,
-        fbc: getCookie("_fbc"),
-        fbp: getCookie("_fbp"),
+        fbc: getCookie("_fbc") || (typeof window !== "undefined" && new URLSearchParams(window.location.search).get("fbclid") ? `fb.1.${Date.now()}.${new URLSearchParams(window.location.search).get("fbclid")}` : undefined),
+        fbp: getCookie("_fbp") || `fb.1.${Date.now()}.${Math.floor(Math.random() * 10000000000)}`,
       }),
     }).catch(() => { });
   }
@@ -611,6 +615,8 @@ export function trackContact(method: string) {
       {
         content_name: method,
         content_category: "Photography Inquiry",
+        value: 0,
+        currency: "EUR",
       },
       eventId ? { eventID: eventId } : undefined,
     );
@@ -622,7 +628,6 @@ export function trackContact(method: string) {
       event_category: "Engagement",
       event_label: method,
     });
-
   }
 
   // Facebook CAPI — Contact
@@ -635,14 +640,15 @@ export function trackContact(method: string) {
         event_name: "Contact",
         event_id: eventId,
         package_id: "general",
+        amount: 0,
         customer_email: userData?.email,
         customer_phone: userData?.phone,
         first_name: userData?.firstName,
         last_name: userData?.lastName,
-        custom_data: { contact_method: method },
+        custom_data: { contact_method: method, currency: "EUR" },
         event_source_url: window.location.href,
-        fbc: getCookie("_fbc"),
-        fbp: getCookie("_fbp"),
+        fbc: getCookie("_fbc") || (typeof window !== "undefined" && new URLSearchParams(window.location.search).get("fbclid") ? `fb.1.${Date.now()}.${new URLSearchParams(window.location.search).get("fbclid")}` : undefined),
+        fbp: getCookie("_fbp") || `fb.1.${Date.now()}.${Math.floor(Math.random() * 10000000000)}`,
       }),
     }).catch(() => { });
   }
@@ -747,6 +753,7 @@ export function trackPackageAddToCart(
 
   // Facebook CAPI — AddToCart
   if (typeof window !== "undefined") {
+    const userData = getUserDataForAdvancedMatching();
     fetch("/api/facebook/conversions", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -755,10 +762,20 @@ export function trackPackageAddToCart(
         event_id: resolvedEventId,
         package_id: packageId,
         amount: value,
+        customer_email: userData?.email,
+        customer_phone: userData?.phone,
+        first_name: userData?.firstName,
+        last_name: userData?.lastName,
+        city: userData?.city,
+        state: userData?.state,
+        zip: userData?.zip,
+        country: userData?.country,
+        dob: userData?.dob,
+        gender: userData?.gender,
         custom_data: { content_name: packageName, currency: currency },
         event_source_url: window.location.href,
-        fbc: getCookie("_fbc"),
-        fbp: getCookie("_fbp"),
+        fbc: getCookie("_fbc") || (typeof window !== "undefined" && new URLSearchParams(window.location.search).get("fbclid") ? `fb.1.${Date.now()}.${new URLSearchParams(window.location.search).get("fbclid")}` : undefined),
+        fbp: getCookie("_fbp") || `fb.1.${Date.now()}.${Math.floor(Math.random() * 10000000000)}`,
       }),
     }).catch(() => { });
   }
@@ -824,8 +841,8 @@ export function trackPrintViewItem(
         amount: price,
         custom_data: { content_name: name, content_category: category, currency: currency },
         event_source_url: window.location.href,
-        fbc: getCookie("_fbc"),
-        fbp: getCookie("_fbp"),
+        fbc: getCookie("_fbc") || (typeof window !== "undefined" && new URLSearchParams(window.location.search).get("fbclid") ? `fb.1.${Date.now()}.${new URLSearchParams(window.location.search).get("fbclid")}` : undefined),
+        fbp: getCookie("_fbp") || `fb.1.${Date.now()}.${Math.floor(Math.random() * 10000000000)}`,
       }),
     }).catch(() => { });
   }
@@ -879,6 +896,7 @@ export function trackPrintAddToCart(
 
   // Facebook CAPI — AddToCart
   if (typeof window !== "undefined") {
+    const userData = getUserDataForAdvancedMatching();
     fetch("/api/facebook/conversions", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -887,10 +905,20 @@ export function trackPrintAddToCart(
         event_id: resolvedEventId,
         package_id: sku,
         amount: price,
+        customer_email: userData?.email,
+        customer_phone: userData?.phone,
+        first_name: userData?.firstName,
+        last_name: userData?.lastName,
+        city: userData?.city,
+        state: userData?.state,
+        zip: userData?.zip,
+        country: userData?.country,
+        dob: userData?.dob,
+        gender: userData?.gender,
         custom_data: { content_name: name, content_category: category, currency: currency },
         event_source_url: window.location.href,
-        fbc: getCookie("_fbc"),
-        fbp: getCookie("_fbp"),
+        fbc: getCookie("_fbc") || (typeof window !== "undefined" && new URLSearchParams(window.location.search).get("fbclid") ? `fb.1.${Date.now()}.${new URLSearchParams(window.location.search).get("fbclid")}` : undefined),
+        fbp: getCookie("_fbp") || `fb.1.${Date.now()}.${Math.floor(Math.random() * 10000000000)}`,
       }),
     }).catch(() => { });
   }
@@ -960,8 +988,8 @@ export function trackPrintBeginCheckout(
           num_items: items.reduce((acc, curr) => acc + curr.quantity, 0),
         },
         event_source_url: window.location.href,
-        fbc: getCookie("_fbc"),
-        fbp: getCookie("_fbp"),
+        fbc: getCookie("_fbc") || (typeof window !== "undefined" && new URLSearchParams(window.location.search).get("fbclid") ? `fb.1.${Date.now()}.${new URLSearchParams(window.location.search).get("fbclid")}` : undefined),
+        fbp: getCookie("_fbp") || `fb.1.${Date.now()}.${Math.floor(Math.random() * 10000000000)}`,
       }),
     }).catch(() => { });
   }
