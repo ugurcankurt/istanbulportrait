@@ -99,7 +99,7 @@ Return ONLY a minified JSON object matching this exact structure, with no markdo
 `;
 
     // Connect to Google Gemini REST API
-    const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
+    const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
 
     const response = await fetch(geminiUrl, {
       method: "POST",
@@ -132,7 +132,7 @@ Return ONLY a minified JSON object matching this exact structure, with no markdo
 
     let parsedBlogContent = {};
     try {
-      parsedBlogContent = JSON.parse(textOutput);
+      parsedBlogContent = JSON.parse(textOutput.replace(/```(?:json)?/gi, "").trim());
     } catch (e) {
       console.error("Failed to parse Gemini JSON:", textOutput);
       return NextResponse.json({ error: "AI returned invalid JSON" }, { status: 500 });

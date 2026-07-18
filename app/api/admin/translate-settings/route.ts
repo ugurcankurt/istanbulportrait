@@ -59,7 +59,7 @@ Provide accurate, professional, context-aware translations suitable for a photog
 `;
 
     // Connect to Google Gemini REST API
-    const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
+    const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
     
     const response = await fetch(geminiUrl, {
       method: "POST",
@@ -88,7 +88,7 @@ Provide accurate, professional, context-aware translations suitable for a photog
 
     let parsedTranslations = {};
     try {
-      parsedTranslations = JSON.parse(textOutput);
+      parsedTranslations = JSON.parse(textOutput.replace(/```(?:json)?/gi, "").trim());
     } catch (e) {
       console.error("Failed to parse Gemini JSON:", textOutput);
       return NextResponse.json({ error: "AI returned invalid JSON" }, { status: 500 });
