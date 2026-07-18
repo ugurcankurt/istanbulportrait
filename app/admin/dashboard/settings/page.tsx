@@ -626,7 +626,7 @@ export default function SettingsPage() {
         <Card className="lg:col-span-2">
           <CardHeader>
             <CardTitle>Other Integrations</CardTitle>
-            <CardDescription>Prodigi Print API, Featurable, Google Ads.</CardDescription>
+            <CardDescription>Featurable, Google Ads.</CardDescription>
           </CardHeader>
           <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6">
 
@@ -644,23 +644,6 @@ export default function SettingsPage() {
                 value={settings.featurable_widget_id || ""}
                 onChange={(e) => updateSetting("featurable_widget_id", e.target.value)}
                 placeholder="ce9..."
-              />
-            </div>
-            <div className="space-y-2">
-              <Label>Prodigi API URL</Label>
-              <Input
-                value={settings.prodigi_api_url || ""}
-                onChange={(e) => updateSetting("prodigi_api_url", e.target.value)}
-                placeholder="https://api.sandbox.prodigi.com"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label>Prodigi API Key</Label>
-              <Input
-                type="password"
-                value={settings.prodigi_api_key || ""}
-                onChange={(e) => updateSetting("prodigi_api_key", e.target.value)}
-                placeholder="test_..."
               />
             </div>
 
