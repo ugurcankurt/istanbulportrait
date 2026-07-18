@@ -18,9 +18,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { Metadata } from "next";
 import { SchemaInjector } from "@/components/schema-injector";
 import { buildOrganizationSchema, constructOpenGraph, getBaseUrl, optimizeSeoImage } from "@/lib/seo-utils";
-import { getEURtoTRYRate } from "@/lib/currency";
 import { CurrencyProvider } from "@/contexts/currency-context";
-
 const WhatsAppButton = dynamic(() =>
   import("@/components/whatsapp-button").then((mod) => mod.WhatsAppButton),
 );
@@ -139,7 +137,20 @@ export default async function LocaleLayout({
   const dynamicNavData = await pagesContentService.getDynamicCoreNavData(locale);
   const { settingsService } = await import("@/lib/settings-service");
   const settings = await settingsService.getSettings();
-  const tryRate = await getEURtoTRYRate();
+  
+  const { getRatesForBase } = await import("@/lib/currency");
+  const rates = await getRatesForBase("EUR");
+  
+  const { cookies } = await import("next/headers");
+  const cookieStore = await cookies();
+  let selectedCurrency = cookieStore.get("NEXT_CURRENCY")?.value;
+
+  if (!selectedCurrency) {
+    selectedCurrency = locale === "tr" ? "TRY" : "EUR";
+  }
+
+  const currentRate = selectedCurrency === "EUR" ? 1 : (rates[selectedCurrency] || 1);
+
   const { getServerUser } = await import("@/lib/auth-server");
   const user = await getServerUser();
 
@@ -196,7 +207,7 @@ export default async function LocaleLayout({
         >
           <ConsentProvider>
             <NextIntlClientProvider messages={messages}>
-              <CurrencyProvider rate={tryRate}>
+              <CurrencyProvider rate={currentRate} currency={selectedCurrency}>
                 <TooltipProvider>
                   <div className="flex min-h-[100dvh] flex-col">
                     <Navigation dynamicNavData={dynamicNavData} settings={settings} />

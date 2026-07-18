@@ -59,7 +59,7 @@ export const getRatesForBase = cache(
 
       // Final fallback: identity or common defaults
       return base.toUpperCase() === "EUR"
-        ? { TRY: 36.5, GBP: 0.84, USD: 1.05 }
+        ? { TRY: 37.0, GBP: 0.84, USD: 1.05, AED: 3.85, SEK: 11.50, CNY: 7.60, RUB: 105.0 }
         : { [base]: 1.0 };
     }
   },

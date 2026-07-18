@@ -170,14 +170,14 @@ export function Navigation({ dynamicNavData = {}, settings }: NavigationProps) {
           {/* Theme Toggle */}
           <ThemeToggle />
 
-          {/* Language Switcher Modal */}
+          {/* Language & Currency Switcher Modal */}
           <Dialog open={isLangOpen} onOpenChange={setIsLangOpen}>
             <DialogTrigger
               className={cn(
                 buttonVariants({ variant: "ghost", size: "sm" }),
                 "h-9 px-3 hover:bg-muted/50 hover:scale-105 active:scale-95 transition-all duration-200 gap-2 border border-transparent hover:border-border/50",
               )}
-              aria-label="Change language"
+              aria-label="Change language or currency"
             >
               <span className="text-lg leading-none">
                 {locales.find((l) => l.code === locale)?.flag || (
@@ -185,41 +185,83 @@ export function Navigation({ dynamicNavData = {}, settings }: NavigationProps) {
                 )}
               </span>
               <span className="text-xs font-medium uppercase hidden sm:inline-block">
-                {locale}
+                {locale} / {typeof document !== 'undefined' ? (document.cookie.replace(/(?:(?:^|.*;\s*)NEXT_CURRENCY\s*\=\s*([^;]*).*$)|^.*$/, "$1") || "EUR") : "EUR"}
               </span>
-              <span className="sr-only">Change language</span>
+              <span className="sr-only">Change settings</span>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-md">
+            <DialogContent className="sm:max-w-md max-h-[90vh] overflow-y-auto">
               <DialogHeader>
                 <DialogTitle className="text-center sm:text-left flex items-center gap-2">
                   <Globe className="h-4 w-4" />
-                  {t("selectLanguage") || "Select Language"}
+                  Language & Currency
                 </DialogTitle>
                 <DialogDescription className="text-center sm:text-left">
-                  {t("selectLanguageDescription") ||
-                    "Choose your preferred language to explore Istanbul Portrait."}
+                  Choose your preferred language and currency to explore Istanbul Portrait.
                 </DialogDescription>
               </DialogHeader>
-              <div className="grid grid-cols-2 gap-2 pt-4">
-                {locales.map((loc) => (
-                  <Button
-                    key={loc.code}
-                    variant={locale === loc.code ? "default" : "outline"}
-                    className={cn(
-                      "justify-start gap-3 h-12 px-4 transition-all duration-200",
-                      locale === loc.code
-                        ? "bg-primary shadow-md hover:bg-primary/90"
-                        : "hover:bg-muted/50 hover:scale-[1.02] active:scale-[0.98]",
-                    )}
-                    onClick={() => {
-                      handleLocaleChange(loc.code);
-                      setIsLangOpen(false);
-                    }}
-                  >
-                    <span className="text-xl leading-none">{loc.flag}</span>
-                    <span className="font-medium">{loc.name}</span>
-                  </Button>
-                ))}
+              
+              <div className="space-y-6 pt-4">
+                <div>
+                  <h4 className="text-sm font-semibold mb-3 text-muted-foreground uppercase tracking-wider">Language</h4>
+                  <div className="grid grid-cols-2 gap-2">
+                    {locales.map((loc) => (
+                      <Button
+                        key={loc.code}
+                        variant={locale === loc.code ? "default" : "outline"}
+                        className={cn(
+                          "justify-start gap-3 h-12 px-4 transition-all duration-200",
+                          locale === loc.code
+                            ? "bg-primary shadow-md hover:bg-primary/90"
+                            : "hover:bg-muted/50 hover:scale-[1.02] active:scale-[0.98]",
+                        )}
+                        onClick={() => {
+                          handleLocaleChange(loc.code);
+                          setIsLangOpen(false);
+                        }}
+                      >
+                        <span className="text-xl leading-none">{loc.flag}</span>
+                        <span className="font-medium">{loc.name}</span>
+                      </Button>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="border-t pt-4">
+                  <h4 className="text-sm font-semibold mb-3 text-muted-foreground uppercase tracking-wider">Currency</h4>
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                    {[
+                      { code: "EUR", symbol: "€" },
+                      { code: "USD", symbol: "$" },
+                      { code: "GBP", symbol: "£" },
+                      { code: "TRY", symbol: "₺" },
+                      { code: "AED", symbol: "د.إ" },
+                      { code: "SEK", symbol: "kr" },
+                      { code: "CNY", symbol: "¥" },
+                      { code: "RUB", symbol: "₽" },
+                    ].map((curr) => {
+                      const currentCurrency = typeof document !== 'undefined' ? (document.cookie.replace(/(?:(?:^|.*;\s*)NEXT_CURRENCY\s*\=\s*([^;]*).*$)|^.*$/, "$1") || "EUR") : "EUR";
+                      return (
+                        <Button
+                          key={curr.code}
+                          variant={currentCurrency === curr.code ? "default" : "outline"}
+                          className={cn(
+                            "h-12 transition-all duration-200",
+                            currentCurrency === curr.code
+                              ? "bg-primary shadow-md hover:bg-primary/90"
+                              : "hover:bg-muted/50 hover:scale-[1.02] active:scale-[0.98]",
+                          )}
+                          onClick={() => {
+                            document.cookie = `NEXT_CURRENCY=${curr.code}; path=/; max-age=31536000`;
+                            window.location.reload();
+                          }}
+                        >
+                          <span className="font-medium">{curr.code}</span>
+                          <span className="ml-1 text-muted-foreground/70 text-xs">({curr.symbol})</span>
+                        </Button>
+                      );
+                    })}
+                  </div>
+                </div>
               </div>
             </DialogContent>
           </Dialog>

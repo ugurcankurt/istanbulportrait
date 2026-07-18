@@ -11,7 +11,7 @@ interface CurrencyContextType {
 }
 
 const CurrencyContext = createContext<CurrencyContextType>({
-  rate: 36.5,
+  rate: 1,
   formatPrice: (amountEUR: number) => `€${amountEUR}`,
   currency: "EUR",
   convertPrice: (amountEUR: number) => amountEUR,
@@ -20,40 +20,39 @@ const CurrencyContext = createContext<CurrencyContextType>({
 export function CurrencyProvider({
   children,
   rate,
+  currency = "EUR",
 }: {
   children: React.ReactNode;
   rate: number;
+  currency?: string;
 }) {
   const locale = useLocale();
 
-  const currency = locale === "tr" ? "TRY" : "EUR";
-
   const convertPrice = (amountEUR: number) => {
-    if (locale === "tr") {
+    if (currency !== "EUR") {
       return Math.round(amountEUR * rate);
     }
     return amountEUR;
   };
 
   const formatPrice = (amountEUR: number, forceEur: boolean = false) => {
-    if (!forceEur && locale === "tr") {
-      // Clean integer rounding for TRY conversions as requested
-      const amountTRY = Math.round(amountEUR * rate);
-      return new Intl.NumberFormat("tr-TR", {
+    if (forceEur) {
+      return new Intl.NumberFormat(locale === "tr" ? "tr-TR" : "en-US", {
         style: "currency",
-        currency: "TRY",
+        currency: "EUR",
         minimumFractionDigits: 0,
-        maximumFractionDigits: 0,
-      }).format(amountTRY);
+        maximumFractionDigits: 2,
+      }).format(amountEUR);
     }
+
+    const amountConverted = currency === "EUR" ? amountEUR : Math.round(amountEUR * rate);
     
-    // Default formatting for EUR (or English / forced contexts)
-    return new Intl.NumberFormat(locale === "tr" ? "de-DE" : "en-US", {
+    return new Intl.NumberFormat(locale === "tr" ? "tr-TR" : "en-US", {
       style: "currency",
-      currency: "EUR",
-      minimumFractionDigits: 0, // Keep clean numbers unless decimals exist
-      maximumFractionDigits: 2,
-    }).format(amountEUR);
+      currency: currency,
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    }).format(amountConverted);
   };
 
   return (
