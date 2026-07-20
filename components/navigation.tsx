@@ -98,10 +98,10 @@ export function Navigation({ dynamicNavData = {}, settings }: NavigationProps) {
   }
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className="sticky top-0 z-50 w-full border-b border-white/10 dark:border-white/5 bg-background/40 backdrop-blur-2xl shadow-sm supports-[backdrop-filter]:bg-background/40">
       <div className="container mx-auto flex h-14 sm:h-16 items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Logo */}
-        <Link href={`/${locale}`} className="relative flex items-center w-36 h-10 sm:w-48 sm:h-12 transition-transform hover:opacity-90">
+        <Link href={`/${locale}`} prefetch={true} className="relative flex items-center w-36 h-10 sm:w-48 sm:h-12 transition-transform hover:opacity-90">
           {settings?.logo_url ? (
             <Image
               src={settings.logo_url}
@@ -138,6 +138,7 @@ export function Navigation({ dynamicNavData = {}, settings }: NavigationProps) {
             >
               <Link
                 href={item.href as any}
+                prefetch={true}
                 className={cn(
                   "relative transition-all duration-200 hover:text-foreground/80 hover:scale-110",
                   isLinkActive(item.href as string)
@@ -158,6 +159,7 @@ export function Navigation({ dynamicNavData = {}, settings }: NavigationProps) {
           {/* Customer Portal Login */}
           <Link 
             href={`/${locale}/account/login`} 
+            prefetch={true}
             aria-label="Customer Portal" 
             className={cn(
               buttonVariants({ variant: "ghost", size: "sm" }), 

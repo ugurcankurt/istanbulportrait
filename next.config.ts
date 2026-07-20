@@ -56,6 +56,7 @@ const nextConfig: NextConfig = {
     qualities: [50, 70, 75],
   },
   experimental: {
+    viewTransition: true,
     optimizePackageImports: [
       "lucide-react",
       "@radix-ui/react-icons",

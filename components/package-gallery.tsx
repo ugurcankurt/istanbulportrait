@@ -31,6 +31,7 @@ interface PackageGalleryProps {
   onBack?: () => void;
   isFavorite?: boolean;
   videoUrl?: string | null;
+  packageSlug?: string;
 }
 
 const VideoPlayer = ({ url, fit = "cover" }: { url: string; fit?: "cover" | "contain" }) => {
@@ -125,6 +126,7 @@ export function PackageGallery({
   onBack,
   isFavorite,
   videoUrl,
+  packageSlug,
 }: PackageGalleryProps) {
   const t = useTranslations("ui");
   const [selectedIndex, setSelectedIndex] = React.useState(0);
@@ -193,6 +195,7 @@ export function PackageGallery({
                   alt={`${alt} - Photo ${index + 1}`}
                   fill
                   className="object-cover"
+                  style={{ viewTransitionName: packageSlug && index === 0 ? `package-cover-${packageSlug}` : undefined }}
                   sizes="100vw"
                   priority={!videoUrl && index === 0}
                 />
@@ -297,6 +300,7 @@ export function PackageGallery({
                 alt={alt}
                 fill
                 className="object-cover hover:brightness-90 transition-all duration-700 hover:scale-105"
+                style={{ viewTransitionName: packageSlug ? `package-cover-${packageSlug}` : undefined }}
                 sizes="(max-width: 1024px) 50vw, (max-width: 1536px) 50vw, 800px"
                 priority
               />

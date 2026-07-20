@@ -127,9 +127,9 @@ export function AboutSection({
 
             <div className="pt-2 sm:pt-4">
               <Button nativeButton={false}
-                render={<Link href={"/packages" as any} />}
+                render={<Link href={"/packages" as any} prefetch={true} />}
                 size="sm"
-                className="sm:size-lg text-xs sm:text-sm"
+                className="sm:size-lg text-xs sm:text-sm active:scale-[0.98] transition-transform shadow-md"
               >
                 {tui("view_my_work")}
               </Button>
@@ -141,7 +141,7 @@ export function AboutSection({
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 mx-auto mb-12 sm:mb-16 lg:mb-20">
           {stats.map((stat, i) => (
             <div key={`stat-${stat.label}-${i}`} className="group">
-              <Card className="text-center p-6 sm:p-8 lg:p-10 rounded-[2rem] border-[0.5px] border-border/50 shadow-sm transition-all duration-500 hover:shadow-md hover:border-primary/30 bg-background">
+              <Card className="text-center p-6 sm:p-8 lg:p-10 rounded-[2rem] border border-white/20 dark:border-white/10 shadow-lg transition-all duration-500 hover:shadow-xl hover:border-primary/30 bg-background/40 backdrop-blur-2xl">
                 <CardContent className="p-0">
                   <div className="w-14 h-14 sm:w-16 sm:h-16 mx-auto mb-4 sm:mb-6 rounded-[1.5rem] bg-primary/5 border-[0.5px] border-primary/20 shadow-sm flex items-center justify-center transition-transform duration-500 group-hover:scale-110">
                     <stat.icon className="w-6 h-6 sm:w-7 sm:h-7 lg:w-8 lg:h-8 text-primary" />
@@ -165,7 +165,7 @@ export function AboutSection({
           <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
             {highlights.map((highlight, i) => (
               <div key={`highlight-${highlight.title}-${i}`} className="group">
-                <Card className="text-center p-6 sm:p-8 rounded-[2rem] border-[0.5px] border-border/50 shadow-sm transition-all duration-500 hover:shadow-md hover:border-primary/30 bg-background h-full flex flex-col justify-center">
+                <Card className="text-center p-6 sm:p-8 rounded-[2rem] border border-white/20 dark:border-white/10 shadow-lg transition-all duration-500 hover:shadow-xl hover:border-primary/30 bg-background/40 backdrop-blur-2xl h-full flex flex-col justify-center">
                   <CardContent className="p-0 flex flex-col items-center flex-1">
                     <div className="w-12 h-12 sm:w-14 sm:h-14 mx-auto mb-4 sm:mb-6 rounded-2xl bg-primary/5 border-[0.5px] border-primary/20 shadow-sm flex items-center justify-center transition-transform duration-500 group-hover:scale-110">
                       <highlight.icon className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
@@ -189,17 +189,17 @@ export function AboutSection({
             {ctaHeader}
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
               <Button nativeButton={false}
-                render={<Link href={"/locations" as any} />}
+                render={<Link href={"/locations" as any} prefetch={true} />}
                 size="lg"
-                className="h-12 px-8 rounded-xl font-bold"
+                className="h-12 px-8 rounded-xl font-bold active:scale-[0.98] transition-transform shadow-lg"
               >
                 {tui("check_locations")}
               </Button>
               <Button nativeButton={false}
-                render={<Link href={"/packages" as any} />}
+                render={<Link href={"/packages" as any} prefetch={true} />}
                 variant="outline"
                 size="lg"
-                className="h-12 px-8 rounded-xl font-bold bg-background/50 border-border/50"
+                className="h-12 px-8 rounded-xl font-bold bg-background/50 border-white/20 dark:border-white/10 active:scale-[0.98] transition-transform shadow-lg backdrop-blur-md"
               >
                 {tui("view_packages")}
               </Button>

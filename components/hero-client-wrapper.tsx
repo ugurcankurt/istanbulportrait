@@ -58,21 +58,21 @@ export function HeroClientWrapper({
         <div className="flex flex-row flex-wrap justify-start items-center gap-4 w-full mb-8">
           <Button nativeButton={false}
             render={
-              <Link href={"/packages" as any} className="flex items-center justify-center gap-2">
+              <Link href={"/packages" as any} prefetch={true} className="flex items-center justify-center gap-2">
                 {packagesButtonText}
                 <ArrowRight className="w-4 h-4" />
               </Link>
             }
             size="lg"
-            className="w-auto min-w-[160px] h-14 px-8 rounded-full font-bold text-base shadow-lg hover:scale-105 transition-transform bg-white text-slate-900 border-none hover:bg-slate-100"
+            className="w-auto min-w-[160px] h-14 px-8 rounded-full font-bold text-base shadow-lg transition-transform active:scale-[0.98] hover:scale-105 bg-white text-slate-900 border-none hover:bg-slate-100"
             onClick={() => trackEvent("cta_click", "Hero", "View Packages")}
           />
 
           <Button nativeButton={false}
-            render={<Link href={"/locations" as any}>{checkLocationsButtonText}</Link>}
+            render={<Link href={"/locations" as any} prefetch={true}>{checkLocationsButtonText}</Link>}
             variant="outline"
             size="lg"
-            className="w-auto min-w-[160px] h-14 px-8 rounded-full border-[0.5px] border-white/40 bg-white/5 backdrop-blur-sm hover:bg-white/10 text-white font-semibold transition-all hover:scale-105"
+            className="w-auto min-w-[160px] h-14 px-8 rounded-full border-[0.5px] border-white/40 bg-white/5 backdrop-blur-sm hover:bg-white/10 text-white font-semibold transition-all active:scale-[0.98] hover:scale-105"
             onClick={() => trackEvent("cta_click", "Hero", "Check Locations")}
           />
         </div>

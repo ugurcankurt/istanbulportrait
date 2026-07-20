@@ -250,6 +250,7 @@ export function PackageDetails({ packageData, aggregateRating, reviews, activeDi
           <div className="lg:col-span-8 space-y-8">
             {/* Gallery (Responsive: Mobile carousel, Desktop 1+4 grid) */}
             <PackageGallery
+              packageSlug={packageData.slug}
               images={gallery}
               alt={packageName}
               onShare={handleShare}

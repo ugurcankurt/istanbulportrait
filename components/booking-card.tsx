@@ -202,8 +202,8 @@ export function BookingCard({
 
   return (
     <Card className={cn(
-      "overflow-hidden bg-card p-0 transition-all duration-700",
-      isFlat ? "border-none shadow-none" : "shadow-luxury rounded-3xl border-[0.5px] border-border/50 bg-background/50 backdrop-blur-sm"
+      "overflow-hidden bg-card p-0 transition-all duration-700 relative",
+      isFlat ? "border-none shadow-none" : "shadow-[0_8px_40px_-12px_rgba(0,0,0,0.1)] rounded-3xl border border-white/20 dark:border-white/10 bg-background/40 backdrop-blur-3xl"
     )}>
       <CardContent className={cn("space-y-4", isInsideModal ? "p-4 pt-2" : "p-6")}>
         <div className="space-y-4">
@@ -496,7 +496,7 @@ export function BookingCard({
           <Button
             variant="default"
             size="lg"
-            className="w-full h-11 font-black"
+            className="w-full h-11 font-black shadow-lg transition-transform active:scale-[0.98]"
             onClick={handleCheckAvailability}
             disabled={!selectedDate || !selectedTime}
           >
@@ -516,7 +516,7 @@ export function BookingCard({
             </Button>
             <Button
               variant="default"
-              className="w-full h-12 font-bold shadow-sm"
+              className="w-full h-12 font-bold shadow-lg transition-transform active:scale-[0.98]"
               onClick={onCheckAvailability}
             >
               {tCheckout("buttons.continue")}

@@ -20,7 +20,7 @@ export function ContactSection({ settings }: { settings?: any } = {}) {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 mx-auto">
           {/* Contact Information */}
           <div className="group">
-            <Card className="h-full flex flex-col rounded-[2rem] border-[0.5px] border-border/50 bg-background transition-all duration-500 shadow-sm hover:shadow-md">
+            <Card className="h-full flex flex-col rounded-[2rem] border border-white/20 dark:border-white/10 bg-background/40 backdrop-blur-3xl transition-all duration-500 shadow-xl hover:shadow-2xl">
               <CardHeader className="px-8 lg:px-12 pt-8 lg:pt-12 pb-6">
                 <CardTitle className="text-3xl sm:text-4xl font-serif text-center lg:text-left text-foreground leading-tight">
                   {tui("contact_information")}
@@ -114,7 +114,7 @@ export function ContactSection({ settings }: { settings?: any } = {}) {
 
           {/* Dynamic Map Embed */}
           <div className="group h-full min-h-[350px] lg:min-h-full">
-            <Card className="h-full w-full rounded-[2rem] border-[0.5px] border-border/50 bg-background shadow-sm overflow-hidden flex p-0 hover:shadow-md transition-all duration-500">
+            <Card className="h-full w-full rounded-[2rem] border border-white/20 dark:border-white/10 bg-background/40 backdrop-blur-3xl shadow-xl overflow-hidden flex p-0 hover:shadow-2xl transition-all duration-500">
               <iframe
                 src={mapUrl}
                 width="100%"

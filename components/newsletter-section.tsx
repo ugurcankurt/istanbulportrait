@@ -55,7 +55,7 @@ export function NewsletterSection() {
   return (
     <section className="relative py-16 sm:py-24">
       <div className="container relative z-10 px-4 max-w-5xl mx-auto">
-        <Card className="relative overflow-hidden border-border bg-card/50 backdrop-blur-sm shadow-sm">
+        <Card className="relative overflow-hidden border border-white/20 dark:border-white/10 bg-background/40 backdrop-blur-3xl shadow-xl">
           {/* Subtle glowing accents */}
           <div className="absolute top-0 right-0 -mr-24 -mt-24 w-72 h-72 bg-primary/5 blur-[120px] rounded-full pointer-events-none" />
           <div className="absolute bottom-0 left-0 -ml-24 -mb-24 w-72 h-72 bg-primary/5 blur-[120px] rounded-full pointer-events-none" />
@@ -123,7 +123,7 @@ export function NewsletterSection() {
                     <Button
                       type="submit"
                       size="lg"
-                      className="h-14 rounded-xl px-8 font-semibold shrink-0 sm:w-auto w-full shadow-sm"
+                      className="h-14 rounded-xl px-8 font-semibold shrink-0 sm:w-auto w-full shadow-lg active:scale-[0.98] transition-transform"
                       disabled={isLoading}
                     >
                       {isLoading ? (

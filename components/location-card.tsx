@@ -31,9 +31,10 @@ export function LocationCard({ location, index, parentSlug }: LocationCardProps)
     <div className="h-full cursor-pointer">
       <Link
         href={baseHref}
+        prefetch={true}
         className="block group h-full"
       >
-        <Card className="overflow-hidden h-full transition-all duration-300 hover:shadow-lg border-border/50 bg-card/80 backdrop-blur-sm py-0 gap-0">
+        <Card className="overflow-hidden h-full transition-all duration-300 hover:shadow-xl shadow-lg border border-white/20 dark:border-white/10 bg-background/40 backdrop-blur-3xl py-0 gap-0">
           {/* Image Container - More compact aspect ratio */}
           <div className="relative aspect-[16/10] sm:aspect-[4/3] overflow-hidden">
             {location.cover_image && (
@@ -42,6 +43,7 @@ export function LocationCard({ location, index, parentSlug }: LocationCardProps)
                 alt={dynamicTitle}
                 fill
                 className="object-cover object-center transition-transform duration-500 hover:scale-110"
+                style={{ viewTransitionName: `location-cover-${dynamicSlug}` }}
                 sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
                 priority={index < 4}
                 quality={75}

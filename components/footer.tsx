@@ -108,6 +108,7 @@ export function Footer({ dynamicNavData = {}, settings }: FooterProps) {
                 <li key={link.href}>
                   <Link
                     href={link.href}
+                    prefetch={true}
                     className="text-muted-foreground hover:text-foreground transition-colors text-sm"
                   >
                     {link.label}

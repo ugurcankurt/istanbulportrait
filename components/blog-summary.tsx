@@ -11,7 +11,7 @@ export function BlogSummary({ summary }: BlogSummaryProps) {
   if (!summary) return null;
 
   return (
-    <div className="my-8 rounded-4xl border bg-primary/5 p-6 relative overflow-hidden">
+    <div className="my-8 rounded-4xl border border-white/10 dark:border-white/5 shadow-md bg-primary/5 backdrop-blur-md p-6 relative overflow-hidden">
       {/* Decorative background element */}
       <div className="absolute -top-6 -right-6 w-24 h-24 bg-primary/10 rounded-full blur-2xl" />
 

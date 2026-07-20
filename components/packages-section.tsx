@@ -115,6 +115,7 @@ export function PackagesSection({ header, customCtaHeader, aggregateRating, dbPa
     >
       <Link
         href={`/${locale}/${parentSlug || "packages"}/${pkg.id}`}
+        prefetch={true}
         className="block h-full group"
       >
         <Card
@@ -130,6 +131,7 @@ export function PackagesSection({ header, customCtaHeader, aggregateRating, dbPa
               alt={pkg.name}
               fill
               className="object-cover transition-transform duration-700 ease-out group-hover:scale-110"
+              style={{ viewTransitionName: `package-cover-${pkg.dbSlug}` }}
               sizes="(max-width: 639px) 80vw, (max-width: 1023px) 45vw, 22vw"
               quality={60}
             />
