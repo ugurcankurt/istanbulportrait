@@ -12,6 +12,7 @@ import { pagesContentService } from "@/lib/pages-content-service";
 import { discountService } from "@/lib/discount-service";
 import { SchemaInjector } from "@/components/schema-injector";
 import { buildCollectionPageSchema, generateSeoDescription, getBaseUrl } from "@/lib/seo-utils";
+import { generateNativeSlug } from "@/lib/slug-generator";
 export async function PackagesPageContent({
   params,
 }: {
@@ -36,12 +37,16 @@ export async function PackagesPageContent({
     name: dynamicTitle,
     description: generateSeoDescription(dynamicSubtitle),
     url: `${getBaseUrl()}/${locale}/${parentSlug}`,
-    items: dbPackages.map(pkg => ({
-      name: pkg.title?.[locale] || pkg.title?.en || pkg.slug,
-      description: pkg.description?.[locale] || pkg.description?.en ? generateSeoDescription(pkg.description?.[locale] || pkg.description?.en || "") : undefined,
-      url: `${getBaseUrl()}/${locale}/${parentSlug}/${pkg.slug}`,
-      image: pkg.gallery_images?.[0]
-    }))
+    items: dbPackages.map(pkg => {
+      const pkgTitleLoc = pkg.title?.[locale];
+      const pkgSeg = pkgTitleLoc ? (generateNativeSlug(pkgTitleLoc) || pkg.slug) : pkg.slug;
+      return {
+        name: pkg.title?.[locale] || pkg.title?.en || pkg.slug,
+        description: pkg.description?.[locale] || pkg.description?.en ? generateSeoDescription(pkg.description?.[locale] || pkg.description?.en || "") : undefined,
+        url: `${getBaseUrl()}/${locale}/${parentSlug}/${pkgSeg}`,
+        image: pkg.gallery_images?.[0]
+      };
+    })
   });
 
   return (

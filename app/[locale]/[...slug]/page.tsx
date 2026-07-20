@@ -95,15 +95,19 @@ export async function generateMetadata(props: {
       const desc = generateSeoDescription(pkg.description?.[params.locale] || pkg.description?.en);
       const ogImage = (pkg.gallery_images && pkg.gallery_images.length > 0) ? pkg.gallery_images[0] : settings.default_og_image_url || "";
       const currentPSeg = dbPage.title?.[params.locale] ? generateNativeSlug(dbPage.title[params.locale]!) : "packages";
+      const pkgTitleLoc = pkg.title?.[params.locale];
+      const currentPkgSeg = pkgTitleLoc ? (generateNativeSlug(pkgTitleLoc) || pkg.slug) : pkg.slug;
       return {
         title,
         description: desc,
         alternates: {
-          canonical: `${baseUrl}/${params.locale}/${currentPSeg}/${pkg.slug}`,
+          canonical: `${baseUrl}/${params.locale}/${currentPSeg}/${currentPkgSeg}`,
           ...getAlternates((l) => {
             const tTitle = dbPage.title?.[l];
             const tSeg = tTitle ? generateNativeSlug(tTitle) : "packages";
-            return `/${tSeg}/${pkg.slug}`;
+            const tPkgTitle = pkg.title?.[l];
+            const tPkgSeg = tPkgTitle ? (generateNativeSlug(tPkgTitle) || pkg.slug) : pkg.slug;
+            return `/${tSeg}/${tPkgSeg}`;
           }),
         },
         openGraph: constructOpenGraph(title, desc, ogImage, fallbackTitle, params.locale),
@@ -117,15 +121,19 @@ export async function generateMetadata(props: {
       const desc = generateSeoDescription(loc.description?.[params.locale] || loc.description?.en);
       const ogImage = loc.cover_image || (loc.gallery_images && loc.gallery_images.length > 0 ? loc.gallery_images[0] : settings.default_og_image_url || "");
       const currentLSeg = dbPage.title?.[params.locale] ? generateNativeSlug(dbPage.title[params.locale]!) : "locations";
+      const locTitleLoc = loc.title?.[params.locale];
+      const currentLocSeg = locTitleLoc ? (generateNativeSlug(locTitleLoc) || loc.slug) : loc.slug;
       return {
         title,
         description: desc,
         alternates: {
-          canonical: `${baseUrl}/${params.locale}/${currentLSeg}/${loc.slug}`,
+          canonical: `${baseUrl}/${params.locale}/${currentLSeg}/${currentLocSeg}`,
           ...getAlternates((l) => {
             const tTitle = dbPage.title?.[l];
             const tSeg = tTitle ? generateNativeSlug(tTitle) : "locations";
-            return `/${tSeg}/${loc.slug}`;
+            const tLocTitle = loc.title?.[l];
+            const tLocSeg = tLocTitle ? (generateNativeSlug(tLocTitle) || loc.slug) : loc.slug;
+            return `/${tSeg}/${tLocSeg}`;
           }),
         },
         openGraph: constructOpenGraph(title, desc, ogImage, fallbackTitle, params.locale),

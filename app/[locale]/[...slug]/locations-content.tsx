@@ -6,7 +6,10 @@ import { locationsService } from "@/lib/locations-service";
 
 import { pagesContentService } from "@/lib/pages-content-service";
 import { SchemaInjector } from "@/components/schema-injector";
-import { buildCollectionPageSchema, generateSeoDescription, getBaseUrl } from "@/lib/seo-utils";export async function LocationsPageContent({
+import { buildCollectionPageSchema, generateSeoDescription, getBaseUrl } from "@/lib/seo-utils";
+import { generateNativeSlug } from "@/lib/slug-generator";
+
+export async function LocationsPageContent({
   params,
 }: {
   params: { locale: string; slug: string };
@@ -22,12 +25,16 @@ import { buildCollectionPageSchema, generateSeoDescription, getBaseUrl } from "@
     name: dynamicTitle,
     description: generateSeoDescription(dynamicSubtitle),
     url: `${getBaseUrl()}/${locale}/${parentSlug}`,
-    items: dbLocations.map(location => ({
-      name: location.title?.[locale] || location.title?.en || location.slug,
-      description: location.description?.[locale] || location.description?.en ? generateSeoDescription(location.description?.[locale] || location.description?.en || "") : undefined,
-      url: `${getBaseUrl()}/${locale}/${parentSlug}/${location.slug}`,
-      image: location.cover_image || undefined
-    }))
+    items: dbLocations.map(location => {
+      const locTitleLoc = location.title?.[locale];
+      const locSeg = locTitleLoc ? (generateNativeSlug(locTitleLoc) || location.slug) : location.slug;
+      return {
+        name: location.title?.[locale] || location.title?.en || location.slug,
+        description: location.description?.[locale] || location.description?.en ? generateSeoDescription(location.description?.[locale] || location.description?.en || "") : undefined,
+        url: `${getBaseUrl()}/${locale}/${parentSlug}/${locSeg}`,
+        image: location.cover_image || undefined
+      };
+    })
   });
 
   return (

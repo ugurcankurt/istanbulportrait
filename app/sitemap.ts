@@ -85,16 +85,20 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     locales.forEach((locale) => {
       const pTitle = packagesParent?.title?.[locale];
       const pSeg = pTitle ? generateNativeSlug(pTitle) : "packages";
+      const pkgTitleLoc = pkg.title?.[locale];
+      const pkgSeg = pkgTitleLoc ? (generateNativeSlug(pkgTitleLoc) || pkg.slug) : pkg.slug;
 
       sitemapData.push({
-        url: `${baseUrl}/${locale}/${pSeg}/${pkg.slug}`,
+        url: `${baseUrl}/${locale}/${pSeg}/${pkgSeg}`,
         lastModified: new Date(pkg.updated_at || pkg.created_at || new Date()),
         changeFrequency: "weekly",
         priority: 0.9,
         alternates: getAlternates((loc) => {
           const tTitle = packagesParent?.title?.[loc];
           const tSeg = tTitle ? generateNativeSlug(tTitle) : "packages";
-          return `/${tSeg}/${pkg.slug}`;
+          const tPkgTitle = pkg.title?.[loc];
+          const tPkgSeg = tPkgTitle ? (generateNativeSlug(tPkgTitle) || pkg.slug) : pkg.slug;
+          return `/${tSeg}/${tPkgSeg}`;
         }),
         ...((pkg.gallery_images && pkg.gallery_images.length > 0) ? { images: [cleanImage(pkg.gallery_images[0])] } : {}),
       });
@@ -109,16 +113,20 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     locales.forEach((locale) => {
       const pTitle = locationsParent?.title?.[locale];
       const pSeg = pTitle ? generateNativeSlug(pTitle) : "locations";
+      const locTitleLoc = locItem.title?.[locale];
+      const locSeg = locTitleLoc ? (generateNativeSlug(locTitleLoc) || locItem.slug) : locItem.slug;
 
       sitemapData.push({
-        url: `${baseUrl}/${locale}/${pSeg}/${locItem.slug}`,
+        url: `${baseUrl}/${locale}/${pSeg}/${locSeg}`,
         lastModified: new Date(locItem.updated_at || locItem.created_at || new Date()),
         changeFrequency: "weekly",
         priority: 0.7,
         alternates: getAlternates((loc) => {
           const tTitle = locationsParent?.title?.[loc];
           const tSeg = tTitle ? generateNativeSlug(tTitle) : "locations";
-          return `/${tSeg}/${locItem.slug}`;
+          const tLocTitle = locItem.title?.[loc];
+          const tLocSeg = tLocTitle ? (generateNativeSlug(tLocTitle) || locItem.slug) : locItem.slug;
+          return `/${tSeg}/${tLocSeg}`;
         }),
         ...(locItem.cover_image ? { images: [cleanImage(locItem.cover_image)] } : {}),
       });
