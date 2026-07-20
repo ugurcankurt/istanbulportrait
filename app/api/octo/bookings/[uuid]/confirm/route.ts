@@ -43,23 +43,7 @@ export async function POST(
     }
 
     const rawText = await request.text();
-    // HTTP LOGGING
-    await supabaseAdmin.from("bookings").insert({
-      package_id: "LOG_HTTP",
-      status: "cancelled",
-      total_amount: 0,
-      user_name: "LOG_CONFIRM",
-      user_email: "log@log.com",
-      user_phone: "0000000000",
-      booking_time: "00:00",
-      booking_date: "2026-01-01",
-      notes: JSON.stringify({
-        method: "CONFIRM",
-        url: request.url,
-        body: rawText,
-        headers: Object.fromEntries(request.headers)
-      })
-    });
+
     
     let body: any = {};
     try {
