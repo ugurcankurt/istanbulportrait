@@ -134,8 +134,8 @@ export async function POST(request: NextRequest) {
     const rawFbp = bodyFbp || request.cookies.get("_fbp")?.value;
     
     // Validate Meta cookie formats to prevent 'modified fbclid' errors
-    const fbc = rawFbc && /^fb\.[0-9]\.[0-9]{13,}\.[a-zA-Z0-9_=-]+$/.test(rawFbc) ? rawFbc : undefined;
-    const fbp = rawFbp && /^fb\.[0-9]\.[0-9]{13,}\.[0-9]+$/.test(rawFbp) ? rawFbp : undefined;
+    const fbc = rawFbc && /^fb\.[0-9]\.[0-9]{13,}\.[a-zA-Z0-9_=-]+(\.[a-zA-Z0-9_=-]+)?$/.test(rawFbc) ? rawFbc : undefined;
+    const fbp = rawFbp && /^fb\.[0-9]\.[0-9]{13,}\.[0-9]+(\.[a-zA-Z0-9_=-]+)?$/.test(rawFbp) ? rawFbp : undefined;
     
     const clientIpAddress = ip;
 

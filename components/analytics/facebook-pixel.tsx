@@ -100,8 +100,8 @@ export function FacebookPixel({ pixelId }: { pixelId?: string | null }) {
       const fbpMatch = document.cookie.match(/(^| )_fbp=([^;]+)/);
       if (fbpMatch) currentFbp = fbpMatch[2];
 
-      const isValidFbc = currentFbc && /^fb\.[0-9]\.[0-9]{13,}\.[a-zA-Z0-9_=-]+$/.test(currentFbc);
-      const isValidFbp = currentFbp && /^fb\.[0-9]\.[0-9]{13,}\.[0-9]+$/.test(currentFbp);
+      const isValidFbc = currentFbc && /^fb\.[0-9]\.[0-9]{13,}\.[a-zA-Z0-9_=-]+(\.[a-zA-Z0-9_=-]+)?$/.test(currentFbc);
+      const isValidFbp = currentFbp && /^fb\.[0-9]\.[0-9]{13,}\.[0-9]+(\.[a-zA-Z0-9_=-]+)?$/.test(currentFbp);
 
       const fbclid = searchParams.get("fbclid");
       if (fbclid && /^[a-zA-Z0-9_=-]+$/.test(fbclid)) {

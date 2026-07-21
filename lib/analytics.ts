@@ -75,7 +75,7 @@ export function getValidFbc(): string | undefined {
   }
   
   const fbc = getCookie("_fbc");
-  if (fbc && /^fb\.[0-9]\.[0-9]{13,}\.[a-zA-Z0-9_=-]+$/.test(fbc)) {
+  if (fbc && /^fb\.[0-9]\.[0-9]{13,}\.[a-zA-Z0-9_=-]+(\.[a-zA-Z0-9_=-]+)?$/.test(fbc)) {
     return fbc;
   }
   
@@ -86,7 +86,7 @@ export function getValidFbp(): string | undefined {
   if (typeof window === "undefined") return undefined;
   
   const fbp = getCookie("_fbp");
-  if (fbp && /^fb\.[0-9]\.[0-9]{13,}\.[0-9]+$/.test(fbp)) {
+  if (fbp && /^fb\.[0-9]\.[0-9]{13,}\.[0-9]+(\.[a-zA-Z0-9_=-]+)?$/.test(fbp)) {
     return fbp;
   }
   
