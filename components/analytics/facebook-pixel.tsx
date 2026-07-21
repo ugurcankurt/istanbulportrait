@@ -91,15 +91,29 @@ export function FacebookPixel({ pixelId }: { pixelId?: string | null }) {
       window.fbq("track", "PageView");
     };
 
-    // Ensure _fbc and _fbp cookies exist before firing events
+    // Ensure _fbc and _fbp cookies exist and are valid before firing events
     if (typeof window !== "undefined") {
+      let currentFbc: string | null = null;
+      let currentFbp: string | null = null;
+      const fbcMatch = document.cookie.match(/(^| )_fbc=([^;]+)/);
+      if (fbcMatch) currentFbc = fbcMatch[2];
+      const fbpMatch = document.cookie.match(/(^| )_fbp=([^;]+)/);
+      if (fbpMatch) currentFbp = fbpMatch[2];
+
+      const isValidFbc = currentFbc && /^fb\.[0-9]\.[0-9]{13,}\.[a-zA-Z0-9_=-]+$/.test(currentFbc);
+      const isValidFbp = currentFbp && /^fb\.[0-9]\.[0-9]{13,}\.[0-9]+$/.test(currentFbp);
+
       const fbclid = searchParams.get("fbclid");
-      if (fbclid && !document.cookie.includes("_fbc=")) {
+      if (fbclid && /^[a-zA-Z0-9_=-]+$/.test(fbclid)) {
+        // Always update _fbc if fbclid is in URL to ensure it's fresh and correct
         const fbc = `fb.1.${Date.now()}.${fbclid}`;
         document.cookie = `_fbc=${fbc}; path=/; max-age=7776000; SameSite=Lax`;
+      } else if (currentFbc && !isValidFbc) {
+        // Clear corrupted fbc cookie
+        document.cookie = `_fbc=; path=/; max-age=0; SameSite=Lax`;
       }
 
-      if (!document.cookie.includes("_fbp=")) {
+      if (!isValidFbp) {
         const fbp = `fb.1.${Date.now()}.${Math.floor(Math.random() * 10000000000)}`;
         document.cookie = `_fbp=${fbp}; path=/; max-age=7776000; SameSite=Lax`;
       }

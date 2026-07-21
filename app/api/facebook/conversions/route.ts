@@ -130,16 +130,21 @@ export async function POST(request: NextRequest) {
     } = validationResult.data;
 
     // Extract Meta matching parameters directly from cookies
-    const fbc = bodyFbc || request.cookies.get("_fbc")?.value;
-    const fbp = bodyFbp || request.cookies.get("_fbp")?.value;
+    const rawFbc = bodyFbc || request.cookies.get("_fbc")?.value;
+    const rawFbp = bodyFbp || request.cookies.get("_fbp")?.value;
+    
+    // Validate Meta cookie formats to prevent 'modified fbclid' errors
+    const fbc = rawFbc && /^fb\.[0-9]\.[0-9]{13,}\.[a-zA-Z0-9_=-]+$/.test(rawFbc) ? rawFbc : undefined;
+    const fbp = rawFbp && /^fb\.[0-9]\.[0-9]{13,}\.[0-9]+$/.test(rawFbp) ? rawFbp : undefined;
+    
     const clientIpAddress = ip;
 
     // Prepare user data with hashed customer information
     const user_data: FacebookConversionEvent["user_data"] = {
       client_ip_address: clientIpAddress,
       client_user_agent: request.headers.get("user-agent") || undefined,
-      fbc: fbc || undefined,
-      fbp: fbp || undefined,
+      fbc,
+      fbp,
     };
 
     if (customer_email) {

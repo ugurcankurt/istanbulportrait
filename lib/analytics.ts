@@ -57,15 +57,42 @@ export function getUserDataForAdvancedMatching(): AnalyticsUserData | undefined 
 }
 
 /**
- * Reads a cookie value safely from the document
+ * Reads a cookie value safely from the document, handles multiple cookies of same name
  */
 export function getCookie(name: string): string | undefined {
   if (typeof document === "undefined") return undefined;
-  const value = `; ${document.cookie}`;
-  const parts = value.split(`; ${name}=`);
-  if (parts.length === 2) return parts.pop()?.split(';').shift();
+  const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+  if (match) return match[2];
   return undefined;
 }
+
+export function getValidFbc(): string | undefined {
+  if (typeof window === "undefined") return undefined;
+  
+  const fbclid = new URLSearchParams(window.location.search).get("fbclid");
+  if (fbclid && /^[a-zA-Z0-9_=-]+$/.test(fbclid)) {
+    return `fb.1.${Date.now()}.${fbclid}`;
+  }
+  
+  const fbc = getCookie("_fbc");
+  if (fbc && /^fb\.[0-9]\.[0-9]{13,}\.[a-zA-Z0-9_=-]+$/.test(fbc)) {
+    return fbc;
+  }
+  
+  return undefined;
+}
+
+export function getValidFbp(): string | undefined {
+  if (typeof window === "undefined") return undefined;
+  
+  const fbp = getCookie("_fbp");
+  if (fbp && /^fb\.[0-9]\.[0-9]{13,}\.[0-9]+$/.test(fbp)) {
+    return fbp;
+  }
+  
+  return `fb.1.${Date.now()}.${Math.floor(Math.random() * 10000000000)}`;
+}
+
 
 // Google Analytics event tracking //
 export function trackEvent(
@@ -215,8 +242,8 @@ export function trackPurchase(
         country: resolvedUserData?.country,
         custom_data: { content_name: packageName, currency: currency },
         event_source_url: window.location.href,
-        fbc: getCookie("_fbc") || (typeof window !== "undefined" && new URLSearchParams(window.location.search).get("fbclid") ? `fb.1.${Date.now()}.${new URLSearchParams(window.location.search).get("fbclid")}` : undefined),
-        fbp: getCookie("_fbp") || `fb.1.${Date.now()}.${Math.floor(Math.random() * 10000000000)}`,
+        fbc: getValidFbc(),
+        fbp: getValidFbp(),
       }),
     }).catch(() => { });
   }
