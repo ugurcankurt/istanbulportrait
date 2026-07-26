@@ -144,11 +144,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       
       for (const bp of blogPosts) {
         const postTranslations = translations?.filter((t: any) => t.post_id === bp.id) || [];
-        const enSlug = postTranslations.find((t: any) => t.locale === "en")?.slug;
-        if (!enSlug) continue; // Skip if no default translation exists
+        const fallbackSlug = postTranslations.find((t: any) => t.slug)?.slug;
+        if (!fallbackSlug) continue; // Skip if no translation exists
 
         locales.forEach((locale) => {
-          const tSlug = postTranslations.find((t: any) => t.locale === locale)?.slug || enSlug;
+          const tSlug = postTranslations.find((t: any) => t.locale === locale)?.slug || fallbackSlug;
           const pTitle = blogParent?.title?.[locale];
           const pSeg = pTitle ? generateNativeSlug(pTitle) : "blog";
 
@@ -160,7 +160,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
             alternates: getAlternates((loc) => {
               const bTitle = blogParent?.title?.[loc];
               const bSeg = bTitle ? generateNativeSlug(bTitle) : "blog";
-              const bSlug = postTranslations.find((t: any) => t.locale === loc)?.slug || enSlug;
+              const bSlug = postTranslations.find((t: any) => t.locale === loc)?.slug || fallbackSlug;
               return `/${bSeg}/${bSlug}`;
             }),
             ...(bp.featured_image ? { images: [cleanImage(bp.featured_image)] } : {}),

@@ -20,7 +20,7 @@ export async function POST(req: Request) {
     const apiKey = settings.gemini_api_key;
     
     if (!apiKey) {
-      console.warn("Gemini API Key is not configured for intent resolution.");
+      console.warn("Groq API Key is not configured for intent resolution.");
       return NextResponse.json({ slug: null });
     }
 
@@ -64,29 +64,32 @@ OR
 {"slug": null}
 `;
 
-        const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${key}`;
+        const groqUrl = `https://api.groq.com/openai/v1/chat/completions`;
         
-        const response = await fetch(geminiUrl, {
+        const response = await fetch(groqUrl, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            "Authorization": `Bearer ${key}`
           },
           body: JSON.stringify({
-            contents: [{ parts: [{ text: prompt }] }],
-            generationConfig: {
-              temperature: 0.1,
-              responseMimeType: "application/json",
-            }
+            model: "llama-3.1-8b-instant",
+            messages: [
+              { role: "system", content: "You are a JSON translation API. Return ONLY valid JSON." },
+              { role: "user", content: prompt }
+            ],
+            response_format: { type: "json_object" },
+            temperature: 0.1,
           })
         });
 
         if (!response.ok) {
-          console.error("Gemini Intent API Error:", await response.text());
+          console.error("Groq Intent API Error:", await response.text());
           return null;
         }
 
         const data = await response.json();
-        const textOutput = data.candidates?.[0]?.content?.parts?.[0]?.text;
+        const textOutput = data.choices?.[0]?.message?.content;
 
         if (!textOutput) return null;
 
@@ -94,7 +97,7 @@ OR
           const parsedResult = JSON.parse(textOutput);
           return parsedResult.slug || null;
         } catch (e) {
-          console.error("Failed to parse Gemini JSON for intent:", textOutput);
+          console.error("Failed to parse Groq JSON for intent:", textOutput);
           return null;
         }
       },

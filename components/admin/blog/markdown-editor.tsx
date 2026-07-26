@@ -3,7 +3,6 @@
 import dynamic from "next/dynamic";
 import { useCallback, useMemo, useRef } from "react";
 import { toast } from "sonner";
-import { Button } from "@/components/ui/button";
 
 // Import styles
 import "easymde/dist/easymde.min.css";
@@ -31,6 +30,7 @@ export function MarkdownEditor({
 }: MarkdownEditorProps) {
   // Hidden file input ref
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const editorInstanceRef = useRef<any>(null);
 
   // Custom image upload handler
   const handleImageUpload = useCallback(
@@ -81,23 +81,14 @@ export function MarkdownEditor({
           data: { publicUrl },
         } = supabase.storage.from("blog-images").getPublicUrl(fileName);
 
-        // Insert markdown at cursor (would be better to access instance, but simple replacement works for now)
-        // Getting the instance is tricky with the dynamic import wrapper, so we append or inform user
-        // Ideally we'd use the instance.codemirror.replaceSelection
-
-        // Since we don't have easy access to the editor instance here to insert at cursor position
-        // without more complex wiring, we'll append to the end or just copy to clipboard?
-        // Better approach: Customize the toolbar action to just trigger the click, and relies on
-        // how SimpleMDE exposes the codemirror instance.
-        // Actually, standard SimpleMDE `image` button behavior is prompt. We want to override.
-        // Let's rely on `onChange` to append for now, or use a workaround.
-
-        // OPTION 2: Insert into content.
-        // If we can't get cursor easily, just append or alert.
-        // Let's try to append for now.
-
         const imageMarkdown = `\n![${file.name.split(".")[0]}](${publicUrl})\n`;
-        onChange(value + imageMarkdown);
+        
+        if (editorInstanceRef.current) {
+          const cm = editorInstanceRef.current.codemirror;
+          cm.replaceSelection(imageMarkdown);
+        } else {
+          onChange((value || "") + imageMarkdown);
+        }
 
         toast.dismiss(toastId);
         toast.success("Image uploaded and appended to content!");
@@ -131,14 +122,10 @@ export function MarkdownEditor({
         {
           name: "custom-image",
           action: (editor: any) => {
+            // Store editor instance to insert at cursor later
+            editorInstanceRef.current = editor;
             // Trigger file input click
             fileInputRef.current?.click();
-
-            // Hacky way to inject into the specific editor instance later
-            // We store the current editor instance in a ref if needed, or just append
-            // For a robust solution, we would need to capture the editor instance.
-            // But `onChange` prop update should re-render the editor with new value.
-            // EasyMDE handles external value updates well.
           },
           className: "fa fa-picture-o",
           title: "Upload Image",
@@ -155,6 +142,7 @@ export function MarkdownEditor({
 
   return (
     <div className="prose-editor-wrapper">
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
       <SimpleMDE
         value={value}
         onChange={onChange}

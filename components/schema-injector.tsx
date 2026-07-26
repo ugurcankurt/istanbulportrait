@@ -1,5 +1,5 @@
-import Script from "next/script";
 import { useId } from "react";
+import Script from "next/script";
 
 interface SchemaInjectorProps {
   schema: any;
@@ -20,7 +20,6 @@ export function SchemaInjector({ schema, id }: SchemaInjectorProps) {
     <Script
       id={uniqueId}
       type="application/ld+json"
-      strategy="beforeInteractive" // Ensure it's available early
       dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
     />
   );

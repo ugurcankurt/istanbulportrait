@@ -11,19 +11,24 @@ import { BlogPageContent } from "./blog-content";
 import { LocationDetailPageContent } from "./location-detail-content";
 import { PackageDetailPageContent } from "./package-detail-content";
 import { BlogDetailPageContent } from "./blog-detail-content";
+import { BlogCategoryContent } from "./blog-category-content";
 
-import { getTranslations } from "next-intl/server";
 import { Metadata } from "next";
-import { generateSeoDescription, generateSeoTitle, constructOpenGraph } from "@/lib/seo-utils";
+import { generateSeoDescription, generateSeoTitle, constructOpenGraph, getBaseUrl, optimizeSeoImage } from "@/lib/seo-utils";
 import { packagesService } from "@/lib/packages-service";
 import { locationsService } from "@/lib/locations-service";
+import { getBlogCategoryBySlug, getBlogPostBySlug, getBlogTagBySlug } from "@/lib/blog/blog-service";
 
-export async function generateMetadata(props: { 
+export async function generateMetadata(props: {
   params: Promise<{ locale: string; slug: string[] }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }): Promise<Metadata> {
   const params = await props.params;
+  const searchParams = await props.searchParams;
+  const pageParam = searchParams?.page;
+  const pageQuery = pageParam ? `?page=${pageParam}` : "";
   const { routing } = await import("@/i18n/routing");
-  
+
   if (!routing.locales.includes(params.locale as any)) {
     return { title: "Not Found" };
   }
@@ -60,7 +65,7 @@ export async function generateMetadata(props: {
     const title = generateSeoTitle(dbPage.title?.[params.locale] || dbPage.title?.en, params.locale, fallbackTitle);
     const desc = generateSeoDescription(dbPage.subtitle?.[params.locale] || dbPage.subtitle?.en) || "";
     let ogImage = dbPage.cover_image || settings.default_og_image_url || "";
-    
+
     // If it's the packages page and no cover image is explicitly defined, fallback to the first active package's image
     if (dbPage.slug === "packages" && !dbPage.cover_image) {
       const activePackages = await packagesService.getActivePackages();
@@ -74,129 +79,200 @@ export async function generateMetadata(props: {
       title,
       description: desc,
       alternates: {
-        canonical: `${baseUrl}/${params.locale}/${currentSeg}`,
+        canonical: `${baseUrl}/${params.locale}/${currentSeg}${pageQuery}`,
         ...getAlternates((loc) => {
           const tLoc = dbPage.title?.[loc];
-          return `/${tLoc ? generateNativeSlug(tLoc) : dbPage.slug}`;
+          return `/${tLoc ? generateNativeSlug(tLoc) : dbPage.slug}${pageQuery}`;
         }),
       },
       openGraph: constructOpenGraph(title, desc, ogImage, fallbackTitle, params.locale),
+      twitter: {
+        card: "summary_large_image",
+        title,
+        description: desc,
+        images: ogImage ? [optimizeSeoImage(ogImage, 1200)] : [],
+      },
     };
   }
 
-  // Level 2: Nested Content Pages (e.g. /packages/solo-portrait, /locations/galata)
+  // Level 3: Deep nested pages (e.g. /blog/category/fotografcilik)
+  if (slugArray.length === 3 && dbPage?.slug === "blog") {
+    const type = slugArray[1]; // category or tag
+    const childSlug = slugArray[2];
+
+    let dynamicTitle = "";
+    let dynamicDesc = "";
+
+    if (type === "category") {
+      const category = await getBlogCategoryBySlug(childSlug, params.locale as any);
+      if (category) {
+        dynamicTitle = category.translation?.name || category.slug;
+        dynamicDesc = category.translation?.description || "";
+      }
+    } else if (type === "tag") {
+      const tag = await getBlogTagBySlug(childSlug, params.locale as any);
+      if (tag) {
+        dynamicTitle = tag.translation?.name || tag.slug;
+      }
+    } else {
+      return { title: "Not Found" };
+    }
+
+    const title = generateSeoTitle(dynamicTitle, params.locale, fallbackTitle);
+    const desc = generateSeoDescription(dynamicDesc);
+
+    return {
+      title,
+      description: desc,
+      alternates: {
+        canonical: `${baseUrl}/${params.locale}/${dbPage.slug}/${type}/${childSlug}${pageQuery}`,
+        ...getAlternates((loc) => {
+          const tLoc = dbPage.title?.[loc];
+          const bSeg = tLoc ? generateNativeSlug(tLoc) : dbPage.slug;
+          return `/${bSeg}/${type}/${childSlug}${pageQuery}`;
+        }),
+      },
+      openGraph: constructOpenGraph(title, desc, settings.default_og_image_url || "", fallbackTitle, params.locale),
+      twitter: {
+        card: "summary_large_image",
+        title,
+        description: desc,
+        images: settings.default_og_image_url ? [optimizeSeoImage(settings.default_og_image_url, 1200)] : [],
+      },
+    };
+  }
+
+  // Level 2: Detail pages
   if (slugArray.length === 2) {
     const childSlug = slugArray[1];
+    let dynamicTitle = fallbackTitle;
+    let dynamicDesc = "";
+    let ogImage = settings.default_og_image_url || "";
+    let publishedTime: string | undefined;
+    let modifiedTime: string | undefined;
+    let authors: string[] | undefined;
+    let keywords: string[] = [];
+
+    // Default alternate resolver fallback
+    let getAlternatesFn = (loc: string) => {
+      const tLoc = dbPage.title?.[loc];
+      return `/${tLoc ? generateNativeSlug(tLoc) : dbPage.slug}/${childSlug}`;
+    };
 
     if (dbPage.slug === "packages") {
       const pkg = await packagesService.getPackageBySlug(childSlug);
       if (!pkg) return { title: "Package Not Found" };
-      const title = generateSeoTitle(pkg.title?.[params.locale] || pkg.title?.en, params.locale, fallbackTitle);
-      const desc = generateSeoDescription(pkg.description?.[params.locale] || pkg.description?.en);
-      const ogImage = (pkg.gallery_images && pkg.gallery_images.length > 0) ? pkg.gallery_images[0] : settings.default_og_image_url || "";
-      const currentPSeg = dbPage.title?.[params.locale] ? generateNativeSlug(dbPage.title[params.locale]!) : "packages";
-      const pkgTitleLoc = pkg.title?.[params.locale];
-      const currentPkgSeg = pkgTitleLoc ? (generateNativeSlug(pkgTitleLoc) || pkg.slug) : pkg.slug;
-      return {
-        title,
-        description: desc,
-        alternates: {
-          canonical: `${baseUrl}/${params.locale}/${currentPSeg}/${currentPkgSeg}`,
-          ...getAlternates((l) => {
-            const tTitle = dbPage.title?.[l];
-            const tSeg = tTitle ? generateNativeSlug(tTitle) : "packages";
-            const tPkgTitle = pkg.title?.[l];
-            const tPkgSeg = tPkgTitle ? (generateNativeSlug(tPkgTitle) || pkg.slug) : pkg.slug;
-            return `/${tSeg}/${tPkgSeg}`;
-          }),
-        },
-        openGraph: constructOpenGraph(title, desc, ogImage, fallbackTitle, params.locale),
+      dynamicTitle = pkg.title?.[params.locale] || pkg.title?.en || "";
+      dynamicDesc = pkg.description?.[params.locale] || pkg.description?.en || "";
+      ogImage = (pkg.gallery_images && pkg.gallery_images.length > 0) ? pkg.gallery_images[0] : ogImage;
+      keywords = (pkg as any).meta_keywords || [];
+      getAlternatesFn = (loc: string) => {
+        const pTitle = dbPage.title?.[loc];
+        const pSeg = pTitle ? generateNativeSlug(pTitle) : "packages";
+        const pkgTitle = pkg.title?.[loc];
+        const pkgSeg = pkgTitle ? (generateNativeSlug(pkgTitle) || pkg.slug) : pkg.slug;
+        return `/${pSeg}/${pkgSeg}`;
       };
-    }
-
-    if (dbPage.slug === "locations") {
-      const loc = await locationsService.getLocationBySlug(childSlug);
-      if (!loc) return { title: "Location Not Found" };
-      const title = generateSeoTitle(loc.title?.[params.locale] || loc.title?.en, params.locale, fallbackTitle);
-      const desc = generateSeoDescription(loc.description?.[params.locale] || loc.description?.en);
-      const ogImage = loc.cover_image || (loc.gallery_images && loc.gallery_images.length > 0 ? loc.gallery_images[0] : settings.default_og_image_url || "");
-      const currentLSeg = dbPage.title?.[params.locale] ? generateNativeSlug(dbPage.title[params.locale]!) : "locations";
-      const locTitleLoc = loc.title?.[params.locale];
-      const currentLocSeg = locTitleLoc ? (generateNativeSlug(locTitleLoc) || loc.slug) : loc.slug;
-      return {
-        title,
-        description: desc,
-        alternates: {
-          canonical: `${baseUrl}/${params.locale}/${currentLSeg}/${currentLocSeg}`,
-          ...getAlternates((l) => {
-            const tTitle = dbPage.title?.[l];
-            const tSeg = tTitle ? generateNativeSlug(tTitle) : "locations";
-            const tLocTitle = loc.title?.[l];
-            const tLocSeg = tLocTitle ? (generateNativeSlug(tLocTitle) || loc.slug) : loc.slug;
-            return `/${tSeg}/${tLocSeg}`;
-          }),
-        },
-        openGraph: constructOpenGraph(title, desc, ogImage, fallbackTitle, params.locale),
+    } else if (dbPage.slug === "locations") {
+      const locItem = await locationsService.getLocationBySlug(childSlug);
+      if (!locItem) return { title: "Location Not Found" };
+      dynamicTitle = locItem.title?.[params.locale] || locItem.title?.en || "";
+      dynamicDesc = locItem.description?.[params.locale] || locItem.description?.en || "";
+      ogImage = locItem.cover_image || (locItem.gallery_images && locItem.gallery_images.length > 0 ? locItem.gallery_images[0] : ogImage);
+      keywords = (locItem as any).meta_keywords || [];
+      getAlternatesFn = (loc: string) => {
+        const pTitle = dbPage.title?.[loc];
+        const pSeg = pTitle ? generateNativeSlug(pTitle) : "locations";
+        const locTitle = locItem.title?.[loc];
+        const locSeg = locTitle ? (generateNativeSlug(locTitle) || locItem.slug) : locItem.slug;
+        return `/${pSeg}/${locSeg}`;
       };
-    }
-
-    if (dbPage.slug === "blog") {
+    } else if (dbPage.slug === "blog") {
       const { getBlogPostBySlug, getBlogPostByIdWithAllTranslations } = await import("@/lib/blog/blog-service");
-      const decodedChildSlug = decodeURIComponent(childSlug);
-      const post = await getBlogPostBySlug(decodedChildSlug, params.locale as any);
-      if (!post || post.status !== "published") return { title: "Blog Post Not Found" };
-
-      const title = generateSeoTitle(post.translation.title, params.locale, fallbackTitle);
-      const desc = generateSeoDescription(post.translation.excerpt || post.translation.content);
-      const ogImage = post.featured_image || settings.default_og_image_url || "";
-
-      // Fetch full translation data for correct URL tracking
-      const fullPost = await getBlogPostByIdWithAllTranslations(post.id);
-      const languages: Record<string, string> = {};
-
-      if (fullPost && fullPost.translations) {
-        const enSlug = fullPost.translations["en"]?.slug || childSlug;
-        routing.locales.forEach((loc) => {
-          const key = loc as keyof typeof fullPost.translations;
-          const tSlug = fullPost.translations[key]?.slug || enSlug;
-          const bTitle = dbPage.title?.[loc];
-          const bSeg = bTitle ? generateNativeSlug(bTitle) : "blog";
-          languages[loc] = `${baseUrl}/${loc}/${bSeg}/${tSlug}`;
-        });
-        const xDefaultSeg = dbPage.title?.["en"] ? generateNativeSlug(dbPage.title["en"]) : "blog";
-        languages["x-default"] = `${baseUrl}/en/${xDefaultSeg}/${enSlug}`;
+      const post = await getBlogPostBySlug(childSlug, params.locale as any);
+      if (post) {
+        dynamicTitle = post.translation.title;
+        dynamicDesc = post.translation.meta_description || post.translation.excerpt || post.translation.content;
+        ogImage = post.featured_image || ogImage;
+        publishedTime = post.published_at || post.created_at;
+        modifiedTime = post.updated_at;
+        keywords = post.translation.meta_keywords || [];
+        if (post.author?.name) {
+          authors = [post.author.name];
+        }
+        const fullPost = await getBlogPostByIdWithAllTranslations(post.id);
+        if (fullPost && fullPost.translations) {
+          getAlternatesFn = (loc: string) => {
+            const pTitle = dbPage.title?.[loc];
+            const pSeg = pTitle ? generateNativeSlug(pTitle) : "blog";
+            const tSlug = (fullPost.translations as any)[loc]?.slug || (fullPost.translations as any).en?.slug || post.translation.slug;
+            return `/${pSeg}/${tSlug}`;
+          };
+        }
+      } else {
+        return { title: "Blog Post Not Found" };
       }
+    }
 
-      const currentSeg = dbPage.title?.[params.locale] ? generateNativeSlug(dbPage.title[params.locale]!) : "blog";
+    const title = generateSeoTitle(dynamicTitle, params.locale, fallbackTitle);
+    const desc = generateSeoDescription(dynamicDesc);
 
-      return {
+    const currentSeg = dbPage.title?.[params.locale] ? generateNativeSlug(dbPage.title[params.locale]!) : dbPage.slug;
+
+    return {
+      title,
+      description: desc,
+      keywords: keywords.length > 0 ? keywords : undefined,
+      alternates: {
+        canonical: `${baseUrl}/${params.locale}${getAlternatesFn(params.locale)}`,
+        ...getAlternates(getAlternatesFn),
+      },
+      openGraph: constructOpenGraph(title, desc, ogImage, fallbackTitle, params.locale, dbPage.slug === "blog" ? {
+        type: "article",
+        publishedTime,
+        modifiedTime,
+        authors,
+        tags: keywords.length > 0 ? keywords : undefined
+      } : {}),
+      twitter: {
+        card: "summary_large_image",
         title,
         description: desc,
-        alternates: {
-          canonical: `${baseUrl}/${params.locale}/${currentSeg}/${post.translation.slug || childSlug}`,
-          languages
-        },
-        openGraph: constructOpenGraph(title, desc, ogImage, fallbackTitle, params.locale),
-      };
-    }
+        images: ogImage ? [optimizeSeoImage(ogImage, 1200)] : [],
+      },
+    };
   }
 
   return { title: fallbackTitle || "Website" };
 }
 
-export default async function GenericCorePage(props: { 
+export default async function GenericCorePage(props: {
   params: Promise<{ locale: string; slug: string[] }>;
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
   const params = await props.params;
   const slugArray = params.slug || [];
 
-  if (slugArray.length > 2) {
-    notFound(); // Max depth supported is 2
-  }
-
   const rootSlug = slugArray[0];
   const dbPage = await pagesContentService.getPageBySlug(rootSlug);
+
+  // Level 3+ Deep nested pages
+  if (slugArray.length > 2) {
+    if (slugArray.length === 3 && dbPage?.slug === "blog") {
+      const type = slugArray[1];
+      if (type === "category" || type === "tag") {
+        return (
+          <BlogCategoryContent 
+            params={props.params as any} 
+            searchParams={props.searchParams as any}
+            type={type as any}
+            slug={slugArray[2]} 
+          />
+        );
+      }
+    }
+    notFound(); // Max depth supported is 3
+  }
 
   if (!dbPage || !dbPage.is_active) {
     notFound();

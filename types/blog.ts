@@ -51,6 +51,8 @@ export interface BlogPostTranslation {
   slug: string;
   excerpt: string | null;
   content: string;
+  meta_description?: string | null;
+  meta_keywords?: string[] | null;
   created_at: string;
   updated_at: string;
 }
@@ -159,6 +161,8 @@ export interface BlogTranslationInput {
   slug?: string;
   excerpt?: string;
   content?: string;
+  meta_description?: string;
+  meta_keywords?: string[];
 }
 
 export interface BlogFormData {

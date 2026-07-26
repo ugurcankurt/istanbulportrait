@@ -1,5 +1,6 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import {
   deleteBlogPost,
   getBlogPostByIdWithAllTranslations,
@@ -134,6 +135,9 @@ export async function PATCH(
           { status: 404 },
         );
       }
+
+      // Revalidate the entire site layout so updated blog data shows immediately on frontend
+      revalidatePath("/", "layout");
 
       // Broadcast removed.
 

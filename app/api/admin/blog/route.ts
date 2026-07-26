@@ -1,5 +1,6 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { createBlogPost, getAllBlogPosts } from "@/lib/blog/blog-service";
 import {
   DatabaseConnectionError,
@@ -117,6 +118,9 @@ export async function POST(request: NextRequest) {
 
     try {
       const post = await createBlogPost(validationResult.data);
+
+      // Revalidate layout to include the new post
+      revalidatePath("/", "layout");
 
       // Broadcast removed.
 

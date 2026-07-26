@@ -53,7 +53,7 @@ const nextConfig: NextConfig = {
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 320, 384, 448, 512],
-    qualities: [50, 70, 75],
+    qualities: [50, 60, 70, 75],
   },
   experimental: {
     viewTransition: true,
@@ -146,15 +146,7 @@ const nextConfig: NextConfig = {
           },
         ],
       },
-      {
-        source: "/_next/static/(.*)",
-        headers: [
-          {
-            key: "Cache-Control",
-            value: "public, max-age=31536000, immutable",
-          },
-        ],
-      },
+
       {
         source: "/(.*)\\.(jpg|jpeg|png|webp|avif|ico|svg)$",
         headers: [

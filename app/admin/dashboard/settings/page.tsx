@@ -433,6 +433,18 @@ export default function SettingsPage() {
                 />
               </div>
               <div className="space-y-2">
+                <Label>OpenRouter API Key (Auto Translate)</Label>
+                <Input
+                  type="password"
+                  value={settings.gemini_api_key || ""}
+                  onChange={(e) => updateSetting("gemini_api_key", e.target.value)}
+                  placeholder="sk-or-v1-..."
+                />
+                <p className="text-xs text-muted-foreground">
+                  Get it from <a href="https://openrouter.ai/keys" target="_blank" className="text-primary hover:underline">OpenRouter</a>
+                </p>
+              </div>
+              <div className="space-y-2">
                 <Label>Resend API Key</Label>
                 <Input
                   type="password"
@@ -442,7 +454,7 @@ export default function SettingsPage() {
                 />
               </div>
               <div className="space-y-2">
-                <Label>Resend Audience ID</Label>
+                <Label>Resend Audience ID (Optional)</Label>
                 <Input
                   value={settings.resend_audience_id || ""}
                   onChange={(e) => updateSetting("resend_audience_id", e.target.value)}
@@ -450,12 +462,12 @@ export default function SettingsPage() {
                 />
               </div>
               <div className="space-y-2 pt-2 border-t mt-4">
-                <Label>Gemini API Key (AI Translations)</Label>
+                <Label>Groq API Key (100% Free System AI)</Label>
                 <Input
                   type="password"
                   value={settings.gemini_api_key || ""}
                   onChange={(e) => updateSetting("gemini_api_key", e.target.value)}
-                  placeholder="AIzaSy..."
+                  placeholder="gsk_..."
                 />
               </div>
             </div>

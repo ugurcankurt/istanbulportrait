@@ -44,7 +44,7 @@ const getTranslatedReviewsBatch = unstable_cache(
       const apiKey = settings.gemini_api_key;
       
       if (!apiKey) {
-        console.warn("No Gemini API key found for review translation.");
+        console.warn("No Groq API key found for review translation.");
         return {};
       }
 
@@ -59,16 +59,15 @@ Reviews to translate:
 ${payloadStr}
 `;
 
-      const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
+    const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=${apiKey}`;
       const response = await fetch(geminiUrl, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify({
           contents: [{ parts: [{ text: prompt }] }],
-          generationConfig: {
-            temperature: 0.1,
-            responseMimeType: "application/json",
-          }
+          generationConfig: { responseMimeType: "application/json" }
         })
       });
 
@@ -149,8 +148,8 @@ class ReviewsService {
           headers: {
             "Content-Type": "application/json",
           },
-          // Cache for 24 hours to stay dynamic while mitigating API limit hits
-          next: { revalidate: 86400, tags: ["reviews"] },
+          // Cache for 7 days to avoid hitting limits and reduce latency on Vercel
+          next: { revalidate: 604800, tags: ["reviews"] },
         },
       );
 

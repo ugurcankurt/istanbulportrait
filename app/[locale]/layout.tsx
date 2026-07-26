@@ -88,9 +88,6 @@ export async function generateMetadata({
       default: title,
     },
     description: desc,
-    alternates: {
-      canonical: "./",
-    },
     robots: {
       index: true,
       follow: true,

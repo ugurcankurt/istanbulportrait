@@ -42,7 +42,7 @@ export async function BlogDetailPageContent({
     <div>
       <SchemaInjector schema={buildArticleSchema({
         title: post.translation.title,
-        description: generateSeoDescription(post.translation.excerpt || post.translation.content),
+        description: generateSeoDescription(post.translation.meta_description || post.translation.excerpt || post.translation.content),
         image: post.featured_image || settings.default_og_image_url || "",
         datePublished: post.published_at || post.created_at,
         dateModified: post.updated_at || post.published_at || post.created_at,
@@ -51,6 +51,7 @@ export async function BlogDetailPageContent({
         publisherName: settings.organization_name || settings.site_name || undefined,
         publisherLogo: settings.logo_url || settings.default_og_image_url || undefined,
         inLanguage: locale,
+        keywords: post.translation.meta_keywords || [],
       })} />
 
       <BreadcrumbNav />

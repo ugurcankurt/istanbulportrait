@@ -188,6 +188,8 @@ export async function getAllBlogPosts(
         slug,
         excerpt,
         content,
+        meta_description,
+        meta_keywords,
         locale
       ),
       categories:blog_post_categories(
@@ -314,6 +316,8 @@ export async function getBlogPostBySlug(
         slug,
         excerpt,
         content,
+        meta_description,
+        meta_keywords,
         locale
       ),
       categories:blog_post_categories(
@@ -525,6 +529,8 @@ export async function getBlogPostByIdWithAllTranslations(
         slug,
         excerpt,
         content,
+        meta_description,
+        meta_keywords,
         created_at,
         updated_at
       ),
@@ -657,6 +663,8 @@ export async function createBlogPost(formData: any): Promise<BlogPost | null> {
       title: translation.title,
       excerpt: translation.excerpt || "",
       content: translation.content,
+      meta_description: translation.meta_description || null,
+      meta_keywords: translation.meta_keywords || [],
     }),
   );
 
@@ -769,6 +777,8 @@ export async function updateBlogPost(
           title: translationData.title,
           excerpt: translationData.excerpt || "",
           content: translationData.content,
+          meta_description: translationData.meta_description || null,
+          meta_keywords: translationData.meta_keywords || [],
           updated_at: new Date().toISOString(),
         }, { onConflict: 'post_id,locale' });
 
@@ -961,6 +971,33 @@ export async function getBlogCategoryById(
 
   if (error) {
     console.error("Error fetching category:", error);
+    return null;
+  }
+
+  return data as unknown as BlogCategoryWithTranslation;
+}
+
+/**
+ * Get category by slug
+ */
+export async function getBlogCategoryBySlug(
+  slug: string,
+  locale: Locale = "en",
+): Promise<BlogCategoryWithTranslation | null> {
+  const { data, error } = await supabaseAdmin
+    .from("blog_categories")
+    .select(
+      `
+      *,
+      translation:blog_category_translations!inner(name, description, locale)
+    `,
+    )
+    .eq("slug", slug)
+    .eq("translation.locale", locale)
+    .maybeSingle();
+
+  if (error) {
+    console.error("Error fetching category by slug:", error);
     return null;
   }
 
@@ -1200,6 +1237,41 @@ export async function getBlogTagById(
 
   if (error) {
     console.error("Error fetching tag:", error);
+    return null;
+  }
+
+  // Transform array to object
+  const tag = {
+    ...data,
+    translation: Array.isArray(data.translation)
+      ? data.translation[0]
+      : data.translation,
+  };
+
+  return tag as BlogTagWithTranslation;
+}
+
+/**
+ * Get tag by slug
+ */
+export async function getBlogTagBySlug(
+  slug: string,
+  locale: Locale = "en",
+): Promise<BlogTagWithTranslation | null> {
+  const { data, error } = await supabaseAdmin
+    .from("blog_tags")
+    .select(
+      `
+      *,
+      translation:blog_tag_translations!inner(name, locale)
+    `,
+    )
+    .eq("slug", slug)
+    .eq("translation.locale", locale)
+    .maybeSingle();
+
+  if (error) {
+    console.error("Error fetching tag by slug:", error);
     return null;
   }
 

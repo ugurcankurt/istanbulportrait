@@ -36,7 +36,7 @@ export async function POST(req: Request) {
     const settings = await settingsService.getSettings();
     const apiKey = settings.gemini_api_key;
     if (!apiKey) {
-      return NextResponse.json({ error: "Gemini API Key is not configured in Site Settings." }, { status: 500 });
+      return NextResponse.json({ error: "Groq API Key is not configured in Site Settings." }, { status: 500 });
     }
 
     const prompt = `
@@ -63,8 +63,8 @@ Respond ONLY with a valid minified JSON object mapping each locale code to the t
 Provide accurate, professional, marketing-friendly translations suitable for a high-end photography business in Istanbul.
 `;
 
-    // Connect to Google Gemini REST API
-    const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+    // Connect to Gemini REST API
+    const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=${apiKey}`;
     
     const response = await fetch(geminiUrl, {
       method: "POST",
@@ -72,13 +72,8 @@ Provide accurate, professional, marketing-friendly translations suitable for a h
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        contents: [{
-          parts: [{ text: prompt }]
-        }],
-        generationConfig: {
-          temperature: 0.2,
-          responseMimeType: "application/json",
-        }
+        contents: [{ parts: [{ text: prompt }] }],
+        generationConfig: { responseMimeType: "application/json" }
       })
     });
 
@@ -99,7 +94,7 @@ Provide accurate, professional, marketing-friendly translations suitable for a h
     try {
       parsedTranslations = JSON.parse(textOutput.replace(/```(?:json)?/gi, "").trim());
     } catch (e) {
-      console.error("Failed to parse Gemini JSON:", textOutput);
+      console.error("Failed to parse Groq JSON:", textOutput);
       return NextResponse.json({ error: "AI returned invalid JSON" }, { status: 500 });
     }
 

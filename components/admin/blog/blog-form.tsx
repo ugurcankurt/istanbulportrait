@@ -72,9 +72,18 @@ export function BlogForm({
   >("en");
   const [isLoadingData, setIsLoadingData] = useState(true);
   const [isTranslating, setIsTranslating] = useState(false);
-  const [isGenerating, setIsGenerating] = useState(false);
-  const [aiPromptOpen, setAiPromptOpen] = useState(false);
-  const [aiTopic, setAiTopic] = useState("");
+  const [keywordsInput, setKeywordsInput] = useState<Record<string, string>>(() => {
+    if (!initialData) return {};
+    const init: Record<string, string> = {};
+    const targetLocales = ["en", "ar", "ru", "es", "zh", "fr", "de", "ro", "tr"];
+    targetLocales.forEach(loc => {
+      const keywords = (initialData as any).translations?.[loc]?.meta_keywords;
+      if (keywords && Array.isArray(keywords)) {
+        init[loc] = keywords.join(", ");
+      }
+    });
+    return init;
+  });
 
   // Fetch categories and tags
   useEffect(() => {
@@ -99,62 +108,17 @@ export function BlogForm({
         featured_image: initialData.featured_image,
         published_at: initialData.published_at,
         is_featured: initialData.is_featured,
-        translations: {
-          en: {
-            slug: (initialData as any).translations?.en?.slug || "",
-            title: (initialData as any).translations?.en?.title || "",
-            excerpt: (initialData as any).translations?.en?.excerpt || "",
-            content: (initialData as any).translations?.en?.content || "",
-          },
-          ar: {
-            slug: (initialData as any).translations?.ar?.slug || "",
-            title: (initialData as any).translations?.ar?.title || "",
-            excerpt: (initialData as any).translations?.ar?.excerpt || "",
-            content: (initialData as any).translations?.ar?.content || "",
-          },
-          ru: {
-            slug: (initialData as any).translations?.ru?.slug || "",
-            title: (initialData as any).translations?.ru?.title || "",
-            excerpt: (initialData as any).translations?.ru?.excerpt || "",
-            content: (initialData as any).translations?.ru?.content || "",
-          },
-          es: {
-            slug: (initialData as any).translations?.es?.slug || "",
-            title: (initialData as any).translations?.es?.title || "",
-            excerpt: (initialData as any).translations?.es?.excerpt || "",
-            content: (initialData as any).translations?.es?.content || "",
-          },
-          zh: {
-            slug: (initialData as any).translations?.zh?.slug || "",
-            title: (initialData as any).translations?.zh?.title || "",
-            excerpt: (initialData as any).translations?.zh?.excerpt || "",
-            content: (initialData as any).translations?.zh?.content || "",
-          },
-          fr: {
-            slug: (initialData as any).translations?.fr?.slug || "",
-            title: (initialData as any).translations?.fr?.title || "",
-            excerpt: (initialData as any).translations?.fr?.excerpt || "",
-            content: (initialData as any).translations?.fr?.content || "",
-          },
-          de: {
-            slug: (initialData as any).translations?.de?.slug || "",
-            title: (initialData as any).translations?.de?.title || "",
-            excerpt: (initialData as any).translations?.de?.excerpt || "",
-            content: (initialData as any).translations?.de?.content || "",
-          },
-          ro: {
-            slug: (initialData as any).translations?.ro?.slug || "",
-            title: (initialData as any).translations?.ro?.title || "",
-            excerpt: (initialData as any).translations?.ro?.excerpt || "",
-            content: (initialData as any).translations?.ro?.content || "",
-          },
-          tr: {
-            slug: (initialData as any).translations?.tr?.slug || "",
-            title: (initialData as any).translations?.tr?.title || "",
-            excerpt: (initialData as any).translations?.tr?.excerpt || "",
-            content: (initialData as any).translations?.tr?.content || "",
-          },
-        },
+        translations: ["en", "ar", "ru", "es", "zh", "fr", "de", "ro", "tr"].reduce((acc, loc) => {
+          acc[loc] = {
+            slug: (initialData as any).translations?.[loc]?.slug || "",
+            title: (initialData as any).translations?.[loc]?.title || "",
+            excerpt: (initialData as any).translations?.[loc]?.excerpt || "",
+            content: (initialData as any).translations?.[loc]?.content || "",
+            meta_description: (initialData as any).translations?.[loc]?.meta_description || "",
+            meta_keywords: (initialData as any).translations?.[loc]?.meta_keywords || [],
+          };
+          return acc;
+        }, {} as any),
         category_ids:
           (initialData as any).categories?.map((c: any) => c.category.id) ||
           [],
@@ -165,17 +129,10 @@ export function BlogForm({
         featured_image: null,
         published_at: null,
         is_featured: false,
-        translations: {
-          en: { slug: "", title: "", excerpt: "", content: "" },
-          ar: { slug: "", title: "", excerpt: "", content: "" },
-          ru: { slug: "", title: "", excerpt: "", content: "" },
-          es: { slug: "", title: "", excerpt: "", content: "" },
-          zh: { slug: "", title: "", excerpt: "", content: "" },
-          fr: { slug: "", title: "", excerpt: "", content: "" },
-          de: { slug: "", title: "", excerpt: "", content: "" },
-          ro: { slug: "", title: "", excerpt: "", content: "" },
-          tr: { slug: "", title: "", excerpt: "", content: "" },
-        },
+        translations: ["en", "ar", "ru", "es", "zh", "fr", "de", "ro", "tr"].reduce((acc, loc) => {
+          acc[loc] = { slug: "", title: "", excerpt: "", content: "", meta_description: "", meta_keywords: [] };
+          return acc;
+        }, {} as any),
         category_ids: [],
         tag_ids: [],
       },
@@ -198,6 +155,8 @@ export function BlogForm({
           title: enState?.title || "",
           excerpt: enState?.excerpt || "",
           content: enState?.content || "",
+          meta_description: enState?.meta_description || "",
+          meta_keywords: enState?.meta_keywords || [],
         }),
       });
 
@@ -216,9 +175,15 @@ export function BlogForm({
                 title: aiTrans.title || "",
                 excerpt: aiTrans.excerpt || "",
                 content: aiTrans.content || "",
+                meta_description: aiTrans.meta_description || "",
+                meta_keywords: aiTrans.meta_keywords || [],
                 // We generate the slug dynamically from the translated title to ensure it's URL safe and locally correct
                 slug: aiTrans.title ? generateSlug(aiTrans.title, { locale: loc as any }) : (currentLangState as any).slug || "",
               });
+              setKeywordsInput((prev) => ({
+                ...prev,
+                [loc]: (aiTrans.meta_keywords || []).join(", ")
+              }));
             }
           });
 
@@ -231,45 +196,6 @@ export function BlogForm({
       toast.error("AI translation failed due to a network error.", { id: "ai-translation" });
     } finally {
       setIsTranslating(false);
-    }
-  };
-
-  const handleAIGenerate = async () => {
-    if (!aiTopic || aiTopic.trim().length === 0) return;
-    setAiPromptOpen(false);
-
-    setIsGenerating(true);
-    toast.loading("AI is writing a high-quality SEO blog post (may take ~20 seconds)...", { id: "ai-generation" });
-    try {
-      const generateRes = await fetch("/api/admin/generate-blog-post", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ topic: aiTopic }),
-      });
-
-      if (generateRes.ok) {
-        const data = await generateRes.json();
-        if (data.post) {
-          const { title, excerpt, content } = data.post;
-          
-          form.setValue("translations.en" as any, {
-            ...(form.getValues("translations.en") || {}),
-            title: title || "",
-            excerpt: excerpt || "",
-            content: content || "",
-            slug: title ? generateSlug(title, { locale: "en" }) : "",
-          });
-          
-          setActiveTab("en");
-          toast.success("Blog generated perfectly! Use Auto-Translate to fan it out to other languages.", { id: "ai-generation" });
-        }
-      } else {
-        toast.error("AI generation failed. Please try again.", { id: "ai-generation" });
-      }
-    } catch (e) {
-      toast.error("AI generation failed due to a network error.", { id: "ai-generation" });
-    } finally {
-      setIsGenerating(false);
     }
   };
 
@@ -297,33 +223,6 @@ export function BlogForm({
 
   return (
     <>
-      <Dialog open={aiPromptOpen} onOpenChange={setAiPromptOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Auto-Write AI Blog</DialogTitle>
-            <DialogDescription>
-              What should the new blog post be about? Be specific for better SEO results.
-            </DialogDescription>
-          </DialogHeader>
-          <div className="py-4">
-            <Input
-              placeholder="e.g. Best places for couple photoshoot in Istanbul"
-              value={aiTopic}
-              onChange={(e) => setAiTopic(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  e.preventDefault();
-                  handleAIGenerate();
-                }
-              }}
-            />
-          </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setAiPromptOpen(false)}>Cancel</Button>
-            <Button onClick={handleAIGenerate} disabled={!aiTopic.trim()}>Generate</Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
       <Form {...form}>
       <form onSubmit={form.handleSubmit(handleSubmit)} className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
 
@@ -342,24 +241,10 @@ export function BlogForm({
                 <div className="flex items-center gap-2">
                   <Button
                     type="button"
-                    variant="outline"
-                    size="sm"
-                    onClick={() => {
-                        setAiTopic("");
-                        setAiPromptOpen(true);
-                    }}
-                    disabled={isGenerating || isTranslating}
-                    className="w-fit shrink-0 border-blue-200 hover:bg-blue-50/50"
-                  >
-                    {isGenerating ? <Spinner className="w-4 h-4 mr-2" /> : <Wand className="w-4 h-4 mr-2 text-blue-500" />}
-                    Auto-Write (AI)
-                  </Button>
-                  <Button
-                    type="button"
                     variant="secondary"
                     size="sm"
                     onClick={handleAITranslate}
-                    disabled={isTranslating || isGenerating}
+                    disabled={isTranslating}
                     className="w-fit shrink-0"
                   >
                     {isTranslating ? <Spinner className="w-4 h-4 mr-2" /> : <Sparkles className="w-4 h-4 mr-2 text-yellow-500" />}
@@ -508,7 +393,54 @@ export function BlogForm({
                       )}
                     />
 
-                    {/* Meta Description Removed */}
+                    {/* Meta Description & Keywords */}
+                    <FormField
+                      control={form.control}
+                      name={`translations.${locale.value}.meta_description` as any}
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Meta Description (SEO) ({locale.label})</FormLabel>
+                          <FormControl>
+                            <Textarea
+                              {...field}
+                              value={field.value || ""}
+                              placeholder="Custom SEO description for Google (optional)..."
+                              rows={2}
+                              className="resize-none"
+                            />
+                          </FormControl>
+                          <FormDescription className="text-xs">
+                            Overrides the excerpt for search engine results. Keep under 160 characters.
+                          </FormDescription>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    
+                    <FormField
+                      control={form.control}
+                      name={`translations.${locale.value}.meta_keywords` as any}
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Meta Keywords ({locale.label})</FormLabel>
+                          <FormControl>
+                            <Input
+                              value={keywordsInput[locale.value] !== undefined ? keywordsInput[locale.value] : (field.value ? (field.value as string[]).join(", ") : "")}
+                              onChange={(e) => {
+                                const val = e.target.value;
+                                setKeywordsInput({ ...keywordsInput, [locale.value]: val });
+                                field.onChange(val ? val.split(",").map(k => k.trim()).filter(Boolean) : []);
+                              }}
+                              placeholder="istanbul, photographer, travel..."
+                            />
+                          </FormControl>
+                          <FormDescription className="text-xs">
+                            Comma-separated keywords for SEO.
+                          </FormDescription>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
                   </TabsContent>
                 ))}
               </Tabs>
@@ -796,7 +728,7 @@ export function BlogForm({
                 )}
               />
 
-              {/* Meta Keywords Removed */}
+
 
             </CardContent>
           </Card>

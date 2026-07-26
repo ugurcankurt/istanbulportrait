@@ -40,7 +40,9 @@ export function generateSeoDescription(
  */
 export function generateSeoTitle(title: string | null | undefined, locale: string, fallbackTitle: string = ""): string {
   if (!title) return fallbackTitle;
-  return title;
+  if (title.length <= 60) return title;
+  const truncated = title.substring(0, 60);
+  return truncated.substring(0, Math.min(truncated.length, truncated.lastIndexOf(" "))) + "...";
 }
 
 /**
@@ -71,7 +73,8 @@ export function constructOpenGraph(
   description: string,
   imageUrl: string,
   siteName: string,
-  locale: string
+  locale: string,
+  extraOverrides: any = {}
 ) {
   const optimizedUrl = optimizeSeoImage(imageUrl, 1200);
 
@@ -103,6 +106,7 @@ export function constructOpenGraph(
     ],
     locale: ogLocale,
     type: "website",
+    ...extraOverrides
   };
 }
 
@@ -333,9 +337,12 @@ export function buildArticleSchema({
   dateModified,
   authorName,
   authorUrls,
+  authorImage,
+  authorBio,
   publisherName,
   publisherLogo,
   inLanguage,
+  keywords,
 }: {
   title: string;
   description: string;
@@ -344,9 +351,12 @@ export function buildArticleSchema({
   dateModified: string;
   authorName: string;
   authorUrls?: string[];
+  authorImage?: string;
+  authorBio?: string;
   publisherName?: string;
   publisherLogo?: string;
   inLanguage?: string;
+  keywords?: string[];
 }) {
   return {
     "@context": "https://schema.org",
@@ -367,6 +377,8 @@ export function buildArticleSchema({
       {
         "@type": "Person",
         name: authorName,
+        ...(authorImage ? { image: authorImage } : {}),
+        ...(authorBio ? { description: authorBio } : {}),
         ...(authorUrls && authorUrls.length > 0 ? { sameAs: authorUrls } : {}),
       },
     ],
@@ -383,6 +395,7 @@ export function buildArticleSchema({
       } : {}),
     } : undefined,
     description,
+    ...(keywords && keywords.length > 0 ? { keywords: keywords.join(", ") } : {}),
   };
 }
 
@@ -524,7 +537,14 @@ export function buildCollectionPageSchema({
         url: item.url,
         name: item.name,
         ...(item.description ? { description: item.description } : {}),
-        ...(item.image ? { image: optimizeSeoImage(item.image, 1200) } : {}),
+        ...(item.image ? { 
+          image: {
+            "@type": "ImageObject",
+            url: optimizeSeoImage(item.image, 1200),
+            width: 1200,
+            height: 630
+          }
+        } : {}),
       })),
     },
   };

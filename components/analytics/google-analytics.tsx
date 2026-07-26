@@ -1,6 +1,7 @@
 "use client";
 
 import { GoogleAnalytics as NextGoogleAnalytics } from "@next/third-parties/google";
+import Script from "next/script";
 
 export function GoogleAnalytics({ gaId, userId, googleAdsId }: { gaId?: string | null, userId?: string | null, googleAdsId?: string | null }) {
   if (!gaId) {
@@ -10,7 +11,8 @@ export function GoogleAnalytics({ gaId, userId, googleAdsId }: { gaId?: string |
   return (
     <>
       <NextGoogleAnalytics gaId={gaId} />
-      <script
+      <Script
+        id="google-analytics-custom-config"
         dangerouslySetInnerHTML={{
           __html: `
             window.dataLayer = window.dataLayer || [];
