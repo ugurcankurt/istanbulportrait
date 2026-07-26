@@ -73,6 +73,7 @@ export const blogFormSchema = z.object({
   }),
   category_ids: z.array(z.string().uuid()).default([]),
   tag_ids: z.array(z.string().uuid()).default([]),
+  author_id: z.string().uuid().optional().nullable(),
 });
 
 // Partial schema for updates (all fields optional)
@@ -220,6 +221,7 @@ export const createBlogFormSchema = (t: any) =>
     }),
     category_ids: z.array(z.string().uuid()).default([]),
     tag_ids: z.array(z.string().uuid()).default([]),
+    author_id: z.string().uuid().optional().nullable(),
   });
 
 // =============================================

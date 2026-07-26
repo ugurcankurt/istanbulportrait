@@ -84,15 +84,23 @@ export function BlogForm({
     });
     return init;
   });
+  const [authors, setAuthors] = useState<any[]>([]);
 
-  // Fetch categories and tags
+  // Fetch categories, tags, and authors
   useEffect(() => {
     const loadData = async () => {
       setIsLoadingData(true);
       try {
-        await Promise.all([fetchCategories("en"), fetchTags("en")]);
+        const [_, __, authorsRes] = await Promise.all([
+          fetchCategories("en"), 
+          fetchTags("en"),
+          fetch("/api/admin/blog/authors").then(res => res.json())
+        ]);
+        if (authorsRes?.authors) {
+          setAuthors(authorsRes.authors);
+        }
       } catch (error) {
-        console.error("Error loading categories/tags:", error);
+        console.error("Error loading form data:", error);
       } finally {
         setIsLoadingData(false);
       }
@@ -123,6 +131,7 @@ export function BlogForm({
           (initialData as any).categories?.map((c: any) => c.category.id) ||
           [],
         tag_ids: (initialData as any).tags?.map((t: any) => t.tag.id) || [],
+        author_id: initialData.author_id || null,
       }
       : {
         status: "draft",
@@ -135,6 +144,7 @@ export function BlogForm({
         }, {} as any),
         category_ids: [],
         tag_ids: [],
+        author_id: null,
       },
   });
 
@@ -205,6 +215,9 @@ export function BlogForm({
   const readingTime = enContent ? calculateReadingTime(enContent).minutes : 0;
 
   const handleSubmit = async (data: any) => {
+    if (data.author_id === "none") {
+      data.author_id = null;
+    }
     await onSubmit(data as BlogFormData);
   };
 
@@ -596,6 +609,33 @@ export function BlogForm({
               <CardTitle className="text-lg">Organization</CardTitle>
             </CardHeader>
             <CardContent className="pt-6 space-y-6">
+
+              {/* Author */}
+              <FormField
+                control={form.control}
+                name="author_id"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Author</FormLabel>
+                    <Select onValueChange={field.onChange} defaultValue={field.value || undefined}>
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select an author (optional)" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="none">None</SelectItem>
+                        {authors?.map((author) => (
+                          <SelectItem key={author.id} value={author.id}>
+                            {author.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
               {/* Categories */}
               <FormField

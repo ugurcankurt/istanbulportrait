@@ -1454,3 +1454,20 @@ export async function isSlugUnique(
 
   return !data || data.length === 0;
 }
+
+/**
+ * Get all authors
+ */
+export async function getAllAuthors() {
+  const { data, error } = await supabaseAdmin
+    .from("blog_authors")
+    .select("*")
+    .order("name");
+
+  if (error) {
+    console.error("Error fetching authors:", error);
+    return [];
+  }
+
+  return data;
+}

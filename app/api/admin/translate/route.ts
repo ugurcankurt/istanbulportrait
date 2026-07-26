@@ -26,9 +26,9 @@ export async function POST(req: Request) {
     }
 
     const body = await req.json();
-    const { title, description, duration, features } = body;
+    const { title, description, duration, features, meta_description, meta_keywords } = body;
 
-    if (!title || !description || !features || !duration) {
+    if (!title || !description || !features || !duration || !meta_description || !meta_keywords) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
     }
 
@@ -46,6 +46,9 @@ English Source:
 Title: ${title}
 Duration: ${duration}
 Description: ${description}
+Meta Description (SEO snippet max 160 chars): ${meta_description}
+Meta Keywords (SEO):
+${meta_keywords.map((k: string) => `- ${k}`).join("\n")}
 Features:
 ${features.map((f: string) => `- ${f}`).join("\n")}
 
@@ -55,6 +58,8 @@ Respond ONLY with a valid minified JSON object mapping each locale code to the t
     "title": "...",
     "duration": "...",
     "description": "...",
+    "meta_description": "...",
+    "meta_keywords": ["...", "..."],
     "features": ["...", "..."]
   },
   "ar": { ... }
@@ -63,8 +68,8 @@ Respond ONLY with a valid minified JSON object mapping each locale code to the t
 Provide accurate, professional, marketing-friendly translations suitable for a high-end photography business in Istanbul.
 `;
 
-    // Connect to Gemini REST API
-    const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=${apiKey}`;
+    // Connect to Gemini REST API (using gemini-flash-lite-latest for highest free tier limits)
+    const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-lite-latest:generateContent?key=${apiKey}`;
     
     const response = await fetch(geminiUrl, {
       method: "POST",

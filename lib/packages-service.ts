@@ -32,7 +32,9 @@ export interface PackageDB {
   video_url: string | null;
   title: PackageTranslations;
   description: PackageTranslations;
+  meta_description: PackageTranslations;
   features: PackageFeatures;
+  meta_keywords: PackageFeatures;
   duration: PackageTranslations;
   locations: number;
 

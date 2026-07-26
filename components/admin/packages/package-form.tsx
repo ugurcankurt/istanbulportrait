@@ -58,6 +58,8 @@ export function PackageForm({ initialData }: PackageFormProps) {
       description: { en: "" },
       duration: { en: "" },
       features: { en: [""] },
+      meta_description: { en: "" },
+      meta_keywords: { en: [""] },
       locations: 1,
     },
   });
@@ -69,8 +71,14 @@ export function PackageForm({ initialData }: PackageFormProps) {
     name: `features.en`,
   });
 
+  const { fields: keywordFieldsEn, append: appendKeyword, remove: removeKeyword } = useFieldArray({
+    control,
+    name: `meta_keywords.en`,
+  });
+
   // Watch features to know how many fields to render in other locales
   const watchFeaturesEn = form.watch("features.en") || [];
+  const watchKeywordsEn = form.watch("meta_keywords.en") || [];
 
   const handleCoverUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -211,7 +219,7 @@ export function PackageForm({ initialData }: PackageFormProps) {
 
   const handleAITranslate = async () => {
     const data = form.getValues();
-    if (!data.title?.en || !data.description?.en || !data.duration?.en || !data.features?.en) {
+    if (!data.title?.en || !data.description?.en || !data.duration?.en || !data.features?.en || !data.meta_description?.en || !data.meta_keywords?.en) {
       toast.error("Please fill in all English fields first before auto-translating.");
       return;
     }
@@ -226,6 +234,8 @@ export function PackageForm({ initialData }: PackageFormProps) {
           description: data.description.en,
           duration: data.duration.en,
           features: data.features.en,
+          meta_description: data.meta_description.en,
+          meta_keywords: data.meta_keywords.en,
         }),
       });
 
@@ -239,6 +249,8 @@ export function PackageForm({ initialData }: PackageFormProps) {
               form.setValue(`description.${loc}`, translateData.translations[loc].description, { shouldDirty: true });
               form.setValue(`duration.${loc}`, translateData.translations[loc].duration, { shouldDirty: true });
               form.setValue(`features.${loc}`, translateData.translations[loc].features, { shouldDirty: true });
+              form.setValue(`meta_description.${loc}`, translateData.translations[loc].meta_description, { shouldDirty: true });
+              form.setValue(`meta_keywords.${loc}`, translateData.translations[loc].meta_keywords, { shouldDirty: true });
             }
           });
           toast.success("Blank languages successfully auto-filled!", { id: "ai-translation" });
@@ -272,8 +284,10 @@ export function PackageForm({ initialData }: PackageFormProps) {
         gallery_images: data.gallery_images,
         title: data.title,
         description: data.description,
+        meta_description: data.meta_description,
         duration: data.duration,
         features: data.features,
+        meta_keywords: data.meta_keywords,
         locations: typeof data.locations === "string" ? parseInt(data.locations, 10) : data.locations,
       };
 
@@ -471,6 +485,59 @@ export function PackageForm({ initialData }: PackageFormProps) {
                             </Button>
                           )}
                         </div>
+
+                        {/* SEO Fields */}
+                        <div className="space-y-4 pt-4 border-t border-dashed">
+                          <Label className="block font-semibold text-indigo-700 dark:text-indigo-400">
+                            SEO Metadata ({loc.toUpperCase()})
+                          </Label>
+                          <FormField
+                            control={form.control}
+                            name={`meta_description.${loc}`}
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>Meta Description (Max 160 chars)</FormLabel>
+                                <FormControl>
+                                  <Textarea placeholder={`SEO description in ${loc}...`} className="min-h-20" {...field} value={field.value || ''} />
+                                </FormControl>
+                                <FormDescription>Google search result snippet description.</FormDescription>
+                              </FormItem>
+                            )}
+                          />
+
+                          <div className="space-y-4 border rounded-md p-4 bg-muted/20">
+                            <Label className="block font-medium">
+                              Meta Keywords ({loc.toUpperCase()})
+                              {loc !== 'en' && <span className="text-xs text-muted-foreground ml-2 font-normal">(Auto-syncs length with English)</span>}
+                            </Label>
+                            <ul className="space-y-2">
+                              {(loc === 'en' ? keywordFieldsEn : watchKeywordsEn).map((_: any, index: number) => (
+                                <li key={loc === 'en' ? (keywordFieldsEn[index] as any).id : `kw-${loc}-${index}`} className="flex gap-2 items-center">
+                                  <FormField
+                                    control={form.control}
+                                    name={`meta_keywords.${loc}.${index}`}
+                                    render={({ field }) => (
+                                      <FormControl>
+                                        <Input placeholder={`Keyword ${index + 1} in ${loc}`} {...field} value={field.value || ''} />
+                                      </FormControl>
+                                    )}
+                                  />
+                                  {loc === 'en' && (
+                                    <Button type="button" variant="ghost" size="icon" onClick={() => removeKeyword(index)}>
+                                      <Trash2 className="w-4 h-4 text-destructive" />
+                                    </Button>
+                                  )}
+                                </li>
+                              ))}
+                            </ul>
+                            {loc === 'en' && (
+                              <Button type="button" variant="outline" size="sm" onClick={() => appendKeyword("")}>
+                                <Plus className="w-4 h-4 mr-2" />
+                                Add Keyword (EN)
+                              </Button>
+                            )}
+                          </div>
+                        </div>
                       </TabsContent>
                     ))}
                   </Tabs>
@@ -576,7 +643,7 @@ export function PackageForm({ initialData }: PackageFormProps) {
                   <FieldLabel>Cover Image</FieldLabel>
                   {coverImagePreview ? (
                     <div className="relative w-full aspect-[4/3] rounded-lg overflow-hidden border">
-                      <Image src={coverImagePreview} fill className="object-cover" alt="Cover" />
+                      <Image src={coverImagePreview} fill sizes="(max-width: 768px) 100vw, 400px" className="object-cover" alt="Cover" />
                       <Button
                         type="button"
                         variant="destructive"
@@ -650,7 +717,7 @@ export function PackageForm({ initialData }: PackageFormProps) {
                     <div className="grid grid-cols-3 gap-2">
                       {galleryPreviews.map((url, i) => (
                         <div key={i} className="group relative aspect-square rounded-md overflow-hidden border">
-                          <Image src={url} fill className="object-cover" alt={`Gallery ${i}`} />
+                          <Image src={url} fill sizes="(max-width: 768px) 33vw, 150px" className="object-cover" alt={`Gallery ${i}`} />
                           
                           <Button
                             type="button"

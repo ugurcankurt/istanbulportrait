@@ -30,7 +30,7 @@ export function BlogAuthor({ author, siteSettings }: BlogAuthorProps) {
   }, []);
 
   const name = author?.name || siteSettings?.founder_name || t("name");
-  const bio = author?.bio?.[locale] || author?.bio?.en || siteSettings?.site_description?.[locale] || siteSettings?.site_description?.en || t("bio");
+  const bio = author?.bio?.[locale] || author?.bio?.en || t("bio");
   const role = author?.role?.[locale] || author?.role?.en || "";
 
   const fallbackLogo = (mounted && resolvedTheme === "dark" ? siteSettings?.logo_dark_url : siteSettings?.logo_url) || siteSettings?.logo_url;

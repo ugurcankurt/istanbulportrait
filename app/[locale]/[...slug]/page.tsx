@@ -163,9 +163,9 @@ export async function generateMetadata(props: {
       const pkg = await packagesService.getPackageBySlug(childSlug);
       if (!pkg) return { title: "Package Not Found" };
       dynamicTitle = pkg.title?.[params.locale] || pkg.title?.en || "";
-      dynamicDesc = pkg.description?.[params.locale] || pkg.description?.en || "";
+      dynamicDesc = pkg.meta_description?.[params.locale] || pkg.meta_description?.en || pkg.description?.[params.locale] || pkg.description?.en || "";
       ogImage = (pkg.gallery_images && pkg.gallery_images.length > 0) ? pkg.gallery_images[0] : ogImage;
-      keywords = (pkg as any).meta_keywords || [];
+      keywords = pkg.meta_keywords?.[params.locale] || pkg.meta_keywords?.en || (pkg as any).meta_keywords || [];
       getAlternatesFn = (loc: string) => {
         const pTitle = dbPage.title?.[loc];
         const pSeg = pTitle ? generateNativeSlug(pTitle) : "packages";
