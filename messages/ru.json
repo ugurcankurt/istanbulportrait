@@ -438,7 +438,8 @@
   "packages": {
     "title": "Доступные пакеты",
     "subtitle": "Выберите лучший пакет для вас",
-    "per_person": "на человека"
+    "per_person": "на человека",
+    "related_packages": "Похожие Пакеты"
   },
   "gallery": {
     "title": "Портфолио",

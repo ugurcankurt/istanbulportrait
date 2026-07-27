@@ -245,6 +245,13 @@ export default async function LocaleLayout({
         <SpeedInsights />
         <Analytics />
 
+        {/* GetYourGuide Analytics */}
+        <Script 
+          src="https://widget.getyourguide.com/dist/pa.umd.production.min.js"
+          strategy="lazyOnload"
+          data-gyg-partner-id="S6XXHTA"
+        />
+
         {/* Ad-hoc Custom Body Scripts Injected from Settings Dashboard */}
         {settings.custom_body_scripts && (
           <div dangerouslySetInnerHTML={{ __html: settings.custom_body_scripts }} />

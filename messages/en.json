@@ -438,7 +438,8 @@
   "packages": {
     "title": "Available Packages",
     "subtitle": "Choose the best package for you",
-    "per_person": "per person"
+    "per_person": "per person",
+    "related_packages": "Related Packages"
   },
   "gallery": {
     "title": "Portfolio",

@@ -438,7 +438,8 @@
   "packages": {
     "title": "Mevcut Paketler",
     "subtitle": "Sizin için en iyi paketi seçin",
-    "per_person": "kişi başı"
+    "per_person": "kişi başı",
+    "related_packages": "İlginizi Çekebilecek Diğer Paketler"
   },
   "gallery": {
     "title": "Portföyümüz",

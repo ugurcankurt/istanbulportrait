@@ -1,6 +1,8 @@
 import { notFound } from "next/navigation";
+import { getTranslations } from "next-intl/server";
 import { BreadcrumbNav } from "@/components/breadcrumb-nav";
 import { PackageDetails } from "@/components/package-details";
+import { PackagesSection } from "@/components/packages-section";
 import { packagesService } from "@/lib/packages-service";
 import { discountService } from "@/lib/discount-service";
 import { reviewsService } from "@/lib/reviews-service";
@@ -76,6 +78,10 @@ export async function PackageDetailPageContent({
     "contentUrl": pkg.video_url
   } : null;
 
+  const allPackages = await packagesService.getActivePackages();
+  const relatedPackages = allPackages.filter((p) => p.id !== pkg.id);
+  const t = await getTranslations({ locale, namespace: "packages" });
+
   return (
     <div>
       <SchemaInjector schema={serviceSchema} />
@@ -89,6 +95,23 @@ export async function PackageDetailPageContent({
         timeSurcharges={timeSurcharges}
         whatsappNumber={settings.whatsapp_number}
       />
+      {relatedPackages.length > 0 && (
+        <div className="mt-8 border-t border-border/30 bg-muted/10">
+          <PackagesSection
+            dbPackages={relatedPackages}
+            activeDiscount={activeDiscount}
+            aggregateRating={aggregateRating}
+            parentSlug={parentSlug}
+            header={
+              <div key="related-packages-header" className="text-center max-w-2xl mx-auto mb-8 sm:mb-10 pt-8 sm:pt-10">
+                <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif mb-4 font-normal text-foreground leading-tight">
+                  {t("related_packages")}
+                </h2>
+              </div>
+            }
+          />
+        </div>
+      )}
     </div>
   );
 }

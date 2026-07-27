@@ -438,7 +438,8 @@
   "packages": {
     "title": "Forfaits disponibles",
     "subtitle": "Choisissez le meilleur forfait pour vous",
-    "per_person": "par personne"
+    "per_person": "par personne",
+    "related_packages": "Forfaits Similaires"
   },
   "gallery": {
     "title": "Portefeuille",

@@ -152,9 +152,9 @@ export function PackagesSection({ header, customCtaHeader, aggregateRating, dbPa
                 {tui("most_popular")}
               </Badge>
             )}
-            {pkg.pricing.isDiscounted && activeDiscount && (
+            {pkg.pricing?.isDiscounted && activeDiscount && (
               <Badge className="bg-sale/90 backdrop-blur-md border border-white/30 text-white px-2 py-0.5 text-[10px] shadow-sm animate-pulse">
-                -{Math.round(pkg.pricing.discountPercentage * 100)}%{" "}
+                -{Math.round((pkg.pricing?.discountPercentage || 0) * 100)}%{" "}
                 {activeDiscount.name}
               </Badge>
             )}
@@ -192,13 +192,13 @@ export function PackagesSection({ header, customCtaHeader, aggregateRating, dbPa
               {/* Right: Price */}
               <div className="flex flex-col items-end justify-center leading-none">
                 <div className="flex items-center gap-1.5">
-                  {pkg.pricing.isDiscounted && (
+                  {pkg.pricing?.isDiscounted && (
                     <span className="text-[10px] sm:text-xs text-white/70 line-through">
                       {formatPrice(pkg.basePrice)}
                     </span>
                   )}
                   <span className="text-lg sm:text-xl font-serif font-semibold text-white drop-shadow-md">
-                    {formatPrice(pkg.pricing.isDiscounted ? pkg.pricing.price : pkg.basePrice)}
+                    {formatPrice(pkg.pricing?.isDiscounted ? pkg.pricing.price : pkg.basePrice)}
                   </span>
                 </div>
                 {pkg.isPerPerson && (
@@ -233,7 +233,7 @@ export function PackagesSection({ header, customCtaHeader, aggregateRating, dbPa
               <CarouselContent className="-ms-4 px-4 py-4">
                 {sortedPackages.map((pkg) => (
                   <CarouselItem key={pkg.id} className="ps-4 basis-[78%]">
-                    <div className="h-full px-0.5"> {/* Extra tiny padding for ring/shadow */}
+                    <div className="h-full px-0.5">
                       {renderPackageCard(pkg, false)}
                     </div>
                   </CarouselItem>

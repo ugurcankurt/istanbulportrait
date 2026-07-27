@@ -4,7 +4,7 @@ import { PageHeroSection } from "@/components/page-hero-section";
 const PackagesSection = dynamic(() =>
   import("@/components/packages-section").then((mod) => mod.PackagesSection),
 );
-
+import { GygActivitiesSection } from "@/components/gyg-activities-section";
 import { reviewsService } from "@/lib/reviews-service";
 import { packagesService, type PackageDB } from "@/lib/packages-service";
 
@@ -58,6 +58,7 @@ export async function PackagesPageContent({
         {/* Pass the purely dynamic packages object to Section along with parentSlug */}
         <PackagesSection aggregateRating={aggregateRating} dbPackages={dbPackages} parentSlug={parentSlug} activeDiscount={activeDiscount} />
       </div>
+      <GygActivitiesSection />
     </div>
   );
 }

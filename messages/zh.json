@@ -438,7 +438,8 @@
   "packages": {
     "title": "可用套餐",
     "subtitle": "选择最适合您的套餐",
-    "per_person": "每人"
+    "per_person": "每人",
+    "related_packages": "相关套餐"
   },
   "gallery": {
     "title": "投资组合",

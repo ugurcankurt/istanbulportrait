@@ -438,7 +438,8 @@
   "packages": {
     "title": "Verfügbare Pakete",
     "subtitle": "Wählen Sie das beste Paket für Sie",
-    "per_person": "pro Person"
+    "per_person": "pro Person",
+    "related_packages": "Ähnliche Pakete"
   },
   "gallery": {
     "title": "Portfolio",

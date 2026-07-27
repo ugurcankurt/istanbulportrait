@@ -438,7 +438,8 @@
   "packages": {
     "title": "الحزم المتاحة",
     "subtitle": "اختر الحزمة الأفضل بالنسبة لك",
-    "per_person": "لكل شخص"
+    "per_person": "لكل شخص",
+    "related_packages": "باقات ذات صلة"
   },
   "gallery": {
     "title": "المحفظة",

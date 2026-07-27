@@ -8,7 +8,10 @@ import { BlogAuthor } from "@/components/blog-author";
 import { BlogSummary } from "@/components/blog-summary";
 import { BreadcrumbNav } from "@/components/breadcrumb-nav";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
-import { getBlogPostBySlug, getSalvagedBlogSlug } from "@/lib/blog/blog-service";
+import { getBlogPostBySlug, getSalvagedBlogSlug, getPublishedBlogPosts } from "@/lib/blog/blog-service";
+import rehypeSlug from "rehype-slug";
+import { TableOfContents } from "@/components/table-of-contents";
+import { BlogCard } from "@/components/blog-card";
 import { formatBlogDate } from "@/lib/blog/blog-utils";
 import { settingsService } from "@/lib/settings-service";
 import type { Locale } from "@/types/blog";
@@ -37,6 +40,16 @@ export async function BlogDetailPageContent({
     }
     notFound();
   }
+
+  // Fetch related posts (latest 3 excluding the current one)
+  const { posts: allRecentPosts } = await getPublishedBlogPosts({
+    page: 1,
+    limit: 4,
+    locale: locale as Locale,
+    sort_by: "published_at",
+    sort_order: "desc",
+  });
+  const relatedPosts = allRecentPosts.filter(p => p.id !== post.id).slice(0, 3);
 
   return (
     <div>
@@ -101,10 +114,11 @@ export async function BlogDetailPageContent({
           )}
 
           {/* Content */}
+          <TableOfContents content={post.translation.content} title={t("table_of_contents")} />
           <div className="prose prose-lg dark:prose-invert max-w-none prose-headings:font-serif prose-headings:font-normal prose-h2:text-4xl prose-h3:text-2xl prose-p:leading-relaxed prose-p:text-muted-foreground/90 prose-a:text-primary prose-a:underline-offset-4 hover:prose-a:decoration-primary prose-img:rounded-[2rem] prose-img:border-[0.5px] prose-img:border-border/50 prose-img:shadow-sm">
             <ReactMarkdown
               remarkPlugins={[remarkGfm]}
-              rehypePlugins={[rehypeRaw]}
+              rehypePlugins={[rehypeRaw, rehypeSlug]}
             >
               {post.translation.content}
             </ReactMarkdown>
@@ -156,6 +170,23 @@ export async function BlogDetailPageContent({
               )}
             </div>
           </footer>
+
+          {/* Related Posts */}
+          {relatedPosts.length > 0 && (
+            <div className="mt-16 pt-12 border-t border-border/50">
+              <h2 className="text-3xl font-serif text-foreground mb-8 text-center">{t("related_posts")}</h2>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {relatedPosts.map((relatedPost) => (
+                  <BlogCard 
+                    key={relatedPost.id} 
+                    post={relatedPost as any} 
+                    locale={locale} 
+                    parentSegment={parentSlug} 
+                  />
+                ))}
+              </div>
+            </div>
+          )}
         </article>
       </div>
     </div>

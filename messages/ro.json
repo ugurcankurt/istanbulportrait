@@ -438,7 +438,8 @@
   "packages": {
     "title": "Pachete disponibile",
     "subtitle": "Alege cel mai bun pachet pentru tine",
-    "per_person": "pe persoană"
+    "per_person": "pe persoană",
+    "related_packages": "Pachete Similare"
   },
   "gallery": {
     "title": "Portofoliu",
