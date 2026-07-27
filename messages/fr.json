@@ -439,7 +439,9 @@
     "title": "Forfaits disponibles",
     "subtitle": "Choisissez le meilleur forfait pour vous",
     "per_person": "par personne",
-    "related_packages": "Forfaits Similaires"
+    "related_packages": "Forfaits Similaires",
+    "gyg_title": "Explorez plus à Istanbul",
+    "gyg_subtitle": "Activités et visites recommandées par notre partenaire GetYourGuide"
   },
   "gallery": {
     "title": "Portefeuille",

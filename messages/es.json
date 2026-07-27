@@ -439,7 +439,9 @@
     "title": "Paquetes disponibles",
     "subtitle": "Elige el mejor paquete para ti",
     "per_person": "por persona",
-    "related_packages": "Paquetes Relacionados"
+    "related_packages": "Paquetes Relacionados",
+    "gyg_title": "Explora más en Estambul",
+    "gyg_subtitle": "Actividades y excursiones recomendadas por nuestro socio GetYourGuide"
   },
   "gallery": {
     "title": "Portafolio",

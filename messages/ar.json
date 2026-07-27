@@ -439,7 +439,9 @@
     "title": "الحزم المتاحة",
     "subtitle": "اختر الحزمة الأفضل بالنسبة لك",
     "per_person": "لكل شخص",
-    "related_packages": "باقات ذات صلة"
+    "related_packages": "باقات ذات صلة",
+    "gyg_title": "استكشف المزيد في اسطنبول",
+    "gyg_subtitle": "أنشطة وجولات موصى بها من شريكنا GetYourGuide"
   },
   "gallery": {
     "title": "المحفظة",

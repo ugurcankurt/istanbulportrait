@@ -439,7 +439,9 @@
     "title": "Verfügbare Pakete",
     "subtitle": "Wählen Sie das beste Paket für Sie",
     "per_person": "pro Person",
-    "related_packages": "Ähnliche Pakete"
+    "related_packages": "Ähnliche Pakete",
+    "gyg_title": "Entdecken Sie mehr in Istanbul",
+    "gyg_subtitle": "Empfohlene Aktivitäten und Touren von unserem Partner GetYourGuide"
   },
   "gallery": {
     "title": "Portfolio",

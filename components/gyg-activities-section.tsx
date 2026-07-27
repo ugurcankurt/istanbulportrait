@@ -24,10 +24,10 @@ export function GygActivitiesSection() {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-2xl mx-auto mb-8 sm:mb-12">
           <h2 className="text-3xl sm:text-4xl font-serif mb-4 font-normal text-foreground leading-tight">
-            {locale === "tr" ? "İstanbul'da Daha Fazlasını Keşfedin" : "Explore More in Istanbul"}
+            {t("gyg_title")}
           </h2>
           <p className="text-muted-foreground text-sm sm:text-base">
-            {locale === "tr" ? "Çözüm ortağımız GetYourGuide'ın seçkin aktiviteleri" : "Recommended activities and tours by our partner GetYourGuide"}
+            {t("gyg_subtitle")}
           </p>
         </div>
 

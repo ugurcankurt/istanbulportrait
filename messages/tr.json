@@ -439,7 +439,9 @@
     "title": "Mevcut Paketler",
     "subtitle": "Sizin için en iyi paketi seçin",
     "per_person": "kişi başı",
-    "related_packages": "İlginizi Çekebilecek Diğer Paketler"
+    "related_packages": "İlginizi Çekebilecek Diğer Paketler",
+    "gyg_title": "İstanbul'da Daha Fazlasını Keşfedin",
+    "gyg_subtitle": "Çözüm ortağımız GetYourGuide'ın seçkin aktiviteleri"
   },
   "gallery": {
     "title": "Portföyümüz",

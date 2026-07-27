@@ -439,7 +439,9 @@
     "title": "Pachete disponibile",
     "subtitle": "Alege cel mai bun pachet pentru tine",
     "per_person": "pe persoană",
-    "related_packages": "Pachete Similare"
+    "related_packages": "Pachete Similare",
+    "gyg_title": "Explorează mai mult în Istanbul",
+    "gyg_subtitle": "Activități și tururi recomandate de partenerul nostru GetYourGuide"
   },
   "gallery": {
     "title": "Portofoliu",

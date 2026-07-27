@@ -439,7 +439,9 @@
     "title": "Available Packages",
     "subtitle": "Choose the best package for you",
     "per_person": "per person",
-    "related_packages": "Related Packages"
+    "related_packages": "Related Packages",
+    "gyg_title": "Explore More in Istanbul",
+    "gyg_subtitle": "Recommended activities and tours by our partner GetYourGuide"
   },
   "gallery": {
     "title": "Portfolio",
