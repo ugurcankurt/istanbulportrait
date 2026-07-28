@@ -261,9 +261,12 @@ export function buildServiceSchema({
   image,
   price,
   currency = "EUR",
+  aggregateRating,
+  reviewCount,
   providerName,
   providerUrl,
-  discount
+  discount,
+  reviews
 }: {
   name: string;
   description: string;
@@ -324,6 +327,34 @@ export function buildServiceSchema({
     }
 
     schema.offers.priceSpecification = specs;
+  }
+
+  if (aggregateRating && aggregateRating > 0 && reviewCount && reviewCount > 0) {
+    schema.aggregateRating = {
+      "@type": "AggregateRating",
+      ratingValue: aggregateRating.toString(),
+      reviewCount: reviewCount.toString(),
+      bestRating: "5",
+      worstRating: "1",
+    };
+  }
+
+  if (reviews && reviews.length > 0) {
+    schema.review = reviews.slice(0, 5).map((r: any) => ({
+      "@type": "Review",
+      "author": {
+        "@type": "Person",
+        "name": r.author?.name || "Customer"
+      },
+      "datePublished": r.date ? r.date.split("T")[0] : undefined,
+      "reviewBody": r.text,
+      "reviewRating": {
+        "@type": "Rating",
+        "bestRating": "5",
+        "ratingValue": r.rating?.toString() || "5",
+        "worstRating": "1"
+      }
+    }));
   }
 
   return schema;
