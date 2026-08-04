@@ -192,6 +192,24 @@ export async function POST(request: NextRequest) {
       user_data.lead_id = lead_id || generateLeadId();
     }
 
+    const customDataPayload: Record<string, any> = {
+      event_source: "website",
+      ...custom_data,
+    };
+
+    if (package_id && package_id !== "general") {
+      customDataPayload.content_ids = [package_id];
+      customDataPayload.content_type = customDataPayload.content_type || "product";
+    }
+
+    if (amount !== undefined && amount > 0) {
+      customDataPayload.value = amount;
+      customDataPayload.currency = customDataPayload.currency || "EUR";
+    } else {
+      delete customDataPayload.value;
+      delete customDataPayload.currency;
+    }
+
     // Prepare the conversion event
     const conversionEvent: FacebookConversionEvent = {
       event_name,
@@ -200,14 +218,7 @@ export async function POST(request: NextRequest) {
       action_source: "website",
       event_source_url: event_source_url, // Added event_source_url to the payload correctly per Facebook specs
       user_data,
-      custom_data: {
-        event_source: "website",
-        content_ids: [package_id],
-        content_type: "product",
-        value: amount,
-        currency: "EUR",
-        ...custom_data,
-      },
+      custom_data: customDataPayload,
     };
 
     // Add transaction_id for Purchase events

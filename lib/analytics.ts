@@ -595,8 +595,6 @@ export function trackSchedule(
         content_name: packageName,
         content_category: "Photography Session",
         content_type: "product",
-        value: 0,
-        currency: "EUR",
       },
       resolvedEventId ? { eventID: resolvedEventId } : undefined,
     );
@@ -642,8 +640,6 @@ export function trackContact(method: string) {
       {
         content_name: method,
         content_category: "Photography Inquiry",
-        value: 0,
-        currency: "EUR",
       },
       eventId ? { eventID: eventId } : undefined,
     );
