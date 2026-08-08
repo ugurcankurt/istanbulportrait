@@ -77,26 +77,9 @@ export function calculateDiscountedPrice(
   let campaignAmount = 0;
 
   if (activeDiscount && activeDiscount.is_active) {
-    let isValid = true;
-    const targetDate = bookingDate ? new Date(bookingDate) : new Date();
-
-    if (activeDiscount.start_date && activeDiscount.end_date) {
-      const start = new Date(activeDiscount.start_date);
-      const end = new Date(activeDiscount.end_date);
-      
-      start.setHours(0, 0, 0, 0);
-      end.setHours(23, 59, 59, 999);
-
-      if (targetDate.getTime() < start.getTime() || targetDate.getTime() > end.getTime()) {
-        isValid = false;
-      }
-    }
-
-    if (isValid) {
-      campaignPercentage = Number(activeDiscount.discount_percentage);
-      campaignAmount = basePrice * campaignPercentage;
-      currentPrice -= campaignAmount;
-    }
+    campaignPercentage = Number(activeDiscount.discount_percentage);
+    campaignAmount = basePrice * campaignPercentage;
+    currentPrice -= campaignAmount;
   }
 
   let promoPercentage = 0;

@@ -522,7 +522,8 @@ export function BookingModal({
                     isDiscounted: packageInfo.isDiscounted,
                     discountPercentage: packageInfo.discountPercentage,
                     depositAmount: packageInfo.depositAmount,
-                    remainingAmount: packageInfo.remainingAmount
+                    remainingAmount: packageInfo.remainingAmount,
+                    originalPrice: isPerPerson ? packageInfo.originalPrice / (peopleCount || 1) : packageInfo.originalPrice
                   }}
                   displayPrice={isPerPerson ? packageInfo.price / (peopleCount || 1) : packageInfo.price}
                   selectedDate={form.watch("bookingDate") ? new Date(form.watch("bookingDate")) : undefined}

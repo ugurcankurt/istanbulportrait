@@ -41,8 +41,9 @@ interface BookingCardProps {
     price: number;
     isDiscounted: boolean;
     discountPercentage: number;
-    depositAmount?: number;
-    remainingAmount?: number;
+    depositAmount: number;
+    remainingAmount: number;
+    originalPrice?: number;
   };
   displayPrice: number;
   selectedDate: Date | undefined;
@@ -239,7 +240,7 @@ export function BookingCard({
             </span>
             {pricing.isDiscounted && (
               <span className={cn("text-muted-foreground line-through font-medium leading-none", isInsideModal ? "text-base" : "text-lg")}>
-                {formatPrice(basePrice)}
+                {formatPrice(pricing.originalPrice || basePrice)}
               </span>
             )}
             <span className="text-sm font-bold text-muted-foreground">

@@ -308,7 +308,7 @@ export function PackageDetails({ packageData, aggregateRating, reviews, activeDi
                     {pricing.isDiscounted && (
                       <div className="flex items-center gap-2">
                         <span className="text-xl text-muted-foreground line-through font-medium">
-                          {formatPrice(basePrice)}
+                          {formatPrice(pricing.originalPrice)}
                         </span>
                         <Badge className="bg-red-500 hover:bg-red-600 text-white border-none font-bold">
                           -{Math.round(pricing.discountPercentage * 100)}%
@@ -374,7 +374,8 @@ export function PackageDetails({ packageData, aggregateRating, reviews, activeDi
                   isDiscounted: pricing.isDiscounted,
                   discountPercentage: pricing.discountPercentage,
                   depositAmount: fullPricing.depositAmount,
-                  remainingAmount: fullPricing.remainingAmount
+                  remainingAmount: fullPricing.remainingAmount,
+                  originalPrice: pricing.originalPrice
                 }}
                 displayPrice={displayPrice}
                 selectedDate={selectedDate}
@@ -477,7 +478,7 @@ export function PackageDetails({ packageData, aggregateRating, reviews, activeDi
               </span>
               {pricing.isDiscounted && (
                 <span className="text-sm line-through text-muted-foreground font-medium opacity-60">
-                  {formatPrice(basePrice)}
+                  {formatPrice(pricing.originalPrice)}
                 </span>
               )}
             </div>
