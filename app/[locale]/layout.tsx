@@ -81,8 +81,18 @@ export async function generateMetadata({
 
 
 
+  const baseUrl = settings.app_base_url || getBaseUrl();
+  const languages: Record<string, string> = {};
+  routing.locales.forEach((loc) => {
+    languages[loc] = `${baseUrl}/${loc}`;
+  });
+  languages["x-default"] = `${baseUrl}/en`;
+
   return {
-    metadataBase: new URL(settings.app_base_url || getBaseUrl()),
+    metadataBase: new URL(baseUrl),
+    alternates: {
+      languages,
+    },
     title: {
       template: `%s | ${title}`,
       default: title,
@@ -164,14 +174,10 @@ export default async function LocaleLayout({
       className={`${fontSans.variable} ${fontHeading.variable} ${geistMono.variable} theme-${settings.theme_color || "violet"}`}
       suppressHydrationWarning
     >
-      <body
-        className="antialiased"
-        suppressHydrationWarning
-      >
+      <head>
         {/* Google Consent Mode v2 Default State - MUST be first before any analytics */}
-        <Script
+        <script
           id="google-consent-default"
-          strategy="beforeInteractive"
           dangerouslySetInnerHTML={{
             __html: `
               window.dataLayer = window.dataLayer || [];
@@ -188,11 +194,15 @@ export default async function LocaleLayout({
             `,
           }}
         />
-
         {/* Ad-hoc Custom Head Scripts Injected from Settings Dashboard */}
         {settings.custom_head_scripts && (
           <div dangerouslySetInnerHTML={{ __html: settings.custom_head_scripts }} />
         )}
+      </head>
+      <body
+        className="antialiased"
+        suppressHydrationWarning
+      >
 
         <SchemaInjector schema={buildOrganizationSchema(settings)} />
 

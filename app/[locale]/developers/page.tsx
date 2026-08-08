@@ -1,10 +1,10 @@
 import { Metadata } from "next";
 import { getBaseUrl } from "@/lib/seo-utils";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Terminal, Key, Zap, Code2, CheckCircle2, MessageCircle } from "lucide-react";
 import { SchemaInjector } from "@/components/schema-injector";
+import Image from "next/image";
 
 export async function generateMetadata(): Promise<Metadata> {
   const baseUrl = getBaseUrl();
@@ -34,7 +34,7 @@ export default function DevelopersPage() {
       <div className="bg-slate-950 text-slate-50 pt-32 pb-20 px-4 sm:px-6 lg:px-8 overflow-hidden relative">
         <div className="absolute inset-0 bg-gradient-to-br from-violet-600/20 to-fuchsia-600/20 opacity-50" />
         <div className="absolute -top-40 -right-40 w-96 h-96 bg-violet-500/30 blur-3xl rounded-full pointer-events-none" />
-        
+
         <div className="max-w-5xl mx-auto relative z-10">
           <div className="inline-flex items-center rounded-full border border-violet-500/30 bg-violet-500/10 px-3 py-1 text-sm font-medium text-violet-300 mb-6">
             <Zap className="mr-2 h-4 w-4" />
@@ -47,16 +47,16 @@ export default function DevelopersPage() {
             Automate your bookings, access real-time availability, and get dynamic pricing with our fully OCTO-compliant B2B API. Built for OTAs, concierges, and travel agencies.
           </p>
           <div className="flex flex-col sm:flex-row gap-4">
-            <a 
-              href={whatsappUrl} 
-              target="_blank" 
+            <a
+              href={whatsappUrl}
+              target="_blank"
               rel="noopener noreferrer"
               className="inline-flex h-12 items-center justify-center rounded-4xl bg-white px-8 text-sm font-semibold text-slate-950 transition-colors hover:bg-slate-200"
             >
               <Key className="mr-2 h-5 w-5" />
               Request API Key
             </a>
-            <a 
+            <a
               href="#documentation"
               className="inline-flex h-12 items-center justify-center rounded-4xl border border-slate-700 bg-transparent px-8 text-sm font-medium text-slate-300 transition-colors hover:bg-slate-800 hover:text-white"
             >
@@ -68,7 +68,7 @@ export default function DevelopersPage() {
           <div className="flex items-center gap-4 mt-12 pt-8 border-t border-slate-800/50 inline-flex">
             <span className="text-sm text-slate-400 font-medium">Certified by OCTO:</span>
             <a href="https://certify.octo.travel/verify/52ab46b8-59c9-47f5-8d54-3750340a7e51" target="_blank" rel="noopener noreferrer" className="transition-opacity hover:opacity-80">
-              <img src="https://certify.octo.travel/supplier-badge.svg" alt="Supplier Certification Badge" className="h-12 w-auto" />
+              <Image src="https://certify.octo.travel/supplier-badge.svg" alt="Supplier Certification Badge" width={200} height={48} className="h-12 w-auto" unoptimized />
             </a>
           </div>
         </div>
@@ -76,7 +76,7 @@ export default function DevelopersPage() {
 
       {/* Main Content */}
       <div id="documentation" className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 mt-16 scroll-mt-24">
-        
+
         {/* Overview */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
           <Card className="border-none shadow-sm bg-white dark:bg-slate-950">
@@ -161,7 +161,7 @@ export default function DevelopersPage() {
                 </div>
                 <CardTitle className="text-xl">Merchant of Record & Payouts</CardTitle>
                 <CardDescription className="text-sm mt-2 text-slate-600 dark:text-slate-400 leading-relaxed max-w-4xl">
-                  <strong>You are the Merchant of Record.</strong> Our API does not process end-customer payments. You are responsible for collecting the <code className="bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded font-mono text-xs text-pink-500">retail</code> price directly from your customers on your own website using your own payment gateway. 
+                  <strong>You are the Merchant of Record.</strong> Our API does not process end-customer payments. You are responsible for collecting the <code className="bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded font-mono text-xs text-pink-500">retail</code> price directly from your customers on your own website using your own payment gateway.
                   <br /><br />
                   Once you successfully charge your customer, you call our API to secure the booking. To settle the <code className="bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded font-mono text-xs text-sky-500">net</code> balance and confirm the reservation, you can instantly pay the net price for individual ON_HOLD bookings using a credit card via our secure B2B gateway: <code className="bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded font-mono text-xs">/checkout/b2b-pay?bookingId=[UUID]</code>. Successful payment will automatically set the booking to CONFIRMED.
                 </CardDescription>
@@ -184,7 +184,7 @@ export default function DevelopersPage() {
             </div>
             <pre className="text-slate-300 font-mono text-sm overflow-x-auto">
               <code className="language-bash">
-{`curl -X GET "https://istanbulportrait.com/api/octo/products" \\
+                {`curl -X GET "https://istanbulportrait.com/api/octo/products" \\
   -H "Authorization: Bearer YOUR_API_KEY" \\
   -H "Content-Type: application/json"`}
               </code>
@@ -195,23 +195,23 @@ export default function DevelopersPage() {
         {/* API Endpoints Tabs */}
         <div className="mb-16">
           <h2 className="text-3xl font-bold mb-6 text-slate-900 dark:text-white">Core Endpoints</h2>
-          
+
           <Tabs defaultValue="products" className="w-full">
             <TabsList className="w-full justify-start border-b rounded-none h-auto p-0 bg-transparent mb-8">
-              <TabsTrigger 
-                value="products" 
+              <TabsTrigger
+                value="products"
                 className="data-[state=active]:border-b-2 data-[state=active]:border-violet-600 data-[state=active]:shadow-none rounded-none py-3 px-6"
               >
                 Products
               </TabsTrigger>
-              <TabsTrigger 
-                value="availability" 
+              <TabsTrigger
+                value="availability"
                 className="data-[state=active]:border-b-2 data-[state=active]:border-violet-600 data-[state=active]:shadow-none rounded-none py-3 px-6"
               >
                 Availability & Pricing
               </TabsTrigger>
-              <TabsTrigger 
-                value="bookings" 
+              <TabsTrigger
+                value="bookings"
                 className="data-[state=active]:border-b-2 data-[state=active]:border-violet-600 data-[state=active]:shadow-none rounded-none py-3 px-6"
               >
                 Bookings
@@ -233,7 +233,7 @@ export default function DevelopersPage() {
                 <div className="bg-slate-950 rounded-xl p-6 border border-slate-800">
                   <div className="text-slate-400 text-xs font-mono mb-2 uppercase tracking-wider">Example Response</div>
                   <pre className="text-emerald-400 font-mono text-sm overflow-x-auto">
-{`[
+                    {`[
   {
     "id": "package-uuid",
     "internalName": "Surprise Rooftop Proposal",
@@ -271,12 +271,12 @@ export default function DevelopersPage() {
                 <p className="text-slate-600 dark:text-slate-400 mb-6">
                   Check real-time availability for a specific product and date range. The response dynamically includes specific time surcharges (e.g., sunrise shoots).
                 </p>
-                
+
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                   <div className="bg-slate-950 rounded-xl p-6 border border-slate-800">
                     <div className="text-slate-400 text-xs font-mono mb-2 uppercase tracking-wider">Request Body</div>
                     <pre className="text-sky-400 font-mono text-sm overflow-x-auto">
-{`{
+                      {`{
   "productId": "package-uuid",
   "optionId": "standard",
   "localDateStart": "2026-05-10",
@@ -284,11 +284,11 @@ export default function DevelopersPage() {
 }`}
                     </pre>
                   </div>
-                  
+
                   <div className="bg-slate-950 rounded-xl p-6 border border-slate-800">
                     <div className="text-slate-400 text-xs font-mono mb-2 uppercase tracking-wider">Response</div>
                     <pre className="text-emerald-400 font-mono text-sm overflow-x-auto">
-{`[
+                      {`[
   {
     "id": "2026-05-10T06:00:00+03:00",
     "localDateTimeStart": "2026-05-10T06:00:00+03:00",
@@ -329,7 +329,7 @@ export default function DevelopersPage() {
                 <div className="bg-slate-950 rounded-xl p-6 border border-slate-800">
                   <div className="text-slate-400 text-xs font-mono mb-2 uppercase tracking-wider">Request Body</div>
                   <pre className="text-sky-400 font-mono text-sm overflow-x-auto">
-{`{
+                    {`{
   "uuid": "unique-booking-id",
   "productId": "package-uuid",
   "optionId": "standard",
@@ -359,9 +359,9 @@ export default function DevelopersPage() {
             <p className="text-violet-100 mb-8 max-w-2xl mx-auto text-lg">
               Get your API key today and start offering Istanbul's best photography experiences directly to your customers.
             </p>
-            <a 
-              href={whatsappUrl} 
-              target="_blank" 
+            <a
+              href={whatsappUrl}
+              target="_blank"
               rel="noopener noreferrer"
               className="inline-flex h-14 items-center justify-center rounded-xl bg-white px-10 text-lg font-bold text-violet-600 transition-colors hover:bg-slate-100"
             >

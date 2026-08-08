@@ -25,8 +25,6 @@ export async function generateMetadata(props: {
 }): Promise<Metadata> {
   const params = await props.params;
   const searchParams = await props.searchParams;
-  const pageParam = searchParams?.page;
-  const pageQuery = pageParam ? `?page=${pageParam}` : "";
   const { routing } = await import("@/i18n/routing");
 
   if (!routing.locales.includes(params.locale as any)) {
@@ -79,10 +77,10 @@ export async function generateMetadata(props: {
       title,
       description: desc,
       alternates: {
-        canonical: `${baseUrl}/${params.locale}/${currentSeg}${pageQuery}`,
+        canonical: `${baseUrl}/${params.locale}/${currentSeg}`,
         ...getAlternates((loc) => {
           const tLoc = dbPage.title?.[loc];
-          return `/${tLoc ? generateNativeSlug(tLoc) : dbPage.slug}${pageQuery}`;
+          return `/${tLoc ? generateNativeSlug(tLoc) : dbPage.slug}`;
         }),
       },
       openGraph: constructOpenGraph(title, desc, ogImage, fallbackTitle, params.locale),
@@ -125,11 +123,11 @@ export async function generateMetadata(props: {
       title,
       description: desc,
       alternates: {
-        canonical: `${baseUrl}/${params.locale}/${dbPage.slug}/${type}/${childSlug}${pageQuery}`,
+        canonical: `${baseUrl}/${params.locale}/${dbPage.slug}/${type}/${childSlug}`,
         ...getAlternates((loc) => {
           const tLoc = dbPage.title?.[loc];
           const bSeg = tLoc ? generateNativeSlug(tLoc) : dbPage.slug;
-          return `/${bSeg}/${type}/${childSlug}${pageQuery}`;
+          return `/${bSeg}/${type}/${childSlug}`;
         }),
       },
       openGraph: constructOpenGraph(title, desc, settings.default_og_image_url || "", fallbackTitle, params.locale),

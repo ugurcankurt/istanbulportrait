@@ -16,6 +16,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import Link from "next/link";
+import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 
@@ -66,10 +67,10 @@ export default function ClientGallery({ bookingId }: { bookingId: string }) {
         const nextIndex = (currentIndex + 1) % activeFiles.length;
         const prevIndex = (currentIndex - 1 + activeFiles.length) % activeFiles.length;
 
-        const imgNext = new Image();
+        const imgNext = new window.Image();
         imgNext.src = activeFiles[nextIndex].url;
 
-        const imgPrev = new Image();
+        const imgPrev = new window.Image();
         imgPrev.src = activeFiles[prevIndex].url;
       }
     }
@@ -360,12 +361,12 @@ export default function ClientGallery({ bookingId }: { bookingId: string }) {
                   }}
                   className="group relative aspect-[4/5] rounded-xl md:rounded-2xl overflow-hidden cursor-pointer bg-muted transition-all duration-300 hover:shadow-xl hover:-translate-y-1"
                 >
-                  <img
+                  <Image
                     src={f.thumbnail}
                     alt={f.name}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                    loading="lazy"
-                    decoding="async"
+                    fill
+                    sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
+                    className="object-cover transition-transform duration-500 group-hover:scale-105"
                   />
                   {/* Selection Badge for Grid */}
                   {activeTab === "raw" && selectedFiles.includes(f.id) && (
@@ -476,20 +477,24 @@ export default function ClientGallery({ bookingId }: { bookingId: string }) {
               {/* Main Image with Progressive Blur-Up */}
               <div className="w-full h-full flex items-center justify-center p-2 sm:p-8 relative">
                 {/* Low-Res Placeholder (Instant) */}
-                <img
+                <Image
                   src={selectedImage.thumbnail}
                   alt="placeholder"
-                  className={`max-h-full max-w-full object-contain drop-shadow-2xl absolute transition-opacity duration-500 ease-in-out ${isHighResLoaded ? 'opacity-0' : 'opacity-100 blur-md scale-105'}`}
+                  fill
+                  className={`object-contain drop-shadow-2xl absolute transition-opacity duration-500 ease-in-out ${isHighResLoaded ? 'opacity-0' : 'opacity-100 blur-md scale-105'}`}
                   draggable={false}
+                  sizes="100vw"
                 />
                 {/* High-Res Image (Fades in when loaded) */}
-                <img
+                <Image
                   src={selectedImage.url}
                   alt={selectedImage.name}
-                  className={`max-h-full max-w-full object-contain drop-shadow-2xl relative z-10 transition-opacity duration-300 ease-in-out ${isHighResLoaded ? 'opacity-100' : 'opacity-0'}`}
+                  fill
+                  className={`object-contain drop-shadow-2xl relative z-10 transition-opacity duration-300 ease-in-out ${isHighResLoaded ? 'opacity-100' : 'opacity-0'}`}
                   draggable={false}
-                  decoding="async"
                   onLoad={() => setIsHighResLoaded(true)}
+                  sizes="100vw"
+                  quality={90}
                 />
               </div>
 
