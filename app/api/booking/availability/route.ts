@@ -165,14 +165,17 @@ export async function GET(request: Request) {
   const occupancyRate = totalSlotsCount > 0 ? blockedSlotsCount / totalSlotsCount : 0;
 
   // Apply Yield Rules
-  if (occupancyRate >= 0.7) {
+  if (validBookings.length >= 2) {
+    dynamicMultiplier = 1.50; // +50% for 2 or more bookings
+    yieldReason = "high_demand";
+  } else if (occupancyRate >= 0.7) {
     dynamicMultiplier = 1.15; // +15% for high demand
     yieldReason = "high_demand";
   } else if (diffDays <= 3 && diffDays >= 0) {
     dynamicMultiplier = 1.10; // +10% for last minute
     yieldReason = "last_minute";
   } else if (diffDays > 30) {
-    dynamicMultiplier = 0.95; // -5% for early bird
+    dynamicMultiplier = 0.70; // -30% for early bird
     yieldReason = "early_bird";
   }
 
