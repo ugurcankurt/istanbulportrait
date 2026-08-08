@@ -52,6 +52,7 @@ const facebookConversionSchema = z.object({
   transaction_id: z.string().optional(),
   lead_id: z.number().optional(),
   event_source_url: z.string().optional(),
+  external_id: z.string().optional(),
   fbc: z.string().optional(),
   fbp: z.string().optional(),
   custom_data: z.record(z.string(), z.unknown()).optional(),
@@ -124,6 +125,7 @@ export async function POST(request: NextRequest) {
       transaction_id,
       lead_id,
       event_source_url,
+      external_id,
       fbc: bodyFbc,
       fbp: bodyFbp,
       custom_data = {},
@@ -146,6 +148,10 @@ export async function POST(request: NextRequest) {
       fbc,
       fbp,
     };
+
+    if (external_id) {
+      user_data.external_id = [await hashCustomerData(external_id)];
+    }
 
     if (customer_email) {
       user_data.em = [await hashCustomerData(customer_email)];

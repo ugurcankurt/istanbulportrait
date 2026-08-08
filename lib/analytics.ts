@@ -57,6 +57,26 @@ export function getUserDataForAdvancedMatching(): AnalyticsUserData | undefined 
 }
 
 /**
+ * Generates or retrieves a unique external_id for the user
+ */
+const EXT_ID_STORAGE_KEY = "istanbul_portrait_ext_id";
+export function getExternalId(): string | undefined {
+  if (typeof window === "undefined") return undefined;
+  try {
+    let extId = localStorage.getItem(EXT_ID_STORAGE_KEY);
+    if (!extId) {
+      extId = typeof crypto !== "undefined" && crypto.randomUUID 
+        ? crypto.randomUUID() 
+        : `ip_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
+      localStorage.setItem(EXT_ID_STORAGE_KEY, extId);
+    }
+    return extId;
+  } catch (e) {
+    return undefined;
+  }
+}
+
+/**
  * Reads a cookie value safely from the document, handles multiple cookies of same name
  */
 export function getCookie(name: string): string | undefined {
@@ -244,6 +264,7 @@ export function trackPurchase(
         country: resolvedUserData?.country,
         custom_data: { content_name: packageName, currency: currency, yield_category: yieldCategory },
         event_source_url: window.location.href,
+        external_id: getExternalId(),
         fbc: getValidFbc(),
         fbp: getValidFbp(),
       }),
@@ -337,6 +358,7 @@ export function trackViewItem(
         gender: userData?.gender,
         custom_data: { content_name: itemName, currency: currency },
         event_source_url: window.location.href,
+        external_id: getExternalId(),
         fbc: getValidFbc(),
         fbp: getValidFbp(),
       }),
@@ -404,6 +426,7 @@ export function trackBeginCheckout(
           yield_category: yieldCategory,
         },
         event_source_url: window.location.href,
+        external_id: getExternalId(),
         fbc: getValidFbc(),
         fbp: getValidFbp(),
       }),
@@ -477,6 +500,7 @@ export function trackAddPaymentInfo(
         last_name: userData?.lastName,
         custom_data: { content_name: packageName, payment_type: paymentType, currency: currency },
         event_source_url: window.location.href,
+        external_id: getExternalId(),
         fbc: getValidFbc(),
         fbp: getValidFbp(),
       }),
@@ -567,6 +591,7 @@ export function trackLead(
         last_name: userData?.lastName,
         custom_data: { content_name: packageName, currency: currency, yield_category: yieldCategory },
         event_source_url: window.location.href,
+        external_id: getExternalId(),
         fbc: getValidFbc(),
         fbp: getValidFbp(),
       }),
@@ -629,6 +654,7 @@ export function trackSchedule(
           currency: "EUR",
         },
         event_source_url: window.location.href,
+        external_id: getExternalId(),
         fbc: getValidFbc(),
         fbp: getValidFbp(),
       }),
@@ -677,6 +703,7 @@ export function trackContact(method: string) {
         last_name: userData?.lastName,
         custom_data: { contact_method: method, currency: "EUR" },
         event_source_url: window.location.href,
+        external_id: getExternalId(),
         fbc: getValidFbc(),
         fbp: getValidFbp(),
       }),
@@ -806,6 +833,7 @@ export function trackPackageAddToCart(
         gender: userData?.gender,
         custom_data: { content_name: packageName, currency: currency, yield_category: yieldCategory },
         event_source_url: window.location.href,
+        external_id: getExternalId(),
         fbc: getValidFbc(),
         fbp: getValidFbp(),
       }),
@@ -873,6 +901,7 @@ export function trackPrintViewItem(
         amount: price,
         custom_data: { content_name: name, content_category: category, currency: currency },
         event_source_url: window.location.href,
+        external_id: getExternalId(),
         fbc: getValidFbc(),
         fbp: getValidFbp(),
       }),
@@ -949,6 +978,7 @@ export function trackPrintAddToCart(
         gender: userData?.gender,
         custom_data: { content_name: name, content_category: category, currency: currency },
         event_source_url: window.location.href,
+        external_id: getExternalId(),
         fbc: getValidFbc(),
         fbp: getValidFbp(),
       }),
@@ -1020,6 +1050,7 @@ export function trackPrintBeginCheckout(
           num_items: items.reduce((acc, curr) => acc + curr.quantity, 0),
         },
         event_source_url: window.location.href,
+        external_id: getExternalId(),
         fbc: getValidFbc(),
         fbp: getValidFbp(),
       }),
