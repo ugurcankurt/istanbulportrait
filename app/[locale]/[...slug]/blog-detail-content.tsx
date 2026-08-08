@@ -15,7 +15,7 @@ import { BlogCard } from "@/components/blog-card";
 import { formatBlogDate } from "@/lib/blog/blog-utils";
 import { settingsService } from "@/lib/settings-service";
 import type { Locale } from "@/types/blog";
-import { generateSeoDescription, buildArticleSchema } from "@/lib/seo-utils";
+import { generateSeoDescription, buildArticleSchema, getBaseUrl } from "@/lib/seo-utils";
 import { SchemaInjector } from "@/components/schema-injector";
 
 export async function BlogDetailPageContent({
@@ -67,6 +67,7 @@ export async function BlogDetailPageContent({
         publisherLogo: settings.logo_url || settings.default_og_image_url || undefined,
         inLanguage: locale,
         keywords: post.translation.meta_keywords || [],
+        url: `${getBaseUrl()}/${locale}/${parentSlug}/${post.translation.slug}`
       })} />
 
       <BreadcrumbNav />

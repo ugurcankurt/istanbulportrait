@@ -2,17 +2,12 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
-  Check,
   ChevronLeft,
-  ChevronRight,
   Clock,
-  CreditCard,
   Image as ImageIcon,
   Loader2,
   Lock,
   MapPin,
-  ShieldCheck,
-  Tag,
 } from "lucide-react";
 import { useCurrency } from "@/contexts/currency-context";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -25,12 +20,10 @@ import { BookingSuccess } from "@/components/booking-success";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Form } from "@/components/ui/form";
 import { Separator } from "@/components/ui/separator";
 import {
   saveUserDataForAdvancedMatching,
-    trackBeginCheckout,
-  trackFacebookEvent,
+  trackBeginCheckout,
   trackPaymentEvent,
   trackPurchase,
 } from "@/lib/analytics";
@@ -108,7 +101,8 @@ function Step1Summary({
     (preFilledBookingData as any)?.isPerPerson ? preFilledBookingData?.peopleCount : undefined,
     undefined,
     undefined,
-    surchargePercentage
+    surchargePercentage,
+    (preFilledBookingData as any)?.yieldMultiplier || 1.0
   );
 
   const pricing = {
@@ -164,12 +158,12 @@ function Step1Summary({
             ))}
           </div>
         </div>
-        
+
         {/* Promo code */}
         <div className="rounded-2xl border-[0.5px] border-border/50 bg-background overflow-hidden p-4 space-y-3 mt-4">
           <label className="text-sm font-semibold">{t("promo_code") || "Promo Code"}</label>
           <div className="flex gap-2">
-            <Input 
+            <Input
               value={promoCodeInput}
               onChange={(e) => setPromoCodeInput(e.target.value.toUpperCase())}
               placeholder="e.g. SPRING20"
@@ -241,11 +235,11 @@ export function CheckoutForm({ timeSurcharges = [] }: { timeSurcharges?: TimeSur
   const router = useRouter();
   const locale = useLocale();
   const t = useTranslations("checkout");
-    const tui = useTranslations("ui");
+  const tui = useTranslations("ui");
   const tValidation = useTranslations("validation");
   const tPricing = useTranslations("pricing");
 
-    const [selectedPackage, setSelectedPackage] = useState<PackageId | null>(null);
+  const [selectedPackage, setSelectedPackage] = useState<PackageId | null>(null);
   const [bookingId, setBookingId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [preFilledBookingData, setPreFilledBookingData] = useState<BookingFormData | null>(null);
@@ -258,7 +252,7 @@ export function CheckoutForm({ timeSurcharges = [] }: { timeSurcharges?: TimeSur
   const [appliedPromo, setAppliedPromo] = useState<{ code: string; percentage: number } | null>(null);
   const [promoError, setPromoError] = useState("");
   const [isLoadingPromo, setIsLoadingPromo] = useState(false);
-    const [turinvoiceOrder, setTurinvoiceOrder] = useState<{
+  const [turinvoiceOrder, setTurinvoiceOrder] = useState<{
     idOrder: number;
     paymentUrl: string;
     amountTRY: number;
@@ -278,27 +272,28 @@ export function CheckoutForm({ timeSurcharges = [] }: { timeSurcharges?: TimeSur
       (preFilledBookingData as any)?.isPerPerson ? preFilledBookingData?.peopleCount : undefined,
       undefined,
       undefined,
-      computedSurchargePercentage
+      computedSurchargePercentage,
+      (preFilledBookingData as any)?.yieldMultiplier || 1.0
     )
     : null;
 
 
   const handleApplyPromo = async () => {
     if (!promoCodeInput.trim() || !selectedPackage) return;
-    
+
     setIsLoadingPromo(true);
     setPromoError("");
-    
+
     try {
       const response = await fetch(`/api/booking/validate-promo?code=${encodeURIComponent(promoCodeInput.trim().toUpperCase())}&packageId=${selectedPackage}`);
       const data = await response.json();
-      
+
       if (!response.ok) {
         setPromoError(data.error || "Invalid promo code");
         setAppliedPromo(null);
         return;
       }
-      
+
       setAppliedPromo({
         code: data.code,
         percentage: data.discount_percentage
@@ -313,7 +308,7 @@ export function CheckoutForm({ timeSurcharges = [] }: { timeSurcharges?: TimeSur
   };
 
   const bookingSchemaWithTranslations = createBookingSchema(tValidation);
-  
+
   const bookingForm = useForm<BookingFormData>({
     resolver: zodResolver(bookingSchemaWithTranslations),
     defaultValues: {
@@ -328,7 +323,7 @@ export function CheckoutForm({ timeSurcharges = [] }: { timeSurcharges?: TimeSur
     },
   });
 
-  
+
 
   useEffect(() => {
     if (!eventId) setEventId(crypto.randomUUID());
@@ -371,7 +366,7 @@ export function CheckoutForm({ timeSurcharges = [] }: { timeSurcharges?: TimeSur
     if (coupon && selectedPackage && !appliedPromo && !isLoadingPromo && !promoError && !promoCodeInput) {
       const upperCoupon = coupon.toUpperCase();
       setPromoCodeInput(upperCoupon);
-      
+
       const autoApply = async () => {
         setIsLoadingPromo(true);
         setPromoError("");
@@ -392,7 +387,7 @@ export function CheckoutForm({ timeSurcharges = [] }: { timeSurcharges?: TimeSur
           setIsLoadingPromo(false);
         }
       };
-      
+
       autoApply();
     }
   }, [searchParams, selectedPackage, appliedPromo]);
@@ -405,12 +400,20 @@ export function CheckoutForm({ timeSurcharges = [] }: { timeSurcharges?: TimeSur
       photos: (preFilledBookingData as any)?.packagePhotos || "",
       locations: (preFilledBookingData as any)?.packageLocations || "",
       features: ((preFilledBookingData as any)?.packageFeatures || []) as string[],
+      currency: "EUR"
     }
     : null;
 
   useEffect(() => {
     if (selectedPackage && packageInfo && eventId) {
-      trackBeginCheckout(selectedPackage, packageInfo.name, packageInfo.price, "EUR", eventId);
+      trackBeginCheckout(
+        selectedPackage,
+        packageInfo.name,
+        packageInfo.price,
+        packageInfo.currency,
+        eventId,
+        (preFilledBookingData as any)?.yieldReason || "standard"
+      );
     }
   }, [selectedPackage, packageInfo, eventId]);
 
@@ -463,7 +466,8 @@ export function CheckoutForm({ timeSurcharges = [] }: { timeSurcharges?: TimeSur
       (preFilledBookingData as any)?.isPerPerson ? (preFilledBookingData as any)?.peopleCount : undefined,
       undefined,
       undefined,
-      computedSurchargePercentage
+      computedSurchargePercentage,
+      (preFilledBookingData as any)?.yieldMultiplier || 1.0
     );
 
     try {
@@ -493,6 +497,8 @@ export function CheckoutForm({ timeSurcharges = [] }: { timeSurcharges?: TimeSur
           locale,
           fbc,
           fbp,
+          yieldMultiplier: (preFilledBookingData as any)?.yieldMultiplier || 1.0,
+          yieldReason: (preFilledBookingData as any)?.yieldReason || "standard"
         }),
       });
 
@@ -504,7 +510,7 @@ export function CheckoutForm({ timeSurcharges = [] }: { timeSurcharges?: TimeSur
       setShowSuccess(true);
       toast.success(t("success.payment_successful") || "Booking successful");
       sessionStorage.removeItem("bookingData");
-      
+
       const actualTotal = bookingResult.booking.totalAmount;
       const nameParts = bookingData.customerName.split(" ");
       const firstName = nameParts[0];
@@ -523,10 +529,11 @@ export function CheckoutForm({ timeSurcharges = [] }: { timeSurcharges?: TimeSur
           firstName,
           lastName,
         },
-        eventId
+        eventId,
+        (preFilledBookingData as any)?.yieldReason || "standard"
       );
       trackYandexPurchase(bookingResult.booking.id, selectedPackage, actualTotal);
-      
+
       if (typeof window !== "undefined") {
         window.dispatchEvent(new CustomEvent("booking_confirmed", {
           detail: { customerName: bookingData.customerName, bookingDate: bookingData.bookingDate, packageId: selectedPackage },
@@ -565,11 +572,11 @@ export function CheckoutForm({ timeSurcharges = [] }: { timeSurcharges?: TimeSur
   }
 
   const handleExpire = () => {
-        toast.error(t("expired") || "Reservation expired. Please select a new time.");
+    toast.error(t("expired") || "Reservation expired. Please select a new time.");
     router.push(`/${locale}/packages`);
   };
 
-  
+
   return (
     <div className="fixed inset-0 z-[9999] flex flex-col bg-background overflow-hidden">
       {/* ── Mini Header ── */}
@@ -589,9 +596,9 @@ export function CheckoutForm({ timeSurcharges = [] }: { timeSurcharges?: TimeSur
         </div>
       </header>
 
-      
 
-      
+
+
 
       {/* ── Step Content ── */}
       <main className="flex-1 overflow-y-auto px-4 py-4 min-h-0">

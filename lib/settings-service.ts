@@ -1,3 +1,4 @@
+import { unstable_cache } from "next/cache";
 import { supabase } from "./supabase";
 
 export interface SiteSettings {
@@ -127,8 +128,8 @@ export const settingsService = {
    * Fetch site settings from Supabase (runs on Server or Client).
    * Falls back to default settings if query fails or table is empty.
    */
-  async getSettings(): Promise<SiteSettings> {
-    try {
+  getSettings: unstable_cache(async (): Promise<SiteSettings> => {
+try {
       const { data, error } = await supabase
         .from("site_settings")
         .select("*")
@@ -188,25 +189,28 @@ export const settingsService = {
         facebook_dataset_id: rawData.facebook_dataset_id || defaultSettings.facebook_dataset_id,
         facebook_access_token: rawData.facebook_access_token || defaultSettings.facebook_access_token,
         facebook_verify_token: rawData.facebook_verify_token || defaultSettings.facebook_verify_token,
+
         instagram_access_token: rawData.instagram_access_token || defaultSettings.instagram_access_token,
         instagram_account_id: rawData.instagram_account_id || defaultSettings.instagram_account_id,
+
         ga4_measurement_protocol_secret: rawData.ga4_measurement_protocol_secret || defaultSettings.ga4_measurement_protocol_secret,
         app_base_url: rawData.app_base_url || defaultSettings.app_base_url,
         admin_email: rawData.admin_email || defaultSettings.admin_email,
+
         clarity_project_id: rawData.clarity_project_id || defaultSettings.clarity_project_id,
         yandex_webmaster_key: rawData.yandex_webmaster_key || defaultSettings.yandex_webmaster_key,
         bing_webmaster_key: rawData.bing_webmaster_key || defaultSettings.bing_webmaster_key,
         indexnow_api_key: rawData.indexnow_api_key || defaultSettings.indexnow_api_key,
+
         behold_url: rawData.behold_url || defaultSettings.behold_url,
         google_ads_id: rawData.google_ads_id || defaultSettings.google_ads_id,
         google_ads_webhook_key: rawData.google_ads_webhook_key || defaultSettings.google_ads_webhook_key,
         featurable_widget_id: rawData.featurable_widget_id || defaultSettings.featurable_widget_id,
       };
-    } catch (error) {
-      console.error("Failed to load settings:", error);
+    } catch (e) {
       return defaultSettings;
     }
-  },
+  }, ["site-settings"]),
 
   /**
    * Helper to resolve translatable fields explicitly.

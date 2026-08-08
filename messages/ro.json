@@ -206,7 +206,12 @@
     "expired": "Slot de rezervare a expirat. Vă rugăm să selectați o nouă oră.",
     "apply": "Aplică",
     "remove": "Elimină",
-    "promo_code_applied": "%{percentage} Reducere promoțională"
+    "promo_code_applied": "%{percentage} Reducere promoțională",
+    "yield": {
+      "high_demand": "Cerere Mare",
+      "last_minute": "Ultimul Minut",
+      "early_bird": "Rezervare Timpurie"
+    }
   },
   "footer": {
     "description": "Fotograf de top din Istanbul pentru fotografii profesionale de portret. Surprindeți-vă momentele speciale cu cele mai emblematice fundaluri ale orașului.",

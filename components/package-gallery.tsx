@@ -324,6 +324,7 @@ export function PackageGallery({
                 className="object-cover hover:brightness-90 transition-all duration-700 hover:scale-105"
                 quality={75}
                 sizes="(max-width: 1024px) 25vw, (max-width: 1536px) 25vw, 400px"
+                priority
               />
             </div>
           ))}

@@ -1,3 +1,4 @@
+import { unstable_cache } from "next/cache";
 import { createClient } from "@supabase/supabase-js";
 
 export interface PageTranslations {
@@ -76,8 +77,8 @@ export const pagesContentService = {
   /**
    * Fetch all pages for Admin
    */
-  async getAllPages(): Promise<PageDB[]> {
-    const supabase = getSupabaseClient();
+  getAllPages: unstable_cache(async (): Promise<PageDB[]> => {
+const supabase = getSupabaseClient();
     const { data, error } = await supabase
       .from("pages")
       .select("*")
@@ -89,13 +90,13 @@ export const pagesContentService = {
     }
 
     return data as PageDB[];
-  },
+  }, ["pages", "all-pages"], { tags: ["pages"] }),
 
   /**
    * Fetch a page by ID
    */
-  async getPageById(id: string): Promise<PageDB | null> {
-    const supabase = getSupabaseClient();
+  getPageById: unstable_cache(async (id: string): Promise<PageDB | null> => {
+const supabase = getSupabaseClient();
     const { data, error } = await supabase
       .from("pages")
       .select("*")
@@ -108,7 +109,7 @@ export const pagesContentService = {
     }
 
     return data as PageDB;
-  },
+  }, ["pages", "page-by-id"], { tags: ["pages"] }),
 
   /**
    * Create a new page

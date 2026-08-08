@@ -206,7 +206,12 @@
     "expired": "Reservation slot expired. Please select a new time.",
     "apply": "Apply",
     "remove": "Remove",
-    "promo_code_applied": "%{percentage} Promo Discount"
+    "promo_code_applied": "%{percentage} Promo Discount",
+    "yield": {
+      "high_demand": "High Demand",
+      "last_minute": "Last Minute",
+      "early_bird": "Early Bird"
+    }
   },
   "footer": {
     "description": "Leading photographer in Istanbul for professional portrait photography. Capturing your special moments with the city's most iconic backdrops.",

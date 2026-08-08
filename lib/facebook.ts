@@ -76,6 +76,7 @@ export interface FacebookConversionEvent {
     currency?: string;
     transaction_id?: string;
     num_items?: number;
+    yield_category?: string;
   };
 }
 
@@ -214,6 +215,7 @@ export const fbPixel = {
     value: number,
     transactionId: string,
     eventId?: string,
+    yieldCategory?: string,
   ) => {
     fbPixel.track(
       "Purchase",
@@ -223,6 +225,7 @@ export const fbPixel = {
         value: value,
         currency: "EUR",
         transaction_id: transactionId,
+        yield_category: yieldCategory,
       },
       eventId,
     );
@@ -244,6 +247,7 @@ export interface FacebookEventOptions {
   country?: string;
   dateOfBirth?: string;
   gender?: string;
+  yieldCategory?: string;
 }
 
 // Istanbul Portrait specific tracking functions
@@ -371,6 +375,7 @@ export const trackFacebookPurchase = async (
       value: amount,
       currency: "EUR",
       transaction_id: transactionId,
+      yield_category: options?.yieldCategory,
     },
   };
 
@@ -380,7 +385,7 @@ export const trackFacebookPurchase = async (
   // Client-side pixel tracking logic is usually separate for Purchase
   // (e.g. on Thank You page), but if this function is called client-side:
   if (typeof window !== "undefined") {
-    fbPixel.trackPurchase(packageId, amount, transactionId, eventId);
+    fbPixel.trackPurchase(packageId, amount, transactionId, eventId, options?.yieldCategory);
   }
 
   return { success };

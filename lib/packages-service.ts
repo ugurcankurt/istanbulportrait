@@ -63,7 +63,7 @@ export const packagesService = {
    * Ordered by sort_order
    */
   async getActivePackages(): Promise<PackageDB[]> {
-    const supabase = getSupabaseClient();
+const supabase = getSupabaseClient();
     const { data, error } = await supabase
       .from("packages")
       .select("*")
@@ -82,7 +82,7 @@ export const packagesService = {
    * Fetch all packages (including inactive) for Admin
    */
   async getAllPackages(): Promise<PackageDB[]> {
-    const supabase = getSupabaseClient();
+const supabase = getSupabaseClient();
     const { data, error } = await supabase
       .from("packages")
       .select("*")
@@ -131,7 +131,7 @@ export const packagesService = {
    * Fetch a package by ID
    */
   async getPackageById(id: string): Promise<PackageDB | null> {
-    const supabase = getSupabaseClient();
+const supabase = getSupabaseClient();
     const { data, error } = await supabase
       .from("packages")
       .select("*")

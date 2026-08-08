@@ -64,6 +64,8 @@ interface BookingModalProps {
   activeDiscount: DiscountDB | null;
   timeSurcharges?: TimeSurcharge[];
   whatsappNumber?: string;
+  yieldMultiplier?: number;
+  yieldReason?: string;
 }
 
 // Generate time slots from 6 AM to 6 PM
@@ -119,6 +121,8 @@ export function BookingModal({
   activeDiscount,
   timeSurcharges = [],
   whatsappNumber,
+  yieldMultiplier = 1.0,
+  yieldReason = "standard",
 }: BookingModalProps) {
   const locale = useLocale();
   const { formatPrice, rate } = useCurrency();
@@ -134,6 +138,14 @@ export function BookingModal({
   const [peopleCount, setPeopleCount] = useState<number>(1);
   const [isNavigating, setIsNavigating] = useState(false);
   const hasTrackedOpen = useRef(false);
+
+  const [localYieldMultiplier, setLocalYieldMultiplier] = useState(yieldMultiplier);
+  const [localYieldReason, setLocalYieldReason] = useState(yieldReason);
+
+  useEffect(() => {
+    setLocalYieldMultiplier(yieldMultiplier);
+    setLocalYieldReason(yieldReason);
+  }, [yieldMultiplier, yieldReason]);
 
   // Get the appropriate date-fns locale
   const dateFnsLocale = getDateFnsLocale(locale);
@@ -231,7 +243,8 @@ export function BookingModal({
         count,
         undefined,
         undefined,
-        surchargePercentage
+        surchargePercentage,
+        localYieldMultiplier
       );
 
       setPricing({
@@ -279,7 +292,9 @@ export function BookingModal({
         selectedPackage,
         packageInfo.name,
         packageInfo.price,
-        "EUR"
+        "EUR",
+        undefined,
+        localYieldReason
       );
     }
   }, [isOpen, selectedPackage, packageInfo, trackPackageView]);
@@ -304,9 +319,10 @@ export function BookingModal({
         trackLead(
           selectedPackage,
           packageInfo.name,
-          locale === 'tr' ? Math.round(packageInfo.price * rate) : packageInfo.price,
-          locale === 'tr' ? 'TRY' : 'EUR',
-          eventId,
+          packageInfo.price,
+          "EUR",
+          undefined,
+          localYieldReason
         );
 
         // Track Booking Start Event
@@ -327,7 +343,7 @@ export function BookingModal({
           });
 
           const draftResult = await draftResponse.json();
-          const extraInfo = { isPerPerson, activeDiscount, packageDisplayName, packageDuration, packagePhotos, packageLocations, packageFeatures: packageFeatures || [] };
+          const extraInfo = { isPerPerson, activeDiscount, packageDisplayName, packageDuration, packagePhotos, packageLocations, packageFeatures: packageFeatures || [], yieldMultiplier: localYieldMultiplier, yieldReason: localYieldReason };
           const bookingDataToStore = draftResult.bookingId
             ? { ...data, ...extraInfo, totalAmount: pricing?.totalPrice || basePrice, basePrice, originalPrice: pricing?.originalPrice, bookingId: draftResult.bookingId }
             : { ...data, ...extraInfo, totalAmount: pricing?.totalPrice || basePrice, basePrice, originalPrice: pricing?.originalPrice };
@@ -526,6 +542,11 @@ export function BookingModal({
                   timeSurcharges={timeSurcharges}
                   isInsideModal={true}
                   whatsappNumber={whatsappNumber}
+                  yieldReason={localYieldReason}
+                  onYieldChange={(multiplier, reason) => {
+                    setLocalYieldMultiplier(multiplier);
+                    setLocalYieldReason(reason);
+                  }}
                 />
               </div>
             ) : (

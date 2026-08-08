@@ -63,6 +63,7 @@ export async function PackageDetailPageContent({
     providerUrl: getBaseUrl(),
     discount: activeDiscount,
     reviews: reviews,
+    url: `${getBaseUrl()}/${locale}/${parentSlug}/${slug}`
   });
 
   const videoSchema = pkg.video_url ? {
@@ -96,14 +97,14 @@ export async function PackageDetailPageContent({
         whatsappNumber={settings.whatsapp_number}
       />
       {relatedPackages.length > 0 && (
-        <div className="mt-8 border-t border-border/30 bg-muted/10">
+        <div className="mt-0 sm:mt-8 border-t border-border/30 bg-muted/10">
           <PackagesSection
             dbPackages={relatedPackages}
             activeDiscount={activeDiscount}
             aggregateRating={aggregateRating}
             parentSlug={parentSlug}
             header={
-              <div key="related-packages-header" className="text-center max-w-2xl mx-auto mb-8 sm:mb-10 pt-8 sm:pt-10">
+              <div key="related-packages-header" className="text-center max-w-2xl mx-auto mb-6 sm:mb-10 pt-6 sm:pt-10">
                 <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif mb-4 font-normal text-foreground leading-tight">
                   {t("related_packages")}
                 </h2>

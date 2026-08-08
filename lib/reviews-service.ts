@@ -113,7 +113,7 @@ class ReviewsService {
    * Fetch reviews from Featurable API dynamically
    */
   async fetchGoogleReviews(locale: string = "en"): Promise<{ reviews: GoogleReview[], totalCount: number, averageRating: number }> {
-    try {
+try {
       // 1. Fetch dynamic configuration from CMS
       const { pagesContentService } = await import('@/lib/pages-content-service');
       const pageData = await pagesContentService.getPageBySlug("home-reviews");
@@ -229,7 +229,7 @@ class ReviewsService {
    * Calculate aggregate rating from reviews
    */
   async getAggregateRating(): Promise<AggregateRating> {
-    try {
+try {
       const { totalCount, averageRating } = await this.fetchGoogleReviews("en"); // Aggregate rating doesn't need translations
 
       if (totalCount === 0) {

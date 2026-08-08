@@ -206,7 +206,12 @@
     "expired": "Rezervasyon süresi doldu. Lütfen yeni bir saat seçin.",
     "apply": "Uygula",
     "remove": "Kaldır",
-    "promo_code_applied": "%{percentage} Promosyon İndirimi"
+    "promo_code_applied": "%{percentage} Promosyon İndirimi",
+    "yield": {
+      "high_demand": "Yüksek Talep",
+      "last_minute": "Son Dakika",
+      "early_bird": "Erken Rezervasyon"
+    }
   },
   "footer": {
     "description": "Profesyonel portre fotoğrafçılığında İstanbul'un önde gelen fotoğrafçısı. Özel anlarınızı şehrin en simgesel arka planlarıyla ölümsüzleştiriyoruz.",

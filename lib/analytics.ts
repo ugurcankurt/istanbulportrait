@@ -165,6 +165,7 @@ export function trackPurchase(
     country?: string;
   },
   eventId?: string,
+  yieldCategory?: string
 ) {
   if (typeof window !== "undefined" && window.gtag) {
     // Set Enhanced Conversions user data for GA4/Google Ads
@@ -218,6 +219,7 @@ export function trackPurchase(
       value: value,
       currency: currency,
       transaction_id: transactionId,
+      yield_category: yieldCategory,
     },
     eventId,
   );
@@ -240,7 +242,7 @@ export function trackPurchase(
         last_name: resolvedUserData?.lastName,
         city: resolvedUserData?.city,
         country: resolvedUserData?.country,
-        custom_data: { content_name: packageName, currency: currency },
+        custom_data: { content_name: packageName, currency: currency, yield_category: yieldCategory },
         event_source_url: window.location.href,
         fbc: getValidFbc(),
         fbp: getValidFbp(),
@@ -349,6 +351,7 @@ export function trackBeginCheckout(
   value: number,
   currency: string = "EUR",
   eventId?: string,
+  yieldCategory?: string
 ) {
   if (typeof window !== "undefined" && window.gtag) {
     window.gtag("event", "begin_checkout", {
@@ -375,6 +378,7 @@ export function trackBeginCheckout(
       content_type: "product",
       value: value,
       currency: currency,
+      yield_category: yieldCategory,
     },
     eventId,
   );
@@ -397,6 +401,7 @@ export function trackBeginCheckout(
         last_name: userData?.lastName,
         custom_data: {
           content_name: packageName,
+          yield_category: yieldCategory,
         },
         event_source_url: window.location.href,
         fbc: getValidFbc(),
@@ -486,6 +491,7 @@ export function trackLead(
   value?: number,
   currency: string = "EUR",
   eventId?: string,
+  yieldCategory?: string
 ) {
   const resolvedEventId =
     eventId ||
@@ -539,8 +545,9 @@ export function trackLead(
       content_type: "product",
       value: value,
       currency: currency,
+      yield_category: yieldCategory,
     },
-    resolvedEventId, // Fixed parameter mismatch
+    resolvedEventId,
   );
 
   // Facebook CAPI — Lead (server-side, Safari-proof)
@@ -558,7 +565,7 @@ export function trackLead(
         customer_phone: userData?.phone,
         first_name: userData?.firstName,
         last_name: userData?.lastName,
-        custom_data: { content_name: packageName, currency: currency },
+        custom_data: { content_name: packageName, currency: currency, yield_category: yieldCategory },
         event_source_url: window.location.href,
         fbc: getValidFbc(),
         fbp: getValidFbp(),
@@ -737,6 +744,7 @@ export function trackPackageAddToCart(
   value: number,
   currency: string = "EUR",
   eventId?: string,
+  yieldCategory?: string
 ) {
   const resolvedEventId =
     eventId ||
@@ -769,6 +777,7 @@ export function trackPackageAddToCart(
         content_name: packageName,
         value: value,
         currency: currency,
+        yield_category: yieldCategory,
       },
       resolvedEventId ? { eventID: resolvedEventId } : undefined,
     );
@@ -795,7 +804,7 @@ export function trackPackageAddToCart(
         country: userData?.country,
         dob: userData?.dob,
         gender: userData?.gender,
-        custom_data: { content_name: packageName, currency: currency },
+        custom_data: { content_name: packageName, currency: currency, yield_category: yieldCategory },
         event_source_url: window.location.href,
         fbc: getValidFbc(),
         fbp: getValidFbp(),

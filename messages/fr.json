@@ -206,7 +206,12 @@
     "expired": "Emplacement de réservation expiré. Veuillez sélectionner une nouvelle heure.",
     "apply": "Appliquer",
     "remove": "Retirer",
-    "promo_code_applied": "%{percentage} de réduction promo"
+    "promo_code_applied": "%{percentage} de réduction promo",
+    "yield": {
+      "high_demand": "Forte Demande",
+      "last_minute": "Dernière Minute",
+      "early_bird": "Réservation Anticipée"
+    }
   },
   "footer": {
     "description": "Photographe leader à Istanbul pour la photographie de portrait professionnelle. Capturez vos moments privilégiés avec les décors les plus emblématiques de la ville.",

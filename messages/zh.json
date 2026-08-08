@@ -206,7 +206,12 @@
     "expired": "预订时段已过期。请选择新时间。",
     "apply": "应用",
     "remove": "移除",
-    "promo_code_applied": "%{percentage} 促销折扣"
+    "promo_code_applied": "%{percentage} 促销折扣",
+    "yield": {
+      "high_demand": "需求旺盛",
+      "last_minute": "最后一分钟",
+      "early_bird": "早鸟优惠"
+    }
   },
   "footer": {
     "description": "伊斯坦布尔专业肖像摄影的领先摄影师。在这座城市最具标志性的背景下捕捉您的特殊时刻。",

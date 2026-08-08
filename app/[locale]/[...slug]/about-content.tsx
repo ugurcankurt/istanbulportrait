@@ -13,9 +13,9 @@ import { buildAboutPageSchema, buildOrganizationSchema, generateSeoDescription, 
 export async function AboutPageContent({
   params,
 }: {
-  params: Promise<{ locale: string }>;
+  params: Promise<{ locale: string; slug: string }>;
 }) {
-  const { locale } = await params;
+  const { locale, slug } = await params;
 
 
 
@@ -41,7 +41,7 @@ export async function AboutPageContent({
   const aboutSchema = buildAboutPageSchema({
     name: dynamicTitle,
     description: generateSeoDescription(dynamicSubtitle),
-    url: `${getBaseUrl()}/${locale}/about`,
+    url: `${getBaseUrl()}/${locale}/${slug}`,
     organizationSchema: organizationSchema
   });
 

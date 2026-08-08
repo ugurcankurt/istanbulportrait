@@ -91,22 +91,6 @@ export function ContactSection({ settings }: { settings?: any } = {}) {
                       </p>
                     </div>
                   </div>
-
-                  <div className="flex items-start space-x-4 sm:space-x-5 rtl:space-x-reverse">
-                    <div className="p-4 bg-primary/5 border-[0.5px] border-primary/20 shadow-sm rounded-[1.25rem] flex-shrink-0">
-                      <Building className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
-                    </div>
-                    <div className="flex-1 min-w-0 pt-1">
-                      <h3 className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-1.5">
-                        {tui("company_info")}
-                      </h3>
-                      <div className="text-foreground/90 font-medium text-sm sm:text-base space-y-1">
-                        <p>{t("info.company_name")}</p>
-                        <p>{t("info.tax_office")}</p>
-                        <p>{t("info.tax_number")}</p>
-                      </div>
-                    </div>
-                  </div>
                 </div>
               </CardContent>
             </Card>

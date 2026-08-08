@@ -24,7 +24,7 @@ import { PackageGallery } from "@/components/package-gallery";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { trackViewItem } from "@/lib/analytics";
-import { calculateDiscountedPrice, matchActiveSurcharge, DEPOSIT_PERCENTAGE, getPackagePricing } from "@/lib/pricing";
+import { calculateDiscountedPrice, matchActiveSurcharge, getPackagePricing } from "@/lib/pricing";
 import { extractPhotosCount } from "@/lib/features-parser";
 import type { PackageDB } from "@/lib/packages-service";
 import type { DiscountDB } from "@/lib/discount-service";
@@ -74,6 +74,8 @@ export function PackageDetails({ packageData, aggregateRating, reviews, activeDi
   const [peopleCount, setPeopleCount] = useState<number>(1);
   const [isSaved, setIsSaved] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [yieldMultiplier, setYieldMultiplier] = useState<number>(1.0);
+  const [yieldReason, setYieldReason] = useState<string>("standard");
 
   useEffect(() => {
     if (searchParams.get("book") === "true") {
@@ -89,7 +91,7 @@ export function PackageDetails({ packageData, aggregateRating, reviews, activeDi
 
   // Calculate generic unit pricing for display
   const basePrice = Number(packageData.price);
-  const pricing = calculateDiscountedPrice(basePrice * (1 + surchargePercentage / 100), activeDiscount, null, selectedDate);
+  const pricing = calculateDiscountedPrice(basePrice * (1 + surchargePercentage / 100) * yieldMultiplier, activeDiscount, null, selectedDate);
 
   // Calculate full dynamic pricing including people count for the correct deposit logic
   const fullPricing = getPackagePricing(
@@ -101,7 +103,8 @@ export function PackageDetails({ packageData, aggregateRating, reviews, activeDi
     packageData.is_per_person ? peopleCount : undefined,
     undefined,
     undefined,
-    surchargePercentage
+    surchargePercentage,
+    yieldMultiplier
   );
 
   // Price to display (unit price, do not multiply by peopleCount for visual display)
@@ -389,6 +392,11 @@ export function PackageDetails({ packageData, aggregateRating, reviews, activeDi
                 activeDiscount={activeDiscount}
                 timeSurcharges={timeSurcharges}
                 whatsappNumber={whatsappNumber}
+                onYieldChange={(multiplier, reason) => {
+                  setYieldMultiplier(multiplier);
+                  setYieldReason(reason);
+                }}
+                yieldReason={yieldReason}
               />
             </div>
 
@@ -415,11 +423,13 @@ export function PackageDetails({ packageData, aggregateRating, reviews, activeDi
         activeDiscount={activeDiscount}
         timeSurcharges={timeSurcharges}
         whatsappNumber={whatsappNumber}
+        yieldMultiplier={yieldMultiplier}
+        yieldReason={yieldReason}
       />
 
       {/* Existing Sticky Bottom Bar for Mobile (Hidden on Desktop) */}
       {/* Mobile Sticky Booking Interface */}
-      <div 
+      <div
         className="lg:hidden fixed inset-x-0 z-40 bg-background/95 backdrop-blur-xl supports-[backdrop-filter]:bg-background/80 border-t shadow-[0_-10px_40px_rgba(0,0,0,0.1)] transition-all duration-300"
         style={{ bottom: "var(--cookie-banner-height, 0px)" }}
       >

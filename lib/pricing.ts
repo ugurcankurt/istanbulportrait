@@ -143,8 +143,9 @@ export function getPackagePricing(
   taxRate: number = TAX_RATES.TURKEY,
   packageNameOverride?: string,
   surchargePercentage: number = 0,
+  yieldMultiplier: number = 1.0,
 ): PriceBreakdown {
-  const originalPrice = basePrice * (1 + surchargePercentage / 100);
+  const originalPrice = basePrice * (1 + surchargePercentage / 100) * yieldMultiplier;
 
   // Special handling for packages with per-person pricing
   if (peopleCount && peopleCount >= 1) {
@@ -228,6 +229,7 @@ export function formatPackagePricing(
   taxRate: number = TAX_RATES.TURKEY,
   packageNameOverride?: string,
   surchargePercentage: number = 0,
+  yieldMultiplier: number = 1.0,
 ): FormattedPriceBreakdown {
   const breakdown = getPackagePricing(
     packageId,
@@ -238,7 +240,8 @@ export function formatPackagePricing(
     peopleCount,
     taxRate,
     packageNameOverride,
-    surchargePercentage
+    surchargePercentage,
+    yieldMultiplier
   );
   
   const formatted = formatTaxBreakdown(breakdown, locale);

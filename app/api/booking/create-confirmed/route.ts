@@ -119,7 +119,8 @@ export async function POST(request: NextRequest) {
       body.isPerPerson ? peopleCount : undefined,
       undefined,
       undefined,
-      surchargePercentage
+      surchargePercentage,
+      body.yieldMultiplier || 1.0
     );
 
     const expectedTotal = packagePricing.totalPrice;

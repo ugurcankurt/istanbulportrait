@@ -62,7 +62,7 @@ export function optimizeSeoImage(imageUrl: string | null | undefined, width: 120
   // to parse Next.js dynamic /_next/image endpoints emitting AVIF/WebP based on crawler headers.
   // Using wsrv.nl securely globally caches the image, guarantees a fixed JPG output format, 
   // and optimally scales it for Open Graph requirements without cropping.
-  return `https://wsrv.nl/?url=${encodeURIComponent(absoluteUrl)}&w=${width}&output=jpg&q=85`;
+  return `https://wsrv.nl/?url=${encodeURIComponent(absoluteUrl)}&w=${width}&h=630&fit=cover&output=jpg&q=85`;
 }
 
 /**
@@ -266,7 +266,8 @@ export function buildServiceSchema({
   providerName,
   providerUrl,
   discount,
-  reviews
+  reviews,
+  url
 }: {
   name: string;
   description: string;
@@ -279,6 +280,7 @@ export function buildServiceSchema({
   providerUrl?: string;
   discount?: { discount_percentage: number; end_date?: string } | null;
   reviews?: any[];
+  url?: string;
 }) {
   const finalPrice = discount && discount.discount_percentage > 0
     ? price - (price * discount.discount_percentage / 100)
@@ -287,6 +289,11 @@ export function buildServiceSchema({
   const schema: any = {
     "@context": "https://schema.org/",
     "@type": "Service",
+    mainEntityOfPage: url ? {
+      "@type": "WebPage",
+      "@id": url
+    } : undefined,
+    url: url,
     name,
     image: image ? {
       "@type": "ImageObject",
@@ -374,6 +381,7 @@ export function buildArticleSchema({
   publisherLogo,
   inLanguage,
   keywords,
+  url,
 }: {
   title: string;
   description: string;
@@ -388,10 +396,16 @@ export function buildArticleSchema({
   publisherLogo?: string;
   inLanguage?: string;
   keywords?: string[];
+  url?: string;
 }) {
   return {
     "@context": "https://schema.org",
     "@type": "Article",
+    mainEntityOfPage: url ? {
+      "@type": "WebPage",
+      "@id": url
+    } : undefined,
+    url: url,
     headline: title,
     inLanguage: inLanguage,
     image: image ? [{
@@ -480,6 +494,10 @@ export function buildTouristAttractionSchema({
   return {
     "@context": "https://schema.org",
     "@type": "TouristAttraction",
+    mainEntityOfPage: url ? {
+      "@type": "WebPage",
+      "@id": url
+    } : undefined,
     name,
     description,
     url: url || getBaseUrl(),
@@ -513,6 +531,10 @@ export function buildAboutPageSchema({
   return {
     "@context": "https://schema.org",
     "@type": "AboutPage",
+    mainEntityOfPage: url ? {
+      "@type": "WebPage",
+      "@id": url
+    } : undefined,
     name,
     description,
     url: url || getBaseUrl(),
@@ -532,6 +554,10 @@ export function buildContactPageSchema({
   return {
     "@context": "https://schema.org",
     "@type": "ContactPage",
+    mainEntityOfPage: url ? {
+      "@type": "WebPage",
+      "@id": url
+    } : undefined,
     name,
     description,
     url: url || getBaseUrl(),
@@ -557,6 +583,10 @@ export function buildCollectionPageSchema({
   return {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
+    mainEntityOfPage: url ? {
+      "@type": "WebPage",
+      "@id": url
+    } : undefined,
     name,
     description,
     url: url || getBaseUrl(),

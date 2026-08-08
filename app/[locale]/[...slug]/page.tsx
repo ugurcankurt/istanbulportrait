@@ -28,7 +28,8 @@ export async function generateMetadata(props: {
   const { routing } = await import("@/i18n/routing");
 
   if (!routing.locales.includes(params.locale as any)) {
-    return { title: "Not Found" };
+    notFound();
+    return {};
   }
 
   const slugArray = params.slug || [];
@@ -42,7 +43,8 @@ export async function generateMetadata(props: {
 
   const fallbackTitle = settings.site_name || "";
   if (!dbPage || !dbPage.is_active) {
-    return { title: "Not Found" };
+    notFound();
+    return {};
   }
 
 
@@ -113,7 +115,8 @@ export async function generateMetadata(props: {
         dynamicTitle = tag.translation?.name || tag.slug;
       }
     } else {
-      return { title: "Not Found" };
+      notFound();
+      return {};
     }
 
     const title = generateSeoTitle(dynamicTitle, params.locale, fallbackTitle);
@@ -159,7 +162,10 @@ export async function generateMetadata(props: {
 
     if (dbPage.slug === "packages") {
       const pkg = await packagesService.getPackageBySlug(childSlug);
-      if (!pkg) return { title: "Package Not Found" };
+      if (!pkg) {
+        notFound();
+        return {};
+      }
       dynamicTitle = pkg.title?.[params.locale] || pkg.title?.en || "";
       dynamicDesc = pkg.meta_description?.[params.locale] || pkg.meta_description?.en || pkg.description?.[params.locale] || pkg.description?.en || "";
       ogImage = (pkg.gallery_images && pkg.gallery_images.length > 0) ? pkg.gallery_images[0] : ogImage;
@@ -173,7 +179,10 @@ export async function generateMetadata(props: {
       };
     } else if (dbPage.slug === "locations") {
       const locItem = await locationsService.getLocationBySlug(childSlug);
-      if (!locItem) return { title: "Location Not Found" };
+      if (!locItem) {
+        notFound();
+        return {};
+      }
       dynamicTitle = locItem.title?.[params.locale] || locItem.title?.en || "";
       dynamicDesc = locItem.description?.[params.locale] || locItem.description?.en || "";
       ogImage = locItem.cover_image || (locItem.gallery_images && locItem.gallery_images.length > 0 ? locItem.gallery_images[0] : ogImage);
@@ -208,7 +217,8 @@ export async function generateMetadata(props: {
           };
         }
       } else {
-        return { title: "Blog Post Not Found" };
+        notFound();
+        return {};
       }
     }
 

@@ -206,7 +206,12 @@
     "expired": "Der Reservierungsslot ist abgelaufen. Bitte wählen Sie eine neue Uhrzeit aus.",
     "apply": "Anwenden",
     "remove": "Entfernen",
-    "promo_code_applied": "%{percentage} Aktionsrabatt"
+    "promo_code_applied": "%{percentage} Aktionsrabatt",
+    "yield": {
+      "high_demand": "Hohe Nachfrage",
+      "last_minute": "Last Minute",
+      "early_bird": "Frühbucher"
+    }
   },
   "footer": {
     "description": "Führender Fotograf in Istanbul für professionelle Porträtfotografie. Halten Sie Ihre besonderen Momente vor den berühmtesten Kulissen der Stadt fest.",

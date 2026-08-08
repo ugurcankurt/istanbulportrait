@@ -167,6 +167,50 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
           });
         });
       }
+
+      // 6. Blog Categories
+      const { data: blogCategories } = await supabaseAdmin.from("blog_categories").select("id, slug, updated_at, created_at");
+      if (blogCategories && blogCategories.length > 0) {
+        for (const bc of blogCategories) {
+          locales.forEach((locale) => {
+            const pTitle = blogParent?.title?.[locale];
+            const pSeg = pTitle ? generateNativeSlug(pTitle) : "blog";
+            sitemapData.push({
+              url: `${baseUrl}/${locale}/${pSeg}/category/${bc.slug}`,
+              lastModified: new Date(bc.updated_at || bc.created_at || new Date()),
+              changeFrequency: "weekly",
+              priority: 0.5,
+              alternates: getAlternates((loc) => {
+                const bTitle = blogParent?.title?.[loc];
+                const bSeg = bTitle ? generateNativeSlug(bTitle) : "blog";
+                return `/${bSeg}/category/${bc.slug}`;
+              }),
+            });
+          });
+        }
+      }
+
+      // 7. Blog Tags
+      const { data: blogTags } = await supabaseAdmin.from("blog_tags").select("id, slug, updated_at, created_at");
+      if (blogTags && blogTags.length > 0) {
+        for (const bt of blogTags) {
+          locales.forEach((locale) => {
+            const pTitle = blogParent?.title?.[locale];
+            const pSeg = pTitle ? generateNativeSlug(pTitle) : "blog";
+            sitemapData.push({
+              url: `${baseUrl}/${locale}/${pSeg}/tag/${bt.slug}`,
+              lastModified: new Date(bt.updated_at || bt.created_at || new Date()),
+              changeFrequency: "weekly",
+              priority: 0.4,
+              alternates: getAlternates((loc) => {
+                const bTitle = blogParent?.title?.[loc];
+                const bSeg = bTitle ? generateNativeSlug(bTitle) : "blog";
+                return `/${bSeg}/tag/${bt.slug}`;
+              }),
+            });
+          });
+        }
+      }
     }
   }
 

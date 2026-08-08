@@ -68,7 +68,7 @@ export function PackageReviews({ reviews, aggregateRating }: PackageReviewsProps
   };
 
   return (
-    <section id="reviews" className="py-12 sm:py-16 border-t border-slate-300 scroll-mt-24">
+    <section id="reviews" className="pt-12 pb-6 sm:py-16 border-t border-slate-300 scroll-mt-24">
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-16">
 
         {/* LEFT SIDEBAR - Overall Rating & Summary */}
@@ -221,7 +221,7 @@ export function PackageReviews({ reviews, aggregateRating }: PackageReviewsProps
                 ))}
 
                 {visibleCount < filteredReviews.length && (
-                  <div className="pt-12 text-center">
+                  <div className="pt-8 sm:pt-12 text-center">
                     <Button
                       variant="default"
                       size="lg"

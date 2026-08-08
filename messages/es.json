@@ -206,7 +206,12 @@
     "expired": "El espacio de reserva expiró. Por favor seleccione una nueva hora.",
     "apply": "Aplicar",
     "remove": "Eliminar",
-    "promo_code_applied": "%{percentage} de descuento promocional"
+    "promo_code_applied": "%{percentage} de descuento promocional",
+    "yield": {
+      "high_demand": "Alta Demanda",
+      "last_minute": "Último Minuto",
+      "early_bird": "Reserva Anticipada"
+    }
   },
   "footer": {
     "description": "Fotógrafo líder en Estambul para fotografía de retratos profesionales. Capturando tus momentos especiales con los escenarios más emblemáticos de la ciudad.",

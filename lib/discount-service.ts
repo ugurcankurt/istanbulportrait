@@ -17,7 +17,7 @@ export const discountService = {
    * Returns null if no active campaign is running.
    */
   async getActiveDiscount(): Promise<DiscountDB | null> {
-    try {
+try {
       const { data, error } = await supabase
         .from("discounts")
         .select("*")
@@ -58,7 +58,7 @@ export const discountService = {
    * Admin Function: Fetches all discounts including inactive ones.
    */
   async getAllDiscounts(): Promise<DiscountDB[]> {
-    const { data, error } = await supabase
+const { data, error } = await supabase
       .from("discounts")
       .select("*")
       .order("created_at", { ascending: false });

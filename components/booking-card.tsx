@@ -19,6 +19,7 @@ import { useState, useEffect } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { format } from "date-fns";
 import { Button, buttonVariants } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { Calendar } from "@/components/ui/calendar";
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -61,6 +62,8 @@ interface BookingCardProps {
   timeSurcharges?: TimeSurcharge[];
   isInsideModal?: boolean;
   whatsappNumber?: string;
+  onYieldChange?: (multiplier: number, reason: string) => void;
+  yieldReason?: string;
 }
 
 export function BookingCard({
@@ -86,6 +89,8 @@ export function BookingCard({
   timeSurcharges = [],
   isInsideModal = false,
   whatsappNumber,
+  onYieldChange,
+  yieldReason = "standard",
 }: BookingCardProps) {
   const isMobile = useIsMobile();
   const { formatPrice } = useCurrency();
@@ -123,6 +128,10 @@ export function BookingCard({
         if (res.ok) {
           const data = await res.json();
           setBookedSlots(data.blockedSlots || []);
+
+          if (onYieldChange) {
+            onYieldChange(data.dynamicMultiplier || 1.0, data.yieldReason || "standard");
+          }
 
           if (selectedTime && data.blockedSlots?.includes(selectedTime)) {
             setSelectedTime(undefined);
@@ -207,6 +216,23 @@ export function BookingCard({
     )}>
       <CardContent className={cn("space-y-4", isInsideModal ? "p-4 pt-2" : "p-6")}>
         <div className="space-y-4">
+          <div className="flex flex-wrap items-center gap-2 mb-2">
+            {yieldReason === "high_demand" && (
+              <Badge className="bg-orange-500/10 text-orange-600 dark:text-orange-400 border-orange-200 dark:border-orange-900 shadow-none font-bold">
+                🔥 {tCheckout("yield.high_demand", { defaultValue: "High Demand" })}
+              </Badge>
+            )}
+            {yieldReason === "last_minute" && (
+              <Badge className="bg-red-500/10 text-red-600 dark:text-red-400 border-red-200 dark:border-red-900 shadow-none font-bold">
+                🕒 {tCheckout("yield.last_minute", { defaultValue: "Last Minute" })}
+              </Badge>
+            )}
+            {yieldReason === "early_bird" && (
+              <Badge className="bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-200 dark:border-emerald-900 shadow-none font-bold">
+                🕊️ {tCheckout("yield.early_bird", { defaultValue: "Early Bird" })}
+              </Badge>
+            )}
+          </div>
           <div className="flex items-baseline gap-1">
             <span className={cn("font-serif text-foreground leading-none", isInsideModal ? "text-3xl" : "text-5xl")}>
               {formatPrice(displayPrice)}

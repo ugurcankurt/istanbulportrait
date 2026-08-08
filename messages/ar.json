@@ -206,7 +206,12 @@
     "expired": "انتهت فترة الحجز. الرجاء تحديد وقت جديد.",
     "apply": "تطبيق",
     "remove": "إزالة",
-    "promo_code_applied": "خصم %{percentage}"
+    "promo_code_applied": "خصم %{percentage}",
+    "yield": {
+      "high_demand": "طلب عالي",
+      "last_minute": "اللحظة الأخيرة",
+      "early_bird": "حجز مبكر"
+    }
   },
   "footer": {
     "description": "مصور فوتوغرافي رائد في اسطنبول لتصوير البورتريه الاحترافي. التقط لحظاتك الخاصة مع الخلفيات الأكثر شهرة في المدينة.",

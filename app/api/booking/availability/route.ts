@@ -143,5 +143,38 @@ export async function GET(request: Request) {
     }
   }
 
-  return NextResponse.json({ blockedSlots });
+  // YIELD MANAGEMENT CALCULATION
+  let dynamicMultiplier = 1.0;
+  let yieldReason = "standard";
+
+  const targetDate = new Date(date);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  
+  const diffTime = targetDate.getTime() - today.getTime();
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+  // 1. Calculate Occupancy Rate
+  // Total valid slots in the day (6:00 to 20:00 = 29 slots)
+  const totalSlotsCount = allSlots.filter((slot) => {
+    const h = parseInt(slot.split(":")[0]);
+    return h >= startHour && h <= endHour;
+  }).length;
+  
+  const blockedSlotsCount = blockedSlots.length;
+  const occupancyRate = totalSlotsCount > 0 ? blockedSlotsCount / totalSlotsCount : 0;
+
+  // Apply Yield Rules
+  if (occupancyRate >= 0.7) {
+    dynamicMultiplier = 1.15; // +15% for high demand
+    yieldReason = "high_demand";
+  } else if (diffDays <= 3 && diffDays >= 0) {
+    dynamicMultiplier = 1.10; // +10% for last minute
+    yieldReason = "last_minute";
+  } else if (diffDays > 30) {
+    dynamicMultiplier = 0.95; // -5% for early bird
+    yieldReason = "early_bird";
+  }
+
+  return NextResponse.json({ blockedSlots, dynamicMultiplier, yieldReason });
 }

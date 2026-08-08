@@ -11,9 +11,9 @@ import { buildContactPageSchema, generateSeoDescription, getBaseUrl } from "@/li
 export async function ContactPageContent({
   params,
 }: {
-  params: Promise<{ locale: string }>;
+  params: Promise<{ locale: string; slug: string }>;
 }) {
-  const { locale } = await params;
+  const { locale, slug } = await params;
 
   const dbPage = await pagesContentService.getPageBySlug("contact");
   const dynamicTitle = dbPage?.title?.[locale] || dbPage?.title?.en || "";
@@ -27,7 +27,7 @@ export async function ContactPageContent({
   const contactSchema = buildContactPageSchema({
     name: dynamicTitle,
     description: generateSeoDescription(dynamicSubtitle),
-    url: `${getBaseUrl()}/${locale}/contact`,
+    url: `${getBaseUrl()}/${locale}/${slug}`,
   });
 
   return (

@@ -108,7 +108,7 @@ export function PackagesSection({ header, customCtaHeader, aggregateRating, dbPa
     });
   };
 
-  const renderPackageCard = (pkg: any, asHeading: boolean = true) => (
+  const renderPackageCard = (pkg: any, asHeading: boolean = true, index: number = 0) => (
     <div
       className="relative cursor-pointer h-full"
       onClick={() => handlePackageClick(pkg)}
@@ -134,6 +134,7 @@ export function PackagesSection({ header, customCtaHeader, aggregateRating, dbPa
               style={{ viewTransitionName: `package-cover-${pkg.dbSlug}` }}
               sizes="(max-width: 639px) 80vw, (max-width: 1023px) 45vw, 22vw"
               quality={60}
+              priority={index <= 1}
             />
           ) : (
             <div className="w-full h-full bg-muted flex flex-col items-center justify-center text-muted-foreground/30">
@@ -231,10 +232,10 @@ export function PackagesSection({ header, customCtaHeader, aggregateRating, dbPa
             >
               {/* Added py-4 to prevent ring/shadow clipping */}
               <CarouselContent className="-ms-4 px-4 py-4">
-                {sortedPackages.map((pkg) => (
+                {sortedPackages.map((pkg, idx) => (
                   <CarouselItem key={pkg.id} className="ps-4 basis-[78%]">
                     <div className="h-full px-0.5">
-                      {renderPackageCard(pkg, false)}
+                      {renderPackageCard(pkg, false, idx)}
                     </div>
                   </CarouselItem>
                 ))}
@@ -244,9 +245,9 @@ export function PackagesSection({ header, customCtaHeader, aggregateRating, dbPa
 
           {/* Desktop & Tablet Grid View (Hidden on mobile) */}
           <div className="hidden sm:grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8 mx-auto">
-            {sortedPackages.map((pkg) => (
+            {sortedPackages.map((pkg, idx) => (
               <div key={pkg.id}>
-                {renderPackageCard(pkg, true)}
+                {renderPackageCard(pkg, true, idx)}
               </div>
             ))}
           </div>
