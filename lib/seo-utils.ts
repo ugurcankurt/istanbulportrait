@@ -288,7 +288,7 @@ export function buildServiceSchema({
 
   const schema: any = {
     "@context": "https://schema.org/",
-    "@type": "Service",
+    "@type": "Product",
     mainEntityOfPage: url ? {
       "@type": "WebPage",
       "@id": url
@@ -304,10 +304,9 @@ export function buildServiceSchema({
       creator: { "@type": "Organization", name: "Istanbul Portrait" }
     } : undefined,
     description,
-    provider: providerName ? {
-      "@type": "LocalBusiness",
-      name: providerName,
-      ...(providerUrl ? { url: providerUrl } : {})
+    brand: providerName ? {
+      "@type": "Brand",
+      name: providerName
     } : undefined,
     offers: {
       "@type": "Offer",
@@ -315,6 +314,10 @@ export function buildServiceSchema({
       priceCurrency: currency,
       price: finalPrice,
       availability: "https://schema.org/InStock",
+      seller: providerName ? {
+        "@type": "Organization",
+        name: providerName
+      } : undefined,
     },
   };
 
