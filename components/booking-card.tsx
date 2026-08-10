@@ -17,6 +17,7 @@ import { DEPOSIT_PERCENTAGE, matchActiveSurcharge } from "@/lib/pricing";
 import { useCurrency } from "@/contexts/currency-context";
 import { useState, useEffect } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { toast } from "sonner";
 import { format } from "date-fns";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -98,6 +99,7 @@ export function BookingCard({
   const [isPeoplePopoverOpen, setIsPeoplePopoverOpen] = useState(false);
   const [isDatePopoverOpen, setIsDatePopoverOpen] = useState(false);
   const [isTimePopoverOpen, setIsTimePopoverOpen] = useState(false);
+  const [showValidation, setShowValidation] = useState(false);
 
   const popoverZIndex = isInsideModal ? "z-[60]" : "z-20";
 
@@ -149,6 +151,27 @@ export function BookingCard({
   }, [selectedDate, packageId]);
 
   const handleCheckAvailability = () => {
+    if (!selectedDate || !selectedTime) {
+      setShowValidation(true);
+      const isTr = dateFnsLocale?.code?.startsWith("tr");
+      
+      // Haptic feedback for mobile devices
+      if (typeof window !== "undefined" && window.navigator && window.navigator.vibrate) {
+        window.navigator.vibrate(50);
+      }
+
+      if (!selectedDate) {
+        toast.error(isTr ? "Lütfen önce bir tarih seçiniz." : "Please select a date first.");
+        setIsDatePopoverOpen(true);
+      } else if (!selectedTime) {
+        toast.error(isTr ? "Lütfen bir saat seçiniz." : "Please select a time first.");
+        setIsTimePopoverOpen(true);
+      }
+      return;
+    }
+
+    setShowValidation(false);
+
     if (checkState !== "idle") return;
     setCheckState("checking");
     setCheckingProgress(0);
@@ -319,8 +342,9 @@ export function BookingCard({
               <PopoverTrigger
                 className={cn(
                   buttonVariants({ variant: "secondary" }),
-                  "w-full h-14 px-6 font-bold flex items-center justify-between",
-                  !selectedDate && "text-muted-foreground/60"
+                  "w-full h-14 px-6 font-bold flex items-center justify-between transition-colors",
+                  !selectedDate && "text-muted-foreground/60",
+                  showValidation && !selectedDate && "border-2 border-red-500 bg-red-50 dark:bg-red-950/20 text-red-600 dark:text-red-400"
                 )}
               >
                 <div className="flex items-center gap-3 text-start">
@@ -381,8 +405,9 @@ export function BookingCard({
                 <PopoverTrigger
                   className={cn(
                     buttonVariants({ variant: "secondary" }),
-                    "w-full h-14 px-6 font-bold flex items-center justify-between",
-                    !selectedTime && "text-muted-foreground/60"
+                    "w-full h-14 px-6 font-bold flex items-center justify-between transition-colors",
+                    !selectedTime && "text-muted-foreground/60",
+                    showValidation && !selectedTime && "border-2 border-red-500 bg-red-50 dark:bg-red-950/20 text-red-600 dark:text-red-400"
                   )}
                 >
                   <div className="flex items-center gap-3 text-start">
@@ -525,7 +550,6 @@ export function BookingCard({
             size="lg"
             className="w-full h-11 font-black shadow-lg transition-transform active:scale-[0.98]"
             onClick={handleCheckAvailability}
-            disabled={!selectedDate || !selectedTime}
           >
             {tCheckout("buttons.check_availability")}
           </Button>
