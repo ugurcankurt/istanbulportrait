@@ -13,12 +13,13 @@ import {
   Banknote
 } from "lucide-react";
 import { trackSchedule } from "@/lib/analytics";
-import { DEPOSIT_PERCENTAGE, matchActiveSurcharge } from "@/lib/pricing";
+import { matchActiveSurcharge } from "@/lib/pricing";
 import { useCurrency } from "@/contexts/currency-context";
 import { useState, useEffect } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { toast } from "sonner";
 import { format } from "date-fns";
+import { useTranslations } from "next-intl";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Calendar } from "@/components/ui/calendar";
@@ -96,6 +97,7 @@ export function BookingCard({
 }: BookingCardProps) {
   const isMobile = useIsMobile();
   const { formatPrice } = useCurrency();
+  const tValidation = useTranslations("validation");
   const [isPeoplePopoverOpen, setIsPeoplePopoverOpen] = useState(false);
   const [isDatePopoverOpen, setIsDatePopoverOpen] = useState(false);
   const [isTimePopoverOpen, setIsTimePopoverOpen] = useState(false);
@@ -153,18 +155,17 @@ export function BookingCard({
   const handleCheckAvailability = () => {
     if (!selectedDate || !selectedTime) {
       setShowValidation(true);
-      const isTr = dateFnsLocale?.code?.startsWith("tr");
-      
+
       // Haptic feedback for mobile devices
       if (typeof window !== "undefined" && window.navigator && window.navigator.vibrate) {
         window.navigator.vibrate(50);
       }
 
       if (!selectedDate) {
-        toast.error(isTr ? "Lütfen önce bir tarih seçiniz." : "Please select a date first.");
+        toast.error(tValidation("date_required"));
         setIsDatePopoverOpen(true);
       } else if (!selectedTime) {
-        toast.error(isTr ? "Lütfen bir saat seçiniz." : "Please select a time first.");
+        toast.error(tValidation("time_required"));
         setIsTimePopoverOpen(true);
       }
       return;
@@ -214,10 +215,10 @@ export function BookingCard({
   const handleWhatsApp = () => {
     const formattedDate = selectedDate ? format(selectedDate, "PPP", { locale: dateFnsLocale }) : "";
     const isTr = dateFnsLocale?.code?.startsWith("tr");
-    const msg = isTr 
+    const msg = isTr
       ? `Merhaba, ${packageDisplayName} paketi için ${formattedDate} tarihi ve ${selectedTime} saati uygun mu? Bilgi almak istiyorum.`
       : `Hi! I would like to inquire about the ${packageDisplayName} package on ${formattedDate} at ${selectedTime}. Is it available?`;
-    
+
     const encoded = encodeURIComponent(msg);
     const number = (whatsappNumber || "905367093724").replace(/[^\d]/g, "");
     window.open(`https://wa.me/${number}?text=${encoded}`, "_blank");
@@ -562,7 +563,7 @@ export function BookingCard({
               className="w-full h-12 font-bold bg-emerald-50 text-emerald-700 hover:bg-emerald-100 dark:bg-emerald-950/30 dark:text-emerald-400 dark:hover:bg-emerald-900/40 transition-colors"
               onClick={handleWhatsApp}
             >
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" className="w-5 h-5 mr-2 fill-current"><path d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zM223.9 411.9c-31.5 0-62.5-8.4-89.6-24.5l-6.4-3.8-66.5 17.4 17.7-64.8-4.2-6.7c-17.7-28-27.1-60-27.1-92.4 0-97 79-176 176.1-176 47.1 0 91.4 18.4 124.7 51.7s51.7 77.6 51.7 124.7c0 97-79 176-176.1 176zM320.6 288.5c-5.3-2.7-31.3-15.5-36.2-17.2-4.9-1.7-8.4-2.7-12 2.7-3.6 5.3-13.8 17.2-16.9 20.7-3.1 3.6-6.2 4-11.5 1.3-5.3-2.7-22.4-8.3-42.6-26.3-15.7-14-26.3-31.3-29.4-36.6-3.1-5.3-.3-8.2 2.4-10.8 2.4-2.4 5.3-6.2 8-9.3 2.7-3.1 3.6-5.3 5.3-8.9 1.7-3.6 .9-6.7-.4-9.3-1.3-2.7-12-28.9-16.4-39.6-4.3-10.5-8.7-9.1-12-9.3-3.1-.2-6.7-.2-10.2-.2-3.6 0-9.3 1.3-14.2 6.7-4.9 5.3-18.6 18.2-18.6 44.4s19.1 51.5 21.8 55.1c2.7 3.6 37.6 57.4 91.1 80.5 12.7 5.5 22.6 8.7 30.4 11.2 12.7 4 24.3 3.4 33.4 2.1 10.2-1.5 31.3-12.8 35.7-25.2 4.4-12.4 4.4-23.1 3.1-25.2-1.3-2.1-4.9-3.4-10.2-6.1z"/></svg>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" className="w-5 h-5 mr-2 fill-current"><path d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zM223.9 411.9c-31.5 0-62.5-8.4-89.6-24.5l-6.4-3.8-66.5 17.4 17.7-64.8-4.2-6.7c-17.7-28-27.1-60-27.1-92.4 0-97 79-176 176.1-176 47.1 0 91.4 18.4 124.7 51.7s51.7 77.6 51.7 124.7c0 97-79 176-176.1 176zM320.6 288.5c-5.3-2.7-31.3-15.5-36.2-17.2-4.9-1.7-8.4-2.7-12 2.7-3.6 5.3-13.8 17.2-16.9 20.7-3.1 3.6-6.2 4-11.5 1.3-5.3-2.7-22.4-8.3-42.6-26.3-15.7-14-26.3-31.3-29.4-36.6-3.1-5.3-.3-8.2 2.4-10.8 2.4-2.4 5.3-6.2 8-9.3 2.7-3.1 3.6-5.3 5.3-8.9 1.7-3.6 .9-6.7-.4-9.3-1.3-2.7-12-28.9-16.4-39.6-4.3-10.5-8.7-9.1-12-9.3-3.1-.2-6.7-.2-10.2-.2-3.6 0-9.3 1.3-14.2 6.7-4.9 5.3-18.6 18.2-18.6 44.4s19.1 51.5 21.8 55.1c2.7 3.6 37.6 57.4 91.1 80.5 12.7 5.5 22.6 8.7 30.4 11.2 12.7 4 24.3 3.4 33.4 2.1 10.2-1.5 31.3-12.8 35.7-25.2 4.4-12.4 4.4-23.1 3.1-25.2-1.3-2.1-4.9-3.4-10.2-6.1z" /></svg>
               WhatsApp
             </Button>
             <Button
