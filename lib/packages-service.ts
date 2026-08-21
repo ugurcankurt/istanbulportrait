@@ -1,4 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
+import { cache } from "react";
 
 // Types matching our Supabase schema
 export interface PackageTranslations {
@@ -62,8 +63,8 @@ export const packagesService = {
    * Fetch all active packages for public client 
    * Ordered by sort_order
    */
-  async getActivePackages(): Promise<PackageDB[]> {
-const supabase = getSupabaseClient();
+  getActivePackages: cache(async (): Promise<PackageDB[]> => {
+    const supabase = getSupabaseClient();
     const { data, error } = await supabase
       .from("packages")
       .select("*")
@@ -76,13 +77,13 @@ const supabase = getSupabaseClient();
     }
 
     return data as PackageDB[];
-  },
+  }),
 
   /**
    * Fetch all packages (including inactive) for Admin
    */
-  async getAllPackages(): Promise<PackageDB[]> {
-const supabase = getSupabaseClient();
+  getAllPackages: cache(async (): Promise<PackageDB[]> => {
+    const supabase = getSupabaseClient();
     const { data, error } = await supabase
       .from("packages")
       .select("*")
@@ -94,13 +95,13 @@ const supabase = getSupabaseClient();
     }
 
     return data as PackageDB[];
-  },
+  }),
 
   /**
    * Fetch a single package by its main internal slug or by native dynamic translated slug.
    */
-  async getPackageBySlug(slug: string): Promise<PackageDB | null> {
-    const packages = await this.getActivePackages();
+  getPackageBySlug: cache(async (slug: string): Promise<PackageDB | null> => {
+    const packages = await packagesService.getActivePackages();
     
     // Normalize incoming slug to handle URI encodings of native characters
     let decodedIncomingSlug = slug;
@@ -125,13 +126,13 @@ const supabase = getSupabaseClient();
     }
     
     return null;
-  },
+  }),
 
   /**
    * Fetch a package by ID
    */
-  async getPackageById(id: string): Promise<PackageDB | null> {
-const supabase = getSupabaseClient();
+  getPackageById: cache(async (id: string): Promise<PackageDB | null> => {
+    const supabase = getSupabaseClient();
     const { data, error } = await supabase
       .from("packages")
       .select("*")
@@ -144,7 +145,7 @@ const supabase = getSupabaseClient();
     }
 
     return data as PackageDB;
-  },
+  }),
   /**
    * Create a new package
    */

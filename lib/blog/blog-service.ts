@@ -4,6 +4,7 @@
  */
 
 import { supabaseAdmin } from "@/lib/supabase";
+import { cache } from "react";
 import type {
   BlogCategoryListResponse,
   BlogCategoryWithTranslation,
@@ -28,7 +29,7 @@ import { generateSlugFromTitle } from "@/lib/slug-generator";
 /**
  * Get published blog posts (public)
  */
-export async function getPublishedBlogPosts(
+export const getPublishedBlogPosts = cache(async function (
   params: BlogQueryParams,
 ): Promise<BlogPostListResponse> {
   const {
@@ -156,7 +157,7 @@ export async function getPublishedBlogPosts(
       totalPages: Math.ceil((count || 0) / limit),
     },
   };
-}
+});
 
 /**
  * Get all blog posts (admin)
@@ -301,7 +302,7 @@ export async function getAllBlogPosts(
 /**
  * Get blog post by slug
  */
-export async function getBlogPostBySlug(
+export const getBlogPostBySlug = cache(async function (
   slug: string,
   locale: Locale = "en",
 ): Promise<BlogPostWithRelations | null> {
@@ -386,7 +387,7 @@ export async function getBlogPostBySlug(
   };
 
   return transformedPost as unknown as BlogPostWithRelations;
-}
+});
 
 /**
  * Attempts to salvage a 404 by checking if the slug belongs to another locale,
@@ -427,7 +428,7 @@ export async function getSalvagedBlogSlug(
 /**
  * Get blog post by ID
  */
-export async function getBlogPostById(
+export const getBlogPostById = cache(async function (
   id: string,
   locale: Locale = "en",
 ): Promise<BlogPostWithRelations | null> {
@@ -508,12 +509,12 @@ export async function getBlogPostById(
   };
 
   return transformedPost as unknown as BlogPostWithRelations;
-}
+});
 
 /**
  * Get blog post by ID with ALL translations (for editing)
  */
-export async function getBlogPostByIdWithAllTranslations(
+export const getBlogPostByIdWithAllTranslations = cache(async function (
   id: string,
 ): Promise<BlogPostWithAllTranslations | null> {
   const { data, error } = await supabaseAdmin
@@ -610,7 +611,7 @@ export async function getBlogPostByIdWithAllTranslations(
   };
 
   return transformedPost as unknown as BlogPostWithAllTranslations;
-}
+});
 
 /**
  * Create blog post

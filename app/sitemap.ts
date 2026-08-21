@@ -144,69 +144,110 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       
       for (const bp of blogPosts) {
         const postTranslations = translations?.filter((t: any) => t.post_id === bp.id) || [];
-        const fallbackSlug = postTranslations.find((t: any) => t.slug)?.slug;
-        if (!fallbackSlug) continue; // Skip if no translation exists
+        if (postTranslations.length === 0) continue;
 
-        locales.forEach((locale) => {
-          const tSlug = postTranslations.find((t: any) => t.locale === locale)?.slug || fallbackSlug;
+        const translatedLocales = postTranslations.map((t: any) => t.locale);
+
+        translatedLocales.forEach((locale: string) => {
+          const tSlug = postTranslations.find((t: any) => t.locale === locale)?.slug;
+          if (!tSlug) return;
+          
           const pTitle = blogParent?.title?.[locale];
           const pSeg = pTitle ? generateNativeSlug(pTitle) : "blog";
+
+          // Calculate custom alternates for this specific post
+          const postAlternates: Record<string, string> = {};
+          translatedLocales.forEach((loc: string) => {
+            const bTitle = blogParent?.title?.[loc];
+            const bSeg = bTitle ? generateNativeSlug(bTitle) : "blog";
+            const bSlug = postTranslations.find((t: any) => t.locale === loc)?.slug;
+            if (bSlug) {
+              postAlternates[loc] = `${baseUrl}/${loc}/${bSeg}/${bSlug}`;
+            }
+          });
+          
+          // Set x-default to en if exists, otherwise first available
+          if (postAlternates["en"]) {
+            postAlternates["x-default"] = postAlternates["en"];
+          } else if (translatedLocales.length > 0) {
+             const firstLoc = translatedLocales[0];
+             postAlternates["x-default"] = postAlternates[firstLoc];
+          }
 
           sitemapData.push({
             url: `${baseUrl}/${locale}/${pSeg}/${tSlug}`,
             lastModified: new Date(bp.updated_at || bp.created_at || new Date()),
             changeFrequency: "monthly",
             priority: 0.6,
-            alternates: getAlternates((loc) => {
-              const bTitle = blogParent?.title?.[loc];
-              const bSeg = bTitle ? generateNativeSlug(bTitle) : "blog";
-              const bSlug = postTranslations.find((t: any) => t.locale === loc)?.slug || fallbackSlug;
-              return `/${bSeg}/${bSlug}`;
-            }),
+            alternates: { languages: postAlternates },
             ...(bp.featured_image ? { images: [cleanImage(bp.featured_image)] } : {}),
           });
         });
       }
 
       // 6. Blog Categories
-      const { data: blogCategories } = await supabaseAdmin.from("blog_categories").select("id, slug, updated_at, created_at");
+      const { data: blogCategories } = await supabaseAdmin.from("blog_categories").select("id, slug, updated_at, created_at, translations:blog_category_translations(locale, name)");
       if (blogCategories && blogCategories.length > 0) {
         for (const bc of blogCategories) {
-          locales.forEach((locale) => {
+          const catTranslations = bc.translations || [];
+          if (catTranslations.length === 0) continue;
+          
+          const translatedLocales = catTranslations.map((t: any) => t.locale);
+
+          translatedLocales.forEach((locale: string) => {
             const pTitle = blogParent?.title?.[locale];
             const pSeg = pTitle ? generateNativeSlug(pTitle) : "blog";
+            
+            // Alternates
+            const catAlternates: Record<string, string> = {};
+            translatedLocales.forEach((loc: string) => {
+              const bTitle = blogParent?.title?.[loc];
+              const bSeg = bTitle ? generateNativeSlug(bTitle) : "blog";
+              catAlternates[loc] = `${baseUrl}/${loc}/${bSeg}/category/${bc.slug}`;
+            });
+            if (catAlternates["en"]) catAlternates["x-default"] = catAlternates["en"];
+            else if (translatedLocales.length > 0) catAlternates["x-default"] = catAlternates[translatedLocales[0]];
+
             sitemapData.push({
               url: `${baseUrl}/${locale}/${pSeg}/category/${bc.slug}`,
               lastModified: new Date(bc.updated_at || bc.created_at || new Date()),
               changeFrequency: "weekly",
               priority: 0.5,
-              alternates: getAlternates((loc) => {
-                const bTitle = blogParent?.title?.[loc];
-                const bSeg = bTitle ? generateNativeSlug(bTitle) : "blog";
-                return `/${bSeg}/category/${bc.slug}`;
-              }),
+              alternates: { languages: catAlternates },
             });
           });
         }
       }
 
       // 7. Blog Tags
-      const { data: blogTags } = await supabaseAdmin.from("blog_tags").select("id, slug, updated_at, created_at");
+      const { data: blogTags } = await supabaseAdmin.from("blog_tags").select("id, slug, updated_at, created_at, translations:blog_tag_translations(locale, name)");
       if (blogTags && blogTags.length > 0) {
         for (const bt of blogTags) {
-          locales.forEach((locale) => {
+          const tagTranslations = bt.translations || [];
+          if (tagTranslations.length === 0) continue;
+          
+          const translatedLocales = tagTranslations.map((t: any) => t.locale);
+
+          translatedLocales.forEach((locale: string) => {
             const pTitle = blogParent?.title?.[locale];
             const pSeg = pTitle ? generateNativeSlug(pTitle) : "blog";
+            
+            // Alternates
+            const tagAlternates: Record<string, string> = {};
+            translatedLocales.forEach((loc: string) => {
+              const bTitle = blogParent?.title?.[loc];
+              const bSeg = bTitle ? generateNativeSlug(bTitle) : "blog";
+              tagAlternates[loc] = `${baseUrl}/${loc}/${bSeg}/tag/${bt.slug}`;
+            });
+            if (tagAlternates["en"]) tagAlternates["x-default"] = tagAlternates["en"];
+            else if (translatedLocales.length > 0) tagAlternates["x-default"] = tagAlternates[translatedLocales[0]];
+
             sitemapData.push({
               url: `${baseUrl}/${locale}/${pSeg}/tag/${bt.slug}`,
               lastModified: new Date(bt.updated_at || bt.created_at || new Date()),
               changeFrequency: "weekly",
               priority: 0.4,
-              alternates: getAlternates((loc) => {
-                const bTitle = blogParent?.title?.[loc];
-                const bSeg = bTitle ? generateNativeSlug(bTitle) : "blog";
-                return `/${bSeg}/tag/${bt.slug}`;
-              }),
+              alternates: { languages: tagAlternates },
             });
           });
         }

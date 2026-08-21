@@ -51,12 +51,23 @@ export async function generateMetadata(props: {
   const { getBaseUrl } = await import("@/lib/seo-utils");
   const { generateNativeSlug } = await import("@/lib/slug-generator");
   const baseUrl = getBaseUrl();
-  const getAlternates = (resolver: (loc: string) => string) => {
+  const getAlternates = (resolver: (loc: string) => string | null) => {
     const langs: Record<string, string> = {};
     routing.locales.forEach((loc) => {
-      langs[loc] = `${baseUrl}/${loc}${resolver(loc)}`;
+      const resolved = resolver(loc);
+      if (resolved) {
+        langs[loc] = `${baseUrl}/${loc}${resolved}`;
+      }
     });
-    langs["x-default"] = `${baseUrl}/en${resolver("en")}`;
+    const enResolved = resolver("en");
+    if (enResolved) {
+      langs["x-default"] = `${baseUrl}/en${enResolved}`;
+    } else {
+      const availableLocales = Object.keys(langs);
+      if (availableLocales.length > 0) {
+        langs["x-default"] = langs[availableLocales[0]];
+      }
+    }
     return { languages: langs };
   };
 
@@ -154,8 +165,7 @@ export async function generateMetadata(props: {
     let authors: string[] | undefined;
     let keywords: string[] = [];
 
-    // Default alternate resolver fallback
-    let getAlternatesFn = (loc: string) => {
+    let getAlternatesFn = (loc: string): string | null => {
       const tLoc = dbPage.title?.[loc];
       return `/${tLoc ? generateNativeSlug(tLoc) : dbPage.slug}/${childSlug}`;
     };
@@ -212,7 +222,10 @@ export async function generateMetadata(props: {
           getAlternatesFn = (loc: string) => {
             const pTitle = dbPage.title?.[loc];
             const pSeg = pTitle ? generateNativeSlug(pTitle) : "blog";
-            const tSlug = (fullPost.translations as any)[loc]?.slug || (fullPost.translations as any).en?.slug || post.translation.slug;
+            const locTranslation = (fullPost.translations as any)[loc];
+            if (!locTranslation) return null;
+            
+            const tSlug = locTranslation.slug;
             return `/${pSeg}/${tSlug}`;
           };
         }
@@ -232,7 +245,7 @@ export async function generateMetadata(props: {
       description: desc,
       keywords: keywords.length > 0 ? keywords : undefined,
       alternates: {
-        canonical: `${baseUrl}/${params.locale}${getAlternatesFn(params.locale)}`,
+        ...(getAlternatesFn(params.locale) ? { canonical: `${baseUrl}/${params.locale}${getAlternatesFn(params.locale)}` } : {}),
         ...getAlternates(getAlternatesFn),
       },
       openGraph: constructOpenGraph(title, desc, ogImage, fallbackTitle, params.locale, dbPage.slug === "blog" ? {

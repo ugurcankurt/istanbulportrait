@@ -1,5 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
 import { unstable_cache } from "next/cache";
+import { cache } from "react";
 
 // Ensure the client uses the right keys (either server or client boundary depending on usage)
 const getSupabaseClient = () => {
@@ -39,7 +40,7 @@ export class LocationsService {
   /**
    * Fetch all active locations (Client/Server safe)
    */
-  async getLocations(): Promise<LocationDB[]> {
+  getLocations = cache(async (): Promise<LocationDB[]> => {
     const supabase = getSupabaseClient();
     const { data, error } = await supabase
       .from("locations")
@@ -53,12 +54,12 @@ export class LocationsService {
     }
 
     return (data as LocationDB[]) || [];
-  }
+  });
 
   /**
    * Fetch all locations including inactive (Admin only)
    */
-  async getAllLocationsAdmin(): Promise<LocationDB[]> {
+  getAllLocationsAdmin = cache(async (): Promise<LocationDB[]> => {
     const supabase = getSupabaseClient();
     const { data, error } = await supabase
       .from("locations")
@@ -71,12 +72,12 @@ export class LocationsService {
     }
 
     return (data as LocationDB[]) || [];
-  }
+  });
 
   /**
    * Fetch a single location by its main internal slug or by native dynamic translated slug.
    */
-  async getLocationBySlug(slug: string): Promise<LocationDB | null> {
+  getLocationBySlug = cache(async (slug: string): Promise<LocationDB | null> => {
     const locations = await this.getLocations();
     
     // Normalize incoming slug
@@ -100,12 +101,12 @@ export class LocationsService {
     }
     
     return null;
-  }
+  });
 
   /**
    * Fetch a single location by ID (Admin)
    */
-  async getLocationById(id: string): Promise<LocationDB | null> {
+  getLocationById = cache(async (id: string): Promise<LocationDB | null> => {
     const supabase = getSupabaseClient();
     const { data, error } = await supabase
       .from("locations")
@@ -119,7 +120,7 @@ export class LocationsService {
     }
 
     return data as LocationDB;
-  }
+  });
 
   // Admin Mutations
 
