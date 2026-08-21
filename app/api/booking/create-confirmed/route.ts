@@ -13,7 +13,7 @@ import {
   createRateLimitError,
   getClientIP,
 } from "@/lib/rate-limit";
-import { sendBookingConfirmation } from "@/lib/resend";
+import { sendBookingConfirmation, sendAdminBookingNotification } from "@/lib/resend";
 import { settingsService } from "@/lib/settings-service";
 import { supabaseAdmin } from "@/lib/supabase";
 import {
@@ -324,6 +324,26 @@ export async function POST(request: NextRequest) {
           locale: locale || "en",
           // Add extra details if needed
           promoCode: promoCode || undefined,
+        }, settings);
+
+        // Also send notification to the admin
+        await sendAdminBookingNotification({
+          customerName,
+          customerEmail,
+          customerPhone,
+          packageName: `${packageId.charAt(0).toUpperCase() + packageId.slice(1)} Package`,
+          bookingDate,
+          bookingTime,
+          totalAmount,
+          originalAmount: emailOriginalPrice,
+          discountAmount: emailSeasonalDiscount + (emailPromoDiscount || 0),
+          bookingId: booking.id,
+          peopleCount: peopleCount,
+          depositAmount: body.provider === "cash" ? 0 : depositAmount,
+          remainingAmount: body.provider === "cash" ? totalAmount : remainingAmount,
+          locale: locale || "en",
+          promoCode: promoCode || undefined,
+          notes: notes || undefined,
         }, settings);
 
         // Track Facebook CAPI Purchase

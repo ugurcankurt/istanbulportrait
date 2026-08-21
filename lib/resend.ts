@@ -381,7 +381,7 @@ export const sendAdminBookingNotification = async (
 
     await resend.emails.send({
       from: `System <${settings.contact_email}>`,
-      to: ["razor.girdap@gmail.com"],
+      to: [settings.admin_email || "info@istanbulportrait.com"],
       subject: `🎉 NEW BOOKING: ${data.packageName} - ${data.bookingDate}`,
       html: renderEmailLayout(content, "New Booking Notification", "en", settings),
     });
