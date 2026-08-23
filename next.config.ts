@@ -59,6 +59,9 @@ const nextConfig: NextConfig = {
     optimizePackageImports: [
       "lucide-react",
       "@radix-ui/react-icons",
+      "@phosphor-icons/react",
+      "@hugeicons/react",
+      "framer-motion",
       "date-fns",
       "react-day-picker",
       "react-phone-number-input",

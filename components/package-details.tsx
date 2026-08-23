@@ -18,11 +18,16 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState, useMemo } from "react";
 import { format } from "date-fns";
 import { useDateFnsLocale } from "@/hooks/use-date-fns-locale";
-import { BookingModal } from "@/components/booking-modal";
+import dynamic from "next/dynamic";
 import { BookingCard } from "@/components/booking-card";
 import { PackageGallery } from "@/components/package-gallery";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+
+const BookingModal = dynamic(
+  () => import("@/components/booking-modal").then((mod) => mod.BookingModal),
+  { ssr: false }
+);
 import { trackViewItem } from "@/lib/analytics";
 import { calculateDiscountedPrice, matchActiveSurcharge, getPackagePricing } from "@/lib/pricing";
 import { extractPhotosCount } from "@/lib/features-parser";
