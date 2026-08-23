@@ -28,13 +28,13 @@ export async function GET() {
     .single();
 
   if (error) {
-    return NextResponse.json({ 
+    return NextResponse.json({
       success: false,
       message: error.message,
       code: error.code,
       details: error.details,
       hint: error.hint,
-      exactError: error
+      exactError: error,
     });
   }
 

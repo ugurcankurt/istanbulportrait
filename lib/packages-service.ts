@@ -54,13 +54,14 @@ const getSupabaseClient = () => {
   // On Server: use Service Role for unrestricted DB fetch or fallback to ANON
   return createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    process.env.SUPABASE_SERVICE_KEY ||
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
   );
 };
 
 export const packagesService = {
   /**
-   * Fetch all active packages for public client 
+   * Fetch all active packages for public client
    * Ordered by sort_order
    */
   getActivePackages: cache(async (): Promise<PackageDB[]> => {
@@ -102,19 +103,19 @@ export const packagesService = {
    */
   getPackageBySlug: cache(async (slug: string): Promise<PackageDB | null> => {
     const packages = await packagesService.getActivePackages();
-    
+
     // Normalize incoming slug to handle URI encodings of native characters
     let decodedIncomingSlug = slug;
     try {
       decodedIncomingSlug = decodeURIComponent(slug).trim().toLowerCase();
     } catch {}
 
-    const { generateNativeSlug } = await import('@/lib/slug-generator');
+    const { generateNativeSlug } = await import("@/lib/slug-generator");
 
     for (const pkg of packages) {
       // Direct baseline hit
       if (pkg.slug === decodedIncomingSlug) return pkg;
-      
+
       // Dynamic cross-locale hit
       if (pkg.title) {
         for (const val of Object.values(pkg.title)) {
@@ -124,7 +125,7 @@ export const packagesService = {
         }
       }
     }
-    
+
     return null;
   }),
 
@@ -149,7 +150,9 @@ export const packagesService = {
   /**
    * Create a new package
    */
-  async createPackage(pkg: Omit<PackageDB, "id" | "created_at" | "updated_at">): Promise<PackageDB | null> {
+  async createPackage(
+    pkg: Omit<PackageDB, "id" | "created_at" | "updated_at">,
+  ): Promise<PackageDB | null> {
     const supabase = getSupabaseClient();
     const { data, error } = await supabase
       .from("packages")
@@ -158,7 +161,16 @@ export const packagesService = {
       .single();
 
     if (error) {
-      console.error("Error creating package. Message:", error.message, "Details:", error.details, "Hint:", error.hint, "Code:", error.code);
+      console.error(
+        "Error creating package. Message:",
+        error.message,
+        "Details:",
+        error.details,
+        "Hint:",
+        error.hint,
+        "Code:",
+        error.code,
+      );
       console.error("Raw Error Object:", JSON.stringify(error, null, 2));
       return null;
     }
@@ -169,7 +181,10 @@ export const packagesService = {
   /**
    * Update an existing package
    */
-  async updatePackage(id: string, updates: Partial<PackageDB>): Promise<PackageDB | null> {
+  async updatePackage(
+    id: string,
+    updates: Partial<PackageDB>,
+  ): Promise<PackageDB | null> {
     const supabase = getSupabaseClient();
     const { data, error } = await supabase
       .from("packages")
@@ -179,7 +194,14 @@ export const packagesService = {
       .single();
 
     if (error) {
-      console.error(`Error updating package ${id}. Message:`, error.message, "Details:", error.details, "Code:", error.code);
+      console.error(
+        `Error updating package ${id}. Message:`,
+        error.message,
+        "Details:",
+        error.details,
+        "Code:",
+        error.code,
+      );
       console.error("Raw Error Object:", JSON.stringify(error, null, 2));
       return null;
     }
@@ -192,10 +214,7 @@ export const packagesService = {
    */
   async deletePackage(id: string): Promise<boolean> {
     const supabase = getSupabaseClient();
-    const { error } = await supabase
-      .from("packages")
-      .delete()
-      .eq("id", id);
+    const { error } = await supabase.from("packages").delete().eq("id", id);
 
     if (error) {
       console.error(`Error deleting package ${id}:`, error);

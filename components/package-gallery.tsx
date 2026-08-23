@@ -15,11 +15,7 @@ import * as React from "react";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
-import {
-  Dialog,
-  DialogClose,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { Dialog, DialogClose, DialogTitle } from "@/components/ui/dialog";
 import { useTranslations, useLocale } from "next-intl";
 import { getTextDirection } from "@/lib/utils";
 
@@ -34,28 +30,51 @@ interface PackageGalleryProps {
   packageSlug?: string;
 }
 
-const VideoPlayer = ({ url, fit = "cover" }: { url: string; fit?: "cover" | "contain" }) => {
+const VideoPlayer = ({
+  url,
+  fit = "cover",
+}: {
+  url: string;
+  fit?: "cover" | "contain";
+}) => {
   const embed = React.useMemo(() => {
     if (!url) return null;
     try {
       const parsed = new URL(url);
-      if (parsed.hostname.includes("youtube.com") || parsed.hostname.includes("youtu.be")) {
-        const videoId = parsed.searchParams.get("v") || parsed.pathname.split('/').pop();
-        return { type: "youtube", src: `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&loop=1&playlist=${videoId}&controls=0` };
+      if (
+        parsed.hostname.includes("youtube.com") ||
+        parsed.hostname.includes("youtu.be")
+      ) {
+        const videoId =
+          parsed.searchParams.get("v") || parsed.pathname.split("/").pop();
+        return {
+          type: "youtube",
+          src: `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&loop=1&playlist=${videoId}&controls=0`,
+        };
       }
       if (parsed.hostname.includes("vimeo.com")) {
-        const videoId = parsed.pathname.split('/').pop();
-        return { type: "vimeo", src: `https://player.vimeo.com/video/${videoId}?autoplay=1&loop=1&muted=1&background=1` };
+        const videoId = parsed.pathname.split("/").pop();
+        return {
+          type: "vimeo",
+          src: `https://player.vimeo.com/video/${videoId}?autoplay=1&loop=1&muted=1&background=1`,
+        };
       }
       if (parsed.hostname.includes("instagram.com")) {
         let pathname = parsed.pathname;
-        if (pathname.startsWith('/reel/')) {
-          pathname = pathname.replace('/reel/', '/p/');
+        if (pathname.startsWith("/reel/")) {
+          pathname = pathname.replace("/reel/", "/p/");
         }
-        if (!pathname.endsWith('/')) pathname += '/';
-        return { type: "instagram", src: `https://www.instagram.com${pathname}embed/` };
+        if (!pathname.endsWith("/")) pathname += "/";
+        return {
+          type: "instagram",
+          src: `https://www.instagram.com${pathname}embed/`,
+        };
       }
-      if (url.endsWith(".mp4") || url.endsWith(".webm") || url.includes("supabase.co")) {
+      if (
+        url.endsWith(".mp4") ||
+        url.endsWith(".webm") ||
+        url.includes("supabase.co")
+      ) {
         return { type: "mp4", src: url };
       }
     } catch (e) {
@@ -74,7 +93,10 @@ const VideoPlayer = ({ url, fit = "cover" }: { url: string; fit?: "cover" | "con
         loop
         muted
         playsInline
-        className={cn("w-full h-full", fit === "cover" ? "object-cover" : "object-contain")}
+        className={cn(
+          "w-full h-full",
+          fit === "cover" ? "object-cover" : "object-contain",
+        )}
       />
     );
   }
@@ -109,7 +131,12 @@ const VideoPlayer = ({ url, fit = "cover" }: { url: string; fit?: "cover" | "con
   return (
     <iframe
       src={embed.src}
-      className={cn("w-full h-full", embed.type === "instagram" ? "object-contain bg-black" : "object-cover pointer-events-none")}
+      className={cn(
+        "w-full h-full",
+        embed.type === "instagram"
+          ? "object-contain bg-black"
+          : "object-cover pointer-events-none",
+      )}
       frameBorder="0"
       allow="autoplay; encrypted-media"
       allowFullScreen
@@ -137,13 +164,13 @@ export function PackageGallery({
 
   const [emblaRef, emblaApi] = useEmblaCarousel({
     loop: true,
-    direction: direction
+    direction: direction,
   });
 
   const [lightboxRef, lightboxApi] = useEmblaCarousel({
     loop: true,
     startIndex: selectedIndex,
-    direction: direction
+    direction: direction,
   });
 
   const onSelect = React.useCallback((api: any) => {
@@ -195,7 +222,12 @@ export function PackageGallery({
                   alt={`${alt} - Photo ${index + 1}`}
                   fill
                   className="object-cover"
-                  style={{ viewTransitionName: packageSlug && index === 0 ? `package-cover-${packageSlug}` : undefined }}
+                  style={{
+                    viewTransitionName:
+                      packageSlug && index === 0
+                        ? `package-cover-${packageSlug}`
+                        : undefined,
+                  }}
                   sizes="100vw"
                   priority={!videoUrl && index === 0}
                 />
@@ -251,7 +283,7 @@ export function PackageGallery({
                   <Heart
                     className={cn(
                       "h-4 w-4",
-                      isFavorite ? "fill-primary text-primary" : ""
+                      isFavorite ? "fill-primary text-primary" : "",
                     )}
                   />
                 </Button>
@@ -261,7 +293,10 @@ export function PackageGallery({
         )}
 
         <div className="absolute bottom-10 end-4 z-20">
-          <Badge variant="secondary" className="bg-black/30 text-white border border-white/20 py-1.5 px-3 text-xs font-semibold backdrop-blur-md shadow-luxury">
+          <Badge
+            variant="secondary"
+            className="bg-black/30 text-white border border-white/20 py-1.5 px-3 text-xs font-semibold backdrop-blur-md shadow-luxury"
+          >
             {selectedIndex + 1} / {totalItems}
           </Badge>
         </div>
@@ -272,7 +307,9 @@ export function PackageGallery({
               key={i}
               className={cn(
                 "h-1.5 w-1.5 rounded-full transition-all duration-300",
-                i === selectedIndex ? "bg-white scale-125 w-3" : "bg-white/50 scale-100"
+                i === selectedIndex
+                  ? "bg-white scale-125 w-3"
+                  : "bg-white/50 scale-100",
               )}
             />
           ))}
@@ -300,7 +337,11 @@ export function PackageGallery({
                 alt={alt}
                 fill
                 className="object-cover hover:brightness-90 transition-all duration-700 hover:scale-105"
-                style={{ viewTransitionName: packageSlug ? `package-cover-${packageSlug}` : undefined }}
+                style={{
+                  viewTransitionName: packageSlug
+                    ? `package-cover-${packageSlug}`
+                    : undefined,
+                }}
                 sizes="(max-width: 1024px) 50vw, (max-width: 1536px) 50vw, 800px"
                 priority
               />
@@ -308,29 +349,32 @@ export function PackageGallery({
           </div>
 
           {/* Secondary Images (Grid) */}
-          {images.slice(videoUrl ? 0 : 1, videoUrl ? 4 : 5).map((src, index) => (
-            <div
-              key={index}
-              className="relative cursor-pointer overflow-hidden"
-              onClick={() => {
-                setSelectedIndex(videoUrl ? index + 1 : index + 1);
-                setIsOpen(true);
-              }}
-            >
-              <Image
-                src={src}
-                alt={`${alt} ${index + 2}`}
-                fill
-                className="object-cover hover:brightness-90 transition-all duration-700 hover:scale-105"
-                quality={75}
-                sizes="(max-width: 1024px) 25vw, (max-width: 1536px) 25vw, 400px"
-                priority
-              />
-            </div>
-          ))}
+          {images
+            .slice(videoUrl ? 0 : 1, videoUrl ? 4 : 5)
+            .map((src, index) => (
+              <div
+                key={index}
+                className="relative cursor-pointer overflow-hidden"
+                onClick={() => {
+                  setSelectedIndex(videoUrl ? index + 1 : index + 1);
+                  setIsOpen(true);
+                }}
+              >
+                <Image
+                  src={src}
+                  alt={`${alt} ${index + 2}`}
+                  fill
+                  className="object-cover hover:brightness-90 transition-all duration-700 hover:scale-105"
+                  quality={75}
+                  sizes="(max-width: 1024px) 25vw, (max-width: 1536px) 25vw, 400px"
+                  priority
+                />
+              </div>
+            ))}
 
           <div className="absolute bottom-4 end-4 z-20">
-            <Button className="bg-white/90 text-black shadow-luxury hover:bg-white backdrop-blur-md border border-white/20 transition-all duration-700 hover:scale-105"
+            <Button
+              className="bg-white/90 text-black shadow-luxury hover:bg-white backdrop-blur-md border border-white/20 transition-all duration-700 hover:scale-105"
               onClick={() => {
                 setSelectedIndex(0);
                 setIsOpen(true);
@@ -357,7 +401,10 @@ export function PackageGallery({
                 </span>
               </div>
               <DialogClose
-                className={cn(buttonVariants({ variant: "outline", size: "icon" }), "h-10 w-10 sm:h-12 sm:w-12 rounded-full bg-white dark:bg-slate-900 shadow-lg border-slate-100 dark:border-slate-800 text-slate-900 dark:text-slate-100 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all hover:scale-110")}
+                className={cn(
+                  buttonVariants({ variant: "outline", size: "icon" }),
+                  "h-10 w-10 sm:h-12 sm:w-12 rounded-full bg-white dark:bg-slate-900 shadow-lg border-slate-100 dark:border-slate-800 text-slate-900 dark:text-slate-100 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all hover:scale-110",
+                )}
               >
                 <X className="h-5 w-5 sm:h-6 sm:w-6" />
               </DialogClose>
@@ -374,7 +421,10 @@ export function PackageGallery({
                     </div>
                   )}
                   {images.map((src, index) => (
-                    <div className="flex-[0_0_100%] min-w-0 h-full relative" key={index}>
+                    <div
+                      className="flex-[0_0_100%] min-w-0 h-full relative"
+                      key={index}
+                    >
                       <div className="relative w-full h-full flex items-center justify-center">
                         <Image
                           src={src}
@@ -382,7 +432,10 @@ export function PackageGallery({
                           fill
                           className="object-contain"
                           sizes="100vw"
-                          priority={Boolean((!videoUrl && index === selectedIndex) || (videoUrl && index + 1 === selectedIndex))}
+                          priority={Boolean(
+                            (!videoUrl && index === selectedIndex) ||
+                              (videoUrl && index + 1 === selectedIndex),
+                          )}
                         />
                       </div>
                     </div>

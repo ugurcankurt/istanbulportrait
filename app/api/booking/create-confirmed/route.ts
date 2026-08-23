@@ -13,14 +13,13 @@ import {
   createRateLimitError,
   getClientIP,
 } from "@/lib/rate-limit";
-import { sendBookingConfirmation, sendAdminBookingNotification } from "@/lib/resend";
+import {
+  sendBookingConfirmation,
+  sendAdminBookingNotification,
+} from "@/lib/resend";
 import { settingsService } from "@/lib/settings-service";
 import { supabaseAdmin } from "@/lib/supabase";
-import {
-  bookingSchema,
-  type PackageId,
-
-} from "@/lib/validations";
+import { bookingSchema, type PackageId } from "@/lib/validations";
 
 export async function POST(request: NextRequest) {
   const startTime = Date.now();
@@ -44,7 +43,8 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { paymentId, conversationId, locale, promoCode, ...bookingData } = body;
+    const { paymentId, conversationId, locale, promoCode, ...bookingData } =
+      body;
 
     // Extract URL origin/referer for Facebook Match Rate
     const origin = request.headers.get("origin") || "";
@@ -105,8 +105,13 @@ export async function POST(request: NextRequest) {
       .select("*")
       .order("time", { ascending: true });
 
-    const activeSurcharge = matchActiveSurcharge(bookingTime, timeSurcharges || []);
-    const surchargePercentage = activeSurcharge ? activeSurcharge.surcharge_percentage : 0;
+    const activeSurcharge = matchActiveSurcharge(
+      bookingTime,
+      timeSurcharges || [],
+    );
+    const surchargePercentage = activeSurcharge
+      ? activeSurcharge.surcharge_percentage
+      : 0;
 
     // Validate that the totalAmount matches the expected price
     // We check against the booking date and promo code for correct discounts
@@ -120,7 +125,7 @@ export async function POST(request: NextRequest) {
       undefined,
       undefined,
       surchargePercentage,
-      body.yieldMultiplier || 1.0
+      body.yieldMultiplier || 1.0,
     );
 
     const expectedTotal = packagePricing.totalPrice;
@@ -149,14 +154,21 @@ export async function POST(request: NextRequest) {
       // 1. Create or retrieve Supabase Auth User
       let authUserId = null;
       try {
-        const baseUrl = request.headers.get("origin") || process.env.NEXT_PUBLIC_BASE_URL || "https://istanbulportrait.com";
-        const { data: authData, error: authError } = await supabaseAdmin.auth.admin.inviteUserByEmail(customerEmail, {
-          data: { name: customerName, phone: customerPhone },
-          redirectTo: `${baseUrl}/api/auth/confirm?next=/${locale || "en"}/account/update-password`
-        });
-        
+        const baseUrl =
+          request.headers.get("origin") ||
+          process.env.NEXT_PUBLIC_BASE_URL ||
+          "https://istanbulportrait.com";
+        const { data: authData, error: authError } =
+          await supabaseAdmin.auth.admin.inviteUserByEmail(customerEmail, {
+            data: { name: customerName, phone: customerPhone },
+            redirectTo: `${baseUrl}/api/auth/confirm?next=/${locale || "en"}/account/update-password`,
+          });
+
         if (authError) {
-          console.log("Auth invite error (user might exist):", authError.message);
+          console.log(
+            "Auth invite error (user might exist):",
+            authError.message,
+          );
         } else if (authData.user) {
           authUserId = authData.user.id;
         }
@@ -168,11 +180,16 @@ export async function POST(request: NextRequest) {
       let driveFolderId = null;
       try {
         const { createDriveFolder } = await import("@/lib/google-drive");
-        const formattedDate = new Date(bookingDate).toLocaleDateString('tr-TR').replace(/\./g, '-'); 
+        const formattedDate = new Date(bookingDate)
+          .toLocaleDateString("tr-TR")
+          .replace(/\./g, "-");
         const folderName = `${customerName} - ${formattedDate}`;
-        
+
         // You can pass a parentFolderId as a second argument if you have a "Customers" root folder
-        const folder = await createDriveFolder(folderName, "1rKj5qIUzm8nTZ-hm7hspZaWupsKkiOCS");
+        const folder = await createDriveFolder(
+          folderName,
+          "1rKj5qIUzm8nTZ-hm7hspZaWupsKkiOCS",
+        );
         if (folder && folder.id) {
           driveFolderId = folder.id;
         }
@@ -186,25 +203,26 @@ export async function POST(request: NextRequest) {
         name: customerName,
         phone: customerPhone,
       };
-      
+
       // We need to fetch the existing customer if we failed to get authUserId
       if (!authUserId) {
-        const { data: existingCustomer } = await supabaseAdmin.from("customers").select("user_id").eq("email", customerEmail).single();
+        const { data: existingCustomer } = await supabaseAdmin
+          .from("customers")
+          .select("user_id")
+          .eq("email", customerEmail)
+          .single();
         if (existingCustomer?.user_id) {
           authUserId = existingCustomer.user_id;
         }
       }
-      
+
       if (authUserId) {
         customerUpsertData.user_id = authUserId;
       }
 
       const { error: customerError } = await supabaseAdmin
         .from("customers")
-        .upsert(
-          customerUpsertData,
-          { onConflict: "email" },
-        )
+        .upsert(customerUpsertData, { onConflict: "email" })
         .select()
         .single();
 
@@ -307,44 +325,52 @@ export async function POST(request: NextRequest) {
 
         const settings = await settingsService.getSettings();
 
-        await sendBookingConfirmation({
-          customerName,
-          customerEmail,
-          customerPhone,
-          packageName: `${packageId.charAt(0).toUpperCase() + packageId.slice(1)} Package`,
-          bookingDate,
-          bookingTime,
-          totalAmount,
-          originalAmount: emailOriginalPrice,
-          discountAmount: emailSeasonalDiscount + (emailPromoDiscount || 0), // Total discount for now, can be split if template supports it
-          bookingId: booking.id,
-          peopleCount: peopleCount,
-          depositAmount: body.provider === "cash" ? 0 : depositAmount,
-          remainingAmount: body.provider === "cash" ? totalAmount : remainingAmount,
-          locale: locale || "en",
-          // Add extra details if needed
-          promoCode: promoCode || undefined,
-        }, settings);
+        await sendBookingConfirmation(
+          {
+            customerName,
+            customerEmail,
+            customerPhone,
+            packageName: `${packageId.charAt(0).toUpperCase() + packageId.slice(1)} Package`,
+            bookingDate,
+            bookingTime,
+            totalAmount,
+            originalAmount: emailOriginalPrice,
+            discountAmount: emailSeasonalDiscount + (emailPromoDiscount || 0), // Total discount for now, can be split if template supports it
+            bookingId: booking.id,
+            peopleCount: peopleCount,
+            depositAmount: body.provider === "cash" ? 0 : depositAmount,
+            remainingAmount:
+              body.provider === "cash" ? totalAmount : remainingAmount,
+            locale: locale || "en",
+            // Add extra details if needed
+            promoCode: promoCode || undefined,
+          },
+          settings,
+        );
 
         // Also send notification to the admin
-        await sendAdminBookingNotification({
-          customerName,
-          customerEmail,
-          customerPhone,
-          packageName: `${packageId.charAt(0).toUpperCase() + packageId.slice(1)} Package`,
-          bookingDate,
-          bookingTime,
-          totalAmount,
-          originalAmount: emailOriginalPrice,
-          discountAmount: emailSeasonalDiscount + (emailPromoDiscount || 0),
-          bookingId: booking.id,
-          peopleCount: peopleCount,
-          depositAmount: body.provider === "cash" ? 0 : depositAmount,
-          remainingAmount: body.provider === "cash" ? totalAmount : remainingAmount,
-          locale: locale || "en",
-          promoCode: promoCode || undefined,
-          notes: notes || undefined,
-        }, settings);
+        await sendAdminBookingNotification(
+          {
+            customerName,
+            customerEmail,
+            customerPhone,
+            packageName: `${packageId.charAt(0).toUpperCase() + packageId.slice(1)} Package`,
+            bookingDate,
+            bookingTime,
+            totalAmount,
+            originalAmount: emailOriginalPrice,
+            discountAmount: emailSeasonalDiscount + (emailPromoDiscount || 0),
+            bookingId: booking.id,
+            peopleCount: peopleCount,
+            depositAmount: body.provider === "cash" ? 0 : depositAmount,
+            remainingAmount:
+              body.provider === "cash" ? totalAmount : remainingAmount,
+            locale: locale || "en",
+            promoCode: promoCode || undefined,
+            notes: notes || undefined,
+          },
+          settings,
+        );
 
         // Track Facebook CAPI Purchase
         // We do this here because we now have a guaranteed Booking ID (Transaction ID)
@@ -353,12 +379,14 @@ export async function POST(request: NextRequest) {
           // Extract EMQ parameters for Meta CAPI
           const fbc = body.fbc || request.cookies.get("_fbc")?.value;
           const fbp = body.fbp || request.cookies.get("_fbp")?.value;
-          const clientUserAgent = request.headers.get("user-agent") || undefined;
+          const clientUserAgent =
+            request.headers.get("user-agent") || undefined;
           const clientIpAddress = ip; // Already extracted via getClientIP at the top
 
           const nameParts = customerName.split(" ");
           const firstName = nameParts[0];
-          const lastName = nameParts.length > 1 ? nameParts.slice(1).join(" ") : undefined;
+          const lastName =
+            nameParts.length > 1 ? nameParts.slice(1).join(" ") : undefined;
 
           try {
             const { trackFacebookPurchase } = await import("@/lib/facebook");
@@ -369,7 +397,15 @@ export async function POST(request: NextRequest) {
               totalAmount,
               booking.id, // Transaction ID
               body.eventId, // Deduplication Key
-              { eventSourceUrl, fbc, fbp, clientIpAddress, clientUserAgent, firstName, lastName },
+              {
+                eventSourceUrl,
+                fbc,
+                fbp,
+                clientIpAddress,
+                clientUserAgent,
+                firstName,
+                lastName,
+              },
             );
           } catch (facebookError) {
             console.error("Facebook CAPI Error:", facebookError);
@@ -384,7 +420,15 @@ export async function POST(request: NextRequest) {
               customerPhone,
               booking.id,
               body.eventId ? `crm_${body.eventId}` : undefined,
-              { eventSourceUrl, fbc, fbp, clientIpAddress, clientUserAgent, firstName, lastName },
+              {
+                eventSourceUrl,
+                fbc,
+                fbp,
+                clientIpAddress,
+                clientUserAgent,
+                firstName,
+                lastName,
+              },
             );
           } catch (crmError) {
             console.error("Meta CRM Lead Event Error:", crmError);
@@ -393,18 +437,24 @@ export async function POST(request: NextRequest) {
 
           // ── GA4 Measurement Protocol (Server-Side Purchase Tracking) ──
           try {
-            const { trackGA4ServerPurchase, extractClientIdFromCookie, PACKAGE_DISPLAY_NAMES } = await import("@/lib/ga4-server");
+            const {
+              trackGA4ServerPurchase,
+              extractClientIdFromCookie,
+              PACKAGE_DISPLAY_NAMES,
+            } = await import("@/lib/ga4-server");
             const rawGaCookie = request.cookies.get("_ga")?.value;
             const gaClientId = extractClientIdFromCookie(rawGaCookie);
-            const packageName = PACKAGE_DISPLAY_NAMES[packageId] || `${packageId.charAt(0).toUpperCase() + packageId.slice(1)} Package`;
-            
+            const packageName =
+              PACKAGE_DISPLAY_NAMES[packageId] ||
+              `${packageId.charAt(0).toUpperCase() + packageId.slice(1)} Package`;
+
             await trackGA4ServerPurchase(
               booking.id,
               packageId,
               packageName,
               totalAmount,
               "EUR",
-              gaClientId
+              gaClientId,
             );
           } catch (ga4Error) {
             console.error("GA4 Measurement Protocol Error:", ga4Error);

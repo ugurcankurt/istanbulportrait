@@ -21,7 +21,10 @@ export async function BlogCard({ post, locale, parentSegment }: BlogCardProps) {
     >
       <article className="rounded-[2rem] border-[0.5px] border-border/50 bg-background overflow-hidden shadow-sm hover:shadow-md transition-all duration-500 h-full flex flex-col">
         {post.featured_image && (
-          <AspectRatio ratio={4 / 3} className="overflow-hidden relative bg-muted">
+          <AspectRatio
+            ratio={4 / 3}
+            className="overflow-hidden relative bg-muted"
+          >
             <Image
               src={post.featured_image}
               alt={post.translation.title}
@@ -60,9 +63,16 @@ export async function BlogCard({ post, locale, parentSegment }: BlogCardProps) {
             {post.translation.title}
           </h2>
           <p className="text-[10px] uppercase tracking-widest font-bold text-muted-foreground mb-4 flex flex-wrap items-center gap-2">
-            <span>{formatBlogDate(post.published_at || post.created_at, locale as any)}</span>
+            <span>
+              {formatBlogDate(
+                post.published_at || post.created_at,
+                locale as any,
+              )}
+            </span>
             <span>•</span>
-            <span>{t("reading_time", { minutes: post.reading_time_minutes })}</span>
+            <span>
+              {t("reading_time", { minutes: post.reading_time_minutes })}
+            </span>
           </p>
           {post.translation.excerpt && (
             <p className="text-muted-foreground/80 leading-relaxed line-clamp-3 flex-1 text-sm">

@@ -6,7 +6,9 @@ export const getGoogleAuth = () => {
   const clientEmail = process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL;
 
   if (!privateKey || !clientEmail) {
-    throw new Error("Google API credentials are missing from environment variables.");
+    throw new Error(
+      "Google API credentials are missing from environment variables.",
+    );
   }
 
   return new google.auth.GoogleAuth({
@@ -19,7 +21,10 @@ export const getGoogleAuth = () => {
 };
 
 // Create an empty folder in Google Drive
-export const createDriveFolder = async (folderName: string, parentFolderId?: string) => {
+export const createDriveFolder = async (
+  folderName: string,
+  parentFolderId?: string,
+) => {
   const auth = getGoogleAuth();
   const drive = google.drive({ version: "v3", auth });
 
@@ -54,9 +59,10 @@ export const listFilesInFolder = async (folderId: string) => {
     const res = await drive.files.list({
       // Fetch all files in the folder (removes mimeType restriction to support RAW, HEIC, etc.)
       q: `'${folderId}' in parents and trashed = false`,
-      fields: "files(id, name, mimeType, thumbnailLink, imageMediaMetadata, createdTime)",
+      fields:
+        "files(id, name, mimeType, thumbnailLink, imageMediaMetadata, createdTime)",
       orderBy: "name",
-      pageSize: 100, 
+      pageSize: 100,
     });
     return res.data.files || [];
   } catch (err) {
@@ -74,14 +80,19 @@ export const getGalleryFilesGrouped = async (folderId: string) => {
     // 1. Fetch folders and files in the root folder
     const rootRes = await drive.files.list({
       q: `'${folderId}' in parents and trashed = false`,
-      fields: "files(id, name, mimeType, thumbnailLink, imageMediaMetadata, createdTime)",
+      fields:
+        "files(id, name, mimeType, thumbnailLink, imageMediaMetadata, createdTime)",
       orderBy: "name",
       pageSize: 1000,
     });
-    
+
     const rootItems = rootRes.data.files || [];
-    const rootFiles = rootItems.filter(f => f.mimeType !== "application/vnd.google-apps.folder");
-    const subfolders = rootItems.filter(f => f.mimeType === "application/vnd.google-apps.folder");
+    const rootFiles = rootItems.filter(
+      (f) => f.mimeType !== "application/vnd.google-apps.folder",
+    );
+    const subfolders = rootItems.filter(
+      (f) => f.mimeType === "application/vnd.google-apps.folder",
+    );
 
     let editedFiles: any[] = [];
     let finalFiles: any[] = [];
@@ -89,17 +100,22 @@ export const getGalleryFilesGrouped = async (folderId: string) => {
     // 2. Look for "edited" and "final" folders
     for (const folder of subfolders) {
       const folderName = folder.name?.toLowerCase() || "";
-      const isEdited = folderName.includes("edit") || folderName.includes("seç");
-      const isFinal = folderName.includes("final") || folderName.includes("deliver") || folderName.includes("teslim");
+      const isEdited =
+        folderName.includes("edit") || folderName.includes("seç");
+      const isFinal =
+        folderName.includes("final") ||
+        folderName.includes("deliver") ||
+        folderName.includes("teslim");
 
       if (isEdited || isFinal) {
         const res = await drive.files.list({
           q: `'${folder.id}' in parents and trashed = false`,
-          fields: "files(id, name, mimeType, thumbnailLink, imageMediaMetadata, createdTime)",
+          fields:
+            "files(id, name, mimeType, thumbnailLink, imageMediaMetadata, createdTime)",
           orderBy: "name",
           pageSize: 1000,
         });
-        
+
         if (isFinal) {
           finalFiles = [...finalFiles, ...(res.data.files || [])];
         } else {
@@ -111,7 +127,7 @@ export const getGalleryFilesGrouped = async (folderId: string) => {
     return {
       raw: rootFiles,
       selected: editedFiles,
-      final: finalFiles
+      final: finalFiles,
     };
   } catch (err) {
     console.error("Google Drive grouped files error:", err);
@@ -134,7 +150,7 @@ export const getFileStream = async (fileId: string) => {
     // Request the file content as a stream
     const res = await drive.files.get(
       { fileId, alt: "media" },
-      { responseType: "stream" }
+      { responseType: "stream" },
     );
 
     return {
@@ -148,18 +164,22 @@ export const getFileStream = async (fileId: string) => {
 };
 
 // Move multiple files to a new folder
-export const moveFilesToFolder = async (fileIds: string[], newParentId: string, oldParentId: string) => {
+export const moveFilesToFolder = async (
+  fileIds: string[],
+  newParentId: string,
+  oldParentId: string,
+) => {
   const auth = getGoogleAuth();
   const drive = google.drive({ version: "v3", auth });
 
   try {
-    const promises = fileIds.map(fileId => 
+    const promises = fileIds.map((fileId) =>
       drive.files.update({
         fileId: fileId,
         addParents: newParentId,
         removeParents: oldParentId,
-        fields: "id, parents"
-      })
+        fields: "id, parents",
+      }),
     );
     await Promise.all(promises);
     return true;

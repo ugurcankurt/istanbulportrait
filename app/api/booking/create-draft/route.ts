@@ -127,42 +127,54 @@ export async function POST(request: NextRequest) {
       try {
         const settings = await settingsService.getSettings();
         const apiKey = settings.resend_api_key || process.env.RESEND_API_KEY;
-        const audienceId = settings.resend_audience_id || process.env.RESEND_AUDIENCE_ID;
+        const audienceId =
+          settings.resend_audience_id || process.env.RESEND_AUDIENCE_ID;
 
-        console.log("Resend Execution Check:", { 
-          hasApiKey: !!apiKey && apiKey !== "demo-resend-key", 
-          hasAudienceId: !!audienceId 
+        console.log("Resend Execution Check:", {
+          hasApiKey: !!apiKey && apiKey !== "demo-resend-key",
+          hasAudienceId: !!audienceId,
         });
 
         if (apiKey && apiKey !== "demo-resend-key") {
           const resend = new Resend(apiKey);
           const nameParts = customerName.split(" ");
           const firstName = nameParts[0];
-          const lastName = nameParts.length > 1 ? nameParts.slice(1).join(" ") : undefined;
+          const lastName =
+            nameParts.length > 1 ? nameParts.slice(1).join(" ") : undefined;
 
           if (audienceId) {
             // Native SDK approach as strictly specified in v6+
-            resend.contacts.create({
-              audienceId: audienceId,
-              email: customerEmail,
-              firstName: firstName,
-              lastName: lastName,
-              unsubscribed: false,
-            }).then(({ data, error }) => {
-              if (error) console.error("Resend Contacts SDK Error:", error);
-              else console.log("Resend Contact Added:", data);
-            }).catch((err) => {
-              console.error("Resend Contacts SDK Exception:", err);
-            });
+            resend.contacts
+              .create({
+                audienceId: audienceId,
+                email: customerEmail,
+                firstName: firstName,
+                lastName: lastName,
+                unsubscribed: false,
+              })
+              .then(({ data, error }) => {
+                if (error) console.error("Resend Contacts SDK Error:", error);
+                else console.log("Resend Contact Added:", data);
+              })
+              .catch((err) => {
+                console.error("Resend Contacts SDK Exception:", err);
+              });
           } else {
-            console.warn("WARNING: Resend Contact creation skipped. No audienceId provided. Add RESEND_AUDIENCE_ID to Vercel or Settings.");
+            console.warn(
+              "WARNING: Resend Contact creation skipped. No audienceId provided. Add RESEND_AUDIENCE_ID to Vercel or Settings.",
+            );
           }
         } else {
-          console.warn("WARNING: Resend Contact creation skipped. API Key is missing or default.");
+          console.warn(
+            "WARNING: Resend Contact creation skipped. API Key is missing or default.",
+          );
         }
       } catch (contactError) {
         // Silently fail setting the contact so we don't break booking flow
-        console.error("Failed to add contact to Resend Audience:", contactError);
+        console.error(
+          "Failed to add contact to Resend Audience:",
+          contactError,
+        );
       }
 
       return NextResponse.json({

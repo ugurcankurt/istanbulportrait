@@ -37,7 +37,8 @@ const getSupabaseClient = () => {
   // On Server: use Service Role for unrestricted DB fetch or fallback to ANON
   return createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    process.env.SUPABASE_SERVICE_KEY ||
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
   );
 };
 
@@ -47,13 +48,13 @@ export const pagesContentService = {
    */
   async getPageBySlug(slug: string): Promise<PageDB | null> {
     const pages = await this.getAllPages();
-    
+
     let decodedSlug = slug;
     try {
       decodedSlug = decodeURIComponent(slug).trim().toLowerCase();
     } catch {}
 
-    const { generateNativeSlug } = await import('@/lib/slug-generator');
+    const { generateNativeSlug } = await import("@/lib/slug-generator");
 
     for (const page of pages) {
       if (!page.is_active) continue;
@@ -62,7 +63,11 @@ export const pagesContentService = {
       if (page.slug === decodedSlug) return page;
 
       // Match localized active translated titles for actual standalone pages (skip sections like home-*)
-      if (page.title && !page.slug.startsWith("home-") && page.slug !== "home") {
+      if (
+        page.title &&
+        !page.slug.startsWith("home-") &&
+        page.slug !== "home"
+      ) {
         for (const val of Object.values(page.title)) {
           if (val && generateNativeSlug(val) === decodedSlug) {
             return page;
@@ -77,44 +82,54 @@ export const pagesContentService = {
   /**
    * Fetch all pages for Admin
    */
-  getAllPages: unstable_cache(async (): Promise<PageDB[]> => {
-const supabase = getSupabaseClient();
-    const { data, error } = await supabase
-      .from("pages")
-      .select("*")
-      .order("created_at", { ascending: false });
+  getAllPages: unstable_cache(
+    async (): Promise<PageDB[]> => {
+      const supabase = getSupabaseClient();
+      const { data, error } = await supabase
+        .from("pages")
+        .select("*")
+        .order("created_at", { ascending: false });
 
-    if (error) {
-      console.error("Error fetching all pages:", error);
-      return [];
-    }
+      if (error) {
+        console.error("Error fetching all pages:", error);
+        return [];
+      }
 
-    return data as PageDB[];
-  }, ["pages", "all-pages"], { tags: ["pages"] }),
+      return data as PageDB[];
+    },
+    ["pages", "all-pages"],
+    { tags: ["pages"] },
+  ),
 
   /**
    * Fetch a page by ID
    */
-  getPageById: unstable_cache(async (id: string): Promise<PageDB | null> => {
-const supabase = getSupabaseClient();
-    const { data, error } = await supabase
-      .from("pages")
-      .select("*")
-      .eq("id", id)
-      .single();
+  getPageById: unstable_cache(
+    async (id: string): Promise<PageDB | null> => {
+      const supabase = getSupabaseClient();
+      const { data, error } = await supabase
+        .from("pages")
+        .select("*")
+        .eq("id", id)
+        .single();
 
-    if (error) {
-      console.error(`Error fetching page by id ${id}:`, error);
-      return null;
-    }
+      if (error) {
+        console.error(`Error fetching page by id ${id}:`, error);
+        return null;
+      }
 
-    return data as PageDB;
-  }, ["pages", "page-by-id"], { tags: ["pages"] }),
+      return data as PageDB;
+    },
+    ["pages", "page-by-id"],
+    { tags: ["pages"] },
+  ),
 
   /**
    * Create a new page
    */
-  async createPage(page: Omit<PageDB, "id" | "created_at" | "updated_at">): Promise<PageDB | null> {
+  async createPage(
+    page: Omit<PageDB, "id" | "created_at" | "updated_at">,
+  ): Promise<PageDB | null> {
     const supabase = getSupabaseClient();
     const { data, error } = await supabase
       .from("pages")
@@ -133,7 +148,10 @@ const supabase = getSupabaseClient();
   /**
    * Update an existing page
    */
-  async updatePage(id: string, updates: Partial<PageDB>): Promise<PageDB | null> {
+  async updatePage(
+    id: string,
+    updates: Partial<PageDB>,
+  ): Promise<PageDB | null> {
     const supabase = getSupabaseClient();
     const { data, error } = await supabase
       .from("pages")
@@ -155,10 +173,7 @@ const supabase = getSupabaseClient();
    */
   async deletePage(id: string): Promise<boolean> {
     const supabase = getSupabaseClient();
-    const { error } = await supabase
-      .from("pages")
-      .delete()
-      .eq("id", id);
+    const { error } = await supabase.from("pages").delete().eq("id", id);
 
     if (error) {
       console.error(`Error deleting page ${id}:`, error);
@@ -171,15 +186,17 @@ const supabase = getSupabaseClient();
   /**
    * For the Header/Footer layout: given a locale, return an object mapping core DB slugs to their localized dynamic slugs and titles.
    */
-  async getDynamicCoreNavData(locale: string): Promise<Record<string, { path: string; title: string | null }>> {
+  async getDynamicCoreNavData(
+    locale: string,
+  ): Promise<Record<string, { path: string; title: string | null }>> {
     const pages = await this.getAllPages();
-    const { generateNativeSlug } = await import('@/lib/slug-generator');
-    
+    const { generateNativeSlug } = await import("@/lib/slug-generator");
+
     const navMap: Record<string, { path: string; title: string | null }> = {};
 
     for (const page of pages) {
       if (!page.is_active) continue;
-      
+
       const locTitle = page.title?.[locale];
       if (locTitle) {
         navMap[page.slug] = {

@@ -1,4 +1,4 @@
-const fs = require('fs');
+const fs = require("fs");
 
 const enTranslations = {
   login: {
@@ -9,35 +9,38 @@ const enTranslations = {
     password: "Password",
     passwordPlaceholder: "Enter your password",
     forgotPassword: "Forgot password?",
-    forgotPasswordAlert: "Please check the invite email sent when you completed your reservation, or contact support.",
+    forgotPasswordAlert:
+      "Please check the invite email sent when you completed your reservation, or contact support.",
     signIn: "Sign In",
-    signingIn: "Signing in..."
+    signingIn: "Signing in...",
   },
   updatePassword: {
     title: "Set Your Password",
-    description: "Please secure your customer portal account by setting a new password.",
+    description:
+      "Please secure your customer portal account by setting a new password.",
     newPassword: "New Password",
     newPasswordPlaceholder: "Enter new password",
     confirmPassword: "Confirm Password",
     confirmPasswordPlaceholder: "Confirm new password",
     savePassword: "Save Password",
     saving: "Updating...",
-    passwordMismatch: "Passwords do not match"
+    passwordMismatch: "Passwords do not match",
   },
   sidebar: {
     portal: "Customer Portal",
     myBookings: "My Bookings",
     payments: "Payments",
-    logout: "Log out"
+    logout: "Log out",
   },
   dashboard: {
     title: "My Bookings",
-    description: "Manage your photography reservations and view your photo galleries.",
+    description:
+      "Manage your photography reservations and view your photo galleries.",
     upcoming: "Upcoming",
     past: "Past",
     viewGallery: "View Gallery",
     bookingDate: "Booking Date",
-    noReservations: "No reservations found"
+    noReservations: "No reservations found",
   },
   payments: {
     title: "Payments",
@@ -45,7 +48,7 @@ const enTranslations = {
     noTransactions: "No transactions found",
     balanceDue: "Balance Due",
     fullyPaid: "Fully Paid",
-    totalAmount: "Total Amount"
+    totalAmount: "Total Amount",
   },
   gallery: {
     title: "Photo Gallery",
@@ -54,48 +57,53 @@ const enTranslations = {
     download: "Download",
     backToDashboard: "Back to Dashboard",
     mobileZipTitle: "Download ZIP on Mobile",
-    mobileZipDesc: "Downloading a ZIP file on mobile devices might require a file manager to open. Do you want to proceed?"
-  }
+    mobileZipDesc:
+      "Downloading a ZIP file on mobile devices might require a file manager to open. Do you want to proceed?",
+  },
 };
 
 const trTranslations = {
   login: {
     title: "Tekrar Hoş Geldiniz",
-    description: "Fotoğraflarınızı ve rezervasyonlarınızı görüntülemek için giriş yapın.",
+    description:
+      "Fotoğraflarınızı ve rezervasyonlarınızı görüntülemek için giriş yapın.",
     email: "E-posta",
     emailPlaceholder: "isim@ornek.com",
     password: "Şifre",
     passwordPlaceholder: "Şifrenizi girin",
     forgotPassword: "Şifremi unuttum?",
-    forgotPasswordAlert: "Lütfen rezervasyonunuzu tamamladığınızda gönderilen davet e-postasını kontrol edin veya destek ekibiyle iletişime geçin.",
+    forgotPasswordAlert:
+      "Lütfen rezervasyonunuzu tamamladığınızda gönderilen davet e-postasını kontrol edin veya destek ekibiyle iletişime geçin.",
     signIn: "Giriş Yap",
-    signingIn: "Giriş yapılıyor..."
+    signingIn: "Giriş yapılıyor...",
   },
   updatePassword: {
     title: "Şifrenizi Belirleyin",
-    description: "Lütfen yeni bir şifre belirleyerek müşteri portalı hesabınızı güvene alın.",
+    description:
+      "Lütfen yeni bir şifre belirleyerek müşteri portalı hesabınızı güvene alın.",
     newPassword: "Yeni Şifre",
     newPasswordPlaceholder: "Yeni şifrenizi girin",
     confirmPassword: "Şifreyi Onayla",
     confirmPasswordPlaceholder: "Yeni şifrenizi tekrar girin",
     savePassword: "Şifreyi Kaydet",
     saving: "Güncelleniyor...",
-    passwordMismatch: "Şifreler eşleşmiyor"
+    passwordMismatch: "Şifreler eşleşmiyor",
   },
   sidebar: {
     portal: "Müşteri Portali",
     myBookings: "Rezervasyonlarım",
     payments: "Ödemeler",
-    logout: "Çıkış Yap"
+    logout: "Çıkış Yap",
   },
   dashboard: {
     title: "Rezervasyonlarım",
-    description: "Fotoğraf çekimi rezervasyonlarınızı yönetin ve galerilerinizi görüntüleyin.",
+    description:
+      "Fotoğraf çekimi rezervasyonlarınızı yönetin ve galerilerinizi görüntüleyin.",
     upcoming: "Yaklaşan",
     past: "Geçmiş",
     viewGallery: "Galeriyi Görüntüle",
     bookingDate: "Rezervasyon Tarihi",
-    noReservations: "Hiç rezervasyon bulunamadı"
+    noReservations: "Hiç rezervasyon bulunamadı",
   },
   payments: {
     title: "Ödemeler",
@@ -103,7 +111,7 @@ const trTranslations = {
     noTransactions: "Hiç işlem bulunamadı",
     balanceDue: "Kalan Bakiye",
     fullyPaid: "Tamamı Ödendi",
-    totalAmount: "Toplam Tutar"
+    totalAmount: "Toplam Tutar",
   },
   gallery: {
     title: "Fotoğraf Galerisi",
@@ -112,17 +120,18 @@ const trTranslations = {
     download: "İndir",
     backToDashboard: "Panele Dön",
     mobileZipTitle: "Mobilde ZIP İndir",
-    mobileZipDesc: "Mobil cihazlarda ZIP dosyası indirmek, açmak için bir dosya yöneticisi gerektirebilir. Devam etmek istiyor musunuz?"
-  }
+    mobileZipDesc:
+      "Mobil cihazlarda ZIP dosyası indirmek, açmak için bir dosya yöneticisi gerektirebilir. Devam etmek istiyor musunuz?",
+  },
 };
 
 function updateJson(filePath, newAccountData) {
-  const content = fs.readFileSync(filePath, 'utf8');
+  const content = fs.readFileSync(filePath, "utf8");
   const data = JSON.parse(content);
   data.account = newAccountData;
-  fs.writeFileSync(filePath, JSON.stringify(data, null, 2) + '\n');
-  console.log('Updated ' + filePath);
+  fs.writeFileSync(filePath, JSON.stringify(data, null, 2) + "\n");
+  console.log("Updated " + filePath);
 }
 
-updateJson('messages/en.json', enTranslations);
-updateJson('messages/tr.json', trTranslations);
+updateJson("messages/en.json", enTranslations);
+updateJson("messages/tr.json", trTranslations);

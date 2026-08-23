@@ -44,7 +44,12 @@ export const blogTranslationInputSchema = z.object({
     .optional()
     .or(z.literal("")),
   content: z.string().optional().or(z.literal("")),
-  meta_description: z.string().max(500, "validation.blog.excerpt_max").optional().or(z.literal("")).nullable(),
+  meta_description: z
+    .string()
+    .max(500, "validation.blog.excerpt_max")
+    .optional()
+    .or(z.literal(""))
+    .nullable(),
   meta_keywords: z.array(z.string()).optional().nullable(),
 });
 
@@ -104,7 +109,12 @@ export const createBlogFormSchema = (t: any) =>
           .optional()
           .or(z.literal("")),
         content: z.string().min(1, t("content_required")),
-        meta_description: z.string().max(500, t("excerpt_max")).optional().or(z.literal("")).nullable(),
+        meta_description: z
+          .string()
+          .max(500, t("excerpt_max"))
+          .optional()
+          .or(z.literal(""))
+          .nullable(),
       }),
       ar: z.object({
         slug: z
@@ -120,7 +130,12 @@ export const createBlogFormSchema = (t: any) =>
           .optional()
           .or(z.literal("")),
         content: z.string().min(1, t("content_required")),
-        meta_description: z.string().max(500, t("excerpt_max")).optional().or(z.literal("")).nullable(),
+        meta_description: z
+          .string()
+          .max(500, t("excerpt_max"))
+          .optional()
+          .or(z.literal(""))
+          .nullable(),
       }),
       ru: z.object({
         slug: z
@@ -136,7 +151,12 @@ export const createBlogFormSchema = (t: any) =>
           .optional()
           .or(z.literal("")),
         content: z.string().min(1, t("content_required")),
-        meta_description: z.string().max(500, t("excerpt_max")).optional().or(z.literal("")).nullable(),
+        meta_description: z
+          .string()
+          .max(500, t("excerpt_max"))
+          .optional()
+          .or(z.literal(""))
+          .nullable(),
       }),
       es: z.object({
         slug: z
@@ -152,7 +172,12 @@ export const createBlogFormSchema = (t: any) =>
           .optional()
           .or(z.literal("")),
         content: z.string().min(1, t("content_required")),
-        meta_description: z.string().max(500, t("excerpt_max")).optional().or(z.literal("")).nullable(),
+        meta_description: z
+          .string()
+          .max(500, t("excerpt_max"))
+          .optional()
+          .or(z.literal(""))
+          .nullable(),
       }),
       fr: z.object({
         slug: z
@@ -168,7 +193,12 @@ export const createBlogFormSchema = (t: any) =>
           .optional()
           .or(z.literal("")),
         content: z.string().min(1, t("content_required")),
-        meta_description: z.string().max(500, t("excerpt_max")).optional().or(z.literal("")).nullable(),
+        meta_description: z
+          .string()
+          .max(500, t("excerpt_max"))
+          .optional()
+          .or(z.literal(""))
+          .nullable(),
       }),
       de: z.object({
         slug: z
@@ -184,7 +214,12 @@ export const createBlogFormSchema = (t: any) =>
           .optional()
           .or(z.literal("")),
         content: z.string().min(1, t("content_required")),
-        meta_description: z.string().max(500, t("excerpt_max")).optional().or(z.literal("")).nullable(),
+        meta_description: z
+          .string()
+          .max(500, t("excerpt_max"))
+          .optional()
+          .or(z.literal(""))
+          .nullable(),
       }),
       ro: z.object({
         slug: z
@@ -200,7 +235,12 @@ export const createBlogFormSchema = (t: any) =>
           .optional()
           .or(z.literal("")),
         content: z.string().min(1, t("content_required")),
-        meta_description: z.string().max(500, t("excerpt_max")).optional().or(z.literal("")).nullable(),
+        meta_description: z
+          .string()
+          .max(500, t("excerpt_max"))
+          .optional()
+          .or(z.literal(""))
+          .nullable(),
       }),
       tr: z.object({
         slug: z
@@ -216,7 +256,12 @@ export const createBlogFormSchema = (t: any) =>
           .optional()
           .or(z.literal("")),
         content: z.string().min(1, t("content_required")),
-        meta_description: z.string().max(500, t("excerpt_max")).optional().or(z.literal("")).nullable(),
+        meta_description: z
+          .string()
+          .max(500, t("excerpt_max"))
+          .optional()
+          .or(z.literal(""))
+          .nullable(),
       }),
     }),
     category_ids: z.array(z.string().uuid()).default([]),
@@ -270,10 +315,7 @@ export const categoryUpdateSchema = categoryFormSchema.partial();
 
 export const createCategoryFormSchema = (t: any) =>
   z.object({
-    slug: z
-      .string()
-      .min(1, t("slug_required"))
-      .max(100, t("slug_max")),
+    slug: z.string().min(1, t("slug_required")).max(100, t("slug_max")),
 
     icon: z.string().optional().nullable(),
     color: z
@@ -384,10 +426,7 @@ export const tagUpdateSchema = tagFormSchema.partial();
 
 export const createTagFormSchema = (t: any) =>
   z.object({
-    slug: z
-      .string()
-      .min(1, t("slug_required"))
-      .max(50, t("slug_max")),
+    slug: z.string().min(1, t("slug_required")).max(50, t("slug_max")),
 
     translations: z.object({
       en: z.object({

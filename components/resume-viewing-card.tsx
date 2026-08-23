@@ -64,11 +64,16 @@ export function ResumeViewingCard({
           const now = Date.now();
           const thirtySixHours = 36 * 60 * 60 * 1000;
 
-          const validPackages = data.filter((p) => now - p.timestamp < thirtySixHours);
+          const validPackages = data.filter(
+            (p) => now - p.timestamp < thirtySixHours,
+          );
           setLocalVisited(validPackages);
 
           if (validPackages.length !== data.length) {
-            localStorage.setItem("visited_packages", JSON.stringify(validPackages));
+            localStorage.setItem(
+              "visited_packages",
+              JSON.stringify(validPackages),
+            );
           }
         } catch (e) {
           console.error("Error parsing visited_packages", e);
@@ -91,15 +96,17 @@ export function ResumeViewingCard({
 
   // Ensure we have enough items for a smooth infinite loop when loop is enabled
   // If we have few items (but enough to loop), repeat them to fill the carousel
-  const displayPackages = isLoopable && visitedPackages.length < 8
-    ? Array.from({ length: Math.ceil(8 / visitedPackages.length) })
-      .flatMap(() => visitedPackages)
-    : visitedPackages;
+  const displayPackages =
+    isLoopable && visitedPackages.length < 8
+      ? Array.from({ length: Math.ceil(8 / visitedPackages.length) }).flatMap(
+          () => visitedPackages,
+        )
+      : visitedPackages;
 
   const content = (
     <div className={cn("flex flex-col gap-8", !withContainer && "w-full")}>
-      {showTitle && (
-        isMainTitle ? (
+      {showTitle &&
+        (isMainTitle ? (
           <h2 className="font-serif text-3xl sm:text-4xl text-white drop-shadow-lg text-center tracking-tight">
             {thero("resume_title")}
           </h2>
@@ -107,8 +114,7 @@ export function ResumeViewingCard({
           <div className="font-serif text-3xl sm:text-4xl text-white drop-shadow-lg text-center tracking-tight">
             {thero("resume_title")}
           </div>
-        )
-      )}
+        ))}
 
       <div className="relative">
         <Carousel
@@ -128,19 +134,35 @@ export function ResumeViewingCard({
               const packageDb = packages.find((p) => p.slug === packageId);
 
               const basePrice = packageDb ? Number(packageDb.price) : 150;
-              const pricing = calculateDiscountedPrice(basePrice, activeDiscount, null, today);
+              const pricing = calculateDiscountedPrice(
+                basePrice,
+                activeDiscount,
+                null,
+                today,
+              );
 
               // Use dynamic translations
-              const locFeatures = packageDb?.features[locale] || packageDb?.features["en"] || [];
-              const locName = packageDb?.title[locale] || packageDb?.title["en"] || packageDb?.slug || packageId;
-              const locDuration = packageDb?.duration[locale] || packageDb?.duration["en"] || "";
+              const locFeatures =
+                packageDb?.features[locale] || packageDb?.features["en"] || [];
+              const locName =
+                packageDb?.title[locale] ||
+                packageDb?.title["en"] ||
+                packageDb?.slug ||
+                packageId;
+              const locDuration =
+                packageDb?.duration[locale] || packageDb?.duration["en"] || "";
               const locPhotos = extractPhotosCount(locFeatures);
               const packageImage = packageDb?.cover_image || "";
 
-              const nativeSlug = packageDb?.title[locale] ? generateNativeSlug(packageDb.title[locale]) : (packageDb?.slug || packageId);
+              const nativeSlug = packageDb?.title[locale]
+                ? generateNativeSlug(packageDb.title[locale])
+                : packageDb?.slug || packageId;
 
               return (
-                <CarouselItem key={`${packageId}-${index}`} className="ps-2 md:ps-4 basis-[88%] sm:basis-1/2 lg:basis-[92%]">
+                <CarouselItem
+                  key={`${packageId}-${index}`}
+                  className="ps-2 md:ps-4 basis-[88%] sm:basis-1/2 lg:basis-[92%]"
+                >
                   <Link
                     href={`/${locale}/packages/${nativeSlug}`}
                     className="group block w-full"
@@ -182,7 +204,9 @@ export function ResumeViewingCard({
                             </div>
                             <div className="flex items-center gap-1">
                               <Images className="w-3 h-3" />
-                              <span>{locPhotos} {tui("photos")}</span>
+                              <span>
+                                {locPhotos} {tui("photos")}
+                              </span>
                             </div>
                           </div>
                         </div>
@@ -200,7 +224,8 @@ export function ResumeViewingCard({
                           </div>
                           {pricing.isDiscounted && activeDiscount && (
                             <span className="text-[10px] font-bold text-sale bg-sale/10 px-2 py-0.5 rounded-full animate-pulse whitespace-nowrap">
-                              -{Math.round(pricing.discountPercentage * 100)}% {activeDiscount.name}
+                              -{Math.round(pricing.discountPercentage * 100)}%{" "}
+                              {activeDiscount.name}
                             </span>
                           )}
                         </div>
@@ -225,9 +250,7 @@ export function ResumeViewingCard({
   if (withContainer) {
     return (
       <section className="py-8 sm:py-10 animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-500 fill-mode-both">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          {content}
-        </div>
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">{content}</div>
       </section>
     );
   }

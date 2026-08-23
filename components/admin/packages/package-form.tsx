@@ -4,7 +4,14 @@ import { useState } from "react";
 import { useForm, useFieldArray } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { Trash2, UploadCloud, Plus, Sparkles, ChevronLeft, ChevronRight } from "lucide-react";
+import {
+  Trash2,
+  UploadCloud,
+  Plus,
+  Sparkles,
+  ChevronLeft,
+  ChevronRight,
+} from "lucide-react";
 import { Spinner } from "@/components/ui/spinner";
 import Image from "next/image";
 
@@ -15,7 +22,13 @@ import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Field, FieldLabel } from "@/components/ui/field";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Form,
@@ -28,19 +41,37 @@ import {
 } from "@/components/ui/form";
 
 import { packagesService, type PackageDB } from "@/lib/packages-service";
-import { uploadPackageImage, deletePackageImage, uploadPackageVideo } from "@/lib/storage-utils";
+import {
+  uploadPackageImage,
+  deletePackageImage,
+  uploadPackageVideo,
+} from "@/lib/storage-utils";
 
 interface PackageFormProps {
   initialData?: PackageDB;
 }
 
-const SUPPORTED_LOCALES = ["en", "ar", "ru", "es", "zh", "de", "fr", "ro", "tr"];
+const SUPPORTED_LOCALES = [
+  "en",
+  "ar",
+  "ru",
+  "es",
+  "zh",
+  "de",
+  "fr",
+  "ro",
+  "tr",
+];
 
 export function PackageForm({ initialData }: PackageFormProps) {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [coverImagePreview, setCoverImagePreview] = useState<string | null>(initialData?.cover_image || null);
-  const [galleryPreviews, setGalleryPreviews] = useState<string[]>(initialData?.gallery_images || []);
+  const [coverImagePreview, setCoverImagePreview] = useState<string | null>(
+    initialData?.cover_image || null,
+  );
+  const [galleryPreviews, setGalleryPreviews] = useState<string[]>(
+    initialData?.gallery_images || [],
+  );
 
   const form = useForm<any>({
     defaultValues: initialData || {
@@ -66,12 +97,20 @@ export function PackageForm({ initialData }: PackageFormProps) {
 
   const { control } = form;
 
-  const { fields: featureFieldsEn, append: appendFeature, remove: removeFeature } = useFieldArray({
+  const {
+    fields: featureFieldsEn,
+    append: appendFeature,
+    remove: removeFeature,
+  } = useFieldArray({
     control,
     name: `features.en`,
   });
 
-  const { fields: keywordFieldsEn, append: appendKeyword, remove: removeKeyword } = useFieldArray({
+  const {
+    fields: keywordFieldsEn,
+    append: appendKeyword,
+    remove: removeKeyword,
+  } = useFieldArray({
     control,
     name: `meta_keywords.en`,
   });
@@ -150,7 +189,9 @@ export function PackageForm({ initialData }: PackageFormProps) {
     }
   };
 
-  const handleGalleryUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleGalleryUpload = async (
+    e: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     const files = e.target.files;
     if (!files || files.length === 0) return;
 
@@ -161,13 +202,19 @@ export function PackageForm({ initialData }: PackageFormProps) {
     }
 
     setIsSubmitting(true);
-    toast.loading(`Uploading ${files.length} images...`, { id: "upload-gallery" });
+    toast.loading(`Uploading ${files.length} images...`, {
+      id: "upload-gallery",
+    });
 
     try {
-      const uploadPromises = Array.from(files).map(file => uploadPackageImage(slug, file));
+      const uploadPromises = Array.from(files).map((file) =>
+        uploadPackageImage(slug, file),
+      );
       const results = await Promise.all(uploadPromises);
 
-      const newUrls = results.filter(r => r.success && r.url).map(r => r.url as string);
+      const newUrls = results
+        .filter((r) => r.success && r.url)
+        .map((r) => r.url as string);
 
       if (newUrls.length > 0) {
         const currentGallery = form.getValues("gallery_images") || [];
@@ -177,7 +224,9 @@ export function PackageForm({ initialData }: PackageFormProps) {
         toast.success("Gallery images uploaded!", { id: "upload-gallery" });
       }
     } catch (err) {
-      toast.error("Failed to upload some gallery images", { id: "upload-gallery" });
+      toast.error("Failed to upload some gallery images", {
+        id: "upload-gallery",
+      });
     } finally {
       setIsSubmitting(false);
     }
@@ -198,20 +247,26 @@ export function PackageForm({ initialData }: PackageFormProps) {
     form.setValue("gallery_images", newGallery, { shouldDirty: true });
   };
 
-  const handleMoveGalleryImage = (index: number, direction: 'left' | 'right') => {
+  const handleMoveGalleryImage = (
+    index: number,
+    direction: "left" | "right",
+  ) => {
     const currentGallery = form.getValues("gallery_images") || [];
     if (
-      (direction === 'left' && index === 0) || 
-      (direction === 'right' && index === currentGallery.length - 1)
+      (direction === "left" && index === 0) ||
+      (direction === "right" && index === currentGallery.length - 1)
     ) {
       return;
     }
 
-    const newIndex = direction === 'left' ? index - 1 : index + 1;
+    const newIndex = direction === "left" ? index - 1 : index + 1;
     const newGallery = [...currentGallery];
-    
+
     // Swap elements
-    [newGallery[index], newGallery[newIndex]] = [newGallery[newIndex], newGallery[index]];
+    [newGallery[index], newGallery[newIndex]] = [
+      newGallery[newIndex],
+      newGallery[index],
+    ];
 
     setGalleryPreviews(newGallery);
     form.setValue("gallery_images", newGallery, { shouldDirty: true });
@@ -219,8 +274,17 @@ export function PackageForm({ initialData }: PackageFormProps) {
 
   const handleAITranslate = async () => {
     const data = form.getValues();
-    if (!data.title?.en || !data.description?.en || !data.duration?.en || !data.features?.en || !data.meta_description?.en || !data.meta_keywords?.en) {
-      toast.error("Please fill in all English fields first before auto-translating.");
+    if (
+      !data.title?.en ||
+      !data.description?.en ||
+      !data.duration?.en ||
+      !data.features?.en ||
+      !data.meta_description?.en ||
+      !data.meta_keywords?.en
+    ) {
+      toast.error(
+        "Please fill in all English fields first before auto-translating.",
+      );
       return;
     }
 
@@ -242,21 +306,49 @@ export function PackageForm({ initialData }: PackageFormProps) {
       if (translateRes.ok) {
         const translateData = await translateRes.json();
         if (translateData.translations) {
-          SUPPORTED_LOCALES.forEach(loc => {
+          SUPPORTED_LOCALES.forEach((loc) => {
             if (loc === "en") return;
             if (translateData.translations[loc]) {
-              form.setValue(`title.${loc}`, translateData.translations[loc].title, { shouldDirty: true });
-              form.setValue(`description.${loc}`, translateData.translations[loc].description, { shouldDirty: true });
-              form.setValue(`duration.${loc}`, translateData.translations[loc].duration, { shouldDirty: true });
-              form.setValue(`features.${loc}`, translateData.translations[loc].features, { shouldDirty: true });
-              form.setValue(`meta_description.${loc}`, translateData.translations[loc].meta_description, { shouldDirty: true });
-              form.setValue(`meta_keywords.${loc}`, translateData.translations[loc].meta_keywords, { shouldDirty: true });
+              form.setValue(
+                `title.${loc}`,
+                translateData.translations[loc].title,
+                { shouldDirty: true },
+              );
+              form.setValue(
+                `description.${loc}`,
+                translateData.translations[loc].description,
+                { shouldDirty: true },
+              );
+              form.setValue(
+                `duration.${loc}`,
+                translateData.translations[loc].duration,
+                { shouldDirty: true },
+              );
+              form.setValue(
+                `features.${loc}`,
+                translateData.translations[loc].features,
+                { shouldDirty: true },
+              );
+              form.setValue(
+                `meta_description.${loc}`,
+                translateData.translations[loc].meta_description,
+                { shouldDirty: true },
+              );
+              form.setValue(
+                `meta_keywords.${loc}`,
+                translateData.translations[loc].meta_keywords,
+                { shouldDirty: true },
+              );
             }
           });
-          toast.success("Blank languages successfully auto-filled!", { id: "ai-translation" });
+          toast.success("Blank languages successfully auto-filled!", {
+            id: "ai-translation",
+          });
         }
       } else {
-        toast.error("AI translation failed. Check API key.", { id: "ai-translation" });
+        toast.error("AI translation failed. Check API key.", {
+          id: "ai-translation",
+        });
       }
     } catch (err) {
       toast.error("AI translation API error.", { id: "ai-translation" });
@@ -266,15 +358,18 @@ export function PackageForm({ initialData }: PackageFormProps) {
   const onSubmit = async (data: any) => {
     setIsSubmitting(true);
     try {
-      const { generateNativeSlug } = await import('@/lib/slug-generator');
+      const { generateNativeSlug } = await import("@/lib/slug-generator");
       // Set the master identifier slug based on the English Title
-      const masterSlug = data.slug || generateNativeSlug(data.title.en || 'unknown-package');
+      const masterSlug =
+        data.slug || generateNativeSlug(data.title.en || "unknown-package");
 
       // Formatting payload
       const payload: any = {
         slug: masterSlug,
         price: Number(data.price),
-        original_price: data.original_price ? Number(data.original_price) : null,
+        original_price: data.original_price
+          ? Number(data.original_price)
+          : null,
         is_active: data.is_active,
         is_per_person: data.is_per_person,
         is_popular: Boolean(data.is_popular),
@@ -288,7 +383,10 @@ export function PackageForm({ initialData }: PackageFormProps) {
         duration: data.duration,
         features: data.features,
         meta_keywords: data.meta_keywords,
-        locations: typeof data.locations === "string" ? parseInt(data.locations, 10) : data.locations,
+        locations:
+          typeof data.locations === "string"
+            ? parseInt(data.locations, 10)
+            : data.locations,
       };
 
       if (initialData?.id) {
@@ -301,7 +399,6 @@ export function PackageForm({ initialData }: PackageFormProps) {
 
       router.push("/admin/dashboard/packages");
       router.refresh();
-
     } catch (error: any) {
       toast.error(error.message || "Something went wrong.");
     } finally {
@@ -313,13 +410,14 @@ export function PackageForm({ initialData }: PackageFormProps) {
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-
           {/* Main Content Area */}
           <div className="lg:col-span-2 space-y-8">
             <Card>
               <CardHeader>
                 <CardTitle>Basic Information</CardTitle>
-                <CardDescription>Core details about this photography package.</CardDescription>
+                <CardDescription>
+                  Core details about this photography package.
+                </CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -345,7 +443,11 @@ export function PackageForm({ initialData }: PackageFormProps) {
                         <FormItem className="flex-1">
                           <FormLabel>Original Price (Optional)</FormLabel>
                           <FormControl>
-                            <Input type="number" {...field} value={field.value || ''} />
+                            <Input
+                              type="number"
+                              {...field}
+                              value={field.value || ""}
+                            />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -381,14 +483,15 @@ export function PackageForm({ initialData }: PackageFormProps) {
                       )}
                     />
                   </div>
-
                 </div>
 
                 {/* Localized Content Tabs */}
                 <div className="pt-4 border-t mt-4">
                   <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-4">
                     <div>
-                      <Label className="block text-lg font-semibold">Localized Content</Label>
+                      <Label className="block text-lg font-semibold">
+                        Localized Content
+                      </Label>
                       <p className="text-sm text-muted-foreground mt-1">
                         Manage package details for each language.
                       </p>
@@ -406,12 +509,22 @@ export function PackageForm({ initialData }: PackageFormProps) {
 
                   <Tabs defaultValue="en" className="w-full">
                     <TabsList className="w-full flex flex-wrap h-auto">
-                      {SUPPORTED_LOCALES.map(loc => (
-                        <TabsTrigger key={loc} value={loc} className="uppercase">{loc}</TabsTrigger>
+                      {SUPPORTED_LOCALES.map((loc) => (
+                        <TabsTrigger
+                          key={loc}
+                          value={loc}
+                          className="uppercase"
+                        >
+                          {loc}
+                        </TabsTrigger>
                       ))}
                     </TabsList>
-                    {SUPPORTED_LOCALES.map(loc => (
-                      <TabsContent key={loc} value={loc} className="space-y-6 pt-4">
+                    {SUPPORTED_LOCALES.map((loc) => (
+                      <TabsContent
+                        key={loc}
+                        value={loc}
+                        className="space-y-6 pt-4"
+                      >
                         <FormField
                           control={form.control}
                           name={`title.${loc}`}
@@ -419,7 +532,11 @@ export function PackageForm({ initialData }: PackageFormProps) {
                             <FormItem>
                               <FormLabel>Title ({loc.toUpperCase()})</FormLabel>
                               <FormControl>
-                                <Input placeholder={`Title in ${loc}`} {...field} value={field.value || ''} />
+                                <Input
+                                  placeholder={`Title in ${loc}`}
+                                  {...field}
+                                  value={field.value || ""}
+                                />
                               </FormControl>
                             </FormItem>
                           )}
@@ -430,9 +547,15 @@ export function PackageForm({ initialData }: PackageFormProps) {
                           name={`duration.${loc}`}
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel>Duration string ({loc.toUpperCase()})</FormLabel>
+                              <FormLabel>
+                                Duration string ({loc.toUpperCase()})
+                              </FormLabel>
                               <FormControl>
-                                <Input placeholder={`e.g. 1.5 Hours`} {...field} value={field.value || ''} />
+                                <Input
+                                  placeholder={`e.g. 1.5 Hours`}
+                                  {...field}
+                                  value={field.value || ""}
+                                />
                               </FormControl>
                             </FormItem>
                           )}
@@ -443,9 +566,16 @@ export function PackageForm({ initialData }: PackageFormProps) {
                           name={`description.${loc}`}
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel>Description ({loc.toUpperCase()})</FormLabel>
+                              <FormLabel>
+                                Description ({loc.toUpperCase()})
+                              </FormLabel>
                               <FormControl>
-                                <Textarea placeholder={`Detailed description in ${loc}...`} className="min-h-32" {...field} value={field.value || ''} />
+                                <Textarea
+                                  placeholder={`Detailed description in ${loc}...`}
+                                  className="min-h-32"
+                                  {...field}
+                                  value={field.value || ""}
+                                />
                               </FormControl>
                             </FormItem>
                           )}
@@ -455,31 +585,59 @@ export function PackageForm({ initialData }: PackageFormProps) {
                         <div className="space-y-4 border rounded-md p-4 bg-muted/20">
                           <Label className="block font-semibold">
                             Features Checklist ({loc.toUpperCase()})
-                            {loc !== 'en' && <span className="text-xs text-muted-foreground ml-2 font-normal">(Auto-syncs length with English)</span>}
+                            {loc !== "en" && (
+                              <span className="text-xs text-muted-foreground ml-2 font-normal">
+                                (Auto-syncs length with English)
+                              </span>
+                            )}
                           </Label>
                           <ul className="space-y-2">
                             {/* For EN we use fieldArray, for others we map based on EN length so they match line-by-line */}
-                            {(loc === 'en' ? featureFieldsEn : watchFeaturesEn).map((_: any, index: number) => (
-                              <li key={loc === 'en' ? (featureFieldsEn[index] as any).id : `feat-${loc}-${index}`} className="flex gap-2 items-center">
+                            {(loc === "en"
+                              ? featureFieldsEn
+                              : watchFeaturesEn
+                            ).map((_: any, index: number) => (
+                              <li
+                                key={
+                                  loc === "en"
+                                    ? (featureFieldsEn[index] as any).id
+                                    : `feat-${loc}-${index}`
+                                }
+                                className="flex gap-2 items-center"
+                              >
                                 <FormField
                                   control={form.control}
                                   name={`features.${loc}.${index}`}
                                   render={({ field }) => (
                                     <FormControl>
-                                      <Input placeholder={`Feature ${index + 1} in ${loc}`} {...field} value={field.value || ''} />
+                                      <Input
+                                        placeholder={`Feature ${index + 1} in ${loc}`}
+                                        {...field}
+                                        value={field.value || ""}
+                                      />
                                     </FormControl>
                                   )}
                                 />
-                                {loc === 'en' && (
-                                  <Button type="button" variant="ghost" size="icon" onClick={() => removeFeature(index)}>
+                                {loc === "en" && (
+                                  <Button
+                                    type="button"
+                                    variant="ghost"
+                                    size="icon"
+                                    onClick={() => removeFeature(index)}
+                                  >
                                     <Trash2 className="w-4 h-4 text-destructive" />
                                   </Button>
                                 )}
                               </li>
                             ))}
                           </ul>
-                          {loc === 'en' && (
-                            <Button type="button" variant="outline" size="sm" onClick={() => appendFeature("")}>
+                          {loc === "en" && (
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="sm"
+                              onClick={() => appendFeature("")}
+                            >
                               <Plus className="w-4 h-4 mr-2" />
                               Add Feature (EN)
                             </Button>
@@ -496,11 +654,20 @@ export function PackageForm({ initialData }: PackageFormProps) {
                             name={`meta_description.${loc}`}
                             render={({ field }) => (
                               <FormItem>
-                                <FormLabel>Meta Description (Max 160 chars)</FormLabel>
+                                <FormLabel>
+                                  Meta Description (Max 160 chars)
+                                </FormLabel>
                                 <FormControl>
-                                  <Textarea placeholder={`SEO description in ${loc}...`} className="min-h-20" {...field} value={field.value || ''} />
+                                  <Textarea
+                                    placeholder={`SEO description in ${loc}...`}
+                                    className="min-h-20"
+                                    {...field}
+                                    value={field.value || ""}
+                                  />
                                 </FormControl>
-                                <FormDescription>Google search result snippet description.</FormDescription>
+                                <FormDescription>
+                                  Google search result snippet description.
+                                </FormDescription>
                               </FormItem>
                             )}
                           />
@@ -508,30 +675,58 @@ export function PackageForm({ initialData }: PackageFormProps) {
                           <div className="space-y-4 border rounded-md p-4 bg-muted/20">
                             <Label className="block font-medium">
                               Meta Keywords ({loc.toUpperCase()})
-                              {loc !== 'en' && <span className="text-xs text-muted-foreground ml-2 font-normal">(Auto-syncs length with English)</span>}
+                              {loc !== "en" && (
+                                <span className="text-xs text-muted-foreground ml-2 font-normal">
+                                  (Auto-syncs length with English)
+                                </span>
+                              )}
                             </Label>
                             <ul className="space-y-2">
-                              {(loc === 'en' ? keywordFieldsEn : watchKeywordsEn).map((_: any, index: number) => (
-                                <li key={loc === 'en' ? (keywordFieldsEn[index] as any).id : `kw-${loc}-${index}`} className="flex gap-2 items-center">
+                              {(loc === "en"
+                                ? keywordFieldsEn
+                                : watchKeywordsEn
+                              ).map((_: any, index: number) => (
+                                <li
+                                  key={
+                                    loc === "en"
+                                      ? (keywordFieldsEn[index] as any).id
+                                      : `kw-${loc}-${index}`
+                                  }
+                                  className="flex gap-2 items-center"
+                                >
                                   <FormField
                                     control={form.control}
                                     name={`meta_keywords.${loc}.${index}`}
                                     render={({ field }) => (
                                       <FormControl>
-                                        <Input placeholder={`Keyword ${index + 1} in ${loc}`} {...field} value={field.value || ''} />
+                                        <Input
+                                          placeholder={`Keyword ${index + 1} in ${loc}`}
+                                          {...field}
+                                          value={field.value || ""}
+                                        />
                                       </FormControl>
                                     )}
                                   />
-                                  {loc === 'en' && (
-                                    <Button type="button" variant="ghost" size="icon" onClick={() => removeKeyword(index)}>
+                                  {loc === "en" && (
+                                    <Button
+                                      type="button"
+                                      variant="ghost"
+                                      size="icon"
+                                      onClick={() => removeKeyword(index)}
+                                    >
                                       <Trash2 className="w-4 h-4 text-destructive" />
                                     </Button>
                                   )}
                                 </li>
                               ))}
                             </ul>
-                            {loc === 'en' && (
-                              <Button type="button" variant="outline" size="sm" onClick={() => appendKeyword("")}>
+                            {loc === "en" && (
+                              <Button
+                                type="button"
+                                variant="outline"
+                                size="sm"
+                                onClick={() => appendKeyword("")}
+                              >
                                 <Plus className="w-4 h-4 mr-2" />
                                 Add Keyword (EN)
                               </Button>
@@ -559,7 +754,9 @@ export function PackageForm({ initialData }: PackageFormProps) {
                   render={({ field }) => (
                     <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
                       <div className="space-y-0.5">
-                        <FormLabel className="text-base">Active Status</FormLabel>
+                        <FormLabel className="text-base">
+                          Active Status
+                        </FormLabel>
                         <FormDescription>
                           Make this package visible on the website.
                         </FormDescription>
@@ -580,7 +777,9 @@ export function PackageForm({ initialData }: PackageFormProps) {
                   render={({ field }) => (
                     <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
                       <div className="space-y-0.5">
-                        <FormLabel className="text-base">Per Person Pricing</FormLabel>
+                        <FormLabel className="text-base">
+                          Per Person Pricing
+                        </FormLabel>
                         <FormDescription>
                           If enabled, price is multiplied by person count.
                         </FormDescription>
@@ -601,7 +800,9 @@ export function PackageForm({ initialData }: PackageFormProps) {
                   render={({ field }) => (
                     <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
                       <div className="space-y-0.5">
-                        <FormLabel className="text-base">Most Popular</FormLabel>
+                        <FormLabel className="text-base">
+                          Most Popular
+                        </FormLabel>
                         <FormDescription>
                           Display the "Most Popular" badge on this package.
                         </FormDescription>
@@ -625,7 +826,9 @@ export function PackageForm({ initialData }: PackageFormProps) {
                       <FormControl>
                         <Input type="number" {...field} />
                       </FormControl>
-                      <FormDescription>Lower numbers appear first.</FormDescription>
+                      <FormDescription>
+                        Lower numbers appear first.
+                      </FormDescription>
                     </FormItem>
                   )}
                 />
@@ -635,15 +838,22 @@ export function PackageForm({ initialData }: PackageFormProps) {
             <Card>
               <CardHeader>
                 <CardTitle>Media</CardTitle>
-                <CardDescription>Upload photos (auto-optimized max 150KB WebP).</CardDescription>
+                <CardDescription>
+                  Upload photos (auto-optimized max 150KB WebP).
+                </CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
-
                 <Field className="space-y-4">
                   <FieldLabel>Cover Image</FieldLabel>
                   {coverImagePreview ? (
                     <div className="relative w-full aspect-[4/3] rounded-lg overflow-hidden border">
-                      <Image src={coverImagePreview} fill sizes="(max-width: 768px) 100vw, 400px" className="object-cover" alt="Cover" />
+                      <Image
+                        src={coverImagePreview}
+                        fill
+                        sizes="(max-width: 768px) 100vw, 400px"
+                        className="object-cover"
+                        alt="Cover"
+                      />
                       <Button
                         type="button"
                         variant="destructive"
@@ -685,7 +895,11 @@ export function PackageForm({ initialData }: PackageFormProps) {
                       <FormLabel>Gallery Video URL (Optional)</FormLabel>
                       <div className="flex gap-2">
                         <FormControl>
-                          <Input placeholder="e.g. YouTube, Vimeo, or Instagram URL" {...field} value={field.value || ''} />
+                          <Input
+                            placeholder="e.g. YouTube, Vimeo, or Instagram URL"
+                            {...field}
+                            value={field.value || ""}
+                          />
                         </FormControl>
                         <Label
                           htmlFor="video-upload"
@@ -704,7 +918,8 @@ export function PackageForm({ initialData }: PackageFormProps) {
                         </Label>
                       </div>
                       <FormDescription>
-                        Paste a link OR upload a direct .mp4 video for seamless autoplay.
+                        Paste a link OR upload a direct .mp4 video for seamless
+                        autoplay.
                       </FormDescription>
                     </FormItem>
                   )}
@@ -716,9 +931,18 @@ export function PackageForm({ initialData }: PackageFormProps) {
                   {galleryPreviews.length > 0 && (
                     <div className="grid grid-cols-3 gap-2">
                       {galleryPreviews.map((url, i) => (
-                        <div key={i} className="group relative aspect-square rounded-md overflow-hidden border">
-                          <Image src={url} fill sizes="(max-width: 768px) 33vw, 150px" className="object-cover" alt={`Gallery ${i}`} />
-                          
+                        <div
+                          key={i}
+                          className="group relative aspect-square rounded-md overflow-hidden border"
+                        >
+                          <Image
+                            src={url}
+                            fill
+                            sizes="(max-width: 768px) 33vw, 150px"
+                            className="object-cover"
+                            alt={`Gallery ${i}`}
+                          />
+
                           <Button
                             type="button"
                             variant="destructive"
@@ -734,8 +958,8 @@ export function PackageForm({ initialData }: PackageFormProps) {
                               type="button"
                               variant="secondary"
                               size="icon"
-                              className={`rounded-full w-6 h-6 bg-background/80 hover:bg-background ${i === 0 ? 'invisible' : ''}`}
-                              onClick={() => handleMoveGalleryImage(i, 'left')}
+                              className={`rounded-full w-6 h-6 bg-background/80 hover:bg-background ${i === 0 ? "invisible" : ""}`}
+                              onClick={() => handleMoveGalleryImage(i, "left")}
                             >
                               <ChevronLeft className="w-3 h-3" />
                             </Button>
@@ -743,8 +967,8 @@ export function PackageForm({ initialData }: PackageFormProps) {
                               type="button"
                               variant="secondary"
                               size="icon"
-                              className={`rounded-full w-6 h-6 bg-background/80 hover:bg-background ${i === galleryPreviews.length - 1 ? 'invisible' : ''}`}
-                              onClick={() => handleMoveGalleryImage(i, 'right')}
+                              className={`rounded-full w-6 h-6 bg-background/80 hover:bg-background ${i === galleryPreviews.length - 1 ? "invisible" : ""}`}
+                              onClick={() => handleMoveGalleryImage(i, "right")}
                             >
                               <ChevronRight className="w-3 h-3" />
                             </Button>
@@ -760,7 +984,9 @@ export function PackageForm({ initialData }: PackageFormProps) {
                   >
                     <div className="flex flex-col items-center justify-center pt-5 pb-6 gap-2">
                       <Plus className="w-5 h-5 text-muted-foreground" />
-                      <span className="text-xs text-muted-foreground font-semibold">Add Gallery Images</span>
+                      <span className="text-xs text-muted-foreground font-semibold">
+                        Add Gallery Images
+                      </span>
                     </div>
                     <Input
                       id="gallery-upload"
@@ -775,13 +1001,16 @@ export function PackageForm({ initialData }: PackageFormProps) {
                 </Field>
               </CardContent>
             </Card>
-
           </div>
         </div>
 
         <div className="flex justify-end py-4 sticky bottom-0 bg-background border-t pt-4">
           <ButtonGroup>
-            <Button type="button" variant="outline" onClick={() => router.push("/admin/dashboard/packages")}>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => router.push("/admin/dashboard/packages")}
+            >
               Cancel
             </Button>
             <Button type="submit" disabled={isSubmitting}>
@@ -790,8 +1019,10 @@ export function PackageForm({ initialData }: PackageFormProps) {
                   <Spinner className="w-4 h-4 mr-2 animate-spin" />
                   Saving...
                 </>
+              ) : initialData ? (
+                "Save Changes"
               ) : (
-                initialData ? "Save Changes" : "Create Package"
+                "Create Package"
               )}
             </Button>
           </ButtonGroup>

@@ -263,16 +263,36 @@ export const trackFacebookLead = async (
   const generatedLeadId = leadId || generateLeadId();
 
   // Prepare hashed data
-  const hashedEmail = customerEmail ? [await hashCustomerData(customerEmail)] : [];
-  const hashedPhone = customerPhone ? [await hashPhoneNumber(customerPhone)] : [];
-  const hashedFirstName = options?.firstName ? [await hashCustomerData(options.firstName)] : undefined;
-  const hashedLastName = options?.lastName ? [await hashCustomerData(options.lastName)] : undefined;
-  const hashedCity = options?.city ? [await hashCustomerData(options.city)] : undefined;
-  const hashedState = options?.state ? [await hashCustomerData(options.state)] : undefined;
-  const hashedZip = options?.zip ? [await hashCustomerData(options.zip)] : undefined;
-  const hashedCountry = options?.country ? [await hashCustomerData(options.country)] : undefined;
-  const hashedDob = options?.dateOfBirth ? [await hashCustomerData(options.dateOfBirth)] : undefined;
-  const hashedGender = options?.gender ? [await hashCustomerData(options.gender)] : undefined;
+  const hashedEmail = customerEmail
+    ? [await hashCustomerData(customerEmail)]
+    : [];
+  const hashedPhone = customerPhone
+    ? [await hashPhoneNumber(customerPhone)]
+    : [];
+  const hashedFirstName = options?.firstName
+    ? [await hashCustomerData(options.firstName)]
+    : undefined;
+  const hashedLastName = options?.lastName
+    ? [await hashCustomerData(options.lastName)]
+    : undefined;
+  const hashedCity = options?.city
+    ? [await hashCustomerData(options.city)]
+    : undefined;
+  const hashedState = options?.state
+    ? [await hashCustomerData(options.state)]
+    : undefined;
+  const hashedZip = options?.zip
+    ? [await hashCustomerData(options.zip)]
+    : undefined;
+  const hashedCountry = options?.country
+    ? [await hashCustomerData(options.country)]
+    : undefined;
+  const hashedDob = options?.dateOfBirth
+    ? [await hashCustomerData(options.dateOfBirth)]
+    : undefined;
+  const hashedGender = options?.gender
+    ? [await hashCustomerData(options.gender)]
+    : undefined;
 
   // Prepare event for Conversions API
   const event: FacebookConversionEvent = {
@@ -332,16 +352,36 @@ export const trackFacebookPurchase = async (
   options?: FacebookEventOptions,
 ) => {
   // Prepare hashed data
-  const hashedEmail = customerEmail ? [await hashCustomerData(customerEmail)] : [];
-  const hashedPhone = customerPhone ? [await hashPhoneNumber(customerPhone)] : [];
-  const hashedFirstName = options?.firstName ? [await hashCustomerData(options.firstName)] : undefined;
-  const hashedLastName = options?.lastName ? [await hashCustomerData(options.lastName)] : undefined;
-  const hashedCity = options?.city ? [await hashCustomerData(options.city)] : undefined;
-  const hashedState = options?.state ? [await hashCustomerData(options.state)] : undefined;
-  const hashedZip = options?.zip ? [await hashCustomerData(options.zip)] : undefined;
-  const hashedCountry = options?.country ? [await hashCustomerData(options.country)] : undefined;
-  const hashedDob = options?.dateOfBirth ? [await hashCustomerData(options.dateOfBirth)] : undefined;
-  const hashedGender = options?.gender ? [await hashCustomerData(options.gender)] : undefined;
+  const hashedEmail = customerEmail
+    ? [await hashCustomerData(customerEmail)]
+    : [];
+  const hashedPhone = customerPhone
+    ? [await hashPhoneNumber(customerPhone)]
+    : [];
+  const hashedFirstName = options?.firstName
+    ? [await hashCustomerData(options.firstName)]
+    : undefined;
+  const hashedLastName = options?.lastName
+    ? [await hashCustomerData(options.lastName)]
+    : undefined;
+  const hashedCity = options?.city
+    ? [await hashCustomerData(options.city)]
+    : undefined;
+  const hashedState = options?.state
+    ? [await hashCustomerData(options.state)]
+    : undefined;
+  const hashedZip = options?.zip
+    ? [await hashCustomerData(options.zip)]
+    : undefined;
+  const hashedCountry = options?.country
+    ? [await hashCustomerData(options.country)]
+    : undefined;
+  const hashedDob = options?.dateOfBirth
+    ? [await hashCustomerData(options.dateOfBirth)]
+    : undefined;
+  const hashedGender = options?.gender
+    ? [await hashCustomerData(options.gender)]
+    : undefined;
 
   // Prepare event for Conversions API
   const event: FacebookConversionEvent = {
@@ -385,7 +425,13 @@ export const trackFacebookPurchase = async (
   // Client-side pixel tracking logic is usually separate for Purchase
   // (e.g. on Thank You page), but if this function is called client-side:
   if (typeof window !== "undefined") {
-    fbPixel.trackPurchase(packageId, amount, transactionId, eventId, options?.yieldCategory);
+    fbPixel.trackPurchase(
+      packageId,
+      amount,
+      transactionId,
+      eventId,
+      options?.yieldCategory,
+    );
   }
 
   return { success };
@@ -404,16 +450,36 @@ export const trackFacebookPrintPurchase = async (
   const contentIds = items.map((item) => item.sku);
 
   // Prepare hashed data
-  const hashedEmail = customerEmail ? [await hashCustomerData(customerEmail)] : [];
-  const hashedPhone = customerPhone ? [await hashPhoneNumber(customerPhone)] : [];
-  const hashedFirstName = options?.firstName ? [await hashCustomerData(options.firstName)] : undefined;
-  const hashedLastName = options?.lastName ? [await hashCustomerData(options.lastName)] : undefined;
-  const hashedCity = options?.city ? [await hashCustomerData(options.city)] : undefined;
-  const hashedState = options?.state ? [await hashCustomerData(options.state)] : undefined;
-  const hashedZip = options?.zip ? [await hashCustomerData(options.zip)] : undefined;
-  const hashedCountry = options?.country ? [await hashCustomerData(options.country)] : undefined;
-  const hashedDob = options?.dateOfBirth ? [await hashCustomerData(options.dateOfBirth)] : undefined;
-  const hashedGender = options?.gender ? [await hashCustomerData(options.gender)] : undefined;
+  const hashedEmail = customerEmail
+    ? [await hashCustomerData(customerEmail)]
+    : [];
+  const hashedPhone = customerPhone
+    ? [await hashPhoneNumber(customerPhone)]
+    : [];
+  const hashedFirstName = options?.firstName
+    ? [await hashCustomerData(options.firstName)]
+    : undefined;
+  const hashedLastName = options?.lastName
+    ? [await hashCustomerData(options.lastName)]
+    : undefined;
+  const hashedCity = options?.city
+    ? [await hashCustomerData(options.city)]
+    : undefined;
+  const hashedState = options?.state
+    ? [await hashCustomerData(options.state)]
+    : undefined;
+  const hashedZip = options?.zip
+    ? [await hashCustomerData(options.zip)]
+    : undefined;
+  const hashedCountry = options?.country
+    ? [await hashCustomerData(options.country)]
+    : undefined;
+  const hashedDob = options?.dateOfBirth
+    ? [await hashCustomerData(options.dateOfBirth)]
+    : undefined;
+  const hashedGender = options?.gender
+    ? [await hashCustomerData(options.gender)]
+    : undefined;
 
   // Prepare event for Conversions API
   const event: FacebookConversionEvent = {
@@ -479,16 +545,36 @@ export const trackMetaCRMLeadEvent = async (
     const cleanId = bookingId.replace(/[^a-zA-Z0-9_-]/g, "_");
 
     // Prepare hashed data
-    const hashedEmail = customerEmail ? [await hashCustomerData(customerEmail)] : [];
-    const hashedPhone = customerPhone ? [await hashPhoneNumber(customerPhone)] : [];
-    const hashedFirstName = options?.firstName ? [await hashCustomerData(options.firstName)] : undefined;
-    const hashedLastName = options?.lastName ? [await hashCustomerData(options.lastName)] : undefined;
-    const hashedCity = options?.city ? [await hashCustomerData(options.city)] : undefined;
-    const hashedState = options?.state ? [await hashCustomerData(options.state)] : undefined;
-    const hashedZip = options?.zip ? [await hashCustomerData(options.zip)] : undefined;
-    const hashedCountry = options?.country ? [await hashCustomerData(options.country)] : undefined;
-    const hashedDob = options?.dateOfBirth ? [await hashCustomerData(options.dateOfBirth)] : undefined;
-    const hashedGender = options?.gender ? [await hashCustomerData(options.gender)] : undefined;
+    const hashedEmail = customerEmail
+      ? [await hashCustomerData(customerEmail)]
+      : [];
+    const hashedPhone = customerPhone
+      ? [await hashPhoneNumber(customerPhone)]
+      : [];
+    const hashedFirstName = options?.firstName
+      ? [await hashCustomerData(options.firstName)]
+      : undefined;
+    const hashedLastName = options?.lastName
+      ? [await hashCustomerData(options.lastName)]
+      : undefined;
+    const hashedCity = options?.city
+      ? [await hashCustomerData(options.city)]
+      : undefined;
+    const hashedState = options?.state
+      ? [await hashCustomerData(options.state)]
+      : undefined;
+    const hashedZip = options?.zip
+      ? [await hashCustomerData(options.zip)]
+      : undefined;
+    const hashedCountry = options?.country
+      ? [await hashCustomerData(options.country)]
+      : undefined;
+    const hashedDob = options?.dateOfBirth
+      ? [await hashCustomerData(options.dateOfBirth)]
+      : undefined;
+    const hashedGender = options?.gender
+      ? [await hashCustomerData(options.gender)]
+      : undefined;
 
     const event: FacebookConversionEvent = {
       event_name: "Lead",

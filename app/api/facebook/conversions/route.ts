@@ -29,7 +29,7 @@ const facebookConversionSchema = z.object({
     "Contact",
     "Schedule",
     "PageView",
-    "AddToCart"
+    "AddToCart",
   ]),
   event_id: z.string().optional(), // For deduplication with Pixel
   customer_email: z
@@ -37,7 +37,7 @@ const facebookConversionSchema = z.object({
     .email({ message: "Invalid email format" })
     .or(z.literal(""))
     .optional()
-    .transform(e => e === "" ? undefined : e),
+    .transform((e) => (e === "" ? undefined : e)),
   customer_phone: z.string().optional(),
   first_name: z.string().optional(),
   last_name: z.string().optional(),
@@ -88,7 +88,10 @@ export async function POST(request: NextRequest) {
       const validationError = new ValidationError(
         "Invalid Facebook conversion data",
       );
-      console.error("Facebook API Validation Error:", JSON.stringify(validationResult.error.issues, null, 2));
+      console.error(
+        "Facebook API Validation Error:",
+        JSON.stringify(validationResult.error.issues, null, 2),
+      );
       logError(validationError, {
         ip,
         endpoint: "facebook-conversions",
@@ -134,11 +137,21 @@ export async function POST(request: NextRequest) {
     // Extract Meta matching parameters directly from cookies
     const rawFbc = bodyFbc || request.cookies.get("_fbc")?.value;
     const rawFbp = bodyFbp || request.cookies.get("_fbp")?.value;
-    
+
     // Validate Meta cookie formats to prevent 'modified fbclid' errors
-    const fbc = rawFbc && /^fb\.[0-9]\.[0-9]{13,}\.[a-zA-Z0-9_=-]+(\.[a-zA-Z0-9_=-]+)?$/.test(rawFbc) ? rawFbc : undefined;
-    const fbp = rawFbp && /^fb\.[0-9]\.[0-9]{13,}\.[0-9]+(\.[a-zA-Z0-9_=-]+)?$/.test(rawFbp) ? rawFbp : undefined;
-    
+    const fbc =
+      rawFbc &&
+      /^fb\.[0-9]\.[0-9]{13,}\.[a-zA-Z0-9_=-]+(\.[a-zA-Z0-9_=-]+)?$/.test(
+        rawFbc,
+      )
+        ? rawFbc
+        : undefined;
+    const fbp =
+      rawFbp &&
+      /^fb\.[0-9]\.[0-9]{13,}\.[0-9]+(\.[a-zA-Z0-9_=-]+)?$/.test(rawFbp)
+        ? rawFbp
+        : undefined;
+
     const clientIpAddress = ip;
 
     // Prepare user data with hashed customer information
@@ -205,7 +218,8 @@ export async function POST(request: NextRequest) {
 
     if (package_id && package_id !== "general") {
       customDataPayload.content_ids = [package_id];
-      customDataPayload.content_type = customDataPayload.content_type || "product";
+      customDataPayload.content_type =
+        customDataPayload.content_type || "product";
     }
 
     if (amount !== undefined && amount > 0) {
@@ -298,7 +312,8 @@ export async function GET() {
     const settings = await settingsService.getSettings();
 
     const missingVars = [];
-    if (!settings.facebook_access_token) missingVars.push("facebook_access_token");
+    if (!settings.facebook_access_token)
+      missingVars.push("facebook_access_token");
     if (!settings.facebook_dataset_id) missingVars.push("facebook_dataset_id");
     if (!settings.facebook_pixel_id) missingVars.push("facebook_pixel_id");
 

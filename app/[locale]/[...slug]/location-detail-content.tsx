@@ -1,10 +1,4 @@
-import {
-  Camera,
-  Clock,
-  ExternalLink,
-  MapPin,
-  Sparkles,
-} from "lucide-react";
+import { Camera, Clock, ExternalLink, MapPin, Sparkles } from "lucide-react";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
@@ -16,8 +10,10 @@ import { LocationCard } from "@/components/location-card";
 import { Link } from "@/i18n/routing";
 import { locationsService } from "@/lib/locations-service";
 import { SchemaInjector } from "@/components/schema-injector";
-import { buildTouristAttractionSchema, generateSeoDescription } from "@/lib/seo-utils";
-
+import {
+  buildTouristAttractionSchema,
+  generateSeoDescription,
+} from "@/lib/seo-utils";
 
 // Force dynamic rendering to avoid Vercel build-time issues with next-intl
 export const dynamic = "force-dynamic";
@@ -43,16 +39,19 @@ export async function LocationDetailPageContent({
   const baseUrl = getBaseUrl();
 
   const dynamicTitle = location.title?.[locale] || location.title?.en || slug;
-  const dynamicDesc = location.description?.[locale] || location.description?.en || "";
-  const dynamicBestTime = location.best_time?.[locale] || location.best_time?.en || "";
-  const photographyTips = location.photography_tips?.[locale] || location.photography_tips?.en || [];
+  const dynamicDesc =
+    location.description?.[locale] || location.description?.en || "";
+  const dynamicBestTime =
+    location.best_time?.[locale] || location.best_time?.en || "";
+  const photographyTips =
+    location.photography_tips?.[locale] || location.photography_tips?.en || [];
 
   const heroImage = location.cover_image
-    ? (location.cover_image.startsWith("http") ? location.cover_image : `${baseUrl}${location.cover_image}`)
+    ? location.cover_image.startsWith("http")
+      ? location.cover_image
+      : `${baseUrl}${location.cover_image}`
     : `${baseUrl}/images/locations/${slug}-hero.webp`;
   const galleryImages = location.gallery_images || [];
-
-
 
   const touristAttractionSchema = buildTouristAttractionSchema({
     name: dynamicTitle,
@@ -66,7 +65,6 @@ export async function LocationDetailPageContent({
   return (
     <div className="min-h-screen">
       <SchemaInjector schema={touristAttractionSchema} />
-
 
       <BreadcrumbNav />
 
@@ -98,7 +96,11 @@ export async function LocationDetailPageContent({
               <div className="flex flex-wrap items-center gap-3 sm:gap-6 mt-4 sm:mt-6">
                 <div className="flex items-center gap-2 text-white/80 text-sm sm:text-base">
                   <MapPin className="w-4 h-4" />
-                  <span>{location.coordinates ? `${location.coordinates.lat.toFixed(4)}, ${location.coordinates.lng.toFixed(4)}` : t("locationInfo")}</span>
+                  <span>
+                    {location.coordinates
+                      ? `${location.coordinates.lat.toFixed(4)}, ${location.coordinates.lng.toFixed(4)}`
+                      : t("locationInfo")}
+                  </span>
                 </div>
                 <div className="flex items-center gap-2 text-white/80 text-sm sm:text-base">
                   <Camera className="w-4 h-4" />
@@ -184,24 +186,36 @@ export async function LocationDetailPageContent({
               )}
 
               {/* Nearby Locations via tag match */}
-              {location.nearby_locations && location.nearby_locations.length > 0 && (
-                <div className="space-y-6 pt-4 border-t">
-                  <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold flex items-center gap-2">
-                    <span className="w-1 h-6 sm:h-8 bg-primary rounded-full" />
-                    {t("nearbyLocations", { default: "Nearby Locations" })}
-                  </h2>
-                  <div className="grid sm:grid-cols-2 gap-4">
-                    {allLocations
-                      .filter(l => location.nearby_locations.includes(l.slug) && l.id !== location.id)
-                      .slice(0, 4)
-                      .map((nearbyLoc, idx) => (
-                        <div key={nearbyLoc.slug} className="pointer-events-auto h-[250px] sm:h-[300px]">
-                          <LocationCard location={nearbyLoc} index={idx} parentSlug={parentSlug} />
-                        </div>
-                      ))}
+              {location.nearby_locations &&
+                location.nearby_locations.length > 0 && (
+                  <div className="space-y-6 pt-4 border-t">
+                    <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold flex items-center gap-2">
+                      <span className="w-1 h-6 sm:h-8 bg-primary rounded-full" />
+                      {t("nearbyLocations", { default: "Nearby Locations" })}
+                    </h2>
+                    <div className="grid sm:grid-cols-2 gap-4">
+                      {allLocations
+                        .filter(
+                          (l) =>
+                            location.nearby_locations.includes(l.slug) &&
+                            l.id !== location.id,
+                        )
+                        .slice(0, 4)
+                        .map((nearbyLoc, idx) => (
+                          <div
+                            key={nearbyLoc.slug}
+                            className="pointer-events-auto h-[250px] sm:h-[300px]"
+                          >
+                            <LocationCard
+                              location={nearbyLoc}
+                              index={idx}
+                              parentSlug={parentSlug}
+                            />
+                          </div>
+                        ))}
+                    </div>
                   </div>
-                </div>
-              )}
+                )}
             </div>
 
             {/* Sidebar - Right */}
@@ -263,7 +277,8 @@ export async function LocationDetailPageContent({
                   <p className="text-primary-foreground/80 text-sm mb-5 leading-relaxed">
                     {t("bookPhotoshootDescription")}
                   </p>
-                  <Button nativeButton={false}
+                  <Button
+                    nativeButton={false}
                     render={<Link href={"/packages" as any} />}
                     variant="secondary"
                     className="w-full font-semibold shadow-lg hover:shadow-xl transition-all"

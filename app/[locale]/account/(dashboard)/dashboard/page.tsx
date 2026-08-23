@@ -3,7 +3,14 @@ import { createServerSupabaseClient } from "@/lib/supabase/server";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { formatCurrency } from "@/lib/currency";
-import { Calendar, Clock, Image as ImageIcon, CheckCircle, Package, ArrowRight } from "lucide-react";
+import {
+  Calendar,
+  Clock,
+  Image as ImageIcon,
+  CheckCircle,
+  Package,
+  ArrowRight,
+} from "lucide-react";
 import { Link } from "@/i18n/routing";
 import { Button } from "@/components/ui/button";
 import { getTranslations } from "next-intl/server";
@@ -14,12 +21,14 @@ export default async function CustomerDashboardPage() {
   if (!user) return null;
 
   const supabase = await createServerSupabaseClient();
-  
+
   // Fetch bookings belonging to this user
   const { data: bookings } = await supabase
     .from("bookings")
     .select("*")
-    .or(`user_id.eq."${user.id}"${user.email ? `,user_email.eq."${user.email}"` : ''}`)
+    .or(
+      `user_id.eq."${user.id}"${user.email ? `,user_email.eq."${user.email}"` : ""}`,
+    )
     .order("booking_date", { ascending: false });
 
   return (
@@ -36,14 +45,18 @@ export default async function CustomerDashboardPage() {
         </div>
       </div>
 
-      {(!bookings || bookings.length === 0) ? (
+      {!bookings || bookings.length === 0 ? (
         <Card className="border-dashed bg-muted/20 border-2">
           <CardContent className="flex flex-col items-center justify-center py-20 text-center">
             <div className="bg-primary/10 p-6 rounded-full mb-6">
               <Calendar className="h-12 w-12 text-primary" />
             </div>
-            <h3 className="text-xl font-semibold mb-2">{t("noReservations")}</h3>
-            <p className="text-muted-foreground max-w-md">{t("noReservationsDesc")}</p>
+            <h3 className="text-xl font-semibold mb-2">
+              {t("noReservations")}
+            </h3>
+            <p className="text-muted-foreground max-w-md">
+              {t("noReservationsDesc")}
+            </p>
           </CardContent>
         </Card>
       ) : (
@@ -53,41 +66,61 @@ export default async function CustomerDashboardPage() {
             const isUpcoming = date > new Date();
 
             return (
-              <Card key={booking.id} className="group overflow-hidden flex flex-col rounded-2xl border-border/50 bg-card hover:shadow-xl hover:border-primary/20 transition-all duration-300 hover:-translate-y-1">
+              <Card
+                key={booking.id}
+                className="group overflow-hidden flex flex-col rounded-2xl border-border/50 bg-card hover:shadow-xl hover:border-primary/20 transition-all duration-300 hover:-translate-y-1"
+              >
                 <div className="bg-gradient-to-br from-primary/5 to-transparent p-5 border-b border-border/50 relative">
                   <div className="mt-1">
                     <p className="text-[10px] font-bold uppercase tracking-widest text-primary mb-1">
-                      {booking.package_id.replace(/-/g, ' ')}
+                      {booking.package_id.replace(/-/g, " ")}
                     </p>
                     <h3 className="text-xl font-bold tracking-tight">
-                      {date.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
+                      {date.toLocaleDateString("en-US", {
+                        month: "short",
+                        day: "numeric",
+                        year: "numeric",
+                      })}
                     </h3>
                   </div>
                 </div>
-                
+
                 <CardContent className="p-5 flex-1 space-y-4">
                   <div className="grid grid-cols-2 gap-3">
                     <div className="bg-secondary/30 p-2.5 rounded-lg flex items-center">
                       <Clock className="w-4 h-4 mr-2 text-primary" />
-                      <span className="text-sm font-medium">{booking.booking_time}</span>
+                      <span className="text-sm font-medium">
+                        {booking.booking_time}
+                      </span>
                     </div>
                     <div className="bg-secondary/30 p-2.5 rounded-lg flex items-center">
                       <Package className="w-4 h-4 mr-2 text-primary" />
-                      <span className="text-sm font-medium">{booking.people_count} {t("people")}</span>
+                      <span className="text-sm font-medium">
+                        {booking.people_count} {t("people")}
+                      </span>
                     </div>
                   </div>
-                  
+
                   <div className="pt-1 flex justify-between items-end">
                     <div>
-                      <p className="text-[10px] text-muted-foreground uppercase tracking-wider font-semibold mb-1">{t("totalAmount")}</p>
-                      <p className="text-lg font-bold">{formatCurrency(booking.total_amount, "EUR")}</p>
+                      <p className="text-[10px] text-muted-foreground uppercase tracking-wider font-semibold mb-1">
+                        {t("totalAmount")}
+                      </p>
+                      <p className="text-lg font-bold">
+                        {formatCurrency(booking.total_amount, "EUR")}
+                      </p>
                     </div>
                   </div>
                 </CardContent>
-                
+
                 <div className="p-5 pt-0 mt-auto">
                   {booking.drive_folder_id ? (
-                    <Link href={{ pathname: '/account/gallery/[bookingId]', params: { bookingId: booking.id } }}>
+                    <Link
+                      href={{
+                        pathname: "/account/gallery/[bookingId]",
+                        params: { bookingId: booking.id },
+                      }}
+                    >
                       <Button className="w-full rounded-lg h-10 bg-primary/10 text-primary hover:bg-primary hover:text-primary-foreground transition-all group-hover:shadow-md">
                         <ImageIcon className="w-4 h-4 mr-2" />
                         {t("viewGallery")}
@@ -95,7 +128,11 @@ export default async function CustomerDashboardPage() {
                       </Button>
                     </Link>
                   ) : (
-                    <Button className="w-full rounded-lg h-10" variant="outline" disabled>
+                    <Button
+                      className="w-full rounded-lg h-10"
+                      variant="outline"
+                      disabled
+                    >
                       <Clock className="w-4 h-4 mr-2 animate-pulse" />
                       {t("photosProcessing")}
                     </Button>

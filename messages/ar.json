@@ -446,7 +446,8 @@
     "per_person": "لكل شخص",
     "related_packages": "باقات ذات صلة",
     "gyg_title": "استكشف المزيد في اسطنبول",
-    "gyg_subtitle": "أنشطة وجولات موصى بها من شريكنا GetYourGuide"
+    "gyg_subtitle": "أنشطة وجولات موصى بها من شريكنا GetYourGuide",
+    "starting_from": "تبدأ من"
   },
   "gallery": {
     "title": "المحفظة",

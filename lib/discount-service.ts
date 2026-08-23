@@ -17,11 +17,11 @@ export const discountService = {
    * Returns null if no active campaign is running.
    */
   async getActiveDiscount(): Promise<DiscountDB | null> {
-try {
+    try {
       const { data, error } = await supabase
         .from("discounts")
         .select("*")
-        .eq("is_active", true)
+        .eq("is_active", true);
 
       if (error) {
         console.error("Supabase Error fetching active discount:", error);
@@ -35,14 +35,14 @@ try {
       const validDiscount = data.find((discount: any) => {
         let isValid = true;
         if (discount.start_date) {
-            const start = new Date(discount.start_date);
-            start.setHours(0, 0, 0, 0);
-            if (now.getTime() < start.getTime()) isValid = false;
+          const start = new Date(discount.start_date);
+          start.setHours(0, 0, 0, 0);
+          if (now.getTime() < start.getTime()) isValid = false;
         }
         if (discount.end_date) {
-            const end = new Date(discount.end_date);
-            end.setHours(23, 59, 59, 999);
-            if (now.getTime() > end.getTime()) isValid = false;
+          const end = new Date(discount.end_date);
+          end.setHours(23, 59, 59, 999);
+          if (now.getTime() > end.getTime()) isValid = false;
         }
         return isValid;
       });
@@ -58,7 +58,7 @@ try {
    * Admin Function: Fetches all discounts including inactive ones.
    */
   async getAllDiscounts(): Promise<DiscountDB[]> {
-const { data, error } = await supabase
+    const { data, error } = await supabase
       .from("discounts")
       .select("*")
       .order("created_at", { ascending: false });

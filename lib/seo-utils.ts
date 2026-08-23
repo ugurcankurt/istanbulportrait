@@ -1,7 +1,8 @@
 import { SiteSettings } from "./settings-service";
 
 export function getBaseUrl() {
-  if (process.env.VERCEL_PROJECT_PRODUCTION_URL) return `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`;
+  if (process.env.VERCEL_PROJECT_PRODUCTION_URL)
+    return `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`;
   if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`;
   if (process.env.NEXT_PUBLIC_APP_URL) return process.env.NEXT_PUBLIC_APP_URL;
   return "https://istanbulportrait.com";
@@ -16,7 +17,7 @@ export function getBaseUrl() {
  */
 export function generateSeoDescription(
   content: string | null | undefined,
-  maxLength = 160
+  maxLength = 160,
 ): string {
   if (!content) return "";
 
@@ -31,17 +32,31 @@ export function generateSeoDescription(
 
   // Truncate cleanly at word boundary
   const truncated = cleanText.substring(0, maxLength);
-  return truncated.substring(0, Math.min(truncated.length, truncated.lastIndexOf(" "))) + "...";
+  return (
+    truncated.substring(
+      0,
+      Math.min(truncated.length, truncated.lastIndexOf(" ")),
+    ) + "..."
+  );
 }
 
 /**
  * Normalizes title for Meta Tags
  */
-export function generateSeoTitle(title: string | null | undefined, locale: string, fallbackTitle: string = ""): string {
+export function generateSeoTitle(
+  title: string | null | undefined,
+  locale: string,
+  fallbackTitle: string = "",
+): string {
   if (!title) return fallbackTitle;
   if (title.length <= 60) return title;
   const truncated = title.substring(0, 60);
-  return truncated.substring(0, Math.min(truncated.length, truncated.lastIndexOf(" "))) + "...";
+  return (
+    truncated.substring(
+      0,
+      Math.min(truncated.length, truncated.lastIndexOf(" ")),
+    ) + "..."
+  );
 }
 
 /**
@@ -49,7 +64,10 @@ export function generateSeoTitle(title: string | null | undefined, locale: strin
  * Uses Next.js /api/og dynamic image generation to guarantee a perfect 1200x630
  * aspect ratio for social media crawlers, avoiding cropped or improperly sized previews.
  */
-export function optimizeSeoImage(imageUrl: string | null | undefined, width: 1200 | 1080 | 1920 = 1200): string {
+export function optimizeSeoImage(
+  imageUrl: string | null | undefined,
+  width: 1200 | 1080 | 1920 = 1200,
+): string {
   if (!imageUrl) return "";
 
   // Get absolute URL
@@ -59,7 +77,7 @@ export function optimizeSeoImage(imageUrl: string | null | undefined, width: 120
 
   // Social media bots (WhatsApp, Facebook, LinkedIn) strictly require a JPEG/PNG format and often fail
   // to parse Next.js dynamic /_next/image endpoints emitting AVIF/WebP based on crawler headers.
-  // Using wsrv.nl securely globally caches the image, guarantees a fixed JPG output format, 
+  // Using wsrv.nl securely globally caches the image, guarantees a fixed JPG output format,
   // and optimally scales it for Open Graph requirements without cropping.
   return `https://wsrv.nl/?url=${encodeURIComponent(absoluteUrl)}&w=${width}&h=630&fit=cover&output=jpg&q=85`;
 }
@@ -73,7 +91,7 @@ export function constructOpenGraph(
   imageUrl: string,
   siteName: string,
   locale: string,
-  extraOverrides: any = {}
+  extraOverrides: any = {},
 ) {
   const optimizedUrl = optimizeSeoImage(imageUrl, 1200);
 
@@ -105,7 +123,7 @@ export function constructOpenGraph(
     ],
     locale: ogLocale,
     type: "website",
-    ...extraOverrides
+    ...extraOverrides,
   };
 }
 
@@ -114,27 +132,32 @@ export function constructOpenGraph(
 // ----------------------------------------------------
 
 export function buildLocalBusinessSchema(
-  settings: SiteSettings, 
-  priceRange?: string, 
+  settings: SiteSettings,
+  priceRange?: string,
   reviews?: any[],
   aggregateRatingValue?: number,
   reviewCount?: number,
-  coverImage?: string
+  coverImage?: string,
 ) {
-  const imageUrl = optimizeSeoImage(coverImage || settings.logo_url || settings.default_og_image_url, 1200);
+  const imageUrl = optimizeSeoImage(
+    coverImage || settings.logo_url || settings.default_og_image_url,
+    1200,
+  );
 
   const schema: any = {
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
     name: settings.organization_name || settings.site_name,
-    image: imageUrl ? {
-      "@type": "ImageObject",
-      url: imageUrl,
-      width: 1200,
-      height: 630,
-      copyrightNotice: "IstanbulPortrait 2026",
-      creator: { "@type": "Organization", name: "Istanbul Portrait" }
-    } : undefined,
+    image: imageUrl
+      ? {
+          "@type": "ImageObject",
+          url: imageUrl,
+          width: 1200,
+          height: 630,
+          copyrightNotice: "IstanbulPortrait 2026",
+          creator: { "@type": "Organization", name: "Istanbul Portrait" },
+        }
+      : undefined,
     "@id": getBaseUrl(),
     url: getBaseUrl(),
     telephone: settings.contact_phone || settings.whatsapp_number,
@@ -145,11 +168,14 @@ export function buildLocalBusinessSchema(
       addressCountry: settings.country_code || "",
       streetAddress: settings.address?.en || settings.city || "",
     },
-    geo: (settings.latitude && settings.longitude) ? {
-      "@type": "GeoCoordinates",
-      latitude: settings.latitude,
-      longitude: settings.longitude,
-    } : undefined,
+    geo:
+      settings.latitude && settings.longitude
+        ? {
+            "@type": "GeoCoordinates",
+            latitude: settings.latitude,
+            longitude: settings.longitude,
+          }
+        : undefined,
     openingHoursSpecification: {
       "@type": "OpeningHoursSpecification",
       dayOfWeek: settings.working_days || [
@@ -173,7 +199,12 @@ export function buildLocalBusinessSchema(
     ].filter(Boolean),
   };
 
-  if (aggregateRatingValue && aggregateRatingValue > 0 && reviewCount && reviewCount > 0) {
+  if (
+    aggregateRatingValue &&
+    aggregateRatingValue > 0 &&
+    reviewCount &&
+    reviewCount > 0
+  ) {
     schema.aggregateRating = {
       "@type": "AggregateRating",
       ratingValue: aggregateRatingValue.toString(),
@@ -186,18 +217,18 @@ export function buildLocalBusinessSchema(
   if (reviews && reviews.length > 0) {
     schema.review = reviews.slice(0, 5).map((r: any) => ({
       "@type": "Review",
-      "author": {
+      author: {
         "@type": "Person",
-        "name": r.author?.name || "Customer"
+        name: r.author?.name || "Customer",
       },
-      "datePublished": r.date ? r.date.split("T")[0] : undefined,
-      "reviewBody": r.text,
-      "reviewRating": {
+      datePublished: r.date ? r.date.split("T")[0] : undefined,
+      reviewBody: r.text,
+      reviewRating: {
         "@type": "Rating",
-        "bestRating": "5",
-        "ratingValue": r.rating?.toString() || "5",
-        "worstRating": "1"
-      }
+        bestRating: "5",
+        ratingValue: r.rating?.toString() || "5",
+        worstRating: "1",
+      },
     }));
   }
 
@@ -205,7 +236,10 @@ export function buildLocalBusinessSchema(
 }
 
 export function buildOrganizationSchema(settings: SiteSettings) {
-  const imageUrl = optimizeSeoImage(settings.logo_url || settings.default_og_image_url, 1200);
+  const imageUrl = optimizeSeoImage(
+    settings.logo_url || settings.default_og_image_url,
+    1200,
+  );
 
   return {
     "@context": "https://schema.org",
@@ -213,30 +247,38 @@ export function buildOrganizationSchema(settings: SiteSettings) {
     name: settings.organization_name || settings.site_name,
     "@id": getBaseUrl() + "/#organization",
     url: getBaseUrl(),
-    logo: imageUrl ? {
-      "@type": "ImageObject",
-      url: imageUrl,
-      width: 1200,
-      height: 630
-    } : undefined,
-    image: imageUrl ? {
-      "@type": "ImageObject",
-      url: imageUrl,
-      width: 1200,
-      height: 630
-    } : undefined,
-    founder: settings.founder_name ? {
-      "@type": "Person",
-      name: settings.founder_name,
-      ...(settings.founder_image_url ? {
-        image: {
+    logo: imageUrl
+      ? {
           "@type": "ImageObject",
-          url: optimizeSeoImage(settings.founder_image_url, 1200),
+          url: imageUrl,
           width: 1200,
-          height: 630
+          height: 630,
         }
-      } : {})
-    } : undefined,
+      : undefined,
+    image: imageUrl
+      ? {
+          "@type": "ImageObject",
+          url: imageUrl,
+          width: 1200,
+          height: 630,
+        }
+      : undefined,
+    founder: settings.founder_name
+      ? {
+          "@type": "Person",
+          name: settings.founder_name,
+          ...(settings.founder_image_url
+            ? {
+                image: {
+                  "@type": "ImageObject",
+                  url: optimizeSeoImage(settings.founder_image_url, 1200),
+                  width: 1200,
+                  height: 630,
+                },
+              }
+            : {}),
+        }
+      : undefined,
     foundingDate: settings.organization_founding_date || undefined,
     contactPoint: {
       "@type": "ContactPoint",
@@ -266,7 +308,7 @@ export function buildServiceSchema({
   providerUrl,
   discount,
   reviews,
-  url
+  url,
 }: {
   name: string;
   description: string;
@@ -281,42 +323,51 @@ export function buildServiceSchema({
   reviews?: any[];
   url?: string;
 }) {
-  const finalPrice = discount && discount.discount_percentage > 0
-    ? price - (price * discount.discount_percentage / 100)
-    : price;
+  const finalPrice =
+    discount && discount.discount_percentage > 0
+      ? price - (price * discount.discount_percentage) / 100
+      : price;
 
   const schema: any = {
     "@context": "https://schema.org/",
     "@type": "Product",
-    mainEntityOfPage: url ? {
-      "@type": "WebPage",
-      "@id": url
-    } : undefined,
+    mainEntityOfPage: url
+      ? {
+          "@type": "WebPage",
+          "@id": url,
+        }
+      : undefined,
     url: url,
     name,
-    image: image ? {
-      "@type": "ImageObject",
-      url: optimizeSeoImage(image, 1200),
-      width: 1200,
-      height: 630,
-      copyrightNotice: "IstanbulPortrait 2026",
-      creator: { "@type": "Organization", name: "Istanbul Portrait" }
-    } : undefined,
+    image: image
+      ? {
+          "@type": "ImageObject",
+          url: optimizeSeoImage(image, 1200),
+          width: 1200,
+          height: 630,
+          copyrightNotice: "IstanbulPortrait 2026",
+          creator: { "@type": "Organization", name: "Istanbul Portrait" },
+        }
+      : undefined,
     description,
-    brand: providerName ? {
-      "@type": "Brand",
-      name: providerName
-    } : undefined,
+    brand: providerName
+      ? {
+          "@type": "Brand",
+          name: providerName,
+        }
+      : undefined,
     offers: {
       "@type": "Offer",
       url: providerUrl || getBaseUrl(),
       priceCurrency: currency,
       price: finalPrice,
       availability: "https://schema.org/InStock",
-      seller: providerName ? {
-        "@type": "Organization",
-        name: providerName
-      } : undefined,
+      seller: providerName
+        ? {
+            "@type": "Organization",
+            name: providerName,
+          }
+        : undefined,
     },
   };
 
@@ -328,7 +379,7 @@ export function buildServiceSchema({
       "@type": "UnitPriceSpecification",
       priceType: "https://schema.org/StrikethroughPrice",
       price: price,
-      priceCurrency: currency
+      priceCurrency: currency,
     });
 
     if (discount.end_date) {
@@ -338,7 +389,12 @@ export function buildServiceSchema({
     schema.offers.priceSpecification = specs;
   }
 
-  if (aggregateRating && aggregateRating > 0 && reviewCount && reviewCount > 0) {
+  if (
+    aggregateRating &&
+    aggregateRating > 0 &&
+    reviewCount &&
+    reviewCount > 0
+  ) {
     schema.aggregateRating = {
       "@type": "AggregateRating",
       ratingValue: aggregateRating.toString(),
@@ -351,18 +407,18 @@ export function buildServiceSchema({
   if (reviews && reviews.length > 0) {
     schema.review = reviews.slice(0, 5).map((r: any) => ({
       "@type": "Review",
-      "author": {
+      author: {
         "@type": "Person",
-        "name": r.author?.name || "Customer"
+        name: r.author?.name || "Customer",
       },
-      "datePublished": r.date ? r.date.split("T")[0] : undefined,
-      "reviewBody": r.text,
-      "reviewRating": {
+      datePublished: r.date ? r.date.split("T")[0] : undefined,
+      reviewBody: r.text,
+      reviewRating: {
         "@type": "Rating",
-        "bestRating": "5",
-        "ratingValue": r.rating?.toString() || "5",
-        "worstRating": "1"
-      }
+        bestRating: "5",
+        ratingValue: r.rating?.toString() || "5",
+        worstRating: "1",
+      },
     }));
   }
 
@@ -403,21 +459,27 @@ export function buildArticleSchema({
   return {
     "@context": "https://schema.org",
     "@type": "Article",
-    mainEntityOfPage: url ? {
-      "@type": "WebPage",
-      "@id": url
-    } : undefined,
+    mainEntityOfPage: url
+      ? {
+          "@type": "WebPage",
+          "@id": url,
+        }
+      : undefined,
     url: url,
     headline: title,
     inLanguage: inLanguage,
-    image: image ? [{
-      "@type": "ImageObject",
-      url: optimizeSeoImage(image, 1200),
-      width: 1200,
-      height: 630,
-      copyrightNotice: "IstanbulPortrait 2026",
-      creator: { "@type": "Organization", name: "Istanbul Portrait" }
-    }] : [],
+    image: image
+      ? [
+          {
+            "@type": "ImageObject",
+            url: optimizeSeoImage(image, 1200),
+            width: 1200,
+            height: 630,
+            copyrightNotice: "IstanbulPortrait 2026",
+            creator: { "@type": "Organization", name: "Istanbul Portrait" },
+          },
+        ]
+      : [],
     datePublished,
     dateModified,
     author: [
@@ -429,24 +491,32 @@ export function buildArticleSchema({
         ...(authorUrls && authorUrls.length > 0 ? { sameAs: authorUrls } : {}),
       },
     ],
-    publisher: publisherName ? {
-      "@type": "Organization",
-      name: publisherName,
-      ...(publisherLogo ? {
-        logo: {
-          "@type": "ImageObject",
-          url: optimizeSeoImage(publisherLogo, 1200),
-          width: 1200,
-          height: 630,
-        },
-      } : {}),
-    } : undefined,
+    publisher: publisherName
+      ? {
+          "@type": "Organization",
+          name: publisherName,
+          ...(publisherLogo
+            ? {
+                logo: {
+                  "@type": "ImageObject",
+                  url: optimizeSeoImage(publisherLogo, 1200),
+                  width: 1200,
+                  height: 630,
+                },
+              }
+            : {}),
+        }
+      : undefined,
     description,
-    ...(keywords && keywords.length > 0 ? { keywords: keywords.join(", ") } : {}),
+    ...(keywords && keywords.length > 0
+      ? { keywords: keywords.join(", ") }
+      : {}),
   };
 }
 
-export function buildFAQSchema(faqs: Array<{ question: string; answer: string }>) {
+export function buildFAQSchema(
+  faqs: Array<{ question: string; answer: string }>,
+) {
   if (!faqs || faqs.length === 0) return null;
 
   return {
@@ -463,7 +533,9 @@ export function buildFAQSchema(faqs: Array<{ question: string; answer: string }>
   };
 }
 
-export function buildBreadcrumbSchema(items: Array<{ name: string; url: string }>) {
+export function buildBreadcrumbSchema(
+  items: Array<{ name: string; url: string }>,
+) {
   if (!items || items.length === 0) return null;
 
   return {
@@ -473,7 +545,9 @@ export function buildBreadcrumbSchema(items: Array<{ name: string; url: string }
       "@type": "ListItem",
       position: index + 1,
       name: item.name,
-      item: item.url.startsWith("http") ? item.url : `${getBaseUrl()}${item.url}`,
+      item: item.url.startsWith("http")
+        ? item.url
+        : `${getBaseUrl()}${item.url}`,
     })),
   };
 }
@@ -496,26 +570,33 @@ export function buildTouristAttractionSchema({
   return {
     "@context": "https://schema.org",
     "@type": "TouristAttraction",
-    mainEntityOfPage: url ? {
-      "@type": "WebPage",
-      "@id": url
-    } : undefined,
+    mainEntityOfPage: url
+      ? {
+          "@type": "WebPage",
+          "@id": url,
+        }
+      : undefined,
     name,
     description,
     url: url || getBaseUrl(),
-    image: image ? {
-      "@type": "ImageObject",
-      url: optimizeSeoImage(image, 1200),
-      width: 1200,
-      height: 630,
-      copyrightNotice: "IstanbulPortrait 2026",
-      creator: { "@type": "Organization", name: "Istanbul Portrait" }
-    } : undefined,
-    geo: (lat && lng) ? {
-      "@type": "GeoCoordinates",
-      latitude: lat,
-      longitude: lng,
-    } : undefined,
+    image: image
+      ? {
+          "@type": "ImageObject",
+          url: optimizeSeoImage(image, 1200),
+          width: 1200,
+          height: 630,
+          copyrightNotice: "IstanbulPortrait 2026",
+          creator: { "@type": "Organization", name: "Istanbul Portrait" },
+        }
+      : undefined,
+    geo:
+      lat && lng
+        ? {
+            "@type": "GeoCoordinates",
+            latitude: lat,
+            longitude: lng,
+          }
+        : undefined,
   };
 }
 
@@ -533,14 +614,16 @@ export function buildAboutPageSchema({
   return {
     "@context": "https://schema.org",
     "@type": "AboutPage",
-    mainEntityOfPage: url ? {
-      "@type": "WebPage",
-      "@id": url
-    } : undefined,
+    mainEntityOfPage: url
+      ? {
+          "@type": "WebPage",
+          "@id": url,
+        }
+      : undefined,
     name,
     description,
     url: url || getBaseUrl(),
-    ...(organizationSchema ? { mainEntity: organizationSchema } : {})
+    ...(organizationSchema ? { mainEntity: organizationSchema } : {}),
   };
 }
 
@@ -556,10 +639,12 @@ export function buildContactPageSchema({
   return {
     "@context": "https://schema.org",
     "@type": "ContactPage",
-    mainEntityOfPage: url ? {
-      "@type": "WebPage",
-      "@id": url
-    } : undefined,
+    mainEntityOfPage: url
+      ? {
+          "@type": "WebPage",
+          "@id": url,
+        }
+      : undefined,
     name,
     description,
     url: url || getBaseUrl(),
@@ -585,10 +670,12 @@ export function buildCollectionPageSchema({
   return {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
-    mainEntityOfPage: url ? {
-      "@type": "WebPage",
-      "@id": url
-    } : undefined,
+    mainEntityOfPage: url
+      ? {
+          "@type": "WebPage",
+          "@id": url,
+        }
+      : undefined,
     name,
     description,
     url: url || getBaseUrl(),
@@ -600,14 +687,16 @@ export function buildCollectionPageSchema({
         url: item.url,
         name: item.name,
         ...(item.description ? { description: item.description } : {}),
-        ...(item.image ? { 
-          image: {
-            "@type": "ImageObject",
-            url: optimizeSeoImage(item.image, 1200),
-            width: 1200,
-            height: 630
-          }
-        } : {}),
+        ...(item.image
+          ? {
+              image: {
+                "@type": "ImageObject",
+                url: optimizeSeoImage(item.image, 1200),
+                width: 1200,
+                height: 630,
+              },
+            }
+          : {}),
       })),
     },
   };

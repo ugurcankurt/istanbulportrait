@@ -1,12 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getServerUser } from "@/lib/auth-server";
-import { createServerSupabaseClient, createServerSupabaseAdminClient } from "@/lib/supabase/server";
+import {
+  createServerSupabaseClient,
+  createServerSupabaseAdminClient,
+} from "@/lib/supabase/server";
 import { createDriveFolder, moveFilesToFolder } from "@/lib/google-drive";
 import { extractPhotosCount } from "@/lib/features-parser";
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: Promise<{ bookingId: string }> }
+  { params }: { params: Promise<{ bookingId: string }> },
 ) {
   try {
     const user = await getServerUser();
@@ -41,31 +44,55 @@ export async function POST(
     }
 
     if (!booking.drive_folder_id) {
-      return NextResponse.json({ error: "No drive folder linked" }, { status: 400 });
+      return NextResponse.json(
+        { error: "No drive folder linked" },
+        { status: 400 },
+      );
     }
 
     if (booking.selection_status === "completed") {
-      return NextResponse.json({ error: "Selection already completed" }, { status: 400 });
+      return NextResponse.json(
+        { error: "Selection already completed" },
+        { status: 400 },
+      );
     }
 
     // 2. Validate max selections
     let maxSelections = 15;
     if (booking.package_id) {
-      const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(booking.package_id);
-      const { data: pkgData } = await supabase.from("packages").select("features").eq(isUUID ? "id" : "slug", booking.package_id).single();
+      const isUUID =
+        /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
+          booking.package_id,
+        );
+      const { data: pkgData } = await supabase
+        .from("packages")
+        .select("features")
+        .eq(isUUID ? "id" : "slug", booking.package_id)
+        .single();
       const featuresObj = (pkgData as any)?.features || {};
-      const featuresList = featuresObj.en || featuresObj.tr || featuresObj.ru || featuresObj.ar || Object.values(featuresObj)[0];
+      const featuresList =
+        featuresObj.en ||
+        featuresObj.tr ||
+        featuresObj.ru ||
+        featuresObj.ar ||
+        Object.values(featuresObj)[0];
       if (Array.isArray(featuresList) && featuresList.length > 0) {
         maxSelections = extractPhotosCount(featuresList);
       }
     }
 
     if (fileIds.length > maxSelections) {
-      return NextResponse.json({ error: `Cannot select more than ${maxSelections} photos` }, { status: 400 });
+      return NextResponse.json(
+        { error: `Cannot select more than ${maxSelections} photos` },
+        { status: 400 },
+      );
     }
 
     // 3. Create the "edited" folder inside the main booking folder
-    const editedFolder = await createDriveFolder("edited", booking.drive_folder_id);
+    const editedFolder = await createDriveFolder(
+      "edited",
+      booking.drive_folder_id,
+    );
 
     // 4. Move files to the new folder
     await moveFilesToFolder(fileIds, editedFolder.id!, booking.drive_folder_id);
@@ -85,19 +112,31 @@ export async function POST(
     // 6. Send Email Notification to Admin
     try {
       const { settingsService } = await import("@/lib/settings-service");
-      const { sendAdminSelectionNotificationEmail } = await import("@/lib/resend");
+      const { sendAdminSelectionNotificationEmail } = await import(
+        "@/lib/resend"
+      );
       const settings = await settingsService.getSettings();
-      await sendAdminSelectionNotificationEmail(booking, fileIds.length, settings);
+      await sendAdminSelectionNotificationEmail(
+        booking,
+        fileIds.length,
+        settings,
+      );
     } catch (emailError) {
-      console.error("Failed to send admin selection notification email:", emailError);
+      console.error(
+        "Failed to send admin selection notification email:",
+        emailError,
+      );
     }
 
-    return NextResponse.json({ success: true, message: "Files successfully moved for editing." });
+    return NextResponse.json({
+      success: true,
+      message: "Files successfully moved for editing.",
+    });
   } catch (error: any) {
     console.error("Gallery selection error:", error);
     return NextResponse.json(
       { error: error.message || "Failed to submit selections" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

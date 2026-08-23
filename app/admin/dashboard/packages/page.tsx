@@ -2,7 +2,14 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Plus, Pencil, Trash2, CheckCircle2, XCircle, Image as ImageIcon } from "lucide-react";
+import {
+  Plus,
+  Pencil,
+  Trash2,
+  CheckCircle2,
+  XCircle,
+  Image as ImageIcon,
+} from "lucide-react";
 import Image from "next/image";
 import { toast } from "sonner";
 import { packagesService, type PackageDB } from "@/lib/packages-service";
@@ -27,12 +34,20 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
 
 export default function PackagesAdminPage() {
   const [packages, setPackages] = useState<PackageDB[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [packageToDelete, setPackageToDelete] = useState<PackageDB | null>(null);
+  const [packageToDelete, setPackageToDelete] = useState<PackageDB | null>(
+    null,
+  );
 
   useEffect(() => {
     fetchPackages();
@@ -58,16 +73,22 @@ export default function PackagesAdminPage() {
       toast.loading("Deleting package...", { id: "delete-pkg" });
 
       // Delete DB record and associated images via secure backend route
-      const response = await fetch(`/api/admin/packages/${packageToDelete.id}`, {
-        method: "DELETE",
-      });
-      
+      const response = await fetch(
+        `/api/admin/packages/${packageToDelete.id}`,
+        {
+          method: "DELETE",
+        },
+      );
+
       if (response.ok) {
         toast.success("Package deleted successfully", { id: "delete-pkg" });
-        setPackages(packages.filter(p => p.id !== packageToDelete.id));
+        setPackages(packages.filter((p) => p.id !== packageToDelete.id));
       } else {
         const errorData = await response.json();
-        toast.error(errorData.error || "Failed to delete package from database", { id: "delete-pkg" });
+        toast.error(
+          errorData.error || "Failed to delete package from database",
+          { id: "delete-pkg" },
+        );
       }
     } catch (error) {
       console.error(error);
@@ -86,16 +107,22 @@ export default function PackagesAdminPage() {
             Manage your photography packages, pricing, and features.
           </p>
         </div>
-        <Button nativeButton={false} render={<Link href="/admin/dashboard/packages/new" />} className="shrink-0 gap-2">
-            <Plus className="w-4 h-4" />
-            Add Package
+        <Button
+          nativeButton={false}
+          render={<Link href="/admin/dashboard/packages/new" />}
+          className="shrink-0 gap-2"
+        >
+          <Plus className="w-4 h-4" />
+          Add Package
         </Button>
       </div>
 
       <Card>
         <CardHeader className="border-b">
           <CardTitle>All Packages</CardTitle>
-          <CardDescription>A list of all active and inactive packages in your system.</CardDescription>
+          <CardDescription>
+            A list of all active and inactive packages in your system.
+          </CardDescription>
         </CardHeader>
         <CardContent className="p-0">
           <Table>
@@ -122,7 +149,10 @@ export default function PackagesAdminPage() {
                 </TableRow>
               ) : packages.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={7} className="h-32 text-center text-muted-foreground">
+                  <TableCell
+                    colSpan={7}
+                    className="h-32 text-center text-muted-foreground"
+                  >
                     No packages found. Create your first one!
                   </TableCell>
                 </TableRow>
@@ -154,11 +184,18 @@ export default function PackagesAdminPage() {
                     </TableCell>
                     <TableCell className="font-bold">
                       €{pkg.price}
-                      {pkg.original_price && <span className="text-xs font-normal text-muted-foreground line-through ml-2">€{pkg.original_price}</span>}
+                      {pkg.original_price && (
+                        <span className="text-xs font-normal text-muted-foreground line-through ml-2">
+                          €{pkg.original_price}
+                        </span>
+                      )}
                     </TableCell>
                     <TableCell>
                       {pkg.is_active ? (
-                        <Badge variant="default" className="bg-green-500 hover:bg-green-600 gap-1">
+                        <Badge
+                          variant="default"
+                          className="bg-green-500 hover:bg-green-600 gap-1"
+                        >
                           <CheckCircle2 className="w-3 h-3" /> Active
                         </Badge>
                       ) : (
@@ -172,13 +209,18 @@ export default function PackagesAdminPage() {
                     </TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end gap-2">
-                        <Button nativeButton={false}
+                        <Button
+                          nativeButton={false}
                           variant="ghost"
                           size="icon"
-                          render={<Link href={`/admin/dashboard/packages/${pkg.id}`} />}
+                          render={
+                            <Link
+                              href={`/admin/dashboard/packages/${pkg.id}`}
+                            />
+                          }
                         >
-                            <Pencil className="w-4 h-4" />
-                            <span className="sr-only">Edit</span>
+                          <Pencil className="w-4 h-4" />
+                          <span className="sr-only">Edit</span>
                         </Button>
                         <Button
                           variant="ghost"
@@ -207,8 +249,12 @@ export default function PackagesAdminPage() {
           <AlertDialogHeader>
             <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
             <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete the package{" "}
-              <strong>{packageToDelete?.title?.en || packageToDelete?.slug}</strong> and remove all associated imagery from Supabase bucket storage.
+              This action cannot be undone. This will permanently delete the
+              package{" "}
+              <strong>
+                {packageToDelete?.title?.en || packageToDelete?.slug}
+              </strong>{" "}
+              and remove all associated imagery from Supabase bucket storage.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

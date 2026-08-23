@@ -111,10 +111,7 @@ function DeletePostDialog({
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DropdownMenuItem
-        onClick={() => setOpen(true)}
-        closeOnClick={false}
-      >
+      <DropdownMenuItem onClick={() => setOpen(true)} closeOnClick={false}>
         <div className="flex items-center w-full">
           <Trash className="w-4 h-4 mr-2" />
           Delete Post
@@ -209,9 +206,12 @@ export default function BlogManagementPage() {
           </p>
         </div>
         <div className="flex gap-2">
-          <Button nativeButton={false} render={<Link href="/admin/dashboard/blog/new" />}>
-              <Plus className="w-4 h-4 mr-2" />
-              New Post
+          <Button
+            nativeButton={false}
+            render={<Link href="/admin/dashboard/blog/new" />}
+          >
+            <Plus className="w-4 h-4 mr-2" />
+            New Post
           </Button>
         </div>
       </div>
@@ -281,7 +281,9 @@ export default function BlogManagementPage() {
             {/* Category Filter */}
             <Select
               value={category_id}
-              onValueChange={(value) => setFilters({ category_id: value || 'all' })}
+              onValueChange={(value) =>
+                setFilters({ category_id: value || "all" })
+              }
             >
               <SelectTrigger>
                 <SelectValue placeholder="Category" />
@@ -299,7 +301,7 @@ export default function BlogManagementPage() {
             {/* Tag Filter */}
             <Select
               value={tag_id}
-              onValueChange={(value) => setFilters({ tag_id: value || 'all' })}
+              onValueChange={(value) => setFilters({ tag_id: value || "all" })}
             >
               <SelectTrigger>
                 <SelectValue placeholder="Tag" />
@@ -350,10 +352,20 @@ export default function BlogManagementPage() {
           </div>
 
           <div className="flex gap-2 mt-4">
-            <Button nativeButton={false} render={<Link href="/admin/dashboard/blog/categories" />} variant="outline" size="sm">
-                Manage Categories
+            <Button
+              nativeButton={false}
+              render={<Link href="/admin/dashboard/blog/categories" />}
+              variant="outline"
+              size="sm"
+            >
+              Manage Categories
             </Button>
-            <Button nativeButton={false} render={<Link href="/admin/dashboard/blog/tags" />} variant="outline" size="sm">
+            <Button
+              nativeButton={false}
+              render={<Link href="/admin/dashboard/blog/tags" />}
+              variant="outline"
+              size="sm"
+            >
               Manage Tags
             </Button>
           </div>
@@ -381,9 +393,12 @@ export default function BlogManagementPage() {
                   Start creating engaging content for your photography blog
                 </EmptyDescription>
                 <EmptyContent>
-                  <Button nativeButton={false} render={<Link href="/admin/dashboard/blog/new" />}>
-                      <Plus className="w-4 h-4 mr-2" />
-                      Create First Post
+                  <Button
+                    nativeButton={false}
+                    render={<Link href="/admin/dashboard/blog/new" />}
+                  >
+                    <Plus className="w-4 h-4 mr-2" />
+                    Create First Post
                   </Button>
                 </EmptyContent>
               </Empty>
@@ -449,25 +464,51 @@ export default function BlogManagementPage() {
                       <TableCell>{post.views_count}</TableCell>
                       <TableCell className="text-right">
                         <DropdownMenu>
-                          <DropdownMenuTrigger render={<Button variant="ghost" size="sm" />}>
-                              <MoreHorizontal className="w-4 h-4" />
+                          <DropdownMenuTrigger
+                            render={<Button variant="ghost" size="sm" />}
+                          >
+                            <MoreHorizontal className="w-4 h-4" />
                           </DropdownMenuTrigger>
                           <DropdownMenuContent align="end">
                             <DropdownMenuGroup>
                               <DropdownMenuLabel>Actions</DropdownMenuLabel>
                               {(() => {
-                                const pathnames: Record<string, string> = { ar: "/مُدونة", ru: "/блог", zh: "/博客", tr: "/blog", es: "/blog", fr: "/blog", de: "/blog", ro: "/blog", en: "/blog" };
+                                const pathnames: Record<string, string> = {
+                                  ar: "/مُدونة",
+                                  ru: "/блог",
+                                  zh: "/博客",
+                                  tr: "/blog",
+                                  es: "/blog",
+                                  fr: "/blog",
+                                  de: "/blog",
+                                  ro: "/blog",
+                                  en: "/blog",
+                                };
                                 const blogPrefix = pathnames[locale] || "/blog";
                                 return (
-                                  <DropdownMenuItem render={<a href={`/${locale}${blogPrefix}/${post.translation.slug}`} target="_blank" rel="noreferrer" />}>
-                                      <Eye className="w-4 h-4 mr-2" />
-                                      View Post
+                                  <DropdownMenuItem
+                                    render={
+                                      <a
+                                        href={`/${locale}${blogPrefix}/${post.translation.slug}`}
+                                        target="_blank"
+                                        rel="noreferrer"
+                                      />
+                                    }
+                                  >
+                                    <Eye className="w-4 h-4 mr-2" />
+                                    View Post
                                   </DropdownMenuItem>
                                 );
                               })()}
-                              <DropdownMenuItem render={<Link href={`/admin/dashboard/blog/${post.id}`} />}>
-                                  <Edit className="w-4 h-4 mr-2" />
-                                  Edit Post
+                              <DropdownMenuItem
+                                render={
+                                  <Link
+                                    href={`/admin/dashboard/blog/${post.id}`}
+                                  />
+                                }
+                              >
+                                <Edit className="w-4 h-4 mr-2" />
+                                Edit Post
                               </DropdownMenuItem>
                               <DeletePostDialog
                                 post={post}

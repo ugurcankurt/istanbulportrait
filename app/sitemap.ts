@@ -28,7 +28,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     if (!url) return "";
     return url.replace(
       "https://xfntnamwfnqjgqmyxwfz.supabase.co/storage/v1/object/public",
-      `${baseUrl}/storage`
+      `${baseUrl}/storage`,
     );
   };
 
@@ -54,18 +54,24 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   // 2. Core Dynamic Pages from PagesContentService
   const corePages = await pagesContentService.getAllPages();
-  const activeCorePages = corePages.filter(p => p.is_active && !p.slug.includes("home-"));
+  const activeCorePages = corePages.filter(
+    (p) => p.is_active && !p.slug.includes("home-"),
+  );
 
   for (const page of activeCorePages) {
     if (page.slug === "home") continue;
 
     locales.forEach((locale) => {
       const titleLoc = page.title?.[locale];
-      const pageSeg = titleLoc ? `/${generateNativeSlug(titleLoc)}` : `/${page.slug}`;
+      const pageSeg = titleLoc
+        ? `/${generateNativeSlug(titleLoc)}`
+        : `/${page.slug}`;
 
       sitemapData.push({
         url: `${baseUrl}/${locale}${pageSeg}`,
-        lastModified: new Date(page.updated_at || page.created_at || new Date()),
+        lastModified: new Date(
+          page.updated_at || page.created_at || new Date(),
+        ),
         changeFrequency: "weekly",
         priority: 0.8,
         alternates: getAlternates((loc) => {
@@ -79,14 +85,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   // 3. Packages
   const activePackages = await packagesService.getActivePackages();
-  const packagesParent = corePages.find(p => p.slug === "packages");
-  
+  const packagesParent = corePages.find((p) => p.slug === "packages");
+
   for (const pkg of activePackages) {
     locales.forEach((locale) => {
       const pTitle = packagesParent?.title?.[locale];
       const pSeg = pTitle ? generateNativeSlug(pTitle) : "packages";
       const pkgTitleLoc = pkg.title?.[locale];
-      const pkgSeg = pkgTitleLoc ? (generateNativeSlug(pkgTitleLoc) || pkg.slug) : pkg.slug;
+      const pkgSeg = pkgTitleLoc
+        ? generateNativeSlug(pkgTitleLoc) || pkg.slug
+        : pkg.slug;
 
       sitemapData.push({
         url: `${baseUrl}/${locale}/${pSeg}/${pkgSeg}`,
@@ -97,38 +105,50 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
           const tTitle = packagesParent?.title?.[loc];
           const tSeg = tTitle ? generateNativeSlug(tTitle) : "packages";
           const tPkgTitle = pkg.title?.[loc];
-          const tPkgSeg = tPkgTitle ? (generateNativeSlug(tPkgTitle) || pkg.slug) : pkg.slug;
+          const tPkgSeg = tPkgTitle
+            ? generateNativeSlug(tPkgTitle) || pkg.slug
+            : pkg.slug;
           return `/${tSeg}/${tPkgSeg}`;
         }),
-        ...((pkg.gallery_images && pkg.gallery_images.length > 0) ? { images: [cleanImage(pkg.gallery_images[0])] } : {}),
+        ...(pkg.gallery_images && pkg.gallery_images.length > 0
+          ? { images: [cleanImage(pkg.gallery_images[0])] }
+          : {}),
       });
     });
   }
 
   // 4. Locations
   const activeLocations = await locationsService.getLocations();
-  const locationsParent = corePages.find(p => p.slug === "locations");
+  const locationsParent = corePages.find((p) => p.slug === "locations");
 
   for (const locItem of activeLocations) {
     locales.forEach((locale) => {
       const pTitle = locationsParent?.title?.[locale];
       const pSeg = pTitle ? generateNativeSlug(pTitle) : "locations";
       const locTitleLoc = locItem.title?.[locale];
-      const locSeg = locTitleLoc ? (generateNativeSlug(locTitleLoc) || locItem.slug) : locItem.slug;
+      const locSeg = locTitleLoc
+        ? generateNativeSlug(locTitleLoc) || locItem.slug
+        : locItem.slug;
 
       sitemapData.push({
         url: `${baseUrl}/${locale}/${pSeg}/${locSeg}`,
-        lastModified: new Date(locItem.updated_at || locItem.created_at || new Date()),
+        lastModified: new Date(
+          locItem.updated_at || locItem.created_at || new Date(),
+        ),
         changeFrequency: "weekly",
         priority: 0.7,
         alternates: getAlternates((loc) => {
           const tTitle = locationsParent?.title?.[loc];
           const tSeg = tTitle ? generateNativeSlug(tTitle) : "locations";
           const tLocTitle = locItem.title?.[loc];
-          const tLocSeg = tLocTitle ? (generateNativeSlug(tLocTitle) || locItem.slug) : locItem.slug;
+          const tLocSeg = tLocTitle
+            ? generateNativeSlug(tLocTitle) || locItem.slug
+            : locItem.slug;
           return `/${tSeg}/${tLocSeg}`;
         }),
-        ...(locItem.cover_image ? { images: [cleanImage(locItem.cover_image)] } : {}),
+        ...(locItem.cover_image
+          ? { images: [cleanImage(locItem.cover_image)] }
+          : {}),
       });
     });
   }
@@ -136,22 +156,30 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // 5. Blog Posts
   const { supabaseAdmin } = await import("@/lib/supabase");
   if (supabaseAdmin) {
-    const { data: blogPosts } = await supabaseAdmin.from("blog_posts").select("id, updated_at, created_at, status, featured_image").eq("status", "published");
-    
+    const { data: blogPosts } = await supabaseAdmin
+      .from("blog_posts")
+      .select("id, updated_at, created_at, status, featured_image")
+      .eq("status", "published");
+
     if (blogPosts && blogPosts.length > 0) {
-      const blogParent = corePages.find(p => p.slug === "blog");
-      const { data: translations } = await supabaseAdmin.from("blog_post_translations").select("post_id, locale, slug");
-      
+      const blogParent = corePages.find((p) => p.slug === "blog");
+      const { data: translations } = await supabaseAdmin
+        .from("blog_post_translations")
+        .select("post_id, locale, slug");
+
       for (const bp of blogPosts) {
-        const postTranslations = translations?.filter((t: any) => t.post_id === bp.id) || [];
+        const postTranslations =
+          translations?.filter((t: any) => t.post_id === bp.id) || [];
         if (postTranslations.length === 0) continue;
 
         const translatedLocales = postTranslations.map((t: any) => t.locale);
 
         translatedLocales.forEach((locale: string) => {
-          const tSlug = postTranslations.find((t: any) => t.locale === locale)?.slug;
+          const tSlug = postTranslations.find(
+            (t: any) => t.locale === locale,
+          )?.slug;
           if (!tSlug) return;
-          
+
           const pTitle = blogParent?.title?.[locale];
           const pSeg = pTitle ? generateNativeSlug(pTitle) : "blog";
 
@@ -160,57 +188,72 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
           translatedLocales.forEach((loc: string) => {
             const bTitle = blogParent?.title?.[loc];
             const bSeg = bTitle ? generateNativeSlug(bTitle) : "blog";
-            const bSlug = postTranslations.find((t: any) => t.locale === loc)?.slug;
+            const bSlug = postTranslations.find(
+              (t: any) => t.locale === loc,
+            )?.slug;
             if (bSlug) {
               postAlternates[loc] = `${baseUrl}/${loc}/${bSeg}/${bSlug}`;
             }
           });
-          
+
           // Set x-default to en if exists, otherwise first available
           if (postAlternates["en"]) {
             postAlternates["x-default"] = postAlternates["en"];
           } else if (translatedLocales.length > 0) {
-             const firstLoc = translatedLocales[0];
-             postAlternates["x-default"] = postAlternates[firstLoc];
+            const firstLoc = translatedLocales[0];
+            postAlternates["x-default"] = postAlternates[firstLoc];
           }
 
           sitemapData.push({
             url: `${baseUrl}/${locale}/${pSeg}/${tSlug}`,
-            lastModified: new Date(bp.updated_at || bp.created_at || new Date()),
+            lastModified: new Date(
+              bp.updated_at || bp.created_at || new Date(),
+            ),
             changeFrequency: "monthly",
             priority: 0.6,
             alternates: { languages: postAlternates },
-            ...(bp.featured_image ? { images: [cleanImage(bp.featured_image)] } : {}),
+            ...(bp.featured_image
+              ? { images: [cleanImage(bp.featured_image)] }
+              : {}),
           });
         });
       }
 
       // 6. Blog Categories
-      const { data: blogCategories } = await supabaseAdmin.from("blog_categories").select("id, slug, updated_at, created_at, translations:blog_category_translations(locale, name)");
+      const { data: blogCategories } = await supabaseAdmin
+        .from("blog_categories")
+        .select(
+          "id, slug, updated_at, created_at, translations:blog_category_translations(locale, name)",
+        );
       if (blogCategories && blogCategories.length > 0) {
         for (const bc of blogCategories) {
           const catTranslations = bc.translations || [];
           if (catTranslations.length === 0) continue;
-          
+
           const translatedLocales = catTranslations.map((t: any) => t.locale);
 
           translatedLocales.forEach((locale: string) => {
             const pTitle = blogParent?.title?.[locale];
             const pSeg = pTitle ? generateNativeSlug(pTitle) : "blog";
-            
+
             // Alternates
             const catAlternates: Record<string, string> = {};
             translatedLocales.forEach((loc: string) => {
               const bTitle = blogParent?.title?.[loc];
               const bSeg = bTitle ? generateNativeSlug(bTitle) : "blog";
-              catAlternates[loc] = `${baseUrl}/${loc}/${bSeg}/category/${bc.slug}`;
+              catAlternates[loc] =
+                `${baseUrl}/${loc}/${bSeg}/category/${bc.slug}`;
             });
-            if (catAlternates["en"]) catAlternates["x-default"] = catAlternates["en"];
-            else if (translatedLocales.length > 0) catAlternates["x-default"] = catAlternates[translatedLocales[0]];
+            if (catAlternates["en"])
+              catAlternates["x-default"] = catAlternates["en"];
+            else if (translatedLocales.length > 0)
+              catAlternates["x-default"] = catAlternates[translatedLocales[0]];
 
             sitemapData.push({
               url: `${baseUrl}/${locale}/${pSeg}/category/${bc.slug}`,
-              lastModified: new Date(bc.updated_at || bc.created_at || new Date()),
+              lastModified: new Date(
+                bc.updated_at || bc.created_at || new Date(),
+              ),
               changeFrequency: "weekly",
               priority: 0.5,
               alternates: { languages: catAlternates },
@@ -220,18 +263,22 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       }
 
       // 7. Blog Tags
-      const { data: blogTags } = await supabaseAdmin.from("blog_tags").select("id, slug, updated_at, created_at, translations:blog_tag_translations(locale, name)");
+      const { data: blogTags } = await supabaseAdmin
+        .from("blog_tags")
+        .select(
+          "id, slug, updated_at, created_at, translations:blog_tag_translations(locale, name)",
+        );
       if (blogTags && blogTags.length > 0) {
         for (const bt of blogTags) {
           const tagTranslations = bt.translations || [];
           if (tagTranslations.length === 0) continue;
-          
+
           const translatedLocales = tagTranslations.map((t: any) => t.locale);
 
           translatedLocales.forEach((locale: string) => {
             const pTitle = blogParent?.title?.[locale];
             const pSeg = pTitle ? generateNativeSlug(pTitle) : "blog";
-            
+
             // Alternates
             const tagAlternates: Record<string, string> = {};
             translatedLocales.forEach((loc: string) => {
@@ -239,12 +286,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
               const bSeg = bTitle ? generateNativeSlug(bTitle) : "blog";
               tagAlternates[loc] = `${baseUrl}/${loc}/${bSeg}/tag/${bt.slug}`;
             });
-            if (tagAlternates["en"]) tagAlternates["x-default"] = tagAlternates["en"];
-            else if (translatedLocales.length > 0) tagAlternates["x-default"] = tagAlternates[translatedLocales[0]];
+            if (tagAlternates["en"])
+              tagAlternates["x-default"] = tagAlternates["en"];
+            else if (translatedLocales.length > 0)
+              tagAlternates["x-default"] = tagAlternates[translatedLocales[0]];
 
             sitemapData.push({
               url: `${baseUrl}/${locale}/${pSeg}/tag/${bt.slug}`,
-              lastModified: new Date(bt.updated_at || bt.created_at || new Date()),
+              lastModified: new Date(
+                bt.updated_at || bt.created_at || new Date(),
+              ),
               changeFrequency: "weekly",
               priority: 0.4,
               alternates: { languages: tagAlternates },

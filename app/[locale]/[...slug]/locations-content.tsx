@@ -1,4 +1,3 @@
-
 import { BreadcrumbNav } from "@/components/breadcrumb-nav";
 import { LocationCard } from "@/components/location-card";
 import { PageHeroSection } from "@/components/page-hero-section";
@@ -6,7 +5,11 @@ import { locationsService } from "@/lib/locations-service";
 
 import { pagesContentService } from "@/lib/pages-content-service";
 import { SchemaInjector } from "@/components/schema-injector";
-import { buildCollectionPageSchema, generateSeoDescription, getBaseUrl } from "@/lib/seo-utils";
+import {
+  buildCollectionPageSchema,
+  generateSeoDescription,
+  getBaseUrl,
+} from "@/lib/seo-utils";
 import { generateNativeSlug } from "@/lib/slug-generator";
 
 export async function LocationsPageContent({
@@ -17,7 +20,8 @@ export async function LocationsPageContent({
   const { locale, slug: parentSlug } = params;
   const dbPage = await pagesContentService.getPageBySlug("locations");
   const dynamicTitle = dbPage?.title?.[locale] || dbPage?.title?.en || "";
-  const dynamicSubtitle = dbPage?.subtitle?.[locale] || dbPage?.subtitle?.en || "";
+  const dynamicSubtitle =
+    dbPage?.subtitle?.[locale] || dbPage?.subtitle?.en || "";
 
   const dbLocations = await locationsService.getLocations();
 
@@ -25,23 +29,32 @@ export async function LocationsPageContent({
     name: dynamicTitle,
     description: generateSeoDescription(dynamicSubtitle),
     url: `${getBaseUrl()}/${locale}/${parentSlug}`,
-    items: dbLocations.map(location => {
+    items: dbLocations.map((location) => {
       const locTitleLoc = location.title?.[locale];
-      const locSeg = locTitleLoc ? (generateNativeSlug(locTitleLoc) || location.slug) : location.slug;
+      const locSeg = locTitleLoc
+        ? generateNativeSlug(locTitleLoc) || location.slug
+        : location.slug;
       return {
         name: location.title?.[locale] || location.title?.en || location.slug,
-        description: location.description?.[locale] || location.description?.en ? generateSeoDescription(location.description?.[locale] || location.description?.en || "") : undefined,
+        description:
+          location.description?.[locale] || location.description?.en
+            ? generateSeoDescription(
+                location.description?.[locale] ||
+                  location.description?.en ||
+                  "",
+              )
+            : undefined,
         url: `${getBaseUrl()}/${locale}/${parentSlug}/${locSeg}`,
-        image: location.cover_image || undefined
+        image: location.cover_image || undefined,
       };
-    })
+    }),
   });
 
   return (
     <div>
-      <SchemaInjector schema={collectionSchema} />      <BreadcrumbNav customLastLabel={dynamicTitle || undefined} />
+      <SchemaInjector schema={collectionSchema} />{" "}
+      <BreadcrumbNav customLastLabel={dynamicTitle || undefined} />
       <PageHeroSection title={dynamicTitle} subtitle={dynamicSubtitle} />
-
       {/* Locations Grid */}
       <section className="py-8 sm:py-10 section-contain-auto">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -55,8 +68,6 @@ export async function LocationsPageContent({
               />
             ))}
           </div>
-
-
         </div>
       </section>
     </div>

@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { toast } from "sonner";
 import {
@@ -26,10 +26,14 @@ import { Button } from "@/components/ui/button";
 
 const BookingModal = dynamic(
   () => import("@/components/booking-modal").then((mod) => mod.BookingModal),
-  { ssr: false }
+  { ssr: false },
 );
 import { trackViewItem } from "@/lib/analytics";
-import { calculateDiscountedPrice, matchActiveSurcharge, getPackagePricing } from "@/lib/pricing";
+import {
+  calculateDiscountedPrice,
+  matchActiveSurcharge,
+  getPackagePricing,
+} from "@/lib/pricing";
 import { extractPhotosCount } from "@/lib/features-parser";
 import type { PackageDB } from "@/lib/packages-service";
 import type { DiscountDB } from "@/lib/discount-service";
@@ -48,7 +52,14 @@ export interface PackageDetailsProps {
   whatsappNumber?: string;
 }
 
-export function PackageDetails({ packageData, aggregateRating, reviews, activeDiscount, timeSurcharges, whatsappNumber }: PackageDetailsProps) {
+export function PackageDetails({
+  packageData,
+  aggregateRating,
+  reviews,
+  activeDiscount,
+  timeSurcharges,
+  whatsappNumber,
+}: PackageDetailsProps) {
   const t = useTranslations("packages");
   const tReviews = useTranslations("reviews");
   const tui = useTranslations("ui");
@@ -61,7 +72,9 @@ export function PackageDetails({ packageData, aggregateRating, reviews, activeDi
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
-  const [selectedTime, setSelectedTime] = useState<string | undefined>(undefined);
+  const [selectedTime, setSelectedTime] = useState<string | undefined>(
+    undefined,
+  );
   const [peopleCount, setPeopleCount] = useState<number>(1);
   const [isSaved, setIsSaved] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -78,11 +91,18 @@ export function PackageDetails({ packageData, aggregateRating, reviews, activeDi
 
   // Calculate surcharge if specific time is selected
   const activeSurcharge = matchActiveSurcharge(selectedTime, timeSurcharges);
-  const surchargePercentage = activeSurcharge ? activeSurcharge.surcharge_percentage : 0;
+  const surchargePercentage = activeSurcharge
+    ? activeSurcharge.surcharge_percentage
+    : 0;
 
   // Calculate generic unit pricing for display
   const basePrice = Number(packageData.price);
-  const pricing = calculateDiscountedPrice(basePrice * (1 + surchargePercentage / 100) * yieldMultiplier, activeDiscount, null, selectedDate);
+  const pricing = calculateDiscountedPrice(
+    basePrice * (1 + surchargePercentage / 100) * yieldMultiplier,
+    activeDiscount,
+    null,
+    selectedDate,
+  );
 
   // Calculate full dynamic pricing including people count for the correct deposit logic
   const fullPricing = getPackagePricing(
@@ -95,35 +115,54 @@ export function PackageDetails({ packageData, aggregateRating, reviews, activeDi
     undefined,
     undefined,
     surchargePercentage,
-    yieldMultiplier
+    yieldMultiplier,
   );
 
   // Price to display (unit price, do not multiply by peopleCount for visual display)
   const displayPrice = pricing.price;
 
-  const features = packageData.features[locale] || packageData.features["en"] || [];
-  const packageName = packageData.title[locale] || packageData.title["en"] || packageData.slug;
-  const packageDesc = packageData.description[locale] || packageData.description["en"] || "";
-  const packageDur = packageData.duration[locale] || packageData.duration["en"] || "1 Hour";
-  const gallery = packageData.gallery_images && packageData.gallery_images.length > 0
-    ? packageData.gallery_images
-    : (packageData.cover_image ? [packageData.cover_image] : []);
+  const features =
+    packageData.features[locale] || packageData.features["en"] || [];
+  const packageName =
+    packageData.title[locale] || packageData.title["en"] || packageData.slug;
+  const packageDesc =
+    packageData.description[locale] || packageData.description["en"] || "";
+  const packageDur =
+    packageData.duration[locale] || packageData.duration["en"] || "1 Hour";
+  const gallery =
+    packageData.gallery_images && packageData.gallery_images.length > 0
+      ? packageData.gallery_images
+      : packageData.cover_image
+        ? [packageData.cover_image]
+        : [];
 
   useEffect(() => {
     trackViewItem(
       packageData.slug,
       packageName,
       convertPrice(pricing.price),
-      currency
+      currency,
     );
-  }, [packageData.slug, packageName, pricing.price, pricing.isDiscounted, basePrice, currency, convertPrice]);
+  }, [
+    packageData.slug,
+    packageName,
+    pricing.price,
+    pricing.isDiscounted,
+    basePrice,
+    currency,
+    convertPrice,
+  ]);
 
   useEffect(() => {
-    const savedPackages = JSON.parse(localStorage.getItem("saved_packages") || "[]");
+    const savedPackages = JSON.parse(
+      localStorage.getItem("saved_packages") || "[]",
+    );
     setIsSaved(savedPackages.includes(packageData.slug));
 
     // Track visited packages for Hero personalization
-    const visited = JSON.parse(localStorage.getItem("visited_packages") || "[]");
+    const visited = JSON.parse(
+      localStorage.getItem("visited_packages") || "[]",
+    );
     const updated = [
       { id: packageData.slug, timestamp: Date.now() },
       ...visited.filter((p: any) => p.id !== packageData.slug),
@@ -140,7 +179,9 @@ export function PackageDetails({ packageData, aggregateRating, reviews, activeDi
   }, []);
 
   const toggleSave = () => {
-    const savedPackages = JSON.parse(localStorage.getItem("saved_packages") || "[]");
+    const savedPackages = JSON.parse(
+      localStorage.getItem("saved_packages") || "[]",
+    );
     let newSaved;
     if (isSaved) {
       newSaved = savedPackages.filter((id: string) => id !== packageData.slug);
@@ -184,8 +225,13 @@ export function PackageDetails({ packageData, aggregateRating, reviews, activeDi
               </h1>
               <div className="flex flex-wrap items-center gap-x-2 gap-y-2 text-sm">
                 {pricing.isDiscounted && (
-                  <Badge variant="default" className="bg-black/80 backdrop-blur-md text-white border border-white/20 animate-pulse font-serif tracking-widest uppercase text-xs px-3 py-1 shadow-luxury">
-                    {tui("save_percentage", { percentage: Math.round(pricing.discountPercentage * 100) })}
+                  <Badge
+                    variant="default"
+                    className="bg-black/80 backdrop-blur-md text-white border border-white/20 animate-pulse font-serif tracking-widest uppercase text-xs px-3 py-1 shadow-luxury"
+                  >
+                    {tui("save_percentage", {
+                      percentage: Math.round(pricing.discountPercentage * 100),
+                    })}
                   </Badge>
                 )}
                 <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-md">
@@ -197,15 +243,21 @@ export function PackageDetails({ packageData, aggregateRating, reviews, activeDi
                           "h-5 w-5",
                           i < Math.floor(aggregateRating.average)
                             ? "fill-primary text-primary"
-                            : "text-muted-foreground/30"
+                            : "text-muted-foreground/30",
                         )}
                       />
                     ))}
                   </div>
-                  <span className="font-bold text-foreground">{aggregateRating.average}</span>
+                  <span className="font-bold text-foreground">
+                    {aggregateRating.average}
+                  </span>
                 </div>
                 <button
-                  onClick={() => document.getElementById("reviews")?.scrollIntoView({ behavior: "smooth" })}
+                  onClick={() =>
+                    document
+                      .getElementById("reviews")
+                      ?.scrollIntoView({ behavior: "smooth" })
+                  }
                   className="text-primary hover:underline font-bold decoration-2 underline-offset-4"
                 >
                   {aggregateRating.count} {tReviews("total_reviews")}
@@ -217,20 +269,19 @@ export function PackageDetails({ packageData, aggregateRating, reviews, activeDi
               </div>
             </div>
             <div className="flex items-center gap-3">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleShare}
-              >
+              <Button variant="outline" size="sm" onClick={handleShare}>
                 <Share2 className="h-4 w-4" />
                 <span>{tui("share")}</span>
               </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={toggleSave}
-              >
-                <Heart className={cn("h-4 w-4", isSaved ? "fill-primary text-primary" : "text-muted-foreground")} />
+              <Button variant="outline" size="sm" onClick={toggleSave}>
+                <Heart
+                  className={cn(
+                    "h-4 w-4",
+                    isSaved
+                      ? "fill-primary text-primary"
+                      : "text-muted-foreground",
+                  )}
+                />
                 <span>{isSaved ? tui("saved") : tui("save")}</span>
               </Button>
             </div>
@@ -258,7 +309,10 @@ export function PackageDetails({ packageData, aggregateRating, reviews, activeDi
             <div className="md:hidden space-y-6">
               <div className="space-y-4">
                 <div className="flex flex-wrap items-center gap-x-2 gap-y-2 text-sm">
-                  <Badge variant="secondary" className="bg-primary/5 text-primary border-[0.5px] border-primary/20 font-serif tracking-widest uppercase text-[10px] px-3 py-1 shadow-sm">
+                  <Badge
+                    variant="secondary"
+                    className="bg-primary/5 text-primary border-[0.5px] border-primary/20 font-serif tracking-widest uppercase text-[10px] px-3 py-1 shadow-sm"
+                  >
                     {tui("professional_photographer")}
                   </Badge>
                   {packageData.is_popular && (
@@ -279,20 +333,28 @@ export function PackageDetails({ packageData, aggregateRating, reviews, activeDi
                           "h-4 w-4",
                           i < Math.floor(aggregateRating.average)
                             ? "fill-primary text-primary"
-                            : "text-muted-foreground/30"
+                            : "text-muted-foreground/30",
                         )}
                       />
                     ))}
                   </div>
                   <button
-                    onClick={() => document.getElementById("reviews")?.scrollIntoView({ behavior: "smooth" })}
+                    onClick={() =>
+                      document
+                        .getElementById("reviews")
+                        ?.scrollIntoView({ behavior: "smooth" })
+                    }
                     className="text-sm font-bold text-primary hover:underline underline-offset-4"
                   >
-                    {aggregateRating.average} ({aggregateRating.count} {tReviews("total_reviews")})
+                    {aggregateRating.average} ({aggregateRating.count}{" "}
+                    {tReviews("total_reviews")})
                   </button>
                 </div>
                 <div className="flex items-center gap-3">
                   <div className="flex items-center gap-3">
+                    <span className="text-xs text-muted-foreground font-semibold uppercase tracking-wide">
+                      {t("starting_from")}
+                    </span>
                     <div className="text-4xl font-bold text-primary">
                       {formatPrice(pricing.price)}
                     </div>
@@ -314,12 +376,25 @@ export function PackageDetails({ packageData, aggregateRating, reviews, activeDi
               <div className="grid grid-cols-3 gap-3">
                 {[
                   { icon: Clock, label: "Duration", val: packageDur },
-                  { icon: ImageIcon, label: tui("photos"), val: extractPhotosCount(features) },
-                  { icon: MapPin, label: tui("locations"), val: packageData.locations || 1 }
+                  {
+                    icon: ImageIcon,
+                    label: tui("photos"),
+                    val: extractPhotosCount(features),
+                  },
+                  {
+                    icon: MapPin,
+                    label: tui("locations"),
+                    val: packageData.locations || 1,
+                  },
                 ].map((stat, i) => (
-                  <div key={i} className="bg-muted/40 rounded-2xl p-3 flex flex-col items-center justify-center text-center border border-border/50">
+                  <div
+                    key={i}
+                    className="bg-muted/40 rounded-2xl p-3 flex flex-col items-center justify-center text-center border border-border/50"
+                  >
                     <stat.icon className="h-5 w-5 text-primary mb-2" />
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-1">{stat.label}</span>
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-1">
+                      {stat.label}
+                    </span>
                     <span className="text-sm font-bold">{stat.val}</span>
                   </div>
                 ))}
@@ -345,7 +420,9 @@ export function PackageDetails({ packageData, aggregateRating, reviews, activeDi
                       <div className="mt-1 bg-primary/10 p-1.5 rounded-full group-hover:bg-primary/20 transition-colors">
                         <Check className="h-3.5 w-3.5 text-primary stroke-[3]" />
                       </div>
-                      <span className="text-lg font-medium text-foreground">{feature}</span>
+                      <span className="text-lg font-medium text-foreground">
+                        {feature}
+                      </span>
                     </li>
                   ))}
                 </ul>
@@ -366,7 +443,7 @@ export function PackageDetails({ packageData, aggregateRating, reviews, activeDi
                   discountPercentage: pricing.discountPercentage,
                   depositAmount: fullPricing.depositAmount,
                   remainingAmount: fullPricing.remainingAmount,
-                  originalPrice: pricing.originalPrice
+                  originalPrice: pricing.originalPrice,
                 }}
                 displayPrice={displayPrice}
                 selectedDate={selectedDate}
@@ -403,7 +480,9 @@ export function PackageDetails({ packageData, aggregateRating, reviews, activeDi
         selectedPackage={packageData.slug as any}
         basePrice={basePrice}
         packageDisplayName={packageName}
-        initialDate={selectedDate ? format(selectedDate, "yyyy-MM-dd") : undefined}
+        initialDate={
+          selectedDate ? format(selectedDate, "yyyy-MM-dd") : undefined
+        }
         initialTime={selectedTime}
         initialPeopleCount={peopleCount}
         packageDuration={packageDur}
@@ -426,18 +505,26 @@ export function PackageDetails({ packageData, aggregateRating, reviews, activeDi
         style={{ bottom: "var(--cookie-banner-height, 0px)" }}
       >
         {/* Info Rows - Collapsible on Scroll */}
-        <div className={cn(
-          "transition-all duration-500 ease-in-out overflow-hidden border-b border-border/50 px-4",
-          isScrolled ? "max-h-0 py-0 opacity-0 border-none" : "max-h-40 py-3 opacity-100"
-        )}>
+        <div
+          className={cn(
+            "transition-all duration-500 ease-in-out overflow-hidden border-b border-border/50 px-4",
+            isScrolled
+              ? "max-h-0 py-0 opacity-0 border-none"
+              : "max-h-40 py-3 opacity-100",
+          )}
+        >
           <div className="space-y-3">
             <div className="flex items-start gap-3">
               <div className="mt-0.5">
                 <CheckCircle2 className="h-4 w-4 text-emerald-500" />
               </div>
               <div>
-                <p className="text-[11px] font-bold text-foreground leading-tight">{tCheckout("cancellation.title")}</p>
-                <p className="text-[10px] font-medium text-muted-foreground leading-tight line-clamp-1">{tCheckout("cancellation.description")}</p>
+                <p className="text-[11px] font-bold text-foreground leading-tight">
+                  {tCheckout("cancellation.title")}
+                </p>
+                <p className="text-[10px] font-medium text-muted-foreground leading-tight line-clamp-1">
+                  {tCheckout("cancellation.description")}
+                </p>
               </div>
             </div>
 
@@ -446,7 +533,9 @@ export function PackageDetails({ packageData, aggregateRating, reviews, activeDi
                 <Banknote className="h-4 w-4 text-primary" />
               </div>
               <div>
-                <p className="text-[11px] font-bold text-foreground leading-tight">{tCheckout("payment_methods.cash")}</p>
+                <p className="text-[11px] font-bold text-foreground leading-tight">
+                  {tCheckout("payment_methods.cash")}
+                </p>
                 <p className="text-[10px] font-medium text-muted-foreground leading-tight">
                   {tCheckout("payment_methods.cash_description")}
                 </p>
@@ -458,6 +547,9 @@ export function PackageDetails({ packageData, aggregateRating, reviews, activeDi
         {/* Action Bar */}
         <div className="p-4 flex items-center justify-between gap-4 pb-[calc(1rem+env(safe-area-inset-bottom))]">
           <div className="flex flex-col">
+            <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wide mb-1">
+              {t("starting_from")}
+            </span>
             {packageData.is_per_person && (
               <span className="text-[14px] capitalize font-black text-muted-foreground mb-1">
                 {t("per_person")}

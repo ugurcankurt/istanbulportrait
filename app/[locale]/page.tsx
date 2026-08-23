@@ -6,19 +6,37 @@ import { HeroSection } from "@/components/hero-section";
 import { HomeGalleryWrapper } from "@/components/home-gallery-wrapper";
 
 // Below-the-fold components loaded dynamically to improve performance
-const PackagesSection = dynamic(() => import("@/components/packages-section").then(mod => mod.PackagesSection));
-const InstagramFeed = dynamic(() => import("@/components/instagram-feed").then(mod => mod.InstagramFeed));
-const FAQSection = dynamic(() => import("@/components/faq-section").then(mod => mod.FAQSection));
-const ReviewsSection = dynamic(() => import("@/components/reviews").then(mod => mod.ReviewsSection));
-const NewsletterSection = dynamic(() => import("@/components/newsletter-section").then(mod => mod.NewsletterSection));
-
+const PackagesSection = dynamic(() =>
+  import("@/components/packages-section").then((mod) => mod.PackagesSection),
+);
+const InstagramFeed = dynamic(() =>
+  import("@/components/instagram-feed").then((mod) => mod.InstagramFeed),
+);
+const FAQSection = dynamic(() =>
+  import("@/components/faq-section").then((mod) => mod.FAQSection),
+);
+const ReviewsSection = dynamic(() =>
+  import("@/components/reviews").then((mod) => mod.ReviewsSection),
+);
+const NewsletterSection = dynamic(() =>
+  import("@/components/newsletter-section").then(
+    (mod) => mod.NewsletterSection,
+  ),
+);
 
 import { pagesContentService } from "@/lib/pages-content-service";
 import { packagesService } from "@/lib/packages-service";
 import { discountService } from "@/lib/discount-service";
 import { reviewsService } from "@/lib/reviews-service";
 import { Metadata } from "next";
-import { generateSeoDescription, generateSeoTitle, constructOpenGraph, buildFAQSchema, getBaseUrl, buildLocalBusinessSchema } from "@/lib/seo-utils";
+import {
+  generateSeoDescription,
+  generateSeoTitle,
+  constructOpenGraph,
+  buildFAQSchema,
+  getBaseUrl,
+  buildLocalBusinessSchema,
+} from "@/lib/seo-utils";
 import { SchemaInjector } from "@/components/schema-injector";
 import { settingsService } from "@/lib/settings-service";
 
@@ -29,7 +47,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const { routing } = await import("@/i18n/routing");
-  
+
   if (!routing.locales.includes(locale as any)) {
     return { title: "Not Found" };
   }
@@ -38,20 +56,30 @@ export async function generateMetadata({
 
   const [allPages, settings] = await Promise.all([
     pagesContentService.getAllPages(),
-    settingsService.getSettings()
+    settingsService.getSettings(),
   ]);
 
-  const homePage = allPages.find(p => p.slug === "home");
-  const heroPage = allPages.find(p => p.slug === "home-hero");
+  const homePage = allPages.find((p) => p.slug === "home");
+  const heroPage = allPages.find((p) => p.slug === "home-hero");
 
   // Decouple SEO Title from H1 string. The user can configure the 'home' page slug in the Pages Core panel to manage SEO metadata perfectly.
-  const seoSource = (homePage?.title?.[locale] || homePage?.title?.en) ? homePage : heroPage;
+  const seoSource =
+    homePage?.title?.[locale] || homePage?.title?.en ? homePage : heroPage;
 
-  const title = generateSeoTitle(seoSource?.title?.[locale] || seoSource?.title?.en, locale, settings.site_name || "");
-  const rawDesc = seoSource?.subtitle?.[locale] || seoSource?.subtitle?.en || "";
+  const title = generateSeoTitle(
+    seoSource?.title?.[locale] || seoSource?.title?.en,
+    locale,
+    settings.site_name || "",
+  );
+  const rawDesc =
+    seoSource?.subtitle?.[locale] || seoSource?.subtitle?.en || "";
   const desc = generateSeoDescription(rawDesc) || "";
-  const ogImage = seoSource?.cover_image || heroPage?.cover_image || homePage?.cover_image || settings.default_og_image_url || "";
-
+  const ogImage =
+    seoSource?.cover_image ||
+    heroPage?.cover_image ||
+    homePage?.cover_image ||
+    settings.default_og_image_url ||
+    "";
 
   const { getBaseUrl } = await import("@/lib/seo-utils");
   const baseUrl = getBaseUrl();
@@ -66,9 +94,15 @@ export async function generateMetadata({
     description: desc,
     alternates: {
       canonical: `${baseUrl}/${locale}`,
-      languages
+      languages,
     },
-    openGraph: constructOpenGraph(title, desc, ogImage, settings.site_name || title, locale),
+    openGraph: constructOpenGraph(
+      title,
+      desc,
+      ogImage,
+      settings.site_name || title,
+      locale,
+    ),
   };
 }
 
@@ -78,7 +112,6 @@ export default async function HomePage({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
-
 
   // Fetch data in parallel to avoid Request Waterfall and reduce TTFB
   const [
@@ -92,7 +125,7 @@ export default async function HomePage({
     activePackages,
     settings,
     activeDiscount,
-    allPages
+    allPages,
   ] = await Promise.all([
     getTranslations({ locale, namespace: "reviews" }),
     getTranslations({ locale, namespace: "ui" }),
@@ -104,10 +137,10 @@ export default async function HomePage({
     packagesService.getActivePackages(),
     settingsService.getSettings(),
     discountService.getActiveDiscount(),
-    pagesContentService.getAllPages()
+    pagesContentService.getAllPages(),
   ]);
 
-  const pageMap = new Map(allPages.map(p => [p.slug, p]));
+  const pageMap = new Map(allPages.map((p) => [p.slug, p]));
 
   const getDynamicTitle = (slug: string, fallback: string) => {
     const page = pageMap.get(slug);
@@ -134,15 +167,15 @@ export default async function HomePage({
     if (!page || !page.is_active || !page.content?.faqs) return null;
 
     // Transform faqs array focusing on current locale
-    return page.content.faqs.map((faq: any, index: number) => ({
-      id: `dynamic-faq-${index}`,
-      question: faq.question?.[locale] || faq.question?.en || "",
-      answer: faq.answer?.[locale] || faq.answer?.en || "",
-      keywords: []
-    })).filter((f: any) => f.question && f.answer);
+    return page.content.faqs
+      .map((faq: any, index: number) => ({
+        id: `dynamic-faq-${index}`,
+        question: faq.question?.[locale] || faq.question?.en || "",
+        answer: faq.answer?.[locale] || faq.answer?.en || "",
+        keywords: [],
+      }))
+      .filter((f: any) => f.question && f.answer);
   };
-
-
 
   const renderStars = (rating: number) => {
     return (
@@ -150,10 +183,11 @@ export default async function HomePage({
         {[1, 2, 3, 4, 5].map((star) => (
           <Star
             key={star}
-            className={`w-5 h-5 ${star <= rating
-              ? "fill-yellow-400 text-yellow-400 drop-shadow-sm"
-              : "fill-gray-300 text-gray-300"
-              }`}
+            className={`w-5 h-5 ${
+              star <= rating
+                ? "fill-yellow-400 text-yellow-400 drop-shadow-sm"
+                : "fill-gray-300 text-gray-300"
+            }`}
           />
         ))}
       </div>
@@ -165,7 +199,9 @@ export default async function HomePage({
   // Dynamic Price Range Calculation for LocalBusiness Schema (Google April 2026 guidelines)
   let priceRangeStr = undefined;
   if (activePackages && activePackages.length > 0) {
-    const prices = activePackages.map(p => p.price).filter(p => !isNaN(p) && p > 0);
+    const prices = activePackages
+      .map((p) => p.price)
+      .filter((p) => !isNaN(p) && p > 0);
     if (prices.length > 0) {
       const minPrice = Math.min(...prices);
       const maxPrice = Math.max(...prices);
@@ -175,26 +211,44 @@ export default async function HomePage({
 
   return (
     <>
-      <SchemaInjector schema={{
-        "@context": "https://schema.org",
-        "@type": "WebSite",
-        name: settings.site_name || "Website",
-        url: `${getBaseUrl()}/${locale}`,
-        potentialAction: {
-          "@type": "SearchAction",
-          target: `${getBaseUrl()}/${locale}/packages?search={search_term_string}`,
-          "query-input": "required name=search_term_string"
-        }
-      }} />
-      <SchemaInjector schema={buildLocalBusinessSchema(settings, priceRangeStr, reviews?.reviews, aggregateRating?.average, aggregateRating?.count, getDynamicImage("home-hero", undefined) || getDynamicImage("home", undefined))} />
+      <SchemaInjector
+        schema={{
+          "@context": "https://schema.org",
+          "@type": "WebSite",
+          name: settings.site_name || "Website",
+          url: `${getBaseUrl()}/${locale}`,
+          potentialAction: {
+            "@type": "SearchAction",
+            target: `${getBaseUrl()}/${locale}/packages?search={search_term_string}`,
+            "query-input": "required name=search_term_string",
+          },
+        }}
+      />
+      <SchemaInjector
+        schema={buildLocalBusinessSchema(
+          settings,
+          priceRangeStr,
+          reviews?.reviews,
+          aggregateRating?.average,
+          aggregateRating?.count,
+          getDynamicImage("home-hero", undefined) ||
+            getDynamicImage("home", undefined),
+        )}
+      />
       {dynamicFaqs && dynamicFaqs.length > 0 && (
         <SchemaInjector schema={buildFAQSchema(dynamicFaqs)} />
       )}
 
       <div className="overflow-hidden">
         <HeroSection
-          title={getDynamicTitle("home-hero", tUi("professional_photographer_in_istanbul"))}
-          subtitle={getDynamicSubtitle("home-hero", tUi("portrait_photography"))}
+          title={getDynamicTitle(
+            "home-hero",
+            tUi("professional_photographer_in_istanbul"),
+          )}
+          subtitle={getDynamicSubtitle(
+            "home-hero",
+            tUi("portrait_photography"),
+          )}
           backgroundImage={getDynamicImage("home-hero", undefined)}
           activeDiscount={activeDiscount}
         />
@@ -205,7 +259,10 @@ export default async function HomePage({
             dbPackages={activePackages}
             activeDiscount={activeDiscount}
             header={
-              <div key="packages-header" className="text-left mb-4 sm:mb-4 lg:mb-4">
+              <div
+                key="packages-header"
+                className="text-left mb-4 sm:mb-4 lg:mb-4"
+              >
                 <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-4xl font-bold mb-2 sm:mb-2">
                   {getDynamicTitle("home-packages", tPackages("title"))}
                 </h2>
@@ -222,7 +279,10 @@ export default async function HomePage({
             locale={locale}
             packages={activePackages}
             header={
-              <div key="gallery-header" className="text-left mb-4 sm:mb-4 lg:mb-4">
+              <div
+                key="gallery-header"
+                className="text-left mb-4 sm:mb-4 lg:mb-4"
+              >
                 <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-4xl font-bold mb-2 sm:mb-2">
                   {getDynamicTitle("home-portfolio", tGallery("title"))}
                 </h2>
@@ -238,17 +298,28 @@ export default async function HomePage({
           <InstagramFeed
             instagramUrl={settings.instagram_url}
             header={
-              <div key="instagram-header" className="text-left mb-4 sm:mb-4 lg:mb-4">
+              <div
+                key="instagram-header"
+                className="text-left mb-4 sm:mb-4 lg:mb-4"
+              >
                 <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-4xl font-bold mb-2 sm:mb-2">
-                  {getDynamicTitle("home-instagram", tUi("instagram_feed.title"))}
+                  {getDynamicTitle(
+                    "home-instagram",
+                    tUi("instagram_feed.title"),
+                  )}
                 </h2>
                 <a
-                  href={`https://instagram.com/${(settings.instagram_url?.split('/').pop() || '').trim()}`}
+                  href={`https://instagram.com/${(settings.instagram_url?.split("/").pop() || "").trim()}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-base sm:text-lg lg:text-xl text-muted-foreground max-w-5xl"
                 >
-                  {getDynamicSubtitle("home-instagram", settings.instagram_url ? `@${settings.instagram_url.split('/').pop()}` : "")}
+                  {getDynamicSubtitle(
+                    "home-instagram",
+                    settings.instagram_url
+                      ? `@${settings.instagram_url.split("/").pop()}`
+                      : "",
+                  )}
                 </a>
               </div>
             }
@@ -275,7 +346,10 @@ export default async function HomePage({
           <ReviewsSection
             locale={locale}
             header={
-              <div key="reviews-header" className="text-left mb-4 sm:mb-4 lg:mb-4">
+              <div
+                key="reviews-header"
+                className="text-left mb-4 sm:mb-4 lg:mb-4"
+              >
                 <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-4xl font-bold mb-2 sm:mb-2">
                   {getDynamicTitle("home-reviews", tReviews("title"))}
                 </h2>

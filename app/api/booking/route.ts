@@ -71,7 +71,9 @@ export async function POST(request: NextRequest) {
 
     try {
       // Check if package exists
-      const packageData = await packagesService.getPackageBySlug(packageId as string);
+      const packageData = await packagesService.getPackageBySlug(
+        packageId as string,
+      );
 
       if (!packageData) {
         logError(new Error("Package not found"), {
@@ -80,7 +82,6 @@ export async function POST(request: NextRequest) {
           action: "package_validation",
         });
         // Continue with demo mode if package table doesn't exist
-
       } else if (
         packageData &&
         Math.abs(packageData.price - totalAmount) > 0.01

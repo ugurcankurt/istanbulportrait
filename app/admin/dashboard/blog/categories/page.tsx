@@ -167,7 +167,9 @@ function CategoryDialog({
 
   const handleAITranslate = async () => {
     if (!translations.en.name.trim()) {
-      toast.error("Please fill in the English Name first before auto-translating.");
+      toast.error(
+        "Please fill in the English Name first before auto-translating.",
+      );
       return;
     }
 
@@ -186,8 +188,17 @@ function CategoryDialog({
         const translateData = await translateRes.json();
         if (translateData.translations) {
           const newTrans = { ...translations };
-          const targetLocales = ["ar", "ru", "es", "zh", "de", "fr", "ro", "tr"];
-          
+          const targetLocales = [
+            "ar",
+            "ru",
+            "es",
+            "zh",
+            "de",
+            "fr",
+            "ro",
+            "tr",
+          ];
+
           targetLocales.forEach((loc) => {
             if (translateData.translations[loc]) {
               newTrans[loc as keyof typeof translations] = {
@@ -196,9 +207,11 @@ function CategoryDialog({
               };
             }
           });
-          
+
           setTranslations(newTrans);
-          toast.success("All languages successfully auto-filled!", { id: "ai-translation" });
+          toast.success("All languages successfully auto-filled!", {
+            id: "ai-translation",
+          });
         }
       } else {
         toast.error("AI translation failed.", { id: "ai-translation" });
@@ -272,7 +285,9 @@ function CategoryDialog({
           <div className="flex justify-between items-center py-2 border-t mt-4 pt-4">
             <div>
               <h4 className="text-sm font-semibold">Localized Content</h4>
-              <p className="text-xs text-muted-foreground">Manage name and description for each locale.</p>
+              <p className="text-xs text-muted-foreground">
+                Manage name and description for each locale.
+              </p>
             </div>
             <Button
               type="button"
@@ -318,45 +333,45 @@ function CategoryDialog({
               </TabsTrigger>
             </TabsList>
 
-            {(["en", "ar", "ru", "es", "zh", "fr", "de", "ro", "tr"] as const).map(
-              (locale) => (
-                <TabsContent key={locale} value={locale} className="space-y-4">
-                  <div>
-                    <Label>Name</Label>
-                    <Input
-                      value={translations[locale].name}
-                      onChange={(e) =>
-                        setTranslations({
-                          ...translations,
-                          [locale]: {
-                            ...translations[locale],
-                            name: e.target.value,
-                          },
-                        })
-                      }
-                      placeholder="Category name"
-                    />
-                  </div>
-                  <div>
-                    <Label>Description</Label>
-                    <Textarea
-                      value={translations[locale].description}
-                      onChange={(e) =>
-                        setTranslations({
-                          ...translations,
-                          [locale]: {
-                            ...translations[locale],
-                            description: e.target.value,
-                          },
-                        })
-                      }
-                      placeholder="Category description (optional)"
-                      rows={3}
-                    />
-                  </div>
-                </TabsContent>
-              ),
-            )}
+            {(
+              ["en", "ar", "ru", "es", "zh", "fr", "de", "ro", "tr"] as const
+            ).map((locale) => (
+              <TabsContent key={locale} value={locale} className="space-y-4">
+                <div>
+                  <Label>Name</Label>
+                  <Input
+                    value={translations[locale].name}
+                    onChange={(e) =>
+                      setTranslations({
+                        ...translations,
+                        [locale]: {
+                          ...translations[locale],
+                          name: e.target.value,
+                        },
+                      })
+                    }
+                    placeholder="Category name"
+                  />
+                </div>
+                <div>
+                  <Label>Description</Label>
+                  <Textarea
+                    value={translations[locale].description}
+                    onChange={(e) =>
+                      setTranslations({
+                        ...translations,
+                        [locale]: {
+                          ...translations[locale],
+                          description: e.target.value,
+                        },
+                      })
+                    }
+                    placeholder="Category description (optional)"
+                    rows={3}
+                  />
+                </div>
+              </TabsContent>
+            ))}
           </Tabs>
         </div>
 
@@ -427,9 +442,14 @@ export default function CategoriesManagementPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
-          <Button nativeButton={false} variant="ghost" size="sm" render={<Link href="/admin/dashboard/blog" />}>
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Back to Blog
+          <Button
+            nativeButton={false}
+            variant="ghost"
+            size="sm"
+            render={<Link href="/admin/dashboard/blog" />}
+          >
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Back to Blog
           </Button>
           <div>
             <h1 className="text-3xl font-bold tracking-tight">Categories</h1>

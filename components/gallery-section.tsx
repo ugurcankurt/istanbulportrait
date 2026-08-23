@@ -25,7 +25,6 @@ interface GallerySectionProps {
 }
 
 export function GallerySection({ header, images = [] }: GallerySectionProps) {
-
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
@@ -78,8 +77,9 @@ export function GallerySection({ header, images = [] }: GallerySectionProps) {
             <div
               key={image.id}
               id={`gallery-image-${image.id}`}
-              className={`group relative aspect-square rounded-xl overflow-hidden cursor-pointer ${index >= 6 ? "hidden md:block" : ""
-                }`}
+              className={`group relative aspect-square rounded-xl overflow-hidden cursor-pointer ${
+                index >= 6 ? "hidden md:block" : ""
+              }`}
             >
               <Dialog>
                 <DialogTrigger

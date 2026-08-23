@@ -11,7 +11,8 @@ export function ContactSection({ settings }: { settings?: any } = {}) {
   const tui = useTranslations("ui");
   const locale = useLocale();
 
-  const addressString = settings?.address?.[locale] || settings?.address?.en || t("info.location");
+  const addressString =
+    settings?.address?.[locale] || settings?.address?.en || t("info.location");
   const mapUrl = `https://maps.google.com/maps?q=${encodeURIComponent(addressString)}&t=&z=14&ie=UTF8&iwloc=&output=embed`;
 
   return (
@@ -37,7 +38,9 @@ export function ContactSection({ settings }: { settings?: any } = {}) {
                         {tui("location")}
                       </h3>
                       <p className="text-foreground/90 font-medium text-sm sm:text-base leading-relaxed">
-                        {settings?.address?.[locale] || settings?.address?.en || t("info.location")}
+                        {settings?.address?.[locale] ||
+                          settings?.address?.en ||
+                          t("info.location")}
                       </p>
                     </div>
                   </div>
@@ -87,7 +90,9 @@ export function ContactSection({ settings }: { settings?: any } = {}) {
                         {tui("availability")}
                       </h3>
                       <p className="text-foreground/90 font-medium text-sm sm:text-base">
-                        {settings?.working_hours?.[locale] || settings?.working_hours?.en || t("info.hours")}
+                        {settings?.working_hours?.[locale] ||
+                          settings?.working_hours?.en ||
+                          t("info.hours")}
                       </p>
                     </div>
                   </div>

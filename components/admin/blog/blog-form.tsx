@@ -72,18 +72,31 @@ export function BlogForm({
   >("en");
   const [isLoadingData, setIsLoadingData] = useState(true);
   const [isTranslating, setIsTranslating] = useState(false);
-  const [keywordsInput, setKeywordsInput] = useState<Record<string, string>>(() => {
-    if (!initialData) return {};
-    const init: Record<string, string> = {};
-    const targetLocales = ["en", "ar", "ru", "es", "zh", "fr", "de", "ro", "tr"];
-    targetLocales.forEach(loc => {
-      const keywords = (initialData as any).translations?.[loc]?.meta_keywords;
-      if (keywords && Array.isArray(keywords)) {
-        init[loc] = keywords.join(", ");
-      }
-    });
-    return init;
-  });
+  const [keywordsInput, setKeywordsInput] = useState<Record<string, string>>(
+    () => {
+      if (!initialData) return {};
+      const init: Record<string, string> = {};
+      const targetLocales = [
+        "en",
+        "ar",
+        "ru",
+        "es",
+        "zh",
+        "fr",
+        "de",
+        "ro",
+        "tr",
+      ];
+      targetLocales.forEach((loc) => {
+        const keywords = (initialData as any).translations?.[loc]
+          ?.meta_keywords;
+        if (keywords && Array.isArray(keywords)) {
+          init[loc] = keywords.join(", ");
+        }
+      });
+      return init;
+    },
+  );
   const [authors, setAuthors] = useState<any[]>([]);
 
   // Fetch categories, tags, and authors
@@ -92,9 +105,9 @@ export function BlogForm({
       setIsLoadingData(true);
       try {
         const [_, __, authorsRes] = await Promise.all([
-          fetchCategories("en"), 
+          fetchCategories("en"),
           fetchTags("en"),
-          fetch("/api/admin/blog/authors").then(res => res.json())
+          fetch("/api/admin/blog/authors").then((res) => res.json()),
         ]);
         if (authorsRes?.authors) {
           setAuthors(authorsRes.authors);
@@ -112,51 +125,86 @@ export function BlogForm({
     resolver: zodResolver(blogFormSchema),
     defaultValues: initialData
       ? {
-        status: initialData.status,
-        featured_image: initialData.featured_image,
-        published_at: initialData.published_at,
-        is_featured: initialData.is_featured,
-        translations: ["en", "ar", "ru", "es", "zh", "fr", "de", "ro", "tr"].reduce((acc, loc) => {
-          acc[loc] = {
-            slug: (initialData as any).translations?.[loc]?.slug || "",
-            title: (initialData as any).translations?.[loc]?.title || "",
-            excerpt: (initialData as any).translations?.[loc]?.excerpt || "",
-            content: (initialData as any).translations?.[loc]?.content || "",
-            meta_description: (initialData as any).translations?.[loc]?.meta_description || "",
-            meta_keywords: (initialData as any).translations?.[loc]?.meta_keywords || [],
-          };
-          return acc;
-        }, {} as any),
-        category_ids:
-          (initialData as any).categories?.map((c: any) => c.category.id) ||
-          [],
-        tag_ids: (initialData as any).tags?.map((t: any) => t.tag.id) || [],
-        author_id: initialData.author_id || null,
-      }
+          status: initialData.status,
+          featured_image: initialData.featured_image,
+          published_at: initialData.published_at,
+          is_featured: initialData.is_featured,
+          translations: [
+            "en",
+            "ar",
+            "ru",
+            "es",
+            "zh",
+            "fr",
+            "de",
+            "ro",
+            "tr",
+          ].reduce((acc, loc) => {
+            acc[loc] = {
+              slug: (initialData as any).translations?.[loc]?.slug || "",
+              title: (initialData as any).translations?.[loc]?.title || "",
+              excerpt: (initialData as any).translations?.[loc]?.excerpt || "",
+              content: (initialData as any).translations?.[loc]?.content || "",
+              meta_description:
+                (initialData as any).translations?.[loc]?.meta_description ||
+                "",
+              meta_keywords:
+                (initialData as any).translations?.[loc]?.meta_keywords || [],
+            };
+            return acc;
+          }, {} as any),
+          category_ids:
+            (initialData as any).categories?.map((c: any) => c.category.id) ||
+            [],
+          tag_ids: (initialData as any).tags?.map((t: any) => t.tag.id) || [],
+          author_id: initialData.author_id || null,
+        }
       : {
-        status: "draft",
-        featured_image: null,
-        published_at: null,
-        is_featured: false,
-        translations: ["en", "ar", "ru", "es", "zh", "fr", "de", "ro", "tr"].reduce((acc, loc) => {
-          acc[loc] = { slug: "", title: "", excerpt: "", content: "", meta_description: "", meta_keywords: [] };
-          return acc;
-        }, {} as any),
-        category_ids: [],
-        tag_ids: [],
-        author_id: null,
-      },
+          status: "draft",
+          featured_image: null,
+          published_at: null,
+          is_featured: false,
+          translations: [
+            "en",
+            "ar",
+            "ru",
+            "es",
+            "zh",
+            "fr",
+            "de",
+            "ro",
+            "tr",
+          ].reduce((acc, loc) => {
+            acc[loc] = {
+              slug: "",
+              title: "",
+              excerpt: "",
+              content: "",
+              meta_description: "",
+              meta_keywords: [],
+            };
+            return acc;
+          }, {} as any),
+          category_ids: [],
+          tag_ids: [],
+          author_id: null,
+        },
   });
 
   const handleAITranslate = async () => {
     const enState = form.getValues("translations.en");
     if (!enState?.title?.trim() || !enState?.content?.trim()) {
-      toast.error("Please fill in the English Title and Content first to provide source context for AI.");
+      toast.error(
+        "Please fill in the English Title and Content first to provide source context for AI.",
+      );
       return;
     }
 
     setIsTranslating(true);
-    toast.loading("AI is translating your blog post (this may take up to 20 seconds)...", { id: "ai-translation" });
+    toast.loading(
+      "AI is translating your blog post (this may take up to 20 seconds)...",
+      { id: "ai-translation" },
+    );
     try {
       const translateRes = await fetch("/api/admin/translate-blog-post", {
         method: "POST",
@@ -174,12 +222,23 @@ export function BlogForm({
         const translateData = await translateRes.json();
         if (translateData.translations) {
           const currentTranslations = form.getValues("translations");
-          const targetLocales = ["ar", "ru", "es", "zh", "de", "fr", "ro", "tr"];
+          const targetLocales = [
+            "ar",
+            "ru",
+            "es",
+            "zh",
+            "de",
+            "fr",
+            "ro",
+            "tr",
+          ];
 
           targetLocales.forEach((loc) => {
             const aiTrans = translateData.translations[loc];
             if (aiTrans) {
-              const currentLangState = currentTranslations[loc as keyof typeof currentTranslations] || {};
+              const currentLangState =
+                currentTranslations[loc as keyof typeof currentTranslations] ||
+                {};
               form.setValue(`translations.${loc}` as any, {
                 ...currentLangState,
                 title: aiTrans.title || "",
@@ -188,27 +247,34 @@ export function BlogForm({
                 meta_description: aiTrans.meta_description || "",
                 meta_keywords: aiTrans.meta_keywords || [],
                 // We generate the slug dynamically from the translated title to ensure it's URL safe and locally correct
-                slug: aiTrans.title ? generateSlug(aiTrans.title, { locale: loc as any }) : (currentLangState as any).slug || "",
+                slug: aiTrans.title
+                  ? generateSlug(aiTrans.title, { locale: loc as any })
+                  : (currentLangState as any).slug || "",
               });
               setKeywordsInput((prev) => ({
                 ...prev,
-                [loc]: (aiTrans.meta_keywords || []).join(", ")
+                [loc]: (aiTrans.meta_keywords || []).join(", "),
               }));
             }
           });
 
-          toast.success("Blog post successfully translated to all languages!", { id: "ai-translation" });
+          toast.success("Blog post successfully translated to all languages!", {
+            id: "ai-translation",
+          });
         }
       } else {
-        toast.error("AI translation failed. Please try again.", { id: "ai-translation" });
+        toast.error("AI translation failed. Please try again.", {
+          id: "ai-translation",
+        });
       }
     } catch (e) {
-      toast.error("AI translation failed due to a network error.", { id: "ai-translation" });
+      toast.error("AI translation failed due to a network error.", {
+        id: "ai-translation",
+      });
     } finally {
       setIsTranslating(false);
     }
   };
-
 
   // Calculate reading time from English content
   const enContent = form.watch("translations.en.content");
@@ -237,283 +303,457 @@ export function BlogForm({
   return (
     <>
       <Form {...form}>
-      <form onSubmit={form.handleSubmit(handleSubmit)} className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-
-        {/* Main Content Area */}
-        <div className="lg:col-span-8 flex flex-col gap-6">
-          {/* Multi-language Content Card */}
-          <Card className="border-border shadow-sm">
-            <CardHeader className="bg-muted/30 pb-4 border-b">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                <div className="flex flex-wrap items-center gap-3">
-                  <CardTitle className="text-lg">Content (Multi-language)</CardTitle>
-                  <span className="text-sm font-normal text-muted-foreground bg-muted px-2 py-1 rounded-md border">
-                    ~{readingTime} min read
-                  </span>
+        <form
+          onSubmit={form.handleSubmit(handleSubmit)}
+          className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start"
+        >
+          {/* Main Content Area */}
+          <div className="lg:col-span-8 flex flex-col gap-6">
+            {/* Multi-language Content Card */}
+            <Card className="border-border shadow-sm">
+              <CardHeader className="bg-muted/30 pb-4 border-b">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                  <div className="flex flex-wrap items-center gap-3">
+                    <CardTitle className="text-lg">
+                      Content (Multi-language)
+                    </CardTitle>
+                    <span className="text-sm font-normal text-muted-foreground bg-muted px-2 py-1 rounded-md border">
+                      ~{readingTime} min read
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Button
+                      type="button"
+                      variant="secondary"
+                      size="sm"
+                      onClick={handleAITranslate}
+                      disabled={isTranslating}
+                      className="w-fit shrink-0"
+                    >
+                      {isTranslating ? (
+                        <Spinner className="w-4 h-4 mr-2" />
+                      ) : (
+                        <Sparkles className="w-4 h-4 mr-2 text-yellow-500" />
+                      )}
+                      Auto-Translate (AI)
+                    </Button>
+                  </div>
                 </div>
-                <div className="flex items-center gap-2">
+              </CardHeader>
+              <CardContent className="pt-6">
+                <Tabs
+                  value={activeTab}
+                  onValueChange={(v) => setActiveTab(v as typeof activeTab)}
+                >
+                  <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 lg:grid-cols-4 xl:grid-cols-8 gap-1 h-auto mb-6">
+                    {locales.map((locale) => {
+                      const hasContent = form.watch(
+                        `translations.${locale.value}.title`,
+                      );
+                      return (
+                        <TabsTrigger
+                          key={locale.value}
+                          value={locale.value}
+                          className="relative py-2 data-[state=active]:bg-background data-[state=active]:shadow-sm"
+                        >
+                          <span className="hidden sm:inline">
+                            {locale.label}
+                          </span>
+                          <span className="sm:hidden text-lg">
+                            {
+                              locale.label.match(
+                                /[\u{1F1E0}-\u{1F1FF}]{2}/u,
+                              )?.[0]
+                            }
+                          </span>
+                          {hasContent && (
+                            <span className="ml-1 text-green-500 text-xs font-bold">
+                              ✓
+                            </span>
+                          )}
+                          {!hasContent && locale.value !== "en" && (
+                            <span className="ml-1 text-yellow-500 text-xs opacity-50">
+                              ⚠
+                            </span>
+                          )}
+                        </TabsTrigger>
+                      );
+                    })}
+                  </TabsList>
+
+                  {locales.map((locale) => (
+                    <TabsContent
+                      key={locale.value}
+                      value={locale.value}
+                      className="space-y-6 mt-0"
+                      dir={locale.value === "ar" ? "rtl" : "ltr"}
+                    >
+                      {/* Title */}
+                      <FormField
+                        control={form.control}
+                        name={`translations.${locale.value}.title`}
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="text-base font-medium">
+                              Title ({locale.label})
+                            </FormLabel>
+                            <FormControl>
+                              <Input
+                                {...field}
+                                placeholder="Enter a captivating post title..."
+                                className="text-lg py-6 font-medium"
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      {/* Slug */}
+                      <FormField
+                        control={form.control}
+                        name={`translations.${locale.value}.slug`}
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Slug ({locale.label})</FormLabel>
+                            <div className="flex gap-2">
+                              <FormControl>
+                                <Input
+                                  {...field}
+                                  placeholder="url-friendly-identifier"
+                                  className="font-mono text-sm bg-muted/50"
+                                />
+                              </FormControl>
+                              <Button
+                                type="button"
+                                variant="secondary"
+                                onClick={() => {
+                                  const currentTitle = form.getValues(
+                                    `translations.${locale.value}.title` as any,
+                                  );
+                                  if (currentTitle) {
+                                    form.setValue(
+                                      `translations.${locale.value}.slug` as any,
+                                      generateSlug(currentTitle, {
+                                        locale: locale.value as any,
+                                      }),
+                                    );
+                                  }
+                                }}
+                              >
+                                Generate
+                              </Button>
+                            </div>
+                            <FormDescription className="text-xs">
+                              Automatically created from title. Used in URL:
+                              /blog/slug
+                            </FormDescription>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      {/* Content (Markdown) */}
+                      <FormField
+                        control={form.control}
+                        name={`translations.${locale.value}.content`}
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="flex justify-between items-end">
+                              <span className="text-base font-medium">
+                                Content ({locale.label})
+                              </span>
+                            </FormLabel>
+                            <FormControl>
+                              <div className="min-h-[400px] border rounded-md shadow-sm bg-background">
+                                <MarkdownEditor
+                                  value={field.value || ""}
+                                  onChange={field.onChange}
+                                  placeholder="Write your blog post content in Markdown here..."
+                                />
+                              </div>
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      {/* Excerpt */}
+                      <FormField
+                        control={form.control}
+                        name={`translations.${locale.value}.excerpt`}
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Excerpt ({locale.label})</FormLabel>
+                            <FormControl>
+                              <Textarea
+                                {...field}
+                                placeholder="Write a short, engaging summary of the post..."
+                                rows={3}
+                                className="resize-none"
+                              />
+                            </FormControl>
+                            <FormDescription className="text-xs">
+                              Brief summary displayed in post listings and
+                              preview cards.
+                            </FormDescription>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      {/* Meta Description & Keywords */}
+                      <FormField
+                        control={form.control}
+                        name={
+                          `translations.${locale.value}.meta_description` as any
+                        }
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>
+                              Meta Description (SEO) ({locale.label})
+                            </FormLabel>
+                            <FormControl>
+                              <Textarea
+                                {...field}
+                                value={field.value || ""}
+                                placeholder="Custom SEO description for Google (optional)..."
+                                rows={2}
+                                className="resize-none"
+                              />
+                            </FormControl>
+                            <FormDescription className="text-xs">
+                              Overrides the excerpt for search engine results.
+                              Keep under 160 characters.
+                            </FormDescription>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      <FormField
+                        control={form.control}
+                        name={
+                          `translations.${locale.value}.meta_keywords` as any
+                        }
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>
+                              Meta Keywords ({locale.label})
+                            </FormLabel>
+                            <FormControl>
+                              <Input
+                                value={
+                                  keywordsInput[locale.value] !== undefined
+                                    ? keywordsInput[locale.value]
+                                    : field.value
+                                      ? (field.value as string[]).join(", ")
+                                      : ""
+                                }
+                                onChange={(e) => {
+                                  const val = e.target.value;
+                                  setKeywordsInput({
+                                    ...keywordsInput,
+                                    [locale.value]: val,
+                                  });
+                                  field.onChange(
+                                    val
+                                      ? val
+                                          .split(",")
+                                          .map((k) => k.trim())
+                                          .filter(Boolean)
+                                      : [],
+                                  );
+                                }}
+                                placeholder="istanbul, photographer, travel..."
+                              />
+                            </FormControl>
+                            <FormDescription className="text-xs">
+                              Comma-separated keywords for SEO.
+                            </FormDescription>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </TabsContent>
+                  ))}
+                </Tabs>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Sidebar Space */}
+          <div className="lg:col-span-4 flex flex-col gap-6">
+            {/* Action & Publish Card */}
+            <Card className="border-border shadow-sm">
+              <CardHeader className="bg-muted/30 pb-4 border-b">
+                <CardTitle className="text-lg">Publish</CardTitle>
+              </CardHeader>
+              <CardContent className="pt-6 space-y-6">
+                <div className="flex flex-col gap-3">
                   <Button
                     type="button"
-                    variant="secondary"
-                    size="sm"
-                    onClick={handleAITranslate}
-                    disabled={isTranslating}
-                    className="w-fit shrink-0"
+                    variant="outline"
+                    onClick={handleSaveDraft}
+                    disabled={isSubmitting}
+                    className="w-full font-medium h-11"
                   >
-                    {isTranslating ? <Spinner className="w-4 h-4 mr-2" /> : <Sparkles className="w-4 h-4 mr-2 text-yellow-500" />}
-                    Auto-Translate (AI)
+                    <Save className="w-4 h-4 mr-2" />
+                    Save Draft
+                  </Button>
+                  <Button
+                    type="button"
+                    onClick={handlePublish}
+                    disabled={isSubmitting}
+                    className="w-full font-medium bg-blue-600 hover:bg-blue-700 text-white h-11"
+                  >
+                    <Send className="w-4 h-4 mr-2" />
+                    {isSubmitting ? "Publishing..." : "Publish Now"}
                   </Button>
                 </div>
-              </div>
-            </CardHeader>
-            <CardContent className="pt-6">
-              <Tabs
-                value={activeTab}
-                onValueChange={(v) => setActiveTab(v as typeof activeTab)}
-              >
-                <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 lg:grid-cols-4 xl:grid-cols-8 gap-1 h-auto mb-6">
-                  {locales.map((locale) => {
-                    const hasContent = form.watch(
-                      `translations.${locale.value}.title`,
-                    );
-                    return (
-                      <TabsTrigger
-                        key={locale.value}
-                        value={locale.value}
-                        className="relative py-2 data-[state=active]:bg-background data-[state=active]:shadow-sm"
-                      >
-                        <span className="hidden sm:inline">{locale.label}</span>
-                        <span className="sm:hidden text-lg">
-                          {locale.label.match(/[\u{1F1E0}-\u{1F1FF}]{2}/u)?.[0]}
-                        </span>
-                        {hasContent && (
-                          <span className="ml-1 text-green-500 text-xs font-bold">✓</span>
-                        )}
-                        {!hasContent && locale.value !== "en" && (
-                          <span className="ml-1 text-yellow-500 text-xs opacity-50">
-                            ⚠
-                          </span>
-                        )}
-                      </TabsTrigger>
-                    );
-                  })}
-                </TabsList>
 
-                {locales.map((locale) => (
-                  <TabsContent
-                    key={locale.value}
-                    value={locale.value}
-                    className="space-y-6 mt-0"
-                    dir={locale.value === "ar" ? "rtl" : "ltr"}
-                  >
-                    {/* Title */}
-                    <FormField
-                      control={form.control}
-                      name={`translations.${locale.value}.title`}
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="text-base font-medium">Title ({locale.label})</FormLabel>
+                <div className="space-y-4 pt-4 border-t">
+                  {/* Status */}
+                  <FormField
+                    control={form.control}
+                    name="status"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Status</FormLabel>
+                        <Select
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
+                        >
                           <FormControl>
-                            <Input
-                              {...field}
-                              placeholder="Enter a captivating post title..."
-                              className="text-lg py-6 font-medium"
-                            />
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select status" />
+                            </SelectTrigger>
                           </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+                          <SelectContent>
+                            <SelectItem value="draft">Draft</SelectItem>
+                            <SelectItem value="published">Published</SelectItem>
+                            <SelectItem value="archived">Archived</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
 
-                    {/* Slug */}
-                    <FormField
-                      control={form.control}
-                      name={`translations.${locale.value}.slug`}
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Slug ({locale.label})</FormLabel>
-                          <div className="flex gap-2">
-                            <FormControl>
-                              <Input {...field} placeholder="url-friendly-identifier" className="font-mono text-sm bg-muted/50" />
-                            </FormControl>
-                            <Button
-                              type="button"
-                              variant="secondary"
-                              onClick={() => {
-                                const currentTitle = form.getValues(`translations.${locale.value}.title` as any);
-                                if (currentTitle) {
-                                  form.setValue(
-                                    `translations.${locale.value}.slug` as any,
-                                    generateSlug(currentTitle, { locale: locale.value as any })
-                                  );
-                                }
-                              }}
-                            >
-                              Generate
-                            </Button>
-                          </div>
-                          <FormDescription className="text-xs">
-                            Automatically created from title. Used in URL: /blog/slug
-                          </FormDescription>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+                  {/* Published Date */}
+                  <FormField
+                    control={form.control}
+                    name="published_at"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Publish Date</FormLabel>
+                        <FormControl>
+                          <Input
+                            value={field.value ? field.value.slice(0, 16) : ""}
+                            onChange={(e) => {
+                              const value = e.target.value;
+                              field.onChange(
+                                value ? new Date(value).toISOString() : null,
+                              );
+                            }}
+                            type="datetime-local"
+                          />
+                        </FormControl>
+                        <FormDescription className="text-xs">
+                          Leave empty for auto (on publish)
+                        </FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
 
-                    {/* Content (Markdown) */}
-                    <FormField
-                      control={form.control}
-                      name={`translations.${locale.value}.content`}
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="flex justify-between items-end">
-                            <span className="text-base font-medium">Content ({locale.label})</span>
+                  {/* Featured Checkbox */}
+                  <FormField
+                    control={form.control}
+                    name="is_featured"
+                    render={({ field }) => (
+                      <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm bg-muted/10 mt-2">
+                        <div className="space-y-0.5">
+                          <FormLabel className="text-base">
+                            Featured Post
                           </FormLabel>
-                          <FormControl>
-                            <div className="min-h-[400px] border rounded-md shadow-sm bg-background">
-                              <MarkdownEditor
-                                value={field.value || ""}
-                                onChange={field.onChange}
-                                placeholder="Write your blog post content in Markdown here..."
-                              />
-                            </div>
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-
-                    {/* Excerpt */}
-                    <FormField
-                      control={form.control}
-                      name={`translations.${locale.value}.excerpt`}
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Excerpt ({locale.label})</FormLabel>
-                          <FormControl>
-                            <Textarea
-                              {...field}
-                              placeholder="Write a short, engaging summary of the post..."
-                              rows={3}
-                              className="resize-none"
-                            />
-                          </FormControl>
                           <FormDescription className="text-xs">
-                            Brief summary displayed in post listings and preview cards.
+                            Pin this post to the top
                           </FormDescription>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+                        </div>
+                        <FormControl>
+                          <Checkbox
+                            checked={field.value}
+                            onCheckedChange={field.onChange}
+                            className="h-5 w-5"
+                          />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              </CardContent>
+            </Card>
 
-                    {/* Meta Description & Keywords */}
-                    <FormField
-                      control={form.control}
-                      name={`translations.${locale.value}.meta_description` as any}
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Meta Description (SEO) ({locale.label})</FormLabel>
-                          <FormControl>
-                            <Textarea
-                              {...field}
-                              value={field.value || ""}
-                              placeholder="Custom SEO description for Google (optional)..."
-                              rows={2}
-                              className="resize-none"
-                            />
-                          </FormControl>
-                          <FormDescription className="text-xs">
-                            Overrides the excerpt for search engine results. Keep under 160 characters.
-                          </FormDescription>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    
-                    <FormField
-                      control={form.control}
-                      name={`translations.${locale.value}.meta_keywords` as any}
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Meta Keywords ({locale.label})</FormLabel>
-                          <FormControl>
-                            <Input
-                              value={keywordsInput[locale.value] !== undefined ? keywordsInput[locale.value] : (field.value ? (field.value as string[]).join(", ") : "")}
-                              onChange={(e) => {
-                                const val = e.target.value;
-                                setKeywordsInput({ ...keywordsInput, [locale.value]: val });
-                                field.onChange(val ? val.split(",").map(k => k.trim()).filter(Boolean) : []);
-                              }}
-                              placeholder="istanbul, photographer, travel..."
-                            />
-                          </FormControl>
-                          <FormDescription className="text-xs">
-                            Comma-separated keywords for SEO.
-                          </FormDescription>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </TabsContent>
-                ))}
-              </Tabs>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Sidebar Space */}
-        <div className="lg:col-span-4 flex flex-col gap-6">
-
-          {/* Action & Publish Card */}
-          <Card className="border-border shadow-sm">
-            <CardHeader className="bg-muted/30 pb-4 border-b">
-              <CardTitle className="text-lg">Publish</CardTitle>
-            </CardHeader>
-            <CardContent className="pt-6 space-y-6">
-
-              <div className="flex flex-col gap-3">
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={handleSaveDraft}
-                  disabled={isSubmitting}
-                  className="w-full font-medium h-11"
-                >
-                  <Save className="w-4 h-4 mr-2" />
-                  Save Draft
-                </Button>
-                <Button
-                  type="button"
-                  onClick={handlePublish}
-                  disabled={isSubmitting}
-                  className="w-full font-medium bg-blue-600 hover:bg-blue-700 text-white h-11"
-                >
-                  <Send className="w-4 h-4 mr-2" />
-                  {isSubmitting ? "Publishing..." : "Publish Now"}
-                </Button>
-              </div>
-
-              <div className="space-y-4 pt-4 border-t">
-                {/* Status */}
+            {/* Media Card */}
+            <Card className="border-border shadow-sm">
+              <CardHeader className="bg-muted/30 pb-4 border-b">
+                <CardTitle className="text-lg">Media</CardTitle>
+              </CardHeader>
+              <CardContent className="pt-6">
                 <FormField
                   control={form.control}
-                  name="status"
+                  name="featured_image"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Status</FormLabel>
+                      <FormLabel>Featured Image</FormLabel>
+                      <FormControl>
+                        <ImageUpload
+                          value={field.value}
+                          onChange={field.onChange}
+                          onRemove={() => field.onChange(null)}
+                        />
+                      </FormControl>
+                      <FormDescription className="text-xs">
+                        Primary image for this post. Auto-converted to WebP.
+                        Recommended size: 1200x630.
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </CardContent>
+            </Card>
+
+            {/* Organization Card */}
+            <Card className="border-border shadow-sm">
+              <CardHeader className="bg-muted/30 pb-4 border-b">
+                <CardTitle className="text-lg">Organization</CardTitle>
+              </CardHeader>
+              <CardContent className="pt-6 space-y-6">
+                {/* Author */}
+                <FormField
+                  control={form.control}
+                  name="author_id"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Author</FormLabel>
                       <Select
                         onValueChange={field.onChange}
-                        defaultValue={field.value}
+                        defaultValue={field.value || undefined}
                       >
                         <FormControl>
                           <SelectTrigger>
-                            <SelectValue placeholder="Select status" />
+                            <SelectValue placeholder="Select an author (optional)" />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          <SelectItem value="draft">Draft</SelectItem>
-                          <SelectItem value="published">Published</SelectItem>
-                          <SelectItem value="archived">Archived</SelectItem>
+                          <SelectItem value="none">None</SelectItem>
+                          {authors?.map((author) => (
+                            <SelectItem key={author.id} value={author.id}>
+                              {author.name}
+                            </SelectItem>
+                          ))}
                         </SelectContent>
                       </Select>
                       <FormMessage />
@@ -521,261 +761,147 @@ export function BlogForm({
                   )}
                 />
 
-                {/* Published Date */}
+                {/* Categories */}
                 <FormField
                   control={form.control}
-                  name="published_at"
+                  name="category_ids"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Publish Date</FormLabel>
-                      <FormControl>
-                        <Input
-                          value={field.value ? field.value.slice(0, 16) : ""}
-                          onChange={(e) => {
-                            const value = e.target.value;
-                            field.onChange(
-                              value ? new Date(value).toISOString() : null,
-                            );
-                          }}
-                          type="datetime-local"
-                        />
-                      </FormControl>
-                      <FormDescription className="text-xs">
-                        Leave empty for auto (on publish)
-                      </FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                {/* Featured Checkbox */}
-                <FormField
-                  control={form.control}
-                  name="is_featured"
-                  render={({ field }) => (
-                    <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm bg-muted/10 mt-2">
-                      <div className="space-y-0.5">
-                        <FormLabel className="text-base">Featured Post</FormLabel>
-                        <FormDescription className="text-xs">
-                          Pin this post to the top
-                        </FormDescription>
-                      </div>
-                      <FormControl>
-                        <Checkbox
-                          checked={field.value}
-                          onCheckedChange={field.onChange}
-                          className="h-5 w-5"
-                        />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Media Card */}
-          <Card className="border-border shadow-sm">
-            <CardHeader className="bg-muted/30 pb-4 border-b">
-              <CardTitle className="text-lg">Media</CardTitle>
-            </CardHeader>
-            <CardContent className="pt-6">
-              <FormField
-                control={form.control}
-                name="featured_image"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Featured Image</FormLabel>
-                    <FormControl>
-                      <ImageUpload
-                        value={field.value}
-                        onChange={field.onChange}
-                        onRemove={() => field.onChange(null)}
-                      />
-                    </FormControl>
-                    <FormDescription className="text-xs">
-                      Primary image for this post. Auto-converted to WebP. Recommended size: 1200x630.
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </CardContent>
-          </Card>
-
-          {/* Organization Card */}
-          <Card className="border-border shadow-sm">
-            <CardHeader className="bg-muted/30 pb-4 border-b">
-              <CardTitle className="text-lg">Organization</CardTitle>
-            </CardHeader>
-            <CardContent className="pt-6 space-y-6">
-
-              {/* Author */}
-              <FormField
-                control={form.control}
-                name="author_id"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Author</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value || undefined}>
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select an author (optional)" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectItem value="none">None</SelectItem>
-                        {authors?.map((author) => (
-                          <SelectItem key={author.id} value={author.id}>
-                            {author.name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              {/* Categories */}
-              <FormField
-                control={form.control}
-                name="category_ids"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="flex justify-between items-end">
-                      <span>Categories</span>
-                      {categories.length === 0 && (
-                        <a
-                          href="/admin/dashboard/blog/categories"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-xs text-blue-500 hover:underline"
-                        >
-                          Create New
-                        </a>
-                      )}
-                    </FormLabel>
-                    <div className="p-3 border rounded-md max-h-48 overflow-y-auto bg-muted/10 flex flex-col gap-2">
-                      {isLoadingData ? (
-                        <div className="text-sm text-muted-foreground py-2 text-center animate-pulse">
-                          Loading categories...
-                        </div>
-                      ) : categories.length === 0 ? (
-                        <div className="text-sm text-muted-foreground py-2 text-center">
-                          No categories available.
-                        </div>
-                      ) : (
-                        categories.map((category) => (
-                          <div
-                            key={category.id}
-                            className="flex items-center space-x-2"
+                      <FormLabel className="flex justify-between items-end">
+                        <span>Categories</span>
+                        {categories.length === 0 && (
+                          <a
+                            href="/admin/dashboard/blog/categories"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-xs text-blue-500 hover:underline"
                           >
-                            <Checkbox
-                              id={`category-${category.id}`}
-                              checked={field.value?.includes(category.id)}
-                              onCheckedChange={(checked) => {
-                                if (checked) {
-                                  field.onChange([
-                                    ...(field.value || []),
-                                    category.id,
-                                  ]);
-                                } else {
-                                  field.onChange(
-                                    (field.value || []).filter(
-                                      (id) => id !== category.id,
-                                    ),
-                                  );
-                                }
-                              }}
-                            />
-                            <label htmlFor={`category-${category.id}`} className="text-sm cursor-pointer hover:font-medium transition-all">
-                              {category.translation?.name || category.slug}
-                            </label>
+                            Create New
+                          </a>
+                        )}
+                      </FormLabel>
+                      <div className="p-3 border rounded-md max-h-48 overflow-y-auto bg-muted/10 flex flex-col gap-2">
+                        {isLoadingData ? (
+                          <div className="text-sm text-muted-foreground py-2 text-center animate-pulse">
+                            Loading categories...
                           </div>
-                        ))
-                      )}
-                    </div>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              {/* Tags */}
-              <FormField
-                control={form.control}
-                name="tag_ids"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="flex justify-between items-end">
-                      <span>Tags</span>
-                      {tags.length === 0 && (
-                        <a
-                          href="/admin/dashboard/blog/tags"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-xs text-blue-500 hover:underline"
-                        >
-                          Create New
-                        </a>
-                      )}
-                    </FormLabel>
-                    <div className="p-3 border rounded-md max-h-48 overflow-y-auto bg-muted/10">
-                      {isLoadingData ? (
-                        <div className="text-sm text-muted-foreground py-2 text-center animate-pulse">
-                          Loading tags...
-                        </div>
-                      ) : tags.length === 0 ? (
-                        <div className="text-sm text-muted-foreground py-2 text-center">
-                          No tags available.
-                        </div>
-                      ) : (
-                        <div className="flex flex-wrap gap-2">
-                          {tags.map((tag) => (
+                        ) : categories.length === 0 ? (
+                          <div className="text-sm text-muted-foreground py-2 text-center">
+                            No categories available.
+                          </div>
+                        ) : (
+                          categories.map((category) => (
                             <div
-                              key={tag.id}
-                              className="flex items-center space-x-1.5 bg-background border px-2 py-1 rounded text-xs hover:border-primary/50 transition-colors"
+                              key={category.id}
+                              className="flex items-center space-x-2"
                             >
                               <Checkbox
-                                id={`tag-${tag.id}`}
-                                className="h-3 w-3"
-                                checked={field.value?.includes(tag.id)}
+                                id={`category-${category.id}`}
+                                checked={field.value?.includes(category.id)}
                                 onCheckedChange={(checked) => {
                                   if (checked) {
                                     field.onChange([
                                       ...(field.value || []),
-                                      tag.id,
+                                      category.id,
                                     ]);
                                   } else {
                                     field.onChange(
                                       (field.value || []).filter(
-                                        (id) => id !== tag.id,
+                                        (id) => id !== category.id,
                                       ),
                                     );
                                   }
                                 }}
                               />
-                              <label htmlFor={`tag-${tag.id}`} className="cursor-pointer">
-                                {tag.translation?.name || tag.slug}
+                              <label
+                                htmlFor={`category-${category.id}`}
+                                className="text-sm cursor-pointer hover:font-medium transition-all"
+                              >
+                                {category.translation?.name || category.slug}
                               </label>
                             </div>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+                          ))
+                        )}
+                      </div>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-
-
-            </CardContent>
-          </Card>
-
-        </div>
-      </form>
-    </Form>
+                {/* Tags */}
+                <FormField
+                  control={form.control}
+                  name="tag_ids"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="flex justify-between items-end">
+                        <span>Tags</span>
+                        {tags.length === 0 && (
+                          <a
+                            href="/admin/dashboard/blog/tags"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-xs text-blue-500 hover:underline"
+                          >
+                            Create New
+                          </a>
+                        )}
+                      </FormLabel>
+                      <div className="p-3 border rounded-md max-h-48 overflow-y-auto bg-muted/10">
+                        {isLoadingData ? (
+                          <div className="text-sm text-muted-foreground py-2 text-center animate-pulse">
+                            Loading tags...
+                          </div>
+                        ) : tags.length === 0 ? (
+                          <div className="text-sm text-muted-foreground py-2 text-center">
+                            No tags available.
+                          </div>
+                        ) : (
+                          <div className="flex flex-wrap gap-2">
+                            {tags.map((tag) => (
+                              <div
+                                key={tag.id}
+                                className="flex items-center space-x-1.5 bg-background border px-2 py-1 rounded text-xs hover:border-primary/50 transition-colors"
+                              >
+                                <Checkbox
+                                  id={`tag-${tag.id}`}
+                                  className="h-3 w-3"
+                                  checked={field.value?.includes(tag.id)}
+                                  onCheckedChange={(checked) => {
+                                    if (checked) {
+                                      field.onChange([
+                                        ...(field.value || []),
+                                        tag.id,
+                                      ]);
+                                    } else {
+                                      field.onChange(
+                                        (field.value || []).filter(
+                                          (id) => id !== tag.id,
+                                        ),
+                                      );
+                                    }
+                                  }}
+                                />
+                                <label
+                                  htmlFor={`tag-${tag.id}`}
+                                  className="cursor-pointer"
+                                >
+                                  {tag.translation?.name || tag.slug}
+                                </label>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </CardContent>
+            </Card>
+          </div>
+        </form>
+      </Form>
     </>
   );
 }

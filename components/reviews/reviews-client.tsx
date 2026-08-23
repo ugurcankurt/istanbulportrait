@@ -161,7 +161,8 @@ export function ReviewsClient({
 
         {/* View All Reviews Button */}
         <div className="text-center mt-8 sm:mt-12 lg:mt-16">
-          <Button nativeButton={false}
+          <Button
+            nativeButton={false}
             variant="outline"
             size="lg"
             className="group h-14 px-8 rounded-full font-semibold shadow-sm hover:scale-105 transition-transform border-[0.5px] border-primary/20 bg-primary/5 hover:bg-primary/10 text-primary"

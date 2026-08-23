@@ -11,7 +11,12 @@ interface DraftCountdownProps {
   label?: string;
 }
 
-export function DraftCountdown({ addedAt, onExpire, className, label = "We'll hold your spot for [TIME] minutes." }: DraftCountdownProps) {
+export function DraftCountdown({
+  addedAt,
+  onExpire,
+  className,
+  label = "We'll hold your spot for [TIME] minutes.",
+}: DraftCountdownProps) {
   const [timeLeft, setTimeLeft] = useState<number>(10 * 60);
   const [isExpired, setIsExpired] = useState(false);
   const [mounted, setMounted] = useState(false);
@@ -61,7 +66,11 @@ export function DraftCountdown({ addedAt, onExpire, className, label = "We'll ho
   // Split label to bold the [TIME] part
   const renderLabel = () => {
     if (!label.includes("[TIME]")) {
-      return <span>{label} {timeString}</span>;
+      return (
+        <span>
+          {label} {timeString}
+        </span>
+      );
     }
     const parts = label.split("[TIME]");
     return (
@@ -74,11 +83,13 @@ export function DraftCountdown({ addedAt, onExpire, className, label = "We'll ho
   };
 
   return (
-    <div className={cn(
-      "flex items-center gap-3 px-4 py-3 rounded-xl border transition-colors duration-500",
-      "bg-[#FFF0F3] border-[#FFE4E4] text-[#1B1B1B]",
-      className
-    )}>
+    <div
+      className={cn(
+        "flex items-center gap-3 px-4 py-3 rounded-xl border transition-colors duration-500",
+        "bg-[#FFF0F3] border-[#FFE4E4] text-[#1B1B1B]",
+        className,
+      )}
+    >
       <div className="flex items-center gap-2.5">
         <div className="w-8 h-8 rounded-full bg-white/80 flex items-center justify-center shadow-sm">
           <Timer className="w-5 h-5 text-[#E11D48]" />

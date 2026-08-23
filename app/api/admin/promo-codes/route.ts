@@ -13,7 +13,10 @@ export async function GET() {
     return NextResponse.json(data);
   } catch (error) {
     console.error("Error fetching promo codes:", error);
-    return NextResponse.json({ error: "Failed to fetch promo codes" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Failed to fetch promo codes" },
+      { status: 500 },
+    );
   }
 }
 
@@ -21,7 +24,7 @@ export async function POST(request: Request) {
   try {
     const supabase = await createServerSupabaseAdminClient();
     const body = await request.json();
-    
+
     // Normalize code text
     if (body.code) body.code = body.code.trim().toUpperCase();
 
@@ -35,6 +38,9 @@ export async function POST(request: Request) {
     return NextResponse.json(data);
   } catch (error) {
     console.error("Error creating promo code:", error);
-    return NextResponse.json({ error: "Failed to create promo code" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Failed to create promo code" },
+      { status: 500 },
+    );
   }
 }

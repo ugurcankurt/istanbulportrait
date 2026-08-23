@@ -22,14 +22,15 @@ export async function GET(request: Request) {
     if (!url) return "";
     return url.replace(
       "https://xfntnamwfnqjgqmyxwfz.supabase.co/storage/v1/object/public",
-      `${baseUrl}/storage`
+      `${baseUrl}/storage`,
     );
   };
 
   // Google Ads strictly requires exactly these header names for a Custom feed
   // Reference: https://support.google.com/google-ads/answer/6053288 (Custom feed)
   // Add UTF-8 BOM to ensure Google Ads correctly parses Turkish characters
-  let csv = "\uFEFFID,Item title,Item description,Final URL,Image URL,Price,Sale price\n";
+  let csv =
+    "\uFEFFID,Item title,Item description,Final URL,Image URL,Price,Sale price\n";
 
   for (const pkg of packages) {
     if (!pkg.is_active) continue; // Skip inactive packages
@@ -48,7 +49,9 @@ export async function GET(request: Request) {
     const finalUrl = `${baseUrl}/${locale}/packages/${pkg.slug}`;
 
     // 5. Image URL (Use our beautiful dynamic getyourguide-style image!)
-    const rawImageUrl = cleanImage(pkg.cover_image || (pkg.gallery_images && pkg.gallery_images[0]));
+    const rawImageUrl = cleanImage(
+      pkg.cover_image || (pkg.gallery_images && pkg.gallery_images[0]),
+    );
     let imageUrl = rawImageUrl;
     if (rawImageUrl) {
       const rating = average > 0 ? average.toFixed(1) : "5.0";
@@ -65,7 +68,8 @@ export async function GET(request: Request) {
       salePriceStr = `${pkg.price} EUR`;
     } else if (activeDiscount && activeDiscount.discount_percentage > 0) {
       priceStr = `${pkg.price} EUR`;
-      const calculatedSalePrice = pkg.price - (pkg.price * activeDiscount.discount_percentage);
+      const calculatedSalePrice =
+        pkg.price - pkg.price * activeDiscount.discount_percentage;
       salePriceStr = `${parseFloat(calculatedSalePrice.toFixed(2))} EUR`;
     }
 

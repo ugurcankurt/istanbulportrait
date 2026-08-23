@@ -34,15 +34,15 @@ const getTranslatedReviewsBatch = unstable_cache(
   async (payloadStr: string, locale: string) => {
     const supportedLocales = ["ar", "ru", "es", "zh", "fr", "de", "ro", "tr"];
     if (!supportedLocales.includes(locale)) return {};
-    const payload: {id: string, text: string}[] = JSON.parse(payloadStr);
+    const payload: { id: string; text: string }[] = JSON.parse(payloadStr);
 
     if (payload.length === 0) return {};
 
     try {
-      const { settingsService } = await import('@/lib/settings-service');
+      const { settingsService } = await import("@/lib/settings-service");
       const settings = await settingsService.getSettings();
       const apiKey = settings.gemini_api_key;
-      
+
       if (!apiKey) {
         console.warn("No Groq API key found for review translation.");
         return {};
@@ -59,23 +59,25 @@ Reviews to translate:
 ${payloadStr}
 `;
 
-    const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=${apiKey}`;
+      const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=${apiKey}`;
       const response = await fetch(geminiUrl, {
         method: "POST",
-        headers: { 
+        headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
           contents: [{ parts: [{ text: prompt }] }],
-          generationConfig: { responseMimeType: "application/json" }
-        })
+          generationConfig: { responseMimeType: "application/json" },
+        }),
       });
 
       if (!response.ok) {
         const errText = await response.text();
         if (response.status === 429 || response.status === 400) {
-           console.warn(`Gemini API limit/error (${response.status}). Caching empty translations to prevent log spam and reduce costs.`);
-           return {};
+          console.warn(
+            `Gemini API limit/error (${response.status}). Caching empty translations to prevent log spam and reduce costs.`,
+          );
+          return {};
         }
         console.error("Gemini API Error for reviews translation:", errText);
         throw new Error(`Gemini API Error: ${response.status}`);
@@ -83,23 +85,29 @@ ${payloadStr}
 
       const data = await response.json();
       let textOutput = data.candidates?.[0]?.content?.parts?.[0]?.text;
-      
+
       if (!textOutput) {
         throw new Error("Invalid AI response structure");
       }
 
       // Clean markdown block if Gemini still returns it
-      textOutput = textOutput.replace(/```json/g, "").replace(/```/g, "").trim();
+      textOutput = textOutput
+        .replace(/```json/g, "")
+        .replace(/```/g, "")
+        .trim();
 
       const translatedDict = JSON.parse(textOutput);
       return translatedDict as Record<string, string>;
     } catch (err) {
-      console.error("Failed to translate reviews. Cache will not be poisoned.", err);
+      console.error(
+        "Failed to translate reviews. Cache will not be poisoned.",
+        err,
+      );
       throw err; // Throwing prevents unstable_cache from saving English fallback permanently
     }
   },
-  ['gemini-reviews-translations-batch-v3'],
-  { revalidate: 86400 * 7 } // Cache for 7 days.
+  ["gemini-reviews-translations-batch-v3"],
+  { revalidate: 86400 * 7 }, // Cache for 7 days.
 );
 
 class ReviewsService {
@@ -112,28 +120,37 @@ class ReviewsService {
   /**
    * Fetch reviews from Featurable API dynamically
    */
-  async fetchGoogleReviews(locale: string = "en"): Promise<{ reviews: GoogleReview[], totalCount: number, averageRating: number }> {
-try {
+  async fetchGoogleReviews(locale: string = "en"): Promise<{
+    reviews: GoogleReview[];
+    totalCount: number;
+    averageRating: number;
+  }> {
+    try {
       // 1. Fetch dynamic configuration from CMS
-      const { pagesContentService } = await import('@/lib/pages-content-service');
+      const { pagesContentService } = await import(
+        "@/lib/pages-content-service"
+      );
       const pageData = await pagesContentService.getPageBySlug("home-reviews");
       const rawInput = pageData?.content?.featurable_code || "";
 
       // 2. Safely extract the UUID from the raw configuration (it could be a script tag, a URL, or just the ID)
-      const uuidRegex = /[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}/;
+      const uuidRegex =
+        /[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}/;
       const match = rawInput.match(uuidRegex);
-      
+
       let activeWidgetId = match ? match[0] : null;
 
       // 3. Fallback to .env config if CMS is unconfigured
       if (!activeWidgetId) {
-        const { settingsService } = await import('@/lib/settings-service');
+        const { settingsService } = await import("@/lib/settings-service");
         const settings = await settingsService.getSettings();
         activeWidgetId = settings.featurable_widget_id || this.config.widgetId;
       }
 
       if (!activeWidgetId) {
-        console.warn("ReviewsService: No Featurable Widget ID configured. Returning empty reviews gracefully.");
+        console.warn(
+          "ReviewsService: No Featurable Widget ID configured. Returning empty reviews gracefully.",
+        );
         return {
           reviews: [],
           totalCount: 0,
@@ -166,18 +183,22 @@ try {
       const averageRating = Math.round(averageRatingRaw * 10) / 10;
 
       // Transform to our GoogleReview interface
-      const transformedReviews: GoogleReview[] = reviews.map((review: any, index: number) => ({
-        id: review.id || `review-${review.reviewer?.displayName || "anon"}-${review.createTime || index}`,
-        author: {
-          name: review.reviewer?.displayName || "Anonymous",
-          photoUrl: review.reviewer?.profilePhotoUrl,
-        },
-        rating: Number(review.starRating) || 5,
-        text: truncateReviewText(review.comment || "", 500),
-        date: review.createTime || new Date().toISOString(),
-        relativeTimeDescription:
-          review.relativePublishTimeDescription || "Recent",
-      }));
+      const transformedReviews: GoogleReview[] = reviews.map(
+        (review: any, index: number) => ({
+          id:
+            review.id ||
+            `review-${review.reviewer?.displayName || "anon"}-${review.createTime || index}`,
+          author: {
+            name: review.reviewer?.displayName || "Anonymous",
+            photoUrl: review.reviewer?.profilePhotoUrl,
+          },
+          rating: Number(review.starRating) || 5,
+          text: truncateReviewText(review.comment || "", 500),
+          date: review.createTime || new Date().toISOString(),
+          relativeTimeDescription:
+            review.relativePublishTimeDescription || "Recent",
+        }),
+      );
 
       // Sort by date (newest first) and limit results
       const sortedReviews = transformedReviews
@@ -188,21 +209,26 @@ try {
       let finalReviews = sortedReviews;
       if (locale !== "en" && finalReviews.length > 0) {
         const reviewsToTranslate = finalReviews
-          .filter(r => r.text && r.text.trim().length > 0)
-          .map(r => ({ id: r.id, text: r.text }));
+          .filter((r) => r.text && r.text.trim().length > 0)
+          .map((r) => ({ id: r.id, text: r.text }));
 
         if (reviewsToTranslate.length > 0) {
           const payloadStr = JSON.stringify(reviewsToTranslate);
           try {
-            const translatedDict = await getTranslatedReviewsBatch(payloadStr, locale);
-            finalReviews = finalReviews.map(r => {
+            const translatedDict = await getTranslatedReviewsBatch(
+              payloadStr,
+              locale,
+            );
+            finalReviews = finalReviews.map((r) => {
               if (translatedDict[r.id]) {
                 return { ...r, text: translatedDict[r.id] };
               }
               return r;
             });
           } catch (translationErr) {
-            console.warn(`Translation failed for locale '${locale}', falling back to English for this request only.`);
+            console.warn(
+              `Translation failed for locale '${locale}', falling back to English for this request only.`,
+            );
             // We keep finalReviews as sortedReviews (English) without poisoning the Next.js cache.
           }
         }
@@ -229,7 +255,7 @@ try {
    * Calculate aggregate rating from reviews
    */
   async getAggregateRating(): Promise<AggregateRating> {
-try {
+    try {
       const { totalCount, averageRating } = await this.fetchGoogleReviews("en"); // Aggregate rating doesn't need translations
 
       if (totalCount === 0) {
@@ -244,8 +270,8 @@ try {
       // Average: 4.8, Total: 71 -> Total Points: ~341. Max Points (all 5s): 355. Difference: 14.
       // This means approx 14 reviews are 4-star instead of 5-star.
       const totalPointsNeeded = Math.round(totalCount * averageRating);
-      const diffFromMax = (totalCount * 5) - totalPointsNeeded;
-      
+      const diffFromMax = totalCount * 5 - totalPointsNeeded;
+
       // Heuristic split: Mostly 4s, some 3s/2s if diff is large
       const distribution = {
         5: totalCount,
@@ -258,22 +284,33 @@ try {
       if (diffFromMax > 0) {
         // Distribute the "lost" points starting from 4 stars
         let pointsToLose = diffFromMax;
-        
+
         // 4 stars (costs 1 point each)
-        distribution[4] = Math.min(Math.round(pointsToLose * 0.8), totalCount - 1);
+        distribution[4] = Math.min(
+          Math.round(pointsToLose * 0.8),
+          totalCount - 1,
+        );
         distribution[5] -= distribution[4];
         pointsToLose -= distribution[4];
 
         if (pointsToLose > 0) {
           // 3 stars (costs 2 points each)
-          distribution[3] = Math.min(Math.round(pointsToLose / 2), distribution[5]);
+          distribution[3] = Math.min(
+            Math.round(pointsToLose / 2),
+            distribution[5],
+          );
           distribution[5] -= distribution[3];
-          pointsToLose -= (distribution[3] * 2);
+          pointsToLose -= distribution[3] * 2;
         }
-        
+
         // Ensure total count matches
-        const currentSum = distribution[5] + distribution[4] + distribution[3] + distribution[2] + distribution[1];
-        if (currentSum < totalCount) distribution[5] += (totalCount - currentSum);
+        const currentSum =
+          distribution[5] +
+          distribution[4] +
+          distribution[3] +
+          distribution[2] +
+          distribution[1];
+        if (currentSum < totalCount) distribution[5] += totalCount - currentSum;
       }
 
       return {
@@ -290,14 +327,12 @@ try {
       };
     }
   }
-
-
 }
 
 // Export singleton instance
 export const reviewsService = new ReviewsService({
   apiKey: "", // Legacy, unused
-  widgetId: "", // Legacy, falls back to settingsService 
+  widgetId: "", // Legacy, falls back to settingsService
   maxReviews: 100,
   sortBy: "newest",
 });

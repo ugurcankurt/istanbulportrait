@@ -130,16 +130,18 @@ export async function getSession() {
 export function onAuthStateChange(callback: (user: User | null) => void) {
   // Only use auth state change on client-side
   if (typeof window !== "undefined") {
-    return supabaseAuth.auth.onAuthStateChange((_event: AuthChangeEvent, session: Session | null) => {
-      callback(session?.user || null);
-    });
+    return supabaseAuth.auth.onAuthStateChange(
+      (_event: AuthChangeEvent, session: Session | null) => {
+        callback(session?.user || null);
+      },
+    );
   }
 
   // Return empty subscription for server-side
   return {
     data: {
       subscription: {
-        unsubscribe: () => { },
+        unsubscribe: () => {},
       },
     },
   };

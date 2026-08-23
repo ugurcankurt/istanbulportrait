@@ -48,29 +48,52 @@ export function FacebookPixel({ pixelId }: { pixelId?: string | null }) {
       // Check URL for advanced matching parameters passed from email campaigns
       let updatedUserData = { ...userData };
       let hasUrlUserData = false;
-      
+
       const urlEm = searchParams.get("em");
       const urlPh = searchParams.get("ph");
       const urlFn = searchParams.get("fn");
       const urlLn = searchParams.get("ln");
-      
-      if (urlEm) { updatedUserData.email = urlEm; hasUrlUserData = true; }
-      if (urlPh) { updatedUserData.phone = urlPh; hasUrlUserData = true; }
-      if (urlFn) { updatedUserData.firstName = urlFn; hasUrlUserData = true; }
-      if (urlLn) { updatedUserData.lastName = urlLn; hasUrlUserData = true; }
-      
-      if (hasUrlUserData) {
-        import("@/lib/analytics").then(({ saveUserDataForAdvancedMatching }) => {
-          saveUserDataForAdvancedMatching(updatedUserData);
-        });
+
+      if (urlEm) {
+        updatedUserData.email = urlEm;
+        hasUrlUserData = true;
+      }
+      if (urlPh) {
+        updatedUserData.phone = urlPh;
+        hasUrlUserData = true;
+      }
+      if (urlFn) {
+        updatedUserData.firstName = urlFn;
+        hasUrlUserData = true;
+      }
+      if (urlLn) {
+        updatedUserData.lastName = urlLn;
+        hasUrlUserData = true;
       }
 
-      if (updatedUserData && !advancedMatchingSentRef.current && !window._fbqAdvancedMatchingSent) {
-        if (updatedUserData.email) hashed.em = await hashCustomerData(updatedUserData.email);
-        if (updatedUserData.phone) hashed.ph = await hashPhoneNumber(updatedUserData.phone);
-        if (updatedUserData.firstName) hashed.fn = await hashCustomerData(updatedUserData.firstName);
-        if (updatedUserData.lastName) hashed.ln = await hashCustomerData(updatedUserData.lastName);
-        if (updatedUserData.country) hashed.country = await hashCustomerData(updatedUserData.country);
+      if (hasUrlUserData) {
+        import("@/lib/analytics").then(
+          ({ saveUserDataForAdvancedMatching }) => {
+            saveUserDataForAdvancedMatching(updatedUserData);
+          },
+        );
+      }
+
+      if (
+        updatedUserData &&
+        !advancedMatchingSentRef.current &&
+        !window._fbqAdvancedMatchingSent
+      ) {
+        if (updatedUserData.email)
+          hashed.em = await hashCustomerData(updatedUserData.email);
+        if (updatedUserData.phone)
+          hashed.ph = await hashPhoneNumber(updatedUserData.phone);
+        if (updatedUserData.firstName)
+          hashed.fn = await hashCustomerData(updatedUserData.firstName);
+        if (updatedUserData.lastName)
+          hashed.ln = await hashCustomerData(updatedUserData.lastName);
+        if (updatedUserData.country)
+          hashed.country = await hashCustomerData(updatedUserData.country);
 
         if (Object.keys(hashed).length > 0) {
           window.fbq("init", pixelId, hashed);
@@ -100,8 +123,14 @@ export function FacebookPixel({ pixelId }: { pixelId?: string | null }) {
       const fbpMatch = document.cookie.match(/(^| )_fbp=([^;]+)/);
       if (fbpMatch) currentFbp = fbpMatch[2];
 
-      const isValidFbc = currentFbc && /^fb\.[0-9]\.[0-9]{13,}\.[a-zA-Z0-9_=-]+(\.[a-zA-Z0-9_=-]+)?$/.test(currentFbc);
-      const isValidFbp = currentFbp && /^fb\.[0-9]\.[0-9]{13,}\.[0-9]+(\.[a-zA-Z0-9_=-]+)?$/.test(currentFbp);
+      const isValidFbc =
+        currentFbc &&
+        /^fb\.[0-9]\.[0-9]{13,}\.[a-zA-Z0-9_=-]+(\.[a-zA-Z0-9_=-]+)?$/.test(
+          currentFbc,
+        );
+      const isValidFbp =
+        currentFbp &&
+        /^fb\.[0-9]\.[0-9]{13,}\.[0-9]+(\.[a-zA-Z0-9_=-]+)?$/.test(currentFbp);
 
       const fbclid = searchParams.get("fbclid");
       if (fbclid && /^[a-zA-Z0-9_=-]+$/.test(fbclid)) {

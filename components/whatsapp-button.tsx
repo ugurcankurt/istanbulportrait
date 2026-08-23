@@ -39,7 +39,9 @@ export function WhatsAppButton({
   const isMobile = useIsMobile();
 
   // Check if we are on the packages page (Photography Packages)
-  const isPackagesPage = (pathname as string) === "/packages" || (pathname as string).startsWith("/packages/");
+  const isPackagesPage =
+    (pathname as string) === "/packages" ||
+    (pathname as string).startsWith("/packages/");
 
   // Intersection Observer for scroll-based animation
   const { ref, inView } = useInView({
@@ -101,12 +103,14 @@ export function WhatsAppButton({
       localStorage.setItem("hasSeenWhatsAppGreeting", "true");
     };
 
-    // Add listeners after a slight delay to prevent immediate dismissal 
+    // Add listeners after a slight delay to prevent immediate dismissal
     // if the user is currently scrolling when it pops up
     const timer = setTimeout(() => {
       window.addEventListener("scroll", handleInteraction, { passive: true });
       window.addEventListener("mousedown", handleInteraction);
-      window.addEventListener("touchstart", handleInteraction, { passive: true });
+      window.addEventListener("touchstart", handleInteraction, {
+        passive: true,
+      });
     }, 1000);
 
     return () => {
@@ -147,11 +151,15 @@ export function WhatsAppButton({
           : "bottom-8 right-8",
         className,
       )}
-      style={mounted && isMobile ? {
-        bottom: isMinimized 
-          ? `calc(9rem + var(--cookie-banner-height, 0px))` 
-          : `calc(1rem + var(--cookie-banner-height, 0px))`
-      } : undefined}
+      style={
+        mounted && isMobile
+          ? {
+              bottom: isMinimized
+                ? `calc(9rem + var(--cookie-banner-height, 0px))`
+                : `calc(1rem + var(--cookie-banner-height, 0px))`,
+            }
+          : undefined
+      }
     >
       {/* First-time visitor notification popover */}
       {showNotification && (
@@ -169,7 +177,9 @@ export function WhatsAppButton({
               <div className="w-1.5 h-1.5 bg-success rounded-full animate-bounce [animation-delay:-0.3s]" />
               <div className="w-1.5 h-1.5 bg-success rounded-full animate-bounce [animation-delay:-0.15s]" />
               <div className="w-1.5 h-1.5 bg-success rounded-full animate-bounce" />
-              <span className="text-xs text-muted-foreground ml-2 font-medium">Typing...</span>
+              <span className="text-xs text-muted-foreground ml-2 font-medium">
+                Typing...
+              </span>
             </div>
           ) : (
             <div className="pr-4 animate-in fade-in slide-in-from-left-2 duration-300">
@@ -193,7 +203,7 @@ export function WhatsAppButton({
         rel="noopener noreferrer"
         className={cn(
           "relative group transition-all duration-500 ease-out active:scale-95",
-          isMinimized && mounted && isMobile ? "translate-x-0" : ""
+          isMinimized && mounted && isMobile ? "translate-x-0" : "",
         )}
         aria-label={t("tooltip")}
         onClick={() => {
@@ -238,4 +248,3 @@ export function WhatsAppButtonCompact({
 }: WhatsAppButtonProps) {
   return <WhatsAppButton phoneNumber={phoneNumber} className={className} />;
 }
-

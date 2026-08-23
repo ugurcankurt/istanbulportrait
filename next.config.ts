@@ -95,7 +95,8 @@ const nextConfig: NextConfig = {
     return [
       {
         source: "/storage/:path*",
-        destination: "https://xfntnamwfnqjgqmyxwfz.supabase.co/storage/v1/object/public/:path*",
+        destination:
+          "https://xfntnamwfnqjgqmyxwfz.supabase.co/storage/v1/object/public/:path*",
       },
     ];
   },

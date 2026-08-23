@@ -142,7 +142,9 @@ async function handleSync(request: NextRequest) {
             em: booking.user_email
               ? [await hashCustomerData(booking.user_email)]
               : [],
-            ph: booking.user_phone ? [await hashPhoneNumber(booking.user_phone)] : [],
+            ph: booking.user_phone
+              ? [await hashPhoneNumber(booking.user_phone)]
+              : [],
             lead_id: leadId, // RECOMMENDED: 15-17 digit lead tracking code
           },
           custom_data: {

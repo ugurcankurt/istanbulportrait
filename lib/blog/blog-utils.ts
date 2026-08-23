@@ -23,7 +23,7 @@ export function generateSlug(
   options: SlugGenerationOptions = {},
 ): string {
   const { maxLength = 200 } = options;
-  
+
   // Use the native sluggifier from site architecture
   let slug = generateNativeSlug(text);
 

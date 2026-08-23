@@ -16,7 +16,6 @@ import { routing } from "@/i18n/routing";
 import { SchemaInjector } from "@/components/schema-injector";
 import { buildBreadcrumbSchema } from "@/lib/seo-utils";
 
-
 interface BreadcrumbNavProps {
   className?: string;
   customLastLabel?: string;
@@ -27,7 +26,6 @@ export function BreadcrumbNav(props: BreadcrumbNavProps) {
   const pathname = usePathname();
   const locale = useLocale();
   const t = useTranslations("breadcrumb");
-
 
   // Remove locale from pathname and decode URL-encoded characters
   let pathWithoutLocale = pathname.replace(/^\/[a-z]{2}/, "") || "/";
@@ -62,8 +60,6 @@ export function BreadcrumbNav(props: BreadcrumbNavProps) {
   };
 
   const pathToKeyMapping = createPathToKeyMapping();
-
-
 
   // Helper function to format unknown segments
   const formatSegment = (segment: string): string => {
@@ -139,13 +135,17 @@ export function BreadcrumbNav(props: BreadcrumbNavProps) {
     return null;
   }
 
-  const schemaItems = breadcrumbs.map(b => ({
+  const schemaItems = breadcrumbs.map((b) => ({
     name: b.label,
-    url: b.isLast ? decodedPathname : (b.href === "/" ? `/${locale}` : (b.href || decodedPathname))
+    url: b.isLast
+      ? decodedPathname
+      : b.href === "/"
+        ? `/${locale}`
+        : b.href || decodedPathname,
   }));
 
   return (
-    <>      
+    <>
       <SchemaInjector schema={buildBreadcrumbSchema(schemaItems)} />
       <div className={`bg-muted/30 border-b ${className}`}>
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -166,7 +166,12 @@ export function BreadcrumbNav(props: BreadcrumbNavProps) {
                       </BreadcrumbPage>
                     ) : (
                       <BreadcrumbLink
-                        render={<Link href={item.href || "#"} className="flex items-center gap-2" />}
+                        render={
+                          <Link
+                            href={item.href || "#"}
+                            className="flex items-center gap-2"
+                          />
+                        }
                       >
                         {item.isHome && <Home className="h-4 w-4" />}
                         {item.label}

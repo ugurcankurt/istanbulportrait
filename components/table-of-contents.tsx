@@ -15,24 +15,27 @@ interface TableOfContentsProps {
   title?: string;
 }
 
-export function TableOfContents({ content, title = "Table of Contents" }: TableOfContentsProps) {
+export function TableOfContents({
+  content,
+  title = "Table of Contents",
+}: TableOfContentsProps) {
   const [items, setItems] = useState<TocItem[]>([]);
   const [activeId, setActiveId] = useState<string>("");
 
   useEffect(() => {
     // Basic regex to find markdown headings (## and ###)
     const headings = Array.from(content.matchAll(/^(#{2,3})\s+(.+)$/gm));
-    
-    // Check if we need to use github-slugger. 
-    // rehype-slug uses github-slugger, which handles duplicates. 
+
+    // Check if we need to use github-slugger.
+    // rehype-slug uses github-slugger, which handles duplicates.
     // For simplicity, we assume unique headings or simple slug generation.
     const counts: Record<string, number> = {};
-    
-    const tocItems = headings.map(match => {
+
+    const tocItems = headings.map((match) => {
       const level = match[1].length;
       const text = match[2].trim();
       let id = generateSlugFromTitle(text);
-      
+
       // Handle duplicates similar to github-slugger
       if (counts[id]) {
         counts[id]++;
@@ -44,7 +47,7 @@ export function TableOfContents({ content, title = "Table of Contents" }: TableO
       return {
         level,
         text,
-        id
+        id,
       };
     });
 
@@ -60,7 +63,7 @@ export function TableOfContents({ content, title = "Table of Contents" }: TableO
           }
         });
       },
-      { rootMargin: "0px 0px -80% 0px" }
+      { rootMargin: "0px 0px -80% 0px" },
     );
 
     items.forEach((item) => {
@@ -77,18 +80,20 @@ export function TableOfContents({ content, title = "Table of Contents" }: TableO
 
   return (
     <div className="bg-muted/30 border-[0.5px] border-border/50 rounded-[2rem] p-6 mb-10 max-w-sm">
-      <h3 className="text-sm font-bold uppercase tracking-widest text-primary mb-4">{title}</h3>
+      <h3 className="text-sm font-bold uppercase tracking-widest text-primary mb-4">
+        {title}
+      </h3>
       <ul className="space-y-3">
         {items.map((item, index) => (
-          <li 
+          <li
             key={`${item.id}-${index}`}
             style={{ paddingLeft: `${(item.level - 2) * 1}rem` }}
           >
-            <NextLink 
+            <NextLink
               href={`#${item.id}`}
               className={`text-sm transition-colors hover:text-primary ${
-                activeId === item.id 
-                  ? "text-primary font-semibold" 
+                activeId === item.id
+                  ? "text-primary font-semibold"
                   : "text-muted-foreground"
               }`}
             >

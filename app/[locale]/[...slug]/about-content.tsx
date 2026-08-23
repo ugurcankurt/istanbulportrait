@@ -6,9 +6,12 @@ import { BreadcrumbNav } from "@/components/breadcrumb-nav";
 import { pagesContentService } from "@/lib/pages-content-service";
 import { settingsService } from "@/lib/settings-service";
 import { SchemaInjector } from "@/components/schema-injector";
-import { buildAboutPageSchema, buildOrganizationSchema, generateSeoDescription, getBaseUrl } from "@/lib/seo-utils";
-
-
+import {
+  buildAboutPageSchema,
+  buildOrganizationSchema,
+  generateSeoDescription,
+  getBaseUrl,
+} from "@/lib/seo-utils";
 
 export async function AboutPageContent({
   params,
@@ -17,16 +20,12 @@ export async function AboutPageContent({
 }) {
   const { locale, slug } = await params;
 
-
-
-
-
-
   const dbPage = await pagesContentService.getPageBySlug("about");
   const settings = await settingsService.getSettings();
 
   const dynamicTitle = dbPage?.title?.[locale] || dbPage?.title?.en || "";
-  const dynamicSubtitle = dbPage?.subtitle?.[locale] || dbPage?.subtitle?.en || "";
+  const dynamicSubtitle =
+    dbPage?.subtitle?.[locale] || dbPage?.subtitle?.en || "";
 
   const tAboutHighlights = await getTranslations({
     locale,
@@ -42,13 +41,12 @@ export async function AboutPageContent({
     name: dynamicTitle,
     description: generateSeoDescription(dynamicSubtitle),
     url: `${getBaseUrl()}/${locale}/${slug}`,
-    organizationSchema: organizationSchema
+    organizationSchema: organizationSchema,
   });
 
   return (
     <div>
       <SchemaInjector schema={aboutSchema} />
-
 
       <BreadcrumbNav customLastLabel={dynamicTitle || undefined} />
       <div className="section-contain-auto">
@@ -61,7 +59,10 @@ export async function AboutPageContent({
           locale={locale}
           founderImageUrl={settings.founder_image_url}
           highlightsHeader={
-            <h2 key="highlights-header" className="text-3xl sm:text-4xl lg:text-5xl font-serif leading-tight text-center mb-8 sm:mb-10 lg:mb-12">
+            <h2
+              key="highlights-header"
+              className="text-3xl sm:text-4xl lg:text-5xl font-serif leading-tight text-center mb-8 sm:mb-10 lg:mb-12"
+            >
               {tAboutHighlights("title")}
             </h2>
           }

@@ -21,7 +21,10 @@ export const usePackagesStore = create<PackagesState>((set, get) => ({
       const data = await packagesService.getAllPackages();
       set({ packages: data, loading: false });
     } catch (error: any) {
-      set({ error: error.message || "Failed to fetch packages", loading: false });
+      set({
+        error: error.message || "Failed to fetch packages",
+        loading: false,
+      });
     }
   },
 
@@ -30,10 +33,10 @@ export const usePackagesStore = create<PackagesState>((set, get) => ({
     try {
       // Direct deletion using client to preserve auth context if it's admin
       const supabase = createClientSupabaseClient();
-      
+
       const { error } = await supabase.from("packages").delete().eq("id", id);
       if (error) throw error;
-      
+
       // Update local state
       set((state) => ({
         packages: state.packages.filter((p) => p.id !== id),
@@ -41,7 +44,10 @@ export const usePackagesStore = create<PackagesState>((set, get) => ({
       }));
       return true;
     } catch (error: any) {
-      set({ error: error.message || "Failed to delete package", loading: false });
+      set({
+        error: error.message || "Failed to delete package",
+        loading: false,
+      });
       return false;
     }
   },

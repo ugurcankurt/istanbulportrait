@@ -1,6 +1,10 @@
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
-import { Instrument_Sans, Geist_Mono, Playfair_Display } from "next/font/google";
+import {
+  Instrument_Sans,
+  Geist_Mono,
+  Playfair_Display,
+} from "next/font/google";
 import Script from "next/script";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
@@ -17,23 +21,32 @@ import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Metadata } from "next";
 import { SchemaInjector } from "@/components/schema-injector";
-import { buildOrganizationSchema, constructOpenGraph, getBaseUrl, optimizeSeoImage } from "@/lib/seo-utils";
+import {
+  buildOrganizationSchema,
+  constructOpenGraph,
+  getBaseUrl,
+  optimizeSeoImage,
+} from "@/lib/seo-utils";
 import { CurrencyProvider } from "@/contexts/currency-context";
 const WhatsAppButton = dynamic(() =>
   import("@/components/whatsapp-button").then((mod) => mod.WhatsAppButton),
 );
 
 const Navigation = dynamic(() =>
-  import("@/components/navigation").then((mod) => mod.Navigation)
+  import("@/components/navigation").then((mod) => mod.Navigation),
 );
 const Footer = dynamic(() =>
-  import("@/components/footer").then((mod) => mod.Footer)
+  import("@/components/footer").then((mod) => mod.Footer),
 );
 const DeferredAnalytics = dynamic(() =>
-  import("@/components/analytics/deferred-analytics").then((mod) => mod.DeferredAnalytics)
+  import("@/components/analytics/deferred-analytics").then(
+    (mod) => mod.DeferredAnalytics,
+  ),
 );
 const DeferredCookieConsent = dynamic(() =>
-  import("@/components/analytics/deferred-analytics").then((mod) => mod.DeferredCookieConsent)
+  import("@/components/analytics/deferred-analytics").then(
+    (mod) => mod.DeferredCookieConsent,
+  ),
 );
 
 const fontHeading = Playfair_Display({
@@ -67,7 +80,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const { routing } = await import("@/i18n/routing");
-  
+
   if (!routing.locales.includes(locale as any)) {
     return { title: "Not Found" };
   }
@@ -76,10 +89,11 @@ export async function generateMetadata({
   const settings = await settingsService.getSettings();
 
   const title = settings.site_name || "Website";
-  const desc = settingsService.resolveTranslatable(settings.site_description, locale);
+  const desc = settingsService.resolveTranslatable(
+    settings.site_description,
+    locale,
+  );
   const ogImage = settings.default_og_image_url || "";
-
-
 
   const baseUrl = settings.app_base_url || getBaseUrl();
   const languages: Record<string, string> = {};
@@ -120,8 +134,6 @@ export async function generateMetadata({
   };
 }
 
-
-
 export default async function LocaleLayout({
   children,
   params,
@@ -132,7 +144,7 @@ export default async function LocaleLayout({
   const { locale } = await params;
   const { routing } = await import("@/i18n/routing");
   const { notFound } = await import("next/navigation");
-  
+
   if (!routing.locales.includes(locale as any)) {
     notFound();
   }
@@ -178,9 +190,11 @@ export default async function LocaleLayout({
     selectedCurrency = locale === "tr" ? "TRY" : "EUR";
   }
 
-  const currentRate = selectedCurrency === "EUR" ? 1 : (rates[selectedCurrency] || 1);
+  const currentRate =
+    selectedCurrency === "EUR" ? 1 : rates[selectedCurrency] || 1;
 
-  const isGranted = consentData?.consent === "accepted_all" ? "granted" : "denied";
+  const isGranted =
+    consentData?.consent === "accepted_all" ? "granted" : "denied";
 
   return (
     <html
@@ -212,19 +226,17 @@ export default async function LocaleLayout({
         />
         {/* Ad-hoc Custom Head Scripts Injected from Settings Dashboard */}
         {settings.custom_head_scripts && (
-          <div dangerouslySetInnerHTML={{ __html: settings.custom_head_scripts }} />
+          <div
+            dangerouslySetInnerHTML={{ __html: settings.custom_head_scripts }}
+          />
         )}
       </head>
-      <body
-        className="antialiased"
-        suppressHydrationWarning
-      >
-
+      <body className="antialiased" suppressHydrationWarning>
         <SchemaInjector schema={buildOrganizationSchema(settings)} />
 
         <ThemeProvider
           attribute="class"
-          defaultTheme={settings.color_mode || 'system'}
+          defaultTheme={settings.color_mode || "system"}
           enableSystem
           disableTransitionOnChange
         >
@@ -233,7 +245,10 @@ export default async function LocaleLayout({
               <CurrencyProvider rate={currentRate} currency={selectedCurrency}>
                 <TooltipProvider>
                   <div className="flex min-h-[100dvh] flex-col">
-                    <Navigation dynamicNavData={dynamicNavData} settings={settings} />
+                    <Navigation
+                      dynamicNavData={dynamicNavData}
+                      settings={settings}
+                    />
                     <main className="flex-1">{children}</main>
 
                     {/* Non-critical Analytics — deferred until first interaction to minimize main-thread work */}
@@ -243,18 +258,25 @@ export default async function LocaleLayout({
                         strategy="afterInteractive"
                         dangerouslySetInnerHTML={{
                           __html: `
-                            window.__GOOGLE_ADS_ID__ = "${settings.google_ads_id || ''}";
-                            window.__GOOGLE_ADS_LABEL__ = "${settings.google_ads_webhook_key || ''}";
-                          `
+                            window.__GOOGLE_ADS_ID__ = "${settings.google_ads_id || ""}";
+                            window.__GOOGLE_ADS_LABEL__ = "${settings.google_ads_webhook_key || ""}";
+                          `,
                         }}
                       />
                       <FacebookPixel pixelId={settings.facebook_pixel_id} />
-                      <DeferredAnalytics gaId={settings.google_analytics_id} clarityId={settings.clarity_project_id} userId={user?.id} googleAdsId={settings.google_ads_id} />
+                      <DeferredAnalytics
+                        gaId={settings.google_analytics_id}
+                        clarityId={settings.clarity_project_id}
+                        userId={user?.id}
+                        googleAdsId={settings.google_ads_id}
+                      />
                       <ConsentGate consent="accepted_all">
-                        <YandexMetrica id={settings.yandex_metrica_id || undefined} />
+                        <YandexMetrica
+                          id={settings.yandex_metrica_id || undefined}
+                        />
                       </ConsentGate>
                       {/* GetYourGuide Analytics */}
-                      <Script 
+                      <Script
                         src="https://widget.getyourguide.com/dist/pa.umd.production.min.js"
                         strategy="afterInteractive"
                         data-gyg-partner-id="S6XXHTA"
@@ -262,13 +284,14 @@ export default async function LocaleLayout({
                     </InteractionLoader>
 
                     <CoreWebVitals />
-                    <Footer dynamicNavData={dynamicNavData} settings={settings} />
+                    <Footer
+                      dynamicNavData={dynamicNavData}
+                      settings={settings}
+                    />
                   </div>
                   <Toaster />
                   <DeferredCookieConsent />
-                  <WhatsAppButton
-                    phoneNumber={settings.whatsapp_number}
-                  />
+                  <WhatsAppButton phoneNumber={settings.whatsapp_number} />
                 </TooltipProvider>
               </CurrencyProvider>
             </NextIntlClientProvider>
@@ -279,7 +302,9 @@ export default async function LocaleLayout({
 
         {/* Ad-hoc Custom Body Scripts Injected from Settings Dashboard */}
         {settings.custom_body_scripts && (
-          <div dangerouslySetInnerHTML={{ __html: settings.custom_body_scripts }} />
+          <div
+            dangerouslySetInnerHTML={{ __html: settings.custom_body_scripts }}
+          />
         )}
       </body>
     </html>

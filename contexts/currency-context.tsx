@@ -45,8 +45,9 @@ export function CurrencyProvider({
       }).format(amountEUR);
     }
 
-    const amountConverted = currency === "EUR" ? amountEUR : Math.round(amountEUR * rate);
-    
+    const amountConverted =
+      currency === "EUR" ? amountEUR : Math.round(amountEUR * rate);
+
     return new Intl.NumberFormat(locale === "tr" ? "tr-TR" : "en-US", {
       style: "currency",
       currency: currency,
@@ -56,7 +57,9 @@ export function CurrencyProvider({
   };
 
   return (
-    <CurrencyContext.Provider value={{ rate, formatPrice, currency, convertPrice }}>
+    <CurrencyContext.Provider
+      value={{ rate, formatPrice, currency, convertPrice }}
+    >
       {children}
     </CurrencyContext.Provider>
   );

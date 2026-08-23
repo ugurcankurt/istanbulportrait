@@ -31,7 +31,7 @@ export function ThemeCustomizer({
   themeColor: propColor,
   onThemeChange,
   colorMode,
-  onColorModeChange
+  onColorModeChange,
 }: {
   themeColor?: string;
   onThemeChange?: (color: string) => void;
@@ -50,8 +50,8 @@ export function ThemeCustomizer({
         const html = document.documentElement;
         // Remove all theme-xxx classes
         const classes = Array.from(html.classList);
-        classes.forEach(c => {
-          if (c.startsWith('theme-')) {
+        classes.forEach((c) => {
+          if (c.startsWith("theme-")) {
             html.classList.remove(c);
           }
         });
@@ -76,8 +76,8 @@ export function ThemeCustomizer({
       <CardHeader>
         <CardTitle>Appearance</CardTitle>
         <CardDescription>
-          Customize the appearance of the app. Switch between day
-          and night modes or use the system preference globally.
+          Customize the appearance of the app. Switch between day and night
+          modes or use the system preference globally.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
@@ -90,8 +90,9 @@ export function ThemeCustomizer({
               <Button
                 key={t.value}
                 variant="outline"
-                className={`w-full justify-start gap-2 ${activeColor === t.value ? "border-primary border-2" : ""
-                  }`}
+                className={`w-full justify-start gap-2 ${
+                  activeColor === t.value ? "border-primary border-2" : ""
+                }`}
                 onClick={() => handleColorChange(t.value)}
               >
                 <div
@@ -116,7 +117,9 @@ export function ThemeCustomizer({
               variant="outline"
               size="sm"
               onClick={() => handleModeChange("light")}
-              className={activeMode === "light" ? "border-primary border-2" : ""}
+              className={
+                activeMode === "light" ? "border-primary border-2" : ""
+              }
             >
               <Sun className="mr-2 h-4 w-4" />
               Light
@@ -134,7 +137,9 @@ export function ThemeCustomizer({
               variant="outline"
               size="sm"
               onClick={() => handleModeChange("system")}
-              className={activeMode === "system" ? "border-primary border-2" : ""}
+              className={
+                activeMode === "system" ? "border-primary border-2" : ""
+              }
             >
               <Monitor className="mr-2 h-4 w-4" />
               System

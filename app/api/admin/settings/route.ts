@@ -10,7 +10,7 @@ export async function GET() {
       .eq("id", 1)
       .single();
 
-    if (error && error.code !== 'PGRST116') {
+    if (error && error.code !== "PGRST116") {
       console.error("GET site_settings Error:", error);
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
@@ -20,7 +20,7 @@ export async function GET() {
     console.error("GET site_settings Unknown Error:", error);
     return NextResponse.json(
       { error: "Internal Server Error" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -55,7 +55,10 @@ export async function PATCH(request: Request) {
 
     if (result.error) {
       console.error("PATCH site_settings Error:", result.error);
-      return NextResponse.json({ error: result.error.message }, { status: 500 });
+      return NextResponse.json(
+        { error: result.error.message },
+        { status: 500 },
+      );
     }
 
     return NextResponse.json(result.data);
@@ -63,7 +66,7 @@ export async function PATCH(request: Request) {
     console.error("PATCH site_settings Unknown Error:", error);
     return NextResponse.json(
       { error: "Internal Server Error" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

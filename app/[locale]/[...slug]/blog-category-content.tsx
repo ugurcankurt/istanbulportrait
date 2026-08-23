@@ -4,14 +4,22 @@ import { PageHeroSection } from "@/components/page-hero-section";
 import { BreadcrumbNav } from "@/components/breadcrumb-nav";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import NextLink from "next/link";
-import { getPublishedBlogPosts, getBlogCategoryBySlug, getBlogTagBySlug } from "@/lib/blog/blog-service";
+import {
+  getPublishedBlogPosts,
+  getBlogCategoryBySlug,
+  getBlogTagBySlug,
+} from "@/lib/blog/blog-service";
 import { formatBlogDate } from "@/lib/blog/blog-utils";
 
 import type { Locale } from "@/types/blog";
 import { pagesContentService } from "@/lib/pages-content-service";
 import { generateNativeSlug } from "@/lib/slug-generator";
 import { SchemaInjector } from "@/components/schema-injector";
-import { buildCollectionPageSchema, generateSeoDescription, getBaseUrl } from "@/lib/seo-utils";
+import {
+  buildCollectionPageSchema,
+  generateSeoDescription,
+  getBaseUrl,
+} from "@/lib/seo-utils";
 import { notFound } from "next/navigation";
 
 export const dynamic = "force-dynamic";
@@ -33,7 +41,9 @@ export async function BlogCategoryContent({
   const page = Number.parseInt(pageParam || "1", 10);
 
   const dbPage = await pagesContentService.getPageBySlug("blog");
-  const parentSegment = dbPage?.title?.[locale] ? generateNativeSlug(dbPage.title[locale]!) : "blog";
+  const parentSegment = dbPage?.title?.[locale]
+    ? generateNativeSlug(dbPage.title[locale]!)
+    : "blog";
 
   let dynamicTitle = "";
   let dynamicSubtitle = "";
@@ -68,12 +78,14 @@ export async function BlogCategoryContent({
     name: dynamicTitle,
     description: generateSeoDescription(dynamicSubtitle),
     url: `${getBaseUrl()}/${locale}/${parentSegment}/${type}/${slug}`,
-    items: posts.map(post => ({
+    items: posts.map((post) => ({
       name: post.translation.title,
-      description: post.translation.excerpt ? generateSeoDescription(post.translation.excerpt) : undefined,
+      description: post.translation.excerpt
+        ? generateSeoDescription(post.translation.excerpt)
+        : undefined,
       url: `${getBaseUrl()}/${locale}/${parentSegment}/${post.translation.slug}`,
-      image: post.featured_image || undefined
-    }))
+      image: post.featured_image || undefined,
+    })),
   });
 
   return (
@@ -117,9 +129,18 @@ export async function BlogCategoryContent({
                         {post.translation.title}
                       </h2>
                       <p className="text-[10px] uppercase tracking-widest font-bold text-muted-foreground mb-4 flex flex-wrap items-center gap-2">
-                        <span>{formatBlogDate(post.published_at || post.created_at, locale)}</span>
+                        <span>
+                          {formatBlogDate(
+                            post.published_at || post.created_at,
+                            locale,
+                          )}
+                        </span>
                         <span>•</span>
-                        <span>{t("reading_time", { minutes: post.reading_time_minutes })}</span>
+                        <span>
+                          {t("reading_time", {
+                            minutes: post.reading_time_minutes,
+                          })}
+                        </span>
                       </p>
                       {post.translation.excerpt && (
                         <p className="text-muted-foreground/80 leading-relaxed line-clamp-3 flex-1 text-sm">

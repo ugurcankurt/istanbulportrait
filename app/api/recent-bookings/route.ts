@@ -24,16 +24,18 @@ export async function GET() {
     }
 
     // Transform data - only show first name for privacy
-    const recentBookings: RecentBooking[] = (bookings || []).map((booking: any) => {
-      const firstName = booking.user_name?.split(" ")[0] || "Guest";
+    const recentBookings: RecentBooking[] = (bookings || []).map(
+      (booking: any) => {
+        const firstName = booking.user_name?.split(" ")[0] || "Guest";
 
-      return {
-        firstName,
-        packageId: booking.package_id,
-        bookingDate: booking.booking_date,
-        createdAt: booking.created_at,
-      };
-    });
+        return {
+          firstName,
+          packageId: booking.package_id,
+          bookingDate: booking.booking_date,
+          createdAt: booking.created_at,
+        };
+      },
+    );
 
     return NextResponse.json({ bookings: recentBookings }, { status: 200 });
   } catch {

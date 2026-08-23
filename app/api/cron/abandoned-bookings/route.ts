@@ -19,11 +19,14 @@ export async function GET(request: Request) {
     }
 
     const settings = await settingsService.getSettings();
-    
+
     // We only proceed if Resend is configured
     const apiKey = settings.resend_api_key || process.env.RESEND_API_KEY;
     if (!apiKey || apiKey === "demo-resend-key") {
-      return NextResponse.json({ skipped: true, reason: "Resend API key not configured" });
+      return NextResponse.json({
+        skipped: true,
+        reason: "Resend API key not configured",
+      });
     }
 
     // Identify the time threshold (2 minutes ago)
@@ -51,7 +54,11 @@ export async function GET(request: Request) {
     }
 
     if (!abandonedBookings || abandonedBookings.length === 0) {
-      return NextResponse.json({ success: true, count: 0, message: "No abandoned bookings found" });
+      return NextResponse.json({
+        success: true,
+        count: 0,
+        message: "No abandoned bookings found",
+      });
     }
 
     let successCount = 0;
@@ -77,13 +84,16 @@ export async function GET(request: Request) {
             totalAmount: booking.total_amount,
             locale: locale,
           },
-          settings
+          settings,
         );
 
         processedIds.push(booking.id);
         successCount++;
       } catch (emailError) {
-        console.error(`Failed to send abandoned email for booking ${booking.id}:`, emailError);
+        console.error(
+          `Failed to send abandoned email for booking ${booking.id}:`,
+          emailError,
+        );
       }
     }
 
@@ -96,20 +106,23 @@ export async function GET(request: Request) {
         .in("id", processedIds);
 
       if (updateError) {
-        console.error("Failed to update abandoned_email_sent flag:", updateError);
+        console.error(
+          "Failed to update abandoned_email_sent flag:",
+          updateError,
+        );
       }
     }
 
-    return NextResponse.json({ 
-      success: true, 
-      processed: successCount, 
-      totalFound: abandonedBookings.length 
+    return NextResponse.json({
+      success: true,
+      processed: successCount,
+      totalFound: abandonedBookings.length,
     });
   } catch (error) {
     console.error("CRON Error processing abandoned bookings:", error);
     return NextResponse.json(
       { error: "Internal Server Error" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

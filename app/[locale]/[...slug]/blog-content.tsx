@@ -1,4 +1,3 @@
-
 import Image from "next/image";
 import { getTranslations } from "next-intl/server";
 import { PageHeroSection } from "@/components/page-hero-section";
@@ -12,13 +11,15 @@ import type { Locale } from "@/types/blog";
 import { pagesContentService } from "@/lib/pages-content-service";
 import { generateNativeSlug } from "@/lib/slug-generator";
 import { SchemaInjector } from "@/components/schema-injector";
-import { buildCollectionPageSchema, generateSeoDescription, getBaseUrl } from "@/lib/seo-utils";
+import {
+  buildCollectionPageSchema,
+  generateSeoDescription,
+  getBaseUrl,
+} from "@/lib/seo-utils";
 import { BlogCard } from "@/components/blog-card";
 
 // Force dynamic rendering for blog list page (uses searchParams)
 export const dynamic = "force-dynamic";
-
-
 
 export async function BlogPageContent({
   params,
@@ -34,8 +35,11 @@ export async function BlogPageContent({
 
   const dbPage = await pagesContentService.getPageBySlug("blog");
   const dynamicTitle = dbPage?.title?.[locale] || dbPage?.title?.en || "blog";
-  const dynamicSubtitle = dbPage?.subtitle?.[locale] || dbPage?.subtitle?.en || "";
-  const parentSegment = dbPage?.title?.[locale] ? generateNativeSlug(dbPage.title[locale]!) : "blog";
+  const dynamicSubtitle =
+    dbPage?.subtitle?.[locale] || dbPage?.subtitle?.en || "";
+  const parentSegment = dbPage?.title?.[locale]
+    ? generateNativeSlug(dbPage.title[locale]!)
+    : "blog";
 
   const { posts, pagination } = await getPublishedBlogPosts({
     page,
@@ -49,12 +53,14 @@ export async function BlogPageContent({
     name: dynamicTitle,
     description: generateSeoDescription(dynamicSubtitle),
     url: `${getBaseUrl()}/${locale}/${parentSegment}`,
-    items: posts.map(post => ({
+    items: posts.map((post) => ({
       name: post.translation.title,
-      description: post.translation.excerpt ? generateSeoDescription(post.translation.excerpt) : undefined,
+      description: post.translation.excerpt
+        ? generateSeoDescription(post.translation.excerpt)
+        : undefined,
       url: `${getBaseUrl()}/${locale}/${parentSegment}/${post.translation.slug}`,
-      image: post.featured_image || undefined
-    }))
+      image: post.featured_image || undefined,
+    })),
   });
 
   return (
@@ -73,11 +79,11 @@ export async function BlogPageContent({
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 mb-12">
               {posts.map((post) => (
-                <BlogCard 
-                  key={post.id} 
-                  post={post} 
-                  locale={locale} 
-                  parentSegment={parentSegment} 
+                <BlogCard
+                  key={post.id}
+                  post={post}
+                  locale={locale}
+                  parentSegment={parentSegment}
                 />
               ))}
             </div>

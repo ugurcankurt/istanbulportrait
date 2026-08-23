@@ -6,10 +6,7 @@ import { useTranslations, useLocale } from "next-intl";
 import { useEffect, useMemo } from "react";
 import { useCurrency } from "@/contexts/currency-context";
 import { Badge } from "@/components/ui/badge";
-import {
-  Card,
-  CardHeader,
-} from "@/components/ui/card";
+import { Card, CardHeader } from "@/components/ui/card";
 import {
   Carousel,
   CarouselContent,
@@ -36,8 +33,14 @@ interface PackagesSectionProps {
   activeDiscount?: DiscountDB | null;
 }
 
-export function PackagesSection({ header, customCtaHeader, aggregateRating, dbPackages = [], parentSlug, activeDiscount = null }: PackagesSectionProps) {
-
+export function PackagesSection({
+  header,
+  customCtaHeader,
+  aggregateRating,
+  dbPackages = [],
+  parentSlug,
+  activeDiscount = null,
+}: PackagesSectionProps) {
   const t = useTranslations("packages");
   const tui = useTranslations("ui");
   const locale = useLocale();
@@ -56,7 +59,9 @@ export function PackagesSection({ header, customCtaHeader, aggregateRating, dbPa
         const locFeatures = pkg.features[locale] || pkg.features["en"] || [];
 
         // Generate native slug if translation exists, otherwise strict fallback
-        const nativeSlug = pkg.title[locale] ? generateNativeSlug(pkg.title[locale]) : pkg.slug;
+        const nativeSlug = pkg.title[locale]
+          ? generateNativeSlug(pkg.title[locale])
+          : pkg.slug;
 
         return {
           id: nativeSlug,
@@ -108,7 +113,11 @@ export function PackagesSection({ header, customCtaHeader, aggregateRating, dbPa
     });
   };
 
-  const renderPackageCard = (pkg: any, asHeading: boolean = true, index: number = 0) => (
+  const renderPackageCard = (
+    pkg: any,
+    asHeading: boolean = true,
+    index: number = 0,
+  ) => (
     <div
       className="relative cursor-pointer h-full"
       onClick={() => handlePackageClick(pkg)}
@@ -121,7 +130,7 @@ export function PackagesSection({ header, customCtaHeader, aggregateRating, dbPa
         <Card
           className={cn(
             "relative w-full aspect-[3/4] sm:aspect-[4/5] overflow-hidden bg-card border-none transition-all duration-700 hover:-translate-y-2 group-hover:shadow-luxury",
-            pkg.popular ? "shadow-luxury sm:scale-[1.02]" : "shadow-sm"
+            pkg.popular ? "shadow-luxury sm:scale-[1.02]" : "shadow-sm",
           )}
         >
           {/* Background Image */}
@@ -179,13 +188,19 @@ export function PackagesSection({ header, customCtaHeader, aggregateRating, dbPa
                 {aggregateRating ? (
                   <div className="flex items-center gap-1.5">
                     <Star className="h-4 w-4 fill-white text-white drop-shadow-sm" />
-                    <span className="text-sm font-medium text-white drop-shadow-sm">{aggregateRating.average}</span>
-                    <span className="text-xs text-white/80">({aggregateRating.count})</span>
+                    <span className="text-sm font-medium text-white drop-shadow-sm">
+                      {aggregateRating.average}
+                    </span>
+                    <span className="text-xs text-white/80">
+                      ({aggregateRating.count})
+                    </span>
                   </div>
                 ) : (
                   <div className="flex items-center gap-1.5">
                     <Star className="h-4 w-4 fill-white text-white drop-shadow-sm" />
-                    <span className="text-sm font-medium text-white drop-shadow-sm">5.0</span>
+                    <span className="text-sm font-medium text-white drop-shadow-sm">
+                      5.0
+                    </span>
                   </div>
                 )}
               </div>
@@ -193,13 +208,20 @@ export function PackagesSection({ header, customCtaHeader, aggregateRating, dbPa
               {/* Right: Price */}
               <div className="flex flex-col items-end justify-center leading-none">
                 <div className="flex items-center gap-1.5">
+                  <span className="text-[10px] sm:text-xs text-white/80 uppercase tracking-wide mr-1 drop-shadow-md">
+                    {t("starting_from")}
+                  </span>
                   {pkg.pricing?.isDiscounted && (
                     <span className="text-[10px] sm:text-xs text-white/70 line-through">
                       {formatPrice(pkg.basePrice)}
                     </span>
                   )}
                   <span className="text-lg sm:text-xl font-serif font-semibold text-white drop-shadow-md">
-                    {formatPrice(pkg.pricing?.isDiscounted ? pkg.pricing.price : pkg.basePrice)}
+                    {formatPrice(
+                      pkg.pricing?.isDiscounted
+                        ? pkg.pricing.price
+                        : pkg.basePrice,
+                    )}
                   </span>
                 </div>
                 {pkg.isPerPerson && (
@@ -246,9 +268,7 @@ export function PackagesSection({ header, customCtaHeader, aggregateRating, dbPa
           {/* Desktop & Tablet Grid View (Hidden on mobile) */}
           <div className="hidden sm:grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8 mx-auto">
             {sortedPackages.map((pkg, idx) => (
-              <div key={pkg.id}>
-                {renderPackageCard(pkg, true, idx)}
-              </div>
+              <div key={pkg.id}>{renderPackageCard(pkg, true, idx)}</div>
             ))}
           </div>
         </div>

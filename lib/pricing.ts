@@ -14,11 +14,17 @@ import { type PackageId } from "./validations";
 import { type DiscountDB } from "./discount-service";
 export const DEPOSIT_PERCENTAGE = 0;
 
-export function matchActiveSurcharge(timeString: string | undefined | null, timeSurcharges: any[] | undefined | null) {
-  if (!timeString || !timeSurcharges || !Array.isArray(timeSurcharges)) return null;
-  let match = timeSurcharges.find(s => s.time === timeString);
+export function matchActiveSurcharge(
+  timeString: string | undefined | null,
+  timeSurcharges: any[] | undefined | null,
+) {
+  if (!timeString || !timeSurcharges || !Array.isArray(timeSurcharges))
+    return null;
+  let match = timeSurcharges.find((s) => s.time === timeString);
   if (!match && timeString.endsWith(":30")) {
-    match = timeSurcharges.find(s => s.time === timeString.replace(":30", ":00"));
+    match = timeSurcharges.find(
+      (s) => s.time === timeString.replace(":30", ":00"),
+    );
   }
   return match || null;
 }
@@ -56,7 +62,10 @@ export interface FormattedPriceBreakdown extends FormattedTaxBreakdown {
  * @param bookingDate - Optional booking date to constrain strictly to discounts window
  * @returns Discounted price and applied percentage
  */
-export interface AppliedPromo { code: string; percentage: number; }
+export interface AppliedPromo {
+  code: string;
+  percentage: number;
+}
 
 export function calculateDiscountedPrice(
   basePrice: number,
@@ -100,7 +109,7 @@ export function calculateDiscountedPrice(
     discountAmount: campaignAmount + promoAmount,
     isDiscounted: campaignPercentage > 0 || promoPercentage > 0,
     promoCode: appliedPromo?.code,
-    promoAmount: promoAmount
+    promoAmount: promoAmount,
   };
 }
 
@@ -128,7 +137,8 @@ export function getPackagePricing(
   surchargePercentage: number = 0,
   yieldMultiplier: number = 1.0,
 ): PriceBreakdown {
-  const originalPrice = basePrice * (1 + surchargePercentage / 100) * yieldMultiplier;
+  const originalPrice =
+    basePrice * (1 + surchargePercentage / 100) * yieldMultiplier;
 
   // Special handling for packages with per-person pricing
   if (peopleCount && peopleCount >= 1) {
@@ -138,12 +148,17 @@ export function getPackagePricing(
       discountPercentage,
       promoCode,
       promoAmount: perPersonPromoAmount,
-    } = calculateDiscountedPrice(originalPrice, activeDiscount, appliedPromo, bookingDate);
+    } = calculateDiscountedPrice(
+      originalPrice,
+      activeDiscount,
+      appliedPromo,
+      bookingDate,
+    );
 
     // Calculate total based on people count
     const originalTotal = originalPrice * peopleCount;
     const discountedTotal = discountedPerPerson * peopleCount;
-    const seasonalAmount = (originalPrice * discountPercentage) * peopleCount;
+    const seasonalAmount = originalPrice * discountPercentage * peopleCount;
 
     const taxBreakdown = getTaxBreakdownFromTotal(discountedTotal, taxRate);
 
@@ -164,7 +179,9 @@ export function getPackagePricing(
       depositAmount,
       remainingAmount,
       promoCode,
-      promoAmount: perPersonPromoAmount ? perPersonPromoAmount * peopleCount : undefined,
+      promoAmount: perPersonPromoAmount
+        ? perPersonPromoAmount * peopleCount
+        : undefined,
     };
   }
 
@@ -175,7 +192,12 @@ export function getPackagePricing(
     discountAmount: seasonalAmount,
     promoCode,
     promoAmount,
-  } = calculateDiscountedPrice(originalPrice, activeDiscount, appliedPromo, bookingDate);
+  } = calculateDiscountedPrice(
+    originalPrice,
+    activeDiscount,
+    appliedPromo,
+    bookingDate,
+  );
 
   const taxBreakdown = getTaxBreakdownFromTotal(totalPrice, taxRate);
 
@@ -224,9 +246,9 @@ export function formatPackagePricing(
     taxRate,
     packageNameOverride,
     surchargePercentage,
-    yieldMultiplier
+    yieldMultiplier,
   );
-  
+
   const formatted = formatTaxBreakdown(breakdown, locale);
 
   const formatter = new Intl.NumberFormat(locale, {
@@ -245,6 +267,8 @@ export function formatPackagePricing(
     depositAmount: formatter.format(breakdown.depositAmount),
     remainingAmount: formatter.format(breakdown.remainingAmount),
     promoCode: breakdown.promoCode,
-    promoAmount: breakdown.promoAmount ? formatter.format(breakdown.promoAmount) : undefined,
+    promoAmount: breakdown.promoAmount
+      ? formatter.format(breakdown.promoAmount)
+      : undefined,
   };
 }

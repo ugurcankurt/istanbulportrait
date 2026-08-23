@@ -11,14 +11,17 @@ export async function POST(req: Request) {
     const { query } = body;
 
     if (!query || typeof query !== "string") {
-      return NextResponse.json({ error: "Missing required query string" }, { status: 400 });
+      return NextResponse.json(
+        { error: "Missing required query string" },
+        { status: 400 },
+      );
     }
 
     // 1. Get settings for Gemini API Key
     const { settingsService } = await import("@/lib/settings-service");
     const settings = await settingsService.getSettings();
     const apiKey = settings.gemini_api_key;
-    
+
     if (!apiKey) {
       console.warn("Groq API Key is not configured for intent resolution.");
       return NextResponse.json({ slug: null });
@@ -31,11 +34,13 @@ export async function POST(req: Request) {
     }
 
     // Format packages context: slug, english name, and english description
-    const packagesContext = activePackages.map(pkg => {
-      const name = pkg.title["en"] || pkg.slug;
-      const desc = pkg.description["en"] || "";
-      return `- Slug: "${pkg.slug}" | Name: "${name}" | Description: "${desc.substring(0, 150)}..."`;
-    }).join("\n");
+    const packagesContext = activePackages
+      .map((pkg) => {
+        const name = pkg.title["en"] || pkg.slug;
+        const desc = pkg.description["en"] || "";
+        return `- Slug: "${pkg.slug}" | Name: "${name}" | Description: "${desc.substring(0, 150)}..."`;
+      })
+      .join("\n");
 
     // Normalize query to increase cache hits (lowercase, trim)
     const normalizedQuery = query.toLowerCase().trim();
@@ -65,22 +70,26 @@ OR
 `;
 
         const groqUrl = `https://api.groq.com/openai/v1/chat/completions`;
-        
+
         const response = await fetch(groqUrl, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            "Authorization": `Bearer ${key}`
+            Authorization: `Bearer ${key}`,
           },
           body: JSON.stringify({
             model: "llama-3.1-8b-instant",
             messages: [
-              { role: "system", content: "You are a JSON translation API. Return ONLY valid JSON." },
-              { role: "user", content: prompt }
+              {
+                role: "system",
+                content:
+                  "You are a JSON translation API. Return ONLY valid JSON.",
+              },
+              { role: "user", content: prompt },
             ],
             response_format: { type: "json_object" },
             temperature: 0.1,
-          })
+          }),
         });
 
         if (!response.ok) {
@@ -102,17 +111,22 @@ OR
         }
       },
       [`intent-resolution-${normalizedQuery}`], // Cache key based on normalized query
-      { revalidate: 2592000, tags: ['intent-cache'] } // Cache for 30 days
+      { revalidate: 2592000, tags: ["intent-cache"] }, // Cache for 30 days
     );
 
     // Execute the cached function
-    const resolvedSlug = await resolveIntentWithAI(normalizedQuery, packagesContext, apiKey);
+    const resolvedSlug = await resolveIntentWithAI(
+      normalizedQuery,
+      packagesContext,
+      apiKey,
+    );
 
     // Double check that the returned slug actually exists in our DB
-    const validSlug = activePackages.some(p => p.slug === resolvedSlug) ? resolvedSlug : null;
+    const validSlug = activePackages.some((p) => p.slug === resolvedSlug)
+      ? resolvedSlug
+      : null;
 
     return NextResponse.json({ slug: validSlug });
-
   } catch (err: any) {
     console.error("Intent resolution error:", err);
     return NextResponse.json({ slug: null }, { status: 500 });

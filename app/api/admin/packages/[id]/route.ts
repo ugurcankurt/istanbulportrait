@@ -16,22 +16,22 @@ export async function DELETE(
     if (pkg) {
       const supabase = createClient(
         process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        process.env.SUPABASE_SERVICE_KEY!
+        process.env.SUPABASE_SERVICE_KEY!,
       );
 
       const pathsToDelete: string[] = [];
 
       const preparePath = (url: string | null) => {
         if (!url) return null;
-        const parts = url.split('/packages/');
+        const parts = url.split("/packages/");
         return parts.length > 1 ? parts[1] : null;
       };
 
       const coverPath = preparePath(pkg.cover_image);
       if (coverPath) pathsToDelete.push(coverPath);
-      
+
       if (pkg.gallery_images && pkg.gallery_images.length > 0) {
-        pkg.gallery_images.forEach(img => {
+        pkg.gallery_images.forEach((img) => {
           const p = preparePath(img);
           if (p) pathsToDelete.push(p);
         });
@@ -39,7 +39,9 @@ export async function DELETE(
 
       if (pathsToDelete.length > 0) {
         // Delete the files securely as Administrator
-        const { error } = await supabase.storage.from("packages").remove(pathsToDelete);
+        const { error } = await supabase.storage
+          .from("packages")
+          .remove(pathsToDelete);
         if (error) {
           console.error("Error removing storage objects:", error);
         }
@@ -56,7 +58,10 @@ export async function DELETE(
       );
     }
 
-    return NextResponse.json({ success: true, message: "Package deleted successfully" });
+    return NextResponse.json({
+      success: true,
+      message: "Package deleted successfully",
+    });
   } catch (error: any) {
     console.error("Error deleting package API:", error);
     return NextResponse.json(

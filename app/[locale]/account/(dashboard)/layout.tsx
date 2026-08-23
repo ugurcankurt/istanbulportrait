@@ -27,17 +27,25 @@ export default async function AccountLayout({
     <div className="min-h-screen bg-muted/30">
       {/* Mobile Navbar */}
       <div className="md:hidden sticky top-0 z-40 border-b border-border/50 bg-background/80 backdrop-blur-xl p-4 flex items-center justify-between shadow-sm">
-        <Link href="/account/dashboard" className="relative flex items-center w-32 h-8 transition-transform hover:opacity-90">
+        <Link
+          href="/account/dashboard"
+          className="relative flex items-center w-32 h-8 transition-transform hover:opacity-90"
+        >
           {settings?.logo_url ? (
             <Image
               src={settings.logo_url}
               alt={settings?.site_name || "Customer Portal"}
               fill
               sizes="128px"
-              className={cn("object-contain object-left", settings.logo_dark_url && "dark:hidden")}
+              className={cn(
+                "object-contain object-left",
+                settings.logo_dark_url && "dark:hidden",
+              )}
             />
           ) : (
-            <span className="font-bold text-lg tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/70 dark:hidden">{settings?.site_name || "IstanbulPortrait"}</span>
+            <span className="font-bold text-lg tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/70 dark:hidden">
+              {settings?.site_name || "IstanbulPortrait"}
+            </span>
           )}
           {settings?.logo_dark_url ? (
             <Image
@@ -47,8 +55,12 @@ export default async function AccountLayout({
               sizes="128px"
               className="object-contain object-left hidden dark:block"
             />
-          ) : !settings?.logo_url && (
-            <span className="font-bold text-lg tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/70 hidden dark:block">{settings?.site_name || "IstanbulPortrait"}</span>
+          ) : (
+            !settings?.logo_url && (
+              <span className="font-bold text-lg tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/70 hidden dark:block">
+                {settings?.site_name || "IstanbulPortrait"}
+              </span>
+            )
           )}
         </Link>
         <MobileNav userEmail={user.email || ""} settings={settings} />
@@ -58,18 +70,26 @@ export default async function AccountLayout({
         {/* Desktop Sidebar */}
         <aside className="hidden md:flex w-72 flex-col border-r border-border/50 bg-background/50 backdrop-blur-xl sticky top-0 h-screen">
           <div className="p-8 border-b border-border/50">
-            <Link href="/account/dashboard" className="relative flex items-center w-48 h-10 transition-transform hover:opacity-90">
+            <Link
+              href="/account/dashboard"
+              className="relative flex items-center w-48 h-10 transition-transform hover:opacity-90"
+            >
               {settings?.logo_url ? (
                 <Image
                   src={settings.logo_url}
                   alt={settings?.site_name || "Customer Portal"}
                   fill
                   sizes="192px"
-                  className={cn("object-contain object-left", settings.logo_dark_url && "dark:hidden")}
+                  className={cn(
+                    "object-contain object-left",
+                    settings.logo_dark_url && "dark:hidden",
+                  )}
                   priority
                 />
               ) : (
-                <span className="font-bold text-2xl tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/70 dark:hidden">{settings?.site_name || "IstanbulPortrait"}</span>
+                <span className="font-bold text-2xl tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/70 dark:hidden">
+                  {settings?.site_name || "IstanbulPortrait"}
+                </span>
               )}
               {settings?.logo_dark_url ? (
                 <Image
@@ -80,21 +100,32 @@ export default async function AccountLayout({
                   className="object-contain object-left hidden dark:block"
                   priority
                 />
-              ) : !settings?.logo_url && (
-                <span className="font-bold text-2xl tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/70 hidden dark:block">{settings?.site_name || "IstanbulPortrait"}</span>
+              ) : (
+                !settings?.logo_url && (
+                  <span className="font-bold text-2xl tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/70 hidden dark:block">
+                    {settings?.site_name || "IstanbulPortrait"}
+                  </span>
+                )
               )}
             </Link>
-            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider mt-2">{t("portal")}</p>
+            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider mt-2">
+              {t("portal")}
+            </p>
           </div>
 
           <SidebarNav />
 
           <div className="p-6 border-t border-border/50 bg-secondary/10 mt-auto">
             <div className="mb-4 px-3">
-              <p className="text-sm font-semibold truncate text-foreground/80">{user.email}</p>
+              <p className="text-sm font-semibold truncate text-foreground/80">
+                {user.email}
+              </p>
             </div>
             <form action="/api/account/logout" method="POST">
-              <button type="submit" className="flex w-full items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-medium text-destructive hover:bg-destructive/10 hover:text-destructive transition-all">
+              <button
+                type="submit"
+                className="flex w-full items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-medium text-destructive hover:bg-destructive/10 hover:text-destructive transition-all"
+              >
                 <LogOut className="w-5 h-5" />
                 <span>{t("logout")}</span>
               </button>

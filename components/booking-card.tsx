@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import {
   Clock,
   ChevronDown,
@@ -10,7 +10,7 @@ import {
   Sunrise,
   Sun,
   Sunset,
-  Banknote
+  Banknote,
 } from "lucide-react";
 import { trackSchedule } from "@/lib/analytics";
 import { matchActiveSurcharge } from "@/lib/pricing";
@@ -107,7 +107,9 @@ export function BookingCard({
 
   const [bookedSlots, setBookedSlots] = useState<string[]>([]);
   const [isLoadingSlots, setIsLoadingSlots] = useState(false);
-  const [checkState, setCheckState] = useState<"idle" | "checking" | "success" | "ready">("idle");
+  const [checkState, setCheckState] = useState<
+    "idle" | "checking" | "success" | "ready"
+  >("idle");
   const [checkingProgress, setCheckingProgress] = useState(0);
 
   // Reset state when selection changes
@@ -128,14 +130,17 @@ export function BookingCard({
       try {
         const formattedDate = format(selectedDate, "yyyy-MM-dd");
         const res = await fetch(
-          `/api/booking/availability?date=${formattedDate}&packageId=${packageId}`
+          `/api/booking/availability?date=${formattedDate}&packageId=${packageId}`,
         );
         if (res.ok) {
           const data = await res.json();
           setBookedSlots(data.blockedSlots || []);
 
           if (onYieldChange) {
-            onYieldChange(data.dynamicMultiplier || 1.0, data.yieldReason || "standard");
+            onYieldChange(
+              data.dynamicMultiplier || 1.0,
+              data.yieldReason || "standard",
+            );
           }
 
           if (selectedTime && data.blockedSlots?.includes(selectedTime)) {
@@ -157,7 +162,11 @@ export function BookingCard({
       setShowValidation(true);
 
       // Haptic feedback for mobile devices
-      if (typeof window !== "undefined" && window.navigator && window.navigator.vibrate) {
+      if (
+        typeof window !== "undefined" &&
+        window.navigator &&
+        window.navigator.vibrate
+      ) {
         window.navigator.vibrate(50);
       }
 
@@ -198,7 +207,7 @@ export function BookingCard({
           trackSchedule(
             packageId,
             packageDisplayName,
-            `${formattedDate} ${selectedTime}`
+            `${formattedDate} ${selectedTime}`,
           );
         }
 
@@ -213,7 +222,9 @@ export function BookingCard({
   };
 
   const handleWhatsApp = () => {
-    const formattedDate = selectedDate ? format(selectedDate, "PPP", { locale: dateFnsLocale }) : "";
+    const formattedDate = selectedDate
+      ? format(selectedDate, "PPP", { locale: dateFnsLocale })
+      : "";
     const isTr = dateFnsLocale?.code?.startsWith("tr");
     const msg = isTr
       ? `Merhaba, ${packageDisplayName} paketi için ${formattedDate} tarihi ve ${selectedTime} saati uygun mu? Bilgi almak istiyorum.`
@@ -225,7 +236,12 @@ export function BookingCard({
   };
 
   const isDateDiscounted = (date: Date) => {
-    if (!activeDiscount || !activeDiscount.start_date || !activeDiscount.end_date) return false;
+    if (
+      !activeDiscount ||
+      !activeDiscount.start_date ||
+      !activeDiscount.end_date
+    )
+      return false;
     const start = new Date(activeDiscount.start_date);
     start.setHours(0, 0, 0, 0);
     const end = new Date(activeDiscount.end_date);
@@ -235,41 +251,69 @@ export function BookingCard({
   };
 
   return (
-    <Card className={cn(
-      "overflow-hidden bg-card p-0 transition-all duration-700 relative",
-      isFlat ? "border-none shadow-none" : "shadow-[0_8px_40px_-12px_rgba(0,0,0,0.1)] rounded-3xl border border-white/20 dark:border-white/10 bg-background/40 backdrop-blur-3xl"
-    )}>
-      <CardContent className={cn("space-y-4", isInsideModal ? "p-4 pt-2" : "p-6")}>
+    <Card
+      className={cn(
+        "overflow-hidden bg-card p-0 transition-all duration-700 relative",
+        isFlat
+          ? "border-none shadow-none"
+          : "shadow-[0_8px_40px_-12px_rgba(0,0,0,0.1)] rounded-3xl border border-white/20 dark:border-white/10 bg-background/40 backdrop-blur-3xl",
+      )}
+    >
+      <CardContent
+        className={cn("space-y-4", isInsideModal ? "p-4 pt-2" : "p-6")}
+      >
         <div className="space-y-4">
           <div className="flex flex-wrap items-center gap-2 mb-2">
             {yieldReason === "high_demand" && (
               <Badge className="bg-orange-500/10 text-orange-600 dark:text-orange-400 border-orange-200 dark:border-orange-900 shadow-none font-bold">
-                🔥 {tCheckout("yield.high_demand", { defaultValue: "High Demand" })}
+                🔥{" "}
+                {tCheckout("yield.high_demand", {
+                  defaultValue: "High Demand",
+                })}
               </Badge>
             )}
             {yieldReason === "last_minute" && (
               <Badge className="bg-red-500/10 text-red-600 dark:text-red-400 border-red-200 dark:border-red-900 shadow-none font-bold">
-                🕒 {tCheckout("yield.last_minute", { defaultValue: "Last Minute" })}
+                🕒{" "}
+                {tCheckout("yield.last_minute", {
+                  defaultValue: "Last Minute",
+                })}
               </Badge>
             )}
             {yieldReason === "early_bird" && (
               <Badge className="bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-200 dark:border-emerald-900 shadow-none font-bold">
-                🕊️ {tCheckout("yield.early_bird", { defaultValue: "Early Bird" })}
+                🕊️{" "}
+                {tCheckout("yield.early_bird", { defaultValue: "Early Bird" })}
               </Badge>
             )}
           </div>
-          <div className="flex items-baseline gap-1">
-            <span className={cn("font-serif text-foreground leading-none", isInsideModal ? "text-3xl" : "text-5xl")}>
-              {formatPrice(displayPrice)}
+          <div className="flex flex-col gap-1">
+            <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wide">
+              {t("starting_from")}
             </span>
-            {pricing.isDiscounted && (
-              <span className={cn("text-muted-foreground line-through font-medium leading-none", isInsideModal ? "text-base" : "text-lg")}>
-                {formatPrice(pricing.originalPrice || basePrice)}
+            <div className="flex items-baseline gap-1">
+              <span
+                className={cn(
+                  "font-serif text-foreground leading-none",
+                  isInsideModal ? "text-3xl" : "text-5xl",
+                )}
+              >
+                {formatPrice(displayPrice)}
               </span>
-            )}
-            <span className="text-sm font-bold text-muted-foreground">
-              {isPerPerson ? `/ ${t("per_person")}` : `/ ${packageDuration}`}
-            </span>
+              {pricing.isDiscounted && (
+                <span
+                  className={cn(
+                    "text-muted-foreground line-through font-medium leading-none",
+                    isInsideModal ? "text-base" : "text-lg",
+                  )}
+                >
+                  {formatPrice(pricing.originalPrice || basePrice)}
+                </span>
+              )}
+              <span className="text-sm font-bold text-muted-foreground">
+                {isPerPerson ? `/ ${t("per_person")}` : `/ ${packageDuration}`}
+              </span>
+            </div>
           </div>
         </div>
 
@@ -278,15 +322,29 @@ export function BookingCard({
           {/* People Count Selector */}
           {isPerPerson && (
             <div className="space-y-2">
-              <Popover open={isPeoplePopoverOpen} onOpenChange={setIsPeoplePopoverOpen} modal={false}>
+              <Popover
+                open={isPeoplePopoverOpen}
+                onOpenChange={setIsPeoplePopoverOpen}
+                modal={false}
+              >
                 <PopoverTrigger
-                  className={cn(buttonVariants({ variant: "secondary" }), "w-full h-14 px-6 font-bold flex items-center justify-between")}
+                  className={cn(
+                    buttonVariants({ variant: "secondary" }),
+                    "w-full h-14 px-6 font-bold flex items-center justify-between",
+                  )}
                 >
                   <div className="flex items-center gap-3">
                     <User2 className="h-5 w-5 text-primary stroke-[2.5]" />
-                    <span>{tCheckout("person")} x {peopleCount}</span>
+                    <span>
+                      {tCheckout("person")} x {peopleCount}
+                    </span>
                   </div>
-                  <ChevronDown className={cn("h-4 w-4 opacity-50 transition-transform", isPeoplePopoverOpen && "rotate-180")} />
+                  <ChevronDown
+                    className={cn(
+                      "h-4 w-4 opacity-50 transition-transform",
+                      isPeoplePopoverOpen && "rotate-180",
+                    )}
+                  />
                 </PopoverTrigger>
                 <PopoverContent
                   className={cn("w-[var(--anchor-width)] p-4", popoverZIndex)}
@@ -298,24 +356,32 @@ export function BookingCard({
                   <div className="space-y-6">
                     <div className="flex items-center justify-between">
                       <div className="space-y-1">
-                        <p className="font-bold text-foreground">{tCheckout("person")}</p>
+                        <p className="font-bold text-foreground">
+                          {tCheckout("person")}
+                        </p>
                       </div>
                       <div className="flex items-center gap-4">
                         <Button
                           variant="outline"
                           size="icon"
                           className="h-8 w-8 rounded-md border-border text-primary hover:border-primary/50 hover:bg-primary/5 disabled:opacity-30"
-                          onClick={() => setPeopleCount(Math.max(1, peopleCount - 1))}
+                          onClick={() =>
+                            setPeopleCount(Math.max(1, peopleCount - 1))
+                          }
                           disabled={peopleCount <= 1}
                         >
                           <MinusCircle className="h-6 w-6 stroke-[1.5]" />
                         </Button>
-                        <span className="w-6 text-center text-lg font-bold text-foreground">{peopleCount}</span>
+                        <span className="w-6 text-center text-lg font-bold text-foreground">
+                          {peopleCount}
+                        </span>
                         <Button
                           variant="outline"
                           size="icon"
                           className="h-8 w-8 rounded-md border-border text-primary hover:border-primary/50 hover:bg-primary/5 disabled:opacity-30"
-                          onClick={() => setPeopleCount(Math.min(10, peopleCount + 1))}
+                          onClick={() =>
+                            setPeopleCount(Math.min(10, peopleCount + 1))
+                          }
                           disabled={peopleCount >= 10}
                         >
                           <PlusCircle className="h-6 w-6 stroke-[1.5]" />
@@ -339,26 +405,41 @@ export function BookingCard({
 
           {/* Date Selector */}
           <div className="space-y-2">
-            <Popover open={isDatePopoverOpen} onOpenChange={setIsDatePopoverOpen} modal={false}>
+            <Popover
+              open={isDatePopoverOpen}
+              onOpenChange={setIsDatePopoverOpen}
+              modal={false}
+            >
               <PopoverTrigger
                 className={cn(
                   buttonVariants({ variant: "secondary" }),
                   "w-full h-14 px-6 font-bold flex items-center justify-between transition-colors",
                   !selectedDate && "text-muted-foreground/60",
-                  showValidation && !selectedDate && "border-2 border-red-500 bg-red-50 dark:bg-red-950/20 text-red-600 dark:text-red-400"
+                  showValidation &&
+                    !selectedDate &&
+                    "border-2 border-red-500 bg-red-50 dark:bg-red-950/20 text-red-600 dark:text-red-400",
                 )}
               >
                 <div className="flex items-center gap-3 text-start">
                   <CalendarIcon className="h-5 w-5 text-primary stroke-[2.5]" />
-                  <span>{selectedDate ? format(selectedDate, "PPP", { locale: dateFnsLocale }) : tCheckout("form.date")}</span>
+                  <span>
+                    {selectedDate
+                      ? format(selectedDate, "PPP", { locale: dateFnsLocale })
+                      : tCheckout("form.date")}
+                  </span>
                 </div>
-                <ChevronDown className={cn("h-4 w-4 opacity-50 transition-transform", isDatePopoverOpen && "rotate-180")} />
+                <ChevronDown
+                  className={cn(
+                    "h-4 w-4 opacity-50 transition-transform",
+                    isDatePopoverOpen && "rotate-180",
+                  )}
+                />
               </PopoverTrigger>
               <PopoverContent
                 className={cn(
                   "p-0",
                   isMobile ? "w-[95vw] max-w-[360px]" : "w-auto",
-                  popoverZIndex
+                  popoverZIndex,
                 )}
                 positionerClassName={popoverZIndex}
                 collisionAvoidance={{ side: "none", align: "shift" }}
@@ -370,15 +451,19 @@ export function BookingCard({
                   mode="single"
                   showOutsideDays={false}
                   className="w-full"
-                  classNames={isMobile ? {
-                    root: "w-full p-4 pt-8",
-                    months: "w-full relative",
-                    month: "w-full",
-                    month_grid: "w-full border-collapse table-fixed mt-4",
-                    day: "w-full p-0 flex items-center justify-center",
-                    day_button: "w-full aspect-square",
-                    nav: "absolute top-0 inset-x-0 flex justify-between px-2",
-                  } : {}}
+                  classNames={
+                    isMobile
+                      ? {
+                          root: "w-full p-4 pt-8",
+                          months: "w-full relative",
+                          month: "w-full",
+                          month_grid: "w-full border-collapse table-fixed mt-4",
+                          day: "w-full p-0 flex items-center justify-center",
+                          day_button: "w-full aspect-square",
+                          nav: "absolute top-0 inset-x-0 flex justify-between px-2",
+                        }
+                      : {}
+                  }
                   numberOfMonths={isMobile ? 1 : 2}
                   selected={selectedDate}
                   onSelect={(date) => {
@@ -391,7 +476,10 @@ export function BookingCard({
                     return date < today || date < new Date("1900-01-01");
                   }}
                   modifiers={{ discount: isDateDiscounted }}
-                  modifiersClassNames={{ discount: "bg-primary/10 text-primary font-black border border-primary/20 rounded-md relative after:absolute after:top-1 after:right-1 after:content-['%'] after:text-[10px] after:font-black after:text-primary" }}
+                  modifiersClassNames={{
+                    discount:
+                      "bg-primary/10 text-primary font-black border border-primary/20 rounded-md relative after:absolute after:top-1 after:right-1 after:content-['%'] after:text-[10px] after:font-black after:text-primary",
+                  }}
                   initialFocus
                   locale={dateFnsLocale}
                 />
@@ -402,20 +490,35 @@ export function BookingCard({
           {/* Time Selector */}
           {selectedDate && (
             <div className="space-y-2 animate-in fade-in slide-in-from-top-2 duration-500">
-              <Popover open={isTimePopoverOpen} onOpenChange={setIsTimePopoverOpen} modal={false}>
+              <Popover
+                open={isTimePopoverOpen}
+                onOpenChange={setIsTimePopoverOpen}
+                modal={false}
+              >
                 <PopoverTrigger
                   className={cn(
                     buttonVariants({ variant: "secondary" }),
                     "w-full h-14 px-6 font-bold flex items-center justify-between transition-colors",
                     !selectedTime && "text-muted-foreground/60",
-                    showValidation && !selectedTime && "border-2 border-red-500 bg-red-50 dark:bg-red-950/20 text-red-600 dark:text-red-400"
+                    showValidation &&
+                      !selectedTime &&
+                      "border-2 border-red-500 bg-red-50 dark:bg-red-950/20 text-red-600 dark:text-red-400",
                   )}
                 >
                   <div className="flex items-center gap-3 text-start">
                     <Clock className="h-5 w-5 text-primary stroke-[2.5]" />
-                    <span>{selectedTime ? selectedTime : tCheckout("form.select_time")}</span>
+                    <span>
+                      {selectedTime
+                        ? selectedTime
+                        : tCheckout("form.select_time")}
+                    </span>
                   </div>
-                  <ChevronDown className={cn("h-4 w-4 opacity-50 transition-transform", isTimePopoverOpen && "rotate-180")} />
+                  <ChevronDown
+                    className={cn(
+                      "h-4 w-4 opacity-50 transition-transform",
+                      isTimePopoverOpen && "rotate-180",
+                    )}
+                  />
                 </PopoverTrigger>
                 <PopoverContent
                   className={cn("w-[var(--anchor-width)] p-3", popoverZIndex)}
@@ -426,15 +529,24 @@ export function BookingCard({
                 >
                   <Tabs defaultValue="morning" className="w-full">
                     <TabsList className="grid grid-cols-3 w-full h-12 p-1 bg-muted/50 rounded-lg mb-6">
-                      <TabsTrigger value="morning" className="rounded-md text-xs font-bold transition-all data-[state=active]:bg-primary data-[state=active]:text-primary-foreground border-none shadow-none gap-2">
+                      <TabsTrigger
+                        value="morning"
+                        className="rounded-md text-xs font-bold transition-all data-[state=active]:bg-primary data-[state=active]:text-primary-foreground border-none shadow-none gap-2"
+                      >
                         <Sunrise className="h-4 w-4" />
                         {tCheckout("form.morning")}
                       </TabsTrigger>
-                      <TabsTrigger value="noon" className="rounded-md text-xs font-bold transition-all data-[state=active]:bg-primary data-[state=active]:text-primary-foreground border-none shadow-none gap-2">
+                      <TabsTrigger
+                        value="noon"
+                        className="rounded-md text-xs font-bold transition-all data-[state=active]:bg-primary data-[state=active]:text-primary-foreground border-none shadow-none gap-2"
+                      >
                         <Sun className="h-4 w-4" />
                         {tCheckout("form.noon")}
                       </TabsTrigger>
-                      <TabsTrigger value="afternoon" className="rounded-md text-xs font-bold transition-all data-[state=active]:bg-primary data-[state=active]:text-primary-foreground border-none shadow-none gap-2">
+                      <TabsTrigger
+                        value="afternoon"
+                        className="rounded-md text-xs font-bold transition-all data-[state=active]:bg-primary data-[state=active]:text-primary-foreground border-none shadow-none gap-2"
+                      >
                         <Sunset className="h-4 w-4" />
                         {tCheckout("form.afternoon")}
                       </TabsTrigger>
@@ -447,27 +559,40 @@ export function BookingCard({
                         allSlots.push(`${h.toString().padStart(2, "0")}:30`);
                       }
 
-                      const slots = allSlots.filter(t => {
+                      const slots = allSlots.filter((t) => {
                         if (period === "morning") return t < "11:00";
-                        if (period === "noon") return t >= "11:00" && t < "15:00";
+                        if (period === "noon")
+                          return t >= "11:00" && t < "15:00";
                         return t >= "15:00";
                       });
 
                       return (
-                        <TabsContent key={period} value={period} className="mt-0 outline-none">
+                        <TabsContent
+                          key={period}
+                          value={period}
+                          className="mt-0 outline-none"
+                        >
                           <div className="grid grid-cols-3 gap-2 max-h-[200px] overflow-y-auto pr-2 custom-scrollbar">
                             {slots.map((time) => {
                               const isBlocked = bookedSlots.includes(time);
-                              const activeSurcharge = matchActiveSurcharge(time, timeSurcharges);
+                              const activeSurcharge = matchActiveSurcharge(
+                                time,
+                                timeSurcharges,
+                              );
 
                               return (
                                 <Button
                                   key={time}
-                                  variant={selectedTime === time ? "default" : "outline"}
+                                  variant={
+                                    selectedTime === time
+                                      ? "default"
+                                      : "outline"
+                                  }
                                   className={cn(
                                     "h-10 text-xs font-bold transition-all relative overflow-hidden",
                                     selectedTime === time && "shadow-sm",
-                                    isBlocked && "bg-red-500 text-white border-red-600 cursor-not-allowed hover:bg-red-500 hover:text-white disabled:opacity-90 shadow-sm"
+                                    isBlocked &&
+                                      "bg-red-500 text-white border-red-600 cursor-not-allowed hover:bg-red-500 hover:text-white disabled:opacity-90 shadow-sm",
                                   )}
                                   onClick={() => {
                                     if (!isBlocked) {
@@ -477,12 +602,20 @@ export function BookingCard({
                                   }}
                                   disabled={isBlocked || isLoadingSlots}
                                 >
-                                  {isBlocked ? (dateFnsLocale?.code?.startsWith("tr") ? "Dolu" : "Reserved") : (
+                                  {isBlocked ? (
+                                    dateFnsLocale?.code?.startsWith("tr") ? (
+                                      "Dolu"
+                                    ) : (
+                                      "Reserved"
+                                    )
+                                  ) : (
                                     <span className="flex items-center gap-1.5">
                                       {time}
                                       {activeSurcharge && (
                                         <span className="text-[10px] text-amber-500 dark:text-amber-400 font-black tracking-tighter">
-                                          (+%{activeSurcharge.surcharge_percentage})
+                                          (+%
+                                          {activeSurcharge.surcharge_percentage}
+                                          )
                                         </span>
                                       )}
                                     </span>
@@ -520,7 +653,8 @@ export function BookingCard({
                 ))}
               </div>
               <span className="text-sm font-semibold text-primary">
-                {tCheckout("buttons.checking_availability") || "Checking Availability..."}
+                {tCheckout("buttons.checking_availability") ||
+                  "Checking Availability..."}
               </span>
             </div>
             <span className="text-xs font-bold text-primary/60 z-10">
@@ -540,7 +674,8 @@ export function BookingCard({
               <div className="absolute w-6 h-6 rounded-full border-2 border-emerald-400 animate-ping opacity-60" />
             </div>
             <span className="text-sm font-bold text-emerald-700 dark:text-emerald-400">
-              {tCheckout("buttons.availability_confirmed") || "Spot Available! Opening..."}
+              {tCheckout("buttons.availability_confirmed") ||
+                "Spot Available! Opening..."}
             </span>
           </div>
         )}
@@ -563,7 +698,13 @@ export function BookingCard({
               className="w-full h-12 font-bold bg-emerald-50 text-emerald-700 hover:bg-emerald-100 dark:bg-emerald-950/30 dark:text-emerald-400 dark:hover:bg-emerald-900/40 transition-colors"
               onClick={handleWhatsApp}
             >
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" className="w-5 h-5 mr-2 fill-current"><path d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zM223.9 411.9c-31.5 0-62.5-8.4-89.6-24.5l-6.4-3.8-66.5 17.4 17.7-64.8-4.2-6.7c-17.7-28-27.1-60-27.1-92.4 0-97 79-176 176.1-176 47.1 0 91.4 18.4 124.7 51.7s51.7 77.6 51.7 124.7c0 97-79 176-176.1 176zM320.6 288.5c-5.3-2.7-31.3-15.5-36.2-17.2-4.9-1.7-8.4-2.7-12 2.7-3.6 5.3-13.8 17.2-16.9 20.7-3.1 3.6-6.2 4-11.5 1.3-5.3-2.7-22.4-8.3-42.6-26.3-15.7-14-26.3-31.3-29.4-36.6-3.1-5.3-.3-8.2 2.4-10.8 2.4-2.4 5.3-6.2 8-9.3 2.7-3.1 3.6-5.3 5.3-8.9 1.7-3.6 .9-6.7-.4-9.3-1.3-2.7-12-28.9-16.4-39.6-4.3-10.5-8.7-9.1-12-9.3-3.1-.2-6.7-.2-10.2-.2-3.6 0-9.3 1.3-14.2 6.7-4.9 5.3-18.6 18.2-18.6 44.4s19.1 51.5 21.8 55.1c2.7 3.6 37.6 57.4 91.1 80.5 12.7 5.5 22.6 8.7 30.4 11.2 12.7 4 24.3 3.4 33.4 2.1 10.2-1.5 31.3-12.8 35.7-25.2 4.4-12.4 4.4-23.1 3.1-25.2-1.3-2.1-4.9-3.4-10.2-6.1z" /></svg>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 448 512"
+                className="w-5 h-5 mr-2 fill-current"
+              >
+                <path d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zM223.9 411.9c-31.5 0-62.5-8.4-89.6-24.5l-6.4-3.8-66.5 17.4 17.7-64.8-4.2-6.7c-17.7-28-27.1-60-27.1-92.4 0-97 79-176 176.1-176 47.1 0 91.4 18.4 124.7 51.7s51.7 77.6 51.7 124.7c0 97-79 176-176.1 176zM320.6 288.5c-5.3-2.7-31.3-15.5-36.2-17.2-4.9-1.7-8.4-2.7-12 2.7-3.6 5.3-13.8 17.2-16.9 20.7-3.1 3.6-6.2 4-11.5 1.3-5.3-2.7-22.4-8.3-42.6-26.3-15.7-14-26.3-31.3-29.4-36.6-3.1-5.3-.3-8.2 2.4-10.8 2.4-2.4 5.3-6.2 8-9.3 2.7-3.1 3.6-5.3 5.3-8.9 1.7-3.6 .9-6.7-.4-9.3-1.3-2.7-12-28.9-16.4-39.6-4.3-10.5-8.7-9.1-12-9.3-3.1-.2-6.7-.2-10.2-.2-3.6 0-9.3 1.3-14.2 6.7-4.9 5.3-18.6 18.2-18.6 44.4s19.1 51.5 21.8 55.1c2.7 3.6 37.6 57.4 91.1 80.5 12.7 5.5 22.6 8.7 30.4 11.2 12.7 4 24.3 3.4 33.4 2.1 10.2-1.5 31.3-12.8 35.7-25.2 4.4-12.4 4.4-23.1 3.1-25.2-1.3-2.1-4.9-3.4-10.2-6.1z" />
+              </svg>
               WhatsApp
             </Button>
             <Button
@@ -582,8 +723,12 @@ export function BookingCard({
               <CheckCircle2 className="h-5 w-5 text-emerald-500" />
             </div>
             <div>
-              <p className="text-sm font-bold text-foreground">{tCheckout("cancellation.title")}</p>
-              <p className="text-xs font-medium text-muted-foreground leading-relaxed">{tCheckout("cancellation.description")}</p>
+              <p className="text-sm font-bold text-foreground">
+                {tCheckout("cancellation.title")}
+              </p>
+              <p className="text-xs font-medium text-muted-foreground leading-relaxed">
+                {tCheckout("cancellation.description")}
+              </p>
             </div>
           </div>
 
@@ -592,7 +737,9 @@ export function BookingCard({
               <Banknote className="h-5 w-5 text-primary" />
             </div>
             <div>
-              <p className="text-sm font-bold text-foreground">{tCheckout("payment_methods.cash")}</p>
+              <p className="text-sm font-bold text-foreground">
+                {tCheckout("payment_methods.cash")}
+              </p>
               <div className="space-y-1">
                 <p className="text-xs font-medium text-muted-foreground leading-relaxed">
                   {tCheckout("payment_methods.cash_description")}

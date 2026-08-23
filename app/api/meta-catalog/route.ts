@@ -22,7 +22,7 @@ export async function GET(request: Request) {
     fr: "Istanbul, Turquie",
     ro: "Istanbul, Turcia",
     ar: "إسطنبول، تركيا",
-    zh: "伊斯坦布尔，土耳其"
+    zh: "伊斯坦布尔，土耳其",
   };
   const location = locationTranslations[locale] || "Istanbul, Turkey";
 
@@ -30,31 +30,40 @@ export async function GET(request: Request) {
   const packages = await packagesService.getAllPackages();
   const settings = await settingsService.getSettings();
   const activeDiscount = await discountService.getActiveDiscount();
-  
+
   // Fetch real Google Reviews aggregate data
   const { average, count } = await reviewsService.getAggregateRating();
 
   const channelTitle = settings.site_name || "Istanbul Portrait Packages";
-  const channelDesc = settings.site_description?.[locale] || settings.site_description?.en || "Photography and Tour Packages in Istanbul";
+  const channelDesc =
+    settings.site_description?.[locale] ||
+    settings.site_description?.en ||
+    "Photography and Tour Packages in Istanbul";
 
   // Helper to resolve images through our proxy if needed
   const cleanImage = (url?: string | null) => {
     if (!url) return "";
     return url.replace(
       "https://xfntnamwfnqjgqmyxwfz.supabase.co/storage/v1/object/public",
-      `${baseUrl}/storage`
+      `${baseUrl}/storage`,
     );
   };
 
   const escapeXml = (unsafe: string) => {
     return unsafe.replace(/[<>&'"]/g, function (c) {
       switch (c) {
-        case "<": return "&lt;";
-        case ">": return "&gt;";
-        case "&": return "&amp;";
-        case "'": return "&apos;";
-        case "\"": return "&quot;";
-        default: return c;
+        case "<":
+          return "&lt;";
+        case ">":
+          return "&gt;";
+        case "&":
+          return "&amp;";
+        case "'":
+          return "&apos;";
+        case '"':
+          return "&quot;";
+        default:
+          return c;
       }
     });
   };
@@ -69,7 +78,7 @@ export async function GET(request: Request) {
       ro: "ro_RO",
       ar: "ar_AR",
       zh: "zh_CN",
-      en: "en_XX"
+      en: "en_XX",
     };
 
     let csv = "id,override,title,description,link,image_link\n";
@@ -84,18 +93,21 @@ export async function GET(request: Request) {
       const cleanDesc = desc.replace(/<[^>]*>?/gm, "").trim();
       const link = `${baseUrl}/${locale}/packages/${pkg.slug}`;
 
-      const rawImageUrl = cleanImage(pkg.cover_image || (pkg.gallery_images && pkg.gallery_images[0]));
+      const rawImageUrl = cleanImage(
+        pkg.cover_image || (pkg.gallery_images && pkg.gallery_images[0]),
+      );
       let imageUrl = rawImageUrl;
 
       // Generate GetYourGuide style dynamic ad image if we have a base image
       if (rawImageUrl) {
         const rating = average > 0 ? average.toFixed(1) : "5.0";
         const reviewsCount = count > 0 ? count : 124;
-        
+
         imageUrl = `${baseUrl}/api/og-catalog?image=${encodeURIComponent(rawImageUrl)}&title=${encodeURIComponent(title)}&rating=${rating}&reviews=${reviewsCount}&location=${encodeURIComponent(location)}`;
       }
 
-      const override = localeToOverride[locale] || `${locale}_${locale.toUpperCase()}`;
+      const override =
+        localeToOverride[locale] || `${locale}_${locale.toUpperCase()}`;
 
       const escapeCsv = (str: string) => `"${str.replace(/"/g, '""')}"`;
 
@@ -126,7 +138,9 @@ export async function GET(request: Request) {
     const rawDesc = pkg.description?.[locale] || pkg.description?.en || title;
     const cleanDesc = generateSeoDescription(rawDesc, 500);
 
-    const rawImageUrl = cleanImage(pkg.cover_image || (pkg.gallery_images && pkg.gallery_images[0]));
+    const rawImageUrl = cleanImage(
+      pkg.cover_image || (pkg.gallery_images && pkg.gallery_images[0]),
+    );
     let imageUrl = rawImageUrl;
 
     // Generate GetYourGuide style dynamic ad image if we have a base image
@@ -134,7 +148,7 @@ export async function GET(request: Request) {
       // Use real reviews data fetched from Google Reviews
       const rating = average > 0 ? average.toFixed(1) : "5.0";
       const reviewsCount = count > 0 ? count : 124;
-      
+
       imageUrl = `${baseUrl}/api/og-catalog?image=${encodeURIComponent(rawImageUrl)}&title=${encodeURIComponent(title)}&rating=${rating}&reviews=${reviewsCount}&location=${encodeURIComponent(location)}`;
     }
 
@@ -156,7 +170,8 @@ export async function GET(request: Request) {
     // 2. Check if there is a global dynamic discount running
     if (activeDiscount && activeDiscount.discount_percentage > 0) {
       finalBasePrice = pkg.price; // The regular price is what's on the package
-      const calculatedSalePrice = pkg.price - (pkg.price * activeDiscount.discount_percentage);
+      const calculatedSalePrice =
+        pkg.price - pkg.price * activeDiscount.discount_percentage;
       finalSalePrice = parseFloat(calculatedSalePrice.toFixed(2));
 
       if (activeDiscount.start_date && activeDiscount.end_date) {
@@ -168,7 +183,7 @@ export async function GET(request: Request) {
       <g:id>${escapeXml(pkg.slug)}</g:id>
       <g:title>${escapeXml(title)}</g:title>
       <g:description>${escapeXml(cleanDesc)}</g:description>
-      <g:availability>${pkg.is_active ? 'in stock' : 'out of stock'}</g:availability>
+      <g:availability>${pkg.is_active ? "in stock" : "out of stock"}</g:availability>
       <g:condition>new</g:condition>
       <g:identifier_exists>no</g:identifier_exists>
       <g:product_type>Photography Services &gt; Photoshoots</g:product_type>
@@ -188,13 +203,15 @@ export async function GET(request: Request) {
     }
 
     // Meta requires direct video files (.mp4). YouTube URLs will cause a catalog error.
-    const isYouTubeVideo = videoUrl && (videoUrl.includes('youtube.com') || videoUrl.includes('youtu.be'));
+    const isYouTubeVideo =
+      videoUrl &&
+      (videoUrl.includes("youtube.com") || videoUrl.includes("youtu.be"));
     if (videoUrl && !isYouTubeVideo) {
       xml += `\n      <video>\n        <url>${escapeXml(videoUrl)}</url>\n      </video>`;
     }
 
     xml += `\n      <g:brand>IstanbulPortrait</g:brand>
-      <g:custom_label_0>${pkg.is_popular ? 'Popular' : 'Standard'}</g:custom_label_0>
+      <g:custom_label_0>${pkg.is_popular ? "Popular" : "Standard"}</g:custom_label_0>
     </item>\n`;
   });
 

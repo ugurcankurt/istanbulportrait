@@ -5,7 +5,11 @@ import { getBaseUrl } from "@/lib/seo-utils";
 export default function robots(): MetadataRoute.Robots {
   // Dynamically extract and block all localized checkout/payment pages
   const checkoutRoute = (routing.pathnames as any)["/checkout"];
-  const checkoutDisallows = checkoutRoute ? (typeof checkoutRoute === "string" ? [`/*${checkoutRoute}*`] : Object.values(checkoutRoute).map(path => `/*${path}*`)) : ["/*checkout*"];
+  const checkoutDisallows = checkoutRoute
+    ? typeof checkoutRoute === "string"
+      ? [`/*${checkoutRoute}*`]
+      : Object.values(checkoutRoute).map((path) => `/*${path}*`)
+    : ["/*checkout*"];
 
   return {
     rules: {
@@ -17,7 +21,7 @@ export default function robots(): MetadataRoute.Robots {
         "/private/",
         "/*?*booking*", // Disallow parameterized booking states
         "/*?*payment*", // Disallow payment gateways
-        "/*?*search=",  // Disallow user search queries
+        "/*?*search=", // Disallow user search queries
         ...checkoutDisallows,
       ],
     },

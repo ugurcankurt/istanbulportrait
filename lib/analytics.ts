@@ -45,7 +45,9 @@ export function saveUserDataForAdvancedMatching(userData: AnalyticsUserData) {
 /**
  * Retrieves persisted user data for Advanced Matching
  */
-export function getUserDataForAdvancedMatching(): AnalyticsUserData | undefined {
+export function getUserDataForAdvancedMatching():
+  | AnalyticsUserData
+  | undefined {
   if (typeof window === "undefined") return undefined;
 
   try {
@@ -65,9 +67,10 @@ export function getExternalId(): string | undefined {
   try {
     let extId = localStorage.getItem(EXT_ID_STORAGE_KEY);
     if (!extId) {
-      extId = typeof crypto !== "undefined" && crypto.randomUUID 
-        ? crypto.randomUUID() 
-        : `ip_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
+      extId =
+        typeof crypto !== "undefined" && crypto.randomUUID
+          ? crypto.randomUUID()
+          : `ip_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
       localStorage.setItem(EXT_ID_STORAGE_KEY, extId);
     }
     return extId;
@@ -81,38 +84,40 @@ export function getExternalId(): string | undefined {
  */
 export function getCookie(name: string): string | undefined {
   if (typeof document === "undefined") return undefined;
-  const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+  const match = document.cookie.match(new RegExp("(^| )" + name + "=([^;]+)"));
   if (match) return match[2];
   return undefined;
 }
 
 export function getValidFbc(): string | undefined {
   if (typeof window === "undefined") return undefined;
-  
+
   const fbclid = new URLSearchParams(window.location.search).get("fbclid");
   if (fbclid && /^[a-zA-Z0-9_=-]+$/.test(fbclid)) {
     return `fb.1.${Date.now()}.${fbclid}`;
   }
-  
+
   const fbc = getCookie("_fbc");
-  if (fbc && /^fb\.[0-9]\.[0-9]{13,}\.[a-zA-Z0-9_=-]+(\.[a-zA-Z0-9_=-]+)?$/.test(fbc)) {
+  if (
+    fbc &&
+    /^fb\.[0-9]\.[0-9]{13,}\.[a-zA-Z0-9_=-]+(\.[a-zA-Z0-9_=-]+)?$/.test(fbc)
+  ) {
     return fbc;
   }
-  
+
   return undefined;
 }
 
 export function getValidFbp(): string | undefined {
   if (typeof window === "undefined") return undefined;
-  
+
   const fbp = getCookie("_fbp");
   if (fbp && /^fb\.[0-9]\.[0-9]{13,}\.[0-9]+(\.[a-zA-Z0-9_=-]+)?$/.test(fbp)) {
     return fbp;
   }
-  
+
   return `fb.1.${Date.now()}.${Math.floor(Math.random() * 10000000000)}`;
 }
-
 
 // Google Analytics event tracking //
 export function trackEvent(
@@ -142,7 +147,10 @@ export function trackBookingEvent(
 // Track page views
 export function trackPageView(url: string, title?: string) {
   if (typeof window !== "undefined" && window.gtag) {
-    const gaId = (window as any).__GA_ID || process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID || "";
+    const gaId =
+      (window as any).__GA_ID ||
+      process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID ||
+      "";
     window.gtag("config", gaId, {
       page_location: url,
       page_title: title,
@@ -185,7 +193,7 @@ export function trackPurchase(
     country?: string;
   },
   eventId?: string,
-  yieldCategory?: string
+  yieldCategory?: string,
 ) {
   if (typeof window !== "undefined" && window.gtag) {
     // Set Enhanced Conversions user data for GA4/Google Ads
@@ -262,13 +270,17 @@ export function trackPurchase(
         last_name: resolvedUserData?.lastName,
         city: resolvedUserData?.city,
         country: resolvedUserData?.country,
-        custom_data: { content_name: packageName, currency: currency, yield_category: yieldCategory },
+        custom_data: {
+          content_name: packageName,
+          currency: currency,
+          yield_category: yieldCategory,
+        },
         event_source_url: window.location.href,
         external_id: getExternalId(),
         fbc: getValidFbc(),
         fbp: getValidFbp(),
       }),
-    }).catch(() => { });
+    }).catch(() => {});
   }
 }
 
@@ -362,7 +374,7 @@ export function trackViewItem(
         fbc: getValidFbc(),
         fbp: getValidFbp(),
       }),
-    }).catch(() => { });
+    }).catch(() => {});
   }
 }
 
@@ -373,7 +385,7 @@ export function trackBeginCheckout(
   value: number,
   currency: string = "EUR",
   eventId?: string,
-  yieldCategory?: string
+  yieldCategory?: string,
 ) {
   if (typeof window !== "undefined" && window.gtag) {
     window.gtag("event", "begin_checkout", {
@@ -498,13 +510,17 @@ export function trackAddPaymentInfo(
         customer_phone: userData?.phone,
         first_name: userData?.firstName,
         last_name: userData?.lastName,
-        custom_data: { content_name: packageName, payment_type: paymentType, currency: currency },
+        custom_data: {
+          content_name: packageName,
+          payment_type: paymentType,
+          currency: currency,
+        },
         event_source_url: window.location.href,
         external_id: getExternalId(),
         fbc: getValidFbc(),
         fbp: getValidFbp(),
       }),
-    }).catch(() => { });
+    }).catch(() => {});
   }
 }
 
@@ -515,7 +531,7 @@ export function trackLead(
   value?: number,
   currency: string = "EUR",
   eventId?: string,
-  yieldCategory?: string
+  yieldCategory?: string,
 ) {
   const resolvedEventId =
     eventId ||
@@ -589,13 +605,17 @@ export function trackLead(
         customer_phone: userData?.phone,
         first_name: userData?.firstName,
         last_name: userData?.lastName,
-        custom_data: { content_name: packageName, currency: currency, yield_category: yieldCategory },
+        custom_data: {
+          content_name: packageName,
+          currency: currency,
+          yield_category: yieldCategory,
+        },
         event_source_url: window.location.href,
         external_id: getExternalId(),
         fbc: getValidFbc(),
         fbp: getValidFbp(),
       }),
-    }).catch(() => { });
+    }).catch(() => {});
   }
 }
 
@@ -658,12 +678,13 @@ export function trackSchedule(
         fbc: getValidFbc(),
         fbp: getValidFbp(),
       }),
-    }).catch(() => { });
+    }).catch(() => {});
   }
 }
 
 export function trackContact(method: string) {
-  const eventId = typeof crypto !== "undefined" ? crypto.randomUUID() : undefined;
+  const eventId =
+    typeof crypto !== "undefined" ? crypto.randomUUID() : undefined;
 
   // Facebook Pixel — Contact
   if (typeof window !== "undefined" && window.fbq) {
@@ -707,7 +728,7 @@ export function trackContact(method: string) {
         fbc: getValidFbc(),
         fbp: getValidFbp(),
       }),
-    }).catch(() => { });
+    }).catch(() => {});
   }
 }
 
@@ -771,7 +792,7 @@ export function trackPackageAddToCart(
   value: number,
   currency: string = "EUR",
   eventId?: string,
-  yieldCategory?: string
+  yieldCategory?: string,
 ) {
   const resolvedEventId =
     eventId ||
@@ -831,13 +852,17 @@ export function trackPackageAddToCart(
         country: userData?.country,
         dob: userData?.dob,
         gender: userData?.gender,
-        custom_data: { content_name: packageName, currency: currency, yield_category: yieldCategory },
+        custom_data: {
+          content_name: packageName,
+          currency: currency,
+          yield_category: yieldCategory,
+        },
         event_source_url: window.location.href,
         external_id: getExternalId(),
         fbc: getValidFbc(),
         fbp: getValidFbp(),
       }),
-    }).catch(() => { });
+    }).catch(() => {});
   }
 }
 
@@ -899,13 +924,17 @@ export function trackPrintViewItem(
         event_id: resolvedEventId,
         package_id: sku,
         amount: price,
-        custom_data: { content_name: name, content_category: category, currency: currency },
+        custom_data: {
+          content_name: name,
+          content_category: category,
+          currency: currency,
+        },
         event_source_url: window.location.href,
         external_id: getExternalId(),
         fbc: getValidFbc(),
         fbp: getValidFbp(),
       }),
-    }).catch(() => { });
+    }).catch(() => {});
   }
 }
 
@@ -976,13 +1005,17 @@ export function trackPrintAddToCart(
         country: userData?.country,
         dob: userData?.dob,
         gender: userData?.gender,
-        custom_data: { content_name: name, content_category: category, currency: currency },
+        custom_data: {
+          content_name: name,
+          content_category: category,
+          currency: currency,
+        },
         event_source_url: window.location.href,
         external_id: getExternalId(),
         fbc: getValidFbc(),
         fbp: getValidFbp(),
       }),
-    }).catch(() => { });
+    }).catch(() => {});
   }
 }
 
@@ -1054,7 +1087,7 @@ export function trackPrintBeginCheckout(
         fbc: getValidFbc(),
         fbp: getValidFbp(),
       }),
-    }).catch(() => { });
+    }).catch(() => {});
   }
 }
 

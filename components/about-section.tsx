@@ -55,18 +55,30 @@ export function AboutSection({
   const highlights = [
     {
       icon: Award,
-      title: dynAbout?.highlights?.[0]?.title?.[locale] || taboutHighlights("professional_quality"),
-      description: dynAbout?.highlights?.[0]?.description?.[locale] || taboutHighlights("professional_quality_desc"),
+      title:
+        dynAbout?.highlights?.[0]?.title?.[locale] ||
+        taboutHighlights("professional_quality"),
+      description:
+        dynAbout?.highlights?.[0]?.description?.[locale] ||
+        taboutHighlights("professional_quality_desc"),
     },
     {
       icon: MapPin,
-      title: dynAbout?.highlights?.[1]?.title?.[locale] || taboutHighlights("local_knowledge"),
-      description: dynAbout?.highlights?.[1]?.description?.[locale] || taboutHighlights("local_knowledge_desc"),
+      title:
+        dynAbout?.highlights?.[1]?.title?.[locale] ||
+        taboutHighlights("local_knowledge"),
+      description:
+        dynAbout?.highlights?.[1]?.description?.[locale] ||
+        taboutHighlights("local_knowledge_desc"),
     },
     {
       icon: Star,
-      title: dynAbout?.highlights?.[2]?.title?.[locale] || taboutHighlights("personalized_experience"),
-      description: dynAbout?.highlights?.[2]?.description?.[locale] || taboutHighlights("personalized_experience_desc"),
+      title:
+        dynAbout?.highlights?.[2]?.title?.[locale] ||
+        taboutHighlights("personalized_experience"),
+      description:
+        dynAbout?.highlights?.[2]?.description?.[locale] ||
+        taboutHighlights("personalized_experience_desc"),
     },
   ];
 
@@ -78,10 +90,13 @@ export function AboutSection({
           {/* Image */}
           <div className="relative">
             <div className="relative aspect-[4/5] rounded-[2.5rem] border-[0.5px] border-border/50 shadow-md overflow-hidden bg-muted flex flex-col items-center justify-center">
-              {(!imgError && (dbPage?.cover_image || founderImageUrl)) ? (
+              {!imgError && (dbPage?.cover_image || founderImageUrl) ? (
                 <Image
                   src={dbPage?.cover_image || founderImageUrl || ""}
-                  alt={dbPage?.title?.[locale] || "Uğur Cankurt - Professional Istanbul Photographer"}
+                  alt={
+                    dbPage?.title?.[locale] ||
+                    "Uğur Cankurt - Professional Istanbul Photographer"
+                  }
                   fill
                   className="object-cover"
                   priority={true}
@@ -126,7 +141,8 @@ export function AboutSection({
             </div>
 
             <div className="pt-2 sm:pt-4">
-              <Button nativeButton={false}
+              <Button
+                nativeButton={false}
                 render={<Link href={"/packages" as any} prefetch={true} />}
                 size="sm"
                 className="sm:size-lg text-xs sm:text-sm active:scale-[0.98] transition-transform shadow-md"
@@ -188,14 +204,16 @@ export function AboutSection({
           <div className="border-[0.5px] border-border/50 bg-primary/5 shadow-sm rounded-[2rem] lg:rounded-[3rem] p-10 sm:p-12 lg:p-16 mx-auto max-w-4xl">
             {ctaHeader}
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
-              <Button nativeButton={false}
+              <Button
+                nativeButton={false}
                 render={<Link href={"/locations" as any} prefetch={true} />}
                 size="lg"
                 className="h-12 px-8 rounded-xl font-bold active:scale-[0.98] transition-transform shadow-lg"
               >
                 {tui("check_locations")}
               </Button>
-              <Button nativeButton={false}
+              <Button
+                nativeButton={false}
                 render={<Link href={"/packages" as any} prefetch={true} />}
                 variant="outline"
                 size="lg"

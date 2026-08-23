@@ -2,24 +2,26 @@ import { NextRequest, NextResponse } from "next/server";
 import { getFileStream } from "@/lib/google-drive";
 
 // Helper to convert Node.js Readable stream to Web ReadableStream
-function nodeStreamToWebStream(nodeStream: NodeJS.ReadableStream): ReadableStream {
+function nodeStreamToWebStream(
+  nodeStream: NodeJS.ReadableStream,
+): ReadableStream {
   return new ReadableStream({
     start(controller) {
-      nodeStream.on('data', (chunk) => controller.enqueue(chunk));
-      nodeStream.on('end', () => controller.close());
-      nodeStream.on('error', (err) => controller.error(err));
+      nodeStream.on("data", (chunk) => controller.enqueue(chunk));
+      nodeStream.on("end", () => controller.close());
+      nodeStream.on("error", (err) => controller.error(err));
     },
     cancel() {
-      if ('destroy' in nodeStream) {
+      if ("destroy" in nodeStream) {
         (nodeStream as any).destroy();
       }
-    }
+    },
   });
 }
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise<{ fileId: string }> }
+  { params }: { params: Promise<{ fileId: string }> },
 ) {
   try {
     const resolvedParams = await params;

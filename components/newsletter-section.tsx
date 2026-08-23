@@ -13,7 +13,11 @@ export function NewsletterSection() {
   const locale = useLocale();
   // Some inline fallback translations just in case they are missing in the user's locales
   const getTrans = (key: string, fallback: string) => {
-    try { return t(key); } catch { return fallback; }
+    try {
+      return t(key);
+    } catch {
+      return fallback;
+    }
   };
 
   const [firstName, setFirstName] = useState("");
@@ -43,10 +47,21 @@ export function NewsletterSection() {
       }
 
       setIsSuccess(true);
-      toast.success(getTrans("newsletter_success", "You've successfully subscribed. Check your email for your promo code!"));
+      toast.success(
+        getTrans(
+          "newsletter_success",
+          "You've successfully subscribed. Check your email for your promo code!",
+        ),
+      );
       setEmail("");
     } catch (error: any) {
-      toast.error(error.message || getTrans("newsletter_error", "An error occurred. Please try again later."));
+      toast.error(
+        error.message ||
+          getTrans(
+            "newsletter_error",
+            "An error occurred. Please try again later.",
+          ),
+      );
     } finally {
       setIsLoading(false);
     }
@@ -70,7 +85,10 @@ export function NewsletterSection() {
                 {getTrans("newsletter_title", "Get Your Exclusive Promo Code")}
               </h2>
               <p className="text-muted-foreground text-base md:text-lg max-w-2xl mx-auto">
-                {getTrans("newsletter_subtitle", "Subscribe to our newsletter to receive an instant discount code for your next photoshoot, plus seasonal updates and early access to new packages.")}
+                {getTrans(
+                  "newsletter_subtitle",
+                  "Subscribe to our newsletter to receive an instant discount code for your next photoshoot, plus seasonal updates and early access to new packages.",
+                )}
               </p>
             </div>
 
@@ -80,9 +98,17 @@ export function NewsletterSection() {
                   <div className="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center mb-4">
                     <CheckCircle2 className="w-8 h-8 text-primary" />
                   </div>
-                  <h3 className="text-xl font-bold mb-2 text-foreground">{getTrans("newsletter_success_title", "You're on the list!")}</h3>
+                  <h3 className="text-xl font-bold mb-2 text-foreground">
+                    {getTrans(
+                      "newsletter_success_title",
+                      "You're on the list!",
+                    )}
+                  </h3>
                   <p className="text-muted-foreground text-sm">
-                    {getTrans("newsletter_success_desc", "We just sent your promo code to your inbox. Enjoy your discount!")}
+                    {getTrans(
+                      "newsletter_success_desc",
+                      "We just sent your promo code to your inbox. Enjoy your discount!",
+                    )}
                   </p>
                 </div>
               ) : (
@@ -90,7 +116,10 @@ export function NewsletterSection() {
                   <div className="flex flex-col sm:flex-row gap-4">
                     <Input
                       type="text"
-                      placeholder={getTrans("newsletter_first_name", "First Name")}
+                      placeholder={getTrans(
+                        "newsletter_first_name",
+                        "First Name",
+                      )}
                       className="h-14 rounded-xl bg-background border-border shadow-sm text-base flex-1 focus-visible:ring-primary/50 transition-all"
                       value={firstName}
                       onChange={(e) => setFirstName(e.target.value)}
@@ -99,7 +128,10 @@ export function NewsletterSection() {
                     />
                     <Input
                       type="text"
-                      placeholder={getTrans("newsletter_last_name", "Last Name")}
+                      placeholder={getTrans(
+                        "newsletter_last_name",
+                        "Last Name",
+                      )}
                       className="h-14 rounded-xl bg-background border-border shadow-sm text-base flex-1 focus-visible:ring-primary/50 transition-all"
                       value={lastName}
                       onChange={(e) => setLastName(e.target.value)}
@@ -111,7 +143,10 @@ export function NewsletterSection() {
                     <div className="relative flex-1">
                       <Input
                         type="email"
-                        placeholder={getTrans("newsletter_placeholder", "Enter your email address...")}
+                        placeholder={getTrans(
+                          "newsletter_placeholder",
+                          "Enter your email address...",
+                        )}
                         className="pl-11 h-14 rounded-xl bg-background border-border shadow-sm text-base focus-visible:ring-primary/50 transition-all"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
@@ -140,7 +175,10 @@ export function NewsletterSection() {
               )}
 
               <p className="text-center text-xs text-muted-foreground mt-6">
-                {getTrans("newsletter_disclaimer", "By subscribing, you agree to receive marketing emails. You can unsubscribe at any time.")}
+                {getTrans(
+                  "newsletter_disclaimer",
+                  "By subscribing, you agree to receive marketing emails. You can unsubscribe at any time.",
+                )}
               </p>
             </div>
           </CardContent>

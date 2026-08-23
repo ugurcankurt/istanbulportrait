@@ -8,7 +8,7 @@ export async function GET(request: Request) {
   if (!code) {
     return NextResponse.json(
       { valid: false, error: "Promo code is required" },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
@@ -24,14 +24,14 @@ export async function GET(request: Request) {
     } else {
       return NextResponse.json(
         { valid: false, error: "Invalid, expired, or fully used promo code" },
-        { status: 404 }
+        { status: 404 },
       );
     }
   } catch (error) {
     console.error("Promo code validation error:", error);
     return NextResponse.json(
       { valid: false, error: "Internal server error" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

@@ -103,5 +103,5 @@ export const promoService = {
       return [];
     }
     return data as PromoCodeDB[];
-  }
+  },
 };

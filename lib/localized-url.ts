@@ -122,8 +122,11 @@ export async function getPackageLocalizedPaths(
     languages[l] = `${baseUrl}/${l}/${parentSlug}/${localeSlug}`;
   });
 
-  const defaultParent = packagesPage?.title?.en ? generateNativeSlug(packagesPage.title.en) : "packages";
-  languages["x-default"] = languages["en"] || `${baseUrl}/en/${defaultParent}/${slug}`;
+  const defaultParent = packagesPage?.title?.en
+    ? generateNativeSlug(packagesPage.title.en)
+    : "packages";
+  languages["x-default"] =
+    languages["en"] || `${baseUrl}/en/${defaultParent}/${slug}`;
 
   return {
     canonical: (locale: string) => {
@@ -180,8 +183,11 @@ export async function getLocationLocalizedPaths(
   });
 
   // Add x-default pointing to English version
-  const defaultParent = locationsPage?.title?.en ? generateNativeSlug(locationsPage.title.en) : "locations";
-  languages["x-default"] = languages["en"] || `${baseUrl}/en/${defaultParent}/${slug}`;
+  const defaultParent = locationsPage?.title?.en
+    ? generateNativeSlug(locationsPage.title.en)
+    : "locations";
+  languages["x-default"] =
+    languages["en"] || `${baseUrl}/en/${defaultParent}/${slug}`;
 
   return {
     canonical: (locale: string) => {
@@ -202,8 +208,6 @@ export async function getLocationLocalizedPaths(
     languages,
   };
 }
-
-
 
 /**
  * Get Open Graph URL for current locale

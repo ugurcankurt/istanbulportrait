@@ -19,7 +19,8 @@ export default async function EditLocationPage({
       <div>
         <h1 className="text-3xl font-bold tracking-tight">Edit Location</h1>
         <p className="text-muted-foreground">
-          Update metadata, images, and tips for {location.title?.en || location.slug}.
+          Update metadata, images, and tips for{" "}
+          {location.title?.en || location.slug}.
         </p>
       </div>
 

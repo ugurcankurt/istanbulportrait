@@ -11,7 +11,7 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
-  
+
   const { settingsService } = await import("@/lib/settings-service");
   const settings = await settingsService.getSettings();
 

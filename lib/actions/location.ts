@@ -26,7 +26,7 @@ export async function getCountriesAction() {
  */
 export async function getStatesForCountryAction(countryCode: string) {
   if (!countryCode) return [];
-  
+
   try {
     const states = State.getStatesOfCountry(countryCode);
     return states.map((state) => ({

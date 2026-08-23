@@ -1,4 +1,12 @@
-import { CheckCircle, Info, Quote, Star, ThumbsUp, X, ChevronDown } from "lucide-react";
+import {
+  CheckCircle,
+  Info,
+  Quote,
+  Star,
+  ThumbsUp,
+  X,
+  ChevronDown,
+} from "lucide-react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { useState, useMemo } from "react";
@@ -11,12 +19,18 @@ interface PackageReviewsProps {
   aggregateRating: AggregateRating;
 }
 
-export function PackageReviews({ reviews, aggregateRating }: PackageReviewsProps) {
+export function PackageReviews({
+  reviews,
+  aggregateRating,
+}: PackageReviewsProps) {
   const t = useTranslations("reviews");
   const [filterRating, setFilterRating] = useState<number | null>(null);
   const [visibleCount, setVisibleCount] = useState(10);
 
-  const renderStars = (rating: number, size: "xs" | "sm" | "md" | "lg" = "md") => {
+  const renderStars = (
+    rating: number,
+    size: "xs" | "sm" | "md" | "lg" = "md",
+  ) => {
     const sizeClasses = {
       xs: "w-2.5 h-2.5",
       sm: "w-3.5 h-3.5",
@@ -33,7 +47,7 @@ export function PackageReviews({ reviews, aggregateRating }: PackageReviewsProps
               sizeClasses[size],
               star <= rating
                 ? "fill-foreground text-foreground"
-                : "fill-muted text-muted"
+                : "fill-muted text-muted",
             )}
           />
         ))}
@@ -56,7 +70,7 @@ export function PackageReviews({ reviews, aggregateRating }: PackageReviewsProps
 
   const filteredReviews = useMemo(() => {
     if (!filterRating) return reviews;
-    return reviews.filter(review => review.rating === filterRating);
+    return reviews.filter((review) => review.rating === filterRating);
   }, [reviews, filterRating]);
 
   const handleHelpfulClick = () => {
@@ -64,19 +78,25 @@ export function PackageReviews({ reviews, aggregateRating }: PackageReviewsProps
   };
 
   const handleShowMore = () => {
-    setVisibleCount(prev => prev + 10);
+    setVisibleCount((prev) => prev + 10);
   };
 
   return (
-    <section id="reviews" className="pt-12 pb-6 sm:py-16 border-t border-slate-300 scroll-mt-24">
+    <section
+      id="reviews"
+      className="pt-12 pb-6 sm:py-16 border-t border-slate-300 scroll-mt-24"
+    >
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-16">
-
         {/* LEFT SIDEBAR - Overall Rating & Summary */}
         <div className="lg:col-span-1 space-y-10 lg:sticky lg:top-28 h-fit">
           <div className="space-y-6">
-            <h3 className="text-2xl font-serif text-foreground">{t("overall_rating")}</h3>
+            <h3 className="text-2xl font-serif text-foreground">
+              {t("overall_rating")}
+            </h3>
             <div className="flex items-center gap-4">
-              <div className="text-6xl font-serif text-primary leading-none">{Number(aggregateRating.average || 0).toFixed(1)}</div>
+              <div className="text-6xl font-serif text-primary leading-none">
+                {Number(aggregateRating.average || 0).toFixed(1)}
+              </div>
               <div className="text-xl font-bold text-muted-foreground">/ 5</div>
             </div>
             {renderStars(Math.round(aggregateRating.average || 5), "lg")}
@@ -87,7 +107,9 @@ export function PackageReviews({ reviews, aggregateRating }: PackageReviewsProps
 
           <div className="space-y-6 pt-6 border-t border-border">
             <div className="flex items-center justify-between">
-              <h4 className="text-sm font-bold text-foreground uppercase tracking-tight">{t("summary")}</h4>
+              <h4 className="text-sm font-bold text-foreground uppercase tracking-tight">
+                {t("summary")}
+              </h4>
               {filterRating && (
                 <Button
                   variant="link"
@@ -102,8 +124,14 @@ export function PackageReviews({ reviews, aggregateRating }: PackageReviewsProps
             </div>
             <div className="space-y-4">
               {[5, 4, 3, 2, 1].map((stars) => {
-                const count = aggregateRating.distribution[stars as keyof typeof aggregateRating.distribution] || 0;
-                const percentage = aggregateRating.count > 0 ? (count / aggregateRating.count) * 100 : 0;
+                const count =
+                  aggregateRating.distribution[
+                    stars as keyof typeof aggregateRating.distribution
+                  ] || 0;
+                const percentage =
+                  aggregateRating.count > 0
+                    ? (count / aggregateRating.count) * 100
+                    : 0;
 
                 return (
                   <button
@@ -114,17 +142,29 @@ export function PackageReviews({ reviews, aggregateRating }: PackageReviewsProps
                     }}
                     className={cn(
                       "w-full flex items-center gap-4 group transition-opacity",
-                      filterRating && filterRating !== stars ? "opacity-30" : "opacity-100"
+                      filterRating && filterRating !== stars
+                        ? "opacity-30"
+                        : "opacity-100",
                     )}
                   >
                     <span className="w-20 text-xs font-bold text-muted-foreground text-start group-hover:text-foreground transition-colors">
-                      {stars === 5 ? t("excellent") : stars === 4 ? t("very_good") : stars === 3 ? t("average") : stars === 2 ? t("poor") : t("terrible")}
+                      {stars === 5
+                        ? t("excellent")
+                        : stars === 4
+                          ? t("very_good")
+                          : stars === 3
+                            ? t("average")
+                            : stars === 2
+                              ? t("poor")
+                              : t("terrible")}
                     </span>
                     <div className="flex-1 h-2.5 bg-muted rounded-full overflow-hidden">
                       <div
                         className={cn(
                           "h-full rounded-full transition-all duration-700",
-                          filterRating === stars ? "bg-primary" : "bg-muted-foreground/30"
+                          filterRating === stars
+                            ? "bg-primary"
+                            : "bg-muted-foreground/30",
                         )}
                         style={{ width: `${percentage}%` }}
                       />
@@ -169,7 +209,9 @@ export function PackageReviews({ reviews, aggregateRating }: PackageReviewsProps
                       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                         <div className="flex items-center gap-2">
                           {renderStars(review.rating, "sm")}
-                          <span className="text-sm font-bold text-foreground">{review.rating}</span>
+                          <span className="text-sm font-bold text-foreground">
+                            {review.rating}
+                          </span>
                         </div>
                         {(!review.text || review.text === "") && (
                           <div className="px-2 py-1 bg-muted rounded text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
@@ -240,8 +282,12 @@ export function PackageReviews({ reviews, aggregateRating }: PackageReviewsProps
                   <Star className="w-8 h-8" />
                 </div>
                 <div className="space-y-2">
-                  <p className="text-lg font-bold text-foreground">{t("no_reviews")}</p>
-                  <p className="text-sm text-muted-foreground">{t("show_all")}</p>
+                  <p className="text-lg font-bold text-foreground">
+                    {t("no_reviews")}
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    {t("show_all")}
+                  </p>
                   <Button
                     variant="default"
                     onClick={() => setFilterRating(null)}

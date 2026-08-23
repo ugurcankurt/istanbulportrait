@@ -1,7 +1,15 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { Download, X, Loader2, Image as ImageIcon, CheckCircle2, ChevronLeft, ChevronRight } from "lucide-react";
+import {
+  Download,
+  X,
+  Loader2,
+  Image as ImageIcon,
+  CheckCircle2,
+  ChevronLeft,
+  ChevronRight,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
@@ -33,7 +41,9 @@ interface DriveFile {
 export default function ClientGallery({ bookingId }: { bookingId: string }) {
   const t = useTranslations("account.gallery");
   const [files, setFiles] = useState<DriveFile[]>([]);
-  const [selectedGalleryFiles, setSelectedGalleryFiles] = useState<DriveFile[]>([]);
+  const [selectedGalleryFiles, setSelectedGalleryFiles] = useState<DriveFile[]>(
+    [],
+  );
   const [finalFiles, setFinalFiles] = useState<DriveFile[]>([]);
   const [activeTab, setActiveTab] = useState<string>("raw");
   const [loading, setLoading] = useState(true);
@@ -49,7 +59,11 @@ export default function ClientGallery({ bookingId }: { bookingId: string }) {
 
   useEffect(() => {
     if (thumbnailRef.current) {
-      thumbnailRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+      thumbnailRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "nearest",
+        inline: "center",
+      });
     }
   }, [selectedImage]);
 
@@ -57,15 +71,23 @@ export default function ClientGallery({ bookingId }: { bookingId: string }) {
     setIsHighResLoaded(false);
   }, [selectedImage]);
 
-  const activeFiles = activeTab === "raw" ? files : activeTab === "selected" ? selectedGalleryFiles : finalFiles;
+  const activeFiles =
+    activeTab === "raw"
+      ? files
+      : activeTab === "selected"
+        ? selectedGalleryFiles
+        : finalFiles;
 
   // Preload adjacent images for instant swiping
   useEffect(() => {
     if (isLightboxOpen && selectedImage && activeFiles.length > 0) {
-      const currentIndex = activeFiles.findIndex(f => f.id === selectedImage.id);
+      const currentIndex = activeFiles.findIndex(
+        (f) => f.id === selectedImage.id,
+      );
       if (currentIndex !== -1) {
         const nextIndex = (currentIndex + 1) % activeFiles.length;
-        const prevIndex = (currentIndex - 1 + activeFiles.length) % activeFiles.length;
+        const prevIndex =
+          (currentIndex - 1 + activeFiles.length) % activeFiles.length;
 
         const imgNext = new window.Image();
         imgNext.src = activeFiles[nextIndex].url;
@@ -76,17 +98,20 @@ export default function ClientGallery({ bookingId }: { bookingId: string }) {
     }
   }, [isLightboxOpen, selectedImage, activeFiles]);
 
-  const navigateImage = (direction: 'next' | 'prev', e?: React.MouseEvent) => {
+  const navigateImage = (direction: "next" | "prev", e?: React.MouseEvent) => {
     if (e) e.stopPropagation();
     if (!selectedImage || activeFiles.length === 0) return;
-    const currentIndex = activeFiles.findIndex(f => f.id === selectedImage.id);
+    const currentIndex = activeFiles.findIndex(
+      (f) => f.id === selectedImage.id,
+    );
     if (currentIndex === -1) return;
 
-    if (direction === 'next') {
+    if (direction === "next") {
       const nextIndex = (currentIndex + 1) % activeFiles.length;
       setSelectedImage(activeFiles[nextIndex]);
     } else {
-      const prevIndex = (currentIndex - 1 + activeFiles.length) % activeFiles.length;
+      const prevIndex =
+        (currentIndex - 1 + activeFiles.length) % activeFiles.length;
       setSelectedImage(activeFiles[prevIndex]);
     }
   };
@@ -94,8 +119,8 @@ export default function ClientGallery({ bookingId }: { bookingId: string }) {
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (!isLightboxOpen || !selectedImage) return;
-      if (e.key === "ArrowRight") navigateImage('next');
-      if (e.key === "ArrowLeft") navigateImage('prev');
+      if (e.key === "ArrowRight") navigateImage("next");
+      if (e.key === "ArrowLeft") navigateImage("prev");
       if (e.key === "Escape") setIsLightboxOpen(false);
     };
     window.addEventListener("keydown", handleKeyDown);
@@ -117,12 +142,14 @@ export default function ClientGallery({ bookingId }: { bookingId: string }) {
     const isLeftSwipe = distance > 50;
     const isRightSwipe = distance < -50;
 
-    if (isLeftSwipe) navigateImage('next');
-    if (isRightSwipe) navigateImage('prev');
+    if (isLeftSwipe) navigateImage("next");
+    if (isRightSwipe) navigateImage("prev");
   };
 
   const [maxSelections, setMaxSelections] = useState(15);
-  const [selectionStatus, setSelectionStatus] = useState<"pending" | "completed">("pending");
+  const [selectionStatus, setSelectionStatus] = useState<
+    "pending" | "completed"
+  >("pending");
   const [selectedFiles, setSelectedFiles] = useState<string[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
@@ -149,12 +176,17 @@ export default function ClientGallery({ bookingId }: { bookingId: string }) {
         if (data.finalFiles && data.finalFiles.length > 0) {
           setActiveTab("final");
           if (data.finalFiles.length > 0) setSelectedImage(data.finalFiles[0]);
-        } else if (data.selectionStatus === "completed" || (data.selectedFiles && data.selectedFiles.length > 0)) {
+        } else if (
+          data.selectionStatus === "completed" ||
+          (data.selectedFiles && data.selectedFiles.length > 0)
+        ) {
           setActiveTab("selected");
-          if (data.selectedFiles.length > 0) setSelectedImage(data.selectedFiles[0]);
+          if (data.selectedFiles.length > 0)
+            setSelectedImage(data.selectedFiles[0]);
         } else {
           setActiveTab("raw");
-          if (data.files && data.files.length > 0) setSelectedImage(data.files[0]);
+          if (data.files && data.files.length > 0)
+            setSelectedImage(data.files[0]);
         }
 
         if (data.maxSelections) setMaxSelections(data.maxSelections);
@@ -173,9 +205,9 @@ export default function ClientGallery({ bookingId }: { bookingId: string }) {
     e.stopPropagation();
     if (selectionStatus === "completed") return;
 
-    setSelectedFiles(prev => {
+    setSelectedFiles((prev) => {
       if (prev.includes(fileId)) {
-        return prev.filter(id => id !== fileId);
+        return prev.filter((id) => id !== fileId);
       }
       if (prev.length >= maxSelections) {
         setLimitAlertOpen(true);
@@ -196,11 +228,12 @@ export default function ClientGallery({ bookingId }: { bookingId: string }) {
       const res = await fetch(`/api/account/gallery/${bookingId}/select`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ fileIds: selectedFiles })
+        body: JSON.stringify({ fileIds: selectedFiles }),
       });
 
       const data = await res.json();
-      if (!res.ok || data.error) throw new Error(data.error || "Submission failed");
+      if (!res.ok || data.error)
+        throw new Error(data.error || "Submission failed");
 
       setSelectionStatus("completed");
       toast.success(t("selectionComplete"));
@@ -239,7 +272,9 @@ export default function ClientGallery({ bookingId }: { bookingId: string }) {
     const input = document.createElement("input");
     input.type = "hidden";
     input.name = "files";
-    input.value = JSON.stringify(activeFiles.map(f => ({ id: f.id, name: f.name })));
+    input.value = JSON.stringify(
+      activeFiles.map((f) => ({ id: f.id, name: f.name })),
+    );
 
     const inputTab = document.createElement("input");
     inputTab.type = "hidden";
@@ -276,7 +311,9 @@ export default function ClientGallery({ bookingId }: { bookingId: string }) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[50vh]">
         <Loader2 className="h-10 w-10 animate-spin text-primary" />
-        <p className="mt-4 text-muted-foreground">{t("loading") || "Loading your photos..."}</p>
+        <p className="mt-4 text-muted-foreground">
+          {t("loading") || "Loading your photos..."}
+        </p>
       </div>
     );
   }
@@ -286,13 +323,19 @@ export default function ClientGallery({ bookingId }: { bookingId: string }) {
       <div className="bg-destructive/10 text-destructive p-6 rounded-xl border border-destructive/20 text-center">
         <p className="font-semibold">{error}</p>
         <Link href="/account/dashboard">
-          <Button variant="outline" className="mt-4">{t("backToDashboard")}</Button>
+          <Button variant="outline" className="mt-4">
+            {t("backToDashboard")}
+          </Button>
         </Link>
       </div>
     );
   }
 
-  if (files.length === 0 && selectedGalleryFiles.length === 0 && finalFiles.length === 0) {
+  if (
+    files.length === 0 &&
+    selectedGalleryFiles.length === 0 &&
+    finalFiles.length === 0
+  ) {
     return (
       <div className="text-center py-32 bg-muted/20 rounded-3xl border-2 border-dashed border-border/50 flex flex-col items-center justify-center shadow-inner">
         <div className="bg-primary/5 p-6 rounded-full mb-6">
@@ -304,40 +347,57 @@ export default function ClientGallery({ bookingId }: { bookingId: string }) {
     );
   }
 
-
-
-
   return (
     <div className="flex flex-col h-[calc(100dvh-8rem)] min-h-[600px]">
       <div className="flex justify-between items-center mb-4 shrink-0">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">{t("title") || "Your Gallery"}</h1>
+          <h1 className="text-3xl font-bold tracking-tight">
+            {t("title") || "Your Gallery"}
+          </h1>
           {selectionStatus === "completed" ? (
             <p className="text-muted-foreground mt-1 text-emerald-600 font-medium">
               {t("selectionComplete")}
             </p>
           ) : (
             <p className="text-muted-foreground mt-1">
-              {t("selectUpTo")} <strong className="text-primary">{maxSelections}</strong> {t("photosToBeEdited")}
+              {t("selectUpTo")}{" "}
+              <strong className="text-primary">{maxSelections}</strong>{" "}
+              {t("photosToBeEdited")}
             </p>
           )}
         </div>
       </div>
 
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full flex-1 flex flex-col overflow-hidden">
+      <Tabs
+        value={activeTab}
+        onValueChange={setActiveTab}
+        className="w-full flex-1 flex flex-col overflow-hidden"
+      >
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-4 shrink-0">
           <TabsList className="bg-muted">
-            <TabsTrigger value="raw">{t("rawPhotos")} ({files.length})</TabsTrigger>
-            {(selectedGalleryFiles.length > 0 || selectionStatus === "completed") && (
-              <TabsTrigger value="selected">{t("selectedPhotos")} ({selectedGalleryFiles.length})</TabsTrigger>
+            <TabsTrigger value="raw">
+              {t("rawPhotos")} ({files.length})
+            </TabsTrigger>
+            {(selectedGalleryFiles.length > 0 ||
+              selectionStatus === "completed") && (
+              <TabsTrigger value="selected">
+                {t("selectedPhotos")} ({selectedGalleryFiles.length})
+              </TabsTrigger>
             )}
             {finalFiles.length > 0 && (
-              <TabsTrigger value="final" className="bg-primary/10 text-primary data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+              <TabsTrigger
+                value="final"
+                className="bg-primary/10 text-primary data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+              >
                 {t("finalEdited")}
               </TabsTrigger>
             )}
           </TabsList>
-          <Button onClick={downloadAll} variant="outline" className="w-full sm:w-auto">
+          <Button
+            onClick={downloadAll}
+            variant="outline"
+            className="w-full sm:w-auto"
+          >
             <Download className="w-4 h-4 mr-2" />
             {t("downloadAll")}
           </Button>
@@ -388,8 +448,8 @@ export default function ClientGallery({ bookingId }: { bookingId: string }) {
         <DialogContent
           className="max-w-[100vw] sm:max-w-[100vw] w-screen h-[100dvh] m-0 p-0 rounded-none bg-black/95 backdrop-blur-sm border-none flex flex-col overflow-hidden [&>button]:hidden z-50"
           onKeyDown={(e) => {
-            if (e.key === "ArrowRight") navigateImage('next');
-            if (e.key === "ArrowLeft") navigateImage('prev');
+            if (e.key === "ArrowRight") navigateImage("next");
+            if (e.key === "ArrowLeft") navigateImage("prev");
           }}
         >
           {selectedImage && (
@@ -414,7 +474,7 @@ export default function ClientGallery({ bookingId }: { bookingId: string }) {
                 variant="ghost"
                 size="icon"
                 className="absolute left-2 md:left-6 top-1/2 -translate-y-1/2 text-white/70 hover:text-white hover:bg-white/20 bg-black/40 z-20 h-12 w-12 md:h-16 md:w-16 rounded-full hidden sm:flex backdrop-blur-md transition-all"
-                onClick={(e) => navigateImage('prev', e)}
+                onClick={(e) => navigateImage("prev", e)}
               >
                 <ChevronLeft className="w-8 h-8 md:w-10 md:h-10" />
               </Button>
@@ -423,7 +483,7 @@ export default function ClientGallery({ bookingId }: { bookingId: string }) {
                 variant="ghost"
                 size="icon"
                 className="absolute right-2 md:right-6 top-1/2 -translate-y-1/2 text-white/70 hover:text-white hover:bg-white/20 bg-black/40 z-20 h-12 w-12 md:h-16 md:w-16 rounded-full hidden sm:flex backdrop-blur-md transition-all"
-                onClick={(e) => navigateImage('next', e)}
+                onClick={(e) => navigateImage("next", e)}
               >
                 <ChevronRight className="w-8 h-8 md:w-10 md:h-10" />
               </Button>
@@ -432,15 +492,18 @@ export default function ClientGallery({ bookingId }: { bookingId: string }) {
               <div className="absolute top-4 left-4 md:top-6 md:left-6 z-50 flex items-center gap-2 md:gap-3">
                 {activeTab === "raw" && selectionStatus !== "completed" && (
                   <Button
-                    className={`rounded-full shadow-lg transition-all duration-300 gap-2 h-10 md:h-12 px-4 md:px-5 ${selectedFiles.includes(selectedImage.id)
-                      ? 'bg-primary text-white hover:bg-primary/90 shadow-primary/30 scale-105'
-                      : 'bg-white/20 backdrop-blur-md text-white hover:bg-white/30 border-transparent'
-                      }`}
+                    className={`rounded-full shadow-lg transition-all duration-300 gap-2 h-10 md:h-12 px-4 md:px-5 ${
+                      selectedFiles.includes(selectedImage.id)
+                        ? "bg-primary text-white hover:bg-primary/90 shadow-primary/30 scale-105"
+                        : "bg-white/20 backdrop-blur-md text-white hover:bg-white/30 border-transparent"
+                    }`}
                     onClick={(e) => toggleSelection(selectedImage.id, e)}
                   >
                     <CheckCircle2 className="w-5 h-5 md:w-6 md:h-6" />
                     <span className="font-medium text-sm md:text-base">
-                      {selectedFiles.includes(selectedImage.id) ? t("selectedPhotos") : t("select")}
+                      {selectedFiles.includes(selectedImage.id)
+                        ? t("selectedPhotos")
+                        : t("select")}
                     </span>
                   </Button>
                 )}
@@ -467,7 +530,8 @@ export default function ClientGallery({ bookingId }: { bookingId: string }) {
                       if (!date || !time) return timeStr;
                       const [y, m, d] = date.split(":");
                       const [h, min] = time.split(":");
-                      if (y && m && d && h && min) return `${d}.${m}.${y} - ${h}:${min}`;
+                      if (y && m && d && h && min)
+                        return `${d}.${m}.${y} - ${h}:${min}`;
                       return timeStr;
                     })()}
                   </span>
@@ -481,7 +545,7 @@ export default function ClientGallery({ bookingId }: { bookingId: string }) {
                   src={selectedImage.thumbnail}
                   alt="placeholder"
                   fill
-                  className={`object-contain drop-shadow-2xl absolute transition-opacity duration-500 ease-in-out ${isHighResLoaded ? 'opacity-0' : 'opacity-100 blur-md scale-105'}`}
+                  className={`object-contain drop-shadow-2xl absolute transition-opacity duration-500 ease-in-out ${isHighResLoaded ? "opacity-0" : "opacity-100 blur-md scale-105"}`}
                   draggable={false}
                   sizes="100vw"
                 />
@@ -490,7 +554,7 @@ export default function ClientGallery({ bookingId }: { bookingId: string }) {
                   src={selectedImage.url}
                   alt={selectedImage.name}
                   fill
-                  className={`object-contain drop-shadow-2xl relative z-10 transition-opacity duration-300 ease-in-out ${isHighResLoaded ? 'opacity-100' : 'opacity-0'}`}
+                  className={`object-contain drop-shadow-2xl relative z-10 transition-opacity duration-300 ease-in-out ${isHighResLoaded ? "opacity-100" : "opacity-0"}`}
                   draggable={false}
                   onLoad={() => setIsHighResLoaded(true)}
                   sizes="100vw"
@@ -500,57 +564,79 @@ export default function ClientGallery({ bookingId }: { bookingId: string }) {
 
               {/* Image Counter */}
               <div className="absolute bottom-28 md:bottom-32 right-4 md:right-auto md:left-1/2 md:-translate-x-1/2 text-white/70 bg-black/40 px-3 md:px-4 py-1.5 md:py-2 rounded-full text-[10px] md:text-sm font-medium tracking-wide backdrop-blur-md z-50 shadow-2xl transition-all">
-                {activeFiles.findIndex(f => f.id === selectedImage.id) + 1} / {activeFiles.length}
+                {activeFiles.findIndex((f) => f.id === selectedImage.id) + 1} /{" "}
+                {activeFiles.length}
               </div>
             </div>
           )}
 
           {/* Sticky Bottom Selection Bar (Only inside Lightbox on raw tab) */}
-          {selectionStatus !== "completed" && activeTab === "raw" && files.length > 0 && isLightboxOpen && (
-            <div className="fixed bottom-6 left-4 right-4 md:left-6 md:right-auto md:w-[420px] p-4 bg-black/60 backdrop-blur-xl border border-white/10 shadow-2xl rounded-2xl z-[60] animate-in slide-in-from-bottom-10 fade-in duration-500">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="bg-white/10 p-2.5 rounded-xl hidden sm:block">
-                    <CheckCircle2 className="w-5 h-5 text-white" />
+          {selectionStatus !== "completed" &&
+            activeTab === "raw" &&
+            files.length > 0 &&
+            isLightboxOpen && (
+              <div className="fixed bottom-6 left-4 right-4 md:left-6 md:right-auto md:w-[420px] p-4 bg-black/60 backdrop-blur-xl border border-white/10 shadow-2xl rounded-2xl z-[60] animate-in slide-in-from-bottom-10 fade-in duration-500">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="bg-white/10 p-2.5 rounded-xl hidden sm:block">
+                      <CheckCircle2 className="w-5 h-5 text-white" />
+                    </div>
+                    <div>
+                      <p className="text-sm text-white/70 font-medium">
+                        {t("selectionProgress")}
+                      </p>
+                      <p className="font-bold text-lg leading-none mt-0.5 text-white">
+                        <span
+                          className={
+                            selectedFiles.length === maxSelections
+                              ? "text-primary text-xl"
+                              : "text-xl"
+                          }
+                        >
+                          {selectedFiles.length}
+                        </span>
+                        <span className="text-white/50">
+                          {" "}
+                          / {maxSelections}
+                        </span>
+                      </p>
+                    </div>
                   </div>
-                  <div>
-                    <p className="text-sm text-white/70 font-medium">{t("selectionProgress")}</p>
-                    <p className="font-bold text-lg leading-none mt-0.5 text-white">
-                      <span className={selectedFiles.length === maxSelections ? "text-primary text-xl" : "text-xl"}>{selectedFiles.length}</span>
-                      <span className="text-white/50"> / {maxSelections}</span>
-                    </p>
-                  </div>
+                  <Button
+                    onClick={submitSelections}
+                    disabled={selectedFiles.length === 0 || isSubmitting}
+                    className={`rounded-xl h-12 px-6 shadow-md transition-all ${selectedFiles.length === maxSelections ? "animate-pulse shadow-primary/20" : ""}`}
+                  >
+                    {isSubmitting ? (
+                      <>
+                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                        {t("submitting")}
+                      </>
+                    ) : (
+                      t("submitPhotos", { count: selectedFiles.length }) ||
+                      `Submit ${selectedFiles.length} Photos`
+                    )}
+                  </Button>
                 </div>
-                <Button
-                  onClick={submitSelections}
-                  disabled={selectedFiles.length === 0 || isSubmitting}
-                  className={`rounded-xl h-12 px-6 shadow-md transition-all ${selectedFiles.length === maxSelections ? 'animate-pulse shadow-primary/20' : ''}`}
-                >
-                  {isSubmitting ? (
-                    <>
-                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                      {t("submitting")}
-                    </>
-                  ) : (
-                    t("submitPhotos", { count: selectedFiles.length }) || `Submit ${selectedFiles.length} Photos`
-                  )}
-                </Button>
               </div>
-            </div>
-          )}
+            )}
         </DialogContent>
       </Dialog>
 
       <AlertDialog open={limitAlertOpen} onOpenChange={setLimitAlertOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>{t("limitReached") || "Limit Reached"}</AlertDialogTitle>
+            <AlertDialogTitle>
+              {t("limitReached") || "Limit Reached"}
+            </AlertDialogTitle>
             <AlertDialogDescription>
               {t("selectUpTo")} {maxSelections} {t("photosToBeEdited")}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogAction onClick={() => setLimitAlertOpen(false)}>{t("ok") || "OK"}</AlertDialogAction>
+            <AlertDialogAction onClick={() => setLimitAlertOpen(false)}>
+              {t("ok") || "OK"}
+            </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
@@ -558,33 +644,61 @@ export default function ClientGallery({ bookingId }: { bookingId: string }) {
       <AlertDialog open={submitConfirmOpen} onOpenChange={setSubmitConfirmOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>{t("submitSelections") || "Submit Selections"}</AlertDialogTitle>
+            <AlertDialogTitle>
+              {t("submitSelections") || "Submit Selections"}
+            </AlertDialogTitle>
             <AlertDialogDescription>
               {t("submitConfirm", { count: selectedFiles.length })}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel disabled={isSubmitting}>{t("cancel") || "Cancel"}</AlertDialogCancel>
-            <AlertDialogAction onClick={(e) => { e.preventDefault(); handleConfirmSubmit(); }} disabled={isSubmitting}>
-              {isSubmitting ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : null}
+            <AlertDialogCancel disabled={isSubmitting}>
+              {t("cancel") || "Cancel"}
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={(e) => {
+                e.preventDefault();
+                handleConfirmSubmit();
+              }}
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? (
+                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+              ) : null}
               {t("confirm") || "Confirm"}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
 
-      <AlertDialog open={showMobileZipModal} onOpenChange={setShowMobileZipModal}>
+      <AlertDialog
+        open={showMobileZipModal}
+        onOpenChange={setShowMobileZipModal}
+      >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>{t("mobileZipTitle") || "Download ZIP on Mobile"}</AlertDialogTitle>
+            <AlertDialogTitle>
+              {t("mobileZipTitle") || "Download ZIP on Mobile"}
+            </AlertDialogTitle>
             <AlertDialogDescription>
-              {t("mobileZipDesc") || "Downloading a ZIP file on mobile devices might require a file manager to open. Do you want to proceed?"}
+              {t("mobileZipDesc") ||
+                "Downloading a ZIP file on mobile devices might require a file manager to open. Do you want to proceed?"}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel disabled={isZipping}>{t("cancel") || "Cancel"}</AlertDialogCancel>
-            <AlertDialogAction onClick={(e) => { e.preventDefault(); triggerZipDownload(); }} disabled={isZipping}>
-              {isZipping ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : null}
+            <AlertDialogCancel disabled={isZipping}>
+              {t("cancel") || "Cancel"}
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={(e) => {
+                e.preventDefault();
+                triggerZipDownload();
+              }}
+              disabled={isZipping}
+            >
+              {isZipping ? (
+                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+              ) : null}
               {t("download") || "Download"}
             </AlertDialogAction>
           </AlertDialogFooter>

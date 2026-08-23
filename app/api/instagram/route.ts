@@ -18,13 +18,13 @@ export async function GET() {
         biography: "Instagram Feed Not Configured",
         profilePictureUrl: "",
         website: "",
-        posts: []
+        posts: [],
       });
     }
 
     // 3. Native fetch to the live Behold API
     const res = await fetch(beholdUrl, {
-      next: { revalidate: 3600 } // Parallel NextJS caching
+      next: { revalidate: 3600 }, // Parallel NextJS caching
     });
 
     if (!res.ok) {
@@ -33,12 +33,11 @@ export async function GET() {
 
     const liveData = await res.json();
     return NextResponse.json(liveData);
-
   } catch (error: any) {
     console.error("Dynamic Instagram Server Error:", error);
     return NextResponse.json(
       { error: "Failed to load live Instagram feed" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

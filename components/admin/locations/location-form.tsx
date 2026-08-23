@@ -4,7 +4,15 @@ import { useState, useEffect } from "react";
 import { useForm, useFieldArray } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { MapPin, Trash2, UploadCloud, ImageIcon, Plus, Sparkles, Navigation } from "lucide-react";
+import {
+  MapPin,
+  Trash2,
+  UploadCloud,
+  ImageIcon,
+  Plus,
+  Sparkles,
+  Navigation,
+} from "lucide-react";
 import { Spinner } from "@/components/ui/spinner";
 import Image from "next/image";
 
@@ -13,7 +21,13 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -33,24 +47,43 @@ interface LocationFormProps {
   initialData?: LocationDB;
 }
 
-const SUPPORTED_LOCALES = ["en", "ar", "ru", "es", "zh", "de", "fr", "ro", "tr"];
+const SUPPORTED_LOCALES = [
+  "en",
+  "ar",
+  "ru",
+  "es",
+  "zh",
+  "de",
+  "fr",
+  "ro",
+  "tr",
+];
 
 export function LocationForm({ initialData }: LocationFormProps) {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [coverImagePreview, setCoverImagePreview] = useState<string | null>(initialData?.cover_image || null);
-  const [galleryPreviews, setGalleryPreviews] = useState<string[]>(initialData?.gallery_images || []);
+  const [coverImagePreview, setCoverImagePreview] = useState<string | null>(
+    initialData?.cover_image || null,
+  );
+  const [galleryPreviews, setGalleryPreviews] = useState<string[]>(
+    initialData?.gallery_images || [],
+  );
   const [isTranslating, setIsTranslating] = useState(false);
 
-  const formattedInitialData = initialData ? {
-    ...initialData,
-    tags: initialData.tags?.map(t => ({ value: t })) || [],
-    nearby_locations: initialData.nearby_locations?.map(l => ({ value: l })) || [],
-    photography_tips: {
-      ...initialData.photography_tips,
-      en: (initialData.photography_tips?.en || []).map(t => ({ value: t }))
-    }
-  } : undefined;
+  const formattedInitialData = initialData
+    ? {
+        ...initialData,
+        tags: initialData.tags?.map((t) => ({ value: t })) || [],
+        nearby_locations:
+          initialData.nearby_locations?.map((l) => ({ value: l })) || [],
+        photography_tips: {
+          ...initialData.photography_tips,
+          en: (initialData.photography_tips?.en || []).map((t) => ({
+            value: t,
+          })),
+        },
+      }
+    : undefined;
 
   const form = useForm<any>({
     defaultValues: formattedInitialData || {
@@ -65,23 +98,35 @@ export function LocationForm({ initialData }: LocationFormProps) {
       photography_tips: { en: [{ value: "" }] },
       nearby_locations: [],
       tags: [],
-      coordinates: { lat: 41.0082, lng: 28.9784 }
+      coordinates: { lat: 41.0082, lng: 28.9784 },
     },
   });
 
   const { control } = form;
 
-  const { fields: tipsFieldsEn, append: appendTip, remove: removeTip } = useFieldArray({
+  const {
+    fields: tipsFieldsEn,
+    append: appendTip,
+    remove: removeTip,
+  } = useFieldArray({
     control,
     name: `photography_tips.en`,
   });
 
-  const { fields: tagsFields, append: appendTag, remove: removeTag } = useFieldArray({
+  const {
+    fields: tagsFields,
+    append: appendTag,
+    remove: removeTag,
+  } = useFieldArray({
     control,
     name: `tags`,
   });
 
-  const { fields: nearbyFields, append: appendNearby, remove: removeNearby } = useFieldArray({
+  const {
+    fields: nearbyFields,
+    append: appendNearby,
+    remove: removeNearby,
+  } = useFieldArray({
     control,
     name: `nearby_locations`,
   });
@@ -93,7 +138,9 @@ export function LocationForm({ initialData }: LocationFormProps) {
   // Auto-generate slug from English title if slug is empty
   useEffect(() => {
     if (watchTitleEn && !watchSlug && !initialData?.slug) {
-      form.setValue("slug", generateNativeSlug(watchTitleEn), { shouldValidate: true });
+      form.setValue("slug", generateNativeSlug(watchTitleEn), {
+        shouldValidate: true,
+      });
     }
   }, [watchTitleEn, watchSlug, initialData?.slug, form]);
 
@@ -127,7 +174,9 @@ export function LocationForm({ initialData }: LocationFormProps) {
     }
   };
 
-  const handleGalleryUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleGalleryUpload = async (
+    e: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     const files = Array.from(e.target.files || []);
     if (!files.length) return;
 
@@ -139,7 +188,9 @@ export function LocationForm({ initialData }: LocationFormProps) {
 
     try {
       setIsSubmitting(true);
-      toast.loading(`Uploading ${files.length} images...`, { id: "upload-gallery" });
+      toast.loading(`Uploading ${files.length} images...`, {
+        id: "upload-gallery",
+      });
 
       const newUrls: string[] = [];
 
@@ -154,7 +205,9 @@ export function LocationForm({ initialData }: LocationFormProps) {
         const updatedGallery = [...galleryPreviews, ...newUrls];
         setGalleryPreviews(updatedGallery);
         form.setValue("gallery_images", updatedGallery, { shouldDirty: true });
-        toast.success(`Successfully uploaded ${newUrls.length} images!`, { id: "upload-gallery" });
+        toast.success(`Successfully uploaded ${newUrls.length} images!`, {
+          id: "upload-gallery",
+        });
       }
     } catch (error: any) {
       toast.error("Failed to upload some images", { id: "upload-gallery" });
@@ -199,13 +252,18 @@ export function LocationForm({ initialData }: LocationFormProps) {
 
     try {
       setIsTranslating(true);
-      toast.loading("AI is translating location content to 7 languages... This may take up to a minute.", { id: "ai-trans" });
+      toast.loading(
+        "AI is translating location content to 7 languages... This may take up to a minute.",
+        { id: "ai-trans" },
+      );
 
       const contentToTranslate = {
         title: values.title.en,
         description: values.description.en,
         best_time: values.best_time?.en || "",
-        photography_tips: (values.photography_tips?.en || []).map((t: any) => t?.value ?? t).filter(Boolean),
+        photography_tips: (values.photography_tips?.en || [])
+          .map((t: any) => t?.value ?? t)
+          .filter(Boolean),
       };
 
       const response = await fetch("/api/admin/translate-location", {
@@ -239,7 +297,9 @@ export function LocationForm({ initialData }: LocationFormProps) {
       toast.success("AI Translation complete!", { id: "ai-trans" });
     } catch (error) {
       console.error(error);
-      toast.error("AI Translation failed. Please try again.", { id: "ai-trans" });
+      toast.error("AI Translation failed. Please try again.", {
+        id: "ai-trans",
+      });
     } finally {
       setIsTranslating(false);
     }
@@ -259,19 +319,35 @@ export function LocationForm({ initialData }: LocationFormProps) {
         title: data.title,
         description: data.description,
         best_time: data.best_time,
-        photography_tips: Object.keys(data.photography_tips || {}).reduce((acc: any, locale) => {
-          const tips = data.photography_tips[locale];
-          acc[locale] = (Array.isArray(tips) ? tips : []).map((t: any) => t?.value ?? t).filter(Boolean);
-          return acc;
-        }, {}),
-        nearby_locations: (data.nearby_locations || []).map((l: any) => l?.value ?? l).filter(Boolean),
+        photography_tips: Object.keys(data.photography_tips || {}).reduce(
+          (acc: any, locale) => {
+            const tips = data.photography_tips[locale];
+            acc[locale] = (Array.isArray(tips) ? tips : [])
+              .map((t: any) => t?.value ?? t)
+              .filter(Boolean);
+            return acc;
+          },
+          {},
+        ),
+        nearby_locations: (data.nearby_locations || [])
+          .map((l: any) => l?.value ?? l)
+          .filter(Boolean),
         tags: Array.isArray(data.tags)
-          ? data.tags.map((t: any) => t?.value ?? t).flatMap((t: string) => (t && typeof t === 'string') ? t.split(',').map(s => s.trim()).filter(Boolean) : [])
+          ? data.tags
+              .map((t: any) => t?.value ?? t)
+              .flatMap((t: string) =>
+                t && typeof t === "string"
+                  ? t
+                      .split(",")
+                      .map((s) => s.trim())
+                      .filter(Boolean)
+                  : [],
+              )
           : [],
         coordinates: {
           lat: parseFloat(data.coordinates.lat) || 0,
-          lng: parseFloat(data.coordinates.lng) || 0
-        }
+          lng: parseFloat(data.coordinates.lng) || 0,
+        },
       };
 
       if (initialData?.id) {
@@ -286,7 +362,9 @@ export function LocationForm({ initialData }: LocationFormProps) {
       router.refresh();
     } catch (error: any) {
       console.error(error);
-      toast.error(error.message || "Failed to save location", { id: "save-loc" });
+      toast.error(error.message || "Failed to save location", {
+        id: "save-loc",
+      });
     } finally {
       setIsSubmitting(false);
     }
@@ -295,7 +373,6 @@ export function LocationForm({ initialData }: LocationFormProps) {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-
         {/* TOP ACTIONS */}
         <div className="flex justify-between items-center bg-card p-4 rounded-xl border border-primary/10 shadow-sm sticky top-0 z-10 w-full dark:bg-background">
           <div className="flex items-center gap-4">
@@ -324,7 +401,11 @@ export function LocationForm({ initialData }: LocationFormProps) {
               disabled={isTranslating || isSubmitting}
               className="gap-2 bg-blue-50 hover:bg-blue-100 text-blue-600 border-blue-200 dark:bg-blue-950/30 dark:border-blue-900 dark:text-blue-400"
             >
-              {isTranslating ? <Spinner className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
+              {isTranslating ? (
+                <Spinner className="w-4 h-4 animate-spin" />
+              ) : (
+                <Sparkles className="w-4 h-4" />
+              )}
               Translate All (AI)
             </Button>
             <Button type="submit" disabled={isSubmitting}>
@@ -341,7 +422,6 @@ export function LocationForm({ initialData }: LocationFormProps) {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-
           {/* LEFT COLUMN: Metadata & Media */}
           <div className="space-y-6 lg:col-span-1">
             <Card>
@@ -358,7 +438,9 @@ export function LocationForm({ initialData }: LocationFormProps) {
                       <FormControl>
                         <Input placeholder="e.g. galata-tower" {...field} />
                       </FormControl>
-                      <FormDescription>Must be unique, lowercase, no spaces.</FormDescription>
+                      <FormDescription>
+                        Must be unique, lowercase, no spaces.
+                      </FormDescription>
                     </FormItem>
                   )}
                 />
@@ -372,7 +454,9 @@ export function LocationForm({ initialData }: LocationFormProps) {
                       <FormControl>
                         <Input type="number" {...field} />
                       </FormControl>
-                      <FormDescription>Lower numbers appear first.</FormDescription>
+                      <FormDescription>
+                        Lower numbers appear first.
+                      </FormDescription>
                     </FormItem>
                   )}
                 />
@@ -385,7 +469,12 @@ export function LocationForm({ initialData }: LocationFormProps) {
                       <FormItem>
                         <FormLabel>Latitude</FormLabel>
                         <FormControl>
-                          <Input type="number" step="any" placeholder="41.0082" {...field} />
+                          <Input
+                            type="number"
+                            step="any"
+                            placeholder="41.0082"
+                            {...field}
+                          />
                         </FormControl>
                       </FormItem>
                     )}
@@ -397,7 +486,12 @@ export function LocationForm({ initialData }: LocationFormProps) {
                       <FormItem>
                         <FormLabel>Longitude</FormLabel>
                         <FormControl>
-                          <Input type="number" step="any" placeholder="28.9784" {...field} />
+                          <Input
+                            type="number"
+                            step="any"
+                            placeholder="28.9784"
+                            {...field}
+                          />
                         </FormControl>
                       </FormItem>
                     )}
@@ -412,34 +506,64 @@ export function LocationForm({ initialData }: LocationFormProps) {
               </CardHeader>
               <CardContent className="space-y-6">
                 <div>
-                  <FormLabel className="mb-2 block">Tags (e.g. historic, couple, rooftop)</FormLabel>
+                  <FormLabel className="mb-2 block">
+                    Tags (e.g. historic, couple, rooftop)
+                  </FormLabel>
                   <div className="space-y-2">
                     {tagsFields.map((field, index) => (
                       <div key={field.id} className="flex items-center gap-2">
-                        <Input {...form.register(`tags.${index}.value`)} placeholder="Tag..." />
-                        <Button type="button" variant="ghost" size="icon" onClick={() => removeTag(index)}>
+                        <Input
+                          {...form.register(`tags.${index}.value`)}
+                          placeholder="Tag..."
+                        />
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => removeTag(index)}
+                        >
                           <Trash2 className="w-4 h-4 text-destructive" />
                         </Button>
                       </div>
                     ))}
-                    <Button type="button" variant="outline" size="sm" onClick={() => appendTag({ value: "" })}>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => appendTag({ value: "" })}
+                    >
                       <Plus className="w-4 h-4 mr-2" /> Add Tag
                     </Button>
                   </div>
                 </div>
 
                 <div>
-                  <FormLabel className="mb-2 block">Nearby Locations (Slugs)</FormLabel>
+                  <FormLabel className="mb-2 block">
+                    Nearby Locations (Slugs)
+                  </FormLabel>
                   <div className="space-y-2">
                     {nearbyFields.map((field, index) => (
                       <div key={field.id} className="flex items-center gap-2">
-                        <Input {...form.register(`nearby_locations.${index}.value`)} placeholder="galata-bridge" />
-                        <Button type="button" variant="ghost" size="icon" onClick={() => removeNearby(index)}>
+                        <Input
+                          {...form.register(`nearby_locations.${index}.value`)}
+                          placeholder="galata-bridge"
+                        />
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => removeNearby(index)}
+                        >
                           <Trash2 className="w-4 h-4 text-destructive" />
                         </Button>
                       </div>
                     ))}
-                    <Button type="button" variant="outline" size="sm" onClick={() => appendNearby({ value: "" })}>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => appendNearby({ value: "" })}
+                    >
                       <Plus className="w-4 h-4 mr-2" /> Add Nearby
                     </Button>
                   </div>
@@ -455,14 +579,20 @@ export function LocationForm({ initialData }: LocationFormProps) {
               <CardContent className="space-y-6">
                 {!form.watch("slug") && (
                   <div className="bg-amber-50 dark:bg-amber-950/30 text-amber-600 dark:text-amber-400 p-3 rounded-lg text-sm mb-4 border border-amber-200 dark:border-amber-900 flex items-center justify-center font-medium">
-                    Please type a Slug (URL) in the Metadata section before uploading images.
+                    Please type a Slug (URL) in the Metadata section before
+                    uploading images.
                   </div>
                 )}
                 <div>
                   <Label className="mb-2 block">Hero Image (Cover)</Label>
                   {coverImagePreview ? (
                     <div className="relative w-full aspect-video rounded-xl overflow-hidden border">
-                      <Image src={coverImagePreview} alt="Cover" fill className="object-cover" />
+                      <Image
+                        src={coverImagePreview}
+                        alt="Cover"
+                        fill
+                        className="object-cover"
+                      />
                       <Button
                         type="button"
                         variant="destructive"
@@ -476,7 +606,11 @@ export function LocationForm({ initialData }: LocationFormProps) {
                   ) : (
                     <div className="relative w-full aspect-video rounded-xl border-2 border-dashed flex flex-col items-center justify-center bg-muted/50 hover:bg-muted transition-colors">
                       <ImageIcon className="w-8 h-8 mb-2 text-muted-foreground" />
-                      <p className="text-sm font-medium">{form.watch("slug") ? "Click to upload cover" : "Type slug first!"}</p>
+                      <p className="text-sm font-medium">
+                        {form.watch("slug")
+                          ? "Click to upload cover"
+                          : "Type slug first!"}
+                      </p>
                       <input
                         type="file"
                         className="absolute inset-0 opacity-0 cursor-pointer disabled:cursor-not-allowed"
@@ -492,8 +626,16 @@ export function LocationForm({ initialData }: LocationFormProps) {
                   <Label className="mb-2 block">Gallery Images</Label>
                   <div className="grid grid-cols-2 gap-2 mb-2">
                     {galleryPreviews.map((url, index) => (
-                      <div key={index} className="relative aspect-square rounded-md overflow-hidden border">
-                        <Image src={url} alt={`Gallery ${index}`} fill className="object-cover" />
+                      <div
+                        key={index}
+                        className="relative aspect-square rounded-md overflow-hidden border"
+                      >
+                        <Image
+                          src={url}
+                          alt={`Gallery ${index}`}
+                          fill
+                          className="object-cover"
+                        />
                         <Button
                           type="button"
                           variant="destructive"
@@ -528,12 +670,18 @@ export function LocationForm({ initialData }: LocationFormProps) {
               <CardHeader className="bg-muted/30 pb-4 border-b">
                 <CardTitle className="text-xl flex items-center gap-2">
                   Content Dictionary
-                  <Badge variant="outline" className="ml-2 font-normal text-xs bg-background">
+                  <Badge
+                    variant="outline"
+                    className="ml-2 font-normal text-xs bg-background"
+                  >
                     {SUPPORTED_LOCALES.length} Languages
                   </Badge>
                 </CardTitle>
                 <CardDescription>
-                  Write in English first, then use <strong>Translate All (AI)</strong>. AI will recursively translate titles, descriptions, and photography tips matching the English fields structure.
+                  Write in English first, then use{" "}
+                  <strong>Translate All (AI)</strong>. AI will recursively
+                  translate titles, descriptions, and photography tips matching
+                  the English fields structure.
                 </CardDescription>
               </CardHeader>
               <Tabs defaultValue="en" className="w-full">
@@ -552,8 +700,11 @@ export function LocationForm({ initialData }: LocationFormProps) {
                 </div>
 
                 {SUPPORTED_LOCALES.map((locale) => (
-                  <TabsContent key={locale} value={locale} className="p-6 space-y-6 m-0 border-none outline-none">
-
+                  <TabsContent
+                    key={locale}
+                    value={locale}
+                    className="p-6 space-y-6 m-0 border-none outline-none"
+                  >
                     <FormField
                       control={form.control}
                       name={`title.${locale}`}
@@ -561,7 +712,11 @@ export function LocationForm({ initialData }: LocationFormProps) {
                         <FormItem>
                           <FormLabel>Location Name ({locale})</FormLabel>
                           <FormControl>
-                            <Input placeholder="..." {...field} className="text-lg font-medium" />
+                            <Input
+                              placeholder="..."
+                              {...field}
+                              className="text-lg font-medium"
+                            />
                           </FormControl>
                         </FormItem>
                       )}
@@ -591,7 +746,10 @@ export function LocationForm({ initialData }: LocationFormProps) {
                         <FormItem>
                           <FormLabel>Best Time To Visit ({locale})</FormLabel>
                           <FormControl>
-                            <Input placeholder="e.g. Early Morning, Sunset" {...field} />
+                            <Input
+                              placeholder="e.g. Early Morning, Sunset"
+                              {...field}
+                            />
                           </FormControl>
                         </FormItem>
                       )}
@@ -606,9 +764,14 @@ export function LocationForm({ initialData }: LocationFormProps) {
                       {locale === "en" ? (
                         <>
                           {tipsFieldsEn.map((field, index) => (
-                            <div key={field.id} className="flex items-start gap-2">
+                            <div
+                              key={field.id}
+                              className="flex items-start gap-2"
+                            >
                               <Input
-                                {...form.register(`photography_tips.en.${index}.value`)}
+                                {...form.register(
+                                  `photography_tips.en.${index}.value`,
+                                )}
                                 placeholder="Enter a photography tip..."
                               />
                               <Button
@@ -637,13 +800,17 @@ export function LocationForm({ initialData }: LocationFormProps) {
                           {watchTipsEn.map((_: any, index: number) => (
                             <div key={index} className="flex items-start gap-2">
                               <Input
-                                {...form.register(`photography_tips.${locale}.${index}`)}
+                                {...form.register(
+                                  `photography_tips.${locale}.${index}`,
+                                )}
                                 placeholder="Waiting for translation..."
                               />
                             </div>
                           ))}
                           {watchTipsEn.length === 0 && (
-                            <p className="text-sm text-muted-foreground italic">Add tips in English first.</p>
+                            <p className="text-sm text-muted-foreground italic">
+                              Add tips in English first.
+                            </p>
                           )}
                         </>
                       )}

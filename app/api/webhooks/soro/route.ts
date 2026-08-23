@@ -4,7 +4,11 @@ import { settingsService } from "@/lib/settings-service";
 
 const TARGET_LOCALES = ["ar", "ru", "es", "zh", "de", "fr", "ro", "tr"];
 
-async function translateTo(locale: string, englishPost: { title: string, excerpt: string, content: string }, apiKey: string) {
+async function translateTo(
+  locale: string,
+  englishPost: { title: string; excerpt: string; content: string },
+  apiKey: string,
+) {
   const prompt = `
 You are an expert localization specialist and marketing copywriter. 
 Translate the following English blog post into the language with locale code: ${locale}.
@@ -34,24 +38,25 @@ Format matching exactly this JSON schema, return ONLY JSON:
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "Authorization": `Bearer ${apiKey}`,
+      Authorization: `Bearer ${apiKey}`,
     },
     body: JSON.stringify({
       model: "llama-3.3-70b-versatile",
       messages: [
         {
           role: "system",
-          content: "You are a JSON translation API. Return ONLY valid JSON, with no backticks, no markdown blocks, and no extra text."
+          content:
+            "You are a JSON translation API. Return ONLY valid JSON, with no backticks, no markdown blocks, and no extra text.",
         },
         {
           role: "user",
-          content: prompt
-        }
+          content: prompt,
+        },
       ],
       response_format: { type: "json_object" },
       temperature: 0.2,
-      max_tokens: 4000
-    })
+      max_tokens: 4000,
+    }),
   });
 
   if (!response.ok) {
@@ -68,10 +73,14 @@ Format matching exactly this JSON schema, return ONLY JSON:
     title: parsed.title || "",
     excerpt: parsed.excerpt || "",
     content: parsed.content || "",
-    slug: parsed.title ? parsed.title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "") : ""
+    slug: parsed.title
+      ? parsed.title
+          .toLowerCase()
+          .replace(/[^a-z0-9]+/g, "-")
+          .replace(/^-+|-+$/g, "")
+      : "",
   };
 }
-
 
 // Soro Webhook Handler
 // Accept incoming posts from Soro SEO and save to database
@@ -81,9 +90,14 @@ export async function POST(request: Request) {
     const secret = process.env.SORO_WEBHOOK_SECRET;
 
     if (!secret) {
-      console.warn("SORO_WEBHOOK_SECRET is not defined in environment variables.");
+      console.warn(
+        "SORO_WEBHOOK_SECRET is not defined in environment variables.",
+      );
     } else if (authHeader !== `Bearer ${secret}`) {
-      return NextResponse.json({ error: "Unauthorized: Invalid Secret Token" }, { status: 401 });
+      return NextResponse.json(
+        { error: "Unauthorized: Invalid Secret Token" },
+        { status: 401 },
+      );
     }
 
     const body = await request.json();
@@ -91,13 +105,20 @@ export async function POST(request: Request) {
     // The base English object received from Soro
     const enBase = {
       title: body.title || "",
-      slug: body.slug || (body.title ? body.title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "") : ""),
+      slug:
+        body.slug ||
+        (body.title
+          ? body.title
+              .toLowerCase()
+              .replace(/[^a-z0-9]+/g, "-")
+              .replace(/^-+|-+$/g, "")
+          : ""),
       excerpt: body.excerpt || "",
       content: body.content || "",
     };
 
     const translations: Record<string, any> = {
-      en: enBase
+      en: enBase,
     };
 
     // Auto-Translate parallel logic
@@ -108,14 +129,14 @@ export async function POST(request: Request) {
       try {
         console.log("Starting parallel Groq translations for:", TARGET_LOCALES);
         const results = await Promise.all(
-          TARGET_LOCALES.map(loc => translateTo(loc, enBase, apiKey))
+          TARGET_LOCALES.map((loc) => translateTo(loc, enBase, apiKey)),
         );
-        results.forEach(res => {
+        results.forEach((res) => {
           translations[res.locale] = {
             title: res.title,
             excerpt: res.excerpt,
             content: res.content,
-            slug: res.slug
+            slug: res.slug,
           };
         });
         console.log("Successfully completed parallel translations!");
@@ -124,25 +145,37 @@ export async function POST(request: Request) {
         // We catch the error so we can still save the English post even if translation fails
       }
     } else {
-      console.warn("No Groq API key found (in process.env.GROQ_API_KEY or settings.gemini_api_key) or missing English content. Skipping auto-translations.");
+      console.warn(
+        "No Groq API key found (in process.env.GROQ_API_KEY or settings.gemini_api_key) or missing English content. Skipping auto-translations.",
+      );
     }
 
     // Map payload to our Next.js Database schema
     const postData = {
       status: body.status || "draft",
       featured_image: body.featured_image || null,
-      published_at: body.status === "published" || body.published_at ? new Date().toISOString() : null,
+      published_at:
+        body.status === "published" || body.published_at
+          ? new Date().toISOString()
+          : null,
       is_featured: false,
       category_ids: body.category_ids || [],
       tag_ids: body.tag_ids || [],
-      translations: translations
+      translations: translations,
     };
 
     const post = await createBlogPost(postData as any);
-    
-    return NextResponse.json({ success: true, translatedLocales: Object.keys(translations), post });
+
+    return NextResponse.json({
+      success: true,
+      translatedLocales: Object.keys(translations),
+      post,
+    });
   } catch (error: any) {
     console.error("Soro Webhook Error:", error);
-    return NextResponse.json({ error: error.message || "Internal Server Error" }, { status: 500 });
+    return NextResponse.json(
+      { error: error.message || "Internal Server Error" },
+      { status: 500 },
+    );
   }
 }

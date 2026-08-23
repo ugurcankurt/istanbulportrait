@@ -1,6 +1,16 @@
 "use client";
 
-import { Facebook, Instagram, Mail, MapPin, Phone, Youtube, Video, MessageCircle, Linkedin } from "lucide-react";
+import {
+  Facebook,
+  Instagram,
+  Mail,
+  MapPin,
+  Phone,
+  Youtube,
+  Video,
+  MessageCircle,
+  Linkedin,
+} from "lucide-react";
 import Image from "next/image";
 import { useLocale, useTranslations } from "next-intl";
 import { useTheme } from "next-themes";
@@ -19,7 +29,7 @@ export function Footer({ dynamicNavData = {}, settings }: FooterProps) {
   const t = useTranslations("footer");
   const nav = useTranslations("nav");
   const tui = useTranslations("ui");
-  
+
   const locale = useLocale();
   const pathname = usePathname();
   const [mounted, setMounted] = useState(false);
@@ -30,28 +40,60 @@ export function Footer({ dynamicNavData = {}, settings }: FooterProps) {
   // Prevent hydration mismatch by waiting for client-side mount and fetching packages
   useEffect(() => {
     setMounted(true);
-    packagesService.getActivePackages().then(setActivePackages).catch(console.error);
+    packagesService
+      .getActivePackages()
+      .then(setActivePackages)
+      .catch(console.error);
   }, []);
 
   const socialLinks = [
-    { icon: Linkedin, href: "https://www.linkedin.com/company/istanbulportrait", label: "LinkedIn" },
-    ...(settings?.instagram_url ? [{ icon: Instagram, href: settings.instagram_url, label: "Instagram" }] : []),
-    ...(settings?.facebook_url ? [{ icon: Facebook, href: settings.facebook_url, label: "Facebook" }] : []),
-    ...(settings?.youtube_url ? [{ icon: Youtube, href: settings.youtube_url, label: "YouTube" }] : []),
-    ...(settings?.tiktok_url ? [{ icon: Video, href: settings.tiktok_url, label: "TikTok" }] : []),
-    ...(settings?.whatsapp_number ? [{ 
-      icon: MessageCircle, 
-      href: `https://wa.me/${settings.whatsapp_number.replace(/[^\d]/g, "")}`, 
-      label: "WhatsApp" 
-    }] : []),
-    { icon: Mail, href: `mailto:${settings?.contact_email || "info@istanbulportrait.com"}`, label: "Email" },
+    {
+      icon: Linkedin,
+      href: "https://www.linkedin.com/company/istanbulportrait",
+      label: "LinkedIn",
+    },
+    ...(settings?.instagram_url
+      ? [{ icon: Instagram, href: settings.instagram_url, label: "Instagram" }]
+      : []),
+    ...(settings?.facebook_url
+      ? [{ icon: Facebook, href: settings.facebook_url, label: "Facebook" }]
+      : []),
+    ...(settings?.youtube_url
+      ? [{ icon: Youtube, href: settings.youtube_url, label: "YouTube" }]
+      : []),
+    ...(settings?.tiktok_url
+      ? [{ icon: Video, href: settings.tiktok_url, label: "TikTok" }]
+      : []),
+    ...(settings?.whatsapp_number
+      ? [
+          {
+            icon: MessageCircle,
+            href: `https://wa.me/${settings.whatsapp_number.replace(/[^\d]/g, "")}`,
+            label: "WhatsApp",
+          },
+        ]
+      : []),
+    {
+      icon: Mail,
+      href: `mailto:${settings?.contact_email || "info@istanbulportrait.com"}`,
+      label: "Email",
+    },
   ];
 
   const quickLinks = [
     { href: "/" as const, label: nav("home") },
-    { href: `/${dynamicNavData.packages?.path || "packages"}` as any, label: dynamicNavData.packages?.title || nav("packages") },
-    { href: `/${dynamicNavData.about?.path || "about"}` as any, label: dynamicNavData.about?.title || nav("about") },
-    { href: `/${dynamicNavData.contact?.path || "contact"}` as any, label: dynamicNavData.contact?.title || nav("contact") },
+    {
+      href: `/${dynamicNavData.packages?.path || "packages"}` as any,
+      label: dynamicNavData.packages?.title || nav("packages"),
+    },
+    {
+      href: `/${dynamicNavData.about?.path || "about"}` as any,
+      label: dynamicNavData.about?.title || nav("about"),
+    },
+    {
+      href: `/${dynamicNavData.contact?.path || "contact"}` as any,
+      label: dynamicNavData.contact?.title || nav("contact"),
+    },
   ];
 
   if (pathname.startsWith("/account")) {
@@ -66,18 +108,28 @@ export function Footer({ dynamicNavData = {}, settings }: FooterProps) {
           <div className="space-y-4">
             <div className="w-32 sm:w-40">
               <AspectRatio ratio={15 / 4}>
-                {mounted && ((resolvedTheme === "dark" ? settings?.logo_dark_url : settings?.logo_url) || settings?.logo_url) ? (
-                <Image
-                  src={(resolvedTheme === "dark" ? settings?.logo_dark_url : settings?.logo_url) || settings?.logo_url!}
-                  alt={settings?.site_name || "Istanbul photographer"}
-                  fill
-                  sizes="(max-width: 640px) 128px, 160px"
-                  className="object-contain object-left"
-                  suppressHydrationWarning
-                />
+                {mounted &&
+                ((resolvedTheme === "dark"
+                  ? settings?.logo_dark_url
+                  : settings?.logo_url) ||
+                  settings?.logo_url) ? (
+                  <Image
+                    src={
+                      (resolvedTheme === "dark"
+                        ? settings?.logo_dark_url
+                        : settings?.logo_url) || settings?.logo_url!
+                    }
+                    alt={settings?.site_name || "Istanbul photographer"}
+                    fill
+                    sizes="(max-width: 640px) 128px, 160px"
+                    className="object-contain object-left"
+                    suppressHydrationWarning
+                  />
                 ) : mounted ? (
                   <div className="w-full h-full flex items-center">
-                    <span className="text-xl font-bold tracking-tight">{settings?.site_name || "Istanbul Portrait"}</span>
+                    <span className="text-xl font-bold tracking-tight">
+                      {settings?.site_name || "Istanbul Portrait"}
+                    </span>
                   </div>
                 ) : null}
               </AspectRatio>
@@ -126,7 +178,9 @@ export function Footer({ dynamicNavData = {}, settings }: FooterProps) {
                   activePackages.map((pkg) => (
                     <li key={pkg.id}>
                       <Link
-                        href={`/${dynamicNavData.packages?.path || "packages"}/${pkg.slug}` as any}
+                        href={
+                          `/${dynamicNavData.packages?.path || "packages"}/${pkg.slug}` as any
+                        }
                         className="hover:text-foreground transition-colors line-clamp-1"
                       >
                         {pkg.title?.[locale] || pkg.title?.en || pkg.slug}
@@ -134,7 +188,9 @@ export function Footer({ dynamicNavData = {}, settings }: FooterProps) {
                     </li>
                   ))
                 ) : (
-                  <li className="text-xs italic text-muted-foreground select-none">...</li>
+                  <li className="text-xs italic text-muted-foreground select-none">
+                    ...
+                  </li>
                 )
               ) : (
                 <li className="animate-pulse bg-muted/60 h-4 w-24 rounded"></li>
@@ -176,7 +232,9 @@ export function Footer({ dynamicNavData = {}, settings }: FooterProps) {
 
         <div className="mt-8 pt-8 border-t border-border">
           <div className="flex flex-col md:flex-row justify-between items-center">
-            <p className="text-sm text-muted-foreground text-center md:text-left">{t("copyright")}</p>
+            <p className="text-sm text-muted-foreground text-center md:text-left">
+              {t("copyright")}
+            </p>
             <div className="flex flex-wrap gap-4 mt-4 md:mt-0 justify-center">
               <Link
                 href={`/${dynamicNavData.privacy?.path || "privacy"}` as any}
@@ -185,7 +243,9 @@ export function Footer({ dynamicNavData = {}, settings }: FooterProps) {
                 {dynamicNavData.privacy?.title || t("privacy_policy")}
               </Link>
               <Link
-                href={`/${dynamicNavData.privacy?.path || "privacy"}#terms` as any}
+                href={
+                  `/${dynamicNavData.privacy?.path || "privacy"}#terms` as any
+                }
                 className="text-sm text-muted-foreground hover:text-foreground transition-colors"
               >
                 {t("terms_of_service")}

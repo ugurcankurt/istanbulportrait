@@ -37,7 +37,7 @@ export const availabilityService = {
       .single();
 
     if (error) {
-      if (error.code === 'PGRST116') {
+      if (error.code === "PGRST116") {
         // Not found, return defaults
         return { id: "default", start_time: "06:00", end_time: "20:00" };
       }
@@ -67,7 +67,11 @@ export const availabilityService = {
     return data || [];
   },
 
-  async addBlockedSlot(date: string, time: string | null, reason: string | null): Promise<void> {
+  async addBlockedSlot(
+    date: string,
+    time: string | null,
+    reason: string | null,
+  ): Promise<void> {
     const supabase = getSupabaseClient();
     const { error } = await supabase
       .from("blocked_slots")
@@ -114,5 +118,5 @@ export const availabilityService = {
       .eq("id", id);
 
     if (error) throw error;
-  }
+  },
 };

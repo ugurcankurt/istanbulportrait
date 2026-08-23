@@ -58,7 +58,7 @@ export function WebpImageUploader({
             }
           },
           "image/webp",
-          0.85
+          0.85,
         );
       };
 
@@ -71,7 +71,9 @@ export function WebpImageUploader({
     });
   };
 
-  const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     const file = event.target.files?.[0];
     if (!file) return;
 
@@ -86,9 +88,9 @@ export function WebpImageUploader({
       // 1. Convert any image to WebP client-side
       const webpBlob = await convertToWebp(file);
       const webpFile = new File(
-        [webpBlob], 
-        `${file.name.split('.')[0]}-${Date.now()}.webp`, 
-        { type: "image/webp" }
+        [webpBlob],
+        `${file.name.split(".")[0]}-${Date.now()}.webp`,
+        { type: "image/webp" },
       );
 
       // 2. Upload to Supabase Storage
@@ -104,12 +106,14 @@ export function WebpImageUploader({
       if (error) throw error;
 
       // 3. Get Public URL
-      const { data: { publicUrl } } = supabase.storage
-        .from(bucket)
-        .getPublicUrl(fileName);
+      const {
+        data: { publicUrl },
+      } = supabase.storage.from(bucket).getPublicUrl(fileName);
 
       onChange(publicUrl);
-      toast.success("Image uploaded and converted to WebP format successfully.");
+      toast.success(
+        "Image uploaded and converted to WebP format successfully.",
+      );
     } catch (error: any) {
       console.error("Upload error:", error);
       toast.error(error.message || "Something went wrong during upload.");
@@ -126,15 +130,21 @@ export function WebpImageUploader({
     <div className="space-y-3">
       <div>
         <label className="text-sm font-medium">{label}</label>
-        {description && <p className="text-xs text-muted-foreground">{description}</p>}
+        {description && (
+          <p className="text-xs text-muted-foreground">{description}</p>
+        )}
       </div>
-      
+
       <div className="flex items-start gap-4">
         {/* Preview Box */}
         <div className="relative w-24 h-24 border rounded-lg bg-muted flex items-center justify-center overflow-hidden flex-shrink-0 group">
           {value ? (
             // eslint-disable-next-line @next/next/no-img-element
-            <img src={value} alt={label} className="w-full h-full object-contain p-2" />
+            <img
+              src={value}
+              alt={label}
+              className="w-full h-full object-contain p-2"
+            />
           ) : (
             <ImageIcon className="w-8 h-8 text-muted-foreground opacity-50" />
           )}
@@ -180,7 +190,8 @@ export function WebpImageUploader({
             )}
           </Button>
           <div className="text-[10px] text-muted-foreground bg-muted/30 p-2 rounded border border-dashed">
-            * Selected image will be automatically converted to highly optimized .WEBP format before upload.
+            * Selected image will be automatically converted to highly optimized
+            .WEBP format before upload.
           </div>
         </div>
       </div>

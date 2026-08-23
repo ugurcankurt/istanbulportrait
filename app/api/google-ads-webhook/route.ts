@@ -6,7 +6,10 @@ import { sendAdminLeadNotification } from "@/lib/resend";
 export async function POST(request: Request) {
   try {
     const payload = await request.json();
-    console.log("Google Ads Webhook Payload:", JSON.stringify(payload, null, 2));
+    console.log(
+      "Google Ads Webhook Payload:",
+      JSON.stringify(payload, null, 2),
+    );
 
     // Payload expected format:
     // {
@@ -31,14 +34,14 @@ export async function POST(request: Request) {
     if (!expectedKey) {
       return NextResponse.json(
         { error: "Webhook not configured on server (Missing key in settings)" },
-        { status: 500 }
+        { status: 500 },
       );
     }
 
     if (payload.google_key !== expectedKey) {
       return NextResponse.json(
         { error: "Invalid google_key" },
-        { status: 401 }
+        { status: 401 },
       );
     }
 
@@ -93,7 +96,7 @@ export async function POST(request: Request) {
         formId: payload.form_id?.toString(),
         fields: fields,
       },
-      settings
+      settings,
     );
 
     // Google Ads expects a 200 OK
@@ -102,7 +105,7 @@ export async function POST(request: Request) {
     console.error("Google Ads Webhook Error:", error);
     return NextResponse.json(
       { error: "Internal Server Error" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

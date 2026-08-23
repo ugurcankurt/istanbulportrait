@@ -6,7 +6,13 @@ import { useRouter } from "@/i18n/routing";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Spinner } from "@/components/ui/spinner";
 import { Lock } from "lucide-react";
@@ -18,22 +24,26 @@ export default function UpdatePasswordPage() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [sessionStatus, setSessionStatus] = useState<"loading" | "authenticated" | "missing">("loading");
+  const [sessionStatus, setSessionStatus] = useState<
+    "loading" | "authenticated" | "missing"
+  >("loading");
   const router = useRouter();
   const supabase = createClientSupabaseClient();
 
   useEffect(() => {
     // Check if user is actually authenticated (session is securely set via cookies by our /api/auth/confirm route)
     const checkSession = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+
       if (!session) {
         setSessionStatus("missing");
       } else {
         setSessionStatus("authenticated");
       }
     };
-    
+
     checkSession();
   }, [supabase.auth]);
 
@@ -43,12 +53,12 @@ export default function UpdatePasswordPage() {
       setError(t("passwordMismatch"));
       return;
     }
-    
+
     setLoading(true);
     setError(null);
 
     const { error: updateError } = await supabase.auth.updateUser({
-      password: password
+      password: password,
     });
 
     if (updateError) {
@@ -66,7 +76,9 @@ export default function UpdatePasswordPage() {
 
       <Card className="w-full max-w-md relative z-10 border-border/50 bg-card/60 backdrop-blur-xl">
         <CardHeader className="space-y-3 text-center pb-6">
-          <CardTitle className="text-3xl font-bold tracking-tight">{t("title")}</CardTitle>
+          <CardTitle className="text-3xl font-bold tracking-tight">
+            {t("title")}
+          </CardTitle>
           <CardDescription className="text-base">
             {t("description")}
           </CardDescription>
@@ -74,15 +86,25 @@ export default function UpdatePasswordPage() {
         <CardContent>
           <form onSubmit={handleUpdate} className="space-y-5">
             {error && (
-              <Alert variant="destructive" className="bg-destructive/10 border-destructive/20 text-destructive">
-                <AlertDescription className="font-medium text-sm">{error}</AlertDescription>
+              <Alert
+                variant="destructive"
+                className="bg-destructive/10 border-destructive/20 text-destructive"
+              >
+                <AlertDescription className="font-medium text-sm">
+                  {error}
+                </AlertDescription>
               </Alert>
             )}
 
             {sessionStatus === "missing" && (
-              <Alert variant="destructive" className="bg-destructive/10 border-destructive/20 text-destructive mb-4">
+              <Alert
+                variant="destructive"
+                className="bg-destructive/10 border-destructive/20 text-destructive mb-4"
+              >
                 <AlertDescription className="font-medium text-sm">
-                  Authentication session is missing! The invite link may have expired or is invalid. Please try logging in or contact support.
+                  Authentication session is missing! The invite link may have
+                  expired or is invalid. Please try logging in or contact
+                  support.
                 </AlertDescription>
               </Alert>
             )}
@@ -123,7 +145,16 @@ export default function UpdatePasswordPage() {
               </div>
             </div>
 
-            <Button type="submit" className="w-full h-11" disabled={loading || !password || !confirmPassword || sessionStatus === "missing"}>
+            <Button
+              type="submit"
+              className="w-full h-11"
+              disabled={
+                loading ||
+                !password ||
+                !confirmPassword ||
+                sessionStatus === "missing"
+              }
+            >
               {loading ? (
                 <>
                   <Spinner className="w-4 h-4 mr-2 animate-spin" />

@@ -1,6 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
-import * as dotenv from 'dotenv';
-dotenv.config({ path: '.env.local' });
+import * as dotenv from "dotenv";
+dotenv.config({ path: ".env.local" });
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseKey = process.env.SUPABASE_SERVICE_KEY!;
@@ -9,19 +9,19 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 
 async function checkBlogData() {
   console.log("Connecting to Supabase project:", supabaseUrl);
-  
+
   const results = {
     authors: 0,
     posts: 0,
     categories: 0,
-    tags: 0
+    tags: 0,
   };
 
   // 1. Check blog posts
   const { data: posts, error: postsError } = await supabase
-    .from('blog_posts')
-    .select('id, status, is_featured, created_at, updated_at');
-  
+    .from("blog_posts")
+    .select("id, status, is_featured, created_at, updated_at");
+
   if (postsError) {
     console.error("Error fetching posts:", postsError.message);
   } else {
@@ -34,9 +34,9 @@ async function checkBlogData() {
 
   // 2. Check authors
   const { data: authors, error: authorsError } = await supabase
-    .from('blog_authors')
-    .select('id, name, bio');
-  
+    .from("blog_authors")
+    .select("id, name, bio");
+
   if (authorsError) {
     console.error("Error fetching authors:", authorsError.message);
   } else {
@@ -46,9 +46,9 @@ async function checkBlogData() {
 
   // 3. Check categories
   const { data: categories, error: catError } = await supabase
-    .from('blog_categories')
-    .select('id, slug');
-  
+    .from("blog_categories")
+    .select("id, slug");
+
   if (catError) {
     console.error("Error fetching categories:", catError.message);
   } else {

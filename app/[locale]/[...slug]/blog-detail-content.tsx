@@ -8,14 +8,22 @@ import { BlogAuthor } from "@/components/blog-author";
 import { BlogSummary } from "@/components/blog-summary";
 import { BreadcrumbNav } from "@/components/breadcrumb-nav";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
-import { getBlogPostBySlug, getSalvagedBlogSlug, getPublishedBlogPosts } from "@/lib/blog/blog-service";
+import {
+  getBlogPostBySlug,
+  getSalvagedBlogSlug,
+  getPublishedBlogPosts,
+} from "@/lib/blog/blog-service";
 import rehypeSlug from "rehype-slug";
 import { TableOfContents } from "@/components/table-of-contents";
 import { BlogCard } from "@/components/blog-card";
 import { formatBlogDate } from "@/lib/blog/blog-utils";
 import { settingsService } from "@/lib/settings-service";
 import type { Locale } from "@/types/blog";
-import { generateSeoDescription, buildArticleSchema, getBaseUrl } from "@/lib/seo-utils";
+import {
+  generateSeoDescription,
+  buildArticleSchema,
+  getBaseUrl,
+} from "@/lib/seo-utils";
 import { SchemaInjector } from "@/components/schema-injector";
 
 export async function BlogDetailPageContent({
@@ -49,26 +57,51 @@ export async function BlogDetailPageContent({
     sort_by: "published_at",
     sort_order: "desc",
   });
-  const relatedPosts = allRecentPosts.filter(p => p.id !== post.id).slice(0, 3);
+  const relatedPosts = allRecentPosts
+    .filter((p) => p.id !== post.id)
+    .slice(0, 3);
 
   return (
     <div>
-      <SchemaInjector schema={buildArticleSchema({
-        title: post.translation.title,
-        description: generateSeoDescription(post.translation.meta_description || post.translation.excerpt || post.translation.content),
-        image: post.featured_image || settings.default_og_image_url || "",
-        datePublished: post.published_at || post.created_at,
-        dateModified: post.updated_at || post.published_at || post.created_at,
-        authorName: post.author?.name || settings.founder_name || settings.site_name || "Author",
-        authorImage: post.author?.avatar_url || undefined,
-        authorBio: post.author?.bio?.[locale as keyof typeof post.author.bio] || undefined,
-        authorUrls: post.author?.social_links ? Object.values(post.author.social_links).filter(Boolean) as string[] : [settings.instagram_url, settings.facebook_url, settings.youtube_url, settings.tiktok_url].filter(Boolean) as string[],
-        publisherName: settings.organization_name || settings.site_name || undefined,
-        publisherLogo: settings.logo_url || settings.default_og_image_url || undefined,
-        inLanguage: locale,
-        keywords: post.translation.meta_keywords || [],
-        url: `${getBaseUrl()}/${locale}/${parentSlug}/${post.translation.slug}`
-      })} />
+      <SchemaInjector
+        schema={buildArticleSchema({
+          title: post.translation.title,
+          description: generateSeoDescription(
+            post.translation.meta_description ||
+              post.translation.excerpt ||
+              post.translation.content,
+          ),
+          image: post.featured_image || settings.default_og_image_url || "",
+          datePublished: post.published_at || post.created_at,
+          dateModified: post.updated_at || post.published_at || post.created_at,
+          authorName:
+            post.author?.name ||
+            settings.founder_name ||
+            settings.site_name ||
+            "Author",
+          authorImage: post.author?.avatar_url || undefined,
+          authorBio:
+            post.author?.bio?.[locale as keyof typeof post.author.bio] ||
+            undefined,
+          authorUrls: post.author?.social_links
+            ? (Object.values(post.author.social_links).filter(
+                Boolean,
+              ) as string[])
+            : ([
+                settings.instagram_url,
+                settings.facebook_url,
+                settings.youtube_url,
+                settings.tiktok_url,
+              ].filter(Boolean) as string[]),
+          publisherName:
+            settings.organization_name || settings.site_name || undefined,
+          publisherLogo:
+            settings.logo_url || settings.default_og_image_url || undefined,
+          inLanguage: locale,
+          keywords: post.translation.meta_keywords || [],
+          url: `${getBaseUrl()}/${locale}/${parentSlug}/${post.translation.slug}`,
+        })}
+      />
 
       <BreadcrumbNav />
 
@@ -79,14 +112,17 @@ export async function BlogDetailPageContent({
             <div className="text-center max-w-4xl mx-auto px-4 mb-8">
               <div className="flex flex-wrap justify-center items-center gap-3 text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-6">
                 <time dateTime={post.published_at || post.created_at}>
-                  {formatBlogDate(post.published_at || post.created_at, locale as Locale)}
+                  {formatBlogDate(
+                    post.published_at || post.created_at,
+                    locale as Locale,
+                  )}
                 </time>
                 <span>•</span>
                 <span>
                   {t("reading_time", { minutes: post.reading_time_minutes })}
                 </span>
               </div>
-              
+
               <h1 className="text-4xl md:text-6xl lg:text-7xl font-serif leading-tight text-foreground mb-8">
                 {post.translation.title}
               </h1>
@@ -115,7 +151,10 @@ export async function BlogDetailPageContent({
           )}
 
           {/* Content */}
-          <TableOfContents content={post.translation.content} title={t("table_of_contents")} />
+          <TableOfContents
+            content={post.translation.content}
+            title={t("table_of_contents")}
+          />
           <div className="prose prose-lg dark:prose-invert max-w-none prose-headings:font-serif prose-headings:font-normal prose-h2:text-4xl prose-h3:text-2xl prose-p:leading-relaxed prose-p:text-muted-foreground/90 prose-a:text-primary prose-a:underline-offset-4 hover:prose-a:decoration-primary prose-img:rounded-[2rem] prose-img:border-[0.5px] prose-img:border-border/50 prose-img:shadow-sm">
             <ReactMarkdown
               remarkPlugins={[remarkGfm]}
@@ -175,14 +214,16 @@ export async function BlogDetailPageContent({
           {/* Related Posts */}
           {relatedPosts.length > 0 && (
             <div className="mt-16 pt-12 border-t border-border/50">
-              <h2 className="text-3xl font-serif text-foreground mb-8 text-center">{t("related_posts")}</h2>
+              <h2 className="text-3xl font-serif text-foreground mb-8 text-center">
+                {t("related_posts")}
+              </h2>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {relatedPosts.map((relatedPost) => (
-                  <BlogCard 
-                    key={relatedPost.id} 
-                    post={relatedPost as any} 
-                    locale={locale} 
-                    parentSegment={parentSlug} 
+                  <BlogCard
+                    key={relatedPost.id}
+                    post={relatedPost as any}
+                    locale={locale}
+                    parentSegment={parentSlug}
                   />
                 ))}
               </div>

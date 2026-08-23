@@ -16,26 +16,35 @@ export async function POST(req: Request) {
             return cookieStore.get(name)?.value;
           },
         },
-      }
+      },
     );
 
-    const { data: { session } } = await supabase.auth.getSession();
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
 
     if (!session) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { title, description, best_time, photography_tips } = await req.json();
+    const { title, description, best_time, photography_tips } =
+      await req.json();
 
     if (!title || !description) {
-      return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
+      return NextResponse.json(
+        { error: "Missing required fields" },
+        { status: 400 },
+      );
     }
 
     const { settingsService } = await import("@/lib/settings-service");
     const settings = await settingsService.getSettings();
     const apiKey = settings.gemini_api_key;
     if (!apiKey) {
-      return NextResponse.json({ error: "Groq API Key is not configured in Site Settings." }, { status: 500 });
+      return NextResponse.json(
+        { error: "Groq API Key is not configured in Site Settings." },
+        { status: 500 },
+      );
     }
 
     const prompt = `
@@ -65,7 +74,7 @@ Provide accurate, professional, marketing-friendly translations suitable for a h
 
     // Connect to Gemini REST API
     const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=${apiKey}`;
-    
+
     const response = await fetch(geminiUrl, {
       method: "POST",
       headers: {
@@ -73,33 +82,43 @@ Provide accurate, professional, marketing-friendly translations suitable for a h
       },
       body: JSON.stringify({
         contents: [{ parts: [{ text: prompt }] }],
-        generationConfig: { responseMimeType: "application/json" }
-      })
+        generationConfig: { responseMimeType: "application/json" },
+      }),
     });
 
     if (!response.ok) {
       const errorData = await response.text();
       console.error("Gemini API Error:", errorData);
-      return NextResponse.json({ error: "Failed to communicate with AI" }, { status: 500 });
+      return NextResponse.json(
+        { error: "Failed to communicate with AI" },
+        { status: 500 },
+      );
     }
 
     const data = await response.json();
     const textOutput = data.candidates?.[0]?.content?.parts?.[0]?.text;
 
     if (!textOutput) {
-      return NextResponse.json({ error: "Invalid AI response structure" }, { status: 500 });
+      return NextResponse.json(
+        { error: "Invalid AI response structure" },
+        { status: 500 },
+      );
     }
 
     let parsedTranslations = {};
     try {
-      parsedTranslations = JSON.parse(textOutput.replace(/```(?:json)?/gi, "").trim());
+      parsedTranslations = JSON.parse(
+        textOutput.replace(/```(?:json)?/gi, "").trim(),
+      );
     } catch (e) {
       console.error("Failed to parse Groq JSON:", textOutput);
-      return NextResponse.json({ error: "AI returned invalid JSON" }, { status: 500 });
+      return NextResponse.json(
+        { error: "AI returned invalid JSON" },
+        { status: 500 },
+      );
     }
 
     return NextResponse.json({ translatedSegments: parsedTranslations });
-
   } catch (err: any) {
     console.error("Translation error:", err);
     return NextResponse.json({ error: err.message }, { status: 500 });

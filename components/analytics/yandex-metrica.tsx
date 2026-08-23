@@ -18,10 +18,7 @@ interface YandexMetricaProps {
   enabled?: boolean;
 }
 
-export function YandexMetrica({
-  id,
-  enabled = true,
-}: YandexMetricaProps) {
+export function YandexMetrica({ id, enabled = true }: YandexMetricaProps) {
   const pathname = usePathname();
 
   // Track page views on route changes
@@ -147,8 +144,6 @@ export function useYandexMetrica() {
 
     // Track as "Add to Cart" for E-commerce funnel
     if (typeof window !== "undefined") {
-
-
       window.ymDataLayer = window.ymDataLayer || [];
       window.ymDataLayer.push({
         ecommerce: {
@@ -173,8 +168,6 @@ export function useYandexMetrica() {
 
     // Track as "Detail" view for E-commerce
     if (typeof window !== "undefined") {
-
-
       window.ymDataLayer = window.ymDataLayer || [];
       window.ymDataLayer.push({
         ecommerce: {

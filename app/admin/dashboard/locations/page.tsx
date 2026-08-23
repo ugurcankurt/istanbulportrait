@@ -2,7 +2,14 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Plus, Pencil, Trash2, CheckCircle2, XCircle, MapPin as MapPinIcon } from "lucide-react";
+import {
+  Plus,
+  Pencil,
+  Trash2,
+  CheckCircle2,
+  XCircle,
+  MapPin as MapPinIcon,
+} from "lucide-react";
 import Image from "next/image";
 import { toast } from "sonner";
 import { locationsService, type LocationDB } from "@/lib/locations-service";
@@ -17,7 +24,12 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Empty, EmptyDescription, EmptyMedia, EmptyTitle } from "@/components/ui/empty";
+import {
+  Empty,
+  EmptyDescription,
+  EmptyMedia,
+  EmptyTitle,
+} from "@/components/ui/empty";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -28,12 +40,20 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
 
 export default function LocationsAdminPage() {
   const [locations, setLocations] = useState<LocationDB[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [locationToDelete, setLocationToDelete] = useState<LocationDB | null>(null);
+  const [locationToDelete, setLocationToDelete] = useState<LocationDB | null>(
+    null,
+  );
 
   useEffect(() => {
     fetchLocations();
@@ -62,14 +82,21 @@ export default function LocationsAdminPage() {
         await deleteLocationImage(locationToDelete.cover_image);
       }
 
-      if (locationToDelete.gallery_images && locationToDelete.gallery_images.length > 0) {
-        await Promise.all(locationToDelete.gallery_images.map(img => deleteLocationImage(img)));
+      if (
+        locationToDelete.gallery_images &&
+        locationToDelete.gallery_images.length > 0
+      ) {
+        await Promise.all(
+          locationToDelete.gallery_images.map((img) =>
+            deleteLocationImage(img),
+          ),
+        );
       }
 
       await locationsService.deleteLocation(locationToDelete.id);
 
       toast.success("Location deleted successfully", { id: "delete-loc" });
-      setLocations(locations.filter(l => l.id !== locationToDelete.id));
+      setLocations(locations.filter((l) => l.id !== locationToDelete.id));
     } catch (error) {
       console.error(error);
       toast.error("An error occurred during deletion", { id: "delete-loc" });
@@ -87,7 +114,11 @@ export default function LocationsAdminPage() {
             Manage your photography locations and maps.
           </p>
         </div>
-        <Button nativeButton={false} render={<Link href="/admin/dashboard/locations/new" />} className="shrink-0 gap-2">
+        <Button
+          nativeButton={false}
+          render={<Link href="/admin/dashboard/locations/new" />}
+          className="shrink-0 gap-2"
+        >
           <Plus className="w-4 h-4" />
           Add Location
         </Button>
@@ -96,7 +127,9 @@ export default function LocationsAdminPage() {
       <Card>
         <CardHeader className="border-b">
           <CardTitle>All Locations</CardTitle>
-          <CardDescription>A list of all active and inactive locations in your system.</CardDescription>
+          <CardDescription>
+            A list of all active and inactive locations in your system.
+          </CardDescription>
         </CardHeader>
         <CardContent className="p-0">
           <Table>
@@ -123,11 +156,18 @@ export default function LocationsAdminPage() {
                 </TableRow>
               ) : locations.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={7} className="h-48 text-center text-muted-foreground p-0">
+                  <TableCell
+                    colSpan={7}
+                    className="h-48 text-center text-muted-foreground p-0"
+                  >
                     <Empty className="py-6 border-0 w-full flex-col justify-center items-center shadow-none">
-                      <EmptyMedia variant="icon"><MapPinIcon className="w-8 h-8 text-muted-foreground" /></EmptyMedia>
+                      <EmptyMedia variant="icon">
+                        <MapPinIcon className="w-8 h-8 text-muted-foreground" />
+                      </EmptyMedia>
                       <EmptyTitle>No locations found</EmptyTitle>
-                      <EmptyDescription>Create your first location to get started.</EmptyDescription>
+                      <EmptyDescription>
+                        Create your first location to get started.
+                      </EmptyDescription>
                     </Empty>
                   </TableCell>
                 </TableRow>
@@ -152,15 +192,25 @@ export default function LocationsAdminPage() {
                       )}
                     </TableCell>
                     <TableCell className="font-medium">
-                      {loc.title?.en || <span className="text-muted-foreground italic">Untitled</span>}
+                      {loc.title?.en || (
+                        <span className="text-muted-foreground italic">
+                          Untitled
+                        </span>
+                      )}
                     </TableCell>
                     <TableCell>
-                      <code className="px-2 py-1 bg-muted rounded text-xs">{loc.slug}</code>
+                      <code className="px-2 py-1 bg-muted rounded text-xs">
+                        {loc.slug}
+                      </code>
                     </TableCell>
                     <TableCell>
                       <div className="flex flex-wrap gap-1">
                         {loc.tags?.map((tag) => (
-                          <Badge key={tag} variant="secondary" className="text-[10px]">
+                          <Badge
+                            key={tag}
+                            variant="secondary"
+                            className="text-[10px]"
+                          >
                             {tag}
                           </Badge>
                         ))}
@@ -168,7 +218,10 @@ export default function LocationsAdminPage() {
                     </TableCell>
                     <TableCell>
                       {loc.is_active ? (
-                        <Badge variant="default" className="bg-green-500 hover:bg-green-600 gap-1">
+                        <Badge
+                          variant="default"
+                          className="bg-green-500 hover:bg-green-600 gap-1"
+                        >
                           <CheckCircle2 className="w-3 h-3" /> Active
                         </Badge>
                       ) : (
@@ -180,7 +233,16 @@ export default function LocationsAdminPage() {
                     <TableCell>{loc.sort_order}</TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end gap-2">
-                        <Button nativeButton={false} variant="outline" size="icon" render={<Link href={`/admin/dashboard/locations/${loc.id}`} />}>
+                        <Button
+                          nativeButton={false}
+                          variant="outline"
+                          size="icon"
+                          render={
+                            <Link
+                              href={`/admin/dashboard/locations/${loc.id}`}
+                            />
+                          }
+                        >
                           <Pencil className="w-4 h-4" />
                         </Button>
                         <Button
@@ -201,13 +263,20 @@ export default function LocationsAdminPage() {
         </CardContent>
       </Card>
 
-      <AlertDialog open={!!locationToDelete} onOpenChange={(open) => !open && setLocationToDelete(null)}>
+      <AlertDialog
+        open={!!locationToDelete}
+        onOpenChange={(open) => !open && setLocationToDelete(null)}
+      >
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
             <AlertDialogDescription>
-              This will permanently delete the location <strong>{locationToDelete?.title?.en || locationToDelete?.slug}</strong>.
-              All associated images in Supabase Storage will also be completely deleted. This action cannot be undone.
+              This will permanently delete the location{" "}
+              <strong>
+                {locationToDelete?.title?.en || locationToDelete?.slug}
+              </strong>
+              . All associated images in Supabase Storage will also be
+              completely deleted. This action cannot be undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

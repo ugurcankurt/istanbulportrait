@@ -1,12 +1,6 @@
 "use client";
 
-import {
-  Calendar,
-  CheckCircle,
-  Clock,
-  Mail,
-  Phone,
-} from "lucide-react";
+import { Calendar, CheckCircle, Clock, Mail, Phone } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -53,7 +47,11 @@ export function BookingSuccess({
   const basePrice = packageDBInfo ? Number(packageDBInfo.price) : 150;
 
   const packageInfo = {
-    name: packageDBInfo?.title?.[locale] || packageDBInfo?.title?.["en"] || packageDBInfo?.slug || packageId,
+    name:
+      packageDBInfo?.title?.[locale] ||
+      packageDBInfo?.title?.["en"] ||
+      packageDBInfo?.slug ||
+      packageId,
     price: basePrice,
   };
 
@@ -72,8 +70,12 @@ export function BookingSuccess({
   const discountAmount = baseTotal > 0 ? Math.max(0, baseTotal - paidTotal) : 0;
   const isDiscounted = discountAmount > 0;
   const isCashPayment = confirmedBooking?.paymentId?.startsWith("cash_");
-  const depositAmount = isCashPayment ? 0 : Math.round(paidTotal * 0.3 * 100) / 100;
-  const remainingAmount = isCashPayment ? paidTotal : Math.round((paidTotal - depositAmount) * 100) / 100;
+  const depositAmount = isCashPayment
+    ? 0
+    : Math.round(paidTotal * 0.3 * 100) / 100;
+  const remainingAmount = isCashPayment
+    ? paidTotal
+    : Math.round((paidTotal - depositAmount) * 100) / 100;
 
   const depositLabel = tsuccess("deposit_paid");
   const remainingLabel = tsuccess("remaining_amount");
@@ -134,8 +136,12 @@ export function BookingSuccess({
                     {isDiscounted && (
                       <div className="bg-sale/10 rounded-md p-3 mb-2 border border-sale/20 space-y-2">
                         <div className="flex justify-between items-center text-sm">
-                          <span className="text-muted-foreground">{originalLabel}:</span>
-                          <span className="line-through text-muted-foreground">{formatCurrency(baseTotal, locale)}</span>
+                          <span className="text-muted-foreground">
+                            {originalLabel}:
+                          </span>
+                          <span className="line-through text-muted-foreground">
+                            {formatCurrency(baseTotal, locale)}
+                          </span>
                         </div>
                         <div className="flex justify-between items-center text-sm text-sale font-bold">
                           <span>{discountLabel}:</span>
@@ -361,10 +367,19 @@ export function BookingSuccess({
 
             {/* Action Buttons */}
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 rtl:gap-reverse pt-4">
-              <Button nativeButton={false} render={<Link href={"/packages" as any} />} className="flex-1 h-11">
+              <Button
+                nativeButton={false}
+                render={<Link href={"/packages" as any} />}
+                className="flex-1 h-11"
+              >
                 {t("buttons.book_another")}
               </Button>
-              <Button nativeButton={false} render={<Link href="/" />} variant="outline" className="flex-1 h-11">
+              <Button
+                nativeButton={false}
+                render={<Link href="/" />}
+                variant="outline"
+                className="flex-1 h-11"
+              >
                 {tui("back_to_home")}
               </Button>
             </div>

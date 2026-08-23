@@ -19,7 +19,10 @@ export async function getServerUser(): Promise<User | null> {
 
     if (error) {
       // Ignore AuthSessionMissingError for anonymous visitors
-      if (error.name !== "AuthSessionMissingError" && !error.message.includes("Auth session missing")) {
+      if (
+        error.name !== "AuthSessionMissingError" &&
+        !error.message.includes("Auth session missing")
+      ) {
         console.error("Auth: Get user error:", error);
       }
       return null;

@@ -10,7 +10,7 @@ async function run() {
   } catch (err: any) {
     console.error("Failed:", err.message);
     if (err.response) {
-       console.error(err.response.data);
+      console.error(err.response.data);
     }
   }
 }

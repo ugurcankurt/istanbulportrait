@@ -46,13 +46,16 @@ export async function GET(request: NextRequest) {
         query = query.eq("status", status);
       }
 
-      // If we need to search by customer name/email, we technically can't do it directly 
-      // via inner join filter with basic supabase unless we use inner joins. 
+      // If we need to search by customer name/email, we technically can't do it directly
+      // via inner join filter with basic supabase unless we use inner joins.
       // For simplicity, we filter in JS if search is present, or we skip it for now.
       if (search) {
         query = query.not("bookings", "is", null);
         // Supabase foreign table filtering
-        query = query.or(`user_name.ilike.%${search}%,user_email.ilike.%${search}%`, { foreignTable: 'bookings' });
+        query = query.or(
+          `user_name.ilike.%${search}%,user_email.ilike.%${search}%`,
+          { foreignTable: "bookings" },
+        );
       }
 
       // Apply sorting

@@ -6,7 +6,9 @@ const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_KEY!;
 
 if (!supabaseUrl || !supabaseAnonKey) {
-  throw new Error("Missing required NEXT_PUBLIC_SUPABASE environment variables");
+  throw new Error(
+    "Missing required NEXT_PUBLIC_SUPABASE environment variables",
+  );
 }
 
 if (typeof window === "undefined" && !supabaseServiceKey) {
@@ -87,7 +89,12 @@ export type Database = {
           user_phone: string;
           booking_date: string;
           booking_time: string;
-          status?: "draft" | "pending" | "confirmed" | "cancelled" | "completed";
+          status?:
+            | "draft"
+            | "pending"
+            | "confirmed"
+            | "cancelled"
+            | "completed";
           total_amount: number;
           notes?: string;
           locale?: string;
@@ -104,7 +111,12 @@ export type Database = {
           user_phone?: string;
           booking_date?: string;
           booking_time?: string;
-          status?: "draft" | "pending" | "confirmed" | "cancelled" | "completed";
+          status?:
+            | "draft"
+            | "pending"
+            | "confirmed"
+            | "cancelled"
+            | "completed";
           total_amount?: number;
           notes?: string;
           locale?: string;
@@ -280,58 +292,58 @@ export type Database = {
         };
       };
       site_settings: {
-          Row: {
-            id: number;
-            contact_email: string | null;
-            contact_phone: string | null;
-            whatsapp_number: string | null;
-            instagram_url: string | null;
-            facebook_url: string | null;
-            youtube_url: string | null;
-            tiktok_url: string | null;
-            logo_url: string | null;
-            logo_dark_url: string | null;
-            favicon_url: string | null;
-            address: any; // JSONB
-            working_hours: any; // JSONB
-            created_at: string;
-            updated_at: string;
-          };
-          Insert: {
-            id?: number;
-            contact_email?: string | null;
-            contact_phone?: string | null;
-            whatsapp_number?: string | null;
-            instagram_url?: string | null;
-            facebook_url?: string | null;
-            youtube_url?: string | null;
-            tiktok_url?: string | null;
-            logo_url?: string | null;
-            logo_dark_url?: string | null;
-            favicon_url?: string | null;
-            address?: any;
-            working_hours?: any;
-            created_at?: string;
-            updated_at?: string;
-          };
-          Update: {
-            id?: number;
-            contact_email?: string | null;
-            contact_phone?: string | null;
-            whatsapp_number?: string | null;
-            instagram_url?: string | null;
-            facebook_url?: string | null;
-            youtube_url?: string | null;
-            tiktok_url?: string | null;
-            logo_url?: string | null;
-            logo_dark_url?: string | null;
-            favicon_url?: string | null;
-            address?: any;
-            working_hours?: any;
-            created_at?: string;
-            updated_at?: string;
-          };
+        Row: {
+          id: number;
+          contact_email: string | null;
+          contact_phone: string | null;
+          whatsapp_number: string | null;
+          instagram_url: string | null;
+          facebook_url: string | null;
+          youtube_url: string | null;
+          tiktok_url: string | null;
+          logo_url: string | null;
+          logo_dark_url: string | null;
+          favicon_url: string | null;
+          address: any; // JSONB
+          working_hours: any; // JSONB
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: number;
+          contact_email?: string | null;
+          contact_phone?: string | null;
+          whatsapp_number?: string | null;
+          instagram_url?: string | null;
+          facebook_url?: string | null;
+          youtube_url?: string | null;
+          tiktok_url?: string | null;
+          logo_url?: string | null;
+          logo_dark_url?: string | null;
+          favicon_url?: string | null;
+          address?: any;
+          working_hours?: any;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: number;
+          contact_email?: string | null;
+          contact_phone?: string | null;
+          whatsapp_number?: string | null;
+          instagram_url?: string | null;
+          facebook_url?: string | null;
+          youtube_url?: string | null;
+          tiktok_url?: string | null;
+          logo_url?: string | null;
+          logo_dark_url?: string | null;
+          favicon_url?: string | null;
+          address?: any;
+          working_hours?: any;
+          created_at?: string;
+          updated_at?: string;
         };
       };
     };
   };
+};

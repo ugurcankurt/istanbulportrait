@@ -13,7 +13,8 @@ const getSupabaseClient = () => {
   // On Server: use Service Role for unrestricted DB fetch or fallback to ANON
   return createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    process.env.SUPABASE_SERVICE_KEY ||
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
   );
 };
 
@@ -77,31 +78,33 @@ export class LocationsService {
   /**
    * Fetch a single location by its main internal slug or by native dynamic translated slug.
    */
-  getLocationBySlug = cache(async (slug: string): Promise<LocationDB | null> => {
-    const locations = await this.getLocations();
-    
-    // Normalize incoming slug
-    let decodedIncomingSlug = slug;
-    try {
-      decodedIncomingSlug = decodeURIComponent(slug).trim().toLowerCase();
-    } catch {}
+  getLocationBySlug = cache(
+    async (slug: string): Promise<LocationDB | null> => {
+      const locations = await this.getLocations();
 
-    const { generateNativeSlug } = await import('@/lib/slug-generator');
+      // Normalize incoming slug
+      let decodedIncomingSlug = slug;
+      try {
+        decodedIncomingSlug = decodeURIComponent(slug).trim().toLowerCase();
+      } catch {}
 
-    for (const loc of locations) {
-      if (loc.slug === decodedIncomingSlug) return loc;
-      
-      if (loc.title) {
-        for (const val of Object.values(loc.title)) {
-          if (val && generateNativeSlug(val) === decodedIncomingSlug) {
-            return loc;
+      const { generateNativeSlug } = await import("@/lib/slug-generator");
+
+      for (const loc of locations) {
+        if (loc.slug === decodedIncomingSlug) return loc;
+
+        if (loc.title) {
+          for (const val of Object.values(loc.title)) {
+            if (val && generateNativeSlug(val) === decodedIncomingSlug) {
+              return loc;
+            }
           }
         }
       }
-    }
-    
-    return null;
-  });
+
+      return null;
+    },
+  );
 
   /**
    * Fetch a single location by ID (Admin)
@@ -136,7 +139,10 @@ export class LocationsService {
     return data as LocationDB;
   }
 
-  async updateLocation(id: string, locationData: Partial<LocationDB>): Promise<LocationDB> {
+  async updateLocation(
+    id: string,
+    locationData: Partial<LocationDB>,
+  ): Promise<LocationDB> {
     const supabase = getSupabaseClient();
     const { data, error } = await supabase
       .from("locations")
@@ -151,10 +157,7 @@ export class LocationsService {
 
   async deleteLocation(id: string): Promise<void> {
     const supabase = getSupabaseClient();
-    const { error } = await supabase
-      .from("locations")
-      .delete()
-      .eq("id", id);
+    const { error } = await supabase.from("locations").delete().eq("id", id);
 
     if (error) throw new Error(error.message);
   }
@@ -168,7 +171,7 @@ export const getLocationsData = unstable_cache(
     return await locationsService.getLocations();
   },
   ["active-locations"],
-  { revalidate: 3600, tags: ["locations"] }
+  { revalidate: 3600, tags: ["locations"] },
 );
 
 export const getLocationBySlug = async (slug: string) => {
@@ -177,10 +180,10 @@ export const getLocationBySlug = async (slug: string) => {
 
 export const getAllLocationSlugs = async () => {
   const locations = await locationsService.getLocations();
-  return locations.map(l => l.slug);
+  return locations.map((l) => l.slug);
 };
 
 export const getLocationsByTag = async (tag: string) => {
   const locations = await locationsService.getLocations();
-  return locations.filter(loc => loc.tags.includes(tag));
+  return locations.filter((loc) => loc.tags.includes(tag));
 };

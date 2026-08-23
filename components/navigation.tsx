@@ -63,7 +63,8 @@ export function Navigation({ dynamicNavData = {}, settings }: NavigationProps) {
   // Helper logic to accurately detect multi-language active states
   const isLinkActive = (href: string) => {
     // pathname omits locale in next-intl (e.g. "/" or "/blog/post")
-    const currentFullPath = pathname === "/" ? `/${locale}` : `/${locale}${pathname}`;
+    const currentFullPath =
+      pathname === "/" ? `/${locale}` : `/${locale}${pathname}`;
     // Exact match for the Home page
     if (href === `/${locale}`) {
       return currentFullPath === href;
@@ -74,11 +75,26 @@ export function Navigation({ dynamicNavData = {}, settings }: NavigationProps) {
 
   const navItems = [
     { href: `/${locale}`, label: t("home") },
-    { href: `/${locale}/${dynamicNavData.packages?.path || "packages"}`, label: dynamicNavData.packages?.title || t("packages") },
-    { href: `/${locale}/${dynamicNavData.locations?.path || "locations"}`, label: dynamicNavData.locations?.title || t("locations") },
-    { href: `/${locale}/${dynamicNavData.blog?.path || "blog"}`, label: dynamicNavData.blog?.title || t("blog") },
-    { href: `/${locale}/${dynamicNavData.about?.path || "about"}`, label: dynamicNavData.about?.title || t("about") },
-    { href: `/${locale}/${dynamicNavData.contact?.path || "contact"}`, label: dynamicNavData.contact?.title || t("contact") },
+    {
+      href: `/${locale}/${dynamicNavData.packages?.path || "packages"}`,
+      label: dynamicNavData.packages?.title || t("packages"),
+    },
+    {
+      href: `/${locale}/${dynamicNavData.locations?.path || "locations"}`,
+      label: dynamicNavData.locations?.title || t("locations"),
+    },
+    {
+      href: `/${locale}/${dynamicNavData.blog?.path || "blog"}`,
+      label: dynamicNavData.blog?.title || t("blog"),
+    },
+    {
+      href: `/${locale}/${dynamicNavData.about?.path || "about"}`,
+      label: dynamicNavData.about?.title || t("about"),
+    },
+    {
+      href: `/${locale}/${dynamicNavData.contact?.path || "contact"}`,
+      label: dynamicNavData.contact?.title || t("contact"),
+    },
   ];
 
   const handleLocaleChange = (newLocale: string) => {
@@ -101,18 +117,27 @@ export function Navigation({ dynamicNavData = {}, settings }: NavigationProps) {
     <header className="sticky top-0 z-50 w-full border-b border-white/10 dark:border-white/5 bg-background/40 backdrop-blur-2xl shadow-sm supports-[backdrop-filter]:bg-background/40">
       <div className="container mx-auto flex h-14 sm:h-16 items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Logo */}
-        <Link href={`/${locale}`} prefetch={true} className="relative flex items-center w-36 h-10 sm:w-48 sm:h-12 transition-transform hover:opacity-90">
+        <Link
+          href={`/${locale}`}
+          prefetch={true}
+          className="relative flex items-center w-36 h-10 sm:w-48 sm:h-12 transition-transform hover:opacity-90"
+        >
           {settings?.logo_url ? (
             <Image
               src={settings.logo_url}
               alt={settings?.site_name || "Istanbul Photographer"}
               fill
               sizes="(max-width: 640px) 144px, 192px"
-              className={cn("object-contain object-left", settings.logo_dark_url && "dark:hidden")}
+              className={cn(
+                "object-contain object-left",
+                settings.logo_dark_url && "dark:hidden",
+              )}
               priority
             />
           ) : (
-            <span className="text-xl font-bold dark:hidden tracking-tight">{settings?.site_name || "Istanbul Portrait"}</span>
+            <span className="text-xl font-bold dark:hidden tracking-tight">
+              {settings?.site_name || "Istanbul Portrait"}
+            </span>
           )}
           {settings?.logo_dark_url ? (
             <Image
@@ -123,8 +148,12 @@ export function Navigation({ dynamicNavData = {}, settings }: NavigationProps) {
               className="object-contain object-left hidden dark:block"
               priority
             />
-          ) : !settings?.logo_url && (
-            <span className="text-xl font-bold hidden dark:block tracking-tight">{settings?.site_name || "Istanbul Portrait"}</span>
+          ) : (
+            !settings?.logo_url && (
+              <span className="text-xl font-bold hidden dark:block tracking-tight">
+                {settings?.site_name || "Istanbul Portrait"}
+              </span>
+            )
           )}
         </Link>
 
@@ -157,13 +186,13 @@ export function Navigation({ dynamicNavData = {}, settings }: NavigationProps) {
 
         <div className="flex items-center space-x-2">
           {/* Customer Portal Login */}
-          <Link 
-            href={`/${locale}/account/login`} 
+          <Link
+            href={`/${locale}/account/login`}
             prefetch={true}
-            aria-label="Customer Portal" 
+            aria-label="Customer Portal"
             className={cn(
-              buttonVariants({ variant: "ghost", size: "sm" }), 
-              "hidden md:inline-flex h-9 w-9 p-0 hover:bg-muted/50 hover:scale-105 active:scale-95 transition-all duration-200 border border-transparent hover:border-border/50"
+              buttonVariants({ variant: "ghost", size: "sm" }),
+              "hidden md:inline-flex h-9 w-9 p-0 hover:bg-muted/50 hover:scale-105 active:scale-95 transition-all duration-200 border border-transparent hover:border-border/50",
             )}
           >
             <User className="h-4 w-4" />
@@ -189,14 +218,35 @@ export function Navigation({ dynamicNavData = {}, settings }: NavigationProps) {
                 </span>
                 <span className="text-sm font-bold text-foreground">
                   {(() => {
-                    const curr = typeof document !== 'undefined' ? (document.cookie.replace(/(?:(?:^|.*;\s*)NEXT_CURRENCY\s*\=\s*([^;]*).*$)|^.*$/, "$1") || "EUR") : "EUR";
-                    const symbols: Record<string, string> = { EUR: "€", USD: "$", GBP: "£", TRY: "₺", AED: "د.إ", CHF: "CHF", CNY: "¥", RUB: "₽" };
+                    const curr =
+                      typeof document !== "undefined"
+                        ? document.cookie.replace(
+                            /(?:(?:^|.*;\s*)NEXT_CURRENCY\s*\=\s*([^;]*).*$)|^.*$/,
+                            "$1",
+                          ) || "EUR"
+                        : "EUR";
+                    const symbols: Record<string, string> = {
+                      EUR: "€",
+                      USD: "$",
+                      GBP: "£",
+                      TRY: "₺",
+                      AED: "د.إ",
+                      CHF: "CHF",
+                      CNY: "¥",
+                      RUB: "₽",
+                    };
                     return symbols[curr] || "€";
                   })()}
                 </span>
               </div>
               <span className="text-xs font-medium uppercase hidden sm:inline-block ml-1">
-                {locale} / {typeof document !== 'undefined' ? (document.cookie.replace(/(?:(?:^|.*;\s*)NEXT_CURRENCY\s*\=\s*([^;]*).*$)|^.*$/, "$1") || "EUR") : "EUR"}
+                {locale} /{" "}
+                {typeof document !== "undefined"
+                  ? document.cookie.replace(
+                      /(?:(?:^|.*;\s*)NEXT_CURRENCY\s*\=\s*([^;]*).*$)|^.*$/,
+                      "$1",
+                    ) || "EUR"
+                  : "EUR"}
               </span>
               <span className="sr-only">Change settings</span>
             </DialogTrigger>
@@ -207,13 +257,16 @@ export function Navigation({ dynamicNavData = {}, settings }: NavigationProps) {
                   Language & Currency
                 </DialogTitle>
                 <DialogDescription className="text-center sm:text-left">
-                  Choose your preferred language and currency to explore Istanbul Portrait.
+                  Choose your preferred language and currency to explore
+                  Istanbul Portrait.
                 </DialogDescription>
               </DialogHeader>
-              
+
               <div className="space-y-6 pt-4">
                 <div>
-                  <h4 className="text-sm font-semibold mb-3 text-muted-foreground uppercase tracking-wider">Language</h4>
+                  <h4 className="text-sm font-semibold mb-3 text-muted-foreground uppercase tracking-wider">
+                    Language
+                  </h4>
                   <div className="grid grid-cols-2 gap-2">
                     {locales.map((loc) => (
                       <Button
@@ -238,7 +291,9 @@ export function Navigation({ dynamicNavData = {}, settings }: NavigationProps) {
                 </div>
 
                 <div className="border-t pt-4">
-                  <h4 className="text-sm font-semibold mb-3 text-muted-foreground uppercase tracking-wider">Currency</h4>
+                  <h4 className="text-sm font-semibold mb-3 text-muted-foreground uppercase tracking-wider">
+                    Currency
+                  </h4>
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                     {[
                       { code: "EUR", symbol: "€" },
@@ -250,11 +305,21 @@ export function Navigation({ dynamicNavData = {}, settings }: NavigationProps) {
                       { code: "CNY", symbol: "¥" },
                       { code: "RUB", symbol: "₽" },
                     ].map((curr) => {
-                      const currentCurrency = typeof document !== 'undefined' ? (document.cookie.replace(/(?:(?:^|.*;\s*)NEXT_CURRENCY\s*\=\s*([^;]*).*$)|^.*$/, "$1") || "EUR") : "EUR";
+                      const currentCurrency =
+                        typeof document !== "undefined"
+                          ? document.cookie.replace(
+                              /(?:(?:^|.*;\s*)NEXT_CURRENCY\s*\=\s*([^;]*).*$)|^.*$/,
+                              "$1",
+                            ) || "EUR"
+                          : "EUR";
                       return (
                         <Button
                           key={curr.code}
-                          variant={currentCurrency === curr.code ? "default" : "outline"}
+                          variant={
+                            currentCurrency === curr.code
+                              ? "default"
+                              : "outline"
+                          }
                           className={cn(
                             "h-12 transition-all duration-200",
                             currentCurrency === curr.code
@@ -267,7 +332,9 @@ export function Navigation({ dynamicNavData = {}, settings }: NavigationProps) {
                           }}
                         >
                           <span className="font-medium">{curr.code}</span>
-                          <span className="ml-1 text-muted-foreground/70 text-xs">({curr.symbol})</span>
+                          <span className="ml-1 text-muted-foreground/70 text-xs">
+                            ({curr.symbol})
+                          </span>
                         </Button>
                       );
                     })}
@@ -305,10 +372,15 @@ export function Navigation({ dynamicNavData = {}, settings }: NavigationProps) {
                       alt={settings?.site_name || "Istanbul Photographer"}
                       fill
                       sizes="128px"
-                      className={cn("object-contain", settings.logo_dark_url && "dark:hidden")}
+                      className={cn(
+                        "object-contain",
+                        settings.logo_dark_url && "dark:hidden",
+                      )}
                     />
                   ) : (
-                    <span className="text-lg font-bold dark:hidden tracking-tight">{settings?.site_name || "Istanbul Portrait"}</span>
+                    <span className="text-lg font-bold dark:hidden tracking-tight">
+                      {settings?.site_name || "Istanbul Portrait"}
+                    </span>
                   )}
                   {settings?.logo_dark_url ? (
                     <Image
@@ -318,8 +390,12 @@ export function Navigation({ dynamicNavData = {}, settings }: NavigationProps) {
                       sizes="128px"
                       className="object-contain hidden dark:block"
                     />
-                  ) : !settings?.logo_url && (
-                    <span className="text-lg font-bold hidden dark:block tracking-tight">{settings?.site_name || "Istanbul Portrait"}</span>
+                  ) : (
+                    !settings?.logo_url && (
+                      <span className="text-lg font-bold hidden dark:block tracking-tight">
+                        {settings?.site_name || "Istanbul Portrait"}
+                      </span>
+                    )
                   )}
                   <SheetTitle className="sr-only">
                     Istanbul Photographer
@@ -366,7 +442,7 @@ export function Navigation({ dynamicNavData = {}, settings }: NavigationProps) {
                   >
                     <User className="w-5 h-5 mr-3 text-primary" />
                     <span className="text-lg font-semibold tracking-tight">
-                      {t('myAccount') || "My Account"}
+                      {t("myAccount") || "My Account"}
                     </span>
                   </Link>
                 </div>

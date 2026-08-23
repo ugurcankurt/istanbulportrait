@@ -268,10 +268,6 @@ export interface BlogQueryParams {
   sort_order?: "asc" | "desc";
 }
 
-
-
-
-
 // =============================================
 // UTILITY TYPES
 // =============================================

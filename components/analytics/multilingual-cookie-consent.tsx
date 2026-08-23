@@ -19,17 +19,26 @@ export function MultilingualCookieConsent() {
 
     if (consent === null && bannerRef.current) {
       const height = bannerRef.current.offsetHeight;
-      document.documentElement.style.setProperty("--cookie-banner-height", `${height}px`);
+      document.documentElement.style.setProperty(
+        "--cookie-banner-height",
+        `${height}px`,
+      );
     } else {
-      document.documentElement.style.setProperty("--cookie-banner-height", "0px");
+      document.documentElement.style.setProperty(
+        "--cookie-banner-height",
+        "0px",
+      );
     }
-    
+
     // Resize observer to handle dynamic height changes (e.g. orientation change)
     if (consent === null && bannerRef.current) {
       const resizeObserver = new ResizeObserver((entries) => {
         for (let entry of entries) {
           const newHeight = entry.target.getBoundingClientRect().height;
-          document.documentElement.style.setProperty("--cookie-banner-height", `${newHeight}px`);
+          document.documentElement.style.setProperty(
+            "--cookie-banner-height",
+            `${newHeight}px`,
+          );
         }
       });
       resizeObserver.observe(bannerRef.current);

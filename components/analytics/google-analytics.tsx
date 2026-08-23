@@ -3,7 +3,15 @@
 import { GoogleAnalytics as NextGoogleAnalytics } from "@next/third-parties/google";
 import Script from "next/script";
 
-export function GoogleAnalytics({ gaId, userId, googleAdsId }: { gaId?: string | null, userId?: string | null, googleAdsId?: string | null }) {
+export function GoogleAnalytics({
+  gaId,
+  userId,
+  googleAdsId,
+}: {
+  gaId?: string | null;
+  userId?: string | null;
+  googleAdsId?: string | null;
+}) {
   if (!gaId) {
     return null;
   }
@@ -18,8 +26,8 @@ export function GoogleAnalytics({ gaId, userId, googleAdsId }: { gaId?: string |
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
             
-            ${userId ? `gtag('set', 'user_id', '${userId}');` : ''}
-            ${googleAdsId ? `gtag('config', '${googleAdsId}');` : ''}
+            ${userId ? `gtag('set', 'user_id', '${userId}');` : ""}
+            ${googleAdsId ? `gtag('config', '${googleAdsId}');` : ""}
           `,
         }}
       />

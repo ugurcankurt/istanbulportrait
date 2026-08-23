@@ -1,6 +1,13 @@
 import { Resend } from "resend";
 import type { SiteSettings } from "./settings-service";
-import { EMAIL_TRANSLATIONS, NEWSLETTER_TRANSLATIONS, ABANDONED_TRANSLATIONS, RAW_PHOTOS_READY_TRANSLATIONS, FINAL_EDITS_READY_TRANSLATIONS, CANCELLATION_TRANSLATIONS } from "./email-translations";
+import {
+  EMAIL_TRANSLATIONS,
+  NEWSLETTER_TRANSLATIONS,
+  ABANDONED_TRANSLATIONS,
+  RAW_PHOTOS_READY_TRANSLATIONS,
+  FINAL_EDITS_READY_TRANSLATIONS,
+  CANCELLATION_TRANSLATIONS,
+} from "./email-translations";
 
 export const getEmailColors = (settings: SiteSettings) => {
   const isDark = settings.color_mode === "dark";
@@ -58,8 +65,12 @@ export const renderEmailLayout = (
   const isDark = settings.color_mode === "dark";
 
   // Clean the URLs to route through our own domain (to satisfy Resend Domain Verification)
-  const appBaseUrl = settings.app_base_url || process.env.NEXT_PUBLIC_APP_URL || "https://istanbulportrait.com";
-  const supabasePrefix = "https://xfntnamwfnqjgqmyxwfz.supabase.co/storage/v1/object/public";
+  const appBaseUrl =
+    settings.app_base_url ||
+    process.env.NEXT_PUBLIC_APP_URL ||
+    "https://istanbulportrait.com";
+  const supabasePrefix =
+    "https://xfntnamwfnqjgqmyxwfz.supabase.co/storage/v1/object/public";
 
   const cleanUrl = (url?: string | null) => {
     if (!url) return "";
@@ -70,7 +81,9 @@ export const renderEmailLayout = (
   const headerLogo = cleanUrl(settings.logo_dark_url);
 
   // Footer logo logic
-  const footerLogo = cleanUrl(isDark ? settings.logo_dark_url : settings.logo_url);
+  const footerLogo = cleanUrl(
+    isDark ? settings.logo_dark_url : settings.logo_url,
+  );
 
   const socials = [];
   if (settings.instagram_url) {
@@ -131,10 +144,11 @@ export const renderEmailLayout = (
                   <img src="${footerLogo}" alt="${siteName} Footer" width="120" style="display: block; margin: 0 auto 15px; opacity: 0.8;">
                   ${address ? `<p style="margin: 0 0 15px;">${address}</p>` : ""}
                   
-                  ${socials.length > 0
-      ? `<p style="margin: 0 0 20px;">${socials.join("")}</p>`
-      : ""
-    }
+                  ${
+                    socials.length > 0
+                      ? `<p style="margin: 0 0 20px;">${socials.join("")}</p>`
+                      : ""
+                  }
                   
                   <hr style="border: none; border-top: 1px solid ${colors.border}; margin: 20px 0;">
                   <p style="font-size: 12px; margin: 0;">© ${new Date().getFullYear()} ${orgName}. All rights reserved.</p>
@@ -169,14 +183,15 @@ export interface BookingConfirmationData {
   packageId?: string;
 }
 
-
 export const sendBookingConfirmation = async (
   data: BookingConfirmationData,
   settings: SiteSettings,
 ) => {
   try {
     const apiKey =
-      settings.resend_api_key || process.env.RESEND_API_KEY || "demo-resend-key";
+      settings.resend_api_key ||
+      process.env.RESEND_API_KEY ||
+      "demo-resend-key";
     if (!apiKey || apiKey === "demo-resend-key") return;
     const resend = new Resend(apiKey);
     const colors = getEmailColors(settings);
@@ -190,9 +205,9 @@ export const sendBookingConfirmation = async (
 
     const content = `
       <h2 style="color: ${colors.text}; margin-top: 0; font-size: 24px;">${t.greeting.replace(
-      "{name}",
-      data.customerName,
-    )}</h2>
+        "{name}",
+        data.customerName,
+      )}</h2>
       <p style="font-size: 16px; line-height: 1.6; color: ${colors.textMuted};">${t.thankYou}</p>
 
       <div style="border: 1px solid ${colors.border}; padding: 25px; border-radius: 12px; margin: 30px 0; background-color: ${detailsBg};">
@@ -206,14 +221,15 @@ export const sendBookingConfirmation = async (
             <td style="padding: 10px 0; border-bottom: 1px solid ${colors.border}; color: ${colors.textMuted};"><strong>${t.package}:</strong></td>
             <td style="padding: 10px 0; border-bottom: 1px solid ${colors.border}; text-align: right; color: ${colors.text};">${data.packageName}</td>
           </tr>
-          ${data.peopleCount && data.peopleCount > 1
-        ? `
+          ${
+            data.peopleCount && data.peopleCount > 1
+              ? `
           <tr>
             <td style="padding: 10px 0; border-bottom: 1px solid ${colors.border}; color: ${colors.textMuted};"><strong>${t.peopleCount}:</strong></td>
             <td style="padding: 10px 0; border-bottom: 1px solid ${colors.border}; text-align: right; color: ${colors.text};">${data.peopleCount}</td>
           </tr>`
-        : ""
-      }
+              : ""
+          }
           <tr>
             <td style="padding: 10px 0; border-bottom: 1px solid ${colors.border}; color: ${colors.textMuted};"><strong>${t.date}:</strong></td>
             <td style="padding: 10px 0; border-bottom: 1px solid ${colors.border}; text-align: right; color: ${colors.text};">${data.bookingDate}</td>
@@ -222,7 +238,9 @@ export const sendBookingConfirmation = async (
             <td style="padding: 10px 0; border-bottom: 1px solid ${colors.border}; color: ${colors.textMuted};"><strong>${t.time}:</strong></td>
             <td style="padding: 10px 0; border-bottom: 1px solid ${colors.border}; text-align: right; color: ${colors.text};">${data.bookingTime}</td>
           </tr>
-          ${data.discountAmount && data.discountAmount > 0 ? `
+          ${
+            data.discountAmount && data.discountAmount > 0
+              ? `
           <tr>
             <td style="padding: 10px 0; border-bottom: 1px dotted ${colors.border}; color: ${colors.textMuted};"><strong>${t.originalPrice}:</strong></td>
             <td style="padding: 10px 0; border-bottom: 1px dotted ${colors.border}; text-align: right; color: ${colors.textMuted}; text-decoration: line-through;">€${data.originalAmount}</td>
@@ -230,25 +248,35 @@ export const sendBookingConfirmation = async (
           <tr>
             <td style="padding: 10px 0; border-bottom: 1px solid ${colors.border}; color: #16a34a;"><strong>${t.discount}:</strong></td>
             <td style="padding: 10px 0; border-bottom: 1px solid ${colors.border}; text-align: right; color: #16a34a;">-€${data.discountAmount}</td>
-          </tr>` : ""}
+          </tr>`
+              : ""
+          }
           <tr>
             <td style="padding: 15px 0 10px 0; font-size: 16px; color: ${colors.text}; border-bottom: 1px dashed ${colors.border};"><strong>${t.total}:</strong></td>
             <td style="padding: 15px 0 10px 0; text-align: right; font-weight: bold; color: ${colors.text}; font-size: 16px; border-bottom: 1px dashed ${colors.border};">
               €${data.totalAmount}
             </td>
           </tr>
-          ${data.depositAmount !== undefined ? `
+          ${
+            data.depositAmount !== undefined
+              ? `
           <tr>
             <td style="padding: 10px 0; border-bottom: 1px dotted ${colors.border}; color: ${colors.textMuted};"><strong>${t.depositPaid}:</strong></td>
             <td style="padding: 10px 0; border-bottom: 1px dotted ${colors.border}; text-align: right; color: ${colors.text};">€${data.depositAmount}</td>
-          </tr>` : ""}
-          ${data.remainingAmount !== undefined ? `
+          </tr>`
+              : ""
+          }
+          ${
+            data.remainingAmount !== undefined
+              ? `
           <tr>
             <td style="padding: 15px 0 0 0; font-size: 18px; color: ${colors.text};"><strong>${t.remainingCash}:</strong></td>
             <td style="padding: 15px 0 0 0; text-align: right; font-weight: bold; color: ${colors.primary}; font-size: 20px;">
               €${data.remainingAmount}
             </td>
-          </tr>` : ""}
+          </tr>`
+              : ""
+          }
         </table>
       </div>
 
@@ -281,7 +309,9 @@ export const sendAdminBookingNotification = async (
 ) => {
   try {
     const apiKey =
-      settings.resend_api_key || process.env.RESEND_API_KEY || "demo-resend-key";
+      settings.resend_api_key ||
+      process.env.RESEND_API_KEY ||
+      "demo-resend-key";
     if (!apiKey || apiKey === "demo-resend-key") return;
 
     if (!settings.contact_email) return;
@@ -317,14 +347,15 @@ export const sendAdminBookingNotification = async (
             <td style="padding: 10px 0; border-bottom: 1px solid ${colors.border}; color: ${colors.textMuted};"><strong>Package:</strong></td>
             <td style="padding: 10px 0; border-bottom: 1px solid ${colors.border}; text-align: right; color: ${colors.text};">${data.packageName}</td>
           </tr>
-          ${data.peopleCount
-        ? `
+          ${
+            data.peopleCount
+              ? `
           <tr>
             <td style="padding: 10px 0; border-bottom: 1px solid ${colors.border}; color: ${colors.textMuted};"><strong>People Count:</strong></td>
             <td style="padding: 10px 0; border-bottom: 1px solid ${colors.border}; text-align: right; color: ${colors.text};">${data.peopleCount}</td>
           </tr>`
-        : ""
-      }
+              : ""
+          }
           <tr>
             <td style="padding: 10px 0; border-bottom: 1px solid ${colors.border}; color: ${colors.textMuted};"><strong>Date:</strong></td>
             <td style="padding: 10px 0; border-bottom: 1px solid ${colors.border}; text-align: right; font-weight: bold; color: ${colors.warning};">${data.bookingDate}</td>
@@ -333,20 +364,27 @@ export const sendAdminBookingNotification = async (
             <td style="padding: 10px 0; border-bottom: 1px solid ${colors.border}; color: ${colors.textMuted};"><strong>Time:</strong></td>
             <td style="padding: 10px 0; border-bottom: 1px solid ${colors.border}; text-align: right; font-weight: bold; color: ${colors.warning};">${data.bookingTime}</td>
           </tr>
-          ${data.notes
-        ? `
+          ${
+            data.notes
+              ? `
           <tr>
             <td style="padding: 10px 0; border-bottom: 1px solid ${colors.border}; color: ${colors.textMuted};"><strong>Notes:</strong></td>
             <td style="padding: 10px 0; border-bottom: 1px solid ${colors.border}; text-align: right; font-style: italic; color: ${colors.text};">${data.notes}</td>
           </tr>`
-        : ""
-      }
-          ${data.promoCode ? `
+              : ""
+          }
+          ${
+            data.promoCode
+              ? `
           <tr>
             <td style="padding: 10px 0; border-bottom: 1px solid ${colors.border}; color: ${colors.textMuted};"><strong>Promo Code:</strong></td>
             <td style="padding: 10px 0; border-bottom: 1px solid ${colors.border}; text-align: right; font-weight: bold; color: ${colors.primary};">${data.promoCode}</td>
-          </tr>` : ""}
-          ${data.discountAmount && data.discountAmount > 0 ? `
+          </tr>`
+              : ""
+          }
+          ${
+            data.discountAmount && data.discountAmount > 0
+              ? `
           <tr>
             <td style="padding: 10px 0; border-bottom: 1px dotted ${colors.border}; color: ${colors.textMuted};"><strong>Original Price:</strong></td>
             <td style="padding: 10px 0; border-bottom: 1px dotted ${colors.border}; text-align: right; color: ${colors.textMuted}; text-decoration: line-through;">€${data.originalAmount}</td>
@@ -354,25 +392,35 @@ export const sendAdminBookingNotification = async (
           <tr>
             <td style="padding: 10px 0; border-bottom: 1px solid ${colors.border}; color: #16a34a;"><strong>Discount / Promo:</strong></td>
             <td style="padding: 10px 0; border-bottom: 1px solid ${colors.border}; text-align: right; color: #16a34a;">-€${data.discountAmount}</td>
-          </tr>` : ""}
+          </tr>`
+              : ""
+          }
           <tr>
             <td style="padding: 15px 0 10px 0; font-size: 16px; color: ${colors.text}; border-bottom: 1px dashed ${colors.border};"><strong>Total Selected Price:</strong></td>
             <td style="padding: 15px 0 10px 0; text-align: right; font-weight: bold; color: ${colors.text}; font-size: 16px; border-bottom: 1px dashed ${colors.border};">
               €${data.totalAmount}
             </td>
           </tr>
-          ${data.depositAmount !== undefined ? `
+          ${
+            data.depositAmount !== undefined
+              ? `
           <tr>
             <td style="padding: 10px 0; border-bottom: 1px dotted ${colors.border}; color: ${colors.textMuted};"><strong>Deposit Paid:</strong></td>
             <td style="padding: 10px 0; border-bottom: 1px dotted ${colors.border}; text-align: right; color: ${colors.text};">€${data.depositAmount}</td>
-          </tr>` : ""}
-          ${data.remainingAmount !== undefined ? `
+          </tr>`
+              : ""
+          }
+          ${
+            data.remainingAmount !== undefined
+              ? `
           <tr>
             <td style="padding: 15px 0 0 0; font-size: 18px; color: ${colors.text};"><strong>Remaining (Cash):</strong></td>
             <td style="padding: 15px 0 0 0; text-align: right; font-weight: bold; color: ${colors.primary}; font-size: 20px;">
               €${data.remainingAmount}
             </td>
-          </tr>` : ""}
+          </tr>`
+              : ""
+          }
         </table>
       </div>
       
@@ -383,7 +431,12 @@ export const sendAdminBookingNotification = async (
       from: `System <${settings.contact_email}>`,
       to: [settings.admin_email || "info@istanbulportrait.com"],
       subject: `🎉 NEW BOOKING: ${data.packageName} - ${data.bookingDate}`,
-      html: renderEmailLayout(content, "New Booking Notification", "en", settings),
+      html: renderEmailLayout(
+        content,
+        "New Booking Notification",
+        "en",
+        settings,
+      ),
     });
   } catch (error) {
     console.error("Error sending admin notification email:", error);
@@ -396,28 +449,33 @@ export const sendAbandonedBookingEmail = async (
 ) => {
   try {
     const apiKey =
-      settings.resend_api_key || process.env.RESEND_API_KEY || "demo-resend-key";
+      settings.resend_api_key ||
+      process.env.RESEND_API_KEY ||
+      "demo-resend-key";
 
     console.log("Abandoned Email Execution Check:", {
       hasApiKey: !!apiKey && apiKey !== "demo-resend-key",
-      contactEmail: settings.contact_email
+      contactEmail: settings.contact_email,
     });
 
     if (!apiKey || apiKey === "demo-resend-key") {
-      console.warn("WARNING: Abandoned Email skipped. API Key is missing or default.");
+      console.warn(
+        "WARNING: Abandoned Email skipped. API Key is missing or default.",
+      );
       return;
     }
 
     const resend = new Resend(apiKey);
     const colors = getEmailColors(settings);
 
-    const locale = data.locale && ABANDONED_TRANSLATIONS[data.locale] ? data.locale : "en";
+    const locale =
+      data.locale && ABANDONED_TRANSLATIONS[data.locale] ? data.locale : "en";
     const t = ABANDONED_TRANSLATIONS[locale];
 
     const checkoutUrl = `${settings.app_base_url || process.env.NEXT_PUBLIC_APP_URL || "https://istanbulportrait.com"}/${locale}/checkout?package=${data.packageId}`;
 
     const content = `
-      <h2 style="color: ${colors.text}; margin-top: 0; font-size: 24px;">${t.greeting.replace("{name}", data.customerName.split(' ')[0])}</h2>
+      <h2 style="color: ${colors.text}; margin-top: 0; font-size: 24px;">${t.greeting.replace("{name}", data.customerName.split(" ")[0])}</h2>
       
       <p style="font-size: 16px; line-height: 1.6; color: ${colors.textMuted};">
         ${t.body1.replace("{package}", data.packageName).replace("{date}", data.bookingDate).replace("{time}", data.bookingTime)}
@@ -468,7 +526,10 @@ export const sendNewsletterWelcomeEmail = async (
   locale: string = "en",
 ) => {
   try {
-    const apiKey = settings.resend_api_key || process.env.RESEND_API_KEY || "demo-resend-key";
+    const apiKey =
+      settings.resend_api_key ||
+      process.env.RESEND_API_KEY ||
+      "demo-resend-key";
     if (!apiKey || apiKey === "demo-resend-key") return;
 
     const resend = new Resend(apiKey);
@@ -492,7 +553,7 @@ export const sendNewsletterWelcomeEmail = async (
       </div>
 
       <div style="text-align: center; margin: 35px 0;">
-         <a href="${settings.app_base_url || 'https://istanbulportrait.com'}/${locale}/packages" style="background-color: ${colors.primary}; color: #ffffff; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; display: inline-block;">${t.button}</a>
+         <a href="${settings.app_base_url || "https://istanbulportrait.com"}/${locale}/packages" style="background-color: ${colors.primary}; color: #ffffff; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; display: inline-block;">${t.button}</a>
       </div>
 
       <div style="text-align: center; margin-top: 40px;">
@@ -503,7 +564,7 @@ export const sendNewsletterWelcomeEmail = async (
     `;
 
     await resend.emails.send({
-      from: `${settings.site_name || "Photographer"} <${settings.contact_email || 'hello@istanbulportrait.com'}>`, // Needs a verified domain like newsletter@istanbulportrait.com
+      from: `${settings.site_name || "Photographer"} <${settings.contact_email || "hello@istanbulportrait.com"}>`, // Needs a verified domain like newsletter@istanbulportrait.com
       to: [email],
       subject: t.title,
       html: renderEmailLayout(content, t.title, locale, settings),
@@ -528,7 +589,10 @@ export const sendAdminLeadNotification = async (
   settings: SiteSettings,
 ) => {
   try {
-    const apiKey = settings.resend_api_key || process.env.RESEND_API_KEY || "demo-resend-key";
+    const apiKey =
+      settings.resend_api_key ||
+      process.env.RESEND_API_KEY ||
+      "demo-resend-key";
     if (!apiKey || apiKey === "demo-resend-key") return;
     if (!settings.contact_email) return;
 
@@ -537,12 +601,14 @@ export const sendAdminLeadNotification = async (
     const detailsBg = settings.color_mode === "dark" ? "#1e1e24" : "#fafafa";
 
     const fieldsRows = Object.entries(data.fields)
-      .map(([key, value]) => `
+      .map(
+        ([key, value]) => `
         <tr>
           <td style="padding: 10px 0; border-bottom: 1px solid ${colors.border}; color: ${colors.textMuted}; font-size: 14px; word-break: break-all; max-width: 150px;"><strong>${key}:</strong></td>
           <td style="padding: 10px 0; border-bottom: 1px solid ${colors.border}; text-align: right; color: ${colors.text}; font-weight: 500;">${value}</td>
         </tr>
-      `)
+      `,
+      )
       .join("");
 
     const content = `
@@ -552,16 +618,24 @@ export const sendAdminLeadNotification = async (
       <div style="border: 1px solid ${colors.border}; padding: 25px; border-radius: 12px; margin: 30px 0; background-color: ${detailsBg};">
         <h3 style="color: ${colors.primary}; margin-top: 0; font-size: 18px; text-transform: uppercase;">Lead Details</h3>
         <table width="100%" border="0" cellspacing="0" cellpadding="0">
-          ${data.campaignId ? `
+          ${
+            data.campaignId
+              ? `
           <tr>
             <td style="padding: 10px 0; border-bottom: 1px solid ${colors.border}; color: ${colors.textMuted}; font-size: 14px;"><strong>Campaign ID:</strong></td>
             <td style="padding: 10px 0; border-bottom: 1px solid ${colors.border}; text-align: right; color: ${colors.warning}; font-weight: bold;">${data.campaignId}</td>
-          </tr>` : ""}
-          ${data.formId ? `
+          </tr>`
+              : ""
+          }
+          ${
+            data.formId
+              ? `
           <tr>
             <td style="padding: 10px 0; border-bottom: 1px solid ${colors.border}; color: ${colors.textMuted}; font-size: 14px;"><strong>Form ID:</strong></td>
             <td style="padding: 10px 0; border-bottom: 1px solid ${colors.border}; text-align: right; color: ${colors.primary}; font-weight: bold;">${data.formId}</td>
-          </tr>` : ""}
+          </tr>`
+              : ""
+          }
           ${fieldsRows}
         </table>
       </div>
@@ -584,7 +658,6 @@ export const sendAdminLeadNotification = async (
   }
 };
 
-
 // ─── RAW PHOTOS READY NOTIFICATION ─────────────────────────
 
 export const sendRawPhotosReadyEmail = async (
@@ -592,19 +665,27 @@ export const sendRawPhotosReadyEmail = async (
   settings: SiteSettings,
 ) => {
   try {
-    const apiKey = settings.resend_api_key || process.env.RESEND_API_KEY || "demo-resend-key";
+    const apiKey =
+      settings.resend_api_key ||
+      process.env.RESEND_API_KEY ||
+      "demo-resend-key";
     if (!apiKey || apiKey === "demo-resend-key") return;
 
     const resend = new Resend(apiKey);
     const locale = booking.locale || "en";
-    const t = RAW_PHOTOS_READY_TRANSLATIONS[locale] || RAW_PHOTOS_READY_TRANSLATIONS["en"];
+    const t =
+      RAW_PHOTOS_READY_TRANSLATIONS[locale] ||
+      RAW_PHOTOS_READY_TRANSLATIONS["en"];
     const colors = getEmailColors(settings);
 
     // Replace dynamic tags
     const emailTitle = t.title.replace("{name}", booking.user_name);
     const greetingText = t.greeting.replace("{name}", booking.user_name);
 
-    const appBaseUrl = settings.app_base_url || process.env.NEXT_PUBLIC_APP_URL || "https://istanbulportrait.com";
+    const appBaseUrl =
+      settings.app_base_url ||
+      process.env.NEXT_PUBLIC_APP_URL ||
+      "https://istanbulportrait.com";
     const portalUrl = `${appBaseUrl}/${locale}/account`;
 
     const content = `
@@ -635,7 +716,7 @@ export const sendRawPhotosReadyEmail = async (
     `;
 
     await resend.emails.send({
-      from: `${settings.site_name || "Photographer"} <${settings.contact_email || 'hello@istanbulportrait.com'}>`,
+      from: `${settings.site_name || "Photographer"} <${settings.contact_email || "hello@istanbulportrait.com"}>`,
       to: [booking.user_email],
       subject: t.subject,
       html: renderEmailLayout(content, emailTitle, locale, settings),
@@ -646,7 +727,6 @@ export const sendRawPhotosReadyEmail = async (
   }
 };
 
-
 // ─── FINAL EDITS READY NOTIFICATION ────────────────────────
 
 export const sendFinalEditsReadyEmail = async (
@@ -654,19 +734,27 @@ export const sendFinalEditsReadyEmail = async (
   settings: SiteSettings,
 ) => {
   try {
-    const apiKey = settings.resend_api_key || process.env.RESEND_API_KEY || "demo-resend-key";
+    const apiKey =
+      settings.resend_api_key ||
+      process.env.RESEND_API_KEY ||
+      "demo-resend-key";
     if (!apiKey || apiKey === "demo-resend-key") return;
 
     const resend = new Resend(apiKey);
     const locale = booking.locale || "en";
-    const t = FINAL_EDITS_READY_TRANSLATIONS[locale] || FINAL_EDITS_READY_TRANSLATIONS["en"];
+    const t =
+      FINAL_EDITS_READY_TRANSLATIONS[locale] ||
+      FINAL_EDITS_READY_TRANSLATIONS["en"];
     const colors = getEmailColors(settings);
 
     // Replace dynamic tags
     const emailTitle = t.title.replace("{name}", booking.user_name);
     const greetingText = t.greeting.replace("{name}", booking.user_name);
 
-    const appBaseUrl = settings.app_base_url || process.env.NEXT_PUBLIC_APP_URL || "https://istanbulportrait.com";
+    const appBaseUrl =
+      settings.app_base_url ||
+      process.env.NEXT_PUBLIC_APP_URL ||
+      "https://istanbulportrait.com";
     const portalUrl = `${appBaseUrl}/${locale}/account`;
 
     const content = `
@@ -697,7 +785,7 @@ export const sendFinalEditsReadyEmail = async (
     `;
 
     await resend.emails.send({
-      from: `${settings.site_name || "Photographer"} <${settings.contact_email || 'hello@istanbulportrait.com'}>`,
+      from: `${settings.site_name || "Photographer"} <${settings.contact_email || "hello@istanbulportrait.com"}>`,
       to: [booking.user_email],
       subject: t.subject,
       html: renderEmailLayout(content, emailTitle, locale, settings),
@@ -708,7 +796,6 @@ export const sendFinalEditsReadyEmail = async (
   }
 };
 
-
 // ─── ADMIN NOTIFICATION: CUSTOMER SUBMITTED SELECTIONS ──────
 
 export const sendAdminSelectionNotificationEmail = async (
@@ -717,7 +804,10 @@ export const sendAdminSelectionNotificationEmail = async (
   settings: SiteSettings,
 ) => {
   try {
-    const apiKey = settings.resend_api_key || process.env.RESEND_API_KEY || "demo-resend-key";
+    const apiKey =
+      settings.resend_api_key ||
+      process.env.RESEND_API_KEY ||
+      "demo-resend-key";
     if (!apiKey || apiKey === "demo-resend-key") return;
 
     const recipient = settings.admin_email || settings.contact_email;
@@ -740,7 +830,7 @@ export const sendAdminSelectionNotificationEmail = async (
           </tr>
           <tr>
             <td style="padding: 10px 0; border-bottom: 1px solid ${colors.border}; color: ${colors.textMuted}; font-size: 14px;"><strong>Booking ID:</strong></td>
-            <td style="padding: 10px 0; border-bottom: 1px solid ${colors.border}; text-align: right; color: ${colors.text}; font-weight: 500;">${booking.id.split('-')[0].toUpperCase()}</td>
+            <td style="padding: 10px 0; border-bottom: 1px solid ${colors.border}; text-align: right; color: ${colors.text}; font-weight: 500;">${booking.id.split("-")[0].toUpperCase()}</td>
           </tr>
           <tr>
             <td style="padding: 10px 0; border-bottom: 1px solid ${colors.border}; color: ${colors.textMuted}; font-size: 14px;"><strong>Number of Photos:</strong></td>
@@ -758,14 +848,18 @@ export const sendAdminSelectionNotificationEmail = async (
       from: fromDomainEmail,
       to: [recipient],
       subject: `✅ Selections Ready: ${booking.user_name} (${fileCount} photos)`,
-      html: renderEmailLayout(content, "Photo Selections Submitted", "en", settings),
+      html: renderEmailLayout(
+        content,
+        "Photo Selections Submitted",
+        "en",
+        settings,
+      ),
     });
     console.log(`Admin selection notification dispatched to ${recipient}`);
   } catch (error) {
     console.error("Error sending admin selection notification:", error);
   }
 };
-
 
 // ─── CANCELLATION NOTIFICATION ───────────────────────────────
 
@@ -774,37 +868,52 @@ export const sendBookingCancellationEmail = async (
   settings: SiteSettings,
 ) => {
   try {
-    const apiKey = settings.resend_api_key || process.env.RESEND_API_KEY || "demo-resend-key";
+    const apiKey =
+      settings.resend_api_key ||
+      process.env.RESEND_API_KEY ||
+      "demo-resend-key";
     if (!apiKey || apiKey === "demo-resend-key") return;
 
     const resend = new Resend(apiKey);
     const locale = booking.locale || "en";
-    const t = CANCELLATION_TRANSLATIONS[locale] || CANCELLATION_TRANSLATIONS["en"];
+    const t =
+      CANCELLATION_TRANSLATIONS[locale] || CANCELLATION_TRANSLATIONS["en"];
     const colors = getEmailColors(settings);
 
     // Replace dynamic tags
     const emailTitle = t.title;
     const greetingText = t.greeting.replace("{name}", booking.user_name);
-    
+
     // Formatting body parts
     let formattedPackageId = booking.package_id || "Photography";
-    if (typeof formattedPackageId === "string" && formattedPackageId !== "Photography") {
-      formattedPackageId = formattedPackageId.charAt(0).toUpperCase() + formattedPackageId.slice(1) + " Package";
+    if (
+      typeof formattedPackageId === "string" &&
+      formattedPackageId !== "Photography"
+    ) {
+      formattedPackageId =
+        formattedPackageId.charAt(0).toUpperCase() +
+        formattedPackageId.slice(1) +
+        " Package";
     }
-    const packageName = booking.package_name || (booking.packages ? booking.packages.name : formattedPackageId);
+    const packageName =
+      booking.package_name ||
+      (booking.packages ? booking.packages.name : formattedPackageId);
     let body1Text = t.body1
       .replace("{package}", packageName)
       .replace("{date}", booking.booking_date)
       .replace("{time}", booking.booking_time);
-      
+
     // Determine deposit amount
     let depositAmount = 0;
-    if (booking.deposit_amount !== undefined && booking.deposit_amount !== null) {
+    if (
+      booking.deposit_amount !== undefined &&
+      booking.deposit_amount !== null
+    ) {
       depositAmount = Number(booking.deposit_amount);
     } else if (booking.payments && booking.payments.length > 0) {
       depositAmount = Number(booking.payments[0].amount);
     }
-    
+
     let body2Text = "";
     if (depositAmount > 0) {
       body2Text = t.body2.replace("{deposit}", `€${depositAmount}`);
@@ -812,7 +921,10 @@ export const sendBookingCancellationEmail = async (
       body2Text = t.body2_cash || t.body2.replace("{deposit}", "€0");
     }
 
-    const appBaseUrl = settings.app_base_url || process.env.NEXT_PUBLIC_APP_URL || "https://istanbulportrait.com";
+    const appBaseUrl =
+      settings.app_base_url ||
+      process.env.NEXT_PUBLIC_APP_URL ||
+      "https://istanbulportrait.com";
     const newBookingUrl = `${appBaseUrl}/${locale}/packages`;
 
     const content = `
@@ -845,7 +957,7 @@ export const sendBookingCancellationEmail = async (
     `;
 
     await resend.emails.send({
-      from: `${settings.site_name || "Photographer"} <${settings.contact_email || 'hello@istanbulportrait.com'}>`,
+      from: `${settings.site_name || "Photographer"} <${settings.contact_email || "hello@istanbulportrait.com"}>`,
       to: [booking.user_email],
       subject: t.subject,
       html: renderEmailLayout(content, emailTitle, locale, settings),
@@ -855,5 +967,3 @@ export const sendBookingCancellationEmail = async (
     console.error("Error sending cancellation email:", error);
   }
 };
-
-

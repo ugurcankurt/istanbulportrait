@@ -29,12 +29,11 @@ interface InstagramFeedProps {
 }
 
 export function InstagramFeed({ header, instagramUrl }: InstagramFeedProps) {
-
   const tui = useTranslations("ui");
   const [posts, setPosts] = useState<BeholdPost[]>([]);
   const [username, setUsername] = useState<string>(() => {
     if (instagramUrl) {
-      const parsed = instagramUrl.replace(/\/$/, '').split('/').pop();
+      const parsed = instagramUrl.replace(/\/$/, "").split("/").pop();
       return parsed || "";
     }
     return "";
@@ -58,9 +57,8 @@ export function InstagramFeed({ header, instagramUrl }: InstagramFeedProps) {
             setUsername(data.username);
           }
           // Allow images, carousels, and videos (Reels)
-          const filteredPosts = data.posts.filter(
-            (post: BeholdPost) =>
-              ["IMAGE", "CAROUSEL_ALBUM", "VIDEO"].includes(post.mediaType)
+          const filteredPosts = data.posts.filter((post: BeholdPost) =>
+            ["IMAGE", "CAROUSEL_ALBUM", "VIDEO"].includes(post.mediaType),
           );
           setPosts(filteredPosts.slice(0, 6)); // Ensure we only ever show exactly 6
         }
@@ -141,7 +139,8 @@ export function InstagramFeed({ header, instagramUrl }: InstagramFeedProps) {
         )}
 
         <div className="mt-10 text-center">
-          <Button nativeButton={false}
+          <Button
+            nativeButton={false}
             variant="outline"
             className="px-8"
             render={

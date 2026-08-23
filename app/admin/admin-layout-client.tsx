@@ -55,7 +55,11 @@ const navigationGroups = [
     items: [
       { name: "Bookings", href: "/admin/dashboard/bookings", icon: Calendar },
       { name: "Customers", href: "/admin/dashboard/customers", icon: Users },
-      { name: "Availability", href: "/admin/dashboard/availability", icon: Calendar },
+      {
+        name: "Availability",
+        href: "/admin/dashboard/availability",
+        icon: Calendar,
+      },
       { name: "Payments", href: "/admin/dashboard/payments", icon: CreditCard },
     ],
   },
@@ -63,8 +67,16 @@ const navigationGroups = [
     title: "Sales & Catalog",
     items: [
       { name: "Packages", href: "/admin/dashboard/packages", icon: Package },
-      { name: "Discounts", href: "/admin/dashboard/discounts", icon: TicketPercent },
-      { name: "Promo Codes", href: "/admin/dashboard/promo-codes", icon: Ticket },
+      {
+        name: "Discounts",
+        href: "/admin/dashboard/discounts",
+        icon: TicketPercent,
+      },
+      {
+        name: "Promo Codes",
+        href: "/admin/dashboard/promo-codes",
+        icon: Ticket,
+      },
     ],
   },
   {
@@ -83,7 +95,10 @@ const navigationGroups = [
   },
 ];
 
-export function AdminLayoutClient({ children, settings }: AdminLayoutClientProps) {
+export function AdminLayoutClient({
+  children,
+  settings,
+}: AdminLayoutClientProps) {
   const {
     user,
     isAuthenticated,
@@ -182,9 +197,7 @@ export function AdminLayoutClient({ children, settings }: AdminLayoutClientProps
                 className="flex items-center space-x-2 p-2 relative h-12 w-full max-w-[180px]"
               >
                 <Image
-                  src={
-                    settings?.logo_url
-                  }
+                  src={settings?.logo_url}
                   alt={settings?.site_name || "Istanbul Photographer"}
                   fill
                   className="object-contain object-left"

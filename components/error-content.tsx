@@ -27,8 +27,13 @@ export function ErrorContent({ error, reset }: ErrorContentProps) {
           <div className="mx-auto w-16 h-16 bg-destructive/10 rounded-full flex items-center justify-center mb-2">
             <AlertTriangle className="w-8 h-8 text-destructive" />
           </div>
-          <CardTitle className="text-2xl font-bold">Oops! Something went wrong.</CardTitle>
-          <p className="text-muted-foreground text-sm">We are incredibly sorry, but an unexpected error occurred while loading this page. Please try refreshing.</p>
+          <CardTitle className="text-2xl font-bold">
+            Oops! Something went wrong.
+          </CardTitle>
+          <p className="text-muted-foreground text-sm">
+            We are incredibly sorry, but an unexpected error occurred while
+            loading this page. Please try refreshing.
+          </p>
         </CardHeader>
         <CardContent className="text-center pb-6">
           <div className="bg-muted/50 rounded-lg p-4 text-xs font-mono text-muted-foreground break-all">
@@ -43,9 +48,14 @@ export function ErrorContent({ error, reset }: ErrorContentProps) {
             <RefreshCw className="w-4 h-4" />
             Retry Request
           </Button>
-          <Button nativeButton={false} variant="outline" render={<Link href="/" />} className="w-full sm:w-auto gap-2">
-              <Home className="w-4 h-4" />
-              Return Home
+          <Button
+            nativeButton={false}
+            variant="outline"
+            render={<Link href="/" />}
+            className="w-full sm:w-auto gap-2"
+          >
+            <Home className="w-4 h-4" />
+            Return Home
           </Button>
         </CardFooter>
       </Card>

@@ -86,9 +86,16 @@ export function CustomerDetailsForm({
   const basePrice = packageDBInfo ? Number(packageDBInfo.price) : 150;
 
   const packageInfo = {
-    name: packageDBInfo?.title?.[locale] || packageDBInfo?.title?.["en"] || packageDBInfo?.slug || selectedPackage,
+    name:
+      packageDBInfo?.title?.[locale] ||
+      packageDBInfo?.title?.["en"] ||
+      packageDBInfo?.slug ||
+      selectedPackage,
     price: basePrice,
-    duration: packageDBInfo?.duration?.[locale] || packageDBInfo?.duration?.["en"] || "1 Hour",
+    duration:
+      packageDBInfo?.duration?.[locale] ||
+      packageDBInfo?.duration?.["en"] ||
+      "1 Hour",
     photos: 15,
   };
 
@@ -205,7 +212,9 @@ export function CustomerDetailsForm({
                               disabled={(date) => {
                                 const today = new Date();
                                 today.setHours(0, 0, 0, 0);
-                                return date < today || date < new Date("1900-01-01");
+                                return (
+                                  date < today || date < new Date("1900-01-01")
+                                );
                               }}
                               locale={dateFnsLocale}
                               dir={locale === "ar" ? "rtl" : "ltr"}

@@ -4,8 +4,6 @@ import { PageHeroSection } from "@/components/page-hero-section";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { pagesContentService } from "@/lib/pages-content-service";
 
-
-
 export async function PrivacyPageContent({
   params,
 }: {
@@ -14,8 +12,10 @@ export async function PrivacyPageContent({
   const { locale } = await params;
 
   const dbPage = await pagesContentService.getPageBySlug("privacy");
-  const dynamicTitle = dbPage?.title?.[locale] || dbPage?.title?.en || "Privacy Policy";
-  const dynamicSubtitle = dbPage?.subtitle?.[locale] || dbPage?.subtitle?.en || "";
+  const dynamicTitle =
+    dbPage?.title?.[locale] || dbPage?.title?.en || "Privacy Policy";
+  const dynamicSubtitle =
+    dbPage?.subtitle?.[locale] || dbPage?.subtitle?.en || "";
 
   const sections = dbPage?.content?.sections || [];
 
@@ -26,18 +26,22 @@ export async function PrivacyPageContent({
         <PageHeroSection title={dynamicTitle} subtitle={dynamicSubtitle} />
       </div>
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-24 max-w-4xl">
-
         <div className="space-y-6">
           {sections.map((section: any, idx: number) => {
             const secTitle = section.title?.[locale] || section.title?.en || "";
-            const secDesc = section.description?.[locale] || section.description?.en || "";
-            const secItemsRaw = section.items?.[locale] || section.items?.en || "";
+            const secDesc =
+              section.description?.[locale] || section.description?.en || "";
+            const secItemsRaw =
+              section.items?.[locale] || section.items?.en || "";
             const secItems = secItemsRaw
               .split("\n")
               .map((item: string) => item.trim())
               .filter(Boolean);
 
-            const isCookie = secTitle.toLowerCase().includes("cookie") || secTitle.toLowerCase().includes("çerez") || secTitle.toLowerCase().includes("kuki");
+            const isCookie =
+              secTitle.toLowerCase().includes("cookie") ||
+              secTitle.toLowerCase().includes("çerez") ||
+              secTitle.toLowerCase().includes("kuki");
 
             if (!secTitle && !secDesc && secItems.length === 0) return null;
 
@@ -76,7 +80,10 @@ export async function PrivacyPageContent({
           {sections.length === 0 && (
             <div className="text-center py-12 text-muted-foreground border rounded-xl bg-muted/20">
               <p>Privacy Policy configuration is pending.</p>
-              <p className="text-sm">Administrators can configure sections in Settings {'->'} Pages {'->'} Privacy.</p>
+              <p className="text-sm">
+                Administrators can configure sections in Settings {"->"} Pages{" "}
+                {"->"} Privacy.
+              </p>
             </div>
           )}
         </div>

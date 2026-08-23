@@ -6,14 +6,18 @@ export async function GET() {
   const supabaseServiceKey = process.env.SUPABASE_SERVICE_KEY;
 
   if (!supabaseUrl || !supabaseServiceKey) {
-    return NextResponse.json({ error: "Missing Supabase Credentials" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Missing Supabase Credentials" },
+      { status: 500 },
+    );
   }
 
   const supabase = createClient(supabaseUrl, supabaseServiceKey, {
     auth: { autoRefreshToken: false, persistSession: false },
   });
 
-  const email = process.env.NEXT_PUBLIC_ADMIN_EMAIL || "info@istanbulportrait.com";
+  const email =
+    process.env.NEXT_PUBLIC_ADMIN_EMAIL || "info@istanbulportrait.com";
   const password = "Istanbul360!Secure";
 
   const { data, error } = await supabase.auth.admin.createUser({
@@ -24,7 +28,10 @@ export async function GET() {
 
   if (error) {
     if (error.message.includes("User already registered")) {
-      return NextResponse.json({ success: true, message: "Admin is already registered. You can login!" });
+      return NextResponse.json({
+        success: true,
+        message: "Admin is already registered. You can login!",
+      });
     }
     return NextResponse.json({ error: error.message }, { status: 400 });
   }
@@ -34,7 +41,7 @@ export async function GET() {
     message: "Admin created successfully!",
     credentials: {
       email,
-      password
-    }
+      password,
+    },
   });
 }

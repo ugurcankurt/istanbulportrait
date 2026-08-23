@@ -5,24 +5,26 @@ import { getFileStream } from "@/lib/google-drive";
 import archiver from "archiver";
 import { PassThrough } from "stream";
 
-function nodeStreamToWebStream(nodeStream: NodeJS.ReadableStream): ReadableStream {
+function nodeStreamToWebStream(
+  nodeStream: NodeJS.ReadableStream,
+): ReadableStream {
   return new ReadableStream({
     start(controller) {
-      nodeStream.on('data', (chunk) => controller.enqueue(chunk));
-      nodeStream.on('end', () => controller.close());
-      nodeStream.on('error', (err) => controller.error(err));
+      nodeStream.on("data", (chunk) => controller.enqueue(chunk));
+      nodeStream.on("end", () => controller.close());
+      nodeStream.on("error", (err) => controller.error(err));
     },
     cancel() {
-      if ('destroy' in nodeStream) {
+      if ("destroy" in nodeStream) {
         (nodeStream as any).destroy();
       }
-    }
+    },
   });
 }
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: Promise<{ bookingId: string }> }
+  { params }: { params: Promise<{ bookingId: string }> },
 ) {
   try {
     const user = await getServerUser();
@@ -60,7 +62,7 @@ export async function POST(
       return new NextResponse("No files provided", { status: 400 });
     }
 
-    // Level 0 compression because images are already compressed (JPEG/PNG/RAW) 
+    // Level 0 compression because images are already compressed (JPEG/PNG/RAW)
     // and we want maximum streaming speed
     const archive = archiver("zip", { zlib: { level: 0 } });
     const passThrough = new PassThrough();

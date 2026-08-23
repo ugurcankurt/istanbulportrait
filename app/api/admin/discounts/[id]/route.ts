@@ -4,7 +4,7 @@ import { requireServerAdmin } from "@/lib/auth-server";
 
 export async function PATCH(
   request: Request,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
     await requireServerAdmin();
@@ -14,7 +14,10 @@ export async function PATCH(
 
     // If making this one active, deactivate all others first
     if (body.is_active === true) {
-      await supabaseAdmin.from("discounts").update({ is_active: false }).neq("id", id);
+      await supabaseAdmin
+        .from("discounts")
+        .update({ is_active: false })
+        .neq("id", id);
     }
 
     const { data, error } = await supabaseAdmin
@@ -36,7 +39,7 @@ export async function PATCH(
 
 export async function DELETE(
   request: Request,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
     await requireServerAdmin();

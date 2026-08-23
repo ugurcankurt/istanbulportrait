@@ -29,7 +29,11 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { trackLead, saveUserDataForAdvancedMatching, trackPackageAddToCart } from "@/lib/analytics";
+import {
+  trackLead,
+  saveUserDataForAdvancedMatching,
+  trackPackageAddToCart,
+} from "@/lib/analytics";
 import { getPackagePricing, matchActiveSurcharge } from "@/lib/pricing";
 import { cn } from "@/lib/utils";
 import type { BookingFormData } from "@/lib/validations";
@@ -115,7 +119,8 @@ export function BookingModal({
   const [isNavigating, setIsNavigating] = useState(false);
   const hasTrackedOpen = useRef(false);
 
-  const [localYieldMultiplier, setLocalYieldMultiplier] = useState(yieldMultiplier);
+  const [localYieldMultiplier, setLocalYieldMultiplier] =
+    useState(yieldMultiplier);
   const [localYieldReason, setLocalYieldReason] = useState(yieldReason);
 
   useEffect(() => {
@@ -129,7 +134,9 @@ export function BookingModal({
   // Create schema with translations
   const bookingSchemaWithTranslations = createBookingSchema(tValidation);
   const { trackBookingStart, trackPackageView } = useYandexMetrica();
-  const [step, setStep] = useState<"selection" | "details" | "summary">("details");
+  const [step, setStep] = useState<"selection" | "details" | "summary">(
+    "details",
+  );
 
   // Custom hook logic for < 1024px (tablet & mobile) because Tailwind 'lg' breakpoint is 1024px.
   // The inline booking card is hidden below 1024px, so we must show the selection step in the modal.
@@ -185,7 +192,14 @@ export function BookingModal({
         form.setValue("packageId", selectedPackage);
       }
     }
-  }, [isOpen, initialDate, initialTime, initialPeopleCount, selectedPackage, form]);
+  }, [
+    isOpen,
+    initialDate,
+    initialTime,
+    initialPeopleCount,
+    selectedPackage,
+    form,
+  ]);
 
   // Update form values when selectedPackage changes
   // Calculate pricing based on selected package and date
@@ -208,7 +222,9 @@ export function BookingModal({
       const count = isPerPerson ? peopleCount : undefined;
       const tValue = form.getValues("bookingTime");
       const activeSurcharge = matchActiveSurcharge(tValue, timeSurcharges);
-      const surchargePercentage = activeSurcharge ? activeSurcharge.surcharge_percentage : 0;
+      const surchargePercentage = activeSurcharge
+        ? activeSurcharge.surcharge_percentage
+        : 0;
 
       const priceBreakdown = getPackagePricing(
         selectedPackage,
@@ -220,7 +236,7 @@ export function BookingModal({
         undefined,
         undefined,
         surchargePercentage,
-        localYieldMultiplier
+        localYieldMultiplier,
       );
 
       setPricing({
@@ -239,29 +255,41 @@ export function BookingModal({
         form.setValue("peopleCount", peopleCount);
       }
     }
-  }, [selectedPackage, peopleCount, form.watch("bookingDate"), form.watch("bookingTime"), form]); // Watch date, time, and peopleCount changes
+  }, [
+    selectedPackage,
+    peopleCount,
+    form.watch("bookingDate"),
+    form.watch("bookingTime"),
+    form,
+  ]); // Watch date, time, and peopleCount changes
 
-  const packageInfo = (selectedPackage && basePrice)
-    ? {
-      name: packageDisplayName || tPackages(`${selectedPackage}.title`), // Fallback just in case
-      price: pricing?.totalPrice || basePrice,
-      originalPrice: pricing?.originalPrice || basePrice,
-      isDiscounted: pricing?.isDiscounted || false,
-      discountPercentage: pricing?.discountPercentage || 0,
-      depositAmount: pricing?.depositAmount || 0,
-      remainingAmount: pricing?.remainingAmount || 0,
-      duration: packageDuration,
-      photos: packagePhotos,
-      locations: packageLocations,
-      features: packageFeatures,
-    }
-    : null;
+  const packageInfo =
+    selectedPackage && basePrice
+      ? {
+          name: packageDisplayName || tPackages(`${selectedPackage}.title`), // Fallback just in case
+          price: pricing?.totalPrice || basePrice,
+          originalPrice: pricing?.originalPrice || basePrice,
+          isDiscounted: pricing?.isDiscounted || false,
+          discountPercentage: pricing?.discountPercentage || 0,
+          depositAmount: pricing?.depositAmount || 0,
+          remainingAmount: pricing?.remainingAmount || 0,
+          duration: packageDuration,
+          photos: packagePhotos,
+          locations: packageLocations,
+          features: packageFeatures,
+        }
+      : null;
 
   // Track package view when modal opens
   useEffect(() => {
     if (!isOpen) {
       hasTrackedOpen.current = false;
-    } else if (isOpen && selectedPackage && packageInfo && !hasTrackedOpen.current) {
+    } else if (
+      isOpen &&
+      selectedPackage &&
+      packageInfo &&
+      !hasTrackedOpen.current
+    ) {
       hasTrackedOpen.current = true;
       trackPackageView(selectedPackage);
       trackPackageAddToCart(
@@ -270,7 +298,7 @@ export function BookingModal({
         packageInfo.price,
         "EUR",
         undefined,
-        localYieldReason
+        localYieldReason,
       );
     }
   }, [isOpen, selectedPackage, packageInfo, trackPackageView]);
@@ -298,7 +326,7 @@ export function BookingModal({
           packageInfo.price,
           "EUR",
           undefined,
-          localYieldReason
+          localYieldReason,
         );
 
         // Track Booking Start Event
@@ -319,12 +347,38 @@ export function BookingModal({
           });
 
           const draftResult = await draftResponse.json();
-          const extraInfo = { isPerPerson, activeDiscount, packageDisplayName, packageDuration, packagePhotos, packageLocations, packageFeatures: packageFeatures || [], yieldMultiplier: localYieldMultiplier, yieldReason: localYieldReason };
+          const extraInfo = {
+            isPerPerson,
+            activeDiscount,
+            packageDisplayName,
+            packageDuration,
+            packagePhotos,
+            packageLocations,
+            packageFeatures: packageFeatures || [],
+            yieldMultiplier: localYieldMultiplier,
+            yieldReason: localYieldReason,
+          };
           const bookingDataToStore = draftResult.bookingId
-            ? { ...data, ...extraInfo, totalAmount: pricing?.totalPrice || basePrice, basePrice, originalPrice: pricing?.originalPrice, bookingId: draftResult.bookingId }
-            : { ...data, ...extraInfo, totalAmount: pricing?.totalPrice || basePrice, basePrice, originalPrice: pricing?.originalPrice };
+            ? {
+                ...data,
+                ...extraInfo,
+                totalAmount: pricing?.totalPrice || basePrice,
+                basePrice,
+                originalPrice: pricing?.originalPrice,
+                bookingId: draftResult.bookingId,
+              }
+            : {
+                ...data,
+                ...extraInfo,
+                totalAmount: pricing?.totalPrice || basePrice,
+                basePrice,
+                originalPrice: pricing?.originalPrice,
+              };
 
-          sessionStorage.setItem("bookingData", JSON.stringify(bookingDataToStore));
+          sessionStorage.setItem(
+            "bookingData",
+            JSON.stringify(bookingDataToStore),
+          );
 
           form.reset();
           onClose();
@@ -336,13 +390,20 @@ export function BookingModal({
           }
         } catch (e) {
           console.error("Draft creation error:", e);
-          sessionStorage.setItem("bookingData", JSON.stringify({
-            ...data,
-            packageDisplayName, packageDuration, packagePhotos, packageLocations, packageFeatures: packageFeatures || [],
-            totalAmount: pricing?.totalPrice || basePrice,
-            basePrice,
-            originalPrice: pricing?.originalPrice
-          }));
+          sessionStorage.setItem(
+            "bookingData",
+            JSON.stringify({
+              ...data,
+              packageDisplayName,
+              packageDuration,
+              packagePhotos,
+              packageLocations,
+              packageFeatures: packageFeatures || [],
+              totalAmount: pricing?.totalPrice || basePrice,
+              basePrice,
+              originalPrice: pricing?.originalPrice,
+            }),
+          );
           form.reset();
           onClose();
           const coupon = searchParams.get("coupon");
@@ -464,8 +525,6 @@ export function BookingModal({
           </div>
         </form>
       </Form>
-
-
     </div>
   );
 
@@ -473,7 +532,10 @@ export function BookingModal({
   if (isTabletOrMobile) {
     return (
       <Sheet open={isOpen} onOpenChange={handleClose}>
-        <SheetContent side="bottom" className="h-[100dvh] w-screen p-0 flex flex-col rounded-none border-none inset-0">
+        <SheetContent
+          side="bottom"
+          className="h-[100dvh] w-screen p-0 flex flex-col rounded-none border-none inset-0"
+        >
           <SheetHeader className="px-4 py-3 border-b shrink-0 text-center flex flex-col items-center justify-center relative">
             <SheetTitle className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
               {step === "details" ? t("booking_details") : t("form.date_time")}
@@ -486,7 +548,12 @@ export function BookingModal({
             </SheetDescription>
           </SheetHeader>
 
-          <div className={cn("flex-1 overflow-y-auto", step === "selection" ? "p-0" : "p-6 pb-32")}>
+          <div
+            className={cn(
+              "flex-1 overflow-y-auto",
+              step === "selection" ? "p-0" : "p-6 pb-32",
+            )}
+          >
             {step === "selection" ? (
               <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
                 <BookingCard
@@ -494,18 +561,37 @@ export function BookingModal({
                   packageDisplayName={packageDisplayName}
                   basePrice={basePrice}
                   pricing={{
-                    price: isPerPerson ? packageInfo.price / (peopleCount || 1) : packageInfo.price,
+                    price: isPerPerson
+                      ? packageInfo.price / (peopleCount || 1)
+                      : packageInfo.price,
                     isDiscounted: packageInfo.isDiscounted,
                     discountPercentage: packageInfo.discountPercentage,
                     depositAmount: packageInfo.depositAmount,
                     remainingAmount: packageInfo.remainingAmount,
-                    originalPrice: isPerPerson ? packageInfo.originalPrice / (peopleCount || 1) : packageInfo.originalPrice
+                    originalPrice: isPerPerson
+                      ? packageInfo.originalPrice / (peopleCount || 1)
+                      : packageInfo.originalPrice,
                   }}
-                  displayPrice={isPerPerson ? packageInfo.price / (peopleCount || 1) : packageInfo.price}
-                  selectedDate={form.watch("bookingDate") ? new Date(form.watch("bookingDate")) : undefined}
-                  setSelectedDate={(date) => form.setValue("bookingDate", date ? format(date, "yyyy-MM-dd") : "")}
+                  displayPrice={
+                    isPerPerson
+                      ? packageInfo.price / (peopleCount || 1)
+                      : packageInfo.price
+                  }
+                  selectedDate={
+                    form.watch("bookingDate")
+                      ? new Date(form.watch("bookingDate"))
+                      : undefined
+                  }
+                  setSelectedDate={(date) =>
+                    form.setValue(
+                      "bookingDate",
+                      date ? format(date, "yyyy-MM-dd") : "",
+                    )
+                  }
                   selectedTime={form.watch("bookingTime")}
-                  setSelectedTime={(time) => form.setValue("bookingTime", time || "")}
+                  setSelectedTime={(time) =>
+                    form.setValue("bookingTime", time || "")
+                  }
                   peopleCount={peopleCount}
                   setPeopleCount={setPeopleCount}
                   dateFnsLocale={dateFnsLocale}
@@ -564,7 +650,9 @@ export function BookingModal({
         showCloseButton={true}
       >
         <DialogHeader className="px-6 py-8 border-b bg-background text-center flex flex-col items-center justify-center">
-          <span className="text-xs font-bold text-muted-foreground uppercase tracking-widest">{t("booking_details")}</span>
+          <span className="text-xs font-bold text-muted-foreground uppercase tracking-widest">
+            {t("booking_details")}
+          </span>
           <DialogTitle className="text-3xl font-serif leading-tight text-foreground mt-2 px-8">
             {packageDisplayName}
           </DialogTitle>

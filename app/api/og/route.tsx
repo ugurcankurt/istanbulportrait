@@ -15,9 +15,9 @@ export async function GET(req: NextRequest) {
     let imageSrc: any = imageUrl;
     let targetUrl = imageUrl;
 
-    // Satori (ImageResponse) .webp formatını desteklemediği için, sadece .webp uzantılı 
+    // Satori (ImageResponse) .webp formatını desteklemediği için, sadece .webp uzantılı
     // Supabase görsellerini anında JPG'ye çeviren aracı pipe (wsrv) kullanıyoruz.
-    if (imageUrl.toLowerCase().includes('.webp')) {
+    if (imageUrl.toLowerCase().includes(".webp")) {
       targetUrl = `https://wsrv.nl/?url=${encodeURIComponent(imageUrl)}&output=jpg&w=1200`;
     }
 
@@ -26,38 +26,38 @@ export async function GET(req: NextRequest) {
       if (imgFetch.ok) {
         imageSrc = await imgFetch.arrayBuffer();
       } else {
-        console.error(`OG Image Fetch Hatası: ${targetUrl} (${imgFetch.status})`);
+        console.error(
+          `OG Image Fetch Hatası: ${targetUrl} (${imgFetch.status})`,
+        );
       }
     }
 
     return new ImageResponse(
-      (
-        <div
+      <div
+        style={{
+          display: "flex",
+          width: "100%",
+          height: "100%",
+          alignItems: "center",
+          justifyContent: "center",
+          backgroundColor: "#000",
+        }}
+      >
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={imageSrc}
+          alt="OG Image"
           style={{
-            display: "flex",
             width: "100%",
             height: "100%",
-            alignItems: "center",
-            justifyContent: "center",
-            backgroundColor: "#000",
+            objectFit: "cover",
           }}
-        >
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={imageSrc}
-            alt="OG Image"
-            style={{
-              width: "100%",
-              height: "100%",
-              objectFit: "cover",
-            }}
-          />
-        </div>
-      ),
+        />
+      </div>,
       {
         width: 1200,
         height: 630,
-      }
+      },
     );
   } catch (e: any) {
     console.error(`Failed to generate OG image`, e.message);

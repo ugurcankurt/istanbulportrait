@@ -446,7 +446,8 @@
     "per_person": "pro Person",
     "related_packages": "Ähnliche Pakete",
     "gyg_title": "Entdecken Sie mehr in Istanbul",
-    "gyg_subtitle": "Empfohlene Aktivitäten und Touren von unserem Partner GetYourGuide"
+    "gyg_subtitle": "Empfohlene Aktivitäten und Touren von unserem Partner GetYourGuide",
+    "starting_from": "Ab"
   },
   "gallery": {
     "title": "Portfolio",

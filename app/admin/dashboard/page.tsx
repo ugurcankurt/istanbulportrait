@@ -167,7 +167,11 @@ export default function AdminDashboard() {
           </p>
         </div>
         <div className="flex gap-2">
-          <Button nativeButton={false} render={<Link href="/admin/dashboard/bookings" />} variant="outline">
+          <Button
+            nativeButton={false}
+            render={<Link href="/admin/dashboard/bookings" />}
+            variant="outline"
+          >
             View All Bookings
           </Button>
         </div>
@@ -199,7 +203,6 @@ export default function AdminDashboard() {
             icon={Users}
             description="Total registered customers"
           />
-
         </div>
       )}
 
@@ -266,7 +269,12 @@ export default function AdminDashboard() {
               Latest booking activities
             </p>
           </div>
-          <Button nativeButton={false} render={<Link href="/admin/dashboard/bookings" />} variant="outline" size="sm">
+          <Button
+            nativeButton={false}
+            render={<Link href="/admin/dashboard/bookings" />}
+            variant="outline"
+            size="sm"
+          >
             View All
           </Button>
         </CardHeader>

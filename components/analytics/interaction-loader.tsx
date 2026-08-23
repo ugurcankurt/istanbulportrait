@@ -15,8 +15,12 @@ export function InteractionLoader({ children }: { children: React.ReactNode }) {
     if (load) return;
 
     // Detect bots/crawlers/Lighthouse to get 100/100 PageSpeed and avoid inflating analytics
-    const isBot = typeof navigator !== 'undefined' && /bot|googlebot|crawler|spider|robot|crawling|lighthouse|chrome-lighthouse/i.test(navigator.userAgent);
-    
+    const isBot =
+      typeof navigator !== "undefined" &&
+      /bot|googlebot|crawler|spider|robot|crawling|lighthouse|chrome-lighthouse/i.test(
+        navigator.userAgent,
+      );
+
     if (isBot) {
       return; // Never load heavy analytics scripts for bots
     }

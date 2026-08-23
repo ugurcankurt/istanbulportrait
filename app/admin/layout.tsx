@@ -20,8 +20,6 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-
-
 export default async function AdminLayout({
   children,
 }: {
@@ -38,7 +36,7 @@ export default async function AdminLayout({
       <body className="antialiased min-h-screen bg-background font-sans">
         <ThemeProvider
           attribute="class"
-          defaultTheme={settings.color_mode || 'system'}
+          defaultTheme={settings.color_mode || "system"}
           enableSystem
           disableTransitionOnChange
         >

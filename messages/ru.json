@@ -446,7 +446,8 @@
     "per_person": "на человека",
     "related_packages": "Похожие Пакеты",
     "gyg_title": "Узнайте больше в Стамбуле",
-    "gyg_subtitle": "Рекомендуемые мероприятия и туры от нашего партнера GetYourGuide"
+    "gyg_subtitle": "Рекомендуемые мероприятия и туры от нашего партнера GetYourGuide",
+    "starting_from": "От"
   },
   "gallery": {
     "title": "Портфолио",

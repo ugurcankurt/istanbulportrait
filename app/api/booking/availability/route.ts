@@ -28,27 +28,33 @@ export async function GET(request: Request) {
     .select("start_time, end_time")
     .eq("id", "default")
     .single();
-    
-  const startHour = settingsData?.start_time ? parseInt(settingsData.start_time.split(":")[0]) : 6;
-  const endHour = settingsData?.end_time ? parseInt(settingsData.end_time.split(":")[0]) : 20;
+
+  const startHour = settingsData?.start_time
+    ? parseInt(settingsData.start_time.split(":")[0])
+    : 6;
+  const endHour = settingsData?.end_time
+    ? parseInt(settingsData.end_time.split(":")[0])
+    : 20;
 
   // Fetch all packages to get exact durations dynamically
-  const { data: allPackages } = await supabaseAdmin.from("packages").select("slug, duration");
-  
+  const { data: allPackages } = await supabaseAdmin
+    .from("packages")
+    .select("slug, duration");
+
   const dynamicDurations: Record<string, number> = { ...PACKAGE_DURATIONS };
-  
+
   if (allPackages) {
     for (const p of allPackages) {
-       const durStr = (p.duration?.en || "").toLowerCase();
-       let mins = 60;
-       if (durStr.includes("hour")) {
-         const h = parseFloat(durStr);
-         if (!isNaN(h)) mins = h * 60;
-       } else if (durStr.includes("min")) {
-         const m = parseInt(durStr);
-         if (!isNaN(m)) mins = m;
-       }
-       dynamicDurations[p.slug] = mins;
+      const durStr = (p.duration?.en || "").toLowerCase();
+      let mins = 60;
+      if (durStr.includes("hour")) {
+        const h = parseFloat(durStr);
+        if (!isNaN(h)) mins = h * 60;
+      } else if (durStr.includes("min")) {
+        const m = parseInt(durStr);
+        if (!isNaN(m)) mins = m;
+      }
+      dynamicDurations[p.slug] = mins;
     }
   }
 
@@ -58,7 +64,7 @@ export async function GET(request: Request) {
   // Drafts hold for 10 minutes -> created_at >= NOW() - 10 minutes
   const tenMinsAgo = new Date(Date.now() - 10 * 60 * 1000).toISOString();
 
-  // Fetch all bookings for the requested date 
+  // Fetch all bookings for the requested date
   const { data, error } = await supabaseAdmin
     .from("bookings")
     .select("booking_time, package_id, status, created_at")
@@ -87,7 +93,8 @@ export async function GET(request: Request) {
 
   // Generate all possible 30-min slots
   const allSlots: string[] = [];
-  for (let h = 6; h <= 20; h++) { // For UI consistency we always return the static grid range, but block out of bounds
+  for (let h = 6; h <= 20; h++) {
+    // For UI consistency we always return the static grid range, but block out of bounds
     allSlots.push(`${h.toString().padStart(2, "0")}:00`);
     allSlots.push(`${h.toString().padStart(2, "0")}:30`);
   }
@@ -99,7 +106,8 @@ export async function GET(request: Request) {
   // Filter valid bookings that actually block time
   const validBookings = (data || []).filter((b: any) => {
     if (["pending", "confirmed", "completed"].includes(b.status)) return true;
-    if (b.status === "draft") return new Date(b.created_at) >= new Date(tenMinsAgo);
+    if (b.status === "draft")
+      return new Date(b.created_at) >= new Date(tenMinsAgo);
     return false;
   });
 
@@ -108,18 +116,18 @@ export async function GET(request: Request) {
   for (const slot of allSlots) {
     const requestedStart = timeToMinutes(slot);
     const requestedEnd = requestedStart + requestedDuration;
-    
+
     // Block if outside working hours
     const h = parseInt(slot.split(":")[0]);
     if (h < startHour || h > endHour) {
-       blockedSlots.push(slot);
-       continue;
+      blockedSlots.push(slot);
+      continue;
     }
 
     // Block if manually blocked
     if (manualBlockedSlots.has(slot)) {
-       blockedSlots.push(slot);
-       continue;
+      blockedSlots.push(slot);
+      continue;
     }
 
     // Check overlap with any existing booking
@@ -150,7 +158,7 @@ export async function GET(request: Request) {
   const targetDate = new Date(date);
   const today = new Date();
   today.setHours(0, 0, 0, 0);
-  
+
   const diffTime = targetDate.getTime() - today.getTime();
   const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
@@ -160,22 +168,23 @@ export async function GET(request: Request) {
     const h = parseInt(slot.split(":")[0]);
     return h >= startHour && h <= endHour;
   }).length;
-  
+
   const blockedSlotsCount = blockedSlots.length;
-  const occupancyRate = totalSlotsCount > 0 ? blockedSlotsCount / totalSlotsCount : 0;
+  const occupancyRate =
+    totalSlotsCount > 0 ? blockedSlotsCount / totalSlotsCount : 0;
 
   // Apply Yield Rules
   if (validBookings.length >= 2) {
-    dynamicMultiplier = 1.50; // +50% for 2 or more bookings
+    dynamicMultiplier = 1.5; // +50% for 2 or more bookings
     yieldReason = "high_demand";
   } else if (occupancyRate >= 0.7) {
     dynamicMultiplier = 1.15; // +15% for high demand
     yieldReason = "high_demand";
   } else if (diffDays <= 3 && diffDays >= 0) {
-    dynamicMultiplier = 1.10; // +10% for last minute
+    dynamicMultiplier = 1.1; // +10% for last minute
     yieldReason = "last_minute";
   } else if (diffDays > 30) {
-    dynamicMultiplier = 0.70; // -30% for early bird
+    dynamicMultiplier = 0.7; // -30% for early bird
     yieldReason = "early_bird";
   }
 

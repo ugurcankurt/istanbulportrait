@@ -119,12 +119,12 @@ export async function PATCH(
 
     try {
       const { id } = await params;
-      
+
       // Fetch current post to check status before update
       const currentPost = await getBlogPostByIdWithAllTranslations(id);
-      const isNewlyPublished = 
-        currentPost && 
-        currentPost.status !== "published" && 
+      const isNewlyPublished =
+        currentPost &&
+        currentPost.status !== "published" &&
         validationResult.data.status === "published";
 
       const post = await updateBlogPost(id, validationResult.data);

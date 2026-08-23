@@ -1,6 +1,11 @@
 "use client";
 
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 
 interface FAQSectionProps {
   header?: React.ReactNode;
@@ -22,9 +27,7 @@ export function FAQSection({ header, dynamicFaqs }: FAQSectionProps) {
             {dynamicFaqs.map((faq) => (
               <AccordionItem key={faq.id} value={faq.id}>
                 <AccordionTrigger className="text-left hover:text-primary">
-                  <span className="font-medium">
-                    {faq.question}
-                  </span>
+                  <span className="font-medium">{faq.question}</span>
                 </AccordionTrigger>
                 <AccordionContent className="text-muted-foreground leading-relaxed">
                   <p>{faq.answer}</p>

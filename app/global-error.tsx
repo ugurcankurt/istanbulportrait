@@ -25,10 +25,7 @@ export default function GlobalError({
           <div className="text-center space-y-4">
             <h1 className="text-4xl font-bold">Something went wrong!</h1>
             <p className="text-muted-foreground">Global Error caught.</p>
-            <Button
-              type="button"
-              onClick={() => reset()}
-            >
+            <Button type="button" onClick={() => reset()}>
               Try again
             </Button>
           </div>

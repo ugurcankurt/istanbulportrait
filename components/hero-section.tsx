@@ -14,7 +14,6 @@ export async function HeroSection({
   backgroundImage?: string;
   activeDiscount?: DiscountDB | null;
 } = {}) {
-
   const tui = await getTranslations("ui");
 
   return (

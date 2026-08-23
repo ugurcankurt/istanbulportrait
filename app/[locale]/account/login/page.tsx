@@ -5,7 +5,13 @@ import { createClientSupabaseClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Spinner } from "@/components/ui/spinner";
 import { Lock, Mail } from "lucide-react";
@@ -27,7 +33,7 @@ export default function CustomerLoginPage() {
     setError(null);
 
     const supabase = createClientSupabaseClient();
-    
+
     const { error: authError } = await supabase.auth.signInWithPassword({
       email,
       password,
@@ -49,7 +55,9 @@ export default function CustomerLoginPage() {
 
       <Card className="w-full max-w-md relative z-10 border-border/50 bg-card/60 backdrop-blur-xl">
         <CardHeader className="space-y-3 text-center pb-6">
-          <CardTitle className="text-3xl font-bold tracking-tight">{t("title")}</CardTitle>
+          <CardTitle className="text-3xl font-bold tracking-tight">
+            {t("title")}
+          </CardTitle>
           <CardDescription className="text-base">
             {t("description")}
           </CardDescription>
@@ -57,8 +65,13 @@ export default function CustomerLoginPage() {
         <CardContent>
           <form onSubmit={handleLogin} className="space-y-5">
             {error && (
-              <Alert variant="destructive" className="bg-destructive/10 border-destructive/20 text-destructive">
-                <AlertDescription className="font-medium text-sm">{error}</AlertDescription>
+              <Alert
+                variant="destructive"
+                className="bg-destructive/10 border-destructive/20 text-destructive"
+              >
+                <AlertDescription className="font-medium text-sm">
+                  {error}
+                </AlertDescription>
               </Alert>
             )}
 
@@ -82,7 +95,11 @@ export default function CustomerLoginPage() {
             <div className="space-y-2.5">
               <div className="flex items-center justify-between">
                 <Label htmlFor="password">{t("password")}</Label>
-                <button type="button" className="text-xs text-primary hover:underline" onClick={() => toast.info(t("forgotPasswordAlert"))}>
+                <button
+                  type="button"
+                  className="text-xs text-primary hover:underline"
+                  onClick={() => toast.info(t("forgotPasswordAlert"))}
+                >
                   {t("forgotPassword")}
                 </button>
               </div>
@@ -101,7 +118,11 @@ export default function CustomerLoginPage() {
               </div>
             </div>
 
-            <Button type="submit" className="w-full h-11" disabled={loading || !email || !password}>
+            <Button
+              type="submit"
+              className="w-full h-11"
+              disabled={loading || !email || !password}
+            >
               {loading ? (
                 <>
                   <Spinner className="w-4 h-4 mr-2 animate-spin" />

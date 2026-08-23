@@ -67,7 +67,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { type Booking, useBookingsStore } from "@/stores/bookings-store";
 
 const formatCurrency = (amount: number) => {
-  if (typeof amount !== 'number') return `€0.00`;
+  if (typeof amount !== "number") return `€0.00`;
   const rounded = Math.round(amount * 100) / 100;
   return `€${rounded.toLocaleString("en-US", {
     minimumFractionDigits: 2,
@@ -98,10 +98,7 @@ function BookingDetailsDialog({ booking }: { booking: Booking }) {
   const [open, setOpen] = useState(false);
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DropdownMenuItem
-        onClick={() => setOpen(true)}
-        closeOnClick={false}
-      >
+      <DropdownMenuItem onClick={() => setOpen(true)} closeOnClick={false}>
         <Eye className="w-4 h-4 mr-2" />
         View Details
       </DropdownMenuItem>
@@ -130,11 +127,14 @@ function BookingDetailsDialog({ booking }: { booking: Booking }) {
                 {booking.package_id} Package
                 {booking.people_count && booking.people_count > 0 && (
                   <Badge variant="outline" className="text-xs">
-                    {booking.people_count} {booking.people_count === 1 ? "Person" : "People"}
+                    {booking.people_count}{" "}
+                    {booking.people_count === 1 ? "Person" : "People"}
                   </Badge>
                 )}
               </p>
-              <p className="text-lg font-bold">{formatCurrency(booking.total_amount)}</p>
+              <p className="text-lg font-bold">
+                {formatCurrency(booking.total_amount)}
+              </p>
               <StatusBadge status={booking.status} />
             </div>
           </div>
@@ -167,10 +167,12 @@ function BookingDetailsDialog({ booking }: { booking: Booking }) {
             <div>
               <Label className="text-sm font-medium">Google Drive Folder</Label>
               <div className="bg-muted p-3 rounded-md flex items-center justify-between">
-                <p className="text-sm font-mono truncate mr-4">{booking.drive_folder_id}</p>
-                <a 
-                  href={`https://drive.google.com/drive/folders/${booking.drive_folder_id}`} 
-                  target="_blank" 
+                <p className="text-sm font-mono truncate mr-4">
+                  {booking.drive_folder_id}
+                </p>
+                <a
+                  href={`https://drive.google.com/drive/folders/${booking.drive_folder_id}`}
+                  target="_blank"
                   rel="noopener noreferrer"
                   className="text-xs text-blue-500 hover:underline whitespace-nowrap"
                 >
@@ -185,7 +187,9 @@ function BookingDetailsDialog({ booking }: { booking: Booking }) {
               <Label className="text-xs font-medium text-muted-foreground uppercase">
                 Total
               </Label>
-              <p className="text-lg font-bold">{formatCurrency(booking.total_amount)}</p>
+              <p className="text-lg font-bold">
+                {formatCurrency(booking.total_amount)}
+              </p>
             </div>
             <div>
               <Label className="text-xs font-medium text-muted-foreground uppercase">
@@ -195,7 +199,7 @@ function BookingDetailsDialog({ booking }: { booking: Booking }) {
                 {formatCurrency(
                   booking.payments
                     ?.filter((p) => p.status === "success")
-                    .reduce((sum, p) => sum + p.amount, 0) || 0
+                    .reduce((sum, p) => sum + p.amount, 0) || 0,
                 )}
               </p>
             </div>
@@ -208,7 +212,7 @@ function BookingDetailsDialog({ booking }: { booking: Booking }) {
                   booking.total_amount -
                     (booking.payments
                       ?.filter((p) => p.status === "success")
-                      .reduce((sum, p) => sum + p.amount, 0) || 0)
+                      .reduce((sum, p) => sum + p.amount, 0) || 0),
                 )}
               </p>
             </div>
@@ -280,10 +284,7 @@ function EditBookingDialog({
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DropdownMenuItem
-        onClick={() => setOpen(true)}
-        closeOnClick={false}
-      >
+      <DropdownMenuItem onClick={() => setOpen(true)} closeOnClick={false}>
         <Edit className="w-4 h-4 mr-2" />
         Edit Booking
       </DropdownMenuItem>
@@ -300,7 +301,7 @@ function EditBookingDialog({
             <Select
               value={status}
               onValueChange={(value) => {
-                if (value) setStatus(value as typeof status)
+                if (value) setStatus(value as typeof status);
               }}
             >
               <SelectTrigger>
@@ -433,7 +434,9 @@ export default function BookingsPage() {
             </div>
             <Select
               value={statusFilter}
-              onValueChange={(value) => setFilters({ statusFilter: value || 'all' })}
+              onValueChange={(value) =>
+                setFilters({ statusFilter: value || "all" })
+              }
             >
               <SelectTrigger className="w-40">
                 <SelectValue placeholder="Status" />
@@ -554,9 +557,9 @@ export default function BookingsPage() {
                     <TableCell className="text-destructive font-medium">
                       {formatCurrency(
                         booking.total_amount -
-                        (booking.payments
-                          ?.filter((p) => p.status === "success")
-                          .reduce((sum, p) => sum + p.amount, 0) || 0),
+                          (booking.payments
+                            ?.filter((p) => p.status === "success")
+                            .reduce((sum, p) => sum + p.amount, 0) || 0),
                       )}
                     </TableCell>
                     <TableCell className="text-sm text-muted-foreground">
@@ -564,7 +567,9 @@ export default function BookingsPage() {
                     </TableCell>
                     <TableCell>
                       <DropdownMenu>
-                        <DropdownMenuTrigger render={<Button variant="ghost" size="sm" />}>
+                        <DropdownMenuTrigger
+                          render={<Button variant="ghost" size="sm" />}
+                        >
                           <MoreHorizontal className="w-4 h-4" />
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">

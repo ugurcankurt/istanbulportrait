@@ -33,7 +33,10 @@ export function BlogAuthor({ author, siteSettings }: BlogAuthorProps) {
   const bio = author?.bio?.[locale] || author?.bio?.en || t("bio");
   const role = author?.role?.[locale] || author?.role?.en || "";
 
-  const fallbackLogo = (mounted && resolvedTheme === "dark" ? siteSettings?.logo_dark_url : siteSettings?.logo_url) || siteSettings?.logo_url;
+  const fallbackLogo =
+    (mounted && resolvedTheme === "dark"
+      ? siteSettings?.logo_dark_url
+      : siteSettings?.logo_url) || siteSettings?.logo_url;
 
   const socialLinks = {
     ...author?.social_links,
@@ -77,9 +80,11 @@ export function BlogAuthor({ author, siteSettings }: BlogAuthorProps) {
                 onError={() => setLogoError(true)}
               />
             ) : (
-                <div className="w-full h-full flex flex-col items-center justify-center p-4">
-                  <span className="text-4xl font-bold uppercase text-muted-foreground">{name.charAt(0)}</span>
-                </div>
+              <div className="w-full h-full flex flex-col items-center justify-center p-4">
+                <span className="text-4xl font-bold uppercase text-muted-foreground">
+                  {name.charAt(0)}
+                </span>
+              </div>
             )}
           </div>
         </div>
@@ -105,27 +110,75 @@ export function BlogAuthor({ author, siteSettings }: BlogAuthorProps) {
 
           <div className="flex flex-wrap gap-2 pt-2 justify-center md:justify-start">
             {socialLinks.instagram && (
-              <Button nativeButton={false} render={<a href={socialLinks.instagram} target="_blank" rel="noopener noreferrer" />} variant="outline" size="sm" className="gap-2">
-                  <Instagram className="w-4 h-4" />
-                  Instagram
+              <Button
+                nativeButton={false}
+                render={
+                  <a
+                    href={socialLinks.instagram}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  />
+                }
+                variant="outline"
+                size="sm"
+                className="gap-2"
+              >
+                <Instagram className="w-4 h-4" />
+                Instagram
               </Button>
             )}
             {socialLinks.twitter && (
-              <Button nativeButton={false} render={<a href={socialLinks.twitter} target="_blank" rel="noopener noreferrer" />} variant="outline" size="sm" className="gap-2">
-                  <Twitter className="w-4 h-4" />
-                  Twitter
+              <Button
+                nativeButton={false}
+                render={
+                  <a
+                    href={socialLinks.twitter}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  />
+                }
+                variant="outline"
+                size="sm"
+                className="gap-2"
+              >
+                <Twitter className="w-4 h-4" />
+                Twitter
               </Button>
             )}
             {socialLinks.linkedin && (
-              <Button nativeButton={false} render={<a href={socialLinks.linkedin} target="_blank" rel="noopener noreferrer" />} variant="outline" size="sm" className="gap-2">
-                  <Linkedin className="w-4 h-4" />
-                  LinkedIn
+              <Button
+                nativeButton={false}
+                render={
+                  <a
+                    href={socialLinks.linkedin}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  />
+                }
+                variant="outline"
+                size="sm"
+                className="gap-2"
+              >
+                <Linkedin className="w-4 h-4" />
+                LinkedIn
               </Button>
             )}
             {socialLinks.website && (
-              <Button nativeButton={false} render={<a href={socialLinks.website} target="_blank" rel="noopener noreferrer" />} variant="outline" size="sm" className="gap-2">
-                  <Globe className="w-4 h-4" />
-                  Website
+              <Button
+                nativeButton={false}
+                render={
+                  <a
+                    href={socialLinks.website}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  />
+                }
+                variant="outline"
+                size="sm"
+                className="gap-2"
+              >
+                <Globe className="w-4 h-4" />
+                Website
               </Button>
             )}
           </div>

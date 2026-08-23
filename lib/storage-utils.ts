@@ -14,7 +14,7 @@ export const LOCATIONS_BUCKET = "locations";
 export async function compressAndConvertToWebp(
   file: File,
   maxKb: number = 150,
-  maxWidth: number = 1920
+  maxWidth: number = 1920,
 ): Promise<File> {
   return new Promise((resolve, reject) => {
     if (typeof window === "undefined") {
@@ -69,7 +69,9 @@ export async function compressAndConvertToWebp(
               // Found acceptable size or reached minimum quality!
               // Standardize file name
               const originalName = file.name.split(".")[0];
-              const safeName = originalName.replace(/[^a-z0-9]/gi, "_").toLowerCase();
+              const safeName = originalName
+                .replace(/[^a-z0-9]/gi, "_")
+                .toLowerCase();
               const newFile = new File([blob], `${safeName}.webp`, {
                 type: "image/webp",
                 lastModified: Date.now(),
@@ -78,14 +80,15 @@ export async function compressAndConvertToWebp(
             }
           },
           "image/webp",
-          quality
+          quality,
         );
       };
 
       attemptCompression();
     };
 
-    img.onerror = () => reject(new Error("Failed to load image for compression"));
+    img.onerror = () =>
+      reject(new Error("Failed to load image for compression"));
   });
 }
 
@@ -100,20 +103,20 @@ export async function compressAndConvertToWebp(
 export async function uploadPackageImage(
   slug: string,
   file: File,
-  bucket: string = PACKAGES_BUCKET
+  bucket: string = PACKAGES_BUCKET,
 ): Promise<{ success: boolean; url?: string; error?: string }> {
   try {
     const supabase = getSupabaseStorageClient();
-    
+
     // Optimize the image client-side first
     const optimizedFile = await compressAndConvertToWebp(file, 150);
-    
+
     // Normalize folder path to ASCII for Supabase Storage (removes ö, ş, ç etc.)
     const safeSlug = slug
-      .normalize('NFD')
-      .replace(/[\u0300-\u036f]/g, '')
-      .replace(/[^a-zA-Z0-9-]/g, '-')
-      .replace(/-+/g, '-')
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/[^a-zA-Z0-9-]/g, "-")
+      .replace(/-+/g, "-")
       .toLowerCase();
 
     // Use an epoch + normalized name to avoid caching artifacts
@@ -152,17 +155,17 @@ export async function uploadPackageImage(
 export async function uploadPackageVideo(
   slug: string,
   file: File,
-  bucket: string = PACKAGES_BUCKET
+  bucket: string = PACKAGES_BUCKET,
 ): Promise<{ success: boolean; url?: string; error?: string }> {
   try {
     const supabase = getSupabaseStorageClient();
-    
+
     // Normalize folder path to ASCII for Supabase Storage
     const safeSlug = slug
-      .normalize('NFD')
-      .replace(/[\u0300-\u036f]/g, '')
-      .replace(/[^a-zA-Z0-9-]/g, '-')
-      .replace(/-+/g, '-')
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/[^a-zA-Z0-9-]/g, "-")
+      .replace(/-+/g, "-")
       .toLowerCase();
 
     // Use an epoch + normalized name to avoid caching artifacts
@@ -197,18 +200,18 @@ export async function uploadPackageVideo(
  */
 export async function deletePackageImage(
   publicUrl: string,
-  bucket: string = PACKAGES_BUCKET
+  bucket: string = PACKAGES_BUCKET,
 ): Promise<boolean> {
   if (!publicUrl) return true;
 
   try {
     const supabase = getSupabaseStorageClient();
-    
+
     // Example format: .../storage/v1/object/public/packages/essential/170020_file.webp
     // We just want "essential/170020_file.webp"
     const bucketToken = `/${bucket}/`;
     const splitUrl = publicUrl.split(bucketToken);
-    
+
     if (splitUrl.length < 2) {
       console.warn("Could not parse file path from URL:", publicUrl);
       return false; // Could not parse
@@ -218,8 +221,8 @@ export async function deletePackageImage(
 
     const { error } = await supabase.storage.from(bucket).remove([objectPath]);
     if (error) {
-       console.error("Storage remove error:", error);
-       return false;
+      console.error("Storage remove error:", error);
+      return false;
     }
 
     return true;
@@ -234,19 +237,19 @@ export async function deletePackageImage(
  */
 export async function uploadLocationImage(
   slug: string,
-  file: File
+  file: File,
 ): Promise<{ success: boolean; url?: string; error?: string }> {
   // Allow slightly larger sizes for locations (e.g. 200kb vs 150kb)
   try {
     const supabase = getSupabaseStorageClient();
     const optimizedFile = await compressAndConvertToWebp(file, 200);
-    
+
     // Normalize folder path to ASCII for Supabase Storage
     const safeSlug = slug
-      .normalize('NFD')
-      .replace(/[\u0300-\u036f]/g, '')
-      .replace(/[^a-zA-Z0-9-]/g, '-')
-      .replace(/-+/g, '-')
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/[^a-zA-Z0-9-]/g, "-")
+      .replace(/-+/g, "-")
       .toLowerCase();
 
     const uniqueFileName = `${Date.now()}_${optimizedFile.name}`;
@@ -268,7 +271,10 @@ export async function uploadLocationImage(
     return { success: true, url: publicUrlData.publicUrl };
   } catch (err: any) {
     console.error("Storage upload error:", err);
-    return { success: false, error: err.message || "Failed to upload location image" };
+    return {
+      success: false,
+      error: err.message || "Failed to upload location image",
+    };
   }
 }
 

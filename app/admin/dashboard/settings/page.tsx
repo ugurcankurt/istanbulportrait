@@ -1,20 +1,36 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import {  Save, Sparkles } from "lucide-react";
+import { Save, Sparkles } from "lucide-react";
 import { Spinner } from "@/components/ui/spinner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { WebpImageUploader } from "@/components/ui/webp-image-uploader";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { SiteSettings, defaultSettings } from "@/lib/settings-service";
 import { ThemeCustomizer } from "@/components/admin/theme-customizer";
 
-const SUPPORTED_LOCALES = ["en", "ar", "ru", "es", "zh", "de", "fr", "ro", "tr"];
+const SUPPORTED_LOCALES = [
+  "en",
+  "ar",
+  "ru",
+  "es",
+  "zh",
+  "de",
+  "fr",
+  "ro",
+  "tr",
+];
 
 export default function SettingsPage() {
   const [settings, setSettings] = useState<SiteSettings>(defaultSettings);
@@ -64,7 +80,11 @@ export default function SettingsPage() {
     setSettings((prev) => ({ ...prev, [key]: value }));
   };
 
-  const updateTranslatable = (key: "address" | "working_hours" | "site_description", locale: string, value: string) => {
+  const updateTranslatable = (
+    key: "address" | "working_hours" | "site_description",
+    locale: string,
+    value: string,
+  ) => {
     setSettings((prev) => ({
       ...prev,
       [key]: {
@@ -80,12 +100,16 @@ export default function SettingsPage() {
     const enWorkingHours = settings.working_hours?.en || "";
 
     if (!settings.gemini_api_key) {
-      toast.error("Please configure your Gemini API Key in the settings first!");
+      toast.error(
+        "Please configure your Gemini API Key in the settings first!",
+      );
       return;
     }
-    
+
     if (!enDescription && !enAddress && !enWorkingHours) {
-      toast.error("Please fill in the English (EN) fields first to use them as a source.");
+      toast.error(
+        "Please fill in the English (EN) fields first to use them as a source.",
+      );
       return;
     }
 
@@ -98,7 +122,7 @@ export default function SettingsPage() {
         body: JSON.stringify({
           site_description: enDescription,
           address: enAddress,
-          working_hours: enWorkingHours
+          working_hours: enWorkingHours,
         }),
       });
 
@@ -107,7 +131,7 @@ export default function SettingsPage() {
       }
 
       const rawData = await res.json();
-      
+
       const newSettings = { ...settings };
       if (!newSettings.site_description) newSettings.site_description = {};
       if (!newSettings.address) newSettings.address = {};
@@ -116,17 +140,24 @@ export default function SettingsPage() {
       const translations = rawData.translations || {};
 
       Object.keys(translations).forEach((loc) => {
-        if (translations[loc].site_description) newSettings.site_description[loc] = translations[loc].site_description;
-        if (translations[loc].address) newSettings.address[loc] = translations[loc].address;
-        if (translations[loc].working_hours) newSettings.working_hours[loc] = translations[loc].working_hours;
+        if (translations[loc].site_description)
+          newSettings.site_description[loc] =
+            translations[loc].site_description;
+        if (translations[loc].address)
+          newSettings.address[loc] = translations[loc].address;
+        if (translations[loc].working_hours)
+          newSettings.working_hours[loc] = translations[loc].working_hours;
       });
 
       setSettings(newSettings);
-      toast.success("Translations generated! Click 'Save Changes' to apply.", { id: translationToast });
-
+      toast.success("Translations generated! Click 'Save Changes' to apply.", {
+        id: translationToast,
+      });
     } catch (err: any) {
       console.error(err);
-      toast.error("An error occurred during translation.", { id: translationToast });
+      toast.error("An error occurred during translation.", {
+        id: translationToast,
+      });
     } finally {
       setTranslating(false);
     }
@@ -145,10 +176,16 @@ export default function SettingsPage() {
       <div className="flex justify-between items-center">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Site Settings</h1>
-          <p className="text-muted-foreground">Manage global site configuration, API links, and logos.</p>
+          <p className="text-muted-foreground">
+            Manage global site configuration, API links, and logos.
+          </p>
         </div>
         <Button onClick={handleSave} disabled={saving}>
-          {saving ? <Spinner className="w-4 h-4 mr-2 animate-spin" /> : <Save className="w-4 h-4 mr-2" />}
+          {saving ? (
+            <Spinner className="w-4 h-4 mr-2 animate-spin" />
+          ) : (
+            <Save className="w-4 h-4 mr-2" />
+          )}
           Save Changes
         </Button>
       </div>
@@ -156,86 +193,97 @@ export default function SettingsPage() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Appearance / Theme Customizer */}
         <div className="lg:col-span-2">
-           <ThemeCustomizer 
-             themeColor={settings.theme_color} 
-             onThemeChange={(v) => updateSetting("theme_color", v)} 
-             colorMode={settings.color_mode}
-             onColorModeChange={(v) => updateSetting("color_mode", v)}
-           />
+          <ThemeCustomizer
+            themeColor={settings.theme_color}
+            onThemeChange={(v) => updateSetting("theme_color", v)}
+            colorMode={settings.color_mode}
+            onColorModeChange={(v) => updateSetting("color_mode", v)}
+          />
         </div>
 
         {/* SEO & Brand Identity */}
         <Card className="lg:col-span-2">
-            <CardHeader>
-               <CardTitle>Global SEO & Schema Identity</CardTitle>
-               <CardDescription>Master metadata for search engines, rich snippets, and social sharing.</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label>Site Name (SEO Title Base)</Label>
-                    <Input
-                       value={settings.site_name || ""}
-                       onChange={(e) => updateSetting("site_name", e.target.value)}
-                       placeholder="Istanbul Photo Session"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label>Organization Legal Name (Schema)</Label>
-                    <Input
-                       value={settings.organization_name || ""}
-                       onChange={(e) => updateSetting("organization_name", e.target.value)}
-                       placeholder="Istanbul Portrait"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label>Founder Name (Schema & About)</Label>
-                    <Input
-                       value={settings.founder_name || ""}
-                       onChange={(e) => updateSetting("founder_name", e.target.value)}
-                       placeholder="Uğur Cankurt"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label>Founding Date</Label>
-                    <Input
-                       type="date"
-                       value={settings.organization_founding_date || ""}
-                       onChange={(e) => updateSetting("organization_founding_date", e.target.value)}
-                    />
-                  </div>
-                </div>
+          <CardHeader>
+            <CardTitle>Global SEO & Schema Identity</CardTitle>
+            <CardDescription>
+              Master metadata for search engines, rich snippets, and social
+              sharing.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label>Site Name (SEO Title Base)</Label>
+                <Input
+                  value={settings.site_name || ""}
+                  onChange={(e) => updateSetting("site_name", e.target.value)}
+                  placeholder="Istanbul Photo Session"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label>Organization Legal Name (Schema)</Label>
+                <Input
+                  value={settings.organization_name || ""}
+                  onChange={(e) =>
+                    updateSetting("organization_name", e.target.value)
+                  }
+                  placeholder="Istanbul Portrait"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label>Founder Name (Schema & About)</Label>
+                <Input
+                  value={settings.founder_name || ""}
+                  onChange={(e) =>
+                    updateSetting("founder_name", e.target.value)
+                  }
+                  placeholder="Uğur Cankurt"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label>Founding Date</Label>
+                <Input
+                  type="date"
+                  value={settings.organization_founding_date || ""}
+                  onChange={(e) =>
+                    updateSetting("organization_founding_date", e.target.value)
+                  }
+                />
+              </div>
+            </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 border-t pt-6 mt-4">
-                  <div className="space-y-4">
-                    <WebpImageUploader
-                       label="Default Social Share Image (OG Image)"
-                       description="Fallback image when a page is shared on social networks."
-                       value={settings.default_og_image_url}
-                       onChange={(v) => updateSetting("default_og_image_url", v)}
-                       bucket="pages"
-                       folder="site-assets"
-                    />
-                  </div>
-                  <div className="space-y-4">
-                    <WebpImageUploader
-                       label="Founder Portrait"
-                       description="Used inside Schema.org entity definitions."
-                       value={settings.founder_image_url}
-                       onChange={(v) => updateSetting("founder_image_url", v)}
-                       bucket="pages"
-                       folder="site-assets"
-                    />
-                  </div>
-                </div>
-            </CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 border-t pt-6 mt-4">
+              <div className="space-y-4">
+                <WebpImageUploader
+                  label="Default Social Share Image (OG Image)"
+                  description="Fallback image when a page is shared on social networks."
+                  value={settings.default_og_image_url}
+                  onChange={(v) => updateSetting("default_og_image_url", v)}
+                  bucket="pages"
+                  folder="site-assets"
+                />
+              </div>
+              <div className="space-y-4">
+                <WebpImageUploader
+                  label="Founder Portrait"
+                  description="Used inside Schema.org entity definitions."
+                  value={settings.founder_image_url}
+                  onChange={(v) => updateSetting("founder_image_url", v)}
+                  bucket="pages"
+                  folder="site-assets"
+                />
+              </div>
+            </div>
+          </CardContent>
         </Card>
 
         {/* Core Assets */}
         <Card>
           <CardHeader>
             <CardTitle>Brand Assets</CardTitle>
-            <CardDescription>Upload main logos and favicons. Auto-converted to .webp.</CardDescription>
+            <CardDescription>
+              Upload main logos and favicons. Auto-converted to .webp.
+            </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
             <WebpImageUploader
@@ -271,7 +319,9 @@ export default function SettingsPage() {
         <Card>
           <CardHeader>
             <CardTitle>Global Support Contact</CardTitle>
-            <CardDescription>Primary communication channels shared globally.</CardDescription>
+            <CardDescription>
+              Primary communication channels shared globally.
+            </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
@@ -289,16 +339,22 @@ export default function SettingsPage() {
                 onChange={(e) => updateSetting("contact_phone", e.target.value)}
                 placeholder="+905551234567"
               />
-              <p className="text-xs text-muted-foreground mt-1">Please include country code, e.g. +90</p>
+              <p className="text-xs text-muted-foreground mt-1">
+                Please include country code, e.g. +90
+              </p>
             </div>
             <div className="space-y-2">
               <Label>WhatsApp Lead Number</Label>
               <Input
                 value={settings.whatsapp_number}
-                onChange={(e) => updateSetting("whatsapp_number", e.target.value)}
+                onChange={(e) =>
+                  updateSetting("whatsapp_number", e.target.value)
+                }
                 placeholder="+905551234567"
               />
-              <p className="text-xs text-muted-foreground mt-1">Directs the WhatsApp Button. Please include full country code.</p>
+              <p className="text-xs text-muted-foreground mt-1">
+                Directs the WhatsApp Button. Please include full country code.
+              </p>
             </div>
           </CardContent>
         </Card>
@@ -309,16 +365,22 @@ export default function SettingsPage() {
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
                 <CardTitle>Translatable Locale Specific Settings</CardTitle>
-                <CardDescription>Configure localized variants for textual globals like address.</CardDescription>
+                <CardDescription>
+                  Configure localized variants for textual globals like address.
+                </CardDescription>
               </div>
-              <Button 
-                variant="secondary" 
-                size="sm" 
-                onClick={handleAutoTranslate} 
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={handleAutoTranslate}
                 disabled={isTranslating}
                 className="w-fit"
               >
-                {isTranslating ? <Spinner className="w-4 h-4 mr-2" /> : <Sparkles className="w-4 h-4 mr-2 text-yellow-500" />}
+                {isTranslating ? (
+                  <Spinner className="w-4 h-4 mr-2" />
+                ) : (
+                  <Sparkles className="w-4 h-4 mr-2 text-yellow-500" />
+                )}
                 Auto-Translate (AI)
               </Button>
             </div>
@@ -327,7 +389,11 @@ export default function SettingsPage() {
             <Tabs defaultValue="en" className="w-full">
               <TabsList className="mb-4 flex-wrap pb-2 h-auto">
                 {SUPPORTED_LOCALES.map((locale) => (
-                  <TabsTrigger key={locale} value={locale} className="uppercase">
+                  <TabsTrigger
+                    key={locale}
+                    value={locale}
+                    className="uppercase"
+                  >
                     {locale}
                   </TabsTrigger>
                 ))}
@@ -339,7 +405,13 @@ export default function SettingsPage() {
                     <Label>Global SEO Meta Description</Label>
                     <Textarea
                       value={settings.site_description?.[locale] || ""}
-                      onChange={(e) => updateTranslatable("site_description", locale, e.target.value)}
+                      onChange={(e) =>
+                        updateTranslatable(
+                          "site_description",
+                          locale,
+                          e.target.value,
+                        )
+                      }
                       placeholder="Expert photographer in Istanbul for professional portrait and lifestyle photography sessions."
                       className="min-h-[80px]"
                     />
@@ -348,7 +420,9 @@ export default function SettingsPage() {
                     <Label>Local Full Address</Label>
                     <Textarea
                       value={settings.address?.[locale] || ""}
-                      onChange={(e) => updateTranslatable("address", locale, e.target.value)}
+                      onChange={(e) =>
+                        updateTranslatable("address", locale, e.target.value)
+                      }
                       placeholder="Eminönü, Istanbul, Turkey"
                     />
                   </div>
@@ -356,7 +430,13 @@ export default function SettingsPage() {
                     <Label>Working Hours Message</Label>
                     <Input
                       value={settings.working_hours?.[locale] || ""}
-                      onChange={(e) => updateTranslatable("working_hours", locale, e.target.value)}
+                      onChange={(e) =>
+                        updateTranslatable(
+                          "working_hours",
+                          locale,
+                          e.target.value,
+                        )
+                      }
                       placeholder="Everyday: 06:00 - 22:00"
                     />
                   </div>
@@ -370,7 +450,9 @@ export default function SettingsPage() {
         <Card className="lg:col-span-2">
           <CardHeader>
             <CardTitle>Social Media Links</CardTitle>
-            <CardDescription>URLs attached to footers and quick navigations.</CardDescription>
+            <CardDescription>
+              URLs attached to footers and quick navigations.
+            </CardDescription>
           </CardHeader>
           <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
@@ -412,7 +494,10 @@ export default function SettingsPage() {
         <Card className="lg:col-span-2">
           <CardHeader>
             <CardTitle>Developer & Tracking Configurations</CardTitle>
-            <CardDescription>Bypass .env.local completely. Configure analytics and external APIs here.</CardDescription>
+            <CardDescription>
+              Bypass .env.local completely. Configure analytics and external
+              APIs here.
+            </CardDescription>
           </CardHeader>
           <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-4">
@@ -420,7 +505,9 @@ export default function SettingsPage() {
                 <Label>Google Analytics ID</Label>
                 <Input
                   value={settings.google_analytics_id || ""}
-                  onChange={(e) => updateSetting("google_analytics_id", e.target.value)}
+                  onChange={(e) =>
+                    updateSetting("google_analytics_id", e.target.value)
+                  }
                   placeholder="G-XXXXXXXXXX"
                 />
               </div>
@@ -428,7 +515,9 @@ export default function SettingsPage() {
                 <Label>Yandex Metrica ID</Label>
                 <Input
                   value={settings.yandex_metrica_id || ""}
-                  onChange={(e) => updateSetting("yandex_metrica_id", e.target.value)}
+                  onChange={(e) =>
+                    updateSetting("yandex_metrica_id", e.target.value)
+                  }
                   placeholder="12345678"
                 />
               </div>
@@ -437,11 +526,20 @@ export default function SettingsPage() {
                 <Input
                   type="password"
                   value={settings.gemini_api_key || ""}
-                  onChange={(e) => updateSetting("gemini_api_key", e.target.value)}
+                  onChange={(e) =>
+                    updateSetting("gemini_api_key", e.target.value)
+                  }
                   placeholder="sk-or-v1-..."
                 />
                 <p className="text-xs text-muted-foreground">
-                  Get it from <a href="https://openrouter.ai/keys" target="_blank" className="text-primary hover:underline">OpenRouter</a>
+                  Get it from{" "}
+                  <a
+                    href="https://openrouter.ai/keys"
+                    target="_blank"
+                    className="text-primary hover:underline"
+                  >
+                    OpenRouter
+                  </a>
                 </p>
               </div>
               <div className="space-y-2">
@@ -449,7 +547,9 @@ export default function SettingsPage() {
                 <Input
                   type="password"
                   value={settings.resend_api_key || ""}
-                  onChange={(e) => updateSetting("resend_api_key", e.target.value)}
+                  onChange={(e) =>
+                    updateSetting("resend_api_key", e.target.value)
+                  }
                   placeholder="re_xxxxxxxxxxxxxx"
                 />
               </div>
@@ -457,7 +557,9 @@ export default function SettingsPage() {
                 <Label>Resend Audience ID (Optional)</Label>
                 <Input
                   value={settings.resend_audience_id || ""}
-                  onChange={(e) => updateSetting("resend_audience_id", e.target.value)}
+                  onChange={(e) =>
+                    updateSetting("resend_audience_id", e.target.value)
+                  }
                   placeholder="aud_xxxxxxxxxxxxx"
                 />
               </div>
@@ -466,32 +568,42 @@ export default function SettingsPage() {
                 <Input
                   type="password"
                   value={settings.gemini_api_key || ""}
-                  onChange={(e) => updateSetting("gemini_api_key", e.target.value)}
+                  onChange={(e) =>
+                    updateSetting("gemini_api_key", e.target.value)
+                  }
                   placeholder="gsk_..."
                 />
               </div>
             </div>
 
             <div className="space-y-4">
-               <div className="space-y-2">
+              <div className="space-y-2">
                 <Label>Custom &lt;head&gt; Scripts</Label>
                 <Textarea
                   className="font-mono text-xs h-24"
                   value={settings.custom_head_scripts || ""}
-                  onChange={(e) => updateSetting("custom_head_scripts", e.target.value)}
+                  onChange={(e) =>
+                    updateSetting("custom_head_scripts", e.target.value)
+                  }
                   placeholder="<script>...</script>"
                 />
-                <p className="text-xs text-muted-foreground">Injected directly inside the &lt;head&gt; tag.</p>
+                <p className="text-xs text-muted-foreground">
+                  Injected directly inside the &lt;head&gt; tag.
+                </p>
               </div>
               <div className="space-y-2">
                 <Label>Custom &lt;body&gt; Scripts</Label>
                 <Textarea
                   className="font-mono text-xs h-24"
                   value={settings.custom_body_scripts || ""}
-                  onChange={(e) => updateSetting("custom_body_scripts", e.target.value)}
+                  onChange={(e) =>
+                    updateSetting("custom_body_scripts", e.target.value)
+                  }
                   placeholder="<script>...</script>"
                 />
-                 <p className="text-xs text-muted-foreground">Injected before the closing &lt;/body&gt; tag.</p>
+                <p className="text-xs text-muted-foreground">
+                  Injected before the closing &lt;/body&gt; tag.
+                </p>
               </div>
             </div>
           </CardContent>
@@ -501,14 +613,18 @@ export default function SettingsPage() {
         <Card className="lg:col-span-2">
           <CardHeader>
             <CardTitle>Meta (Facebook) Tracking</CardTitle>
-            <CardDescription>Configure Pixel, Conversions API, and Instagram authentication.</CardDescription>
+            <CardDescription>
+              Configure Pixel, Conversions API, and Instagram authentication.
+            </CardDescription>
           </CardHeader>
           <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
               <Label>Facebook Pixel ID</Label>
               <Input
                 value={settings.facebook_pixel_id || ""}
-                onChange={(e) => updateSetting("facebook_pixel_id", e.target.value)}
+                onChange={(e) =>
+                  updateSetting("facebook_pixel_id", e.target.value)
+                }
                 placeholder="Your Pixel ID"
               />
             </div>
@@ -516,7 +632,9 @@ export default function SettingsPage() {
               <Label>Facebook Dataset ID</Label>
               <Input
                 value={settings.facebook_dataset_id || ""}
-                onChange={(e) => updateSetting("facebook_dataset_id", e.target.value)}
+                onChange={(e) =>
+                  updateSetting("facebook_dataset_id", e.target.value)
+                }
                 placeholder="Your Dataset ID"
               />
             </div>
@@ -525,7 +643,9 @@ export default function SettingsPage() {
               <Input
                 type="password"
                 value={settings.facebook_access_token || ""}
-                onChange={(e) => updateSetting("facebook_access_token", e.target.value)}
+                onChange={(e) =>
+                  updateSetting("facebook_access_token", e.target.value)
+                }
                 placeholder="EAAR..."
               />
             </div>
@@ -533,7 +653,9 @@ export default function SettingsPage() {
               <Label>Webhook Verify Token</Label>
               <Input
                 value={settings.facebook_verify_token || ""}
-                onChange={(e) => updateSetting("facebook_verify_token", e.target.value)}
+                onChange={(e) =>
+                  updateSetting("facebook_verify_token", e.target.value)
+                }
                 placeholder="your_secret_verify_token"
               />
             </div>
@@ -541,7 +663,9 @@ export default function SettingsPage() {
               <Label>Instagram Account ID</Label>
               <Input
                 value={settings.instagram_account_id || ""}
-                onChange={(e) => updateSetting("instagram_account_id", e.target.value)}
+                onChange={(e) =>
+                  updateSetting("instagram_account_id", e.target.value)
+                }
                 placeholder="1784..."
               />
             </div>
@@ -550,7 +674,9 @@ export default function SettingsPage() {
               <Input
                 type="password"
                 value={settings.instagram_access_token || ""}
-                onChange={(e) => updateSetting("instagram_access_token", e.target.value)}
+                onChange={(e) =>
+                  updateSetting("instagram_access_token", e.target.value)
+                }
                 placeholder="EAAR..."
               />
             </div>
@@ -561,7 +687,9 @@ export default function SettingsPage() {
         <Card className="lg:col-span-2">
           <CardHeader>
             <CardTitle>Application Core Variables</CardTitle>
-            <CardDescription>Main website routing variables and absolute backend URLs.</CardDescription>
+            <CardDescription>
+              Main website routing variables and absolute backend URLs.
+            </CardDescription>
           </CardHeader>
           <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
@@ -587,7 +715,9 @@ export default function SettingsPage() {
         <Card className="lg:col-span-2">
           <CardHeader>
             <CardTitle>Webmasters & Tracking Extended</CardTitle>
-            <CardDescription>Configure GA4 Measurement Protocol, Clarity, Bing, Indexnow.</CardDescription>
+            <CardDescription>
+              Configure GA4 Measurement Protocol, Clarity, Bing, Indexnow.
+            </CardDescription>
           </CardHeader>
           <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
@@ -595,7 +725,12 @@ export default function SettingsPage() {
               <Input
                 type="password"
                 value={settings.ga4_measurement_protocol_secret || ""}
-                onChange={(e) => updateSetting("ga4_measurement_protocol_secret", e.target.value)}
+                onChange={(e) =>
+                  updateSetting(
+                    "ga4_measurement_protocol_secret",
+                    e.target.value,
+                  )
+                }
                 placeholder="da0..."
               />
             </div>
@@ -603,7 +738,9 @@ export default function SettingsPage() {
               <Label>Clarity Project ID</Label>
               <Input
                 value={settings.clarity_project_id || ""}
-                onChange={(e) => updateSetting("clarity_project_id", e.target.value)}
+                onChange={(e) =>
+                  updateSetting("clarity_project_id", e.target.value)
+                }
                 placeholder="tbm..."
               />
             </div>
@@ -611,7 +748,9 @@ export default function SettingsPage() {
               <Label>Yandex Webmaster Key</Label>
               <Input
                 value={settings.yandex_webmaster_key || ""}
-                onChange={(e) => updateSetting("yandex_webmaster_key", e.target.value)}
+                onChange={(e) =>
+                  updateSetting("yandex_webmaster_key", e.target.value)
+                }
                 placeholder="326..."
               />
             </div>
@@ -619,7 +758,9 @@ export default function SettingsPage() {
               <Label>Bing Webmaster Key</Label>
               <Input
                 value={settings.bing_webmaster_key || ""}
-                onChange={(e) => updateSetting("bing_webmaster_key", e.target.value)}
+                onChange={(e) =>
+                  updateSetting("bing_webmaster_key", e.target.value)
+                }
                 placeholder="02D..."
               />
             </div>
@@ -627,7 +768,9 @@ export default function SettingsPage() {
               <Label>IndexNow API Key</Label>
               <Input
                 value={settings.indexnow_api_key || ""}
-                onChange={(e) => updateSetting("indexnow_api_key", e.target.value)}
+                onChange={(e) =>
+                  updateSetting("indexnow_api_key", e.target.value)
+                }
                 placeholder="74aa..."
               />
             </div>
@@ -641,7 +784,6 @@ export default function SettingsPage() {
             <CardDescription>Featurable, Google Ads.</CardDescription>
           </CardHeader>
           <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6">
-
             <div className="space-y-2">
               <Label>Behold URL (Instagram Feed)</Label>
               <Input
@@ -654,7 +796,9 @@ export default function SettingsPage() {
               <Label>Featurable Widget ID</Label>
               <Input
                 value={settings.featurable_widget_id || ""}
-                onChange={(e) => updateSetting("featurable_widget_id", e.target.value)}
+                onChange={(e) =>
+                  updateSetting("featurable_widget_id", e.target.value)
+                }
                 placeholder="ce9..."
               />
             </div>
@@ -671,7 +815,9 @@ export default function SettingsPage() {
               <Label>Google Ads Webhook Key</Label>
               <Input
                 value={settings.google_ads_webhook_key || ""}
-                onChange={(e) => updateSetting("google_ads_webhook_key", e.target.value)}
+                onChange={(e) =>
+                  updateSetting("google_ads_webhook_key", e.target.value)
+                }
                 placeholder="istanbulportrait_google_ads..."
               />
             </div>

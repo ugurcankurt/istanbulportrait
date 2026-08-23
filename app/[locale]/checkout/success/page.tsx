@@ -1,7 +1,6 @@
 import { Suspense } from "react";
 import { BookingSuccess } from "@/components/booking-success";
 
-
 export default async function CheckoutPage({
   searchParams,
 }: {
@@ -17,13 +16,16 @@ export default async function CheckoutPage({
     return (
       <div className="flex flex-col h-dvh bg-background items-center justify-center">
         <p className="text-muted-foreground text-lg text-center">
-          No booking ID provided. The booking may have been completed successfully but the ID is missing.
+          No booking ID provided. The booking may have been completed
+          successfully but the ID is missing.
         </p>
       </div>
     );
   }
 
-  const { createServerSupabaseAdminClient } = await import("@/lib/supabase/server");
+  const { createServerSupabaseAdminClient } = await import(
+    "@/lib/supabase/server"
+  );
   const supabase = await createServerSupabaseAdminClient();
   const { data: booking, error } = await supabase
     .from("bookings")
@@ -56,8 +58,19 @@ export default async function CheckoutPage({
   };
 
   return (
-    <Suspense fallback={<div className="h-dvh flex flex-col items-center justify-center space-y-4 animate-pulse"><div className="w-16 h-16 rounded-full bg-primary/20"></div><p className="text-muted-foreground">Loading booking...</p></div>}>
-      <BookingSuccess bookingId={booking.id} packageId={booking.package_id as any} confirmedBooking={confirmedBookingData} />
+    <Suspense
+      fallback={
+        <div className="h-dvh flex flex-col items-center justify-center space-y-4 animate-pulse">
+          <div className="w-16 h-16 rounded-full bg-primary/20"></div>
+          <p className="text-muted-foreground">Loading booking...</p>
+        </div>
+      }
+    >
+      <BookingSuccess
+        bookingId={booking.id}
+        packageId={booking.package_id as any}
+        confirmedBooking={confirmedBookingData}
+      />
     </Suspense>
   );
 }

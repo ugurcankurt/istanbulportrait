@@ -82,7 +82,7 @@ export function MarkdownEditor({
         } = supabase.storage.from("blog-images").getPublicUrl(fileName);
 
         const imageMarkdown = `\n![${file.name.split(".")[0]}](${publicUrl})\n`;
-        
+
         if (editorInstanceRef.current) {
           const cm = editorInstanceRef.current.codemirror;
           cm.replaceSelection(imageMarkdown);
@@ -142,7 +142,10 @@ export function MarkdownEditor({
 
   return (
     <div className="prose-editor-wrapper">
-      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+      <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+      />
       <SimpleMDE
         value={value}
         onChange={onChange}

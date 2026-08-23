@@ -8,7 +8,9 @@ interface EditPackagePageProps {
   }>;
 }
 
-export default async function EditPackagePage({ params }: EditPackagePageProps) {
+export default async function EditPackagePage({
+  params,
+}: EditPackagePageProps) {
   const { id } = await params;
 
   const pkg = await packagesService.getPackageById(id);

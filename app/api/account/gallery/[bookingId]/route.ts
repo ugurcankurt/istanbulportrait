@@ -6,7 +6,7 @@ import { extractPhotosCount } from "@/lib/features-parser";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise<{ bookingId: string }> }
+  { params }: { params: Promise<{ bookingId: string }> },
 ) {
   try {
     const user = await getServerUser();
@@ -35,51 +35,64 @@ export async function GET(
 
     // Determine max selections based on the package features
     let maxSelections = 15; // default fallback
-    
+
     if (booking.package_id) {
-      const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(booking.package_id);
-      const { data: pkgData } = await supabase.from("packages").select("features").eq(isUUID ? "id" : "slug", booking.package_id).single();
-      
+      const isUUID =
+        /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
+          booking.package_id,
+        );
+      const { data: pkgData } = await supabase
+        .from("packages")
+        .select("features")
+        .eq(isUUID ? "id" : "slug", booking.package_id)
+        .single();
+
       const featuresObj = (pkgData as any)?.features || {};
-      const featuresList = featuresObj.en || featuresObj.tr || featuresObj.ru || featuresObj.ar || Object.values(featuresObj)[0];
-      
+      const featuresList =
+        featuresObj.en ||
+        featuresObj.tr ||
+        featuresObj.ru ||
+        featuresObj.ar ||
+        Object.values(featuresObj)[0];
+
       if (Array.isArray(featuresList) && featuresList.length > 0) {
         maxSelections = extractPhotosCount(featuresList);
       }
     }
 
     if (!booking.drive_folder_id) {
-      return NextResponse.json({ 
-        files: [], 
-        maxSelections, 
-        selectionStatus: booking.selection_status || "pending" 
-      }); 
+      return NextResponse.json({
+        files: [],
+        maxSelections,
+        selectionStatus: booking.selection_status || "pending",
+      });
     }
 
     // 2. Fetch files from Google Drive (grouped by folder)
     const groupedFiles = await getGalleryFilesGrouped(booking.drive_folder_id);
 
     // 3. Format the response to use our proxy route for secure viewing
-    const formatFiles = (filesArray: any[]) => filesArray.map((file) => {
-      let previewUrl = `/api/drive/image/${file.id}`;
-      let thumbnailUrl = `/api/drive/image/${file.id}`;
-      
-      if (file.thumbnailLink) {
-        const baseLink = file.thumbnailLink.split('=')[0];
-        previewUrl = `/api/drive/proxy?url=${encodeURIComponent(`${baseLink}=w1200`)}`;
-        thumbnailUrl = `/api/drive/proxy?url=${encodeURIComponent(`${baseLink}=s200`)}`;
-      }
+    const formatFiles = (filesArray: any[]) =>
+      filesArray.map((file) => {
+        let previewUrl = `/api/drive/image/${file.id}`;
+        let thumbnailUrl = `/api/drive/image/${file.id}`;
 
-      return {
-        id: file.id,
-        name: file.name,
-        mimeType: file.mimeType,
-        thumbnail: thumbnailUrl,
-        url: previewUrl,
-        downloadUrl: `/api/drive/image/${file.id}`,
-        metadata: file.imageMediaMetadata,
-      };
-    });
+        if (file.thumbnailLink) {
+          const baseLink = file.thumbnailLink.split("=")[0];
+          previewUrl = `/api/drive/proxy?url=${encodeURIComponent(`${baseLink}=w1200`)}`;
+          thumbnailUrl = `/api/drive/proxy?url=${encodeURIComponent(`${baseLink}=s200`)}`;
+        }
+
+        return {
+          id: file.id,
+          name: file.name,
+          mimeType: file.mimeType,
+          thumbnail: thumbnailUrl,
+          url: previewUrl,
+          downloadUrl: `/api/drive/image/${file.id}`,
+          metadata: file.imageMediaMetadata,
+        };
+      });
 
     return NextResponse.json({
       success: true,
@@ -87,13 +100,13 @@ export async function GET(
       selectedFiles: formatFiles(groupedFiles.selected),
       finalFiles: formatFiles(groupedFiles.final),
       maxSelections,
-      selectionStatus: booking.selection_status || "pending"
+      selectionStatus: booking.selection_status || "pending",
     });
   } catch (error) {
     console.error("Gallery fetch error:", error);
     return NextResponse.json(
       { error: "Failed to fetch gallery" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

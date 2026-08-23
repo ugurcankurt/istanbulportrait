@@ -95,19 +95,19 @@ function PaymentDetailsDialog({ payment }: { payment: any }) {
   const [open, setOpen] = useState(false);
 
   // Extract TRY amounts from provider_response if it's Iyzico
-  let tryAmount = payment.currency === 'TRY' ? payment.amount : 0;
+  let tryAmount = payment.currency === "TRY" ? payment.amount : 0;
   let iyzicoFee = 0;
-  
-  if (payment.provider === 'iyzico' && payment.provider_response?.paidPrice) {
+
+  if (payment.provider === "iyzico" && payment.provider_response?.paidPrice) {
     tryAmount = payment.provider_response.paidPrice;
-    
+
     // Calculate Iyzico commission (fixed fee + rate amount)
     const fixedFee = payment.provider_response.iyziCommissionFee || 0;
     const rateAmount = payment.provider_response.iyziCommissionRateAmount || 0;
     iyzicoFee = fixedFee + rateAmount;
   }
 
-  const tryNet = tryAmount / 1.20;
+  const tryNet = tryAmount / 1.2;
   const tryVat = tryAmount - tryNet;
   const finalNetProfit = tryAmount - tryVat - iyzicoFee;
 
@@ -120,23 +120,38 @@ function PaymentDetailsDialog({ payment }: { payment: any }) {
       <DialogContent className="sm:max-w-2xl w-[95vw] p-0 overflow-hidden bg-background border-border/50">
         <div className="p-6 space-y-6">
           <DialogHeader>
-            <DialogTitle className="text-blue-500 text-lg font-medium tracking-tight">Payment Details</DialogTitle>
+            <DialogTitle className="text-blue-500 text-lg font-medium tracking-tight">
+              Payment Details
+            </DialogTitle>
             <DialogDescription className="text-muted-foreground text-sm break-all">
               ID: {payment.id}
             </DialogDescription>
           </DialogHeader>
-          
+
           <div className="space-y-8">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <div className="space-y-1 overflow-hidden">
-                <p className="text-sm font-semibold text-foreground">Customer</p>
-                <p className="text-sm text-foreground/90 truncate">{payment.bookings?.user_name || 'Unknown'}</p>
-                <p className="text-sm text-muted-foreground truncate">{payment.bookings?.user_email || 'No email'}</p>
+                <p className="text-sm font-semibold text-foreground">
+                  Customer
+                </p>
+                <p className="text-sm text-foreground/90 truncate">
+                  {payment.bookings?.user_name || "Unknown"}
+                </p>
+                <p className="text-sm text-muted-foreground truncate">
+                  {payment.bookings?.user_email || "No email"}
+                </p>
               </div>
               <div className="space-y-1 overflow-hidden">
-                <p className="text-sm font-semibold text-foreground">Transaction</p>
-                <p className="text-sm text-foreground/90 truncate">Provider: <span className="capitalize">{payment.provider}</span></p>
-                <p className="text-sm text-muted-foreground truncate">Payment ID: {payment.payment_id}</p>
+                <p className="text-sm font-semibold text-foreground">
+                  Transaction
+                </p>
+                <p className="text-sm text-foreground/90 truncate">
+                  Provider:{" "}
+                  <span className="capitalize">{payment.provider}</span>
+                </p>
+                <p className="text-sm text-muted-foreground truncate">
+                  Payment ID: {payment.payment_id}
+                </p>
                 <div className="pt-1.5">
                   <StatusBadge status={payment.status} />
                 </div>
@@ -146,12 +161,22 @@ function PaymentDetailsDialog({ payment }: { payment: any }) {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <div className="space-y-1">
                 <p className="text-sm font-semibold text-foreground">Date</p>
-                <p className="text-sm text-foreground/90">{new Date(payment.created_at).toLocaleDateString('tr-TR').replace(/\./g, '.')}</p>
-                <p className="text-sm text-muted-foreground">{new Date(payment.created_at).toLocaleTimeString('tr-TR')}</p>
+                <p className="text-sm text-foreground/90">
+                  {new Date(payment.created_at)
+                    .toLocaleDateString("tr-TR")
+                    .replace(/\./g, ".")}
+                </p>
+                <p className="text-sm text-muted-foreground">
+                  {new Date(payment.created_at).toLocaleTimeString("tr-TR")}
+                </p>
               </div>
               <div className="space-y-1">
-                <p className="text-sm font-semibold text-foreground">Original Amount</p>
-                <p className="text-xl font-bold text-foreground">{formatCurrency(payment.amount, payment.currency)}</p>
+                <p className="text-sm font-semibold text-foreground">
+                  Original Amount
+                </p>
+                <p className="text-xl font-bold text-foreground">
+                  {formatCurrency(payment.amount, payment.currency)}
+                </p>
               </div>
             </div>
 
@@ -159,53 +184,89 @@ function PaymentDetailsDialog({ payment }: { payment: any }) {
               <h4 className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground border-b border-border/60 pb-3 mb-4">
                 Turkish Lira (TRY) Breakdown
               </h4>
-              
+
               {tryAmount > 0 ? (
                 <div className="space-y-4">
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     <div className="space-y-1">
-                      <p className="text-[11px] font-bold text-muted-foreground uppercase">Net Amount</p>
-                      <p className="text-lg font-semibold text-foreground break-words">{formatCurrency(tryNet, 'TRY').replace('TRY', 'TRY ')}</p>
+                      <p className="text-[11px] font-bold text-muted-foreground uppercase">
+                        Net Amount
+                      </p>
+                      <p className="text-lg font-semibold text-foreground break-words">
+                        {formatCurrency(tryNet, "TRY").replace("TRY", "TRY ")}
+                      </p>
                     </div>
                     <div className="space-y-1">
-                      <p className="text-[11px] font-bold text-muted-foreground uppercase">VAT / KDV (20%)</p>
-                      <p className="text-lg font-semibold text-foreground break-words">{formatCurrency(tryVat, 'TRY').replace('TRY', 'TRY ')}</p>
+                      <p className="text-[11px] font-bold text-muted-foreground uppercase">
+                        VAT / KDV (20%)
+                      </p>
+                      <p className="text-lg font-semibold text-foreground break-words">
+                        {formatCurrency(tryVat, "TRY").replace("TRY", "TRY ")}
+                      </p>
                     </div>
                     <div className="space-y-1">
-                      <p className="text-[11px] font-bold text-muted-foreground uppercase">Gross Total</p>
-                      <p className="text-lg font-bold text-foreground break-words">{formatCurrency(tryAmount, 'TRY').replace('TRY', 'TRY ')}</p>
+                      <p className="text-[11px] font-bold text-muted-foreground uppercase">
+                        Gross Total
+                      </p>
+                      <p className="text-lg font-bold text-foreground break-words">
+                        {formatCurrency(tryAmount, "TRY").replace(
+                          "TRY",
+                          "TRY ",
+                        )}
+                      </p>
                     </div>
                   </div>
 
-                  {payment.provider === 'iyzico' && (
+                  {payment.provider === "iyzico" && (
                     <div className="mt-4 pt-4 border-t border-border/60 grid grid-cols-1 sm:grid-cols-3 gap-4 bg-muted/20 -mx-5 -mb-5 p-5">
                       <div className="space-y-1">
-                        <p className="text-[11px] font-bold text-muted-foreground uppercase">Iyzico Commission</p>
+                        <p className="text-[11px] font-bold text-muted-foreground uppercase">
+                          Iyzico Commission
+                        </p>
                         <p className="text-lg font-semibold text-destructive break-words">
-                          - {formatCurrency(iyzicoFee, 'TRY').replace('TRY', 'TRY ')}
+                          -{" "}
+                          {formatCurrency(iyzicoFee, "TRY").replace(
+                            "TRY",
+                            "TRY ",
+                          )}
                         </p>
                       </div>
                       <div className="space-y-1">
-                        <p className="text-[11px] font-bold text-muted-foreground uppercase">VAT Deducted</p>
+                        <p className="text-[11px] font-bold text-muted-foreground uppercase">
+                          VAT Deducted
+                        </p>
                         <p className="text-lg font-semibold text-destructive break-words">
-                          - {formatCurrency(tryVat, 'TRY').replace('TRY', 'TRY ')}
+                          -{" "}
+                          {formatCurrency(tryVat, "TRY").replace("TRY", "TRY ")}
                         </p>
                       </div>
                       <div className="space-y-1">
-                        <p className="text-[11px] font-bold text-muted-foreground uppercase">Final Net Profit</p>
-                        <p className="text-xl font-bold text-green-500 break-words">{formatCurrency(finalNetProfit, 'TRY').replace('TRY', 'TRY ')}</p>
+                        <p className="text-[11px] font-bold text-muted-foreground uppercase">
+                          Final Net Profit
+                        </p>
+                        <p className="text-xl font-bold text-green-500 break-words">
+                          {formatCurrency(finalNetProfit, "TRY").replace(
+                            "TRY",
+                            "TRY ",
+                          )}
+                        </p>
                       </div>
                     </div>
                   )}
                 </div>
               ) : (
-                <p className="text-sm text-muted-foreground italic">TRY amount could not be automatically determined from the provider response.</p>
+                <p className="text-sm text-muted-foreground italic">
+                  TRY amount could not be automatically determined from the
+                  provider response.
+                </p>
               )}
             </div>
 
             {payment.provider_response && (
               <div className="space-y-3">
-                <p className="text-sm font-semibold text-foreground">Provider Metadata (Raw)</p>
+                <p className="text-sm font-semibold text-foreground">
+                  Provider Metadata (Raw)
+                </p>
                 <div className="rounded-xl bg-secondary/50 p-4 overflow-auto max-h-48">
                   <pre className="text-xs text-muted-foreground font-mono leading-relaxed">
                     {JSON.stringify(payment.provider_response, null, 2)}
@@ -263,7 +324,9 @@ export default function PaymentsPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Payments & Invoicing</h1>
+          <h1 className="text-3xl font-bold tracking-tight">
+            Payments & Invoicing
+          </h1>
           <p className="text-muted-foreground">
             Monitor incoming payments and KDV (VAT) details
           </p>
@@ -329,7 +392,9 @@ export default function PaymentsPage() {
               <SelectContent>
                 <SelectItem value="created_at-desc">Newest First</SelectItem>
                 <SelectItem value="created_at-asc">Oldest First</SelectItem>
-                <SelectItem value="amount-desc">Amount (High to Low)</SelectItem>
+                <SelectItem value="amount-desc">
+                  Amount (High to Low)
+                </SelectItem>
                 <SelectItem value="amount-asc">Amount (Low to High)</SelectItem>
               </SelectContent>
             </Select>
@@ -353,7 +418,8 @@ export default function PaymentsPage() {
                 </EmptyMedia>
                 <EmptyTitle>No payments found</EmptyTitle>
                 <EmptyDescription>
-                  Payments will appear here when customers complete transactions.
+                  Payments will appear here when customers complete
+                  transactions.
                 </EmptyDescription>
               </Empty>
             </div>
@@ -367,7 +433,9 @@ export default function PaymentsPage() {
                   <TableHead>Status</TableHead>
                   <TableHead className="text-right">Net Amount</TableHead>
                   <TableHead className="text-right">VAT (20%)</TableHead>
-                  <TableHead className="text-right font-bold">Total Amount</TableHead>
+                  <TableHead className="text-right font-bold">
+                    Total Amount
+                  </TableHead>
                   <TableHead className="w-[50px]"></TableHead>
                 </TableRow>
               </TableHeader>
@@ -376,9 +444,9 @@ export default function PaymentsPage() {
                   // Calculate VAT (KDV)
                   // Total = Net * 1.20 => Net = Total / 1.20
                   const total = payment.amount || 0;
-                  const net = total / 1.20;
+                  const net = total / 1.2;
                   const vat = total - net;
-                  
+
                   return (
                     <TableRow key={payment.id}>
                       <TableCell>
@@ -424,7 +492,9 @@ export default function PaymentsPage() {
                       </TableCell>
                       <TableCell>
                         <DropdownMenu>
-                          <DropdownMenuTrigger render={<Button variant="ghost" size="sm" />}>
+                          <DropdownMenuTrigger
+                            render={<Button variant="ghost" size="sm" />}
+                          >
                             <MoreHorizontal className="w-4 h-4" />
                           </DropdownMenuTrigger>
                           <DropdownMenuContent align="end">

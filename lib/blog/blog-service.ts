@@ -132,7 +132,7 @@ export const getPublishedBlogPosts = cache(async function (
         ...cat.category,
         translation: Array.isArray(cat.category.translations)
           ? cat.category.translations.find((t: any) => t.locale === locale) ||
-          cat.category.translations[0]
+            cat.category.translations[0]
           : cat.category.translations,
       },
     })),
@@ -142,7 +142,7 @@ export const getPublishedBlogPosts = cache(async function (
         ...tag.tag,
         translation: Array.isArray(tag.tag.translations)
           ? tag.tag.translations.find((t: any) => t.locale === locale) ||
-          tag.tag.translations[0]
+            tag.tag.translations[0]
           : tag.tag.translations,
       },
     })),
@@ -272,7 +272,7 @@ export async function getAllBlogPosts(
         ...cat.category,
         translation: Array.isArray(cat.category.translations)
           ? cat.category.translations.find((t: any) => t.locale === locale) ||
-          cat.category.translations[0]
+            cat.category.translations[0]
           : cat.category.translations,
       },
     })),
@@ -282,7 +282,7 @@ export async function getAllBlogPosts(
         ...tag.tag,
         translation: Array.isArray(tag.tag.translations)
           ? tag.tag.translations.find((t: any) => t.locale === locale) ||
-          tag.tag.translations[0]
+            tag.tag.translations[0]
           : tag.tag.translations,
       },
     })),
@@ -355,7 +355,7 @@ export const getBlogPostBySlug = cache(async function (
     console.error("Error fetching blog post by slug:", error);
     return null;
   }
-  
+
   if (!data) return null;
 
   // Transform array translations to objects and filter by locale
@@ -370,7 +370,7 @@ export const getBlogPostBySlug = cache(async function (
         ...cat.category,
         translation: Array.isArray(cat.category.translations)
           ? cat.category.translations.find((t: any) => t.locale === locale) ||
-          cat.category.translations[0]
+            cat.category.translations[0]
           : cat.category.translations,
       },
     })),
@@ -380,7 +380,7 @@ export const getBlogPostBySlug = cache(async function (
         ...tag.tag,
         translation: Array.isArray(tag.tag.translations)
           ? tag.tag.translations.find((t: any) => t.locale === locale) ||
-          tag.tag.translations[0]
+            tag.tag.translations[0]
           : tag.tag.translations,
       },
     })),
@@ -492,7 +492,7 @@ export const getBlogPostById = cache(async function (
         ...cat.category,
         translation: Array.isArray(cat.category.translations)
           ? cat.category.translations.find((t: any) => t.locale === locale) ||
-          cat.category.translations[0]
+            cat.category.translations[0]
           : cat.category.translations,
       },
     })),
@@ -502,7 +502,7 @@ export const getBlogPostById = cache(async function (
         ...tag.tag,
         translation: Array.isArray(tag.tag.translations)
           ? tag.tag.translations.find((t: any) => t.locale === locale) ||
-          tag.tag.translations[0]
+            tag.tag.translations[0]
           : tag.tag.translations,
       },
     })),
@@ -653,14 +653,20 @@ export async function createBlogPost(formData: any): Promise<BlogPost | null> {
   }
 
   // Generate English fallback slug
-  const enSlug = translations.en?.slug || generateSlugFromTitle(translations.en?.title || "") || `post-${Date.now()}`;
+  const enSlug =
+    translations.en?.slug ||
+    generateSlugFromTitle(translations.en?.title || "") ||
+    `post-${Date.now()}`;
 
   // Insert translations
   const translationInserts = Object.entries(translations).map(
     ([locale, translation]: [string, any]) => ({
       post_id: post.id,
       locale,
-      slug: translation.slug || generateSlugFromTitle(translation.title) || (locale !== 'en' ? enSlug : `post-${Date.now()}`),
+      slug:
+        translation.slug ||
+        generateSlugFromTitle(translation.title) ||
+        (locale !== "en" ? enSlug : `post-${Date.now()}`),
       title: translation.title,
       excerpt: translation.excerpt || "",
       content: translation.content,
@@ -764,24 +770,33 @@ export async function updateBlogPost(
 
   // Update translations if provided
   if (translations) {
-    const enSlug = translations.en?.slug || generateSlugFromTitle(translations.en?.title || "") || `post-${id}`;
+    const enSlug =
+      translations.en?.slug ||
+      generateSlugFromTitle(translations.en?.title || "") ||
+      `post-${id}`;
 
     for (const [locale, translation] of Object.entries(translations)) {
       const translationData = translation as any;
 
       const { error: translationError } = await supabaseAdmin
         .from("blog_post_translations")
-        .upsert({
-          post_id: id,
-          locale,
-          slug: translationData.slug || generateSlugFromTitle(translationData.title) || (locale !== 'en' ? enSlug : `post-${id}`),
-          title: translationData.title,
-          excerpt: translationData.excerpt || "",
-          content: translationData.content,
-          meta_description: translationData.meta_description || null,
-          meta_keywords: translationData.meta_keywords || [],
-          updated_at: new Date().toISOString(),
-        }, { onConflict: 'post_id,locale' });
+        .upsert(
+          {
+            post_id: id,
+            locale,
+            slug:
+              translationData.slug ||
+              generateSlugFromTitle(translationData.title) ||
+              (locale !== "en" ? enSlug : `post-${id}`),
+            title: translationData.title,
+            excerpt: translationData.excerpt || "",
+            content: translationData.content,
+            meta_description: translationData.meta_description || null,
+            meta_keywords: translationData.meta_keywords || [],
+            updated_at: new Date().toISOString(),
+          },
+          { onConflict: "post_id,locale" },
+        );
 
       if (translationError) {
         console.error(
@@ -1431,8 +1446,6 @@ export async function getAllPublishedSlugs(): Promise<string[]> {
   return data.map((t: any) => t.slug);
 }
 
-
-
 /**
  * Check if slug is unique
  */
@@ -1440,7 +1453,10 @@ export async function isSlugUnique(
   slug: string,
   excludeId?: string,
 ): Promise<boolean> {
-  let query = supabaseAdmin.from("blog_post_translations").select("post_id").eq("slug", slug);
+  let query = supabaseAdmin
+    .from("blog_post_translations")
+    .select("post_id")
+    .eq("slug", slug);
 
   if (excludeId) {
     query = query.neq("post_id", excludeId);

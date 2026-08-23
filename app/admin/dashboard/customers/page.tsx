@@ -63,10 +63,7 @@ function CustomerDetailsDialog({ customer }: { customer: Customer }) {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DropdownMenuItem
-        onClick={() => setOpen(true)}
-        closeOnClick={false}
-      >
+      <DropdownMenuItem onClick={() => setOpen(true)} closeOnClick={false}>
         <Eye className="w-4 h-4 mr-2" />
         View Details
       </DropdownMenuItem>
@@ -523,8 +520,10 @@ export default function CustomersPage() {
                     </TableCell>
                     <TableCell>
                       <DropdownMenu>
-                        <DropdownMenuTrigger render={<Button variant="ghost" size="sm" />}>
-                            <MoreHorizontal className="w-4 h-4" />
+                        <DropdownMenuTrigger
+                          render={<Button variant="ghost" size="sm" />}
+                        >
+                          <MoreHorizontal className="w-4 h-4" />
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
                           <DropdownMenuGroup>
