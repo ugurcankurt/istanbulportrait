@@ -253,6 +253,12 @@ export default async function LocaleLayout({
                       <ConsentGate consent="accepted_all">
                         <YandexMetrica id={settings.yandex_metrica_id || undefined} />
                       </ConsentGate>
+                      {/* GetYourGuide Analytics */}
+                      <Script 
+                        src="https://widget.getyourguide.com/dist/pa.umd.production.min.js"
+                        strategy="afterInteractive"
+                        data-gyg-partner-id="S6XXHTA"
+                      />
                     </InteractionLoader>
 
                     <CoreWebVitals />
@@ -270,13 +276,6 @@ export default async function LocaleLayout({
         </ThemeProvider>
         <SpeedInsights />
         <Analytics />
-
-        {/* GetYourGuide Analytics */}
-        <Script 
-          src="https://widget.getyourguide.com/dist/pa.umd.production.min.js"
-          strategy="lazyOnload"
-          data-gyg-partner-id="S6XXHTA"
-        />
 
         {/* Ad-hoc Custom Body Scripts Injected from Settings Dashboard */}
         {settings.custom_body_scripts && (
