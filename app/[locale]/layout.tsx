@@ -137,19 +137,41 @@ export default async function LocaleLayout({
     notFound();
   }
 
-  const messages = await getMessages();
+  const [
+    { pagesContentService },
+    { settingsService },
+    { getRatesForBase },
+    { cookies },
+    { getServerUser },
+    { getConsentCookie },
+  ] = await Promise.all([
+    import("@/lib/pages-content-service"),
+    import("@/lib/settings-service"),
+    import("@/lib/currency"),
+    import("next/headers"),
+    import("@/lib/auth-server"),
+    import("@/app/actions/consent"),
+  ]);
 
-  // Resolve dynamic db slugs and titles for layout links based on locale
-  const { pagesContentService } = await import("@/lib/pages-content-service");
-  const dynamicNavData = await pagesContentService.getDynamicCoreNavData(locale);
-  const { settingsService } = await import("@/lib/settings-service");
-  const settings = await settingsService.getSettings();
-  
-  const { getRatesForBase } = await import("@/lib/currency");
-  const rates = await getRatesForBase("EUR");
-  
-  const { cookies } = await import("next/headers");
-  const cookieStore = await cookies();
+  // Execute all asynchronous data fetching in parallel
+  const [
+    messages,
+    dynamicNavData,
+    settings,
+    rates,
+    cookieStore,
+    user,
+    consentData,
+  ] = await Promise.all([
+    getMessages(),
+    pagesContentService.getDynamicCoreNavData(locale),
+    settingsService.getSettings(),
+    getRatesForBase("EUR"),
+    cookies(),
+    getServerUser(),
+    getConsentCookie(),
+  ]);
+
   let selectedCurrency = cookieStore.get("NEXT_CURRENCY")?.value;
 
   if (!selectedCurrency) {
@@ -158,12 +180,6 @@ export default async function LocaleLayout({
 
   const currentRate = selectedCurrency === "EUR" ? 1 : (rates[selectedCurrency] || 1);
 
-  const { getServerUser } = await import("@/lib/auth-server");
-  const user = await getServerUser();
-
-  // Server-Side Cookie Reading for Google Consent Mode V2 (Next.js 16 / EEA Compliant)
-  const { getConsentCookie } = await import("@/app/actions/consent");
-  const consentData = await getConsentCookie();
   const isGranted = consentData?.consent === "accepted_all" ? "granted" : "denied";
 
   return (

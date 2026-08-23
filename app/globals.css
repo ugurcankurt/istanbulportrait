@@ -1,6 +1,5 @@
 @import "tailwindcss";
 @import "tw-animate-css";
-@import "easymde/dist/easymde.min.css";
 @import "shadcn/tailwind.css";
 
 @custom-variant dark (&:is(.dark *));
@@ -165,12 +164,14 @@
 }
 
 @layer utilities {
+
   /* Luxury Shadow */
   .shadow-luxury {
-    box-shadow: 0 20px 40px -15px rgba(0,0,0,0.05);
+    box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.05);
   }
+
   .dark .shadow-luxury {
-    box-shadow: 0 20px 40px -15px rgba(0,0,0,0.5);
+    box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.5);
   }
 
   /* Photography-specific utilities */
@@ -226,17 +227,17 @@
   }
 
   /* RTL Flexbox adjustments */
-  [dir="rtl"] .flex.items-center.space-x-2 > * + * {
+  [dir="rtl"] .flex.items-center.space-x-2>*+* {
     margin-left: 0;
     margin-right: 0.5rem;
   }
 
-  [dir="rtl"] .flex.items-center.space-x-4 > * + * {
+  [dir="rtl"] .flex.items-center.space-x-4>*+* {
     margin-left: 0;
     margin-right: 1rem;
   }
 
-  [dir="rtl"] .flex.items-center.space-x-6 > * + * {
+  [dir="rtl"] .flex.items-center.space-x-6>*+* {
     margin-left: 0;
     margin-right: 1.5rem;
   }
@@ -258,7 +259,7 @@
   }
 
   /* RTL Package cards and features */
-  [dir="rtl"] .flex.items-start.space-x-2\.5 > * + * {
+  [dir="rtl"] .flex.items-start.space-x-2\.5>*+* {
     margin-left: 0;
     margin-right: 0.625rem;
   }
@@ -291,41 +292,161 @@
 }
 
 /* Luxury Theme Colors (Jewel & Metallic Tones) */
-.theme-zinc { --primary: hsl(220 10% 15%); --primary-foreground: hsl(0 0% 98%); --sidebar-primary: hsl(220 10% 15%); }
-.dark .theme-zinc, .dark.theme-zinc { --primary: hsl(0 0% 98%); --primary-foreground: hsl(220 10% 15%); --sidebar-primary: hsl(0 0% 98%); }
+.theme-zinc {
+  --primary: hsl(220 10% 15%);
+  --primary-foreground: hsl(0 0% 98%);
+  --sidebar-primary: hsl(220 10% 15%);
+}
 
-.theme-slate { --primary: hsl(215 15% 20%); --primary-foreground: hsl(0 0% 98%); --sidebar-primary: hsl(215 15% 20%); }
-.dark .theme-slate, .dark.theme-slate { --primary: hsl(0 0% 98%); --primary-foreground: hsl(215 15% 20%); --sidebar-primary: hsl(0 0% 98%); }
+.dark .theme-zinc,
+.dark.theme-zinc {
+  --primary: hsl(0 0% 98%);
+  --primary-foreground: hsl(220 10% 15%);
+  --sidebar-primary: hsl(0 0% 98%);
+}
 
-.theme-stone { --primary: hsl(30 10% 25%); --primary-foreground: hsl(0 0% 98%); --sidebar-primary: hsl(30 10% 25%); }
-.dark .theme-stone, .dark.theme-stone { --primary: hsl(0 0% 98%); --primary-foreground: hsl(30 10% 25%); --sidebar-primary: hsl(0 0% 98%); }
+.theme-slate {
+  --primary: hsl(215 15% 20%);
+  --primary-foreground: hsl(0 0% 98%);
+  --sidebar-primary: hsl(215 15% 20%);
+}
 
-.theme-gray { --primary: hsl(0 0% 20%); --primary-foreground: hsl(0 0% 98%); --sidebar-primary: hsl(0 0% 20%); }
-.dark .theme-gray, .dark.theme-gray { --primary: hsl(0 0% 98%); --primary-foreground: hsl(0 0% 20%); --sidebar-primary: hsl(0 0% 98%); }
+.dark .theme-slate,
+.dark.theme-slate {
+  --primary: hsl(0 0% 98%);
+  --primary-foreground: hsl(215 15% 20%);
+  --sidebar-primary: hsl(0 0% 98%);
+}
 
-.theme-neutral { --primary: hsl(0 0% 15%); --primary-foreground: hsl(0 0% 98%); --sidebar-primary: hsl(0 0% 15%); }
-.dark .theme-neutral, .dark.theme-neutral { --primary: hsl(0 0% 98%); --primary-foreground: hsl(0 0% 15%); --sidebar-primary: hsl(0 0% 98%); }
+.theme-stone {
+  --primary: hsl(30 10% 25%);
+  --primary-foreground: hsl(0 0% 98%);
+  --sidebar-primary: hsl(30 10% 25%);
+}
 
-.theme-red { --primary: hsl(348 45% 35%); --primary-foreground: hsl(0 0% 98%); --sidebar-primary: hsl(348 45% 35%); }
-.dark .theme-red, .dark.theme-red { --primary: hsl(348 45% 45%); --primary-foreground: hsl(0 0% 98%); --sidebar-primary: hsl(348 45% 45%); }
+.dark .theme-stone,
+.dark.theme-stone {
+  --primary: hsl(0 0% 98%);
+  --primary-foreground: hsl(30 10% 25%);
+  --sidebar-primary: hsl(0 0% 98%);
+}
 
-.theme-rose { --primary: hsl(346 30% 65%); --primary-foreground: hsl(0 0% 20%); --sidebar-primary: hsl(346 30% 65%); }
-.dark .theme-rose, .dark.theme-rose { --primary: hsl(346 30% 75%); --primary-foreground: hsl(0 0% 20%); --sidebar-primary: hsl(346 30% 75%); }
+.theme-gray {
+  --primary: hsl(0 0% 20%);
+  --primary-foreground: hsl(0 0% 98%);
+  --sidebar-primary: hsl(0 0% 20%);
+}
 
-.theme-orange { --primary: hsl(24 50% 45%); --primary-foreground: hsl(0 0% 98%); --sidebar-primary: hsl(24 50% 45%); }
-.dark .theme-orange, .dark.theme-orange { --primary: hsl(24 50% 55%); --primary-foreground: hsl(0 0% 15%); --sidebar-primary: hsl(24 50% 55%); }
+.dark .theme-gray,
+.dark.theme-gray {
+  --primary: hsl(0 0% 98%);
+  --primary-foreground: hsl(0 0% 20%);
+  --sidebar-primary: hsl(0 0% 98%);
+}
 
-.theme-green { --primary: hsl(142 40% 30%); --primary-foreground: hsl(0 0% 98%); --sidebar-primary: hsl(142 40% 30%); }
-.dark .theme-green, .dark.theme-green { --primary: hsl(142 40% 40%); --primary-foreground: hsl(0 0% 98%); --sidebar-primary: hsl(142 40% 40%); }
+.theme-neutral {
+  --primary: hsl(0 0% 15%);
+  --primary-foreground: hsl(0 0% 98%);
+  --sidebar-primary: hsl(0 0% 15%);
+}
 
-.theme-blue { --primary: hsl(221 55% 30%); --primary-foreground: hsl(0 0% 98%); --sidebar-primary: hsl(221 55% 30%); }
-.dark .theme-blue, .dark.theme-blue { --primary: hsl(221 55% 45%); --primary-foreground: hsl(0 0% 98%); --sidebar-primary: hsl(221 55% 45%); }
+.dark .theme-neutral,
+.dark.theme-neutral {
+  --primary: hsl(0 0% 98%);
+  --primary-foreground: hsl(0 0% 15%);
+  --sidebar-primary: hsl(0 0% 98%);
+}
 
-.theme-yellow { --primary: hsl(43 74% 49%); --primary-foreground: hsl(0 0% 15%); --sidebar-primary: hsl(43 74% 49%); }
-.dark .theme-yellow, .dark.theme-yellow { --primary: hsl(43 74% 55%); --primary-foreground: hsl(0 0% 15%); --sidebar-primary: hsl(43 74% 55%); }
+.theme-red {
+  --primary: hsl(348 45% 35%);
+  --primary-foreground: hsl(0 0% 98%);
+  --sidebar-primary: hsl(348 45% 35%);
+}
 
-.theme-violet { --primary: hsl(262 45% 35%); --primary-foreground: hsl(0 0% 98%); --sidebar-primary: hsl(262 45% 35%); }
-.dark .theme-violet, .dark.theme-violet { --primary: hsl(262 45% 45%); --primary-foreground: hsl(0 0% 98%); --sidebar-primary: hsl(262 45% 45%); }
+.dark .theme-red,
+.dark.theme-red {
+  --primary: hsl(348 45% 45%);
+  --primary-foreground: hsl(0 0% 98%);
+  --sidebar-primary: hsl(348 45% 45%);
+}
+
+.theme-rose {
+  --primary: hsl(346 30% 65%);
+  --primary-foreground: hsl(0 0% 20%);
+  --sidebar-primary: hsl(346 30% 65%);
+}
+
+.dark .theme-rose,
+.dark.theme-rose {
+  --primary: hsl(346 30% 75%);
+  --primary-foreground: hsl(0 0% 20%);
+  --sidebar-primary: hsl(346 30% 75%);
+}
+
+.theme-orange {
+  --primary: hsl(24 50% 45%);
+  --primary-foreground: hsl(0 0% 98%);
+  --sidebar-primary: hsl(24 50% 45%);
+}
+
+.dark .theme-orange,
+.dark.theme-orange {
+  --primary: hsl(24 50% 55%);
+  --primary-foreground: hsl(0 0% 15%);
+  --sidebar-primary: hsl(24 50% 55%);
+}
+
+.theme-green {
+  --primary: hsl(142 40% 30%);
+  --primary-foreground: hsl(0 0% 98%);
+  --sidebar-primary: hsl(142 40% 30%);
+}
+
+.dark .theme-green,
+.dark.theme-green {
+  --primary: hsl(142 40% 40%);
+  --primary-foreground: hsl(0 0% 98%);
+  --sidebar-primary: hsl(142 40% 40%);
+}
+
+.theme-blue {
+  --primary: hsl(221 55% 30%);
+  --primary-foreground: hsl(0 0% 98%);
+  --sidebar-primary: hsl(221 55% 30%);
+}
+
+.dark .theme-blue,
+.dark.theme-blue {
+  --primary: hsl(221 55% 45%);
+  --primary-foreground: hsl(0 0% 98%);
+  --sidebar-primary: hsl(221 55% 45%);
+}
+
+.theme-yellow {
+  --primary: hsl(43 74% 49%);
+  --primary-foreground: hsl(0 0% 15%);
+  --sidebar-primary: hsl(43 74% 49%);
+}
+
+.dark .theme-yellow,
+.dark.theme-yellow {
+  --primary: hsl(43 74% 55%);
+  --primary-foreground: hsl(0 0% 15%);
+  --sidebar-primary: hsl(43 74% 55%);
+}
+
+.theme-violet {
+  --primary: hsl(262 45% 35%);
+  --primary-foreground: hsl(0 0% 98%);
+  --sidebar-primary: hsl(262 45% 35%);
+}
+
+.dark .theme-violet,
+.dark.theme-violet {
+  --primary: hsl(262 45% 45%);
+  --primary-foreground: hsl(0 0% 98%);
+  --sidebar-primary: hsl(262 45% 45%);
+}
 
 /* Custom scrollbar */
 ::-webkit-scrollbar {
@@ -357,9 +478,7 @@ textarea {
 }
 
 /* React Phone Number Input styling to match system theme */
-.PhoneInput {
-  /* Container styling already handled by className prop */
-}
+
 
 .PhoneInput__country {
   border-right: 1px solid var(--border);
@@ -412,6 +531,7 @@ textarea {
 
 /* Smooth gradient animations */
 @keyframes gradientShift {
+
   0%,
   100% {
     background-position: 0% 50%;
