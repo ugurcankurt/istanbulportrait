@@ -1,6 +1,8 @@
 import { notFound } from "next/navigation";
 import { pagesContentService } from "@/lib/pages-content-service";
 
+export const revalidate = 60;
+
 import { AboutPageContent } from "./about-content";
 import { ContactPageContent } from "./contact-content";
 import { PrivacyPageContent } from "./privacy-content";
