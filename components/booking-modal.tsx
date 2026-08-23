@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
-import { ar, de, enUS, es, fr, ro, ru, tr as trLocale, zhCN } from "date-fns/locale";
+import { useDateFnsLocale } from "@/hooks/use-date-fns-locale";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import { useEffect, useState, useRef } from "react";
@@ -80,30 +80,6 @@ const generateTimeSlots = () => {
 
 const timeSlots = generateTimeSlots();
 
-// Locale mapping for date-fns
-const getDateFnsLocale = (locale: string) => {
-  switch (locale) {
-    case "ar":
-      return ar;
-    case "es":
-      return es;
-    case "ru":
-      return ru;
-    case "fr":
-      return fr;
-    case "de":
-      return de;
-    case "zh":
-      return zhCN;
-    case "ro":
-      return ro;
-    case "tr":
-      return trLocale;
-    default:
-      return enUS;
-  }
-};
-
 export function BookingModal({
   isOpen,
   onClose,
@@ -148,7 +124,7 @@ export function BookingModal({
   }, [yieldMultiplier, yieldReason]);
 
   // Get the appropriate date-fns locale
-  const dateFnsLocale = getDateFnsLocale(locale);
+  const dateFnsLocale = useDateFnsLocale();
 
   // Create schema with translations
   const bookingSchemaWithTranslations = createBookingSchema(tValidation);

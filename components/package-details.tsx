@@ -17,7 +17,7 @@ import { useTranslations, useLocale } from "next-intl";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState, useMemo } from "react";
 import { format } from "date-fns";
-import { ar, de, enUS, es, fr, ro, ru, tr as trLocale, zhCN } from "date-fns/locale";
+import { useDateFnsLocale } from "@/hooks/use-date-fns-locale";
 import { BookingModal } from "@/components/booking-modal";
 import { BookingCard } from "@/components/booking-card";
 import { PackageGallery } from "@/components/package-gallery";
@@ -43,20 +43,6 @@ export interface PackageDetailsProps {
   whatsappNumber?: string;
 }
 
-const getDateFnsLocale = (locale: string) => {
-  switch (locale) {
-    case "ar": return ar;
-    case "es": return es;
-    case "ru": return ru;
-    case "fr": return fr;
-    case "de": return de;
-    case "zh": return zhCN;
-    case "ro": return ro;
-    case "tr": return trLocale;
-    default: return enUS;
-  }
-};
-
 export function PackageDetails({ packageData, aggregateRating, reviews, activeDiscount, timeSurcharges, whatsappNumber }: PackageDetailsProps) {
   const t = useTranslations("packages");
   const tReviews = useTranslations("reviews");
@@ -66,7 +52,7 @@ export function PackageDetails({ packageData, aggregateRating, reviews, activeDi
   const { formatPrice, currency, convertPrice } = useCurrency();
   const router = useRouter();
   const searchParams = useSearchParams();
-  const dateFnsLocale = useMemo(() => getDateFnsLocale(locale), [locale]);
+  const dateFnsLocale = useDateFnsLocale();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);

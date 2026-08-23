@@ -11,9 +11,7 @@ import type { PackageId } from "@/lib/validations";
 import { usePackagesStore } from "@/stores/packages-store";
 import type { DiscountDB } from "@/lib/discount-service";
 import { Card, CardHeader } from "@/components/ui/card";
-import { formatDistanceToNow } from "date-fns";
-import { enUS, tr, de, fr, es, zhCN, ro, arSA, ru } from "date-fns/locale";
-import { useLocale } from "next-intl";
+import { useLocale, useFormatter } from "next-intl";
 import { useCurrency } from "@/contexts/currency-context";
 import { cn } from "@/lib/utils";
 import { extractPhotosCount } from "@/lib/features-parser";
@@ -82,19 +80,7 @@ export function ResumeViewingCard({
   const locale = useLocale();
   const { formatPrice } = useCurrency();
 
-  const getDateLocale = (code: string) => {
-    switch (code) {
-      case "tr": return tr;
-      case "de": return de;
-      case "fr": return fr;
-      case "es": return es;
-      case "zh": return zhCN;
-      case "ro": return ro;
-      case "ar": return arSA;
-      case "ru": return ru;
-      default: return enUS;
-    }
-  };
+  const format = useFormatter();
 
   if (visitedPackages.length === 0) return null;
 
@@ -164,10 +150,7 @@ export function ResumeViewingCard({
                       <div className="absolute top-3 start-3 flex items-center gap-1 text-[9px] font-bold uppercase tracking-widest bg-black/60 text-white backdrop-blur-md px-3 py-1.5 rounded-full z-10 border border-white/20">
                         <History className="w-3 h-3" />
                         <span>
-                          {formatDistanceToNow(visited.timestamp, {
-                            addSuffix: true,
-                            locale: getDateLocale(locale),
-                          })}
+                          {format.relativeTime(new Date(visited.timestamp))}
                         </span>
                       </div>
 
