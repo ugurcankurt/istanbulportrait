@@ -78,8 +78,8 @@ export function PackageDetails({
   const [peopleCount, setPeopleCount] = useState<number>(1);
   const [isSaved, setIsSaved] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  const [yieldMultiplier, setYieldMultiplier] = useState<number>(1.0);
-  const [yieldReason, setYieldReason] = useState<string>("standard");
+  const [yieldMultiplier, setYieldMultiplier] = useState<number>(0.7);
+  const [yieldReason, setYieldReason] = useState<string>("early_bird");
 
   useEffect(() => {
     if (searchParams.get("book") === "true") {

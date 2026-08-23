@@ -63,12 +63,15 @@ export function PackagesSection({
           ? generateNativeSlug(pkg.title[locale])
           : pkg.slug;
 
+        const earlyBirdMultiplier = 0.7;
+        const earlyBirdBasePrice = pkg.price * earlyBirdMultiplier;
+
         return {
           id: nativeSlug,
           dbSlug: pkg.slug,
           name: locName,
-          basePrice: pkg.price,
-          pricing: calculateDiscountedPrice(pkg.price, activeDiscount),
+          basePrice: earlyBirdBasePrice,
+          pricing: calculateDiscountedPrice(earlyBirdBasePrice, activeDiscount),
           duration: locDuration,
           photos: extractPhotosCount(locFeatures),
           locations: pkg.locations || 1,
@@ -207,22 +210,24 @@ export function PackagesSection({
 
               {/* Right: Price */}
               <div className="flex flex-col items-end justify-center leading-none">
-                <div className="flex items-center gap-1.5">
-                  <span className="text-[10px] sm:text-xs text-white/80 uppercase tracking-wide mr-1 drop-shadow-md">
+                <div className="flex flex-col items-start">
+                  <span className="text-[10px] sm:text-[11px] text-white/80 uppercase tracking-widest drop-shadow-md mb-1">
                     {t("starting_from")}
                   </span>
-                  {pkg.pricing?.isDiscounted && (
-                    <span className="text-[10px] sm:text-xs text-white/70 line-through">
-                      {formatPrice(pkg.basePrice)}
-                    </span>
-                  )}
-                  <span className="text-lg sm:text-xl font-serif font-semibold text-white drop-shadow-md">
-                    {formatPrice(
-                      pkg.pricing?.isDiscounted
-                        ? pkg.pricing.price
-                        : pkg.basePrice,
+                  <div className="flex items-center gap-1.5">
+                    {pkg.pricing?.isDiscounted && (
+                      <span className="text-[10px] sm:text-xs text-white/70 line-through">
+                        {formatPrice(pkg.basePrice)}
+                      </span>
                     )}
-                  </span>
+                    <span className="text-lg sm:text-xl font-serif font-semibold text-white drop-shadow-md">
+                      {formatPrice(
+                        pkg.pricing?.isDiscounted
+                          ? pkg.pricing.price
+                          : pkg.basePrice,
+                      )}
+                    </span>
+                  </div>
                 </div>
                 {pkg.isPerPerson && (
                   <span className="text-[9px] text-white/80 mt-1 uppercase tracking-wider drop-shadow-sm">
