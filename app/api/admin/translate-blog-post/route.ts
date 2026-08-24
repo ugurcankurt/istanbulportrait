@@ -10,14 +10,9 @@ async function fetchWithRetry(
   retries = 0,
 ): Promise<Response> {
   const MAX_RETRIES = 3;
-  const timeoutMs = 120000; // 120 seconds per attempt to accommodate large blog post generations
 
   try {
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
-
-    const res = await fetch(url, { ...options, signal: controller.signal });
-    clearTimeout(timeoutId);
+    const res = await fetch(url, options);
 
     if (
       !res.ok &&
