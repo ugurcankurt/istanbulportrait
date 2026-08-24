@@ -14,10 +14,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const getAlternates = (pathResolver: (locale: string) => string) => {
     const languages: Record<string, string> = {};
     locales.forEach((loc) => {
-      languages[loc] = `${baseUrl}/${loc}${pathResolver(loc)}`;
+      languages[loc] = encodeURI(`${baseUrl}/${loc}${pathResolver(loc)}`);
     });
     // Fallback for unmatched languages
-    languages["x-default"] = `${baseUrl}/en${pathResolver("en")}`;
+    languages["x-default"] = encodeURI(`${baseUrl}/en${pathResolver("en")}`);
     return { languages };
   };
 
@@ -34,7 +34,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   // 1. Root Domain (x-default fallback)
   sitemapData.push({
-    url: `${baseUrl}/`,
+    url: encodeURI(`${baseUrl}/`),
     lastModified: new Date(),
     changeFrequency: "daily",
     priority: 1.0,
@@ -44,7 +44,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // 2. Home Pages (All Locales)
   locales.forEach((locale) => {
     sitemapData.push({
-      url: `${baseUrl}/${locale}`,
+      url: encodeURI(`${baseUrl}/${locale}`),
       lastModified: new Date(),
       changeFrequency: "daily",
       priority: 1.0,
@@ -68,7 +68,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         : `/${page.slug}`;
 
       sitemapData.push({
-        url: `${baseUrl}/${locale}${pageSeg}`,
+        url: encodeURI(`${baseUrl}/${locale}${pageSeg}`),
         lastModified: new Date(
           page.updated_at || page.created_at || new Date(),
         ),
@@ -97,7 +97,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         : pkg.slug;
 
       sitemapData.push({
-        url: `${baseUrl}/${locale}/${pSeg}/${pkgSeg}`,
+        url: encodeURI(`${baseUrl}/${locale}/${pSeg}/${pkgSeg}`),
         lastModified: new Date(pkg.updated_at || pkg.created_at || new Date()),
         changeFrequency: "weekly",
         priority: 0.9,
@@ -131,7 +131,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         : locItem.slug;
 
       sitemapData.push({
-        url: `${baseUrl}/${locale}/${pSeg}/${locSeg}`,
+        url: encodeURI(`${baseUrl}/${locale}/${pSeg}/${locSeg}`),
         lastModified: new Date(
           locItem.updated_at || locItem.created_at || new Date(),
         ),
@@ -192,7 +192,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
               (t: any) => t.locale === loc,
             )?.slug;
             if (bSlug) {
-              postAlternates[loc] = `${baseUrl}/${loc}/${bSeg}/${bSlug}`;
+              postAlternates[loc] = encodeURI(
+                `${baseUrl}/${loc}/${bSeg}/${bSlug}`,
+              );
             }
           });
 
@@ -205,7 +207,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
           }
 
           sitemapData.push({
-            url: `${baseUrl}/${locale}/${pSeg}/${tSlug}`,
+            url: encodeURI(`${baseUrl}/${locale}/${pSeg}/${tSlug}`),
             lastModified: new Date(
               bp.updated_at || bp.created_at || new Date(),
             ),
@@ -241,8 +243,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
             translatedLocales.forEach((loc: string) => {
               const bTitle = blogParent?.title?.[loc];
               const bSeg = bTitle ? generateNativeSlug(bTitle) : "blog";
-              catAlternates[loc] =
-                `${baseUrl}/${loc}/${bSeg}/category/${bc.slug}`;
+              catAlternates[loc] = encodeURI(
+                `${baseUrl}/${loc}/${bSeg}/category/${bc.slug}`,
+              );
             });
             if (catAlternates["en"])
               catAlternates["x-default"] = catAlternates["en"];
@@ -250,7 +253,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
               catAlternates["x-default"] = catAlternates[translatedLocales[0]];
 
             sitemapData.push({
-              url: `${baseUrl}/${locale}/${pSeg}/category/${bc.slug}`,
+              url: encodeURI(
+                `${baseUrl}/${locale}/${pSeg}/category/${bc.slug}`,
+              ),
               lastModified: new Date(
                 bc.updated_at || bc.created_at || new Date(),
               ),
@@ -284,7 +289,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
             translatedLocales.forEach((loc: string) => {
               const bTitle = blogParent?.title?.[loc];
               const bSeg = bTitle ? generateNativeSlug(bTitle) : "blog";
-              tagAlternates[loc] = `${baseUrl}/${loc}/${bSeg}/tag/${bt.slug}`;
+              tagAlternates[loc] = encodeURI(
+                `${baseUrl}/${loc}/${bSeg}/tag/${bt.slug}`,
+              );
             });
             if (tagAlternates["en"])
               tagAlternates["x-default"] = tagAlternates["en"];
@@ -292,7 +299,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
               tagAlternates["x-default"] = tagAlternates[translatedLocales[0]];
 
             sitemapData.push({
-              url: `${baseUrl}/${locale}/${pSeg}/tag/${bt.slug}`,
+              url: encodeURI(`${baseUrl}/${locale}/${pSeg}/tag/${bt.slug}`),
               lastModified: new Date(
                 bt.updated_at || bt.created_at || new Date(),
               ),
