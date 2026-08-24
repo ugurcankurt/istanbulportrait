@@ -10,8 +10,15 @@ async function fetchWithRetry(
   retries = 0,
 ): Promise<Response> {
   const MAX_RETRIES = 3;
+  const timeoutMs = 120000; // 120 seconds per attempt to accommodate large blog post generations
+
   try {
-    const res = await fetch(url, options);
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+
+    const res = await fetch(url, { ...options, signal: controller.signal });
+    clearTimeout(timeoutId);
+
     if (
       !res.ok &&
       (res.status === 429 || res.status === 503 || res.status === 500) &&
@@ -38,7 +45,7 @@ async function fetchWithRetry(
       }
 
       console.warn(
-        `Gemini API returned ${res.status}. Retrying in ${delaySeconds}s...`,
+        `NVIDIA API returned ${res.status}. Retrying in ${delaySeconds}s...`,
       );
       await new Promise((r) => setTimeout(r, delaySeconds * 1000));
       return fetchWithRetry(url, options, retries + 1);
@@ -153,9 +160,6 @@ ${content}
         (async () => {
           const url = `https://integrate.api.nvidia.com/v1/chat/completions`;
           try {
-            const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 45000); // 45s timeout per request
-            
             const response = await fetchWithRetry(url, {
               method: "POST",
               headers: {
@@ -168,9 +172,7 @@ ${content}
                 temperature: 0.2,
                 response_format: { type: "json_object" },
               }),
-              signal: controller.signal,
             });
-            clearTimeout(timeoutId);
 
             if (!response.ok) {
               console.error(
