@@ -53,7 +53,7 @@ export async function POST(req: Request) {
 
     const { settingsService } = await import("@/lib/settings-service");
     const settings = await settingsService.getSettings();
-    const apiKey = settings.gemini_api_key;
+    const apiKey = process.env.NVIDIA_API_KEY;
     if (!apiKey) {
       return NextResponse.json(
         { error: "Groq API Key is not configured in Site Settings." },

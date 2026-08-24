@@ -95,7 +95,7 @@ export async function POST(req: Request) {
 
     const { settingsService } = await import("@/lib/settings-service");
     const settings = await settingsService.getSettings();
-    const apiKey = settings.gemini_api_key;
+    const apiKey = process.env.NVIDIA_API_KEY;
     if (!apiKey) {
       return NextResponse.json(
         { error: "API Key is not configured in Site Settings." },
@@ -105,20 +105,21 @@ export async function POST(req: Request) {
 
     // We can run these in parallel now since we use NVIDIA NIM, which doesn't have the strict 15RPM limit
     const translations: Record<string, any> = {};
-    const chunkSize = 2;
+    const chunkSize = 1; // Translate 1 language per prompt to avoid exceeding 4096 output token limit with large HTML
     const chunkPromises = [];
 
     for (let i = 0; i < TARGET_LOCALES.length; i += chunkSize) {
       const chunkLocales = TARGET_LOCALES.slice(i, i + chunkSize);
+      const targetLang = chunkLocales[0]; // since chunk size is 1
 
       const prompt = `
 You are an expert localization specialist and marketing copywriter. 
-Translate the following blog post content from English into the following languages: ${chunkLocales.join(", ")}.
-Maintain the exact HTML structure, styling, and tone for each language. 
-Return ONLY a valid minified JSON object where keys are the locale codes and values are the translated objects. Do not include markdown wrappers or additional text.
+Translate the following blog post content from English into the following language code: ${targetLang}.
+Maintain the exact HTML structure, styling, and tone.
+Return ONLY a valid minified JSON object where the key is the locale code "${targetLang}" and the value is the translated object. Do not include markdown wrappers or additional text.
 Example format:
 {
-  "${chunkLocales[0]}": {
+  "${targetLang}": {
     "title": "Translated title",
     "content": "Translated HTML content",
     "seo_title": "Translated SEO title",
@@ -152,6 +153,9 @@ ${content}
         (async () => {
           const url = `https://integrate.api.nvidia.com/v1/chat/completions`;
           try {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 45000); // 45s timeout per request
+            
             const response = await fetchWithRetry(url, {
               method: "POST",
               headers: {
@@ -164,11 +168,13 @@ ${content}
                 temperature: 0.2,
                 response_format: { type: "json_object" },
               }),
+              signal: controller.signal,
             });
+            clearTimeout(timeoutId);
 
             if (!response.ok) {
               console.error(
-                `Failed to translate for ${chunkLocales.join(", ")}: ${await response.text()}`,
+                `Failed to translate for ${targetLang}: ${await response.text()}`,
               );
               return;
             }
@@ -177,9 +183,7 @@ ${content}
             const textOutput = data.choices?.[0]?.message?.content;
 
             if (!textOutput) {
-              console.error(
-                `No content from DeepSeek for ${chunkLocales.join(", ")}`,
-              );
+              console.error(`No content from DeepSeek for ${targetLang}`);
               return;
             }
 
@@ -188,19 +192,16 @@ ${content}
               parsed = JSON.parse(textOutput.trim());
             } catch (e) {
               console.error(
-                `Invalid JSON from DeepSeek for ${chunkLocales.join(", ")}: ${textOutput}`,
+                `Invalid JSON from DeepSeek for ${targetLang}: ${textOutput}`,
               );
               return;
             }
 
-            // Assign chunk results back to the main translations object
-            for (const loc of chunkLocales) {
-              if (parsed[loc]) {
-                translations[loc] = parsed[loc];
-              }
+            if (parsed[targetLang]) {
+              translations[targetLang] = parsed[targetLang];
             }
           } catch (err: any) {
-            console.error(`Error translating ${chunkLocales.join(", ")}:`, err);
+            console.error(`Error translating ${targetLang}:`, err);
           }
         })(),
       );
