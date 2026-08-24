@@ -167,9 +167,11 @@ export function buildLocalBusinessSchema(
     priceRange: priceRange || undefined,
     address: {
       "@type": "PostalAddress",
-      addressLocality: settings.city || "",
-      addressCountry: settings.country_code || "",
-      streetAddress: settings.address?.en || settings.city || "",
+      addressLocality: settings.city || "Istanbul",
+      addressCountry: settings.country_code || "TR",
+      streetAddress:
+        settings.address?.en || settings.city || "Istanbul, Turkey",
+      postalCode: "34116", // Default fallback if not defined elsewhere
     },
     geo:
       settings.latitude && settings.longitude
