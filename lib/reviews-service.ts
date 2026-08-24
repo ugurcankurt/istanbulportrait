@@ -39,12 +39,10 @@ const getTranslatedReviewsBatch = unstable_cache(
     if (payload.length === 0) return {};
 
     try {
-      const { settingsService } = await import("@/lib/settings-service");
-      const settings = await settingsService.getSettings();
-      const apiKey = settings.gemini_api_key;
+      const apiKey = process.env.NVIDIA_API_KEY;
 
       if (!apiKey) {
-        console.warn("No Groq API key found for review translation.");
+        console.warn("No NVIDIA API key found for review translation.");
         return {};
       }
 
@@ -59,44 +57,45 @@ Reviews to translate:
 ${payloadStr}
 `;
 
-      const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=${apiKey}`;
-      const response = await fetch(geminiUrl, {
+      const nvidiaUrl = `https://integrate.api.nvidia.com/v1/chat/completions`;
+      const response = await fetch(nvidiaUrl, {
         method: "POST",
         headers: {
+          Authorization: `Bearer ${apiKey}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          contents: [{ parts: [{ text: prompt }] }],
-          generationConfig: { responseMimeType: "application/json" },
+          model: "deepseek-ai/deepseek-v4-flash-0731",
+          messages: [{ role: "user", content: prompt }],
+          temperature: 0.2,
+          response_format: { type: "json_object" },
         }),
       });
 
       if (!response.ok) {
         const errText = await response.text();
-        if (response.status === 429 || response.status === 400) {
+        if (
+          response.status === 429 ||
+          response.status === 400 ||
+          response.status === 401
+        ) {
           console.warn(
-            `Gemini API limit/error (${response.status}). Caching empty translations to prevent log spam and reduce costs.`,
+            `NVIDIA API limit/error (${response.status}). Caching empty translations to prevent log spam and reduce costs.`,
           );
           return {};
         }
-        console.error("Gemini API Error for reviews translation:", errText);
-        throw new Error(`Gemini API Error: ${response.status}`);
+        console.error("NVIDIA API Error for reviews translation:", errText);
+        throw new Error(`NVIDIA API Error: ${response.status}`);
       }
 
       const data = await response.json();
-      let textOutput = data.candidates?.[0]?.content?.parts?.[0]?.text;
+      const textOutput = data.choices?.[0]?.message?.content;
 
       if (!textOutput) {
         throw new Error("Invalid AI response structure");
       }
 
-      // Clean markdown block if Gemini still returns it
-      textOutput = textOutput
-        .replace(/```json/g, "")
-        .replace(/```/g, "")
-        .trim();
-
-      const translatedDict = JSON.parse(textOutput);
+      const translatedDict = JSON.parse(textOutput.trim());
       return translatedDict as Record<string, string>;
     } catch (err) {
       console.error(
