@@ -72,23 +72,26 @@ Respond ONLY with a valid minified JSON object mapping each locale code to the t
 Provide accurate, professional, marketing-friendly translations suitable for a high-end photography business in Istanbul.
 `;
 
-    // Connect to Gemini REST API
-    const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=${apiKey}`;
+    // Connect to NVIDIA NIM API (DeepSeek)
+    const nvidiaUrl = `https://integrate.api.nvidia.com/v1/chat/completions`;
 
-    const response = await fetch(geminiUrl, {
+    const response = await fetch(nvidiaUrl, {
       method: "POST",
       headers: {
+        Authorization: `Bearer ${process.env.NVIDIA_API_KEY}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        contents: [{ parts: [{ text: prompt }] }],
-        generationConfig: { responseMimeType: "application/json" },
+        model: "deepseek-ai/deepseek-v4-flash-0731",
+        messages: [{ role: "user", content: prompt }],
+        temperature: 0.2,
+        response_format: { type: "json_object" },
       }),
     });
 
     if (!response.ok) {
       const errorData = await response.text();
-      console.error("Gemini API Error:", errorData);
+      console.error("DeepSeek API Error:", errorData);
       return NextResponse.json(
         { error: "Failed to communicate with AI" },
         { status: 500 },
@@ -96,7 +99,7 @@ Provide accurate, professional, marketing-friendly translations suitable for a h
     }
 
     const data = await response.json();
-    const textOutput = data.candidates?.[0]?.content?.parts?.[0]?.text;
+    const textOutput = data.choices?.[0]?.message?.content;
 
     if (!textOutput) {
       return NextResponse.json(

@@ -25,7 +25,10 @@ async function fetchWithRetry(
           (d: any) => d["@type"] === "type.googleapis.com/google.rpc.RetryInfo",
         )?.retryDelay;
         if (retryDelayStr) {
-          const parsedDelay = Number.parseInt(retryDelayStr.replace("s", ""), 10);
+          const parsedDelay = Number.parseInt(
+            retryDelayStr.replace("s", ""),
+            10,
+          );
           if (!Number.isNaN(parsedDelay)) {
             delaySeconds = parsedDelay + 2; // add 2s buffer
           }
@@ -106,7 +109,7 @@ export async function POST(req: Request) {
     const chunkSize = 2;
     for (let i = 0; i < TARGET_LOCALES.length; i += chunkSize) {
       const chunkLocales = TARGET_LOCALES.slice(i, i + chunkSize);
-      
+
       const prompt = `
 You are an expert localization specialist and marketing copywriter. 
 Translate the following blog post content from English into the following languages: ${chunkLocales.join(", ")}.
@@ -143,20 +146,20 @@ Content to translate (HTML):
 ${content}
 `;
 
-      const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=${apiKey.trim()}`;
+      const url = `https://integrate.api.nvidia.com/v1/chat/completions`;
 
       try {
         const response = await fetchWithRetry(url, {
           method: "POST",
           headers: {
+            Authorization: `Bearer ${process.env.NVIDIA_API_KEY}`,
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            contents: [{ parts: [{ text: prompt }] }],
-            generationConfig: {
-              temperature: 0.2,
-              responseMimeType: "application/json",
-            },
+            model: "deepseek-ai/deepseek-v4-flash-0731",
+            messages: [{ role: "user", content: prompt }],
+            temperature: 0.2,
+            response_format: { type: "json_object" },
           }),
         });
 
@@ -168,10 +171,12 @@ ${content}
         }
 
         const data = await response.json();
-        const textOutput = data.candidates?.[0]?.content?.parts?.[0]?.text;
+        const textOutput = data.choices?.[0]?.message?.content;
 
         if (!textOutput) {
-          console.error(`No content from Gemini for ${chunkLocales.join(", ")}`);
+          console.error(
+            `No content from DeepSeek for ${chunkLocales.join(", ")}`,
+          );
           continue;
         }
 
@@ -179,10 +184,12 @@ ${content}
         try {
           parsed = JSON.parse(textOutput.trim());
         } catch (e) {
-          console.error(`Invalid JSON from Gemini for ${chunkLocales.join(", ")}: ${textOutput}`);
+          console.error(
+            `Invalid JSON from DeepSeek for ${chunkLocales.join(", ")}: ${textOutput}`,
+          );
           continue;
         }
-        
+
         // Assign chunk results back to the main translations object
         for (const loc of chunkLocales) {
           if (parsed[loc]) {
