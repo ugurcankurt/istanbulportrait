@@ -1,4 +1,4 @@
-import { SiteSettings } from "./settings-service";
+import type { SiteSettings } from "./settings-service";
 
 export function getBaseUrl() {
   if (process.env.VERCEL_PROJECT_PRODUCTION_URL)
@@ -24,7 +24,7 @@ export function generateSeoDescription(
   // 1. Remove HTML tags
   let cleanText = content.replace(/<[^>]*>?/gm, " ");
   // 2. Remove markdown/formatting chars if any
-  cleanText = cleanText.replace(/[#*_~`>\[\]\(\)]/g, " ");
+  cleanText = cleanText.replace(/[#*_~`>[\]()]/g, " ");
   // 3. Normalize whitespaces
   cleanText = cleanText.replace(/\s+/g, " ").trim();
 
@@ -156,6 +156,9 @@ export function buildLocalBusinessSchema(
           height: 630,
           copyrightNotice: "IstanbulPortrait 2026",
           creator: { "@type": "Organization", name: "Istanbul Portrait" },
+          creditText: "Istanbul Portrait",
+          license: `${getBaseUrl()}/terms-and-conditions`,
+          acquireLicensePage: `${getBaseUrl()}/contact`,
         }
       : undefined,
     "@id": getBaseUrl(),
@@ -253,6 +256,11 @@ export function buildOrganizationSchema(settings: SiteSettings) {
           url: imageUrl,
           width: 1200,
           height: 630,
+          copyrightNotice: "IstanbulPortrait 2026",
+          creator: { "@type": "Organization", name: "Istanbul Portrait" },
+          creditText: "Istanbul Portrait",
+          license: `${getBaseUrl()}/terms-and-conditions`,
+          acquireLicensePage: `${getBaseUrl()}/contact`,
         }
       : undefined,
     image: imageUrl
@@ -261,6 +269,11 @@ export function buildOrganizationSchema(settings: SiteSettings) {
           url: imageUrl,
           width: 1200,
           height: 630,
+          copyrightNotice: "IstanbulPortrait 2026",
+          creator: { "@type": "Organization", name: "Istanbul Portrait" },
+          creditText: "Istanbul Portrait",
+          license: `${getBaseUrl()}/terms-and-conditions`,
+          acquireLicensePage: `${getBaseUrl()}/contact`,
         }
       : undefined,
     founder: settings.founder_name
@@ -274,6 +287,14 @@ export function buildOrganizationSchema(settings: SiteSettings) {
                   url: optimizeSeoImage(settings.founder_image_url, 1200),
                   width: 1200,
                   height: 630,
+                  copyrightNotice: "IstanbulPortrait 2026",
+                  creator: {
+                    "@type": "Organization",
+                    name: "Istanbul Portrait",
+                  },
+                  creditText: "Istanbul Portrait",
+                  license: `${getBaseUrl()}/terms-and-conditions`,
+                  acquireLicensePage: `${getBaseUrl()}/contact`,
                 },
               }
             : {}),
@@ -347,6 +368,9 @@ export function buildServiceSchema({
           height: 630,
           copyrightNotice: "IstanbulPortrait 2026",
           creator: { "@type": "Organization", name: "Istanbul Portrait" },
+          creditText: "Istanbul Portrait",
+          license: `${getBaseUrl()}/terms-and-conditions`,
+          acquireLicensePage: `${getBaseUrl()}/contact`,
         }
       : undefined,
     description,
@@ -362,6 +386,39 @@ export function buildServiceSchema({
       priceCurrency: currency,
       price: finalPrice,
       availability: "https://schema.org/InStock",
+      validFrom: new Date().getFullYear() + "-01-01",
+      hasMerchantReturnPolicy: {
+        "@type": "MerchantReturnPolicy",
+        applicableCountry: "TR",
+        returnPolicyCategory: "https://schema.org/MerchantReturnNotPermitted",
+      },
+      shippingDetails: {
+        "@type": "OfferShippingDetails",
+        shippingRate: {
+          "@type": "MonetaryAmount",
+          value: "0",
+          currency: currency,
+        },
+        shippingDestination: {
+          "@type": "DefinedRegion",
+          addressCountry: "TR",
+        },
+        deliveryTime: {
+          "@type": "ShippingDeliveryTime",
+          handlingTime: {
+            "@type": "QuantitativeValue",
+            minValue: 0,
+            maxValue: 0,
+            unitCode: "d",
+          },
+          transitTime: {
+            "@type": "QuantitativeValue",
+            minValue: 0,
+            maxValue: 0,
+            unitCode: "d",
+          },
+        },
+      },
       seller: providerName
         ? {
             "@type": "Organization",
@@ -477,6 +534,9 @@ export function buildArticleSchema({
             height: 630,
             copyrightNotice: "IstanbulPortrait 2026",
             creator: { "@type": "Organization", name: "Istanbul Portrait" },
+            creditText: "Istanbul Portrait",
+            license: `${getBaseUrl()}/terms-and-conditions`,
+            acquireLicensePage: `${getBaseUrl()}/contact`,
           },
         ]
       : [],
@@ -502,6 +562,14 @@ export function buildArticleSchema({
                   url: optimizeSeoImage(publisherLogo, 1200),
                   width: 1200,
                   height: 630,
+                  copyrightNotice: "IstanbulPortrait 2026",
+                  creator: {
+                    "@type": "Organization",
+                    name: "Istanbul Portrait",
+                  },
+                  creditText: "Istanbul Portrait",
+                  license: `${getBaseUrl()}/terms-and-conditions`,
+                  acquireLicensePage: `${getBaseUrl()}/contact`,
                 },
               }
             : {}),
@@ -587,6 +655,9 @@ export function buildTouristAttractionSchema({
           height: 630,
           copyrightNotice: "IstanbulPortrait 2026",
           creator: { "@type": "Organization", name: "Istanbul Portrait" },
+          creditText: "Istanbul Portrait",
+          license: `${getBaseUrl()}/terms-and-conditions`,
+          acquireLicensePage: `${getBaseUrl()}/contact`,
         }
       : undefined,
     geo:
@@ -694,6 +765,11 @@ export function buildCollectionPageSchema({
                 url: optimizeSeoImage(item.image, 1200),
                 width: 1200,
                 height: 630,
+                copyrightNotice: "IstanbulPortrait 2026",
+                creator: { "@type": "Organization", name: "Istanbul Portrait" },
+                creditText: "Istanbul Portrait",
+                license: `${getBaseUrl()}/terms-and-conditions`,
+                acquireLicensePage: `${getBaseUrl()}/contact`,
               },
             }
           : {}),
