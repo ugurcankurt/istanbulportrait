@@ -213,7 +213,6 @@ export function BlogForm({
           title: enState?.title || "",
           excerpt: enState?.excerpt || "",
           content: enState?.content || "",
-          seo_title: enState?.seo_title || "",
           meta_description: enState?.meta_description || "",
           meta_keywords: enState?.meta_keywords || [],
           targetLocale,
@@ -232,7 +231,6 @@ export function BlogForm({
             title: aiTrans.title || "",
             excerpt: aiTrans.excerpt || "",
             content: aiTrans.content || "",
-            seo_title: aiTrans.seo_title || "",
             meta_description: aiTrans.meta_description || "",
             meta_keywords: aiTrans.meta_keywords || [],
             slug: aiTrans.title
