@@ -107,13 +107,13 @@ export async function POST(req: Request) {
     const prompt = `
 You are an expert localization specialist and marketing copywriter. 
 Translate the following blog post content from English into the following language code: ${targetLocale}.
-Maintain the exact HTML structure, styling, and tone.
-Return ONLY a valid minified JSON object where the key is the locale code "${targetLocale}" and the value is the translated object. Do not include markdown wrappers or additional text.
+Maintain the exact original formatting (e.g., Markdown, headings, bullet points, links, bold text) and tone. DO NOT convert Markdown to HTML tags.
+Return ONLY a valid minified JSON object where the key is the locale code "${targetLocale}" and the value is the translated object. Do not include markdown wrappers or additional text outside the JSON.
 Example format:
 {
   "${targetLocale}": {
     "title": "Translated title",
-    "content": "Translated HTML content",
+    "content": "Translated content (preserving original Markdown/format)",
     "seo_title": "Translated SEO title",
     "meta_description": "Translated meta description",
     "meta_keywords": ["translated", "keywords", "array"],
@@ -136,7 +136,7 @@ ${meta_keywords ? meta_keywords.join(", ") : ""}
 Excerpt to translate:
 ${excerpt || ""}
 
-Content to translate (HTML):
+Content to translate (Preserve Original Formatting):
 ${content}
 `;
 
