@@ -59,41 +59,31 @@ ${payloadStr}
 
       const nvidiaUrl = `https://integrate.api.nvidia.com/v1/chat/completions`;
       let response;
-      for (let attempt = 1; attempt <= 3; attempt++) {
-        try {
-          const controller = new AbortController();
-          const timeoutId = setTimeout(() => controller.abort(), 12000); // 12 seconds max per attempt
+      
+      // We use a single attempt with a 6 second timeout to prevent Vercel 10s Serverless timeout
+      // which causes the page to crash (504 Gateway Timeout). 
+      // This ensures translations work in the background (or fail fast and fallback)
+      try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 6000); // 6 seconds max
 
-          response = await fetch(nvidiaUrl, {
-            method: "POST",
-            headers: {
-              Authorization: `Bearer ${apiKey}`,
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              model: "deepseek-ai/deepseek-v4-flash-0731",
-              messages: [{ role: "user", content: prompt }],
-              temperature: 0.2,
-              response_format: { type: "json_object" },
-            }),
-            signal: controller.signal,
-          });
-          clearTimeout(timeoutId);
-
-          if (response.ok) break;
-
-          // Retry on rate limits or server errors
-          if (response.status === 429 || response.status >= 500) {
-            if (attempt < 3) {
-              await new Promise((res) => setTimeout(res, 1000 * attempt));
-              continue;
-            }
-          }
-          break; // Don't retry on 400 bad request, etc.
-        } catch (err) {
-          if (attempt === 3) throw err;
-          await new Promise((res) => setTimeout(res, 1000 * attempt));
-        }
+        response = await fetch(nvidiaUrl, {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${apiKey}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            model: "deepseek-ai/deepseek-v4-flash-0731",
+            messages: [{ role: "user", content: prompt }],
+            temperature: 0.2,
+            response_format: { type: "json_object" },
+          }),
+          signal: controller.signal,
+        });
+        clearTimeout(timeoutId);
+      } catch (err) {
+        console.warn("Translation API timed out or failed to reach NVIDIA:", err);
       }
       
       if (!response) {
@@ -134,7 +124,7 @@ ${payloadStr}
     }
   },
   ["gemini-reviews-translations-batch-v3"],
-  { revalidate: 86400 * 7 }, // Cache for 7 days.
+  { revalidate: 31536000 }, // Cache for 1 year as requested (31,536,000 seconds).
 );
 
 class ReviewsService {
