@@ -107,7 +107,7 @@ export function ImageUpload({
       <div
         className={`relative aspect-video w-full max-w-md overflow-hidden rounded-lg border bg-muted ${className}`}
       >
-        <Image src={value} alt="Uploaded image" fill className="object-cover" />
+        <Image src={value} alt="Uploaded image" fill sizes="(max-width: 768px) 100vw, 448px" className="object-cover" />
         <Button
           type="button"
           onClick={onRemove}

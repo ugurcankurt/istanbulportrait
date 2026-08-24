@@ -58,19 +58,47 @@ ${payloadStr}
 `;
 
       const nvidiaUrl = `https://integrate.api.nvidia.com/v1/chat/completions`;
-      const response = await fetch(nvidiaUrl, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${apiKey}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          model: "deepseek-ai/deepseek-v4-flash-0731",
-          messages: [{ role: "user", content: prompt }],
-          temperature: 0.2,
-          response_format: { type: "json_object" },
-        }),
-      });
+      let response;
+      for (let attempt = 1; attempt <= 3; attempt++) {
+        try {
+          const controller = new AbortController();
+          const timeoutId = setTimeout(() => controller.abort(), 12000); // 12 seconds max per attempt
+
+          response = await fetch(nvidiaUrl, {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${apiKey}`,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              model: "deepseek-ai/deepseek-v4-flash-0731",
+              messages: [{ role: "user", content: prompt }],
+              temperature: 0.2,
+              response_format: { type: "json_object" },
+            }),
+            signal: controller.signal,
+          });
+          clearTimeout(timeoutId);
+
+          if (response.ok) break;
+
+          // Retry on rate limits or server errors
+          if (response.status === 429 || response.status >= 500) {
+            if (attempt < 3) {
+              await new Promise((res) => setTimeout(res, 1000 * attempt));
+              continue;
+            }
+          }
+          break; // Don't retry on 400 bad request, etc.
+        } catch (err) {
+          if (attempt === 3) throw err;
+          await new Promise((res) => setTimeout(res, 1000 * attempt));
+        }
+      }
+      
+      if (!response) {
+        throw new Error("Failed to get response after 3 attempts");
+      }
 
       if (!response.ok) {
         const errText = await response.text();

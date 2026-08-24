@@ -200,6 +200,7 @@ export function AdminLayoutClient({
                   src={settings?.logo_url}
                   alt={settings?.site_name || "Istanbul Photographer"}
                   fill
+                  sizes="180px"
                   className="object-contain object-left"
                   priority
                 />
