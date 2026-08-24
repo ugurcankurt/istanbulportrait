@@ -17,10 +17,27 @@ async function fetchWithRetry(
       (res.status === 429 || res.status === 503 || res.status === 500) &&
       retries < MAX_RETRIES
     ) {
+      let delaySeconds = 2 ** retries;
+      try {
+        const resClone = res.clone();
+        const errorData = await resClone.json();
+        const retryDelayStr = errorData?.error?.details?.find(
+          (d: any) => d["@type"] === "type.googleapis.com/google.rpc.RetryInfo",
+        )?.retryDelay;
+        if (retryDelayStr) {
+          const parsedDelay = Number.parseInt(retryDelayStr.replace("s", ""), 10);
+          if (!Number.isNaN(parsedDelay)) {
+            delaySeconds = parsedDelay + 2; // add 2s buffer
+          }
+        }
+      } catch (e) {
+        // ignore
+      }
+
       console.warn(
-        `Gemini API returned ${res.status}. Retrying in ${2 ** retries}s...`,
+        `Gemini API returned ${res.status}. Retrying in ${delaySeconds}s...`,
       );
-      await new Promise((r) => setTimeout(r, 2 ** retries * 1000));
+      await new Promise((r) => setTimeout(r, delaySeconds * 1000));
       return fetchWithRetry(url, options, retries + 1);
     }
     return res;
@@ -83,21 +100,28 @@ export async function POST(req: Request) {
       );
     }
 
-    // Process locales sequentially to avoid Gemini Free Tier burst rate limits (15 RPM)
+    // Process locales in batches to avoid Gemini Free Tier burst rate limits (15 RPM)
+    // while keeping output tokens manageable for long blog posts
     const translations: Record<string, any> = {};
-    for (const loc of TARGET_LOCALES) {
+    const chunkSize = 2;
+    for (let i = 0; i < TARGET_LOCALES.length; i += chunkSize) {
+      const chunkLocales = TARGET_LOCALES.slice(i, i + chunkSize);
+      
       const prompt = `
 You are an expert localization specialist and marketing copywriter. 
-Translate the following blog post content from English into ${loc}.
-Maintain the exact HTML structure, styling, and tone. 
-Return ONLY a valid JSON object in this exact format, with no markdown wrappers or additional text:
+Translate the following blog post content from English into the following languages: ${chunkLocales.join(", ")}.
+Maintain the exact HTML structure, styling, and tone for each language. 
+Return ONLY a valid minified JSON object where keys are the locale codes and values are the translated objects. Do not include markdown wrappers or additional text.
+Example format:
 {
-  "title": "Translated title",
-  "content": "Translated HTML content",
-  "seo_title": "Translated SEO title",
-  "meta_description": "Translated meta description",
-  "meta_keywords": ["translated", "keywords", "array"],
-  "excerpt": "Translated excerpt"
+  "${chunkLocales[0]}": {
+    "title": "Translated title",
+    "content": "Translated HTML content",
+    "seo_title": "Translated SEO title",
+    "meta_description": "Translated meta description",
+    "meta_keywords": ["translated", "keywords", "array"],
+    "excerpt": "Translated excerpt"
+  }
 }
 
 Title to translate:
@@ -138,16 +162,16 @@ ${content}
 
         if (!response.ok) {
           console.error(
-            `Failed to translate for ${loc}: ${await response.text()}`,
+            `Failed to translate for ${chunkLocales.join(", ")}: ${await response.text()}`,
           );
-          continue; // Do not throw, just skip this language
+          continue; // Do not throw, just skip this chunk
         }
 
         const data = await response.json();
         const textOutput = data.candidates?.[0]?.content?.parts?.[0]?.text;
 
         if (!textOutput) {
-          console.error(`No content from Gemini for ${loc}`);
+          console.error(`No content from Gemini for ${chunkLocales.join(", ")}`);
           continue;
         }
 
@@ -155,16 +179,22 @@ ${content}
         try {
           parsed = JSON.parse(textOutput.trim());
         } catch (e) {
-          console.error(`Invalid JSON from Gemini for ${loc}: ${textOutput}`);
+          console.error(`Invalid JSON from Gemini for ${chunkLocales.join(", ")}: ${textOutput}`);
           continue;
         }
-        translations[loc] = parsed;
+        
+        // Assign chunk results back to the main translations object
+        for (const loc of chunkLocales) {
+          if (parsed[loc]) {
+            translations[loc] = parsed[loc];
+          }
+        }
       } catch (err: any) {
-        console.error(`Error translating ${loc}:`, err);
+        console.error(`Error translating ${chunkLocales.join(", ")}:`, err);
       }
 
-      // Delay slightly to respect Gemini's 15 RPM free tier limit when translating 8 languages at once
-      await new Promise((resolve) => setTimeout(resolve, 1500));
+      // Delay slightly to respect Gemini's 15 RPM free tier limit
+      await new Promise((resolve) => setTimeout(resolve, 3000));
     }
 
     return NextResponse.json({ translations });
