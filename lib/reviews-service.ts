@@ -209,6 +209,7 @@ class ReviewsService {
       if (locale !== "en" && finalReviews.length > 0) {
         const reviewsToTranslate = finalReviews
           .filter((r) => r.text && r.text.trim().length > 0)
+          .slice(0, 15) // Optimize: Translate max 15 reviews instead of 100 to drastically speed up API calls
           .map((r) => ({ id: r.id, text: r.text }));
 
         if (reviewsToTranslate.length > 0) {

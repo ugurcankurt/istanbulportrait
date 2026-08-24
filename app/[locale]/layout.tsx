@@ -207,8 +207,9 @@ export default async function LocaleLayout({
     >
       <head>
         {/* Google Consent Mode v2 Default State - MUST be first before any analytics */}
-        <script
+        <Script
           id="google-consent-default"
+          strategy="beforeInteractive"
           dangerouslySetInnerHTML={{
             __html: `
               window.dataLayer = window.dataLayer || [];
