@@ -81,7 +81,6 @@ export async function POST(request: NextRequest) {
       // 1. Upsert Customer
       const { error: customerError } = await supabaseAdmin
         .from("customers")
-        // @ts-expect-error - Bypass strict generic constraints
         .upsert(
           {
             email: customerEmail,
@@ -103,7 +102,6 @@ export async function POST(request: NextRequest) {
       // 2. Create Draft Booking
       const { data: booking, error } = await supabaseAdmin
         .from("bookings")
-        // @ts-expect-error - Bypass strict generic constraints
         .insert({
           package_id: packageId,
           user_name: customerName,

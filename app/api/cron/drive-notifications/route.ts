@@ -147,7 +147,6 @@ export async function GET(request: Request) {
           metadata.notifications = notifications;
           const { error: updateError } = await supabaseAdmin
             .from("bookings")
-            // @ts-expect-error
             .update({ payment_metadata: metadata })
             .eq("id", booking.id);
 
