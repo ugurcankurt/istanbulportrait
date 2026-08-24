@@ -14,8 +14,8 @@ import {
   getClientIP,
 } from "@/lib/rate-limit";
 import {
-  sendBookingConfirmation,
   sendAdminBookingNotification,
+  sendBookingConfirmation,
 } from "@/lib/resend";
 import { settingsService } from "@/lib/settings-service";
 import { supabaseAdmin } from "@/lib/supabase";

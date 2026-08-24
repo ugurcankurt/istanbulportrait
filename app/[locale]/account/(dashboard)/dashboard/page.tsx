@@ -1,19 +1,19 @@
-import { getServerUser } from "@/lib/auth-server";
-import { createServerSupabaseClient } from "@/lib/supabase/server";
-import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { formatCurrency } from "@/lib/currency";
 import {
+  ArrowRight,
   Calendar,
+  CheckCircle,
   Clock,
   Image as ImageIcon,
-  CheckCircle,
   Package,
-  ArrowRight,
 } from "lucide-react";
-import { Link } from "@/i18n/routing";
-import { Button } from "@/components/ui/button";
 import { getTranslations } from "next-intl/server";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Link } from "@/i18n/routing";
+import { getServerUser } from "@/lib/auth-server";
+import { formatCurrency } from "@/lib/currency";
+import { createServerSupabaseClient } from "@/lib/supabase/server";
 
 export default async function CustomerDashboardPage() {
   const user = await getServerUser();

@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
-import { getAllAuthors } from "@/lib/blog/blog-service";
 import { getServerUser } from "@/lib/auth-server";
+import { getAllAuthors } from "@/lib/blog/blog-service";
 
 export async function GET() {
   try {

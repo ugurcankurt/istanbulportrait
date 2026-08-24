@@ -1,10 +1,9 @@
 import { BreadcrumbNav } from "@/components/breadcrumb-nav";
 import { LocationCard } from "@/components/location-card";
 import { PageHeroSection } from "@/components/page-hero-section";
-import { locationsService } from "@/lib/locations-service";
-
-import { pagesContentService } from "@/lib/pages-content-service";
 import { SchemaInjector } from "@/components/schema-injector";
+import { locationsService } from "@/lib/locations-service";
+import { pagesContentService } from "@/lib/pages-content-service";
 import {
   buildCollectionPageSchema,
   generateSeoDescription,

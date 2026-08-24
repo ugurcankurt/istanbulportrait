@@ -1,11 +1,10 @@
-import { getServerUser } from "@/lib/auth-server";
-import { Link } from "@/i18n/routing";
-import { redirect } from "next/navigation";
-import ClientGallery from "@/components/gallery/client-gallery";
 import { ArrowLeft } from "lucide-react";
-import { Button } from "@/components/ui/button";
-
+import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
+import ClientGallery from "@/components/gallery/client-gallery";
+import { Button } from "@/components/ui/button";
+import { Link } from "@/i18n/routing";
+import { getServerUser } from "@/lib/auth-server";
 
 export default async function GalleryPage({
   params,

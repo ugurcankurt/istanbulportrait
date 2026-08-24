@@ -1,10 +1,11 @@
 "use client";
 
+import { Lock, Mail } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
-import { createClientSupabaseClient } from "@/lib/supabase/client";
+import { toast } from "sonner";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import {
   Card,
   CardContent,
@@ -12,12 +13,11 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Spinner } from "@/components/ui/spinner";
-import { Lock, Mail } from "lucide-react";
 import { useRouter } from "@/i18n/routing";
-import { useTranslations } from "next-intl";
-import { toast } from "sonner";
+import { createClientSupabaseClient } from "@/lib/supabase/client";
 
 export default function CustomerLoginPage() {
   const t = useTranslations("account.login");

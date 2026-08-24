@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 import { getFileStream } from "@/lib/google-drive";
 
 // Helper to convert Node.js Readable stream to Web ReadableStream

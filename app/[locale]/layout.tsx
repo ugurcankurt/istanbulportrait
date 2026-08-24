@@ -1,8 +1,8 @@
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import {
-  Instrument_Sans,
   Geist_Mono,
+  Instrument_Sans,
   Playfair_Display,
 } from "next/font/google";
 import Script from "next/script";
@@ -15,19 +15,20 @@ import { YandexMetrica } from "@/components/analytics/yandex-metrica";
 import { ConsentGate } from "@/components/consent-gate";
 import { ConsentProvider } from "@/contexts/consent-context";
 import "../globals.css";
+import type { Metadata } from "next";
 import dynamic from "next/dynamic";
 import { ThemeProvider } from "next-themes";
+import { SchemaInjector } from "@/components/schema-injector";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { Metadata } from "next";
-import { SchemaInjector } from "@/components/schema-injector";
+import { CurrencyProvider } from "@/contexts/currency-context";
 import {
   buildOrganizationSchema,
   constructOpenGraph,
   getBaseUrl,
   optimizeSeoImage,
 } from "@/lib/seo-utils";
-import { CurrencyProvider } from "@/contexts/currency-context";
+
 const WhatsAppButton = dynamic(() =>
   import("@/components/whatsapp-button").then((mod) => mod.WhatsAppButton),
 );

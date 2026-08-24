@@ -1,7 +1,7 @@
-import { NextResponse } from "next/server";
-import { settingsService } from "@/lib/settings-service";
 import { createClient } from "@supabase/supabase-js";
+import { NextResponse } from "next/server";
 import { sendAdminLeadNotification } from "@/lib/resend";
+import { settingsService } from "@/lib/settings-service";
 
 export async function POST(request: Request) {
   try {

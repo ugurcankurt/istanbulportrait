@@ -1,5 +1,5 @@
-import { pagesContentService } from "@/lib/pages-content-service";
 import { PageForm } from "@/components/admin/pages/page-form";
+import { pagesContentService } from "@/lib/pages-content-service";
 
 interface EditPageAdminProps {
   params: Promise<{

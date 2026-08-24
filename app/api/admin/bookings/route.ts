@@ -8,8 +8,8 @@ import {
   sanitizeErrorForProduction,
   ValidationError,
 } from "@/lib/errors";
-import { settingsService } from "@/lib/settings-service";
 import { sendBookingCancellationEmail } from "@/lib/resend";
+import { settingsService } from "@/lib/settings-service";
 
 export async function GET(request: NextRequest) {
   try {

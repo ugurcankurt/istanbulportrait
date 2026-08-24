@@ -1,17 +1,20 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { toast } from "sonner";
 import { format } from "date-fns";
 import {
   Calendar as CalendarIcon,
   Clock,
-  Plus,
-  Trash2,
-  ShieldAlert,
   PercentCircle,
+  Plus,
+  ShieldAlert,
+  Trash2,
   TrendingUp,
 } from "lucide-react";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
+import { Badge } from "@/components/ui/badge";
+import { Button, buttonVariants } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
 import {
   Card,
   CardContent,
@@ -19,9 +22,21 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button, buttonVariants } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import {
   Select,
   SelectContent,
@@ -29,7 +44,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Input } from "@/components/ui/input";
 import {
   Table,
   TableBody,
@@ -39,26 +53,12 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { Calendar } from "@/components/ui/calendar";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { cn } from "@/lib/utils";
-import {
-  availabilityService,
   type AvailabilitySettings,
+  availabilityService,
   type BlockedSlot,
   type TimeSurcharge,
 } from "@/lib/availability-service";
+import { cn } from "@/lib/utils";
 
 const TIME_OPTIONS = Array.from({ length: 17 * 2 }, (_, i) => {
   const hour = Math.floor(i / 2) + 6;

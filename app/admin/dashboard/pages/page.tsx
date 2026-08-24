@@ -1,10 +1,18 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { CheckCircle2, Pencil, Plus, Trash2, XCircle } from "lucide-react";
 import Link from "next/link";
-import { Plus, Pencil, Trash2, CheckCircle2, XCircle } from "lucide-react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { pagesContentService, type PageDB } from "@/lib/pages-content-service";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import {
   Table,
   TableBody,
@@ -13,15 +21,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-} from "@/components/ui/card";
+import { type PageDB, pagesContentService } from "@/lib/pages-content-service";
 
 const PAGE_CONFIGS = [
   { slug: "home", type: "Page", label: "Home Page" },

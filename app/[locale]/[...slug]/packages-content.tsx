@@ -1,16 +1,17 @@
 import dynamic from "next/dynamic";
 import { BreadcrumbNav } from "@/components/breadcrumb-nav";
 import { PageHeroSection } from "@/components/page-hero-section";
+
 const PackagesSection = dynamic(() =>
   import("@/components/packages-section").then((mod) => mod.PackagesSection),
 );
-import { GygActivitiesSection } from "@/components/gyg-activities-section";
-import { reviewsService } from "@/lib/reviews-service";
-import { packagesService, type PackageDB } from "@/lib/packages-service";
 
-import { pagesContentService } from "@/lib/pages-content-service";
-import { discountService } from "@/lib/discount-service";
+import { GygActivitiesSection } from "@/components/gyg-activities-section";
 import { SchemaInjector } from "@/components/schema-injector";
+import { discountService } from "@/lib/discount-service";
+import { type PackageDB, packagesService } from "@/lib/packages-service";
+import { pagesContentService } from "@/lib/pages-content-service";
+import { reviewsService } from "@/lib/reviews-service";
 import {
   buildCollectionPageSchema,
   generateSeoDescription,

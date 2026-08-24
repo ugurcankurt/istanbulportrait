@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
-import { packagesService } from "@/lib/packages-service";
-import { getBaseUrl, generateSeoDescription } from "@/lib/seo-utils";
 import { discountService } from "@/lib/discount-service";
+import { packagesService } from "@/lib/packages-service";
 import { reviewsService } from "@/lib/reviews-service";
+import { generateSeoDescription, getBaseUrl } from "@/lib/seo-utils";
 
 export const dynamic = "force-dynamic";
 
@@ -39,7 +39,7 @@ export async function GET(request: Request) {
     const id = pkg.slug;
 
     // 2. Title
-    let title = pkg.title?.[locale] || pkg.title?.en || "Photography Package";
+    const title = pkg.title?.[locale] || pkg.title?.en || "Photography Package";
 
     // 3. Description
     const rawDesc = pkg.description?.[locale] || pkg.description?.en || title;

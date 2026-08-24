@@ -1,20 +1,20 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { format } from "date-fns";
 import {
-  Plus,
-  Trash2,
-  Edit2,
   CheckCircle2,
-  TicketPercent,
+  Edit2,
+  Plus,
   Save,
+  TicketPercent,
+  Trash2,
   X,
 } from "lucide-react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
-import { format } from "date-fns";
 import type { DiscountDB } from "@/lib/discount-service";
 
 export default function DiscountsPage() {

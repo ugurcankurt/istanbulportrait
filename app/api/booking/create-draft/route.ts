@@ -1,5 +1,6 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
+import { Resend } from "resend";
 import { z } from "zod";
 import {
   DatabaseConnectionError,
@@ -14,10 +15,9 @@ import {
   createRateLimitError,
   getClientIP,
 } from "@/lib/rate-limit";
+import { settingsService } from "@/lib/settings-service";
 import { supabaseAdmin } from "@/lib/supabase";
 import { baseBookingSchema } from "@/lib/validations";
-import { Resend } from "resend";
-import { settingsService } from "@/lib/settings-service";
 
 // Extended schema to include locale
 const draftSchema = baseBookingSchema
@@ -81,7 +81,7 @@ export async function POST(request: NextRequest) {
       // 1. Upsert Customer
       const { error: customerError } = await supabaseAdmin
         .from("customers")
-        // @ts-ignore - Bypass strict generic constraints
+        // @ts-expect-error - Bypass strict generic constraints
         .upsert(
           {
             email: customerEmail,
@@ -103,7 +103,7 @@ export async function POST(request: NextRequest) {
       // 2. Create Draft Booking
       const { data: booking, error } = await supabaseAdmin
         .from("bookings")
-        // @ts-ignore - Bypass strict generic constraints
+        // @ts-expect-error - Bypass strict generic constraints
         .insert({
           package_id: packageId,
           user_name: customerName,

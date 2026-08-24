@@ -1,7 +1,7 @@
+import { createClient } from "@supabase/supabase-js";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { packagesService } from "@/lib/packages-service";
-import { createClient } from "@supabase/supabase-js";
 
 export async function DELETE(
   request: NextRequest,

@@ -1,26 +1,25 @@
 import Image from "next/image";
-import { getTranslations } from "next-intl/server";
-import { PageHeroSection } from "@/components/page-hero-section";
-import { BreadcrumbNav } from "@/components/breadcrumb-nav";
-import { AspectRatio } from "@/components/ui/aspect-ratio";
 import NextLink from "next/link";
+import { notFound } from "next/navigation";
+import { getTranslations } from "next-intl/server";
+import { BreadcrumbNav } from "@/components/breadcrumb-nav";
+import { PageHeroSection } from "@/components/page-hero-section";
+import { SchemaInjector } from "@/components/schema-injector";
+import { AspectRatio } from "@/components/ui/aspect-ratio";
 import {
-  getPublishedBlogPosts,
   getBlogCategoryBySlug,
   getBlogTagBySlug,
+  getPublishedBlogPosts,
 } from "@/lib/blog/blog-service";
 import { formatBlogDate } from "@/lib/blog/blog-utils";
-
-import type { Locale } from "@/types/blog";
 import { pagesContentService } from "@/lib/pages-content-service";
-import { generateNativeSlug } from "@/lib/slug-generator";
-import { SchemaInjector } from "@/components/schema-injector";
 import {
   buildCollectionPageSchema,
   generateSeoDescription,
   getBaseUrl,
 } from "@/lib/seo-utils";
-import { notFound } from "next/navigation";
+import { generateNativeSlug } from "@/lib/slug-generator";
+import type { Locale } from "@/types/blog";
 
 export const dynamic = "force-dynamic";
 

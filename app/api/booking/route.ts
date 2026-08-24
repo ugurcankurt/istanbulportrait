@@ -7,6 +7,7 @@ import {
   sanitizeErrorForProduction,
   ValidationError,
 } from "@/lib/errors";
+import { packagesService } from "@/lib/packages-service";
 import {
   checkRateLimit,
   createRateLimitError,
@@ -14,7 +15,6 @@ import {
 } from "@/lib/rate-limit";
 import { supabaseAdmin } from "@/lib/supabase";
 import { bookingSchema } from "@/lib/validations";
-import { packagesService } from "@/lib/packages-service";
 
 export async function POST(request: NextRequest) {
   const startTime = Date.now();

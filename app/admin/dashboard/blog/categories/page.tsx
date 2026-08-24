@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowLeft, Edit, Plus, Trash, Sparkles } from "lucide-react";
+import { ArrowLeft, Edit, Plus, Sparkles, Trash } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";

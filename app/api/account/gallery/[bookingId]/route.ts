@@ -1,8 +1,8 @@
-import { NextRequest, NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 import { getServerUser } from "@/lib/auth-server";
-import { createServerSupabaseClient } from "@/lib/supabase/server";
-import { listFilesInFolder, getGalleryFilesGrouped } from "@/lib/google-drive";
 import { extractPhotosCount } from "@/lib/features-parser";
+import { getGalleryFilesGrouped, listFilesInFolder } from "@/lib/google-drive";
+import { createServerSupabaseClient } from "@/lib/supabase/server";
 
 export async function GET(
   request: NextRequest,

@@ -1,5 +1,5 @@
-import { getServerUser } from "@/lib/auth-server";
 import { redirect } from "next/navigation";
+import { getServerUser } from "@/lib/auth-server";
 
 export default async function LoginLayout({
   children,

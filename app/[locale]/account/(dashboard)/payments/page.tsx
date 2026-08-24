@@ -1,16 +1,16 @@
-import { getServerUser } from "@/lib/auth-server";
-import { createServerSupabaseAdminClient } from "@/lib/supabase/server";
-import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { formatCurrency } from "@/lib/currency";
 import {
-  Receipt,
+  CreditCard as CardIcon,
   CheckCircle,
   Clock,
-  CreditCard as CardIcon,
+  Receipt,
 } from "lucide-react";
 import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
+import { getServerUser } from "@/lib/auth-server";
+import { formatCurrency } from "@/lib/currency";
+import { createServerSupabaseAdminClient } from "@/lib/supabase/server";
 
 export default async function CustomerPaymentsPage() {
   const user = await getServerUser();

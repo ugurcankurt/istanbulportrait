@@ -1,5 +1,5 @@
-import { NextResponse } from "next/server";
 import { unstable_cache } from "next/cache";
+import { NextResponse } from "next/server";
 import { packagesService } from "@/lib/packages-service";
 
 // Define a stable cache time for identical search intents (e.g. 30 days)

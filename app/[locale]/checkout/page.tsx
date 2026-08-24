@@ -2,8 +2,8 @@ import { getTranslations } from "next-intl/server";
 import { Suspense } from "react";
 import { CheckoutForm } from "@/components/checkout-form";
 import { Skeleton } from "@/components/ui/skeleton";
-import { getLocalizedPaths } from "@/lib/localized-url";
 import { availabilityService } from "@/lib/availability-service";
+import { getLocalizedPaths } from "@/lib/localized-url";
 
 export async function generateMetadata({
   params,

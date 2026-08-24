@@ -1,11 +1,11 @@
 import { NextResponse } from "next/server";
-import { supabaseAdmin } from "@/lib/supabase";
-import { settingsService } from "@/lib/settings-service";
-import {
-  sendRawPhotosReadyEmail,
-  sendFinalEditsReadyEmail,
-} from "@/lib/resend";
 import { getGalleryFilesGrouped } from "@/lib/google-drive";
+import {
+  sendFinalEditsReadyEmail,
+  sendRawPhotosReadyEmail,
+} from "@/lib/resend";
+import { settingsService } from "@/lib/settings-service";
+import { supabaseAdmin } from "@/lib/supabase";
 
 export const dynamic = "force-dynamic";
 
@@ -147,7 +147,7 @@ export async function GET(request: Request) {
           metadata.notifications = notifications;
           const { error: updateError } = await supabaseAdmin
             .from("bookings")
-            // @ts-ignore
+            // @ts-expect-error
             .update({ payment_metadata: metadata })
             .eq("id", booking.id);
 

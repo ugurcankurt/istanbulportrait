@@ -1,14 +1,13 @@
-import { Link } from "@/i18n/routing";
-import { redirect } from "next/navigation";
-import { getServerUser } from "@/lib/auth-server";
 import { LogOut } from "lucide-react";
+import Image from "next/image";
+import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
+import { Link } from "@/i18n/routing";
+import { getServerUser } from "@/lib/auth-server";
+import { settingsService } from "@/lib/settings-service";
+import { cn } from "@/lib/utils";
 import { MobileNav } from "../../../../components/account/mobile-nav";
 import { SidebarNav } from "../../../../components/account/sidebar-nav";
-
-import { settingsService } from "@/lib/settings-service";
-import Image from "next/image";
-import { cn } from "@/lib/utils";
 
 export default async function AccountLayout({
   children,

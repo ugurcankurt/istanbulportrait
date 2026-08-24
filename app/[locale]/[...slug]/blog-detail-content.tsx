@@ -3,28 +3,28 @@ import { notFound, redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import ReactMarkdown from "react-markdown";
 import rehypeRaw from "rehype-raw";
+import rehypeSlug from "rehype-slug";
 import remarkGfm from "remark-gfm";
 import { BlogAuthor } from "@/components/blog-author";
+import { BlogCard } from "@/components/blog-card";
 import { BlogSummary } from "@/components/blog-summary";
 import { BreadcrumbNav } from "@/components/breadcrumb-nav";
+import { SchemaInjector } from "@/components/schema-injector";
+import { TableOfContents } from "@/components/table-of-contents";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import {
   getBlogPostBySlug,
-  getSalvagedBlogSlug,
   getPublishedBlogPosts,
+  getSalvagedBlogSlug,
 } from "@/lib/blog/blog-service";
-import rehypeSlug from "rehype-slug";
-import { TableOfContents } from "@/components/table-of-contents";
-import { BlogCard } from "@/components/blog-card";
 import { formatBlogDate } from "@/lib/blog/blog-utils";
-import { settingsService } from "@/lib/settings-service";
-import type { Locale } from "@/types/blog";
 import {
-  generateSeoDescription,
   buildArticleSchema,
+  generateSeoDescription,
   getBaseUrl,
 } from "@/lib/seo-utils";
-import { SchemaInjector } from "@/components/schema-injector";
+import { settingsService } from "@/lib/settings-service";
+import type { Locale } from "@/types/blog";
 
 export async function BlogDetailPageContent({
   locale,

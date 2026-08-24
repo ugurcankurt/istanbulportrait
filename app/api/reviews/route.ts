@@ -1,5 +1,5 @@
-import { reviewsService } from "@/lib/reviews-service";
 import { NextResponse } from "next/server";
+import { reviewsService } from "@/lib/reviews-service";
 
 export const revalidate = 3600; // 1 hour
 

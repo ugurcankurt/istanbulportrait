@@ -1,6 +1,7 @@
-import { getTranslations } from "next-intl/server";
 import { Star } from "lucide-react";
+import { getTranslations } from "next-intl/server";
 export const revalidate = 60;
+
 import dynamic from "next/dynamic";
 import { HeroSection } from "@/components/hero-section";
 import { HomeGalleryWrapper } from "@/components/home-gallery-wrapper";
@@ -24,20 +25,20 @@ const NewsletterSection = dynamic(() =>
   ),
 );
 
-import { pagesContentService } from "@/lib/pages-content-service";
-import { packagesService } from "@/lib/packages-service";
+import type { Metadata } from "next";
+import { SchemaInjector } from "@/components/schema-injector";
 import { discountService } from "@/lib/discount-service";
+import { packagesService } from "@/lib/packages-service";
+import { pagesContentService } from "@/lib/pages-content-service";
 import { reviewsService } from "@/lib/reviews-service";
-import { Metadata } from "next";
 import {
+  buildFAQSchema,
+  buildLocalBusinessSchema,
+  constructOpenGraph,
   generateSeoDescription,
   generateSeoTitle,
-  constructOpenGraph,
-  buildFAQSchema,
   getBaseUrl,
-  buildLocalBusinessSchema,
 } from "@/lib/seo-utils";
-import { SchemaInjector } from "@/components/schema-injector";
 import { settingsService } from "@/lib/settings-service";
 
 export async function generateMetadata({
@@ -197,7 +198,7 @@ export default async function HomePage({
   const dynamicFaqs = getDynamicFaqs();
 
   // Dynamic Price Range Calculation for LocalBusiness Schema (Google April 2026 guidelines)
-  let priceRangeStr = undefined;
+  let priceRangeStr;
   if (activePackages && activePackages.length > 0) {
     const prices = activePackages
       .map((p) => p.price)

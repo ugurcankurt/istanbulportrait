@@ -1,13 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { Save, Sparkles } from "lucide-react";
-import { Spinner } from "@/components/ui/spinner";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import { ThemeCustomizer } from "@/components/admin/theme-customizer";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -15,10 +12,13 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { WebpImageUploader } from "@/components/ui/webp-image-uploader";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Spinner } from "@/components/ui/spinner";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { SiteSettings, defaultSettings } from "@/lib/settings-service";
-import { ThemeCustomizer } from "@/components/admin/theme-customizer";
+import { Textarea } from "@/components/ui/textarea";
+import { WebpImageUploader } from "@/components/ui/webp-image-uploader";
+import { defaultSettings, type SiteSettings } from "@/lib/settings-service";
 
 const SUPPORTED_LOCALES = [
   "en",
@@ -537,6 +537,7 @@ export default function SettingsPage() {
                     href="https://openrouter.ai/keys"
                     target="_blank"
                     className="text-primary hover:underline"
+                    rel="noopener"
                   >
                     OpenRouter
                   </a>

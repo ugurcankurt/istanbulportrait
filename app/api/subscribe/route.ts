@@ -1,10 +1,10 @@
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
-import { checkRateLimit, createRateLimitError } from "@/lib/rate-limit";
-import { settingsService } from "@/lib/settings-service";
-import { promoService } from "@/lib/promo-service";
-import { sendNewsletterWelcomeEmail } from "@/lib/resend";
 import { z } from "zod";
+import { promoService } from "@/lib/promo-service";
+import { checkRateLimit, createRateLimitError } from "@/lib/rate-limit";
+import { sendNewsletterWelcomeEmail } from "@/lib/resend";
+import { settingsService } from "@/lib/settings-service";
 
 const subscribeSchema = z.object({
   firstName: z.string().min(2, "First name is too short."),

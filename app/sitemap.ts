@@ -1,8 +1,8 @@
-import { MetadataRoute } from "next";
-import { pagesContentService } from "@/lib/pages-content-service";
-import { packagesService } from "@/lib/packages-service";
-import { locationsService } from "@/lib/locations-service";
+import type { MetadataRoute } from "next";
 import { routing } from "@/i18n/routing";
+import { locationsService } from "@/lib/locations-service";
+import { packagesService } from "@/lib/packages-service";
+import { pagesContentService } from "@/lib/pages-content-service";
 import { getBaseUrl } from "@/lib/seo-utils";
 
 export const dynamic = "force-dynamic";

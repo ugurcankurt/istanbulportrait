@@ -3,11 +3,11 @@ import { getTranslations } from "next-intl/server";
 import { BreadcrumbNav } from "@/components/breadcrumb-nav";
 import { PackageDetails } from "@/components/package-details";
 import { PackagesSection } from "@/components/packages-section";
-import { packagesService } from "@/lib/packages-service";
-import { discountService } from "@/lib/discount-service";
-import { reviewsService } from "@/lib/reviews-service";
-import { availabilityService } from "@/lib/availability-service";
 import { SchemaInjector } from "@/components/schema-injector";
+import { availabilityService } from "@/lib/availability-service";
+import { discountService } from "@/lib/discount-service";
+import { packagesService } from "@/lib/packages-service";
+import { reviewsService } from "@/lib/reviews-service";
 import {
   buildServiceSchema,
   generateSeoDescription,

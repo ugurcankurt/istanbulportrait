@@ -1,17 +1,16 @@
 import { getTranslations } from "next-intl/server";
-import { PageHeroSection } from "@/components/page-hero-section";
 import { AboutSection } from "@/components/about-section";
 import { BreadcrumbNav } from "@/components/breadcrumb-nav";
-
-import { pagesContentService } from "@/lib/pages-content-service";
-import { settingsService } from "@/lib/settings-service";
+import { PageHeroSection } from "@/components/page-hero-section";
 import { SchemaInjector } from "@/components/schema-injector";
+import { pagesContentService } from "@/lib/pages-content-service";
 import {
   buildAboutPageSchema,
   buildOrganizationSchema,
   generateSeoDescription,
   getBaseUrl,
 } from "@/lib/seo-utils";
+import { settingsService } from "@/lib/settings-service";
 
 export async function AboutPageContent({
   params,

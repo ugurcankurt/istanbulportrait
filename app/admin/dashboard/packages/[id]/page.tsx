@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
-import { packagesService } from "@/lib/packages-service";
 import { PackageForm } from "@/components/admin/packages/package-form";
+import { packagesService } from "@/lib/packages-service";
 
 interface EditPackagePageProps {
   params: Promise<{

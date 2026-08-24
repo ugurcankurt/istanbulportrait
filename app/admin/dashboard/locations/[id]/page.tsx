@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
-import { locationsService } from "@/lib/locations-service";
 import { LocationForm } from "@/components/admin/locations/location-form";
+import { locationsService } from "@/lib/locations-service";
 
 export default async function EditLocationPage({
   params,

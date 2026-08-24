@@ -1,35 +1,17 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import Link from "next/link";
 import {
-  Plus,
-  Pencil,
-  Trash2,
   CheckCircle2,
-  XCircle,
   MapPin as MapPinIcon,
+  Pencil,
+  Plus,
+  Trash2,
+  XCircle,
 } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { locationsService, type LocationDB } from "@/lib/locations-service";
-import { deleteLocationImage } from "@/lib/storage-utils";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import {
-  Empty,
-  EmptyDescription,
-  EmptyMedia,
-  EmptyTitle,
-} from "@/components/ui/empty";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -40,13 +22,31 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
+  CardDescription,
   CardHeader,
   CardTitle,
-  CardDescription,
 } from "@/components/ui/card";
+import {
+  Empty,
+  EmptyDescription,
+  EmptyMedia,
+  EmptyTitle,
+} from "@/components/ui/empty";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { type LocationDB, locationsService } from "@/lib/locations-service";
+import { deleteLocationImage } from "@/lib/storage-utils";
 
 export default function LocationsAdminPage() {
   const [locations, setLocations] = useState<LocationDB[]>([]);

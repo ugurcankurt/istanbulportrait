@@ -1,9 +1,9 @@
-import { NextRequest, NextResponse } from "next/server";
-import { getServerUser } from "@/lib/auth-server";
-import { createServerSupabaseClient } from "@/lib/supabase/server";
-import { getFileStream } from "@/lib/google-drive";
 import archiver from "archiver";
+import { type NextRequest, NextResponse } from "next/server";
 import { PassThrough } from "stream";
+import { getServerUser } from "@/lib/auth-server";
+import { getFileStream } from "@/lib/google-drive";
+import { createServerSupabaseClient } from "@/lib/supabase/server";
 
 function nodeStreamToWebStream(
   nodeStream: NodeJS.ReadableStream,

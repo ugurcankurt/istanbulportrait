@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server";
-import { packagesService } from "@/lib/packages-service";
-import { getBaseUrl, generateSeoDescription } from "@/lib/seo-utils";
-import { settingsService } from "@/lib/settings-service";
 import { discountService } from "@/lib/discount-service";
+import { packagesService } from "@/lib/packages-service";
 import { reviewsService } from "@/lib/reviews-service";
+import { generateSeoDescription, getBaseUrl } from "@/lib/seo-utils";
+import { settingsService } from "@/lib/settings-service";
 
 export const dynamic = "force-dynamic";
 
@@ -50,7 +50,7 @@ export async function GET(request: Request) {
   };
 
   const escapeXml = (unsafe: string) => {
-    return unsafe.replace(/[<>&'"]/g, function (c) {
+    return unsafe.replace(/[<>&'"]/g, (c) => {
       switch (c) {
         case "<":
           return "&lt;";

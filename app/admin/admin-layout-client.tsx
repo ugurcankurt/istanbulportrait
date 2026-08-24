@@ -1,22 +1,21 @@
 "use client";
-import { Spinner } from "@/components/ui/spinner";
 
 import {
   BookOpen,
   Calendar,
+  CreditCard,
+  FileText,
   LayoutDashboard,
   LogOut,
-  Package,
-  Users,
-  FileText,
   MapPin,
+  Package,
   Settings,
-  TicketPercent,
   Ticket,
-  CreditCard,
+  TicketPercent,
+  Users,
 } from "lucide-react";
-import Link from "next/link";
 import Image from "next/image";
+import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
@@ -35,6 +34,7 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
+import { Spinner } from "@/components/ui/spinner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { useAuthStore } from "@/stores/auth-store";
 

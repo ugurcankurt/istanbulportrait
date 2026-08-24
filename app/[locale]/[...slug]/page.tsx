@@ -3,33 +3,31 @@ import { pagesContentService } from "@/lib/pages-content-service";
 
 export const revalidate = 60;
 
-import { AboutPageContent } from "./about-content";
-import { ContactPageContent } from "./contact-content";
-import { PrivacyPageContent } from "./privacy-content";
-import { PackagesPageContent } from "./packages-content";
-import { LocationsPageContent } from "./locations-content";
-import { BlogPageContent } from "./blog-content";
-
-import { LocationDetailPageContent } from "./location-detail-content";
-import { PackageDetailPageContent } from "./package-detail-content";
-import { BlogDetailPageContent } from "./blog-detail-content";
-import { BlogCategoryContent } from "./blog-category-content";
-
-import { Metadata } from "next";
-import {
-  generateSeoDescription,
-  generateSeoTitle,
-  constructOpenGraph,
-  getBaseUrl,
-  optimizeSeoImage,
-} from "@/lib/seo-utils";
-import { packagesService } from "@/lib/packages-service";
-import { locationsService } from "@/lib/locations-service";
+import type { Metadata } from "next";
 import {
   getBlogCategoryBySlug,
   getBlogPostBySlug,
   getBlogTagBySlug,
 } from "@/lib/blog/blog-service";
+import { locationsService } from "@/lib/locations-service";
+import { packagesService } from "@/lib/packages-service";
+import {
+  constructOpenGraph,
+  generateSeoDescription,
+  generateSeoTitle,
+  getBaseUrl,
+  optimizeSeoImage,
+} from "@/lib/seo-utils";
+import { AboutPageContent } from "./about-content";
+import { BlogCategoryContent } from "./blog-category-content";
+import { BlogPageContent } from "./blog-content";
+import { BlogDetailPageContent } from "./blog-detail-content";
+import { ContactPageContent } from "./contact-content";
+import { LocationDetailPageContent } from "./location-detail-content";
+import { LocationsPageContent } from "./locations-content";
+import { PackageDetailPageContent } from "./package-detail-content";
+import { PackagesPageContent } from "./packages-content";
+import { PrivacyPageContent } from "./privacy-content";
 
 export async function generateMetadata(props: {
   params: Promise<{ locale: string; slug: string[] }>;

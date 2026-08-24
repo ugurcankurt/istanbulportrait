@@ -3,13 +3,13 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { BreadcrumbNav } from "@/components/breadcrumb-nav";
+import { LocationCard } from "@/components/location-card";
+import { SchemaInjector } from "@/components/schema-injector";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { LocationCard } from "@/components/location-card";
 import { Link } from "@/i18n/routing";
 import { locationsService } from "@/lib/locations-service";
-import { SchemaInjector } from "@/components/schema-injector";
 import {
   buildTouristAttractionSchema,
   generateSeoDescription,

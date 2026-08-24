@@ -1,6 +1,6 @@
-import { Outfit, Geist_Mono, Playfair_Display } from "next/font/google";
-import { AdminLayoutClient } from "./admin-layout-client";
+import { Geist_Mono, Outfit, Playfair_Display } from "next/font/google";
 import { settingsService } from "@/lib/settings-service";
+import { AdminLayoutClient } from "./admin-layout-client";
 import "../globals.css";
 
 import { ThemeProvider } from "next-themes";

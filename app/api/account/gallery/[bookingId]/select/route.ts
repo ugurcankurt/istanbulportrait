@@ -1,11 +1,11 @@
-import { NextRequest, NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 import { getServerUser } from "@/lib/auth-server";
-import {
-  createServerSupabaseClient,
-  createServerSupabaseAdminClient,
-} from "@/lib/supabase/server";
-import { createDriveFolder, moveFilesToFolder } from "@/lib/google-drive";
 import { extractPhotosCount } from "@/lib/features-parser";
+import { createDriveFolder, moveFilesToFolder } from "@/lib/google-drive";
+import {
+  createServerSupabaseAdminClient,
+  createServerSupabaseClient,
+} from "@/lib/supabase/server";
 
 export async function POST(
   request: NextRequest,

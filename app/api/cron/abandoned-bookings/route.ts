@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
-import { supabaseAdmin } from "@/lib/supabase";
-import { settingsService } from "@/lib/settings-service";
-import { sendAbandonedBookingEmail } from "@/lib/resend";
 import { getPackagePricing } from "@/lib/pricing";
+import { sendAbandonedBookingEmail } from "@/lib/resend";
+import { settingsService } from "@/lib/settings-service";
+import { supabaseAdmin } from "@/lib/supabase";
 import type { PackageId } from "@/lib/validations";
 
 export const dynamic = "force-dynamic";
@@ -68,7 +68,7 @@ export async function GET(request: Request) {
       try {
         const locale = booking.locale || "en";
         // Attempt to parse multilingual package name
-        let packageName = `${booking.package_id.charAt(0).toUpperCase() + booking.package_id.slice(1)} Package`;
+        const packageName = `${booking.package_id.charAt(0).toUpperCase() + booking.package_id.slice(1)} Package`;
 
         // Send Email
         await sendAbandonedBookingEmail(
@@ -101,7 +101,7 @@ export async function GET(request: Request) {
     if (processedIds.length > 0) {
       const { error: updateError } = await supabaseAdmin
         .from("bookings")
-        // @ts-ignore - Bypass never type error from strict supabase generics
+        // @ts-expect-error - Bypass never type error from strict supabase generics
         .update({ abandoned_email_sent: true })
         .in("id", processedIds);
 

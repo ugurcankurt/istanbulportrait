@@ -1,9 +1,8 @@
 import { BreadcrumbNav } from "@/components/breadcrumb-nav";
-import { PageHeroSection } from "@/components/page-hero-section";
 import { ContactSection } from "@/components/contact-section";
-
-import { pagesContentService } from "@/lib/pages-content-service";
+import { PageHeroSection } from "@/components/page-hero-section";
 import { SchemaInjector } from "@/components/schema-injector";
+import { pagesContentService } from "@/lib/pages-content-service";
 import {
   buildContactPageSchema,
   generateSeoDescription,
