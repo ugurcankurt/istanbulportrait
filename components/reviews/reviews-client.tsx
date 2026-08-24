@@ -1,5 +1,7 @@
 "use client";
 
+import { useState, useEffect } from "react";
+
 import { ExternalLink, Quote, Star } from "lucide-react";
 import Image from "next/image";
 import { useLocale, useTranslations } from "next-intl";
@@ -25,9 +27,43 @@ export function ReviewsClient({
   aggregateRating,
   header,
 }: ReviewsClientProps) {
+  const [displayReviews, setDisplayReviews] = useState(reviews);
+
   const t = useTranslations("reviews");
   const locale = useLocale();
   const isRtl = locale === "ar";
+
+  useEffect(() => {
+    if (locale !== "en" && reviews && reviews.length > 0) {
+      const fetchTranslations = async () => {
+        try {
+          const res = await fetch("/api/reviews/translate", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ locale, reviews }),
+          });
+          
+          if (res.ok) {
+            const translatedDict = await res.json();
+            if (Object.keys(translatedDict).length > 0) {
+              setDisplayReviews((prev) => 
+                prev.map((r) => ({
+                  ...r,
+                  text: translatedDict[r.id] || r.text,
+                }))
+              );
+            }
+          }
+        } catch (e) {
+          console.error("Failed to fetch background translations:", e);
+        }
+      };
+
+      fetchTranslations();
+    }
+  }, [locale, reviews]);
 
   const renderStars = (rating: number, size: "sm" | "md" | "lg" = "md") => {
     const sizeClasses = {
@@ -64,7 +100,7 @@ export function ReviewsClient({
     }
   };
 
-  if (!reviews || reviews.length === 0) {
+  if (!displayReviews || displayReviews.length === 0) {
     return null;
   }
 
@@ -87,7 +123,7 @@ export function ReviewsClient({
             className="w-full"
           >
             <CarouselContent className="-ms-2 md:-ms-4">
-              {reviews.map((review) => (
+              {displayReviews.map((review) => (
                 <CarouselItem
                   key={review.id}
                   className="ps-2 md:ps-4 md:basis-1/2 lg:basis-1/3"

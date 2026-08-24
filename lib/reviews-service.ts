@@ -30,7 +30,7 @@ function truncateReviewText(text: string, maxLength: number = 150): string {
  * We use unstable_cache so the translation is persistently cached.
  * We ONLY pass a payload of {id, text} to prevent cache busting from dynamic dates or relative times.
  */
-const getTranslatedReviewsBatch = unstable_cache(
+export const getTranslatedReviewsBatch = unstable_cache(
   async (payloadStr: string, locale: string) => {
     const supportedLocales = ["ar", "ru", "es", "zh", "fr", "de", "ro", "tr"];
     if (!supportedLocales.includes(locale)) return {};
@@ -222,35 +222,9 @@ class ReviewsService {
         .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
         .slice(0, this.config.maxReviews || 100);
 
-      // Translating reviews natively using unstable_cache via Gemini
-      let finalReviews = sortedReviews;
-      if (locale !== "en" && finalReviews.length > 0) {
-        const reviewsToTranslate = finalReviews
-          .filter((r) => r.text && r.text.trim().length > 0)
-          .slice(0, 15) // Optimize: Translate max 15 reviews instead of 100 to drastically speed up API calls
-          .map((r) => ({ id: r.id, text: r.text }));
-
-        if (reviewsToTranslate.length > 0) {
-          const payloadStr = JSON.stringify(reviewsToTranslate);
-          try {
-            const translatedDict = await getTranslatedReviewsBatch(
-              payloadStr,
-              locale,
-            );
-            finalReviews = finalReviews.map((r) => {
-              if (translatedDict[r.id]) {
-                return { ...r, text: translatedDict[r.id] };
-              }
-              return r;
-            });
-          } catch (translationErr) {
-            console.warn(
-              `Translation failed for locale '${locale}', falling back to English for this request only.`,
-            );
-            // We keep finalReviews as sortedReviews (English) without poisoning the Next.js cache.
-          }
-        }
-      }
+      // We removed the native translation logic here to prevent blocking SSR.
+      // Translations are now handled client-side via /api/reviews/translate
+      const finalReviews = sortedReviews;
 
       return {
         reviews: finalReviews,
