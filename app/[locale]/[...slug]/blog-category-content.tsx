@@ -45,19 +45,24 @@ export async function BlogCategoryContent({
     ? generateNativeSlug(dbPage.title[locale]!)
     : "blog";
 
+  let decodedSlug = slug;
+  try {
+    decodedSlug = decodeURIComponent(slug).trim();
+  } catch {}
+
   let dynamicTitle = "";
   let dynamicSubtitle = "";
   let categoryId: string | undefined;
   let tagId: string | undefined;
 
   if (type === "category") {
-    const category = await getBlogCategoryBySlug(slug, locale);
+    const category = await getBlogCategoryBySlug(decodedSlug, locale);
     if (!category) notFound();
     dynamicTitle = category.translation?.name || category.slug;
     dynamicSubtitle = category.translation?.description || "";
     categoryId = category.id;
   } else {
-    const tag = await getBlogTagBySlug(slug, locale);
+    const tag = await getBlogTagBySlug(decodedSlug, locale);
     if (!tag) notFound();
     dynamicTitle = `#${tag.translation?.name || tag.slug}`;
     dynamicSubtitle = "";
