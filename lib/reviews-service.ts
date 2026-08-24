@@ -26,46 +26,40 @@ function truncateReviewText(text: string, maxLength: number = 150): string {
 }
 
 /**
- * Internal helper to translate a batch of reviews via Gemini.
+ * Internal helper to translate a single review via Gemini/NVIDIA.
  * We use unstable_cache so the translation is persistently cached.
- * We ONLY pass a payload of {id, text} to prevent cache busting from dynamic dates or relative times.
  */
-export const getTranslatedReviewsBatch = unstable_cache(
-  async (payloadStr: string, locale: string) => {
+export const getTranslatedReview = unstable_cache(
+  async (id: string, text: string, locale: string) => {
     const supportedLocales = ["ar", "ru", "es", "zh", "fr", "de", "ro", "tr"];
-    if (!supportedLocales.includes(locale)) return {};
-    const payload: { id: string; text: string }[] = JSON.parse(payloadStr);
-
-    if (payload.length === 0) return {};
+    if (!supportedLocales.includes(locale) || !text || text.trim() === "") {
+      return text;
+    }
 
     try {
       const apiKey = process.env.NVIDIA_API_KEY;
 
       if (!apiKey) {
         console.warn("No NVIDIA API key found for review translation.");
-        return {};
+        return text;
       }
 
       const prompt = `
-You are a professional localization expert. Translate the following user reviews from their original language into the language code: "${locale}".
+You are a professional localization expert. Translate the following user review from its original language into the language code: "${locale}".
 Maintain the original tone, which is likely positive and related to a photography business in Istanbul.
-Return ONLY a valid minified JSON object where the keys are the review IDs and the values are the translated texts. Do not include markdown formatting like \`\`\`json.
-Example output format:
-{"review-1": "Harika bir deneyimdi!", "review-2": "Çok profesyonel bir ekip."}
+Return ONLY the translated text without any formatting, quotes, or JSON. Just the plain text.
 
-Reviews to translate:
-${payloadStr}
+Review to translate:
+${text}
 `;
 
       const nvidiaUrl = `https://integrate.api.nvidia.com/v1/chat/completions`;
       let response;
       
-      // We use a single attempt with a 6 second timeout to prevent Vercel 10s Serverless timeout
-      // which causes the page to crash (504 Gateway Timeout). 
-      // This ensures translations work in the background (or fail fast and fallback)
       try {
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 6000); // 6 seconds max
+        // 4 seconds max timeout for a SINGLE review translation
+        const timeoutId = setTimeout(() => controller.abort(), 4000); 
 
         response = await fetch(nvidiaUrl, {
           method: "POST",
@@ -77,54 +71,42 @@ ${payloadStr}
             model: "deepseek-ai/deepseek-v4-flash-0731",
             messages: [{ role: "user", content: prompt }],
             temperature: 0.2,
-            response_format: { type: "json_object" },
           }),
           signal: controller.signal,
         });
         clearTimeout(timeoutId);
       } catch (err) {
-        console.warn("Translation API timed out or failed to reach NVIDIA:", err);
+        console.warn(`Translation API timed out for review ${id}:`, err);
+        return text; // Fallback to original
       }
       
-      if (!response) {
-        throw new Error("Failed to get response after 3 attempts");
-      }
-
-      if (!response.ok) {
-        const errText = await response.text();
-        if (
-          response.status === 429 ||
-          response.status === 400 ||
-          response.status === 401
-        ) {
-          console.warn(
-            `NVIDIA API limit/error (${response.status}). Caching empty translations to prevent log spam and reduce costs.`,
-          );
-          return {};
-        }
-        console.error("NVIDIA API Error for reviews translation:", errText);
-        throw new Error(`NVIDIA API Error: ${response.status}`);
+      if (!response || !response.ok) {
+        console.warn(`NVIDIA API Error for review ${id}. Status:`, response?.status);
+        return text; // Fallback to original
       }
 
       const data = await response.json();
-      const textOutput = data.choices?.[0]?.message?.content;
+      let textOutput = data.choices?.[0]?.message?.content;
 
       if (!textOutput) {
-        throw new Error("Invalid AI response structure");
+        return text;
       }
 
-      const translatedDict = JSON.parse(textOutput.trim());
-      return translatedDict as Record<string, string>;
+      // Clean up potential quotes if the AI added them anyway
+      textOutput = textOutput.trim();
+      if (textOutput.startsWith('"') && textOutput.endsWith('"')) {
+        textOutput = textOutput.slice(1, -1);
+      }
+
+      return textOutput;
     } catch (err) {
-      console.error(
-        "Failed to translate reviews. Cache will not be poisoned.",
-        err,
-      );
-      throw err; // Throwing prevents unstable_cache from saving English fallback permanently
+      console.error(`Failed to translate review ${id}.`, err);
+      // We throw to prevent caching a failed execution if it was a catastrophic error
+      throw err; 
     }
   },
-  ["gemini-reviews-translations-batch-v3"],
-  { revalidate: 31536000 }, // Cache for 1 year as requested (31,536,000 seconds).
+  ["gemini-review-translation-single-v1"],
+  { revalidate: 31536000 }, // Cache for 1 year
 );
 
 class ReviewsService {
