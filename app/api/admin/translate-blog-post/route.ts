@@ -91,42 +91,32 @@ export async function POST(req: Request) {
       seo_title,
       meta_description,
       meta_keywords,
+      targetLocale,
     } = body;
 
-    if (!title || !content) {
+    if (!title || !content || !targetLocale) {
       return NextResponse.json(
-        { error: "Missing required fields (title, content)" },
+        { error: "Missing required fields (title, content, targetLocale)" },
         { status: 400 },
       );
     }
 
-    const { settingsService } = await import("@/lib/settings-service");
-    const settings = await settingsService.getSettings();
     const apiKey = process.env.NVIDIA_API_KEY;
     if (!apiKey) {
       return NextResponse.json(
-        { error: "API Key is not configured in Site Settings." },
+        { error: "API Key is not configured." },
         { status: 500 },
       );
     }
 
-    // We can run these in parallel now since we use NVIDIA NIM, which doesn't have the strict 15RPM limit
-    const translations: Record<string, any> = {};
-    const chunkSize = 1; // Translate 1 language per prompt to avoid exceeding 4096 output token limit with large HTML
-    const chunkPromises = [];
-
-    for (let i = 0; i < TARGET_LOCALES.length; i += chunkSize) {
-      const chunkLocales = TARGET_LOCALES.slice(i, i + chunkSize);
-      const targetLang = chunkLocales[0]; // since chunk size is 1
-
-      const prompt = `
+    const prompt = `
 You are an expert localization specialist and marketing copywriter. 
-Translate the following blog post content from English into the following language code: ${targetLang}.
+Translate the following blog post content from English into the following language code: ${targetLocale}.
 Maintain the exact HTML structure, styling, and tone.
-Return ONLY a valid minified JSON object where the key is the locale code "${targetLang}" and the value is the translated object. Do not include markdown wrappers or additional text.
+Return ONLY a valid minified JSON object where the key is the locale code "${targetLocale}" and the value is the translated object. Do not include markdown wrappers or additional text.
 Example format:
 {
-  "${targetLang}": {
+  "${targetLocale}": {
     "title": "Translated title",
     "content": "Translated HTML content",
     "seo_title": "Translated SEO title",
@@ -155,64 +145,44 @@ Content to translate (HTML):
 ${content}
 `;
 
-      // Add the promise to our parallel array
-      chunkPromises.push(
-        (async () => {
-          const url = `https://integrate.api.nvidia.com/v1/chat/completions`;
-          try {
-            const response = await fetchWithRetry(url, {
-              method: "POST",
-              headers: {
-                Authorization: `Bearer ${process.env.NVIDIA_API_KEY}`,
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
-                model: "deepseek-ai/deepseek-v4-flash-0731",
-                messages: [{ role: "user", content: prompt }],
-                temperature: 0.2,
-                response_format: { type: "json_object" },
-              }),
-            });
+    const url = `https://integrate.api.nvidia.com/v1/chat/completions`;
+    const response = await fetchWithRetry(url, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        model: "deepseek-ai/deepseek-v4-flash-0731",
+        messages: [{ role: "user", content: prompt }],
+        temperature: 0.2,
+        response_format: { type: "json_object" },
+      }),
+    });
 
-            if (!response.ok) {
-              console.error(
-                `Failed to translate for ${targetLang}: ${await response.text()}`,
-              );
-              return;
-            }
-
-            const data = await response.json();
-            const textOutput = data.choices?.[0]?.message?.content;
-
-            if (!textOutput) {
-              console.error(`No content from DeepSeek for ${targetLang}`);
-              return;
-            }
-
-            let parsed;
-            try {
-              parsed = JSON.parse(textOutput.trim());
-            } catch (e) {
-              console.error(
-                `Invalid JSON from DeepSeek for ${targetLang}: ${textOutput}`,
-              );
-              return;
-            }
-
-            if (parsed[targetLang]) {
-              translations[targetLang] = parsed[targetLang];
-            }
-          } catch (err: any) {
-            console.error(`Error translating ${targetLang}:`, err);
-          }
-        })(),
-      );
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error(`Failed to translate for ${targetLocale}: ${errorText}`);
+      return NextResponse.json({ error: "Translation failed" }, { status: response.status });
     }
 
-    // Wait for all chunks to translate in parallel
-    await Promise.all(chunkPromises);
+    const data = await response.json();
+    const textOutput = data.choices?.[0]?.message?.content;
 
-    return NextResponse.json({ translations });
+    if (!textOutput) {
+      console.error(`No content from DeepSeek for ${targetLocale}`);
+      return NextResponse.json({ error: "Empty AI response" }, { status: 500 });
+    }
+
+    let parsed;
+    try {
+      parsed = JSON.parse(textOutput.trim());
+    } catch (e) {
+      console.error(`Invalid JSON from DeepSeek for ${targetLocale}: ${textOutput}`);
+      return NextResponse.json({ error: "Invalid JSON from AI" }, { status: 500 });
+    }
+
+    return NextResponse.json({ translation: parsed[targetLocale] });
   } catch (err: any) {
     console.error("Translation error:", err);
     return NextResponse.json({ error: err.message }, { status: 500 });

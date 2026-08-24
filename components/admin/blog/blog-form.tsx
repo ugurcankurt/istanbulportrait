@@ -191,7 +191,7 @@ export function BlogForm({
         },
   });
 
-  const handleAITranslate = async () => {
+  const handleAITranslate = async (targetLocale: string) => {
     const enState = form.getValues("translations.en");
     if (!enState?.title?.trim() || !enState?.content?.trim()) {
       toast.error(
@@ -202,7 +202,7 @@ export function BlogForm({
 
     setIsTranslating(true);
     toast.loading(
-      "AI is translating your blog post (this may take up to 20 seconds)...",
+      `AI is translating to ${targetLocale.toUpperCase()}...`,
       { id: "ai-translation" },
     );
     try {
@@ -213,62 +213,51 @@ export function BlogForm({
           title: enState?.title || "",
           excerpt: enState?.excerpt || "",
           content: enState?.content || "",
+          seo_title: enState?.seo_title || "",
           meta_description: enState?.meta_description || "",
           meta_keywords: enState?.meta_keywords || [],
+          targetLocale,
         }),
       });
 
       if (translateRes.ok) {
         const translateData = await translateRes.json();
-        if (translateData.translations) {
+        if (translateData.translation) {
+          const aiTrans = translateData.translation;
           const currentTranslations = form.getValues("translations");
-          const targetLocales = [
-            "ar",
-            "ru",
-            "es",
-            "zh",
-            "de",
-            "fr",
-            "ro",
-            "tr",
-          ];
-
-          targetLocales.forEach((loc) => {
-            const aiTrans = translateData.translations[loc];
-            if (aiTrans) {
-              const currentLangState =
-                currentTranslations[loc as keyof typeof currentTranslations] ||
-                {};
-              form.setValue(`translations.${loc}` as any, {
-                ...currentLangState,
-                title: aiTrans.title || "",
-                excerpt: aiTrans.excerpt || "",
-                content: aiTrans.content || "",
-                meta_description: aiTrans.meta_description || "",
-                meta_keywords: aiTrans.meta_keywords || [],
-                // We generate the slug dynamically from the translated title to ensure it's URL safe and locally correct
-                slug: aiTrans.title
-                  ? generateSlug(aiTrans.title, { locale: loc as any })
-                  : (currentLangState as any).slug || "",
-              });
-              setKeywordsInput((prev) => ({
-                ...prev,
-                [loc]: (aiTrans.meta_keywords || []).join(", "),
-              }));
-            }
+          const currentLangState = currentTranslations[targetLocale as keyof typeof currentTranslations] || {};
+          
+          form.setValue(`translations.${targetLocale}` as any, {
+            ...currentLangState,
+            title: aiTrans.title || "",
+            excerpt: aiTrans.excerpt || "",
+            content: aiTrans.content || "",
+            seo_title: aiTrans.seo_title || "",
+            meta_description: aiTrans.meta_description || "",
+            meta_keywords: aiTrans.meta_keywords || [],
+            slug: aiTrans.title
+              ? generateSlug(aiTrans.title, { locale: targetLocale as any })
+              : "",
           });
+          
+          setKeywordsInput((prev) => ({
+            ...prev,
+            [targetLocale]: (aiTrans.meta_keywords || []).join(", "),
+          }));
 
-          toast.success("Blog post successfully translated to all languages!", {
-            id: "ai-translation",
-          });
+          toast.success("AI Translation complete!", { id: "ai-translation" });
+        } else {
+          toast.error("Translation data was empty.", { id: "ai-translation" });
         }
       } else {
-        toast.error("AI translation failed. Please try again.", {
+        const errorData = await translateRes.json();
+        toast.error(`Translation failed: ${errorData.error || "Unknown Error"}`, {
           id: "ai-translation",
         });
       }
-    } catch (e) {
-      toast.error("AI translation failed due to a network error.", {
+    } catch (error) {
+      console.error(error);
+      toast.error("Network error during translation.", {
         id: "ai-translation",
       });
     } finally {
@@ -321,23 +310,6 @@ export function BlogForm({
                       ~{readingTime} min read
                     </span>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <Button
-                      type="button"
-                      variant="secondary"
-                      size="sm"
-                      onClick={handleAITranslate}
-                      disabled={isTranslating}
-                      className="w-fit shrink-0"
-                    >
-                      {isTranslating ? (
-                        <Spinner className="w-4 h-4 mr-2" />
-                      ) : (
-                        <Sparkles className="w-4 h-4 mr-2 text-yellow-500" />
-                      )}
-                      Auto-Translate (AI)
-                    </Button>
-                  </div>
                 </div>
               </CardHeader>
               <CardContent className="pt-6">
@@ -388,6 +360,27 @@ export function BlogForm({
                       className="space-y-6 mt-0"
                       dir={locale.value === "ar" ? "rtl" : "ltr"}
                     >
+                      {/* AI Translation Button (only for non-English tabs) */}
+                      {locale.value !== "en" && (
+                        <div className="flex items-center justify-end mb-2">
+                          <Button
+                            type="button"
+                            variant="secondary"
+                            size="sm"
+                            onClick={() => handleAITranslate(locale.value)}
+                            disabled={isTranslating}
+                            className="w-fit shrink-0 bg-blue-50/50 hover:bg-blue-100/50 text-blue-700 border border-blue-200"
+                          >
+                            {isTranslating ? (
+                              <Spinner className="w-4 h-4 mr-2" />
+                            ) : (
+                              <Sparkles className="w-4 h-4 mr-2 text-blue-500" />
+                            )}
+                            Translate from English
+                          </Button>
+                        </div>
+                      )}
+
                       {/* Title */}
                       <FormField
                         control={form.control}
