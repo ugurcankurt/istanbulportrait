@@ -103,10 +103,11 @@ export async function POST(req: Request) {
       );
     }
 
-    // Process locales in batches to avoid Gemini Free Tier burst rate limits (15 RPM)
-    // while keeping output tokens manageable for long blog posts
+    // We can run these in parallel now since we use NVIDIA NIM, which doesn't have the strict 15RPM limit
     const translations: Record<string, any> = {};
     const chunkSize = 2;
+    const chunkPromises = [];
+
     for (let i = 0; i < TARGET_LOCALES.length; i += chunkSize) {
       const chunkLocales = TARGET_LOCALES.slice(i, i + chunkSize);
 
@@ -146,63 +147,67 @@ Content to translate (HTML):
 ${content}
 `;
 
-      const url = `https://integrate.api.nvidia.com/v1/chat/completions`;
+      // Add the promise to our parallel array
+      chunkPromises.push(
+        (async () => {
+          const url = `https://integrate.api.nvidia.com/v1/chat/completions`;
+          try {
+            const response = await fetchWithRetry(url, {
+              method: "POST",
+              headers: {
+                Authorization: `Bearer ${process.env.NVIDIA_API_KEY}`,
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                model: "deepseek-ai/deepseek-v4-flash-0731",
+                messages: [{ role: "user", content: prompt }],
+                temperature: 0.2,
+                response_format: { type: "json_object" },
+              }),
+            });
 
-      try {
-        const response = await fetchWithRetry(url, {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${process.env.NVIDIA_API_KEY}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            model: "deepseek-ai/deepseek-v4-flash-0731",
-            messages: [{ role: "user", content: prompt }],
-            temperature: 0.2,
-            response_format: { type: "json_object" },
-          }),
-        });
+            if (!response.ok) {
+              console.error(
+                `Failed to translate for ${chunkLocales.join(", ")}: ${await response.text()}`,
+              );
+              return;
+            }
 
-        if (!response.ok) {
-          console.error(
-            `Failed to translate for ${chunkLocales.join(", ")}: ${await response.text()}`,
-          );
-          continue; // Do not throw, just skip this chunk
-        }
+            const data = await response.json();
+            const textOutput = data.choices?.[0]?.message?.content;
 
-        const data = await response.json();
-        const textOutput = data.choices?.[0]?.message?.content;
+            if (!textOutput) {
+              console.error(
+                `No content from DeepSeek for ${chunkLocales.join(", ")}`,
+              );
+              return;
+            }
 
-        if (!textOutput) {
-          console.error(
-            `No content from DeepSeek for ${chunkLocales.join(", ")}`,
-          );
-          continue;
-        }
+            let parsed;
+            try {
+              parsed = JSON.parse(textOutput.trim());
+            } catch (e) {
+              console.error(
+                `Invalid JSON from DeepSeek for ${chunkLocales.join(", ")}: ${textOutput}`,
+              );
+              return;
+            }
 
-        let parsed;
-        try {
-          parsed = JSON.parse(textOutput.trim());
-        } catch (e) {
-          console.error(
-            `Invalid JSON from DeepSeek for ${chunkLocales.join(", ")}: ${textOutput}`,
-          );
-          continue;
-        }
-
-        // Assign chunk results back to the main translations object
-        for (const loc of chunkLocales) {
-          if (parsed[loc]) {
-            translations[loc] = parsed[loc];
+            // Assign chunk results back to the main translations object
+            for (const loc of chunkLocales) {
+              if (parsed[loc]) {
+                translations[loc] = parsed[loc];
+              }
+            }
+          } catch (err: any) {
+            console.error(`Error translating ${chunkLocales.join(", ")}:`, err);
           }
-        }
-      } catch (err: any) {
-        console.error(`Error translating ${chunkLocales.join(", ")}:`, err);
-      }
-
-      // Delay slightly to respect Gemini's 15 RPM free tier limit
-      await new Promise((resolve) => setTimeout(resolve, 3000));
+        })(),
+      );
     }
+
+    // Wait for all chunks to translate in parallel
+    await Promise.all(chunkPromises);
 
     return NextResponse.json({ translations });
   } catch (err: any) {
