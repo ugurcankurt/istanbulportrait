@@ -139,7 +139,10 @@ export async function generateMetadata(props: {
   // Level 3: Deep nested pages (e.g. /blog/category/fotografcilik)
   if (slugArray.length === 3 && dbPage?.slug === "blog") {
     const type = slugArray[1]; // category or tag
-    const childSlug = slugArray[2];
+    let childSlug = slugArray[2];
+    try {
+      childSlug = decodeURIComponent(childSlug).trim();
+    } catch {}
 
     let dynamicTitle = "";
     let dynamicDesc = "";
@@ -197,7 +200,10 @@ export async function generateMetadata(props: {
 
   // Level 2: Detail pages
   if (slugArray.length === 2) {
-    const childSlug = slugArray[1];
+    let childSlug = slugArray[1];
+    try {
+      childSlug = decodeURIComponent(childSlug).trim();
+    } catch {}
     let dynamicTitle = fallbackTitle;
     let dynamicDesc = "";
     let ogImage = settings.default_og_image_url || "";
