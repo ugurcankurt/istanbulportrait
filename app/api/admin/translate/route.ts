@@ -51,10 +51,13 @@ export async function POST(req: Request) {
       );
     }
 
-    const apiKey = process.env.NVIDIA_API_KEY;
+    const { settingsService } = await import("@/lib/settings-service");
+    const settings = await settingsService.getSettings();
+    const apiKey = settings.gemini_api_key;
+    
     if (!apiKey) {
       return NextResponse.json(
-        { error: "API Key is not configured." },
+        { error: "Gemini API Key is not configured in settings." },
         { status: 500 },
       );
     }
@@ -72,7 +75,7 @@ ${meta_keywords.map((k: string) => `- ${k}`).join("\n")}
 Features:
 ${features.map((f: string) => `- ${f}`).join("\n")}
 
-Respond ONLY with a valid minified JSON object mapping the locale code to the translated object. Ensure the JSON format matches exactly this structure (do not include any reasoning or <think> tags in your final output, ONLY the JSON):
+Respond ONLY with a valid minified JSON object mapping the locale code to the translated object. Ensure the JSON format matches exactly this structure:
 {
   "${targetLocale}": {
     "title": "...",
@@ -87,25 +90,26 @@ Respond ONLY with a valid minified JSON object mapping the locale code to the tr
 Provide accurate, professional, marketing-friendly translations suitable for a high-end photography business in Istanbul.
 `;
 
-    // Connect to NVIDIA NIM API (DeepSeek)
-    const nvidiaUrl = `https://integrate.api.nvidia.com/v1/chat/completions`;
+    // Connect to Google Gemini API
+    const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${apiKey}`;
 
-    const response = await fetch(nvidiaUrl, {
+    const response = await fetch(geminiUrl, {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${process.env.NVIDIA_API_KEY}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "deepseek-ai/deepseek-r1",
-        messages: [{ role: "user", content: prompt }],
-        temperature: 0.6,
+        contents: [{ parts: [{ text: prompt }] }],
+        generationConfig: {
+          responseMimeType: "application/json",
+          temperature: 0.2,
+        },
       }),
     });
 
     if (!response.ok) {
       const errorData = await response.text();
-      console.error("DeepSeek API Error:", errorData);
+      console.error("Gemini API Error:", errorData);
       return NextResponse.json(
         { error: "Failed to communicate with AI" },
         { status: 500 },
@@ -113,7 +117,7 @@ Provide accurate, professional, marketing-friendly translations suitable for a h
     }
 
     const data = await response.json();
-    const textOutput = data.choices?.[0]?.message?.content;
+    const textOutput = data.candidates?.[0]?.content?.parts?.[0]?.text;
 
     if (!textOutput) {
       return NextResponse.json(
@@ -124,7 +128,7 @@ Provide accurate, professional, marketing-friendly translations suitable for a h
 
     let parsedTranslations = {};
     try {
-      // Robust JSON extraction to handle DeepSeek <think> blocks
+      // Robust JSON extraction
       const jsonMatch = textOutput.match(/\{[\s\S]*\}/);
       const cleanJsonStr = jsonMatch ? jsonMatch[0] : textOutput;
       parsedTranslations = JSON.parse(
