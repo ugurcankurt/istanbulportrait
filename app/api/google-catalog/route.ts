@@ -77,7 +77,7 @@ export async function GET(request: Request) {
     const escapeCsv = (str: string) => `"${String(str).replace(/"/g, '""')}"`;
 
     // Append row
-    csv += `${escapeCsv(id)},${escapeCsv(title)},${escapeCsv(cleanDesc)},${escapeCsv(finalUrl)},${escapeCsv(imageUrl)},${escapeCsv(priceStr)},${escapeCsv(salePriceStr)}\n`;
+    csv += `${escapeCsv(id)},${escapeCsv(title)},${escapeCsv(cleanDesc || "")},${escapeCsv(finalUrl)},${escapeCsv(imageUrl)},${escapeCsv(priceStr)},${escapeCsv(salePriceStr)}\n`;
   }
 
   return new NextResponse(csv, {

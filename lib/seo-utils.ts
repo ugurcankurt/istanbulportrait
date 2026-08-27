@@ -336,7 +336,7 @@ export function buildServiceSchema({
   url,
 }: {
   name: string;
-  description: string;
+  description: string | null;
   image: string;
   price: number;
   currency?: string;
@@ -377,7 +377,7 @@ export function buildServiceSchema({
           acquireLicensePage: `${getBaseUrl()}/contact`,
         }
       : undefined,
-    description,
+    description: description || undefined,
     brand: providerName
       ? {
           "@type": "Brand",
@@ -503,7 +503,7 @@ export function buildArticleSchema({
   url,
 }: {
   title: string;
-  description: string;
+  description: string | null;
   image: string;
   datePublished: string;
   dateModified: string;
@@ -579,7 +579,7 @@ export function buildArticleSchema({
             : {}),
         }
       : undefined,
-    description,
+    description: description || undefined,
     ...(keywords && keywords.length > 0
       ? { keywords: keywords.join(", ") }
       : {}),
@@ -633,7 +633,7 @@ export function buildTouristAttractionSchema({
   url,
 }: {
   name: string;
-  description: string;
+  description: string | null;
   image?: string;
   lat?: number;
   lng?: number;
@@ -682,7 +682,7 @@ export function buildAboutPageSchema({
   organizationSchema,
 }: {
   name: string;
-  description: string;
+  description: string | null;
   url?: string;
   organizationSchema?: any;
 }) {
@@ -696,7 +696,7 @@ export function buildAboutPageSchema({
         }
       : undefined,
     name,
-    description,
+    description: description || undefined,
     url: url || getBaseUrl(),
     ...(organizationSchema ? { mainEntity: organizationSchema } : {}),
   };
@@ -708,7 +708,7 @@ export function buildContactPageSchema({
   url,
 }: {
   name: string;
-  description: string;
+  description: string | null;
   url?: string;
 }) {
   return {
@@ -721,7 +721,7 @@ export function buildContactPageSchema({
         }
       : undefined,
     name,
-    description,
+    description: description || undefined,
     url: url || getBaseUrl(),
   };
 }
@@ -733,11 +733,11 @@ export function buildCollectionPageSchema({
   items,
 }: {
   name: string;
-  description: string;
+  description: string | null;
   url?: string;
   items: Array<{
     name: string;
-    description?: string;
+    description?: string | null;
     url: string;
     image?: string;
   }>;
@@ -752,7 +752,7 @@ export function buildCollectionPageSchema({
         }
       : undefined,
     name,
-    description,
+    description: description || undefined,
     url: url || getBaseUrl(),
     mainEntity: {
       "@type": "ItemList",

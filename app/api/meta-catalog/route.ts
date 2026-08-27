@@ -182,7 +182,7 @@ export async function GET(request: Request) {
     xml += `    <item>
       <g:id>${escapeXml(pkg.slug)}</g:id>
       <g:title>${escapeXml(title)}</g:title>
-      <g:description>${escapeXml(cleanDesc)}</g:description>
+      <g:description>${escapeXml(cleanDesc || "")}</g:description>
       <g:availability>${pkg.is_active ? "in stock" : "out of stock"}</g:availability>
       <g:condition>new</g:condition>
       <g:identifier_exists>no</g:identifier_exists>

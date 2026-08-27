@@ -2,8 +2,6 @@ import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
-const TARGET_LOCALES = ["ar", "ru", "es", "zh", "de", "fr", "ro", "tr"];
-
 export async function POST(req: Request) {
   try {
     const cookieStore = await cookies();
@@ -35,6 +33,7 @@ export async function POST(req: Request) {
       features,
       meta_description,
       meta_keywords,
+      targetLocale,
     } = body;
 
     if (
@@ -43,7 +42,8 @@ export async function POST(req: Request) {
       !features ||
       !duration ||
       !meta_description ||
-      !meta_keywords
+      !meta_keywords ||
+      !targetLocale
     ) {
       return NextResponse.json(
         { error: "Missing required fields" },
@@ -51,18 +51,16 @@ export async function POST(req: Request) {
       );
     }
 
-    const { settingsService } = await import("@/lib/settings-service");
-    const settings = await settingsService.getSettings();
     const apiKey = process.env.NVIDIA_API_KEY;
     if (!apiKey) {
       return NextResponse.json(
-        { error: "Groq API Key is not configured in Site Settings." },
+        { error: "API Key is not configured." },
         { status: 500 },
       );
     }
 
     const prompt = `
-You are a professional localization expert. Your task is to translate the following English photography package details into the following languages: ${TARGET_LOCALES.join(", ")}.
+You are a professional localization expert. Your task is to translate the following English photography package details into the following language code: ${targetLocale}.
 
 English Source:
 Title: ${title}
@@ -74,17 +72,16 @@ ${meta_keywords.map((k: string) => `- ${k}`).join("\n")}
 Features:
 ${features.map((f: string) => `- ${f}`).join("\n")}
 
-Respond ONLY with a valid minified JSON object mapping each locale code to the translated object. Ensure the JSON format matches exactly this structure:
+Respond ONLY with a valid minified JSON object mapping the locale code to the translated object. Ensure the JSON format matches exactly this structure (do not include any reasoning or <think> tags in your final output, ONLY the JSON):
 {
-  "tr": {
+  "${targetLocale}": {
     "title": "...",
     "duration": "...",
     "description": "...",
     "meta_description": "...",
     "meta_keywords": ["...", "..."],
     "features": ["...", "..."]
-  },
-  "ar": { ... }
+  }
 }
 
 Provide accurate, professional, marketing-friendly translations suitable for a high-end photography business in Istanbul.
@@ -100,10 +97,9 @@ Provide accurate, professional, marketing-friendly translations suitable for a h
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "deepseek-ai/deepseek-v4-flash-0731",
+        model: "deepseek-ai/deepseek-r1",
         messages: [{ role: "user", content: prompt }],
-        temperature: 0.2,
-        response_format: { type: "json_object" },
+        temperature: 0.6,
       }),
     });
 
@@ -128,11 +124,14 @@ Provide accurate, professional, marketing-friendly translations suitable for a h
 
     let parsedTranslations = {};
     try {
+      // Robust JSON extraction to handle DeepSeek <think> blocks
+      const jsonMatch = textOutput.match(/\{[\s\S]*\}/);
+      const cleanJsonStr = jsonMatch ? jsonMatch[0] : textOutput;
       parsedTranslations = JSON.parse(
-        textOutput.replace(/```(?:json)?/gi, "").trim(),
+        cleanJsonStr.replace(/```(?:json)?/gi, "").trim(),
       );
     } catch (e) {
-      console.error("Failed to parse Groq JSON:", textOutput);
+      console.error("Failed to parse JSON:", textOutput);
       return NextResponse.json(
         { error: "AI returned invalid JSON" },
         { status: 500 },
@@ -145,3 +144,4 @@ Provide accurate, professional, marketing-friendly translations suitable for a h
     return NextResponse.json({ error: err.message }, { status: 500 });
   }
 }
+

@@ -72,6 +72,7 @@ export function PackageForm({ initialData }: PackageFormProps) {
   const [galleryPreviews, setGalleryPreviews] = useState<string[]>(
     initialData?.gallery_images || [],
   );
+  const [activeTab, setActiveTab] = useState("en");
 
   const form = useForm<any>({
     defaultValues: initialData || {
@@ -273,6 +274,7 @@ export function PackageForm({ initialData }: PackageFormProps) {
   };
 
   const handleAITranslate = async () => {
+    if (activeTab === "en") return;
     const data = form.getValues();
     if (
       !data.title?.en ||
@@ -288,7 +290,7 @@ export function PackageForm({ initialData }: PackageFormProps) {
       return;
     }
 
-    toast.loading("Translating to all languages...", { id: "ai-translation" });
+    toast.loading(`Translating to ${activeTab.toUpperCase()}...`, { id: "ai-translation" });
     try {
       const translateRes = await fetch("/api/admin/translate", {
         method: "POST",
@@ -300,50 +302,26 @@ export function PackageForm({ initialData }: PackageFormProps) {
           features: data.features.en,
           meta_description: data.meta_description.en,
           meta_keywords: data.meta_keywords.en,
+          targetLocale: activeTab,
         }),
       });
 
       if (translateRes.ok) {
         const translateData = await translateRes.json();
-        if (translateData.translations) {
-          SUPPORTED_LOCALES.forEach((loc) => {
-            if (loc === "en") return;
-            if (translateData.translations[loc]) {
-              form.setValue(
-                `title.${loc}`,
-                translateData.translations[loc].title,
-                { shouldDirty: true },
-              );
-              form.setValue(
-                `description.${loc}`,
-                translateData.translations[loc].description,
-                { shouldDirty: true },
-              );
-              form.setValue(
-                `duration.${loc}`,
-                translateData.translations[loc].duration,
-                { shouldDirty: true },
-              );
-              form.setValue(
-                `features.${loc}`,
-                translateData.translations[loc].features,
-                { shouldDirty: true },
-              );
-              form.setValue(
-                `meta_description.${loc}`,
-                translateData.translations[loc].meta_description,
-                { shouldDirty: true },
-              );
-              form.setValue(
-                `meta_keywords.${loc}`,
-                translateData.translations[loc].meta_keywords,
-                { shouldDirty: true },
-              );
-            }
-          });
-          toast.success("Blank languages successfully auto-filled!", {
+        if (translateData.translations && translateData.translations[activeTab]) {
+          const translated = translateData.translations[activeTab];
+          form.setValue(`title.${activeTab}`, translated.title, { shouldDirty: true });
+          form.setValue(`description.${activeTab}`, translated.description, { shouldDirty: true });
+          form.setValue(`duration.${activeTab}`, translated.duration, { shouldDirty: true });
+          form.setValue(`features.${activeTab}`, translated.features, { shouldDirty: true });
+          form.setValue(`meta_description.${activeTab}`, translated.meta_description, { shouldDirty: true });
+          form.setValue(`meta_keywords.${activeTab}`, translated.meta_keywords, { shouldDirty: true });
+
+          toast.success(`${activeTab.toUpperCase()} translation successful!`, {
             id: "ai-translation",
           });
+        } else {
+          toast.error("AI translation returned empty.", { id: "ai-translation" });
         }
       } else {
         toast.error("AI translation failed. Check API key.", {
@@ -496,18 +474,20 @@ export function PackageForm({ initialData }: PackageFormProps) {
                         Manage package details for each language.
                       </p>
                     </div>
-                    <Button
-                      type="button"
-                      variant="outline"
-                      onClick={handleAITranslate}
-                      className="bg-indigo-50 text-indigo-700 border-indigo-200 hover:bg-indigo-100 dark:bg-indigo-950/50 dark:text-indigo-300 dark:border-indigo-900"
-                    >
-                      <Sparkles className="w-4 h-4 mr-2" />
-                      Auto-Translate All with AI
-                    </Button>
+                    {activeTab !== "en" && (
+                      <Button
+                        type="button"
+                        variant="outline"
+                        onClick={handleAITranslate}
+                        className="bg-indigo-50 text-indigo-700 border-indigo-200 hover:bg-indigo-100 dark:bg-indigo-950/50 dark:text-indigo-300 dark:border-indigo-900"
+                      >
+                        <Sparkles className="w-4 h-4 mr-2" />
+                        Translate to {activeTab.toUpperCase()}
+                      </Button>
+                    )}
                   </div>
 
-                  <Tabs defaultValue="en" className="w-full">
+                  <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
                     <TabsList className="w-full flex flex-wrap h-auto">
                       {SUPPORTED_LOCALES.map((loc) => (
                         <TabsTrigger
