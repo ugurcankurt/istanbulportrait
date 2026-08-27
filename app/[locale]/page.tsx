@@ -74,7 +74,7 @@ export async function generateMetadata({
   );
   const rawDesc =
     seoSource?.subtitle?.[locale] || seoSource?.subtitle?.en || "";
-  const desc = generateSeoDescription(rawDesc) || "";
+  const desc = generateSeoDescription(rawDesc);
   const ogImage =
     seoSource?.cover_image ||
     heroPage?.cover_image ||

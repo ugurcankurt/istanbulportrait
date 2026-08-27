@@ -90,7 +90,7 @@ export async function generateMetadata(props: {
     const desc =
       generateSeoDescription(
         dbPage.subtitle?.[params.locale] || dbPage.subtitle?.en,
-      ) || "";
+      );
     let ogImage = dbPage.cover_image || settings.default_og_image_url || "";
 
     // If it's the packages page and no cover image is explicitly defined, fallback to the first active package's image

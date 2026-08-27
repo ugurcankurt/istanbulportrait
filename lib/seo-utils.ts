@@ -18,8 +18,8 @@ export function getBaseUrl() {
 export function generateSeoDescription(
   content: string | null | undefined,
   maxLength = 160,
-): string {
-  if (!content) return "";
+): string | null {
+  if (!content) return null;
 
   // 1. Remove HTML tags
   let cleanText = content.replace(/<[^>]*>?/gm, " ");
@@ -27,6 +27,8 @@ export function generateSeoDescription(
   cleanText = cleanText.replace(/[#*_~`>[\]()]/g, " ");
   // 3. Normalize whitespaces
   cleanText = cleanText.replace(/\s+/g, " ").trim();
+
+  if (!cleanText) return null;
 
   if (cleanText.length <= maxLength) return cleanText;
 
@@ -87,7 +89,7 @@ export function optimizeSeoImage(
  */
 export function constructOpenGraph(
   title: string,
-  description: string,
+  description: string | null,
   imageUrl: string,
   siteName: string,
   locale: string,
