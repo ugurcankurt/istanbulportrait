@@ -105,9 +105,6 @@ export async function generateMetadata({
 
   return {
     metadataBase: new URL(baseUrl),
-    alternates: {
-      languages,
-    },
     title: {
       template: `%s | ${title}`,
       default: title,

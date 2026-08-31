@@ -65,12 +65,12 @@ export async function generateMetadata(props: {
     routing.locales.forEach((loc) => {
       const resolved = resolver(loc);
       if (resolved) {
-        langs[loc] = `${baseUrl}/${loc}${resolved}`;
+        langs[loc] = encodeURI(`${baseUrl}/${loc}${resolved}`);
       }
     });
     const enResolved = resolver("en");
     if (enResolved) {
-      langs["x-default"] = `${baseUrl}/en${enResolved}`;
+      langs["x-default"] = encodeURI(`${baseUrl}/en${enResolved}`);
     } else {
       const availableLocales = Object.keys(langs);
       if (availableLocales.length > 0) {
@@ -112,7 +112,7 @@ export async function generateMetadata(props: {
       title,
       description: desc,
       alternates: {
-        canonical: `${baseUrl}/${params.locale}/${currentSeg}`,
+        canonical: encodeURI(`${baseUrl}/${params.locale}/${currentSeg}`),
         ...getAlternates((loc) => {
           const tLoc = dbPage.title?.[loc];
           return `/${tLoc ? generateNativeSlug(tLoc) : dbPage.slug}`;
@@ -171,7 +171,7 @@ export async function generateMetadata(props: {
       title,
       description: desc,
       alternates: {
-        canonical: `${baseUrl}/${params.locale}/${dbPage.slug}/${type}/${childSlug}`,
+        canonical: encodeURI(`${baseUrl}/${params.locale}/${dbPage.slug}/${type}/${childSlug}`),
         ...getAlternates((loc) => {
           const tLoc = dbPage.title?.[loc];
           const bSeg = tLoc ? generateNativeSlug(tLoc) : dbPage.slug;
@@ -319,7 +319,7 @@ export async function generateMetadata(props: {
       alternates: {
         ...(getAlternatesFn(params.locale)
           ? {
-              canonical: `${baseUrl}/${params.locale}${getAlternatesFn(params.locale)}`,
+              canonical: encodeURI(`${baseUrl}/${params.locale}${getAlternatesFn(params.locale)}`),
             }
           : {}),
         ...getAlternates(getAlternatesFn),
