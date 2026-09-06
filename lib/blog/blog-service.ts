@@ -98,7 +98,7 @@ export const getPublishedBlogPosts = cache(async function (
       .from("blog_post_categories")
       .select("post_id")
       .eq("category_id", category_id);
-    const postIds = catPosts?.map((p) => p.post_id) || [];
+    const postIds = catPosts?.map((p: any) => p.post_id) || [];
     if (postIds.length > 0) {
       query = query.in("id", postIds);
     } else {
@@ -111,7 +111,7 @@ export const getPublishedBlogPosts = cache(async function (
       .from("blog_post_tags")
       .select("post_id")
       .eq("tag_id", tag_id);
-    const postIds = tagPosts?.map((p) => p.post_id) || [];
+    const postIds = tagPosts?.map((p: any) => p.post_id) || [];
     if (postIds.length > 0) {
       query = query.in("id", postIds);
     } else {
@@ -256,7 +256,7 @@ export async function getAllBlogPosts(
       .from("blog_post_categories")
       .select("post_id")
       .eq("category_id", category_id);
-    const postIds = catPosts?.map((p) => p.post_id) || [];
+    const postIds = catPosts?.map((p: any) => p.post_id) || [];
     if (postIds.length > 0) {
       query = query.in("id", postIds);
     } else {
@@ -269,7 +269,7 @@ export async function getAllBlogPosts(
       .from("blog_post_tags")
       .select("post_id")
       .eq("tag_id", tag_id);
-    const postIds = tagPosts?.map((p) => p.post_id) || [];
+    const postIds = tagPosts?.map((p: any) => p.post_id) || [];
     if (postIds.length > 0) {
       query = query.in("id", postIds);
     } else {
