@@ -94,11 +94,29 @@ export const getPublishedBlogPosts = cache(async function (
   }
 
   if (category_id && category_id !== "all") {
-    query = query.contains("categories", [{ category_id }]);
+    const { data: catPosts } = await supabaseAdmin
+      .from("blog_post_categories")
+      .select("post_id")
+      .eq("category_id", category_id);
+    const postIds = catPosts?.map((p) => p.post_id) || [];
+    if (postIds.length > 0) {
+      query = query.in("id", postIds);
+    } else {
+      query = query.eq("id", "00000000-0000-0000-0000-000000000000");
+    }
   }
 
   if (tag_id && tag_id !== "all") {
-    query = query.contains("tags", [{ tag_id }]);
+    const { data: tagPosts } = await supabaseAdmin
+      .from("blog_post_tags")
+      .select("post_id")
+      .eq("tag_id", tag_id);
+    const postIds = tagPosts?.map((p) => p.post_id) || [];
+    if (postIds.length > 0) {
+      query = query.in("id", postIds);
+    } else {
+      query = query.eq("id", "00000000-0000-0000-0000-000000000000");
+    }
   }
 
   if (typeof is_featured === "boolean") {
@@ -234,11 +252,29 @@ export async function getAllBlogPosts(
   }
 
   if (category_id && category_id !== "all") {
-    query = query.contains("categories", [{ category_id }]);
+    const { data: catPosts } = await supabaseAdmin
+      .from("blog_post_categories")
+      .select("post_id")
+      .eq("category_id", category_id);
+    const postIds = catPosts?.map((p) => p.post_id) || [];
+    if (postIds.length > 0) {
+      query = query.in("id", postIds);
+    } else {
+      query = query.eq("id", "00000000-0000-0000-0000-000000000000");
+    }
   }
 
   if (tag_id && tag_id !== "all") {
-    query = query.contains("tags", [{ tag_id }]);
+    const { data: tagPosts } = await supabaseAdmin
+      .from("blog_post_tags")
+      .select("post_id")
+      .eq("tag_id", tag_id);
+    const postIds = tagPosts?.map((p) => p.post_id) || [];
+    if (postIds.length > 0) {
+      query = query.in("id", postIds);
+    } else {
+      query = query.eq("id", "00000000-0000-0000-0000-000000000000");
+    }
   }
 
   if (typeof is_featured === "boolean") {
