@@ -234,6 +234,11 @@ export function PackageDetails({
                     })}
                   </Badge>
                 )}
+                {packageData.is_per_person && (
+                  <Badge className="bg-primary/10 text-primary border-[0.5px] border-primary/20 font-serif tracking-widest uppercase text-[10px] px-3 py-1 shadow-sm">
+                    👤 {t("per_person")}
+                  </Badge>
+                )}
                 <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-md">
                   <div className="flex items-center">
                     {[...Array(5)].map((_, i) => (
@@ -320,6 +325,11 @@ export function PackageDetails({
                       {tui("most_popular")}
                     </Badge>
                   )}
+                  {packageData.is_per_person && (
+                    <Badge className="bg-primary/10 text-primary border-[0.5px] border-primary/20 font-serif tracking-widest uppercase text-[10px] px-3 py-1 shadow-sm">
+                      👤 {t("per_person")}
+                    </Badge>
+                  )}
                 </div>
                 <div className="text-4xl font-serif text-foreground leading-tight">
                   {packageName}
@@ -351,15 +361,15 @@ export function PackageDetails({
                   </button>
                 </div>
                 <div className="flex items-center gap-3">
-                  <div className="flex items-center gap-3">
-                    <span className="text-xs text-muted-foreground font-semibold uppercase tracking-wide">
-                      {t("starting_from")}
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-sm text-muted-foreground font-medium lowercase">
+                      {t("starting_from")} /
                     </span>
                     <div className="text-4xl font-bold text-primary">
                       {formatPrice(pricing.price)}
                     </div>
                     {pricing.isDiscounted && (
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-2 ml-2">
                         <span className="text-xl text-muted-foreground line-through font-medium">
                           {formatPrice(pricing.originalPrice)}
                         </span>
@@ -547,20 +557,15 @@ export function PackageDetails({
         {/* Action Bar */}
         <div className="p-4 flex items-center justify-between gap-4 pb-[calc(1rem+env(safe-area-inset-bottom))]">
           <div className="flex flex-col">
-            <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wide mb-1">
-              {t("starting_from")}
-            </span>
-            {packageData.is_per_person && (
-              <span className="text-[14px] capitalize font-black text-muted-foreground mb-1">
-                {t("per_person")}
+            <div className="flex items-baseline gap-1.5">
+              <span className="text-sm font-medium text-muted-foreground lowercase">
+                {t("starting_from")} /
               </span>
-            )}
-            <div className="flex items-center gap-2">
               <span className="text-2xl font-black text-primary">
                 {formatPrice(pricing.price)}
               </span>
               {pricing.isDiscounted && (
-                <span className="text-sm line-through text-muted-foreground font-medium opacity-60">
+                <span className="text-sm line-through text-muted-foreground font-medium opacity-60 ml-1">
                   {formatPrice(pricing.originalPrice)}
                 </span>
               )}

@@ -158,6 +158,15 @@ export function PackagesSection({
           <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-black/60 to-transparent z-0 pointer-events-none" />
           <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/95 via-black/50 to-transparent z-0 pointer-events-none" />
 
+          {/* Top Left Badges */}
+          <div className="absolute top-3 start-3 z-10 flex flex-col gap-2 items-start">
+            {pkg.isPerPerson && (
+              <Badge className="bg-black/50 backdrop-blur-md border border-white/20 text-white px-2 py-0.5 text-[9px] sm:text-[10px] tracking-widest uppercase shadow-sm font-medium">
+                {t("per_person")}
+              </Badge>
+            )}
+          </div>
+
           {/* Seasonal Discount Badge (Top Right) */}
           <div className="absolute top-3 end-3 z-10 flex flex-col gap-2 items-end">
             {pkg.popular && (
@@ -209,31 +218,24 @@ export function PackagesSection({
               </div>
 
               {/* Right: Price */}
-              <div className="flex flex-col items-end justify-center leading-none">
-                <div className="flex flex-col items-start">
-                  <span className="text-[10px] sm:text-[11px] text-white/80 uppercase tracking-widest drop-shadow-md mb-1">
-                    {t("starting_from")}
-                  </span>
-                  <div className="flex items-center gap-1.5">
-                    {pkg.pricing?.isDiscounted && (
-                      <span className="text-[10px] sm:text-xs text-white/70 line-through">
-                        {formatPrice(pkg.basePrice)}
-                      </span>
-                    )}
-                    <span className="text-lg sm:text-xl font-serif font-semibold text-white drop-shadow-md">
-                      {formatPrice(
-                        pkg.pricing?.isDiscounted
-                          ? pkg.pricing.price
-                          : pkg.basePrice,
-                      )}
-                    </span>
-                  </div>
-                </div>
-                {pkg.isPerPerson && (
-                  <span className="text-[9px] text-white/80 mt-1 uppercase tracking-wider drop-shadow-sm">
-                    {t("per_person")}
+              <div className="flex flex-col items-end justify-end leading-none">
+                {pkg.pricing?.isDiscounted && (
+                  <span className="text-[10px] sm:text-[11px] text-white/70 line-through drop-shadow-sm mb-0.5">
+                    {formatPrice(pkg.basePrice)}
                   </span>
                 )}
+                <div className="flex items-end gap-1.5">
+                  <span className="text-[11px] sm:text-[12px] text-white/90 lowercase tracking-wide drop-shadow-md pb-[2px]">
+                    {t("starting_from")} /
+                  </span>
+                  <span className="text-lg sm:text-xl font-serif font-semibold text-white drop-shadow-md">
+                    {formatPrice(
+                      pkg.pricing?.isDiscounted
+                        ? pkg.pricing.price
+                        : pkg.basePrice,
+                    )}
+                  </span>
+                </div>
               </div>
             </div>
           </div>

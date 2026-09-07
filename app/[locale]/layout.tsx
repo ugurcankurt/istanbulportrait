@@ -203,6 +203,14 @@ export default async function LocaleLayout({
       suppressHydrationWarning
     >
       <head>
+        {/* Ad-hoc Custom Head Scripts Injected from Settings Dashboard */}
+        {settings.custom_head_scripts && (
+          <div
+            dangerouslySetInnerHTML={{ __html: settings.custom_head_scripts }}
+          />
+        )}
+      </head>
+      <body className="antialiased" suppressHydrationWarning>
         {/* Google Consent Mode v2 Default State - MUST be first before any analytics */}
         <Script
           id="google-consent-default"
@@ -223,14 +231,6 @@ export default async function LocaleLayout({
             `,
           }}
         />
-        {/* Ad-hoc Custom Head Scripts Injected from Settings Dashboard */}
-        {settings.custom_head_scripts && (
-          <div
-            dangerouslySetInnerHTML={{ __html: settings.custom_head_scripts }}
-          />
-        )}
-      </head>
-      <body className="antialiased" suppressHydrationWarning>
         <SchemaInjector schema={buildOrganizationSchema(settings)} />
 
         <ThemeProvider
@@ -240,7 +240,7 @@ export default async function LocaleLayout({
           disableTransitionOnChange
         >
           <ConsentProvider>
-            <NextIntlClientProvider messages={messages}>
+            <NextIntlClientProvider messages={messages} now={new Date()}>
               <CurrencyProvider rate={currentRate} currency={selectedCurrency}>
                 <TooltipProvider>
                   <div className="flex min-h-[100dvh] flex-col">

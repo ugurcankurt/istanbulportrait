@@ -286,12 +286,17 @@ export function BookingCard({
                 {tCheckout("yield.early_bird", { defaultValue: "Early Bird" })}
               </Badge>
             )}
+            {isPerPerson && (
+              <Badge className="bg-primary/10 text-primary border-primary/20 shadow-none font-bold uppercase tracking-widest text-[10px]">
+                👤 {t("per_person")}
+              </Badge>
+            )}
           </div>
           <div className="flex flex-col gap-1">
-            <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wide">
-              {t("starting_from")}
-            </span>
             <div className="flex items-baseline gap-1">
+              <span className="text-sm font-medium text-muted-foreground lowercase">
+                {t("starting_from")} /
+              </span>
               <span
                 className={cn(
                   "font-serif text-foreground leading-none",
@@ -303,15 +308,15 @@ export function BookingCard({
               {pricing.isDiscounted && (
                 <span
                   className={cn(
-                    "text-muted-foreground line-through font-medium leading-none",
+                    "text-muted-foreground line-through font-medium leading-none ml-1",
                     isInsideModal ? "text-base" : "text-lg",
                   )}
                 >
                   {formatPrice(pricing.originalPrice || basePrice)}
                 </span>
               )}
-              <span className="text-sm font-bold text-muted-foreground">
-                {isPerPerson ? `/ ${t("per_person")}` : `/ ${packageDuration}`}
+              <span className="text-sm font-bold text-muted-foreground ml-1">
+                / {packageDuration}
               </span>
             </div>
           </div>

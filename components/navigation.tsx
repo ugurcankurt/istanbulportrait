@@ -27,6 +27,7 @@ import { usePathname, useRouter } from "@/i18n/routing";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { useCurrency } from "@/contexts/currency-context";
 
 const locales = [
   { code: "en", name: "English", flag: "🇬🇧" },
@@ -54,6 +55,7 @@ export function Navigation({ dynamicNavData = {}, settings }: NavigationProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const { resolvedTheme } = useTheme();
+  const { currency } = useCurrency();
 
   // Prevent hydration mismatch by waiting for client-side mount
   useEffect(() => {
@@ -218,13 +220,6 @@ export function Navigation({ dynamicNavData = {}, settings }: NavigationProps) {
                 </span>
                 <span className="text-sm font-bold text-foreground">
                   {(() => {
-                    const curr =
-                      typeof document !== "undefined"
-                        ? document.cookie.replace(
-                            /(?:(?:^|.*;\s*)NEXT_CURRENCY\s*\=\s*([^;]*).*$)|^.*$/,
-                            "$1",
-                          ) || "EUR"
-                        : "EUR";
                     const symbols: Record<string, string> = {
                       EUR: "€",
                       USD: "$",
@@ -235,18 +230,12 @@ export function Navigation({ dynamicNavData = {}, settings }: NavigationProps) {
                       CNY: "¥",
                       RUB: "₽",
                     };
-                    return symbols[curr] || "€";
+                    return symbols[currency] || "€";
                   })()}
                 </span>
               </div>
               <span className="text-xs font-medium uppercase hidden sm:inline-block ml-1">
-                {locale} /{" "}
-                {typeof document !== "undefined"
-                  ? document.cookie.replace(
-                      /(?:(?:^|.*;\s*)NEXT_CURRENCY\s*\=\s*([^;]*).*$)|^.*$/,
-                      "$1",
-                    ) || "EUR"
-                  : "EUR"}
+                {locale} / {currency}
               </span>
               <span className="sr-only">Change settings</span>
             </DialogTrigger>

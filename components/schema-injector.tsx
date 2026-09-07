@@ -1,4 +1,5 @@
 import { useId } from "react";
+import Script from "next/script";
 
 interface SchemaInjectorProps {
   schema: any;
@@ -16,7 +17,7 @@ export function SchemaInjector({ schema, id }: SchemaInjectorProps) {
   const uniqueId = id || `schema-jsonld-${generatedId}`;
 
   return (
-    <script
+    <Script
       id={uniqueId}
       type="application/ld+json"
       dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
