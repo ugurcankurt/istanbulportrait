@@ -50,10 +50,9 @@ export async function GET(request: NextRequest) {
       throw error;
     }
 
-    // 3. Format as CSV (Google Ads Offline Conversions / Enhanced Conversions for Leads format)
-    // Required columns generally: Email, Phone Number, Conversion Name, Conversion Time, Conversion Value, Conversion Currency
+    // Required columns generally: Email, Phone Number, Conversion Name, Conversion Time, Conversion Value, Conversion Currency, Transaction ID, Event Source
     let csvContent =
-      "Email,Phone Number,Conversion Name,Conversion Time,Conversion Value,Conversion Currency\n";
+      "Email,Phone Number,Conversion Name,Conversion Time,Conversion Value,Conversion Currency,Transaction ID,Event Source\n";
 
     if (bookings) {
       for (const booking of bookings) {
@@ -69,8 +68,10 @@ export async function GET(request: NextRequest) {
         const conversionName = '"Offline Booking Confirmed"';
         const value = booking.total_amount || 0;
         const currency = '"EUR"';
+        const transactionId = `"${booking.id}"`;
+        const eventSource = '"CRM"';
 
-        csvContent += `${email},${phone},${conversionName},"${conversionTime}",${value},${currency}\n`;
+        csvContent += `${email},${phone},${conversionName},"${conversionTime}",${value},${currency},${transactionId},${eventSource}\n`;
       }
     }
 
