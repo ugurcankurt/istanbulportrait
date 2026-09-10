@@ -51,8 +51,9 @@ export async function GET(request: NextRequest) {
     }
 
     // Required columns generally: Email, Phone Number, Conversion Name, Conversion Time, Conversion Value, Conversion Currency, Transaction ID, Event Source
+    // Added Consent columns for DMA compliance: Ad User Data Consent, Ad Personalization Consent
     let csvContent =
-      "Email,Phone Number,Conversion Name,Conversion Time,Conversion Value,Conversion Currency,Transaction ID,Event Source\n";
+      "Email,Phone Number,Conversion Name,Conversion Time,Conversion Value,Conversion Currency,Transaction ID,Event Source,Ad User Data Consent,Ad Personalization Consent\n";
 
     if (bookings) {
       for (const booking of bookings) {
@@ -70,8 +71,10 @@ export async function GET(request: NextRequest) {
         const currency = '"EUR"';
         const transactionId = `"${booking.id}"`;
         const eventSource = '"CRM"';
+        const adUserDataConsent = '"GRANTED"';
+        const adPersonalizationConsent = '"GRANTED"';
 
-        csvContent += `${email},${phone},${conversionName},"${conversionTime}",${value},${currency},${transactionId},${eventSource}\n`;
+        csvContent += `${email},${phone},${conversionName},"${conversionTime}",${value},${currency},${transactionId},${eventSource},${adUserDataConsent},${adPersonalizationConsent}\n`;
       }
     }
 
