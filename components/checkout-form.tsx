@@ -586,6 +586,9 @@ export function CheckoutForm({
       const fbc = getCookie("_fbc");
       const fbp = getCookie("_fbp");
 
+      const gbraid = typeof window !== "undefined" ? localStorage.getItem("google_ads_gbraid") : null;
+      const wbraid = typeof window !== "undefined" ? localStorage.getItem("google_ads_wbraid") : null;
+
       const bookingResponse = await fetch("/api/booking/create-confirmed", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -598,6 +601,8 @@ export function CheckoutForm({
           provider: "cash",
           providerResponse: { method: "cash" },
           eventId,
+          gbraid,
+          wbraid,
           bookingId: bookingId || undefined,
           locale,
           fbc,

@@ -28,6 +28,8 @@ import {
   getBaseUrl,
   optimizeSeoImage,
 } from "@/lib/seo-utils";
+import { GoogleAdsTracker } from "@/components/google-ads-tracker";
+import { Suspense } from "react";
 
 const WhatsAppButton = dynamic(() =>
   import("@/components/whatsapp-button").then((mod) => mod.WhatsAppButton),
@@ -232,6 +234,9 @@ export default async function LocaleLayout({
           }}
         />
         <SchemaInjector schema={buildOrganizationSchema(settings)} />
+        <Suspense fallback={null}>
+          <GoogleAdsTracker />
+        </Suspense>
 
         <ThemeProvider
           attribute="class"

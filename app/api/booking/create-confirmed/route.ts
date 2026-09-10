@@ -43,7 +43,7 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { paymentId, conversationId, locale, promoCode, ...bookingData } =
+    const { paymentId, conversationId, locale, promoCode, gbraid, wbraid, ...bookingData } =
       body;
 
     // Extract URL origin/referer for Facebook Match Rate
@@ -256,6 +256,9 @@ export async function POST(request: NextRequest) {
               people_count: peopleCount || null,
               user_id: authUserId || null,
               drive_folder_id: driveFolderId || null,
+              gbraid: gbraid || null,
+              wbraid: wbraid || null,
+              ip_address: ip || null,
             })
             .eq("id", bookingId)
             .select()
@@ -283,6 +286,9 @@ export async function POST(request: NextRequest) {
             people_count: peopleCount || null,
             user_id: authUserId || null,
             drive_folder_id: driveFolderId || null,
+            gbraid: gbraid || null,
+            wbraid: wbraid || null,
+            ip_address: ip || null,
           })
           .select()
           .single();

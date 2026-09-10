@@ -41,7 +41,7 @@ export async function GET(request: NextRequest) {
 
     const { data: bookings, error } = await supabase
       .from("bookings")
-      .select("id, user_email, user_phone, total_amount, status, updated_at")
+      .select("id, user_email, user_phone, total_amount, status, updated_at, gbraid, wbraid, ip_address")
       .in("status", ["confirmed", "completed"])
       .gte("updated_at", thirtyDaysAgo.toISOString())
       .order("updated_at", { ascending: false });
@@ -52,8 +52,9 @@ export async function GET(request: NextRequest) {
 
     // Required columns generally: Email, Phone Number, Conversion Name, Conversion Time, Conversion Value, Conversion Currency, Transaction ID, Event Source
     // Added Consent columns for DMA compliance: Ad User Data Consent, Ad Personalization Consent
+    // Added Attribution columns: GBRAID, WBRAID, IP Address
     let csvContent =
-      "Email,Phone Number,Conversion Name,Conversion Time,Conversion Value,Conversion Currency,Transaction ID,Event Source,Ad User Data Consent,Ad Personalization Consent\n";
+      "Email,Phone Number,Conversion Name,Conversion Time,Conversion Value,Conversion Currency,Transaction ID,Event Source,Ad User Data Consent,Ad Personalization Consent,GBRAID,WBRAID,IP Address\n";
 
     if (bookings) {
       for (const booking of bookings) {
@@ -73,8 +74,11 @@ export async function GET(request: NextRequest) {
         const eventSource = '"CRM"';
         const adUserDataConsent = '"GRANTED"';
         const adPersonalizationConsent = '"GRANTED"';
+        const gbraid = booking.gbraid ? `"${booking.gbraid}"` : '""';
+        const wbraid = booking.wbraid ? `"${booking.wbraid}"` : '""';
+        const ipAddress = booking.ip_address ? `"${booking.ip_address}"` : '""';
 
-        csvContent += `${email},${phone},${conversionName},"${conversionTime}",${value},${currency},${transactionId},${eventSource},${adUserDataConsent},${adPersonalizationConsent}\n`;
+        csvContent += `${email},${phone},${conversionName},"${conversionTime}",${value},${currency},${transactionId},${eventSource},${adUserDataConsent},${adPersonalizationConsent},${gbraid},${wbraid},${ipAddress}\n`;
       }
     }
 
