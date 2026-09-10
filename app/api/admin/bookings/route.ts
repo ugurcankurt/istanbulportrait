@@ -225,6 +225,24 @@ export async function PATCH(request: NextRequest) {
         }
       }
 
+      // Track Meta CRM Status Change (Qualified Lead or Converted Lead)
+      if (
+        (status === "confirmed" || status === "completed") &&
+        currentBooking.status !== status
+      ) {
+        try {
+          const { trackMetaCRMStatusEvent } = await import("@/lib/facebook");
+          await trackMetaCRMStatusEvent(
+            currentBooking.user_email,
+            currentBooking.user_phone,
+            bookingId,
+            status as "confirmed" | "completed",
+          );
+        } catch (crmError) {
+          console.error("Failed to track Meta CRM status event:", crmError);
+        }
+      }
+
       return NextResponse.json({
         success: true,
         booking,

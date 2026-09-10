@@ -611,3 +611,61 @@ export const trackMetaCRMLeadEvent = async (
     console.error("[Meta CRM] trackMetaCRMLeadEvent failed:", err);
   }
 };
+
+/**
+ * Tracks a Meta CRM status change (Qualified or Converted).
+ */
+export const trackMetaCRMStatusEvent = async (
+  customerEmail: string | undefined | null,
+  customerPhone: string | undefined | null,
+  bookingId: string,
+  newStatus: "confirmed" | "completed",
+): Promise<void> => {
+  try {
+    // Derive a stable 15-digit lead_id from bookingId
+    const leadId =
+      (Math.abs(
+        bookingId
+          .split("")
+          .reduce((acc, ch) => acc + ch.charCodeAt(0), 100000000000000),
+      ) %
+        900000000000000) +
+      100000000000000;
+
+    const cleanId = bookingId.replace(/[^a-zA-Z0-9_-]/g, "_");
+
+    // Prepare hashed data
+    const hashedEmail = customerEmail
+      ? [await hashCustomerData(customerEmail)]
+      : [];
+    const hashedPhone = customerPhone
+      ? [await hashPhoneNumber(customerPhone)]
+      : [];
+
+    const eventName = newStatus === "confirmed" ? "Qualified" : "Converted";
+
+    const event: FacebookConversionEvent = {
+      event_name: eventName,
+      event_time: Math.floor(Date.now() / 1000),
+      event_id: `crm_${eventName.toLowerCase()}_${cleanId}_${Date.now()}`,
+      action_source: "system_generated",
+      user_data: {
+        em: hashedEmail,
+        ph: hashedPhone,
+        lead_id: leadId,
+      },
+      custom_data: {
+        event_source: "crm",
+        lead_event_source: "Istanbul Portrait CRM",
+      },
+    };
+
+    await sendToFacebookConversionsAPI([event]);
+  } catch (err) {
+    // Non-blocking: log error but never throw
+    console.error(
+      `[Meta CRM] trackMetaCRMStatusEvent (${newStatus}) failed:`,
+      err,
+    );
+  }
+};
