@@ -127,6 +127,77 @@ export async function trackGA4ServerPurchase(
 }
 
 /**
+ * Send a server-side Refund event to GA4 via Measurement Protocol.
+ * Non-blocking: catches all errors, never throws.
+ */
+export async function trackGA4ServerRefund(
+  bookingId: string,
+  packageId: string,
+  packageName: string,
+  totalAmount: number,
+  currency: string = "EUR",
+): Promise<void> {
+  const settings = await settingsService.getSettings();
+  const GA4_MEASUREMENT_ID = settings.google_analytics_id;
+  const GA4_API_SECRET = settings.ga4_measurement_protocol_secret;
+
+  if (!GA4_MEASUREMENT_ID || !GA4_API_SECRET) {
+    console.warn(
+      "[GA4 Server] Missing google_analytics_id or ga4_measurement_protocol_secret in settings",
+    );
+    return;
+  }
+
+  // Use the same client_id logic as purchase to ensure matching
+  const resolvedClientId = `server.${bookingId.replace(/[^a-zA-Z0-9]/g, "")}`;
+
+  const payload = {
+    client_id: resolvedClientId,
+    events: [
+      {
+        name: "refund",
+        params: {
+          transaction_id: bookingId,
+          value: totalAmount,
+          currency: currency,
+          items: [
+            {
+              item_id: packageId,
+              item_name: packageName,
+              item_category: "Photography Package",
+              price: totalAmount,
+              quantity: 1,
+            },
+          ],
+        },
+      },
+    ],
+  };
+
+  try {
+    const url = `${GA4_ENDPOINT}?measurement_id=${GA4_MEASUREMENT_ID}&api_secret=${GA4_API_SECRET}`;
+
+    const response = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+
+    if (!response.ok) {
+      console.error(
+        `[GA4 Server] Refund event failed: ${response.status} ${response.statusText}`,
+      );
+    } else {
+      console.log(
+        `[GA4 Server] Refund event sent: ${bookingId} — €${totalAmount}`,
+      );
+    }
+  } catch (err) {
+    console.error("[GA4 Server] trackGA4ServerRefund error:", err);
+  }
+}
+
+/**
  * Package display names (for GA4 item_name)
  */
 export const PACKAGE_DISPLAY_NAMES: Record<string, string> = {

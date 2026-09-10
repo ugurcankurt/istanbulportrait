@@ -183,6 +183,25 @@ export async function PATCH(request: NextRequest) {
         } catch (emailError) {
           console.error("Failed to send cancellation email:", emailError);
         }
+
+        // Track GA4 Server Refund
+        try {
+          const { trackGA4ServerRefund, PACKAGE_DISPLAY_NAMES } = await import(
+            "@/lib/ga4-server"
+          );
+          const packageName =
+            PACKAGE_DISPLAY_NAMES[currentBooking.package_id] ||
+            currentBooking.package_id;
+          await trackGA4ServerRefund(
+            bookingId,
+            currentBooking.package_id,
+            packageName,
+            currentBooking.total_amount,
+            "EUR",
+          );
+        } catch (ga4Error) {
+          console.error("Failed to track GA4 refund event:", ga4Error);
+        }
       }
 
       // If status is changed to completed, update the cash payment amount to total_amount
