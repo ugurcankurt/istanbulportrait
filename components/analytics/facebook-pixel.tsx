@@ -92,8 +92,18 @@ export function FacebookPixel({ pixelId }: { pixelId?: string | null }) {
           hashed.fn = await hashCustomerData(updatedUserData.firstName);
         if (updatedUserData.lastName)
           hashed.ln = await hashCustomerData(updatedUserData.lastName);
+        if (updatedUserData.city)
+          hashed.ct = await hashCustomerData(updatedUserData.city);
+        if (updatedUserData.state)
+          hashed.st = await hashCustomerData(updatedUserData.state);
+        if (updatedUserData.zip)
+          hashed.zp = await hashCustomerData(updatedUserData.zip);
         if (updatedUserData.country)
           hashed.country = await hashCustomerData(updatedUserData.country);
+        if (updatedUserData.dob)
+          hashed.db = await hashCustomerData(updatedUserData.dob);
+        if (updatedUserData.gender)
+          hashed.ge = await hashCustomerData(updatedUserData.gender);
 
         if (Object.keys(hashed).length > 0) {
           window.fbq("init", pixelId, hashed);

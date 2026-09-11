@@ -408,8 +408,7 @@ export const trackFacebookPurchase = async (
       external_id: options?.externalId ? [options.externalId] : undefined,
     },
     custom_data: {
-      event_source: "crm",
-      lead_event_source: "Istanbul Portrait CRM",
+      event_source: "website",
       content_ids: [packageId],
       content_type: "product",
       value: amount,

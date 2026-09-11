@@ -667,6 +667,12 @@ export function trackSchedule(
         customer_phone: userData?.phone,
         first_name: userData?.firstName,
         last_name: userData?.lastName,
+        city: userData?.city,
+        state: userData?.state,
+        zip: userData?.zip,
+        country: userData?.country,
+        dob: userData?.dob,
+        gender: userData?.gender,
         custom_data: {
           content_name: packageName,
           scheduled_date: scheduledDate,
