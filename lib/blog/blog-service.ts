@@ -144,26 +144,30 @@ export const getPublishedBlogPosts = cache(async function (
     translation: Array.isArray(post.translation)
       ? post.translation[0]
       : post.translation,
-    categories: (post.categories || []).map((cat: any) => ({
-      ...cat,
-      category: {
-        ...cat.category,
-        translation: Array.isArray(cat.category.translations)
-          ? cat.category.translations.find((t: any) => t.locale === locale) ||
-            cat.category.translations[0]
-          : cat.category.translations,
-      },
-    })),
-    tags: (post.tags || []).map((tag: any) => ({
-      ...tag,
-      tag: {
-        ...tag.tag,
-        translation: Array.isArray(tag.tag.translations)
-          ? tag.tag.translations.find((t: any) => t.locale === locale) ||
-            tag.tag.translations[0]
-          : tag.tag.translations,
-      },
-    })),
+    categories: (post.categories || [])
+      .filter((cat: any) => cat.category)
+      .map((cat: any) => ({
+        ...cat,
+        category: {
+          ...cat.category,
+          translation: Array.isArray(cat.category.translations)
+            ? cat.category.translations.find((t: any) => t.locale === locale) ||
+              cat.category.translations[0]
+            : cat.category.translations,
+        },
+      })),
+    tags: (post.tags || [])
+      .filter((tag: any) => tag.tag)
+      .map((tag: any) => ({
+        ...tag,
+        tag: {
+          ...tag.tag,
+          translation: Array.isArray(tag.tag.translations)
+            ? tag.tag.translations.find((t: any) => t.locale === locale) ||
+              tag.tag.translations[0]
+            : tag.tag.translations,
+        },
+      })),
   }));
 
   return {
@@ -302,26 +306,30 @@ export async function getAllBlogPosts(
     translation: Array.isArray(post.translation)
       ? post.translation[0]
       : post.translation,
-    categories: (post.categories || []).map((cat: any) => ({
-      ...cat,
-      category: {
-        ...cat.category,
-        translation: Array.isArray(cat.category.translations)
-          ? cat.category.translations.find((t: any) => t.locale === locale) ||
-            cat.category.translations[0]
-          : cat.category.translations,
-      },
-    })),
-    tags: (post.tags || []).map((tag: any) => ({
-      ...tag,
-      tag: {
-        ...tag.tag,
-        translation: Array.isArray(tag.tag.translations)
-          ? tag.tag.translations.find((t: any) => t.locale === locale) ||
-            tag.tag.translations[0]
-          : tag.tag.translations,
-      },
-    })),
+    categories: (post.categories || [])
+      .filter((cat: any) => cat.category)
+      .map((cat: any) => ({
+        ...cat,
+        category: {
+          ...cat.category,
+          translation: Array.isArray(cat.category.translations)
+            ? cat.category.translations.find((t: any) => t.locale === locale) ||
+              cat.category.translations[0]
+            : cat.category.translations,
+        },
+      })),
+    tags: (post.tags || [])
+      .filter((tag: any) => tag.tag)
+      .map((tag: any) => ({
+        ...tag,
+        tag: {
+          ...tag.tag,
+          translation: Array.isArray(tag.tag.translations)
+            ? tag.tag.translations.find((t: any) => t.locale === locale) ||
+              tag.tag.translations[0]
+            : tag.tag.translations,
+        },
+      })),
   }));
 
   return {
@@ -400,26 +408,30 @@ export const getBlogPostBySlug = cache(async function (
     translation: Array.isArray(data.translation)
       ? data.translation[0]
       : data.translation,
-    categories: (data.categories || []).map((cat: any) => ({
-      ...cat,
-      category: {
-        ...cat.category,
-        translation: Array.isArray(cat.category.translations)
-          ? cat.category.translations.find((t: any) => t.locale === locale) ||
-            cat.category.translations[0]
-          : cat.category.translations,
-      },
-    })),
-    tags: (data.tags || []).map((tag: any) => ({
-      ...tag,
-      tag: {
-        ...tag.tag,
-        translation: Array.isArray(tag.tag.translations)
-          ? tag.tag.translations.find((t: any) => t.locale === locale) ||
-            tag.tag.translations[0]
-          : tag.tag.translations,
-      },
-    })),
+    categories: (data.categories || [])
+      .filter((cat: any) => cat.category)
+      .map((cat: any) => ({
+        ...cat,
+        category: {
+          ...cat.category,
+          translation: Array.isArray(cat.category.translations)
+            ? cat.category.translations.find((t: any) => t.locale === locale) ||
+              cat.category.translations[0]
+            : cat.category.translations,
+        },
+      })),
+    tags: (data.tags || [])
+      .filter((tag: any) => tag.tag)
+      .map((tag: any) => ({
+        ...tag,
+        tag: {
+          ...tag.tag,
+          translation: Array.isArray(tag.tag.translations)
+            ? tag.tag.translations.find((t: any) => t.locale === locale) ||
+              tag.tag.translations[0]
+            : tag.tag.translations,
+        },
+      })),
   };
 
   return transformedPost as unknown as BlogPostWithRelations;
@@ -522,26 +534,30 @@ export const getBlogPostById = cache(async function (
     translation: Array.isArray(data.translation)
       ? data.translation[0]
       : data.translation,
-    categories: (data.categories || []).map((cat: any) => ({
-      ...cat,
-      category: {
-        ...cat.category,
-        translation: Array.isArray(cat.category.translations)
-          ? cat.category.translations.find((t: any) => t.locale === locale) ||
-            cat.category.translations[0]
-          : cat.category.translations,
-      },
-    })),
-    tags: (data.tags || []).map((tag: any) => ({
-      ...tag,
-      tag: {
-        ...tag.tag,
-        translation: Array.isArray(tag.tag.translations)
-          ? tag.tag.translations.find((t: any) => t.locale === locale) ||
-            tag.tag.translations[0]
-          : tag.tag.translations,
-      },
-    })),
+    categories: (data.categories || [])
+      .filter((cat: any) => cat.category)
+      .map((cat: any) => ({
+        ...cat,
+        category: {
+          ...cat.category,
+          translation: Array.isArray(cat.category.translations)
+            ? cat.category.translations.find((t: any) => t.locale === locale) ||
+              cat.category.translations[0]
+            : cat.category.translations,
+        },
+      })),
+    tags: (data.tags || [])
+      .filter((tag: any) => tag.tag)
+      .map((tag: any) => ({
+        ...tag,
+        tag: {
+          ...tag.tag,
+          translation: Array.isArray(tag.tag.translations)
+            ? tag.tag.translations.find((t: any) => t.locale === locale) ||
+              tag.tag.translations[0]
+            : tag.tag.translations,
+        },
+      })),
   };
 
   return transformedPost as unknown as BlogPostWithRelations;
@@ -620,23 +636,27 @@ export const getBlogPostByIdWithAllTranslations = cache(async function (
   };
 
   // Transform categories and tags
-  const transformedCategories = (data.categories || []).map((cat: any) => ({
-    category: {
-      ...cat.category,
-      translation: Array.isArray(cat.category.translation)
-        ? cat.category.translation[0]
-        : cat.category.translation,
-    },
-  }));
+  const transformedCategories = (data.categories || [])
+    .filter((cat: any) => cat.category)
+    .map((cat: any) => ({
+      category: {
+        ...cat.category,
+        translation: Array.isArray(cat.category.translation)
+          ? cat.category.translation[0]
+          : cat.category.translation,
+      },
+    }));
 
-  const transformedTags = (data.tags || []).map((tag: any) => ({
-    tag: {
-      ...tag.tag,
-      translation: Array.isArray(tag.tag.translation)
-        ? tag.tag.translation[0]
-        : tag.tag.translation,
-    },
-  }));
+  const transformedTags = (data.tags || [])
+    .filter((tag: any) => tag.tag)
+    .map((tag: any) => ({
+      tag: {
+        ...tag.tag,
+        translation: Array.isArray(tag.tag.translation)
+          ? tag.tag.translation[0]
+          : tag.tag.translation,
+      },
+    }));
 
   const transformedPost = {
     ...data,
