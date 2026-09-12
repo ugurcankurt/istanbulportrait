@@ -131,7 +131,9 @@ export default async function sitemap({
             title: pkg.title?.[locale] || pkg.title?.["en"] || pkg.slug,
             thumbnail_loc: cleanImage(thumbnail),
             description:
-              pkg.description?.[locale] || pkg.description?.["en"] || "Package Video",
+              pkg.description?.[locale] ||
+              pkg.description?.["en"] ||
+              "Package Video",
             ...(isYouTube ? {} : { content_loc: pkg.video_url }),
           });
         }
