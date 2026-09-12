@@ -41,7 +41,9 @@ export async function GET(request: NextRequest) {
 
     const { data: bookings, error } = await supabase
       .from("bookings")
-      .select("id, user_email, user_phone, total_amount, status, updated_at, gbraid, wbraid, ip_address")
+      .select(
+        "id, user_email, user_phone, total_amount, status, updated_at, gbraid, wbraid, ip_address",
+      )
       .in("status", ["confirmed", "completed"])
       .gte("updated_at", thirtyDaysAgo.toISOString())
       .order("updated_at", { ascending: false });

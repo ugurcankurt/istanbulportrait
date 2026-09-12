@@ -46,6 +46,7 @@ import {
   InputGroupAddon,
   InputGroupInput,
 } from "@/components/ui/input-group";
+import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -261,18 +262,31 @@ function EditBookingDialog({
   booking: Booking;
   onUpdate: (
     id: string,
-    updates: { status: string; notes?: string },
+    updates: {
+      status: string;
+      notes?: string;
+      booking_date?: string;
+      booking_time?: string;
+    },
   ) => Promise<void>;
 }) {
   const [status, setStatus] = useState(booking.status);
   const [notes, setNotes] = useState(booking.notes || "");
+  const [bookingDate, setBookingDate] = useState(booking.booking_date);
+  const [bookingTime, setBookingTime] = useState(booking.booking_time);
   const [isUpdating, setIsUpdating] = useState(false);
   const [open, setOpen] = useState(false);
 
   const handleUpdate = async () => {
     setIsUpdating(true);
     try {
-      await onUpdate(booking.id, { status, notes });
+      const updates: any = { status, notes };
+      if (bookingDate !== booking.booking_date)
+        updates.booking_date = bookingDate;
+      if (bookingTime !== booking.booking_time)
+        updates.booking_time = bookingTime;
+
+      await onUpdate(booking.id, updates);
       setOpen(false);
       toast.success("Booking updated successfully");
     } catch (_error) {
@@ -314,6 +328,26 @@ function EditBookingDialog({
                 <SelectItem value="cancelled">Cancelled</SelectItem>
               </SelectContent>
             </Select>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <Label htmlFor="bookingDate">Date</Label>
+              <Input
+                id="bookingDate"
+                type="date"
+                value={bookingDate}
+                onChange={(e) => setBookingDate(e.target.value)}
+              />
+            </div>
+            <div>
+              <Label htmlFor="bookingTime">Time</Label>
+              <Input
+                id="bookingTime"
+                type="time"
+                value={bookingTime}
+                onChange={(e) => setBookingTime(e.target.value)}
+              />
+            </div>
           </div>
           <div>
             <Label htmlFor="notes">Notes</Label>
@@ -384,7 +418,12 @@ export default function BookingsPage() {
   // Wrapper for updateBooking that shows success toast
   const handleUpdateBooking = async (
     id: string,
-    updates: { status: string; notes?: string },
+    updates: {
+      status: string;
+      notes?: string;
+      booking_date?: string;
+      booking_time?: string;
+    },
   ) => {
     try {
       await updateBooking(id, updates);

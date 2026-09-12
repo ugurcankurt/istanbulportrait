@@ -20,7 +20,7 @@ export function useGoogleAdsTracking() {
     if (gbraid) {
       localStorage.setItem("google_ads_gbraid", gbraid);
     }
-    
+
     if (wbraid) {
       localStorage.setItem("google_ads_wbraid", wbraid);
     }

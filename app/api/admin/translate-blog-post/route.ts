@@ -158,7 +158,10 @@ ${content}
     if (!response.ok) {
       const errorText = await response.text();
       console.error(`Failed to translate for ${targetLocale}: ${errorText}`);
-      return NextResponse.json({ error: "Translation failed" }, { status: response.status });
+      return NextResponse.json(
+        { error: "Translation failed" },
+        { status: response.status },
+      );
     }
 
     const data = await response.json();
@@ -173,8 +176,13 @@ ${content}
     try {
       parsed = JSON.parse(textOutput.trim());
     } catch (e) {
-      console.error(`Invalid JSON from DeepSeek for ${targetLocale}: ${textOutput}`);
-      return NextResponse.json({ error: "Invalid JSON from AI" }, { status: 500 });
+      console.error(
+        `Invalid JSON from DeepSeek for ${targetLocale}: ${textOutput}`,
+      );
+      return NextResponse.json(
+        { error: "Invalid JSON from AI" },
+        { status: 500 },
+      );
     }
 
     return NextResponse.json({ translation: parsed[targetLocale] });

@@ -8,7 +8,10 @@ import {
   sanitizeErrorForProduction,
   ValidationError,
 } from "@/lib/errors";
-import { sendBookingCancellationEmail } from "@/lib/resend";
+import {
+  sendBookingCancellationEmail,
+  sendBookingRescheduledEmail,
+} from "@/lib/resend";
 import { settingsService } from "@/lib/settings-service";
 
 export async function GET(request: NextRequest) {
@@ -124,7 +127,7 @@ export async function PATCH(request: NextRequest) {
     await requireServerAdmin();
 
     const body = await request.json();
-    const { bookingId, status, notes } = body;
+    const { bookingId, status, notes, booking_date, booking_time } = body;
 
     if (!bookingId) {
       throw new ValidationError("Booking ID is required");
@@ -164,6 +167,14 @@ export async function PATCH(request: NextRequest) {
         updateData.notes = notes;
       }
 
+      if (booking_date !== undefined) {
+        updateData.booking_date = booking_date;
+      }
+
+      if (booking_time !== undefined) {
+        updateData.booking_time = booking_time;
+      }
+
       const { data: booking, error } = await supabase
         .from("bookings")
         .update(updateData)
@@ -201,6 +212,20 @@ export async function PATCH(request: NextRequest) {
           );
         } catch (ga4Error) {
           console.error("Failed to track GA4 refund event:", ga4Error);
+        }
+      }
+
+      // If date or time is changed, send rescheduled email
+      const isRescheduled =
+        (booking_date && booking_date !== currentBooking.booking_date) ||
+        (booking_time && booking_time !== currentBooking.booking_time);
+
+      if (isRescheduled) {
+        try {
+          const settings = await settingsService.getSettings();
+          await sendBookingRescheduledEmail(booking, settings);
+        } catch (emailError) {
+          console.error("Failed to send rescheduled email:", emailError);
         }
       }
 

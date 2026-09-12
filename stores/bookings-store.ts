@@ -58,7 +58,12 @@ interface BookingsState {
   ) => Promise<void>;
   updateBooking: (
     id: string,
-    updates: { status: string; notes?: string },
+    updates: {
+      status: string;
+      notes?: string;
+      booking_date?: string;
+      booking_time?: string;
+    },
   ) => Promise<void>;
   setFilters: (filters: Partial<BookingsFilters>) => void;
   setPage: (page: number) => void;
@@ -174,10 +179,15 @@ export const useBookingsStore = create<BookingsState>()(
         }
       },
 
-      // Update booking status and notes
+      // Update booking status, notes, date, and time
       updateBooking: async (
         id: string,
-        updates: { status: string; notes?: string },
+        updates: {
+          status: string;
+          notes?: string;
+          booking_date?: string;
+          booking_time?: string;
+        },
       ) => {
         try {
           const response = await fetch("/api/admin/bookings", {

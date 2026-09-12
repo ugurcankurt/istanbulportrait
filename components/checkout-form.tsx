@@ -586,8 +586,14 @@ export function CheckoutForm({
       const fbc = getCookie("_fbc");
       const fbp = getCookie("_fbp");
 
-      const gbraid = typeof window !== "undefined" ? localStorage.getItem("google_ads_gbraid") : null;
-      const wbraid = typeof window !== "undefined" ? localStorage.getItem("google_ads_wbraid") : null;
+      const gbraid =
+        typeof window !== "undefined"
+          ? localStorage.getItem("google_ads_gbraid")
+          : null;
+      const wbraid =
+        typeof window !== "undefined"
+          ? localStorage.getItem("google_ads_wbraid")
+          : null;
 
       const bookingResponse = await fetch("/api/booking/create-confirmed", {
         method: "POST",

@@ -290,7 +290,9 @@ export function PackageForm({ initialData }: PackageFormProps) {
       return;
     }
 
-    toast.loading(`Translating to ${activeTab.toUpperCase()}...`, { id: "ai-translation" });
+    toast.loading(`Translating to ${activeTab.toUpperCase()}...`, {
+      id: "ai-translation",
+    });
     try {
       const translateRes = await fetch("/api/admin/translate", {
         method: "POST",
@@ -308,20 +310,41 @@ export function PackageForm({ initialData }: PackageFormProps) {
 
       if (translateRes.ok) {
         const translateData = await translateRes.json();
-        if (translateData.translations && translateData.translations[activeTab]) {
+        if (
+          translateData.translations &&
+          translateData.translations[activeTab]
+        ) {
           const translated = translateData.translations[activeTab];
-          form.setValue(`title.${activeTab}`, translated.title, { shouldDirty: true });
-          form.setValue(`description.${activeTab}`, translated.description, { shouldDirty: true });
-          form.setValue(`duration.${activeTab}`, translated.duration, { shouldDirty: true });
-          form.setValue(`features.${activeTab}`, translated.features, { shouldDirty: true });
-          form.setValue(`meta_description.${activeTab}`, translated.meta_description, { shouldDirty: true });
-          form.setValue(`meta_keywords.${activeTab}`, translated.meta_keywords, { shouldDirty: true });
+          form.setValue(`title.${activeTab}`, translated.title, {
+            shouldDirty: true,
+          });
+          form.setValue(`description.${activeTab}`, translated.description, {
+            shouldDirty: true,
+          });
+          form.setValue(`duration.${activeTab}`, translated.duration, {
+            shouldDirty: true,
+          });
+          form.setValue(`features.${activeTab}`, translated.features, {
+            shouldDirty: true,
+          });
+          form.setValue(
+            `meta_description.${activeTab}`,
+            translated.meta_description,
+            { shouldDirty: true },
+          );
+          form.setValue(
+            `meta_keywords.${activeTab}`,
+            translated.meta_keywords,
+            { shouldDirty: true },
+          );
 
           toast.success(`${activeTab.toUpperCase()} translation successful!`, {
             id: "ai-translation",
           });
         } else {
-          toast.error("AI translation returned empty.", { id: "ai-translation" });
+          toast.error("AI translation returned empty.", {
+            id: "ai-translation",
+          });
         }
       } else {
         toast.error("AI translation failed. Check API key.", {
@@ -487,7 +510,11 @@ export function PackageForm({ initialData }: PackageFormProps) {
                     )}
                   </div>
 
-                  <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+                  <Tabs
+                    value={activeTab}
+                    onValueChange={setActiveTab}
+                    className="w-full"
+                  >
                     <TabsList className="w-full flex flex-wrap h-auto">
                       {SUPPORTED_LOCALES.map((loc) => (
                         <TabsTrigger

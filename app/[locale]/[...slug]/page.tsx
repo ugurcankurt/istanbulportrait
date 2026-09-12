@@ -87,10 +87,9 @@ export async function generateMetadata(props: {
       params.locale,
       fallbackTitle,
     );
-    const desc =
-      generateSeoDescription(
-        dbPage.subtitle?.[params.locale] || dbPage.subtitle?.en,
-      );
+    const desc = generateSeoDescription(
+      dbPage.subtitle?.[params.locale] || dbPage.subtitle?.en,
+    );
     let ogImage = dbPage.cover_image || settings.default_og_image_url || "";
 
     // If it's the packages page and no cover image is explicitly defined, fallback to the first active package's image
@@ -171,7 +170,9 @@ export async function generateMetadata(props: {
       title,
       description: desc,
       alternates: {
-        canonical: encodeURI(`${baseUrl}/${params.locale}/${dbPage.slug}/${type}/${childSlug}`),
+        canonical: encodeURI(
+          `${baseUrl}/${params.locale}/${dbPage.slug}/${type}/${childSlug}`,
+        ),
         ...getAlternates((loc) => {
           const tLoc = dbPage.title?.[loc];
           const bSeg = tLoc ? generateNativeSlug(tLoc) : dbPage.slug;
@@ -319,7 +320,9 @@ export async function generateMetadata(props: {
       alternates: {
         ...(getAlternatesFn(params.locale)
           ? {
-              canonical: encodeURI(`${baseUrl}/${params.locale}${getAlternatesFn(params.locale)}`),
+              canonical: encodeURI(
+                `${baseUrl}/${params.locale}${getAlternatesFn(params.locale)}`,
+              ),
             }
           : {}),
         ...getAlternates(getAlternatesFn),

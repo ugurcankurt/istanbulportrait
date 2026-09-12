@@ -201,10 +201,9 @@ export function BlogForm({
     }
 
     setIsTranslating(true);
-    toast.loading(
-      `AI is translating to ${targetLocale.toUpperCase()}...`,
-      { id: "ai-translation" },
-    );
+    toast.loading(`AI is translating to ${targetLocale.toUpperCase()}...`, {
+      id: "ai-translation",
+    });
     try {
       const translateRes = await fetch("/api/admin/translate-blog-post", {
         method: "POST",
@@ -224,8 +223,11 @@ export function BlogForm({
         if (translateData.translation) {
           const aiTrans = translateData.translation;
           const currentTranslations = form.getValues("translations");
-          const currentLangState = currentTranslations[targetLocale as keyof typeof currentTranslations] || {};
-          
+          const currentLangState =
+            currentTranslations[
+              targetLocale as keyof typeof currentTranslations
+            ] || {};
+
           form.setValue(`translations.${targetLocale}` as any, {
             ...currentLangState,
             title: aiTrans.title || "",
@@ -237,7 +239,7 @@ export function BlogForm({
               ? generateSlug(aiTrans.title, { locale: targetLocale as any })
               : "",
           });
-          
+
           setKeywordsInput((prev) => ({
             ...prev,
             [targetLocale]: (aiTrans.meta_keywords || []).join(", "),
@@ -249,9 +251,12 @@ export function BlogForm({
         }
       } else {
         const errorData = await translateRes.json();
-        toast.error(`Translation failed: ${errorData.error || "Unknown Error"}`, {
-          id: "ai-translation",
-        });
+        toast.error(
+          `Translation failed: ${errorData.error || "Unknown Error"}`,
+          {
+            id: "ai-translation",
+          },
+        );
       }
     } catch (error) {
       console.error(error);

@@ -44,15 +44,15 @@ export function ReviewsClient({
             },
             body: JSON.stringify({ locale, reviews }),
           });
-          
+
           if (res.ok) {
             const translatedDict = await res.json();
             if (Object.keys(translatedDict).length > 0) {
-              setDisplayReviews((prev) => 
+              setDisplayReviews((prev) =>
                 prev.map((r) => ({
                   ...r,
                   text: translatedDict[r.id] || r.text,
-                }))
+                })),
               );
             }
           }

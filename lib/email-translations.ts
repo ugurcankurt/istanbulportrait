@@ -704,3 +704,28 @@ export const CANCELLATION_TRANSLATIONS: Record<string, any> = {
     questions: "如果您有任何问题，请随时联系我们：",
   },
 };
+
+export const RESCHEDULE_TRANSLATIONS: Record<string, any> = {
+  en: {
+    subject: "Booking Rescheduled 📅",
+    title: "Booking Rescheduled",
+    greeting: "Hi {name},",
+    body1:
+      "Your booking for the <strong>{package}</strong> package has been successfully rescheduled to <strong>{date}</strong> at <strong>{time}</strong>.",
+    body2:
+      "Please make a note of your new session date and time. We look forward to seeing you!",
+    button: "View Packages",
+    questions: "If you have any questions, feel free to contact us at",
+  },
+  tr: {
+    subject: "Rezervasyonunuz Yeniden Planlandı 📅",
+    title: "Rezervasyon Güncellendi",
+    greeting: "Merhaba {name},",
+    body1:
+      "<strong>{package}</strong> paketi için rezervasyonunuz başarıyla <strong>{date}</strong> tarihi ve <strong>{time}</strong> saati olarak güncellenmiştir.",
+    body2:
+      "Lütfen yeni çekim tarihinizi ve saatinizi not ediniz. Sizi görmek için sabırsızlanıyoruz!",
+    button: "Paketleri İncele",
+    questions: "Herhangi bir sorunuz varsa bize ulaşın:",
+  },
+};

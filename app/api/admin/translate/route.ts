@@ -54,7 +54,7 @@ export async function POST(req: Request) {
     const { settingsService } = await import("@/lib/settings-service");
     const settings = await settingsService.getSettings();
     const apiKey = settings.gemini_api_key;
-    
+
     if (!apiKey) {
       return NextResponse.json(
         { error: "Gemini API Key is not configured in settings." },
@@ -148,4 +148,3 @@ Provide accurate, professional, marketing-friendly translations suitable for a h
     return NextResponse.json({ error: err.message }, { status: 500 });
   }
 }
-

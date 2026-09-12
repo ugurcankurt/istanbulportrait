@@ -29,12 +29,18 @@ export async function POST(request: Request) {
     for (const review of reviewsToTranslate) {
       // Check if we're approaching the Vercel execution timeout limit
       if (Date.now() - startTime > TIME_LIMIT_MS) {
-        console.warn(`Time limit reached in translation API. Halting at ${Object.keys(translatedDict).length} translations.`);
+        console.warn(
+          `Time limit reached in translation API. Halting at ${Object.keys(translatedDict).length} translations.`,
+        );
         break; // Return what we have so far
       }
 
       try {
-        const translatedText = await getTranslatedReview(review.id, review.text, locale);
+        const translatedText = await getTranslatedReview(
+          review.id,
+          review.text,
+          locale,
+        );
         if (translatedText && translatedText !== review.text) {
           translatedDict[review.id] = translatedText;
         }

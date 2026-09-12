@@ -55,11 +55,11 @@ ${text}
 
       const nvidiaUrl = `https://integrate.api.nvidia.com/v1/chat/completions`;
       let response;
-      
+
       try {
         const controller = new AbortController();
         // 4 seconds max timeout for a SINGLE review translation
-        const timeoutId = setTimeout(() => controller.abort(), 4000); 
+        const timeoutId = setTimeout(() => controller.abort(), 4000);
 
         response = await fetch(nvidiaUrl, {
           method: "POST",
@@ -79,9 +79,12 @@ ${text}
         console.warn(`Translation API timed out for review ${id}:`, err);
         return text; // Fallback to original
       }
-      
+
       if (!response || !response.ok) {
-        console.warn(`NVIDIA API Error for review ${id}. Status:`, response?.status);
+        console.warn(
+          `NVIDIA API Error for review ${id}. Status:`,
+          response?.status,
+        );
         return text; // Fallback to original
       }
 
@@ -102,7 +105,7 @@ ${text}
     } catch (err) {
       console.error(`Failed to translate review ${id}.`, err);
       // We throw to prevent caching a failed execution if it was a catastrophic error
-      throw err; 
+      throw err;
     }
   },
   ["gemini-review-translation-single-v1"],

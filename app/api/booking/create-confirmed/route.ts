@@ -43,8 +43,15 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { paymentId, conversationId, locale, promoCode, gbraid, wbraid, ...bookingData } =
-      body;
+    const {
+      paymentId,
+      conversationId,
+      locale,
+      promoCode,
+      gbraid,
+      wbraid,
+      ...bookingData
+    } = body;
 
     // Extract URL origin/referer for Facebook Match Rate
     const origin = request.headers.get("origin") || "";
