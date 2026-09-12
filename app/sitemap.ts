@@ -58,6 +58,10 @@ export default async function sitemap({
   const sitemapData: MetadataRoute.Sitemap = [];
 
   if (resolvedId === "core") {
+    const corePages = await pagesContentService.getAllPages();
+    const homeHero = corePages.find((p) => p.slug === "home-hero" || p.slug === "home");
+    const homeImage = homeHero?.cover_image ? cleanImage(homeHero.cover_image) : null;
+
     // 1. Root Domain (x-default fallback)
     sitemapData.push({
       url: encodeURI(`${baseUrl}/`),
@@ -65,6 +69,7 @@ export default async function sitemap({
       changeFrequency: "daily",
       priority: 1.0,
       alternates: getAlternates(() => ""),
+      ...(homeImage ? { images: [homeImage] } : {}),
     });
 
     // 2. Home Pages (All Locales)
@@ -75,11 +80,11 @@ export default async function sitemap({
         changeFrequency: "daily",
         priority: 1.0,
         alternates: getAlternates(() => ""),
+        ...(homeImage ? { images: [homeImage] } : {}),
       });
     });
 
     // 3. Core Dynamic Pages from PagesContentService
-    const corePages = await pagesContentService.getAllPages();
     const activeCorePages = corePages.filter(
       (p) => p.is_active && !p.slug.includes("home-"),
     );
