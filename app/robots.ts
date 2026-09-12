@@ -25,6 +25,6 @@ export default function robots(): MetadataRoute.Robots {
         ...checkoutDisallows,
       ],
     },
-    sitemap: `${getBaseUrl()}/sitemap.xml`,
+    sitemap: `${getBaseUrl()}/sitemap-index.xml`,
   };
 }
