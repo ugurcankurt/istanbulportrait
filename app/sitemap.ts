@@ -147,27 +147,34 @@ export default async function sitemap({
           });
         }
 
-        sitemapData.push({
-          url: encodeURI(`${baseUrl}/${locale}/${pSeg}/${pkgSeg}`),
-          lastModified: new Date(
-            pkg.updated_at || pkg.created_at || new Date(),
-          ),
-          changeFrequency: "weekly",
-          priority: 0.9,
-          alternates: getAlternates((loc) => {
-            const tTitle = packagesParent?.title?.[loc];
-            const tSeg = tTitle ? generateNativeSlug(tTitle) : "packages";
-            const tPkgTitle = pkg.title?.[loc];
-            const tPkgSeg = tPkgTitle
-              ? generateNativeSlug(tPkgTitle) || pkg.slug
-              : pkg.slug;
-            return `/${tSeg}/${tPkgSeg}`;
-          }),
-          ...(pkg.gallery_images && pkg.gallery_images.length > 0
-            ? { images: [cleanImage(pkg.gallery_images[0])] }
-            : {}),
-          ...(videos.length > 0 ? { videos } : {}),
-        });
+          const packageImages: string[] = [];
+          if (pkg.cover_image) {
+            packageImages.push(cleanImage(pkg.cover_image));
+          }
+          if (pkg.gallery_images && pkg.gallery_images.length > 0) {
+            pkg.gallery_images.forEach((img) => {
+              packageImages.push(cleanImage(img));
+            });
+          }
+          const uniqueImages = Array.from(new Set(packageImages));
+
+          sitemapData.push({
+            url: encodeURI(`${baseUrl}/${locale}/${pSeg}/${pkgSeg}`),
+            lastModified: new Date(pkg.updated_at || Date.now()).toISOString(),
+            changeFrequency: "weekly",
+            priority: 0.9,
+            alternates: getAlternates((loc) => {
+              const tTitle = packagesParent?.title?.[loc];
+              const tSeg = tTitle ? generateNativeSlug(tTitle) : "packages";
+              const tPkgTitle = pkg.title?.[loc];
+              const tPkgSeg = tPkgTitle
+                ? generateNativeSlug(tPkgTitle) || pkg.slug
+                : pkg.slug;
+              return `/${tSeg}/${tPkgSeg}`;
+            }),
+            ...(uniqueImages.length > 0 ? { images: uniqueImages } : {}),
+            ...(videos.length > 0 ? { videos } : {}),
+          });
       });
     }
   }
