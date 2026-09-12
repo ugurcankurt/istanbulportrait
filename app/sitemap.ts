@@ -45,6 +45,16 @@ export default async function sitemap({
     );
   };
 
+  const escapeXml = (unsafe: string) => {
+    if (!unsafe) return "";
+    return unsafe
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&apos;");
+  };
+
   const sitemapData: MetadataRoute.Sitemap = [];
 
   if (resolvedId === "core") {
@@ -128,12 +138,11 @@ export default async function sitemap({
               : pkg.cover_image || "";
 
           videos.push({
-            title: pkg.title?.[locale] || pkg.title?.["en"] || pkg.slug,
+            title: escapeXml(pkg.title?.[locale] || pkg.title?.["en"] || pkg.slug),
             thumbnail_loc: cleanImage(thumbnail),
-            description:
-              pkg.description?.[locale] ||
-              pkg.description?.["en"] ||
-              "Package Video",
+            description: escapeXml(
+              pkg.description?.[locale] || pkg.description?.["en"] || "Package Video"
+            ),
             ...(isYouTube ? {} : { content_loc: pkg.video_url }),
           });
         }
