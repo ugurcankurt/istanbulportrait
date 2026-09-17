@@ -468,9 +468,7 @@
     "bookPhotoshoot": "Забронировать фотосессию",
     "bookPhotoshootDescription": "Запечатлейте свои лучшие моменты в этом месте с профессиональным фотографом.",
     "viewPackages": "Посмотреть пакеты",
-    "explore": "Исследуйте",
-    "explore_packages": "Explore Packages",
-    "explore_packages_desc": "Select a package to view details and book your session."
+    "explore": "Исследуйте"
   },
   "cookies": {
     "banner": {

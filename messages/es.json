@@ -468,9 +468,7 @@
     "bookPhotoshoot": "Reserva una sesión de fotos",
     "bookPhotoshootDescription": "Capture sus mejores momentos en este lugar con un fotógrafo profesional.",
     "viewPackages": "Ver paquetes",
-    "explore": "Explorar",
-    "explore_packages": "Explore Packages",
-    "explore_packages_desc": "Select a package to view details and book your session."
+    "explore": "Explorar"
   },
   "cookies": {
     "banner": {
