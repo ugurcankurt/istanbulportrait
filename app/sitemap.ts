@@ -15,7 +15,6 @@ export async function generateSitemaps() {
     { id: "locations" },
     { id: "blog-posts" },
     { id: "blog-meta" },
-    { id: "programmatic-pages" },
   ];
 }
 
@@ -386,41 +385,6 @@ export default async function sitemap({
             });
           });
         }
-      }
-    }
-  }
-
-  if (resolvedId === "programmatic-pages") {
-    const activeLocations = await locationsService.getLocations();
-    const activePackages = await packagesService.getActivePackages();
-    
-    for (const locItem of activeLocations) {
-      for (const pkg of activePackages) {
-        locales.forEach((locale) => {
-          const locTitle = locItem.title?.[locale];
-          const pkgTitle = pkg.title?.[locale];
-          const lSlug = locTitle ? generateNativeSlug(locTitle) || locItem.slug : locItem.slug;
-          const pSlug = pkgTitle ? generateNativeSlug(pkgTitle) || pkg.slug : pkg.slug;
-
-          const pageImages: string[] = [];
-          if (locItem.cover_image) pageImages.push(cleanImage(locItem.cover_image));
-          if (pkg.cover_image) pageImages.push(cleanImage(pkg.cover_image));
-
-          sitemapData.push({
-            url: encodeURI(`${baseUrl}/${locale}/photoshoot/${lSlug}/${pSlug}`),
-            lastModified: new Date(),
-            changeFrequency: "weekly",
-            priority: 0.8,
-            alternates: getAlternates((loc) => {
-              const tLocTitle = locItem.title?.[loc];
-              const tPkgTitle = pkg.title?.[loc];
-              const tLSlug = tLocTitle ? generateNativeSlug(tLocTitle) || locItem.slug : locItem.slug;
-              const tPSlug = tPkgTitle ? generateNativeSlug(tPkgTitle) || pkg.slug : pkg.slug;
-              return `/photoshoot/${tLSlug}/${tPSlug}`;
-            }),
-            ...(pageImages.length > 0 ? { images: pageImages } : {}),
-          });
-        });
       }
     }
   }
