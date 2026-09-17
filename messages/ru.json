@@ -447,8 +447,7 @@
     "related_packages": "Похожие Пакеты",
     "gyg_title": "Узнайте больше в Стамбуле",
     "gyg_subtitle": "Рекомендуемые мероприятия и туры от нашего партнера GetYourGuide",
-    "starting_from": "От",
-    "reviews": "Reviews"
+    "starting_from": "От"
   },
   "gallery": {
     "title": "Портфолио",
@@ -469,10 +468,7 @@
     "bookPhotoshoot": "Забронировать фотосессию",
     "bookPhotoshootDescription": "Запечатлейте свои лучшие моменты в этом месте с профессиональным фотографом.",
     "viewPackages": "Посмотреть пакеты",
-    "explore": "Исследуйте",
-    "photoshoot_options": "Photoshoot Options",
-    "explore_packages": "Explore Photoshoot Packages",
-    "explore_packages_desc": "Select a package to view details and book your session."
+    "explore": "Исследуйте"
   },
   "cookies": {
     "banner": {

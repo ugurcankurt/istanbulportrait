@@ -447,8 +447,7 @@
     "related_packages": "Related Packages",
     "gyg_title": "Explore More in Istanbul",
     "gyg_subtitle": "Recommended activities and tours by our partner GetYourGuide",
-    "starting_from": "From",
-    "reviews": "Reviews"
+    "starting_from": "From"
   },
   "gallery": {
     "title": "Portfolio",
@@ -469,10 +468,7 @@
     "bookPhotoshoot": "Book a Photoshoot",
     "bookPhotoshootDescription": "Capture your best moments at this location with a professional photographer.",
     "viewPackages": "View Packages",
-    "explore": "Explore",
-    "photoshoot_options": "Photoshoot Options",
-    "explore_packages": "Explore Photoshoot Packages",
-    "explore_packages_desc": "Select a package to view details and book your session."
+    "explore": "Explore"
   },
   "cookies": {
     "banner": {

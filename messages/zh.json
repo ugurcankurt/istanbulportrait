@@ -447,8 +447,7 @@
     "related_packages": "相关套餐",
     "gyg_title": "在伊斯坦布尔探索更多",
     "gyg_subtitle": "我们的合作伙伴 GetYourGuide 推荐的活动和旅游",
-    "starting_from": "起",
-    "reviews": "Reviews"
+    "starting_from": "起"
   },
   "gallery": {
     "title": "投资组合",
@@ -469,10 +468,7 @@
     "bookPhotoshoot": "预约拍摄",
     "bookPhotoshootDescription": "与专业摄影师一起在这个地点捕捉您最美好的时刻。",
     "viewPackages": "查看套餐",
-    "explore": "探索",
-    "photoshoot_options": "Photoshoot Options",
-    "explore_packages": "Explore Photoshoot Packages",
-    "explore_packages_desc": "Select a package to view details and book your session."
+    "explore": "探索"
   },
   "cookies": {
     "banner": {

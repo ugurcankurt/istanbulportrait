@@ -447,8 +447,7 @@
     "related_packages": "İlginizi Çekebilecek Diğer Paketler",
     "gyg_title": "İstanbul'da Daha Fazlasını Keşfedin",
     "gyg_subtitle": "Çözüm ortağımız GetYourGuide'ın seçkin aktiviteleri",
-    "starting_from": "Başlangıç",
-    "reviews": "Değerlendirme"
+    "starting_from": "Başlangıç"
   },
   "gallery": {
     "title": "Portföyümüz",
@@ -469,10 +468,7 @@
     "bookPhotoshoot": "Burada Çekim Ayırtın",
     "bookPhotoshootDescription": "Profesyonel bir asistan desteğiyle, bu efsanevi mekanda hayalinizdeki karelerin baş rolünde olun.",
     "viewPackages": "Paketleri İncele",
-    "explore": "Keşfet",
-    "photoshoot_options": "Çekim Seçeneği",
-    "explore_packages": "Çekim Paketlerini İnceleyin",
-    "explore_packages_desc": "Detayları görmek ve rezervasyon yapmak için bir paket seçin."
+    "explore": "Keşfet"
   },
   "cookies": {
     "banner": {
