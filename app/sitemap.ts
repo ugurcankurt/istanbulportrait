@@ -13,6 +13,7 @@ export async function generateSitemaps() {
     { id: "core" },
     { id: "packages" },
     { id: "locations" },
+    { id: "explore" },
     { id: "blog-posts" },
     { id: "blog-meta" },
   ];
@@ -216,6 +217,26 @@ export default async function sitemap({
           }),
           ...(locItem.cover_image
             ? { images: [cleanImage(locItem.cover_image)] }
+            : {}),
+        });
+      });
+    }
+  }
+
+  if (resolvedId === "explore") {
+    const { seoKeywordsService } = await import("@/lib/seo-keywords-service");
+    const intents = await seoKeywordsService.getAllIntents();
+    
+    for (const intent of intents) {
+      locales.forEach((locale) => {
+        sitemapData.push({
+          url: encodeURI(`${baseUrl}/${locale}/explore/${intent.slug}`),
+          lastModified: new Date(),
+          changeFrequency: "weekly",
+          priority: 0.8,
+          alternates: getAlternates(() => `/explore/${intent.slug}`),
+          ...(intent.cover_image
+            ? { images: [cleanImage(intent.cover_image)] }
             : {}),
         });
       });
