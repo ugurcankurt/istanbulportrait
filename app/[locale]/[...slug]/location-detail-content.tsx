@@ -77,7 +77,7 @@ export async function LocationDetailPageContent({
       "position": index + 1,
       "item": {
         "@type": "Service",
-        "name": `${pkgTitle} - ${dynamicTitle}`,
+        "name": `${pkgTitle} in ${dynamicTitle}`,
         "url": `${baseUrl}/${locale}/photoshoot/${locSlug}/${pkgSlug}`
       }
     };
