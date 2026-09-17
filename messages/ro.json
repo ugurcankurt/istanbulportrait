@@ -447,7 +447,8 @@
     "related_packages": "Pachete Similare",
     "gyg_title": "Explorează mai mult în Istanbul",
     "gyg_subtitle": "Activități și tururi recomandate de partenerul nostru GetYourGuide",
-    "starting_from": "De la"
+    "starting_from": "De la",
+    "reviews": "Reviews"
   },
   "gallery": {
     "title": "Portofoliu",
@@ -468,7 +469,10 @@
     "bookPhotoshoot": "Rezervă o ședință foto",
     "bookPhotoshootDescription": "Surprindeți-vă cele mai bune momente în această locație cu un fotograf profesionist.",
     "viewPackages": "Vezi pachete",
-    "explore": "Explorează"
+    "explore": "Explorează",
+    "photoshoot_options": "Photoshoot Options",
+    "explore_packages": "Explore Photoshoot Packages",
+    "explore_packages_desc": "Select a package to view details and book your session."
   },
   "cookies": {
     "banner": {

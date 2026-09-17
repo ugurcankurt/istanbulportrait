@@ -447,7 +447,8 @@
     "related_packages": "Paquetes Relacionados",
     "gyg_title": "Explora más en Estambul",
     "gyg_subtitle": "Actividades y excursiones recomendadas por nuestro socio GetYourGuide",
-    "starting_from": "Desde"
+    "starting_from": "Desde",
+    "reviews": "Reviews"
   },
   "gallery": {
     "title": "Portafolio",
@@ -468,7 +469,10 @@
     "bookPhotoshoot": "Reserva una sesión de fotos",
     "bookPhotoshootDescription": "Capture sus mejores momentos en este lugar con un fotógrafo profesional.",
     "viewPackages": "Ver paquetes",
-    "explore": "Explorar"
+    "explore": "Explorar",
+    "photoshoot_options": "Photoshoot Options",
+    "explore_packages": "Explore Photoshoot Packages",
+    "explore_packages_desc": "Select a package to view details and book your session."
   },
   "cookies": {
     "banner": {

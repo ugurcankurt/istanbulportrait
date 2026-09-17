@@ -6,14 +6,20 @@ import { BreadcrumbNav } from "@/components/breadcrumb-nav";
 import { LocationCard } from "@/components/location-card";
 import { SchemaInjector } from "@/components/schema-injector";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Link } from "@/i18n/routing";
+
 import { locationsService } from "@/lib/locations-service";
+import { packagesService } from "@/lib/packages-service";
+import { discountService } from "@/lib/discount-service";
+import { reviewsService } from "@/lib/reviews-service";
+
+import { PackagesSection } from "@/components/packages-section";
+import { PackageReviews } from "@/components/package-reviews";
 import {
   buildTouristAttractionSchema,
   generateSeoDescription,
 } from "@/lib/seo-utils";
+import { generateNativeSlug } from "@/lib/slug-generator";
 
 // Force dynamic rendering to avoid Vercel build-time issues with next-intl
 export const dynamic = "force-dynamic";
@@ -34,7 +40,14 @@ export async function LocationDetailPageContent({
     notFound();
   }
 
+  // Fetch data for Hub & Spoke model
+  const activePackages = await packagesService.getActivePackages();
+  const activeDiscount = await discountService.getActiveDiscount();
+  const aggregateRating = await reviewsService.getAggregateRating();
+  const { reviews } = await reviewsService.fetchGoogleReviews(locale);
+
   const t = await getTranslations({ locale, namespace: "locations" });
+  const tPackages = await getTranslations({ locale, namespace: "packages" });
   const { getBaseUrl } = await import("@/lib/seo-utils");
   const baseUrl = getBaseUrl();
 
@@ -53,6 +66,29 @@ export async function LocationDetailPageContent({
     : `${baseUrl}/images/locations/${slug}-hero.webp`;
   const galleryImages = location.gallery_images || [];
 
+  // Generate ItemList Schema for the packages (GYG style)
+  const itemListElements = activePackages.map((pkg, index) => {
+    const pkgTitle = pkg.title?.[locale] || pkg.title?.en || pkg.slug;
+    const pkgSlug = pkg.title?.[locale] ? generateNativeSlug(pkg.title[locale]) || pkg.slug : pkg.slug;
+    const locSlug = location.title?.[locale] ? generateNativeSlug(location.title[locale]) || location.slug : location.slug;
+
+    return {
+      "@type": "ListItem",
+      "position": index + 1,
+      "item": {
+        "@type": "Service",
+        "name": `${pkgTitle} in ${dynamicTitle}`,
+        "url": `${baseUrl}/${locale}/photoshoot/${locSlug}/${pkgSlug}`
+      }
+    };
+  });
+
+  const itemListSchema = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "itemListElement": itemListElements,
+  };
+
   const touristAttractionSchema = buildTouristAttractionSchema({
     name: dynamicTitle,
     description: generateSeoDescription(dynamicDesc),
@@ -63,8 +99,9 @@ export async function LocationDetailPageContent({
   });
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-background">
       <SchemaInjector schema={touristAttractionSchema} />
+      <SchemaInjector schema={itemListSchema} />
 
       <BreadcrumbNav />
 
@@ -79,34 +116,35 @@ export async function LocationDetailPageContent({
             className="object-cover object-center"
             sizes="100vw"
           />
-          {/* Gradient Overlay */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-black/10" />
 
-          {/* Hero Content - Bottom */}
           <div className="absolute bottom-0 left-0 right-0 pb-6 sm:pb-8 lg:pb-12">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8">
               <h1 className="text-2xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold text-white mb-3 sm:mb-4 drop-shadow-lg">
                 {dynamicTitle}
               </h1>
-              <p className="text-sm sm:text-lg lg:text-xl text-white/90 max-w-3xl leading-relaxed drop-shadow-md line-clamp-3">
+              <p className="text-sm sm:text-lg lg:text-xl text-white/90 max-w-3xl leading-relaxed drop-shadow-md line-clamp-3 mb-4">
                 {dynamicDesc}
               </p>
 
-              {/* Quick Info Bar */}
-              <div className="flex flex-wrap items-center gap-3 sm:gap-6 mt-4 sm:mt-6">
-                <div className="flex items-center gap-2 text-white/80 text-sm sm:text-base">
-                  <MapPin className="w-4 h-4" />
-                  <span>
-                    {location.coordinates
-                      ? `${location.coordinates.lat.toFixed(4)}, ${location.coordinates.lng.toFixed(4)}`
-                      : t("locationInfo")}
+              {/* GYG Style Trust Badges */}
+              <div className="flex flex-wrap items-center gap-3 sm:gap-6">
+                <div className="flex items-center gap-2 bg-white/10 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/20">
+                  <div className="flex gap-0.5">
+                    {[1, 2, 3, 4, 5].map((i) => (
+                      <svg key={i} className="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 20 20">
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                      </svg>
+                    ))}
+                  </div>
+                  <span className="text-white font-medium text-sm">
+                    {aggregateRating.average} ({aggregateRating.count} {tPackages("reviews")})
                   </span>
                 </div>
-                <div className="flex items-center gap-2 text-white/80 text-sm sm:text-base">
+
+                <div className="flex items-center gap-2 text-white/90 text-sm bg-white/10 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/20">
                   <Camera className="w-4 h-4" />
-                  <span>
-                    {photographyTips.length} {t("photographyTips")}
-                  </span>
+                  <span>{activePackages.length} {t("photoshoot_options", { default: "Photoshoot Options" })}</span>
                 </div>
               </div>
             </div>
@@ -114,12 +152,33 @@ export async function LocationDetailPageContent({
         </div>
       </section>
 
+      {/* GYG Hub & Spoke Packages Section */}
+      <div className="bg-muted/10 border-b">
+        <PackagesSection
+          dbPackages={activePackages}
+          activeDiscount={activeDiscount}
+          aggregateRating={aggregateRating}
+          parentSlug={`photoshoot/${location.title?.[locale] ? generateNativeSlug(location.title[locale]) || location.slug : location.slug}`}
+          header={
+            <div key="explore-packages-header" className="mb-6 sm:mb-8 pt-4">
+              <h2 className="text-2xl sm:text-3xl font-serif font-bold text-foreground mb-2">
+                {t("explore_packages", { default: `Photoshoots at ${dynamicTitle}` })}
+              </h2>
+              <p className="text-muted-foreground">
+                {t("explore_packages_desc", { default: "Select a package to view details and book your session." })}
+              </p>
+            </div>
+          }
+        />
+      </div>
+
       {/* Content Section */}
       <section className="py-8 sm:py-12 lg:py-16">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-3 gap-6 lg:gap-10">
             {/* Main Content - Left/Center */}
             <div className="lg:col-span-2 space-y-8 sm:space-y-10">
+
               {/* About Section */}
               <div className="space-y-4">
                 <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold flex items-center gap-2">
@@ -185,7 +244,7 @@ export async function LocationDetailPageContent({
                 </div>
               )}
 
-              {/* Nearby Locations via tag match */}
+              {/* Nearby Locations */}
               {location.nearby_locations &&
                 location.nearby_locations.length > 0 && (
                   <div className="space-y-6 pt-4 border-t">
@@ -264,33 +323,15 @@ export async function LocationDetailPageContent({
                   </a>
                 </CardContent>
               </Card>
-
-              {/* CTA Card - Book Photoshoot */}
-              <Card className="overflow-hidden bg-primary text-primary-foreground border-0 shadow-xl py-0 gap-0">
-                <CardContent className="p-5 sm:p-6 text-center">
-                  <div className="w-12 h-12 rounded-full bg-primary-foreground/20 flex items-center justify-center mx-auto mb-4">
-                    <Sparkles className="w-6 h-6 text-primary-foreground" />
-                  </div>
-                  <h3 className="font-bold text-lg sm:text-xl mb-2 text-primary-foreground">
-                    {t("bookPhotoshoot")}
-                  </h3>
-                  <p className="text-primary-foreground/80 text-sm mb-5 leading-relaxed">
-                    {t("bookPhotoshootDescription")}
-                  </p>
-                  <Button
-                    nativeButton={false}
-                    render={<Link href={"/packages" as any} />}
-                    variant="secondary"
-                    className="w-full font-semibold shadow-lg hover:shadow-xl transition-all"
-                  >
-                    {t("viewPackages")}
-                  </Button>
-                </CardContent>
-              </Card>
             </div>
           </div>
         </div>
       </section>
+
+      {/* Social Proof (Reviews) Section */}
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 border-t py-8 sm:py-12">
+        <PackageReviews reviews={reviews} aggregateRating={aggregateRating} />
+      </div>
     </div>
   );
 }

@@ -447,7 +447,8 @@
     "related_packages": "Forfaits Similaires",
     "gyg_title": "Explorez plus à Istanbul",
     "gyg_subtitle": "Activités et visites recommandées par notre partenaire GetYourGuide",
-    "starting_from": "À partir de"
+    "starting_from": "À partir de",
+    "reviews": "Reviews"
   },
   "gallery": {
     "title": "Portefeuille",
@@ -468,7 +469,10 @@
     "bookPhotoshoot": "Réservez une séance photo",
     "bookPhotoshootDescription": "Capturez vos meilleurs moments à cet endroit avec un photographe professionnel.",
     "viewPackages": "Voir les forfaits",
-    "explore": "Explorer"
+    "explore": "Explorer",
+    "photoshoot_options": "Photoshoot Options",
+    "explore_packages": "Explore Photoshoot Packages",
+    "explore_packages_desc": "Select a package to view details and book your session."
   },
   "cookies": {
     "banner": {

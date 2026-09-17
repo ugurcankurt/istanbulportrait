@@ -447,7 +447,8 @@
     "related_packages": "باقات ذات صلة",
     "gyg_title": "استكشف المزيد في اسطنبول",
     "gyg_subtitle": "أنشطة وجولات موصى بها من شريكنا GetYourGuide",
-    "starting_from": "تبدأ من"
+    "starting_from": "تبدأ من",
+    "reviews": "Reviews"
   },
   "gallery": {
     "title": "المحفظة",
@@ -468,7 +469,10 @@
     "bookPhotoshoot": "احجز جلسة تصوير",
     "bookPhotoshootDescription": "التقط أفضل لحظاتك في هذا الموقع مع مصور محترف.",
     "viewPackages": "عرض الحزم",
-    "explore": "استكشاف"
+    "explore": "استكشاف",
+    "photoshoot_options": "Photoshoot Options",
+    "explore_packages": "Explore Photoshoot Packages",
+    "explore_packages_desc": "Select a package to view details and book your session."
   },
   "cookies": {
     "banner": {
