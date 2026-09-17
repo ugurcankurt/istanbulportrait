@@ -468,7 +468,9 @@
     "bookPhotoshoot": "Rezervă o ședință foto",
     "bookPhotoshootDescription": "Surprindeți-vă cele mai bune momente în această locație cu un fotograf profesionist.",
     "viewPackages": "Vezi pachete",
-    "explore": "Explorează"
+    "explore": "Explorează",
+    "explore_packages": "Explore Packages",
+    "explore_packages_desc": "Select a package to view details and book your session."
   },
   "cookies": {
     "banner": {
