@@ -120,7 +120,7 @@ export function ProgrammaticSeoPage({
   
   const rawPackageName = packageData.title[locale] || packageData.title["en"] || packageData.slug;
   const locTitle = locationData.title?.[locale] || locationData.title?.en || locationData.slug;
-  const packageName = `${rawPackageName} in ${locTitle}`; // Dynamic combination
+  const packageName = `${rawPackageName} - ${locTitle}`; // Dynamic combination
   
   const packageDesc = packageData.description[locale] || packageData.description["en"] || "";
   const locDesc = locationData.description?.[locale] || locationData.description?.en || "";
@@ -352,6 +352,78 @@ export function ProgrammaticSeoPage({
         yieldMultiplier={yieldMultiplier}
         yieldReason={yieldReason}
       />
+
+      {/* Mobile Sticky Booking Interface */}
+      <div
+        className="lg:hidden fixed inset-x-0 z-40 bg-background/95 backdrop-blur-xl supports-[backdrop-filter]:bg-background/80 border-t shadow-[0_-10px_40px_rgba(0,0,0,0.1)] transition-all duration-300"
+        style={{ bottom: "var(--cookie-banner-height, 0px)" }}
+      >
+        {/* Info Rows - Collapsible on Scroll */}
+        <div
+          className={cn(
+            "transition-all duration-500 ease-in-out overflow-hidden border-b border-border/50 px-4",
+            isScrolled
+              ? "max-h-0 py-0 opacity-0 border-none"
+              : "max-h-40 py-3 opacity-100",
+          )}
+        >
+          <div className="space-y-3">
+            <div className="flex items-start gap-3">
+              <div className="mt-0.5">
+                <CheckCircle2 className="h-4 w-4 text-emerald-500" />
+              </div>
+              <div>
+                <p className="text-[11px] font-bold text-foreground leading-tight">
+                  {tCheckout("cancellation.title")}
+                </p>
+                <p className="text-[10px] font-medium text-muted-foreground leading-tight line-clamp-1">
+                  {tCheckout("cancellation.description")}
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-start gap-3">
+              <div className="mt-0.5">
+                <Banknote className="h-4 w-4 text-primary" />
+              </div>
+              <div>
+                <p className="text-[11px] font-bold text-foreground leading-tight">
+                  {tCheckout("payment_methods.cash")}
+                </p>
+                <p className="text-[10px] font-medium text-muted-foreground leading-tight">
+                  {tCheckout("payment_methods.cash_description")}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Action Bar */}
+        <div className="p-4 flex items-center justify-between gap-4 pb-[calc(1rem+env(safe-area-inset-bottom))]">
+          <div className="flex flex-col">
+            <div className="flex items-baseline gap-1.5">
+              <span className="text-sm font-medium text-muted-foreground lowercase">
+                {t("starting_from")} /
+              </span>
+              <span className="text-2xl font-black text-primary">
+                {formatPrice(pricing.price)}
+              </span>
+              {pricing.isDiscounted && (
+                <span className="text-sm line-through text-muted-foreground font-medium opacity-60 ml-1">
+                  {formatPrice(pricing.originalPrice)}
+                </span>
+              )}
+            </div>
+          </div>
+          <Button
+            size="lg"
+            className="flex-1 max-w-[180px] h-12 text-sm font-black"
+            onClick={() => setIsModalOpen(true)}
+          >
+            {tui("book_package")}
+          </Button>
+        </div>
+      </div>
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 border-t mt-8">
         <PackageReviews reviews={reviews} aggregateRating={aggregateRating} />

@@ -47,7 +47,7 @@ export async function generateMetadata(props: {
   const pkgTitle = packageItem.title?.[params.locale] || packageItem.title?.en || packageItem.slug;
   
   // Dynamic Title combination (e.g. "Couples Photoshoot in Galata Tower")
-  const dynamicTitle = `${pkgTitle} in ${locTitle}`;
+  const dynamicTitle = `${pkgTitle} - ${locTitle}`;
   const dynamicDesc = packageItem.meta_description?.[params.locale] || packageItem.description?.[params.locale] || "";
 
   const title = generateSeoTitle(dynamicTitle, params.locale, settings.site_name || "");
@@ -121,7 +121,7 @@ export default async function ProgrammaticSeoRoute(props: {
 
   const locTitle = locationItem.title?.[params.locale] || locationItem.title?.en || locationItem.slug;
   const pkgTitle = packageItem.title?.[params.locale] || packageItem.title?.en || packageItem.slug;
-  const combinedTitle = `${pkgTitle} in ${locTitle}`;
+  const combinedTitle = `${pkgTitle} - ${locTitle}`;
   const desc = packageItem.description?.[params.locale] || packageItem.description?.en || "";
 
   // Merge schemas to present a rich entity to Google
