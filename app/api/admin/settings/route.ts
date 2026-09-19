@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { revalidateTag } from "next/cache";
 import { createServerSupabaseAdminClient } from "@/lib/supabase/server";
 
 export async function GET() {
@@ -61,6 +62,7 @@ export async function PATCH(request: Request) {
       );
     }
 
+    revalidateTag("site-settings", "max");
     return NextResponse.json(result.data);
   } catch (error: any) {
     console.error("PATCH site_settings Unknown Error:", error);

@@ -163,47 +163,58 @@ export async function POST(request: NextRequest) {
     };
 
     if (external_id) {
-      user_data.external_id = [await hashCustomerData(external_id)];
+      const h = await hashCustomerData(external_id);
+      if (h) user_data.external_id = [h];
     }
 
     if (customer_email) {
-      user_data.em = [await hashCustomerData(customer_email)];
+      const h = await hashCustomerData(customer_email);
+      if (h) user_data.em = [h];
     }
 
     if (customer_phone) {
-      user_data.ph = [await hashPhoneNumber(customer_phone)];
+      const h = await hashPhoneNumber(customer_phone);
+      if (h) user_data.ph = [h];
     }
 
     if (first_name) {
-      user_data.fn = [await hashCustomerData(first_name)];
+      const h = await hashCustomerData(first_name);
+      if (h) user_data.fn = [h];
     }
 
     if (last_name) {
-      user_data.ln = [await hashCustomerData(last_name)];
+      const h = await hashCustomerData(last_name);
+      if (h) user_data.ln = [h];
     }
 
     if (city) {
-      user_data.ct = [await hashCustomerData(city)];
+      const h = await hashCustomerData(city);
+      if (h) user_data.ct = [h];
     }
 
     if (state) {
-      user_data.st = [await hashCustomerData(state)];
+      const h = await hashCustomerData(state);
+      if (h) user_data.st = [h];
     }
 
     if (zip) {
-      user_data.zp = [await hashCustomerData(zip)];
+      const h = await hashCustomerData(zip);
+      if (h) user_data.zp = [h];
     }
 
     if (country) {
-      user_data.country = [await hashCustomerData(country)];
+      const h = await hashCustomerData(country);
+      if (h) user_data.country = [h];
     }
 
     if (dob) {
-      user_data.db = [await hashCustomerData(dob)];
+      const h = await hashCustomerData(dob);
+      if (h) user_data.db = [h];
     }
 
     if (gender) {
-      user_data.ge = [await hashCustomerData(gender)];
+      const h = await hashCustomerData(gender);
+      if (h) user_data.ge = [h];
     }
 
     // Generate or use provided lead ID for Lead events

@@ -7,6 +7,8 @@ export async function hashCustomerData(value: string): Promise<string> {
 
   // Normalize the data before hashing
   const normalized = value.toLowerCase().trim();
+  
+  if (!normalized || normalized === "undefined" || normalized === "null" || normalized === "none") return "";
 
   // For both Browser and Node.js 19+ environment
   const msgUint8 = new TextEncoder().encode(normalized);
@@ -25,6 +27,8 @@ export async function hashPhoneNumber(phone: string): Promise<string> {
 
   // Remove all non-digit characters
   const digitsOnly = phone.replace(/\D/g, "");
+  
+  if (!digitsOnly || digitsOnly.length < 7) return "";
 
   // Add country code if not present (assume Turkey +90)
   const normalizedPhone = digitsOnly.startsWith("90")
@@ -60,7 +64,7 @@ export interface FacebookConversionEvent {
     country?: string[]; // hashed country
     db?: string[]; // hashed dob (YYYYMMDD)
     ge?: string[]; // hashed gender (m or f)
-    lead_id?: number;
+    lead_id?: number | string;
     fbc?: string; // Facebook click ID
     fbp?: string; // Facebook browser ID
     external_id?: string[]; // Unique external ID (hashed)
@@ -84,6 +88,7 @@ export interface FacebookConversionEvent {
 // Returns true on success, or error string on failure
 export async function sendToFacebookConversionsAPI(
   events: FacebookConversionEvent[],
+  maxRetries = 2
 ): Promise<boolean | string> {
   const settings = await settingsService.getSettings();
   const FACEBOOK_ACCESS_TOKEN = settings.facebook_access_token;
@@ -96,36 +101,57 @@ export async function sendToFacebookConversionsAPI(
     return msg;
   }
 
-  try {
-    const response = await fetch(
-      `https://graph.facebook.com/v25.0/${FACEBOOK_DATASET_ID}/events`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+  let attempt = 0;
+  let lastErrorDetail = "Unknown Error";
+
+  while (attempt <= maxRetries) {
+    try {
+      const response = await fetch(
+        `https://graph.facebook.com/v26.0/${FACEBOOK_DATASET_ID}/events?access_token=${FACEBOOK_ACCESS_TOKEN}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            data: events,
+          }),
         },
-        body: JSON.stringify({
-          data: events,
-          access_token: FACEBOOK_ACCESS_TOKEN,
-        }),
-      },
-    );
+      );
 
-    const result = await response.json();
+      const result = await response.json();
 
-    if (!response.ok) {
+      if (response.ok) {
+        return true;
+      }
+
       // Return full error object for debugging
-      const errDetail = JSON.stringify(result?.error || result);
-      console.error("Facebook Conversions API Error:", errDetail);
-      return errDetail;
-    }
+      lastErrorDetail = JSON.stringify(result?.error || result);
+      
+      // Check if it is a transient error to retry
+      if (result?.error?.is_transient && attempt < maxRetries) {
+        attempt++;
+        console.warn(`Facebook API transient error (attempt ${attempt}). Retrying...`);
+        await new Promise((resolve) => setTimeout(resolve, attempt * 1500));
+        continue;
+      }
 
-    return true;
-  } catch (error) {
-    const errMsg = error instanceof Error ? error.message : "Network error";
-    console.error("Facebook Conversions API Network Error:", errMsg);
-    return errMsg;
+      console.error("Facebook Conversions API Error:", lastErrorDetail);
+      return lastErrorDetail;
+    } catch (error) {
+      lastErrorDetail = error instanceof Error ? error.message : "Network error";
+      if (attempt < maxRetries) {
+        attempt++;
+        console.warn(`Facebook API network error (attempt ${attempt}). Retrying...`);
+        await new Promise((resolve) => setTimeout(resolve, attempt * 1500));
+        continue;
+      }
+      console.error("Facebook Conversions API Network Error:", lastErrorDetail);
+      return lastErrorDetail;
+    }
   }
+  
+  return lastErrorDetail;
 }
 
 // Client-side Facebook Pixel functions

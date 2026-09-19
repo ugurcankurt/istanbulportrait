@@ -1,6 +1,6 @@
 "use client";
 
-import { Save, Sparkles } from "lucide-react";
+import { Save, Sparkles, RefreshCcw } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { ThemeCustomizer } from "@/components/admin/theme-customizer";
@@ -37,6 +37,25 @@ export default function SettingsPage() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [isTranslating, setTranslating] = useState(false);
+  const [isSyncingCrm, setIsSyncingCrm] = useState(false);
+
+  const handleMetaCrmSync = async () => {
+    setIsSyncingCrm(true);
+    try {
+      const res = await fetch("/api/admin/meta-crm-sync", { method: "POST" });
+      const data = await res.json();
+      
+      if (res.ok && data.success) {
+        toast.success(`CRM Sync Complete! Sent ${data.sent} events.`);
+      } else {
+        toast.error(`CRM Sync failed: ${data.error_detail || data.message || "Unknown error"}`);
+      }
+    } catch (err) {
+      toast.error("Failed to connect to CRM Sync API");
+    } finally {
+      setIsSyncingCrm(false);
+    }
+  };
 
   useEffect(() => {
     async function fetchSettings() {
@@ -680,6 +699,26 @@ export default function SettingsPage() {
                 }
                 placeholder="EAAR..."
               />
+            </div>
+            
+            <div className="col-span-1 md:col-span-2 pt-4 flex flex-col md:flex-row gap-4 justify-between items-center border-t mt-2">
+              <div className="text-sm text-muted-foreground">
+                <strong className="block text-foreground">Meta CRM Sync</strong>
+                Send historical confirmed bookings to Meta Conversions API to train Lookalike Audiences and resolve "Send CRM Event" warnings.
+              </div>
+              <Button 
+                variant="outline" 
+                onClick={handleMetaCrmSync} 
+                disabled={isSyncingCrm}
+                className="whitespace-nowrap"
+              >
+                {isSyncingCrm ? (
+                  <Spinner className="mr-2 h-4 w-4" />
+                ) : (
+                  <RefreshCcw className="mr-2 h-4 w-4" />
+                )}
+                Sync CRM Events
+              </Button>
             </div>
           </CardContent>
         </Card>

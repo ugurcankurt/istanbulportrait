@@ -123,30 +123,21 @@ async function handleSync(request: NextRequest) {
         );
         const eventTime = rawTime < sevenDaysAgo ? sevenDaysAgo : rawTime;
 
-        // Generate a stable 15-digit lead_id from booking ID characters
-        const leadId =
-          (Math.abs(
-            booking.id
-              .split("")
-              .reduce((acc, ch) => acc + ch.charCodeAt(0), 100000000000000),
-          ) %
-            900000000000000) +
-          100000000000000;
+        const userData: any = {};
+        
+        if (booking.user_email) {
+          userData.em = [await hashCustomerData(booking.user_email)];
+        }
+        if (booking.user_phone) {
+          userData.ph = [await hashPhoneNumber(booking.user_phone)];
+        }
 
         return {
           event_name: "Lead", // REQUIRED: must be "Lead" for CRM events
           event_time: eventTime,
           event_id: `crmv3_${cleanId}`,
           action_source: "system_generated", // REQUIRED for CRM
-          user_data: {
-            em: booking.user_email
-              ? [await hashCustomerData(booking.user_email)]
-              : [],
-            ph: booking.user_phone
-              ? [await hashPhoneNumber(booking.user_phone)]
-              : [],
-            lead_id: leadId, // RECOMMENDED: 15-17 digit lead tracking code
-          },
+          user_data: userData,
           custom_data: {
             event_source: "crm", // REQUIRED
             lead_event_source: "Istanbul Portrait CRM", // REQUIRED: CRM name
