@@ -1,5 +1,7 @@
 import { ImageResponse } from "next/og";
 import type { NextRequest } from "next/server";
+import { readFileSync } from "fs";
+import { join } from "path";
 
 export const runtime = "nodejs";
 
@@ -34,6 +36,10 @@ export async function GET(req: NextRequest) {
       }
     }
 
+    // Load custom font to avoid Satori's default font rendering bugs with some characters (lookupType 5 error)
+    const fontPath = join(process.cwd(), "public", "fonts", "Inter-Regular.ttf");
+    const fontData = readFileSync(fontPath);
+
     return new ImageResponse(
       <div
         style={{
@@ -42,7 +48,7 @@ export async function GET(req: NextRequest) {
           height: "100%",
           flexDirection: "column",
           position: "relative",
-          fontFamily: "sans-serif",
+          fontFamily: '"Inter"',
           backgroundColor: "#000",
         }}
       >
@@ -203,6 +209,14 @@ export async function GET(req: NextRequest) {
       {
         width: 1080,
         height: 1080,
+        fonts: [
+          {
+            name: "Inter",
+            data: fontData,
+            style: "normal",
+            weight: 400,
+          },
+        ],
       },
     );
   } catch (e: any) {
