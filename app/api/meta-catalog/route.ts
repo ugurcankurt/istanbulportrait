@@ -81,7 +81,7 @@ export async function GET(request: Request) {
       en: "en_XX",
     };
 
-    let csv = "id,override,title,description,link,image_link\n";
+    let csv = "id,override,title,description,link,image_link,additional_image_link\n";
     for (const pkg of packages) {
       let title = pkg.title?.[locale] || pkg.title?.en || "";
       // Meta secondary feeds have a strict 65-character limit for titles
@@ -106,12 +106,26 @@ export async function GET(request: Request) {
         imageUrl = `${baseUrl}/api/og-catalog?image=${encodeURIComponent(rawImageUrl)}&title=${encodeURIComponent(title)}&rating=${rating}&reviews=${reviewsCount}&location=${encodeURIComponent(location)}`;
       }
 
+      // Add additional images for carousel
+      let additionalImages = "";
+      if (pkg.gallery_images && pkg.gallery_images.length > 0) {
+        const filteredGallery = pkg.gallery_images
+          .map((img: string) => cleanImage(img))
+          .filter((img: string) => img && img !== rawImageUrl);
+        
+        // Meta supports up to 10 additional images
+        const limitedGallery = filteredGallery.slice(0, 10);
+        if (limitedGallery.length > 0) {
+          additionalImages = limitedGallery.join(",");
+        }
+      }
+
       const override =
         localeToOverride[locale] || `${locale}_${locale.toUpperCase()}`;
 
       const escapeCsv = (str: string) => `"${str.replace(/"/g, '""')}"`;
 
-      csv += `${escapeCsv(pkg.slug)},${escapeCsv(override)},${escapeCsv(title)},${escapeCsv(cleanDesc)},${escapeCsv(link)},${escapeCsv(imageUrl)}\n`;
+      csv += `${escapeCsv(pkg.slug)},${escapeCsv(override)},${escapeCsv(title)},${escapeCsv(cleanDesc)},${escapeCsv(link)},${escapeCsv(imageUrl)},${escapeCsv(additionalImages)}\n`;
     }
 
     return new NextResponse(csv, {
@@ -200,6 +214,17 @@ export async function GET(request: Request) {
 
     if (imageUrl) {
       xml += `\n      <g:image_link>${escapeXml(imageUrl)}</g:image_link>`;
+    }
+
+    if (pkg.gallery_images && pkg.gallery_images.length > 0) {
+      const filteredGallery = pkg.gallery_images
+        .map((img: string) => cleanImage(img))
+        .filter((img: string) => img && img !== rawImageUrl);
+      
+      const limitedGallery = filteredGallery.slice(0, 10);
+      limitedGallery.forEach((imgUrl: string) => {
+        xml += `\n      <g:additional_image_link>${escapeXml(imgUrl)}</g:additional_image_link>`;
+      });
     }
 
     // Meta requires direct video files (.mp4). YouTube URLs will cause a catalog error.
