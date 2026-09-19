@@ -208,7 +208,7 @@ export default function AdminDashboard() {
 
       {/* Quick Stats */}
       {stats && (
-        <div className="grid gap-4 md:grid-cols-3">
+        <div className="grid gap-4 md:grid-cols-4">
           <Card className="hover:shadow-lg transition-shadow">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">
@@ -257,16 +257,33 @@ export default function AdminDashboard() {
               </p>
             </CardContent>
           </Card>
+          
+          <Card className="hover:shadow-lg transition-shadow">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">
+                Completed Bookings
+              </CardTitle>
+              <CheckCircle className="h-4 w-4 text-blue-600" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-blue-600">
+                {stats.completed_bookings || 0}
+              </div>
+              <p className="text-xs text-muted-foreground">
+                Successfully finished
+              </p>
+            </CardContent>
+          </Card>
         </div>
       )}
 
-      {/* Recent Bookings */}
+      {/* Upcoming Bookings */}
       <Card>
         <CardHeader className="flex flex-row items-center justify-between">
           <div>
-            <CardTitle>Recent Bookings</CardTitle>
+            <CardTitle>Upcoming Bookings</CardTitle>
             <p className="text-sm text-muted-foreground">
-              Latest booking activities
+              Nearest scheduled photoshoots
             </p>
           </div>
           <Button
@@ -282,7 +299,7 @@ export default function AdminDashboard() {
           {recentBookings.length === 0 ? (
             <div className="text-center py-8">
               <Calendar className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-              <p className="text-muted-foreground">No recent bookings</p>
+              <p className="text-muted-foreground">No upcoming bookings</p>
             </div>
           ) : (
             <div className="space-y-4">

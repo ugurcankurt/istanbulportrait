@@ -6,6 +6,7 @@ interface DashboardStats {
   pending_bookings: number;
   confirmed_bookings: number;
   cancelled_bookings: number;
+  completed_bookings: number;
   total_revenue: number;
   monthly_revenue: number;
   total_customers: number;
@@ -44,6 +45,7 @@ const initialStats: DashboardStats = {
   pending_bookings: 0,
   confirmed_bookings: 0,
   cancelled_bookings: 0,
+  completed_bookings: 0,
   total_revenue: 0,
   monthly_revenue: 0,
   total_customers: 0,
@@ -66,11 +68,13 @@ export const useDashboardStore = create<DashboardState>()(
         set({ loading: true, error: null });
 
         try {
+          const today = new Date().toISOString().split('T')[0];
+
           // Fetch both stats and recent bookings in parallel
           const [statsResponse, bookingsResponse] = await Promise.all([
             fetch("/api/admin/stats"),
             fetch(
-              "/api/admin/bookings?limit=5&sortBy=created_at&sortOrder=desc",
+              `/api/admin/bookings?limit=5&sortBy=booking_date&sortOrder=asc&fromDate=${today}&status=confirmed`
             ),
           ]);
 
@@ -111,6 +115,7 @@ export const useDashboardStore = create<DashboardState>()(
             pending_bookings: stats.pending_bookings || 0,
             confirmed_bookings: stats.confirmed_bookings || 0,
             cancelled_bookings: stats.cancelled_bookings || 0,
+            completed_bookings: stats.completed_bookings || 0,
             total_revenue: stats.total_revenue || 0,
             monthly_revenue: stats.monthly_revenue || 0,
             total_customers: stats.total_customers || 0,

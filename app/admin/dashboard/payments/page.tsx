@@ -61,7 +61,9 @@ import {
   TableHead,
   TableHeader,
   TableRow,
+  TableFooter,
 } from "@/components/ui/table";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { usePaymentsStore } from "@/stores/payments-store";
 
 const formatCurrency = (amount: number, currency: string = "EUR") => {
@@ -292,13 +294,17 @@ export default function PaymentsPage() {
     setFilters,
     setPage,
     clearError,
+    monthlySummaries,
+    loadingSummaries,
+    fetchMonthlySummaries,
   } = usePaymentsStore();
 
   const { search, statusFilter, sortBy, sortOrder } = filters;
 
   useEffect(() => {
     fetchPayments();
-  }, [fetchPayments]);
+    fetchMonthlySummaries();
+  }, [fetchPayments, fetchMonthlySummaries]);
 
   useEffect(() => {
     if (error) {
@@ -319,6 +325,29 @@ export default function PaymentsPage() {
     return () => clearTimeout(timeoutId);
   }, [searchInput, search, setFilters]);
 
+  const totalsByCurrency = Object.values(
+    monthlySummaries.reduce((acc, curr) => {
+      if (!acc[curr.currency]) {
+        acc[curr.currency] = {
+          currency: curr.currency,
+          transaction_count: 0,
+          total_amount: 0,
+          net_amount: 0,
+          vat_amount: 0,
+          commission_amount: 0,
+          final_profit: 0,
+        };
+      }
+      acc[curr.currency].transaction_count += curr.transaction_count;
+      acc[curr.currency].total_amount += curr.total_amount;
+      acc[curr.currency].net_amount += curr.net_amount;
+      acc[curr.currency].vat_amount += curr.vat_amount;
+      acc[curr.currency].commission_amount += curr.commission_amount;
+      acc[curr.currency].final_profit += curr.final_profit;
+      return acc;
+    }, {} as Record<string, any>)
+  );
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -337,7 +366,14 @@ export default function PaymentsPage() {
         </Button>
       </div>
 
-      {/* Filters */}
+      <Tabs defaultValue="transactions" className="w-full space-y-6">
+        <TabsList>
+          <TabsTrigger value="transactions">Transactions</TabsTrigger>
+          <TabsTrigger value="monthly">Monthly Earnings</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="transactions" className="space-y-6 m-0">
+          {/* Filters */}
       <Card>
         <CardHeader>
           <CardTitle className="text-lg">Filters</CardTitle>
@@ -549,6 +585,87 @@ export default function PaymentsPage() {
           </div>
         </div>
       )}
+        </TabsContent>
+
+        <TabsContent value="monthly" className="m-0">
+          <Card>
+            <CardHeader>
+              <CardTitle>Monthly Earnings Summary</CardTitle>
+            </CardHeader>
+            <CardContent className="p-0">
+              {loadingSummaries ? (
+                <div className="p-8 text-center">
+                  <Spinner className="size-8 mx-auto" />
+                  <p className="mt-2 text-muted-foreground">Loading summaries...</p>
+                </div>
+              ) : monthlySummaries.length === 0 ? (
+                <div className="p-8">
+                  <Empty>
+                    <EmptyTitle>No earnings data</EmptyTitle>
+                    <EmptyDescription>
+                      Earnings will appear here once there are successful payments.
+                    </EmptyDescription>
+                  </Empty>
+                </div>
+              ) : (
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Period</TableHead>
+                      <TableHead>Transactions</TableHead>
+                      <TableHead className="text-right">Gross Total</TableHead>
+                      <TableHead className="text-right text-muted-foreground">Net Amount</TableHead>
+                      <TableHead className="text-right text-muted-foreground">VAT</TableHead>
+                      <TableHead className="text-right text-muted-foreground">Commission</TableHead>
+                      <TableHead className="text-right text-success font-bold">Final Profit</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {monthlySummaries.map((summary) => (
+                      <TableRow key={`${summary.year}-${summary.month}-${summary.currency}`}>
+                        <TableCell className="font-medium">
+                          {new Date(summary.year, summary.month - 1).toLocaleString('en-US', { month: 'long', year: 'numeric' })}
+                        </TableCell>
+                        <TableCell>
+                          <Badge variant="outline">{summary.transaction_count}</Badge>
+                        </TableCell>
+                        <TableCell className="text-right font-medium">
+                          {formatCurrency(summary.total_amount, summary.currency)}
+                        </TableCell>
+                        <TableCell className="text-right text-muted-foreground">
+                          {formatCurrency(summary.net_amount, summary.currency)}
+                        </TableCell>
+                        <TableCell className="text-right text-muted-foreground">
+                          {formatCurrency(summary.vat_amount, summary.currency)}
+                        </TableCell>
+                        <TableCell className="text-right text-muted-foreground">
+                          {formatCurrency(summary.commission_amount, summary.currency)}
+                        </TableCell>
+                        <TableCell className="text-right font-bold text-success">
+                          {formatCurrency(summary.final_profit, summary.currency)}
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                  <TableFooter>
+                    {totalsByCurrency.map((total) => (
+                      <TableRow key={`total-${total.currency}`}>
+                        <TableCell className="font-bold">Total ({total.currency})</TableCell>
+                        <TableCell className="font-bold">{total.transaction_count}</TableCell>
+                        <TableCell className="text-right font-bold">{formatCurrency(total.total_amount, total.currency)}</TableCell>
+                        <TableCell className="text-right font-bold">{formatCurrency(total.net_amount, total.currency)}</TableCell>
+                        <TableCell className="text-right font-bold">{formatCurrency(total.vat_amount, total.currency)}</TableCell>
+                        <TableCell className="text-right font-bold">{formatCurrency(total.commission_amount, total.currency)}</TableCell>
+                        <TableCell className="text-right font-bold text-success">{formatCurrency(total.final_profit, total.currency)}</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableFooter>
+                </Table>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }

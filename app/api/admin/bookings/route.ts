@@ -51,9 +51,15 @@ export async function GET(request: NextRequest) {
         { count: "exact" },
       );
 
+      const fromDate = searchParams.get("fromDate");
+
       // Apply filters
       if (status && status !== "all") {
         query = query.eq("status", status);
+      }
+
+      if (fromDate) {
+        query = query.gte("booking_date", fromDate);
       }
 
       if (search) {

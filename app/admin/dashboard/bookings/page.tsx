@@ -13,6 +13,7 @@ import {
   Search,
   XCircle,
 } from "lucide-react";
+import { RiWhatsappFill } from "@remixicon/react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
@@ -66,6 +67,7 @@ import {
 } from "@/components/ui/table";
 import { Textarea } from "@/components/ui/textarea";
 import { type Booking, useBookingsStore } from "@/stores/bookings-store";
+import { usePackagesStore } from "@/stores/packages-store";
 
 const formatCurrency = (amount: number) => {
   if (typeof amount !== "number") return `€0.00`;
@@ -74,6 +76,77 @@ const formatCurrency = (amount: number) => {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   })}`;
+};
+
+const generateWhatsAppLink = (booking: Booking) => {
+  if (!booking.user_phone) return "#";
+  const phone = booking.user_phone.replace(/[^0-9+]/g, '');
+
+  const eWave = String.fromCodePoint(0x1F44B);
+  const eCamera = String.fromCodePoint(0x1F4F8);
+  const eCheck = String.fromCodePoint(0x2705);
+  const eEuro = String.fromCodePoint(0x1F4B6);
+  const ePeople = String.fromCodePoint(0x1F465);
+  const eCash = String.fromCodePoint(0x1F4B5);
+  const eSparkles = String.fromCodePoint(0x2728);
+  const eDove = String.fromCodePoint(0x1F54A, 0xFE0F);
+  const eSpeech = String.fromCodePoint(0x1F4AC);
+
+  let text = "";
+  if (booking.status === "confirmed") {
+    let detailsStr = `Total Amount: ${formatCurrency(booking.total_amount)} 💶\n`;
+    
+    if (booking.people_count && booking.people_count > 0) {
+      detailsStr += `Number of People: ${booking.people_count} 👥\n`;
+    }
+    
+    let featuresText = "";
+    const packages = usePackagesStore.getState().packages;
+    const pkg = packages.find(p => p.slug === booking.package_id || p.id === booking.package_id);
+    if (pkg?.features?.en?.length) {
+      featuresText = `\nPackage Includes:\n${pkg.features.en.map((f: string) => `• ${f}`).join('\n')}\n`;
+    }
+    
+    text = `Hello ${booking.user_name} 👋,\n\nThank you for your interest in Istanbul Portrait! 📸\n\nYour reservation for the ${booking.package_id} package on ${booking.booking_date} at ${booking.booking_time} is confirmed! ✅\n\n${detailsStr}${featuresText}\nPlease note that payments are cash-only on the day of the photoshoot. 💵\n\nWe look forward to welcoming you! ✨\n\nBest regards,\nIstanbul Portrait 🕊️`;
+  } else if (booking.status === "pending") {
+    text = `Hello ${booking.user_name} ${eWave},\n\nWe noticed your reservation at Istanbul Portrait isn't complete yet. Would you like to join us? ${eCamera}\n\nYou can reach out to us through this message to complete your reservation or if you need any assistance! ${eSpeech}\n\nBest regards,\nIstanbul Portrait ${eDove}`;
+  } else if (booking.status === "completed") {
+    const driveLink = booking.drive_folder_id ? `\n\nGoogle Drive Link:\nhttps://drive.google.com/drive/folders/${booking.drive_folder_id}` : "";
+    
+    let editedCountText = "Please select the photos you want us to edit from the link. ";
+    const packages = usePackagesStore.getState().packages;
+    const pkg = packages.find(p => p.slug === booking.package_id || p.id === booking.package_id);
+    if (pkg?.features?.en) {
+      const editedFeature = pkg.features.en.find((f: string) => /edit|retouch/i.test(f));
+      if (editedFeature) {
+        const match = editedFeature.match(/(\d+)/);
+        if (match) {
+          editedCountText = `Based on your package, you can select up to ${match[1]} photos for editing. `;
+        }
+      }
+    }
+    
+    text = `Hello ${booking.user_name} ${eWave},\n\nThank you for a wonderful photoshoot! ${eCamera}${driveLink}\n\n${editedCountText}Please review the photos in the folder and reply to this message with the file numbers of your selections! ${eSparkles}\n\nBest regards,\nIstanbul Portrait ${eDove}`;
+  } else {
+     text = `Hello ${booking.user_name} ${eWave},\n\nWe are contacting you regarding your reservation at Istanbul Portrait. ${eCamera}`;
+  }
+  
+  return `https://api.whatsapp.com/send?phone=${phone}&text=${encodeURIComponent(text)}`;
+};
+
+const generateReviewLink = (booking: Booking) => {
+  if (!booking.user_phone) return "#";
+  const phone = booking.user_phone.replace(/[^0-9+]/g, '');
+
+  const eWave = String.fromCodePoint(0x1F44B);
+  const eCamera = String.fromCodePoint(0x1F4F8);
+  const eSparkles = String.fromCodePoint(0x2728);
+  const eDove = String.fromCodePoint(0x1F54A, 0xFE0F);
+  const eStar = String.fromCodePoint(0x2B50);
+
+  const text = `Hello ${booking.user_name} ${eWave},\n\nThank you for choosing Istanbul Portrait! ${eCamera} We hope you enjoyed your photoshoot experience with us.\n\nWe would love to hear your feedback! If you have a moment, please leave us a review on Google:\nhttps://g.page/r/CQbrbmj8_EInEBM/review ${eStar}\n\nYour support means the world to us! ${eSparkles}\n\nBest regards,\nIstanbul Portrait ${eDove}`;
+
+  return `https://api.whatsapp.com/send?phone=${phone}&text=${encodeURIComponent(text)}`;
 };
 
 function StatusBadge({ status }: { status: string }) {
@@ -118,9 +191,22 @@ function BookingDetailsDialog({ booking }: { booking: Booking }) {
               <p className="text-sm text-muted-foreground">
                 {booking.user_email}
               </p>
-              <p className="text-sm text-muted-foreground">
-                {booking.user_phone}
-              </p>
+              <div className="flex items-center gap-2 mt-1">
+                <p className="text-sm text-muted-foreground">
+                  {booking.user_phone}
+                </p>
+                {booking.user_phone && (
+                  <a
+                    href={generateWhatsAppLink(booking)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-[#25D366] hover:text-[#128C7E] transition-colors"
+                    title="WhatsApp'tan Mesaj Gönder"
+                  >
+                    <RiWhatsappFill className="w-5 h-5" />
+                  </a>
+                )}
+              </div>
             </div>
             <div>
               <Label className="text-sm font-medium">Package & Amount</Label>
@@ -388,11 +474,13 @@ export default function BookingsPage() {
   } = useBookingsStore();
 
   const { search, statusFilter, sortBy, sortOrder } = filters;
+  const { fetchPackages } = usePackagesStore();
 
-  // Fetch bookings on component mount
+  // Fetch bookings and packages on component mount
   useEffect(() => {
     fetchBookings();
-  }, [fetchBookings]);
+    fetchPackages();
+  }, [fetchBookings, fetchPackages]);
 
   // Show error as toast
   useEffect(() => {
@@ -614,6 +702,24 @@ export default function BookingsPage() {
                         <DropdownMenuContent align="end">
                           <DropdownMenuGroup>
                             <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                            {booking.user_phone && (
+                              <DropdownMenuItem
+                                onClick={() => window.open(generateWhatsAppLink(booking), '_blank')}
+                                className="cursor-pointer"
+                              >
+                                <RiWhatsappFill className="w-4 h-4 mr-2 text-[#25D366]" />
+                                WhatsApp Message
+                              </DropdownMenuItem>
+                            )}
+                            {booking.user_phone && booking.status === "completed" && (
+                              <DropdownMenuItem
+                                onClick={() => window.open(generateReviewLink(booking), '_blank')}
+                                className="cursor-pointer"
+                              >
+                                <RiWhatsappFill className="w-4 h-4 mr-2 text-yellow-500" />
+                                Request Review
+                              </DropdownMenuItem>
+                            )}
                             <BookingDetailsDialog booking={booking} />
                             <EditBookingDialog
                               booking={booking}

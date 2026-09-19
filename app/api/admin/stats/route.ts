@@ -64,6 +64,8 @@ export async function GET() {
             .length,
           confirmed_bookings: bookings.filter((b) => b.status === "confirmed")
             .length,
+          completed_bookings: bookings.filter((b) => b.status === "completed")
+            .length,
           cancelled_bookings: bookings.filter((b) => b.status === "cancelled")
             .length,
           total_revenue: bookings
@@ -84,10 +86,20 @@ export async function GET() {
         });
       }
 
-      // Ensure monthly_revenue is included with fallback
+      // Ensure monthly_revenue and completed_bookings are included with fallback
+      let completedBookings = stats.completed_bookings;
+      if (completedBookings === undefined) {
+        const { count } = await supabase
+          .from("bookings")
+          .select("*", { count: "exact", head: true })
+          .eq("status", "completed");
+        completedBookings = count || 0;
+      }
+
       const statsWithFallback = {
         ...stats,
         monthly_revenue: stats.monthly_revenue ?? 0,
+        completed_bookings: completedBookings,
       };
 
       return NextResponse.json({

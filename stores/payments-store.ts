@@ -19,6 +19,18 @@ export interface PaymentAdmin {
   provider_response?: any;
 }
 
+export interface MonthlySummary {
+  year: number;
+  month: number;
+  currency: string;
+  total_amount: number;
+  net_amount: number;
+  vat_amount: number;
+  commission_amount: number;
+  final_profit: number;
+  transaction_count: number;
+}
+
 interface Pagination {
   page: number;
   limit: number;
@@ -39,10 +51,14 @@ interface PaymentsState {
   loading: boolean;
   error: string | null;
   filters: PaymentsFilters;
+  
+  monthlySummaries: MonthlySummary[];
+  loadingSummaries: boolean;
 
   fetchPayments: (
     params?: Partial<PaymentsFilters & { page?: number }>,
   ) => Promise<void>;
+  fetchMonthlySummaries: () => Promise<void>;
   setFilters: (filters: Partial<PaymentsFilters>) => void;
   setPage: (page: number) => void;
   clearError: () => void;
@@ -71,6 +87,9 @@ export const usePaymentsStore = create<PaymentsState>()(
       loading: false,
       error: null,
       filters: initialFilters,
+      
+      monthlySummaries: [],
+      loadingSummaries: false,
 
       fetchPayments: async (params = {}) => {
         set({ loading: true, error: null });
@@ -147,6 +166,37 @@ export const usePaymentsStore = create<PaymentsState>()(
         }
       },
 
+      fetchMonthlySummaries: async () => {
+        set({ loadingSummaries: true, error: null });
+
+        try {
+          const response = await fetch('/api/admin/payments/summary');
+
+          if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(`API Error ${response.status}: ${errorText}`);
+          }
+
+          const data = await response.json();
+
+          set({
+            monthlySummaries: data.summaries || [],
+            loadingSummaries: false,
+            error: null,
+          });
+        } catch (error) {
+          console.error("Payments Store: Fetch summaries error:", error);
+          const errorMessage =
+            error instanceof Error ? error.message : "Failed to fetch summaries";
+
+          set({
+            monthlySummaries: [],
+            loadingSummaries: false,
+            error: errorMessage,
+          });
+        }
+      },
+
       setFilters: (newFilters: Partial<PaymentsFilters>) => {
         const currentState = get();
         const updatedFilters = { ...currentState.filters, ...newFilters };
@@ -180,6 +230,8 @@ export const usePaymentsStore = create<PaymentsState>()(
           loading: false,
           error: null,
           filters: initialFilters,
+          monthlySummaries: [],
+          loadingSummaries: false,
         });
       },
     }),
