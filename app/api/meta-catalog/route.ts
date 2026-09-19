@@ -49,6 +49,11 @@ export async function GET(request: Request) {
     );
   };
 
+  const cropTo4x5 = (url: string) => {
+    if (!url) return "";
+    return `https://wsrv.nl/?url=${encodeURIComponent(url)}&output=jpg&w=1080&h=1350&fit=cover`;
+  };
+
   const escapeXml = (unsafe: string) => {
     return unsafe.replace(/[<>&'"]/g, (c) => {
       switch (c) {
@@ -113,8 +118,8 @@ export async function GET(request: Request) {
           .map((img: string) => cleanImage(img))
           .filter((img: string) => img && img !== rawImageUrl);
         
-        // Meta supports up to 10 additional images
-        const limitedGallery = filteredGallery.slice(0, 10);
+        // Meta supports up to 10 additional images, cropped to 4:5 ratio (1080x1350)
+        const limitedGallery = filteredGallery.slice(0, 10).map((img: string) => cropTo4x5(img));
         if (limitedGallery.length > 0) {
           additionalImages = limitedGallery.join(",");
         }
@@ -223,7 +228,7 @@ export async function GET(request: Request) {
       
       const limitedGallery = filteredGallery.slice(0, 10);
       limitedGallery.forEach((imgUrl: string) => {
-        xml += `\n      <g:additional_image_link>${escapeXml(imgUrl)}</g:additional_image_link>`;
+        xml += `\n      <g:additional_image_link>${escapeXml(cropTo4x5(imgUrl))}</g:additional_image_link>`;
       });
     }
 
