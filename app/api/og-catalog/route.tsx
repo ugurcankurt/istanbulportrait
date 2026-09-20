@@ -1,7 +1,5 @@
 import { ImageResponse } from "next/og";
 import type { NextRequest } from "next/server";
-import { readFileSync } from "fs";
-import { join } from "path";
 
 export const runtime = "nodejs";
 
@@ -13,7 +11,6 @@ export async function GET(req: NextRequest) {
     const rating = searchParams.get("rating") || "4.9";
     const reviews = searchParams.get("reviews") || "124";
     const location = searchParams.get("location") || "Istanbul, Türkiye";
-    const discount = searchParams.get("discount");
 
     if (!image) {
       return new Response("Missing image URL", { status: 400 });
@@ -37,16 +34,6 @@ export async function GET(req: NextRequest) {
       }
     }
 
-    // Load custom font to avoid Satori's default font rendering bugs with some characters (lookupType 5 error)
-    const fontPath = join(
-      process.cwd(),
-      "public",
-      "fonts",
-      "Inter-Regular.ttf",
-    );
-    const fontBuffer = readFileSync(fontPath);
-    const fontData = Uint8Array.from(fontBuffer).buffer;
-
     return new ImageResponse(
       <div
         style={{
@@ -55,7 +42,7 @@ export async function GET(req: NextRequest) {
           height: "100%",
           flexDirection: "column",
           position: "relative",
-          fontFamily: '"Inter"',
+          fontFamily: "sans-serif",
           backgroundColor: "#000",
         }}
       >
@@ -212,62 +199,10 @@ export async function GET(req: NextRequest) {
             }}
           />
         </div>
-
-        {/* Discount Badge */}
-        {discount && (
-          <div
-            style={{
-              position: "absolute",
-              top: "40px",
-              right: "40px",
-              backgroundColor: "#E63946", // Vibrant Red
-              color: "white",
-              padding: "16px 24px",
-              borderRadius: "12px",
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              justifyContent: "center",
-              boxShadow: "0 10px 25px rgba(230, 57, 70, 0.4)",
-              transform: "rotate(4deg)",
-              border: "2px solid rgba(255, 255, 255, 0.9)",
-            }}
-          >
-            <span
-              style={{
-                fontSize: "48px",
-                fontWeight: 700,
-                lineHeight: 1,
-                letterSpacing: "-1px",
-              }}
-            >
-              %{discount}
-            </span>
-            <span
-              style={{
-                fontSize: "20px",
-                fontWeight: 600,
-                textTransform: "uppercase",
-                letterSpacing: "2px",
-                marginTop: "4px",
-              }}
-            >
-              OFF
-            </span>
-          </div>
-        )}
       </div>,
       {
         width: 1080,
         height: 1080,
-        fonts: [
-          {
-            name: "Inter",
-            data: fontData,
-            style: "normal",
-            weight: 400,
-          },
-        ],
       },
     );
   } catch (e: any) {
