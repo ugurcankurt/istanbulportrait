@@ -36,7 +36,8 @@ export async function GET(req: NextRequest) {
 
     // Load custom font to avoid Satori's default font rendering bugs
     const fontPath = join(process.cwd(), "public", "fonts", "Inter-Regular.ttf");
-    const fontData = readFileSync(fontPath);
+    const fontBuffer = readFileSync(fontPath);
+    const fontData = Uint8Array.from(fontBuffer).buffer;
 
     return new ImageResponse(
       <div

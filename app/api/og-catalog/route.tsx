@@ -44,7 +44,8 @@ export async function GET(req: NextRequest) {
       "fonts",
       "Inter-Regular.ttf",
     );
-    const fontData = readFileSync(fontPath);
+    const fontBuffer = readFileSync(fontPath);
+    const fontData = Uint8Array.from(fontBuffer).buffer;
 
     return new ImageResponse(
       <div
