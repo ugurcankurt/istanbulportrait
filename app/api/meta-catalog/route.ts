@@ -119,7 +119,10 @@ export async function GET(request: Request) {
           discountedCalc.isDiscounted &&
           discountedCalc.discountPercentage > 0
         ) {
-          discountParam = `&discount=${discountedCalc.discountPercentage}`;
+          const discountPct = discountedCalc.discountPercentage <= 1 
+            ? Math.round(discountedCalc.discountPercentage * 100) 
+            : Math.round(discountedCalc.discountPercentage);
+          discountParam = `&discount=${discountPct}`;
         } else if (pkg.original_price && pkg.original_price > pkg.price) {
           const discountPct = Math.round(
             (1 - pkg.price / pkg.original_price) * 100,
@@ -198,7 +201,10 @@ export async function GET(request: Request) {
         discountedCalc.isDiscounted &&
         discountedCalc.discountPercentage > 0
       ) {
-        discountParam = `&discount=${discountedCalc.discountPercentage}`;
+        const discountPct = discountedCalc.discountPercentage <= 1 
+          ? Math.round(discountedCalc.discountPercentage * 100) 
+          : Math.round(discountedCalc.discountPercentage);
+        discountParam = `&discount=${discountPct}`;
       } else if (pkg.original_price && pkg.original_price > pkg.price) {
         const discountPct = Math.round(
           (1 - pkg.price / pkg.original_price) * 100,

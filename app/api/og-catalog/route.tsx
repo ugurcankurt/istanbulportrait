@@ -20,8 +20,8 @@ export async function GET(req: NextRequest) {
     }
 
     let targetUrl = image;
-    // Format to JPG via wsrv.nl and resize to 1080x1080 (1:1 ratio for Advantage+ Catalog)
-    targetUrl = `https://wsrv.nl/?url=${encodeURIComponent(image)}&output=jpg&w=1080&h=1080&fit=cover`;
+    // Format to JPG via wsrv.nl and resize to 1080x1080 (1:1 ratio for Advantage+ Catalog) with 100% quality
+    targetUrl = `https://wsrv.nl/?url=${encodeURIComponent(image)}&output=jpg&q=100&w=1080&h=1080&fit=cover`;
 
     let imageSrc: any = targetUrl;
 
