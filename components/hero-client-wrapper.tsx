@@ -16,14 +16,14 @@ interface HeroClientWrapperProps {
   packagesButtonText: string;
   checkLocationsButtonText: string;
   children: React.ReactNode;
-  activeDiscount?: DiscountDB | null;
+  activeDiscounts?: DiscountDB[] | null;
 }
 
 export function HeroClientWrapper({
   packagesButtonText,
   checkLocationsButtonText,
   children,
-  activeDiscount,
+  activeDiscounts,
 }: HeroClientWrapperProps) {
   const [visitedPackages, setVisitedPackages] = useState<LastVisited[]>([]);
   const [hasVisited, setHasVisited] = useState(false);
@@ -100,7 +100,7 @@ export function HeroClientWrapper({
             showTitle={true}
             withContainer={false}
             isMainTitle={false}
-            activeDiscount={activeDiscount}
+            activeDiscounts={activeDiscounts}
           />
         </div>
       )}

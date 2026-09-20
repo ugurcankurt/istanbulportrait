@@ -182,6 +182,8 @@ export interface BookingConfirmationData {
   locale?: string;
   notes?: string;
   packageId?: string;
+  /** Selected addon details to display in email */
+  addonDetails?: Array<{ id: string; name: string; price: number; quantity: number }>;
 }
 
 export const sendBookingConfirmation = async (
@@ -239,6 +241,15 @@ export const sendBookingConfirmation = async (
             <td style="padding: 10px 0; border-bottom: 1px solid ${colors.border}; color: ${colors.textMuted};"><strong>${t.time}:</strong></td>
             <td style="padding: 10px 0; border-bottom: 1px solid ${colors.border}; text-align: right; color: ${colors.text};">${data.bookingTime}</td>
           </tr>
+          ${
+            data.addonDetails && data.addonDetails.length > 0
+              ? data.addonDetails.map((addon) => `
+          <tr>
+            <td style="padding: 8px 0 8px 12px; border-bottom: 1px solid ${colors.border}; color: ${colors.textMuted}; font-size: 13px;">+ ${addon.name}${addon.quantity > 1 ? ` (x${addon.quantity})` : ""}</td>
+            <td style="padding: 8px 0; border-bottom: 1px solid ${colors.border}; text-align: right; color: ${colors.textMuted}; font-size: 13px;">+€${(addon.price * addon.quantity).toFixed(2)}</td>
+          </tr>`).join("")
+              : ""
+          }
           ${
             data.discountAmount && data.discountAmount > 0
               ? `
@@ -365,6 +376,16 @@ export const sendAdminBookingNotification = async (
             <td style="padding: 10px 0; border-bottom: 1px solid ${colors.border}; color: ${colors.textMuted};"><strong>Time:</strong></td>
             <td style="padding: 10px 0; border-bottom: 1px solid ${colors.border}; text-align: right; font-weight: bold; color: ${colors.warning};">${data.bookingTime}</td>
           </tr>
+          ${
+            data.addonDetails && data.addonDetails.length > 0
+              ? `<tr><td colspan="2" style="padding: 8px 0 4px 0; color: ${colors.textMuted}; font-size: 12px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px;">Extra Services</td></tr>` +
+                data.addonDetails.map((addon) => `
+          <tr>
+            <td style="padding: 6px 0 6px 12px; border-bottom: 1px solid ${colors.border}; color: ${colors.textMuted}; font-size: 13px;">+ ${addon.name}${addon.quantity > 1 ? ` (x${addon.quantity})` : ""}</td>
+            <td style="padding: 6px 0; border-bottom: 1px solid ${colors.border}; text-align: right; color: ${colors.textMuted}; font-size: 13px;">+€${(addon.price * addon.quantity).toFixed(2)}</td>
+          </tr>`).join("")
+              : ""
+          }
           ${
             data.notes
               ? `

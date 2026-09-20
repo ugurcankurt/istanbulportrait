@@ -5,6 +5,7 @@ import {
   Clock,
   Image as ImageIcon,
   Package,
+  Sparkles,
 } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { Badge } from "@/components/ui/badge";
@@ -100,6 +101,29 @@ export default async function CustomerDashboardPage() {
                       </span>
                     </div>
                   </div>
+
+                  {booking.selected_addon_details &&
+                    booking.selected_addon_details.length > 0 && (
+                      <div className="space-y-1.5 pt-2 border-t border-border/40">
+                        <div className="flex items-center gap-1.5 text-xs font-semibold text-muted-foreground">
+                          <Sparkles className="w-3.5 h-3.5 text-primary" />
+                          <span>{t("extraServices")}</span>
+                        </div>
+                        <div className="flex flex-wrap gap-1.5">
+                          {booking.selected_addon_details.map(
+                            (addon: any, idx: number) => (
+                              <Badge
+                                key={addon.id || `${addon.name}-${idx}`}
+                                variant="secondary"
+                                className="text-xs bg-primary/10 text-primary border border-primary/20 font-medium"
+                              >
+                                +{addon.name}{addon.quantity && addon.quantity > 1 ? ` (x${addon.quantity})` : ""}
+                              </Badge>
+                            ),
+                          )}
+                        </div>
+                      </div>
+                    )}
 
                   <div className="pt-1 flex justify-between items-end">
                     <div>

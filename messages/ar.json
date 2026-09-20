@@ -101,7 +101,8 @@
       "cvc": "CVC",
       "terms": "أنا أوافق على الشروط والأحكام",
       "month_short": "مم",
-      "year_short": "ص"
+      "year_short": "ص",
+      "addons": "الخدمات الإضافية"
     },
     "buttons": {
       "continue": "متابعة",
@@ -447,7 +448,8 @@
     "related_packages": "باقات ذات صلة",
     "gyg_title": "استكشف المزيد في اسطنبول",
     "gyg_subtitle": "أنشطة وجولات موصى بها من شريكنا GetYourGuide",
-    "starting_from": "تبدأ من"
+    "starting_from": "تبدأ من",
+    "total_price": "السعر الإجمالي"
   },
   "gallery": {
     "title": "المحفظة",
@@ -631,6 +633,7 @@
   },
   "account": {
     "dashboard": {
+      "extraServices": "خدمات إضافية",
       "noReservationsDesc": "يبدو أنه ليس لديك أي جلسات تصوير قادمة مجدولة بعد.",
       "people": "أشخاص",
       "totalAmount": "المبلغ الإجمالي",

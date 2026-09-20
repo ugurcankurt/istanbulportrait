@@ -10,6 +10,13 @@ export interface Payment {
   created_at: string;
 }
 
+export interface BookingAddonDetail {
+  id: string;
+  name: string;
+  price: number;
+  quantity?: number;
+}
+
 export interface Booking {
   id: string;
   package_id: string;
@@ -25,6 +32,8 @@ export interface Booking {
   updated_at?: string;
   people_count?: number | null;
   drive_folder_id?: string | null;
+  selected_addons?: string[] | null;
+  selected_addon_details?: BookingAddonDetail[] | null;
   payments: Payment[];
 }
 

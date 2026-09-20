@@ -101,7 +101,8 @@
       "cvc": "КВК",
       "terms": "Я согласен с условиями",
       "month_short": "ММ",
-      "year_short": "ГГ"
+      "year_short": "ГГ",
+      "addons": "Дополнительные услуги"
     },
     "buttons": {
       "continue": "Продолжить",
@@ -447,7 +448,8 @@
     "related_packages": "Похожие Пакеты",
     "gyg_title": "Узнайте больше в Стамбуле",
     "gyg_subtitle": "Рекомендуемые мероприятия и туры от нашего партнера GetYourGuide",
-    "starting_from": "От"
+    "starting_from": "От",
+    "total_price": "Итоговая цена"
   },
   "gallery": {
     "title": "Портфолио",
@@ -631,6 +633,7 @@
   },
   "account": {
     "dashboard": {
+      "extraServices": "Дополнительные Услуги",
       "noReservationsDesc": "Похоже, у вас пока не запланировано никаких фотосессий.",
       "people": "Люди",
       "totalAmount": "Общая сумма",

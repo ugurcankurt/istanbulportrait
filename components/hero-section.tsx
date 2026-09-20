@@ -7,12 +7,12 @@ export async function HeroSection({
   title,
   subtitle,
   backgroundImage,
-  activeDiscount,
+  activeDiscounts,
 }: {
   title?: string;
   subtitle?: string;
   backgroundImage?: string;
-  activeDiscount?: DiscountDB | null;
+  activeDiscounts?: DiscountDB[] | null;
 } = {}) {
   const tui = await getTranslations("ui");
 
@@ -44,7 +44,7 @@ export async function HeroSection({
           <HeroClientWrapper
             packagesButtonText={tui("packages_button")}
             checkLocationsButtonText={tui("check_locations")}
-            activeDiscount={activeDiscount}
+            activeDiscounts={activeDiscounts}
           >
             {/* Main Title - Server Rendered for LCP */}
             <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-serif font-normal mb-6 leading-[1.1] tracking-tight drop-shadow-2xl text-white">

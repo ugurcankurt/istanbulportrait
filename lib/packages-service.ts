@@ -38,6 +38,8 @@ export interface PackageDB {
   meta_keywords: PackageFeatures;
   duration: PackageTranslations;
   locations: number;
+  
+  addon_ids?: string[]; // Array of associated addon IDs
 
   created_at?: string;
   updated_at?: string;
@@ -145,7 +147,18 @@ export const packagesService = {
       return null;
     }
 
-    return data as PackageDB;
+    // Fetch addon_ids
+    const { data: addonsData } = await supabase
+      .from("package_addons")
+      .select("addon_id")
+      .eq("package_id", id);
+      
+    const packageWithAddons = {
+      ...data,
+      addon_ids: addonsData?.map((a: any) => a.addon_id) || [],
+    } as PackageDB;
+
+    return packageWithAddons;
   }),
   /**
    * Create a new package
@@ -154,9 +167,11 @@ export const packagesService = {
     pkg: Omit<PackageDB, "id" | "created_at" | "updated_at">,
   ): Promise<PackageDB | null> {
     const supabase = getSupabaseClient();
+    const { addon_ids, ...pkgData } = pkg;
+    
     const { data, error } = await supabase
       .from("packages")
-      .insert([pkg])
+      .insert([pkgData])
       .select()
       .single();
 
@@ -175,7 +190,15 @@ export const packagesService = {
       return null;
     }
 
-    return data as PackageDB;
+    if (addon_ids && addon_ids.length > 0) {
+      const addonInserts = addon_ids.map(addon_id => ({
+        package_id: data.id,
+        addon_id
+      }));
+      await supabase.from("package_addons").insert(addonInserts);
+    }
+
+    return { ...data, addon_ids: addon_ids || [] } as PackageDB;
   },
 
   /**
@@ -186,9 +209,11 @@ export const packagesService = {
     updates: Partial<PackageDB>,
   ): Promise<PackageDB | null> {
     const supabase = getSupabaseClient();
+    const { addon_ids, ...pkgData } = updates;
+    
     const { data, error } = await supabase
       .from("packages")
-      .update(updates)
+      .update(pkgData)
       .eq("id", id)
       .select()
       .single();
@@ -206,7 +231,18 @@ export const packagesService = {
       return null;
     }
 
-    return data as PackageDB;
+    if (addon_ids !== undefined) {
+      await supabase.from("package_addons").delete().eq("package_id", id);
+      if (addon_ids.length > 0) {
+        const addonInserts = addon_ids.map(addon_id => ({
+          package_id: id,
+          addon_id
+        }));
+        await supabase.from("package_addons").insert(addonInserts);
+      }
+    }
+
+    return { ...data, addon_ids: addon_ids || [] } as PackageDB;
   },
 
   /**

@@ -30,7 +30,7 @@ interface PackagesSectionProps {
   aggregateRating?: AggregateRating;
   dbPackages?: PackageDB[];
   parentSlug?: string;
-  activeDiscount?: DiscountDB | null;
+  activeDiscounts?: DiscountDB[] | null;
 }
 
 export function PackagesSection({
@@ -39,7 +39,7 @@ export function PackagesSection({
   aggregateRating,
   dbPackages = [],
   parentSlug,
-  activeDiscount = null,
+  activeDiscounts = null,
 }: PackagesSectionProps) {
   const t = useTranslations("packages");
   const tui = useTranslations("ui");
@@ -68,7 +68,7 @@ export function PackagesSection({
           dbSlug: pkg.slug,
           name: locName,
           basePrice: pkg.price,
-          pricing: calculateDiscountedPrice(pkg.price, activeDiscount),
+          pricing: calculateDiscountedPrice(pkg.price, activeDiscounts),
           duration: locDuration,
           photos: extractPhotosCount(locFeatures),
           locations: pkg.locations || 1,
@@ -171,10 +171,9 @@ export function PackagesSection({
                 {tui("most_popular")}
               </Badge>
             )}
-            {pkg.pricing?.isDiscounted && activeDiscount && (
-              <Badge className="bg-sale/90 backdrop-blur-md border border-white/30 text-white px-2 py-0.5 text-[10px] shadow-sm animate-pulse">
-                -{Math.round((pkg.pricing?.discountPercentage || 0) * 100)}%{" "}
-                {activeDiscount.name}
+            {pkg.pricing?.isDiscounted && pkg.pricing.discountPercentage > 0 && (
+              <Badge className="bg-red-600 backdrop-blur-md border border-red-500 text-white px-2 py-0.5 text-[10px] shadow-sm">
+                {pkg.pricing.discountName}
               </Badge>
             )}
           </div>

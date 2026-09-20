@@ -39,6 +39,8 @@ import type { BookingFormData, PackageId } from "@/lib/validations";
 import { createBookingSchema } from "@/lib/validations";
 import Link from "next/link";
 import type { TimeSurcharge } from "@/lib/availability-service";
+import type { AddonDB } from "@/lib/addons-service";
+import type { DiscountDB } from "@/lib/discount-service";
 
 // ─── Step 1: Booking Summary ──────────────────────────────────────────────────
 
@@ -60,10 +62,14 @@ function Step1Summary({
   onSubmit,
   isSubmitting,
   timeSurcharges,
+  availableAddons,
+  activeDiscounts,
+  tCheckout,
 }: {
   t: (k: string, v?: any) => string;
   tPricing: (k: string, v?: any) => string;
   tui: (k: string) => string;
+  tCheckout: (k: string) => string;
   locale: string;
   preFilledBookingData: BookingFormData;
   packageInfo: any;
@@ -78,6 +84,8 @@ function Step1Summary({
   onSubmit: () => void;
   isSubmitting: boolean;
   timeSurcharges?: TimeSurcharge[];
+  availableAddons?: AddonDB[];
+  activeDiscounts?: DiscountDB[] | null;
 }) {
   const { formatPrice } = useCurrency();
   const activeSurcharge = matchActiveSurcharge(
@@ -88,21 +96,26 @@ function Step1Summary({
     ? activeSurcharge.surcharge_percentage
     : 0;
 
+  const isPerPerson = (preFilledBookingData as any)?.isPerPerson;
+  const peopleCount = preFilledBookingData?.peopleCount;
+
   const rawPricing = getPackagePricing(
     selectedPackage,
     (preFilledBookingData as any)?.basePrice ||
       preFilledBookingData?.totalAmount ||
       0,
-    (preFilledBookingData as any)?.activeDiscount || null,
+    (preFilledBookingData as any)?.activeDiscounts ?? activeDiscounts ?? null,
     appliedPromo,
     preFilledBookingData?.bookingDate,
-    (preFilledBookingData as any)?.isPerPerson
-      ? preFilledBookingData?.peopleCount
-      : undefined,
+    peopleCount,
     undefined,
     undefined,
     surchargePercentage,
     (preFilledBookingData as any)?.yieldMultiplier || 1.0,
+    availableAddons,
+    (preFilledBookingData as any)?.selectedAddons || [],
+    isPerPerson,
+    (preFilledBookingData as any)?.addonQuantities || {},
   );
 
   const pricing = {
@@ -249,6 +262,13 @@ function Step1Summary({
               </div>
             )}
             
+            {(rawPricing.addonsAmount || 0) > 0 && (
+              <div className="flex justify-between text-xs font-medium text-emerald-600 dark:text-emerald-500">
+                <span>{tCheckout("form.addons") || "Add-ons"}</span>
+                <span>+{formatPrice(rawPricing.addonsAmount || 0)}</span>
+              </div>
+            )}
+            
             <Separator className="my-1 border-dashed" />
             
             <div className="flex justify-between text-xs font-medium">
@@ -316,9 +336,14 @@ function Step1Summary({
 
 export function CheckoutForm({
   timeSurcharges = [],
+  availableAddons = [],
+  activeDiscounts = null,
 }: {
   timeSurcharges?: TimeSurcharge[];
+  availableAddons?: AddonDB[];
+  activeDiscounts?: DiscountDB[] | null;
 }) {
+  const { formatPrice, currency } = useCurrency();
   const searchParams = useSearchParams();
   const router = useRouter();
   const locale = useLocale();
@@ -326,6 +351,7 @@ export function CheckoutForm({
   const tui = useTranslations("ui");
   const tValidation = useTranslations("validation");
   const tPricing = useTranslations("pricing");
+  const tCheckout = useTranslations("checkout");
 
   const [selectedPackage, setSelectedPackage] = useState<PackageId | null>(
     null,
@@ -367,16 +393,18 @@ export function CheckoutForm({
         (preFilledBookingData as any)?.basePrice ||
           preFilledBookingData?.totalAmount ||
           0,
-        (preFilledBookingData as any)?.activeDiscount || null,
+        (preFilledBookingData as any)?.activeDiscounts ?? activeDiscounts ?? null,
         appliedPromo,
         preFilledBookingData?.bookingDate,
-        (preFilledBookingData as any)?.isPerPerson
-          ? preFilledBookingData?.peopleCount
-          : undefined,
+        (preFilledBookingData as any)?.peopleCount,
         undefined,
         undefined,
         computedSurchargePercentage,
         (preFilledBookingData as any)?.yieldMultiplier || 1.0,
+        availableAddons,
+        (preFilledBookingData as any)?.selectedAddons || [],
+        (preFilledBookingData as any)?.isPerPerson,
+        (preFilledBookingData as any)?.addonQuantities || {},
       )
     : null;
 
@@ -584,16 +612,18 @@ export function CheckoutForm({
       (preFilledBookingData as any)?.basePrice ||
         preFilledBookingData?.totalAmount ||
         0,
-      (preFilledBookingData as any)?.activeDiscount || null,
+      (preFilledBookingData as any)?.activeDiscounts ?? activeDiscounts ?? null,
       appliedPromo,
       bookingData.bookingDate,
-      (preFilledBookingData as any)?.isPerPerson
-        ? (preFilledBookingData as any)?.peopleCount
-        : undefined,
+      (preFilledBookingData as any)?.peopleCount,
       undefined,
       undefined,
       computedSurchargePercentage,
       (preFilledBookingData as any)?.yieldMultiplier || 1.0,
+      availableAddons,
+      (preFilledBookingData as any)?.selectedAddons || [],
+      (preFilledBookingData as any)?.isPerPerson,
+      (preFilledBookingData as any)?.addonQuantities || {},
     );
 
     try {
@@ -622,6 +652,11 @@ export function CheckoutForm({
         body: JSON.stringify({
           appliedPromo,
           ...bookingData,
+          selectedAddons: (preFilledBookingData as any)?.selectedAddons || [],
+          addonQuantities: (preFilledBookingData as any)?.addonQuantities || {},
+          basePrice: (preFilledBookingData as any)?.basePrice,
+          isPerPerson: (preFilledBookingData as any)?.isPerPerson,
+          activeDiscount: (preFilledBookingData as any)?.activeDiscounts ?? activeDiscounts ?? null,
           totalAmount: pricingCalc.totalPrice,
           paymentId: "cash_" + Date.now(),
           conversationId: "cash_" + Date.now(),
@@ -767,6 +802,7 @@ export function CheckoutForm({
             t={t}
             tPricing={tPricing}
             tui={tui}
+            tCheckout={tCheckout}
             locale={locale}
             preFilledBookingData={preFilledBookingData}
             packageInfo={packageInfo}
@@ -781,6 +817,8 @@ export function CheckoutForm({
             onSubmit={handleCashPaymentSubmit}
             isSubmitting={isLoading}
             timeSurcharges={timeSurcharges}
+            availableAddons={availableAddons}
+            activeDiscounts={activeDiscounts}
           />
         </div>
       </main>

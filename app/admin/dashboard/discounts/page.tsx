@@ -149,7 +149,7 @@ export default function DiscountsPage() {
           </h1>
           <p className="text-muted-foreground mt-2">
             Manage your site-wide seasonal discounts (e.g. Winter Sale %20).
-            Only ONE campaign can be active at a time.
+            You can have multiple active campaigns for different dates.
           </p>
         </div>
         {!isFormOpen && (

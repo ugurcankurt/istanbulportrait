@@ -1,6 +1,6 @@
 "use client";
 
-import { Globe, Menu, User } from "lucide-react";
+import { Globe, Menu, User, Instagram, Facebook, MessageCircle } from "lucide-react";
 import Image from "next/image";
 import { useParams } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
@@ -352,7 +352,7 @@ export function Navigation({ dynamicNavData = {}, settings }: NavigationProps) {
               </div>
               <span className="sr-only">Open menu</span>
             </SheetTrigger>
-            <SheetContent side="right" className="w-80 p-0">
+            <SheetContent side="right" className="w-80 p-0 flex flex-col">
               <SheetHeader className="p-6 pb-4 bg-muted/30">
                 <div className="relative flex items-center justify-center w-32 h-10 mx-auto">
                   {settings?.logo_url ? (
@@ -395,7 +395,7 @@ export function Navigation({ dynamicNavData = {}, settings }: NavigationProps) {
                 </div>
               </SheetHeader>
 
-              <nav className="flex flex-col p-6 space-y-2">
+              <nav className="flex flex-col flex-1 p-6 space-y-2 overflow-y-auto">
                 {navItems.map((item, index) => (
                   <div
                     key={item.href}
@@ -434,6 +434,46 @@ export function Navigation({ dynamicNavData = {}, settings }: NavigationProps) {
                       {t("myAccount") || "My Account"}
                     </span>
                   </Link>
+                </div>
+
+                {/* Mobile Social Links */}
+                <div 
+                  className="animate-slide-in-right mt-auto pt-6 flex justify-center space-x-6 rtl:space-x-reverse border-t border-border/50"
+                  style={{ animationDelay: `${(navItems.length + 1) * 100}ms` }}
+                >
+                  {settings?.instagram_url && (
+                    <a
+                      href={settings.instagram_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-muted-foreground hover:text-foreground hover:scale-110 transition-all"
+                      aria-label="Instagram"
+                    >
+                      <Instagram className="h-6 w-6" />
+                    </a>
+                  )}
+                  {settings?.facebook_url && (
+                    <a
+                      href={settings.facebook_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-muted-foreground hover:text-foreground hover:scale-110 transition-all"
+                      aria-label="Facebook"
+                    >
+                      <Facebook className="h-6 w-6" />
+                    </a>
+                  )}
+                  {settings?.whatsapp_number && (
+                    <a
+                      href={`https://wa.me/${settings.whatsapp_number.replace(/[^\d]/g, "")}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-muted-foreground hover:text-whatsapp hover:scale-110 transition-all"
+                      aria-label="WhatsApp"
+                    >
+                      <MessageCircle className="h-6 w-6" />
+                    </a>
+                  )}
                 </div>
               </nav>
             </SheetContent>

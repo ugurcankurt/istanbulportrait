@@ -9,6 +9,7 @@ import {
   LogOut,
   MapPin,
   Package,
+  Puzzle,
   Settings,
   Ticket,
   TicketPercent,
@@ -67,6 +68,7 @@ const navigationGroups = [
     title: "Sales & Catalog",
     items: [
       { name: "Packages", href: "/admin/dashboard/packages", icon: Package },
+      { name: "Add-ons", href: "/admin/dashboard/addons", icon: Puzzle },
       {
         name: "Discounts",
         href: "/admin/dashboard/discounts",

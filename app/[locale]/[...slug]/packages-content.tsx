@@ -37,7 +37,7 @@ export async function PackagesPageContent({
   const dbPackages = await packagesService.getActivePackages();
 
   // Fetch active discount
-  const activeDiscount = await discountService.getActiveDiscount();
+  const activeDiscounts = await discountService.getActiveDiscounts();
 
   const collectionSchema = buildCollectionPageSchema({
     name: dynamicTitle,
@@ -73,7 +73,7 @@ export async function PackagesPageContent({
           aggregateRating={aggregateRating}
           dbPackages={dbPackages}
           parentSlug={parentSlug}
-          activeDiscount={activeDiscount}
+          activeDiscounts={activeDiscounts}
         />
       </div>
       <GygActivitiesSection />

@@ -101,7 +101,8 @@
       "cvc": "CVC",
       "terms": "I agree to the terms and conditions",
       "month_short": "MM",
-      "year_short": "YY"
+      "year_short": "YY",
+      "addons": "Extra Services"
     },
     "buttons": {
       "continue": "Continue",
@@ -447,7 +448,8 @@
     "related_packages": "Related Packages",
     "gyg_title": "Explore More in Istanbul",
     "gyg_subtitle": "Recommended activities and tours by our partner GetYourGuide",
-    "starting_from": "From"
+    "starting_from": "From",
+    "total_price": "Total Price"
   },
   "gallery": {
     "title": "Portfolio",
@@ -660,6 +662,7 @@
       "logout": "Log out"
     },
     "dashboard": {
+      "extraServices": "Extra Services",
       "noReservationsDesc": "Looks like you don't have any upcoming photography sessions scheduled yet.",
       "people": "People",
       "totalAmount": "Total Amount",

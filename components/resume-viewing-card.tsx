@@ -11,6 +11,7 @@ import type { PackageId } from "@/lib/validations";
 import { usePackagesStore } from "@/stores/packages-store";
 import type { DiscountDB } from "@/lib/discount-service";
 import { Card, CardHeader } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { useLocale, useFormatter } from "next-intl";
 import { useCurrency } from "@/contexts/currency-context";
 import { cn } from "@/lib/utils";
@@ -33,7 +34,7 @@ interface ResumeViewingCardProps {
   showTitle?: boolean;
   withContainer?: boolean;
   isMainTitle?: boolean;
-  activeDiscount?: DiscountDB | null;
+  activeDiscounts?: DiscountDB[] | null;
 }
 
 export function ResumeViewingCard({
@@ -41,7 +42,7 @@ export function ResumeViewingCard({
   showTitle = true,
   withContainer = true,
   isMainTitle = false,
-  activeDiscount = null,
+  activeDiscounts = null,
 }: ResumeViewingCardProps) {
   const [localVisited, setLocalVisited] = useState<LastVisited[]>([]);
   const t = useTranslations("packages");
@@ -136,7 +137,7 @@ export function ResumeViewingCard({
               const basePrice = packageDb ? Number(packageDb.price) : 150;
               const pricing = calculateDiscountedPrice(
                 basePrice,
-                activeDiscount,
+                activeDiscounts,
                 null,
                 today,
               );
@@ -222,11 +223,10 @@ export function ResumeViewingCard({
                               </span>
                             )}
                           </div>
-                          {pricing.isDiscounted && activeDiscount && (
-                            <span className="text-[10px] font-bold text-sale bg-sale/10 px-2 py-0.5 rounded-full animate-pulse whitespace-nowrap">
-                              -{Math.round(pricing.discountPercentage * 100)}%{" "}
-                              {activeDiscount.name}
-                            </span>
+                          {pricing.isDiscounted && pricing.discountPercentage > 0 && (
+                            <Badge className="bg-red-600 backdrop-blur-md border border-red-500 text-white px-2 py-0.5 text-[10px] shadow-sm ml-2 whitespace-nowrap">
+                              {pricing.discountName}
+                            </Badge>
                           )}
                         </div>
                       </CardHeader>

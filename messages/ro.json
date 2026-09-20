@@ -101,7 +101,8 @@
       "cvc": "CVC",
       "terms": "Sunt de acord cu termenii și condițiile",
       "month_short": "MM",
-      "year_short": "YY"
+      "year_short": "YY",
+      "addons": "Servicii suplimentare"
     },
     "buttons": {
       "continue": "Continuă",
@@ -447,7 +448,8 @@
     "related_packages": "Pachete Similare",
     "gyg_title": "Explorează mai mult în Istanbul",
     "gyg_subtitle": "Activități și tururi recomandate de partenerul nostru GetYourGuide",
-    "starting_from": "De la"
+    "starting_from": "De la",
+    "total_price": "Preț Total"
   },
   "gallery": {
     "title": "Portofoliu",
@@ -631,6 +633,7 @@
   },
   "account": {
     "dashboard": {
+      "extraServices": "Servicii Suplimentare",
       "noReservationsDesc": "Se pare că nu ai încă nicio ședință foto programată.",
       "people": "Persoane",
       "totalAmount": "Sumă totală",

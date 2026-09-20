@@ -7,6 +7,7 @@ import { SchemaInjector } from "@/components/schema-injector";
 import { availabilityService } from "@/lib/availability-service";
 import { discountService } from "@/lib/discount-service";
 import { packagesService } from "@/lib/packages-service";
+import { addonsService } from "@/lib/addons-service";
 import { reviewsService } from "@/lib/reviews-service";
 import {
   buildServiceSchema,
@@ -37,8 +38,9 @@ export async function PackageDetailPageContent({
     notFound();
   }
 
-  const activeDiscount = await discountService.getActiveDiscount();
+  const activeDiscounts = await discountService.getActiveDiscounts();
   const timeSurcharges = await availabilityService.getTimeSurcharges();
+  const availableAddons = await addonsService.getActiveAddonsForPackage(pkg.id);
 
   // Fetch real reviews data
   const aggregateRating = await reviewsService.getAggregateRating();
@@ -61,7 +63,7 @@ export async function PackageDetailPageContent({
     reviewCount: aggregateRating.count || 1,
     providerName: settings.organization_name || settings.site_name,
     providerUrl: getBaseUrl(),
-    discount: activeDiscount,
+    discount: activeDiscounts && activeDiscounts.length > 0 ? activeDiscounts[0] : null,
     reviews: reviews,
     url: `${getBaseUrl()}/${locale}/${parentSlug}/${slug}`,
   });
@@ -99,15 +101,16 @@ export async function PackageDetailPageContent({
         packageData={pkg}
         aggregateRating={aggregateRating}
         reviews={reviews}
-        activeDiscount={activeDiscount}
+        activeDiscounts={activeDiscounts}
         timeSurcharges={timeSurcharges}
+        availableAddons={availableAddons}
         whatsappNumber={settings.whatsapp_number}
       />
       {relatedPackages.length > 0 && (
         <div className="mt-0 sm:mt-8 border-t border-border/30 bg-muted/10">
           <PackagesSection
             dbPackages={relatedPackages}
-            activeDiscount={activeDiscount}
+            activeDiscounts={activeDiscounts}
             aggregateRating={aggregateRating}
             parentSlug={parentSlug}
             header={

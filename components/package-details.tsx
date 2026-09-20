@@ -42,13 +42,15 @@ import type { GoogleReview, AggregateRating } from "@/types/reviews";
 import { cn } from "@/lib/utils";
 import type { TimeSurcharge } from "@/lib/availability-service";
 import { useCurrency } from "@/contexts/currency-context";
+import type { AddonDB } from "@/lib/addons-service";
 
 export interface PackageDetailsProps {
   packageData: PackageDB;
   aggregateRating: AggregateRating;
   reviews: GoogleReview[];
-  activeDiscount: DiscountDB | null;
+  activeDiscounts: DiscountDB[] | null;
   timeSurcharges: TimeSurcharge[];
+  availableAddons?: AddonDB[];
   whatsappNumber?: string;
 }
 
@@ -56,8 +58,9 @@ export function PackageDetails({
   packageData,
   aggregateRating,
   reviews,
-  activeDiscount,
+  activeDiscounts,
   timeSurcharges,
+  availableAddons = [],
   whatsappNumber,
 }: PackageDetailsProps) {
   const t = useTranslations("packages");
@@ -76,6 +79,8 @@ export function PackageDetails({
     undefined,
   );
   const [peopleCount, setPeopleCount] = useState<number>(1);
+  const [selectedAddons, setSelectedAddons] = useState<string[]>([]);
+  const [addonQuantities, setAddonQuantities] = useState<Record<string, number>>({});
   const [isSaved, setIsSaved] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [yieldMultiplier, setYieldMultiplier] = useState<number>(1.0);
@@ -97,29 +102,49 @@ export function PackageDetails({
 
   // Calculate generic unit pricing for display
   const basePrice = Number(packageData.price);
-  const pricing = calculateDiscountedPrice(
-    basePrice * (1 + surchargePercentage / 100) * yieldMultiplier,
-    activeDiscount,
-    null,
-    selectedDate,
-  );
+
+  // Calculate package unit price before discount
+  const packageUnitPrice =
+    basePrice * (1 + surchargePercentage / 100) * yieldMultiplier;
 
   // Calculate full dynamic pricing including people count for the correct deposit logic
   const fullPricing = getPackagePricing(
     packageData.slug as any,
     basePrice,
-    activeDiscount,
+    activeDiscounts,
     null,
     selectedDate,
-    packageData.is_per_person ? peopleCount : undefined,
+    peopleCount,
     undefined,
     undefined,
     surchargePercentage,
     yieldMultiplier,
+    availableAddons,
+    selectedAddons,
+    packageData.is_per_person,
+    addonQuantities,
   );
 
-  // Price to display (unit price, do not multiply by peopleCount for visual display)
-  const displayPrice = pricing.price;
+  const displayPrice =
+    packageData.is_per_person && peopleCount > 0
+      ? fullPricing.totalPrice / peopleCount
+      : fullPricing.totalPrice;
+
+  const originalDisplayPrice =
+    packageData.is_per_person && peopleCount > 0
+      ? fullPricing.originalPrice / peopleCount
+      : fullPricing.originalPrice;
+
+  const pricing = {
+    price: displayPrice,
+    originalPrice: originalDisplayPrice,
+    isDiscounted: fullPricing.isDiscounted,
+    discountPercentage: fullPricing.appliedDiscountPercentage,
+    depositAmount: fullPricing.depositAmount,
+    remainingAmount: fullPricing.remainingAmount,
+  };
+
+
 
   const features =
     packageData.features[locale] || packageData.features["en"] || [];
@@ -227,7 +252,7 @@ export function PackageDetails({
                 {pricing.isDiscounted && (
                   <Badge
                     variant="default"
-                    className="bg-black/80 backdrop-blur-md text-white border border-white/20 animate-pulse font-serif tracking-widest uppercase text-xs px-3 py-1 shadow-luxury"
+                    className="bg-red-600 backdrop-blur-md text-white border border-red-500 font-serif tracking-widest uppercase text-xs px-3 py-1 shadow-sm"
                   >
                     {tui("save_percentage", {
                       percentage: Math.round(pricing.discountPercentage * 100),
@@ -373,8 +398,10 @@ export function PackageDetails({
                         <span className="text-xl text-muted-foreground line-through font-medium">
                           {formatPrice(pricing.originalPrice)}
                         </span>
-                        <Badge className="bg-red-500 hover:bg-red-600 text-white border-none font-bold">
-                          -{Math.round(pricing.discountPercentage * 100)}%
+                        <Badge className="bg-red-600 backdrop-blur-md text-white border border-red-500 font-serif tracking-widest uppercase text-xs px-3 py-1 shadow-sm">
+                          {tui("save_percentage", {
+                            percentage: Math.round(pricing.discountPercentage * 100),
+                          })}
                         </Badge>
                       </div>
                     )}
@@ -468,9 +495,14 @@ export function PackageDetails({
                 packageDuration={packageDur}
                 isPerPerson={packageData.is_per_person}
                 onCheckAvailability={() => setIsModalOpen(true)}
-                activeDiscount={activeDiscount}
+                activeDiscounts={activeDiscounts}
                 timeSurcharges={timeSurcharges}
+                availableAddons={availableAddons}
                 whatsappNumber={whatsappNumber}
+                selectedAddons={selectedAddons}
+                setSelectedAddons={setSelectedAddons}
+                addonQuantities={addonQuantities}
+                setAddonQuantities={setAddonQuantities}
                 onYieldChange={(multiplier, reason) => {
                   setYieldMultiplier(multiplier);
                   setYieldReason(reason);
@@ -501,11 +533,14 @@ export function PackageDetails({
         // photo count wasn't easily mapped earlier, dropping or mapping directly:
         packagePhotos={packageData.gallery_images?.length || 15}
         isPerPerson={packageData.is_per_person}
-        activeDiscount={activeDiscount}
+        activeDiscounts={activeDiscounts}
         timeSurcharges={timeSurcharges}
         whatsappNumber={whatsappNumber}
         yieldMultiplier={yieldMultiplier}
         yieldReason={yieldReason}
+        availableAddons={availableAddons}
+        initialSelectedAddons={selectedAddons}
+        initialAddonQuantities={addonQuantities}
       />
 
       {/* Existing Sticky Bottom Bar for Mobile (Hidden on Desktop) */}

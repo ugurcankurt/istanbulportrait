@@ -46,9 +46,11 @@ import {
   deletePackageImage,
   uploadPackageVideo,
 } from "@/lib/storage-utils";
+import { type AddonDB } from "@/lib/addons-service";
 
 interface PackageFormProps {
   initialData?: PackageDB;
+  availableAddons?: AddonDB[];
 }
 
 const SUPPORTED_LOCALES = [
@@ -63,7 +65,7 @@ const SUPPORTED_LOCALES = [
   "tr",
 ];
 
-export function PackageForm({ initialData }: PackageFormProps) {
+export function PackageForm({ initialData, availableAddons = [] }: PackageFormProps) {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [coverImagePreview, setCoverImagePreview] = useState<string | null>(
@@ -93,6 +95,7 @@ export function PackageForm({ initialData }: PackageFormProps) {
       meta_description: { en: "" },
       meta_keywords: { en: [""] },
       locations: 1,
+      addon_ids: (initialData as any)?.addon_ids || [],
     },
   });
 
@@ -388,6 +391,7 @@ export function PackageForm({ initialData }: PackageFormProps) {
           typeof data.locations === "string"
             ? parseInt(data.locations, 10)
             : data.locations,
+        addon_ids: data.addon_ids || [],
       };
 
       if (initialData?.id) {
@@ -836,6 +840,66 @@ export function PackageForm({ initialData }: PackageFormProps) {
                       <FormDescription>
                         Lower numbers appear first.
                       </FormDescription>
+                    </FormItem>
+                  )}
+                />
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>Available Add-ons</CardTitle>
+                <CardDescription>
+                  Select which add-ons customers can purchase with this package.
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <FormField
+                  control={form.control}
+                  name="addon_ids"
+                  render={() => (
+                    <FormItem>
+                      {availableAddons.map((addon) => (
+                        <FormField
+                          key={addon.id}
+                          control={form.control}
+                          name="addon_ids"
+                          render={({ field }) => {
+                            return (
+                              <FormItem
+                                key={addon.id}
+                                className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 shadow-sm"
+                              >
+                                <FormControl>
+                                  <Switch
+                                    checked={field.value?.includes(addon.id)}
+                                    onCheckedChange={(checked) => {
+                                      const currentValue = field.value || [];
+                                      return checked
+                                        ? field.onChange([...currentValue, addon.id])
+                                        : field.onChange(
+                                            currentValue.filter(
+                                              (value: string) => value !== addon.id
+                                            )
+                                          )
+                                    }}
+                                  />
+                                </FormControl>
+                                <div className="space-y-1 leading-none">
+                                  <FormLabel>
+                                    {addon.title?.en} (€{addon.price})
+                                  </FormLabel>
+                                  {addon.is_per_person && (
+                                    <FormDescription>
+                                      Pricing is calculated per person
+                                    </FormDescription>
+                                  )}
+                                </div>
+                              </FormItem>
+                            )
+                          }}
+                        />
+                      ))}
                     </FormItem>
                   )}
                 />

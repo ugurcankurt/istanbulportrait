@@ -4,6 +4,7 @@ import { packagesService } from "@/lib/packages-service";
 import { reviewsService } from "@/lib/reviews-service";
 import { generateSeoDescription, getBaseUrl } from "@/lib/seo-utils";
 import { settingsService } from "@/lib/settings-service";
+import { calculateDiscountedPrice } from "@/lib/pricing";
 
 export const dynamic = "force-dynamic";
 
@@ -29,7 +30,7 @@ export async function GET(request: Request) {
   const baseUrl = getBaseUrl();
   const packages = await packagesService.getAllPackages();
   const settings = await settingsService.getSettings();
-  const activeDiscount = await discountService.getActiveDiscount();
+  const activeDiscounts = await discountService.getActiveDiscounts();
 
   // Fetch real Google Reviews aggregate data
   const { average, count } = await reviewsService.getAggregateRating();
@@ -86,7 +87,8 @@ export async function GET(request: Request) {
       en: "en_XX",
     };
 
-    let csv = "id,override,title,description,link,image_link,additional_image_link\n";
+    let csv =
+      "id,override,title,description,link,image_link,additional_image_link\n";
     for (const pkg of packages) {
       let title = pkg.title?.[locale] || pkg.title?.en || "";
       // Meta secondary feeds have a strict 65-character limit for titles
@@ -108,7 +110,24 @@ export async function GET(request: Request) {
         const rating = average > 0 ? average.toFixed(1) : "5.0";
         const reviewsCount = count > 0 ? count : 124;
 
-        imageUrl = `${baseUrl}/api/og-catalog?image=${encodeURIComponent(rawImageUrl)}&title=${encodeURIComponent(title)}&rating=${rating}&reviews=${reviewsCount}&location=${encodeURIComponent(location)}`;
+        let discountParam = "";
+        const discountedCalc = calculateDiscountedPrice(
+          pkg.price,
+          activeDiscounts,
+        );
+        if (
+          discountedCalc.isDiscounted &&
+          discountedCalc.discountPercentage > 0
+        ) {
+          discountParam = `&discount=${discountedCalc.discountPercentage}`;
+        } else if (pkg.original_price && pkg.original_price > pkg.price) {
+          const discountPct = Math.round(
+            (1 - pkg.price / pkg.original_price) * 100,
+          );
+          discountParam = `&discount=${discountPct}`;
+        }
+
+        imageUrl = `${baseUrl}/api/og-catalog?image=${encodeURIComponent(rawImageUrl)}&title=${encodeURIComponent(title)}&rating=${rating}&reviews=${reviewsCount}&location=${encodeURIComponent(location)}${discountParam}`;
       }
 
       // Add additional images for carousel
@@ -117,9 +136,11 @@ export async function GET(request: Request) {
         const filteredGallery = pkg.gallery_images
           .map((img: string) => cleanImage(img))
           .filter((img: string) => img && img !== rawImageUrl);
-        
+
         // Meta supports up to 10 additional images, cropped to 4:5 ratio (1080x1350)
-        const limitedGallery = filteredGallery.slice(0, 10).map((img: string) => cropTo4x5(img));
+        const limitedGallery = filteredGallery
+          .slice(0, 10)
+          .map((img: string) => cropTo4x5(img));
         if (limitedGallery.length > 0) {
           additionalImages = limitedGallery.join(",");
         }
@@ -168,7 +189,24 @@ export async function GET(request: Request) {
       const rating = average > 0 ? average.toFixed(1) : "5.0";
       const reviewsCount = count > 0 ? count : 124;
 
-      imageUrl = `${baseUrl}/api/og-catalog?image=${encodeURIComponent(rawImageUrl)}&title=${encodeURIComponent(title)}&rating=${rating}&reviews=${reviewsCount}&location=${encodeURIComponent(location)}`;
+      let discountParam = "";
+      const discountedCalc = calculateDiscountedPrice(
+        pkg.price,
+        activeDiscounts,
+      );
+      if (
+        discountedCalc.isDiscounted &&
+        discountedCalc.discountPercentage > 0
+      ) {
+        discountParam = `&discount=${discountedCalc.discountPercentage}`;
+      } else if (pkg.original_price && pkg.original_price > pkg.price) {
+        const discountPct = Math.round(
+          (1 - pkg.price / pkg.original_price) * 100,
+        );
+        discountParam = `&discount=${discountPct}`;
+      }
+
+      imageUrl = `${baseUrl}/api/og-catalog?image=${encodeURIComponent(rawImageUrl)}&title=${encodeURIComponent(title)}&rating=${rating}&reviews=${reviewsCount}&location=${encodeURIComponent(location)}${discountParam}`;
     }
 
     const videoUrl = cleanImage(pkg.video_url);
@@ -186,15 +224,18 @@ export async function GET(request: Request) {
       finalSalePrice = pkg.price;
     }
 
-    // 2. Check if there is a global dynamic discount running
-    if (activeDiscount && activeDiscount.discount_percentage > 0) {
-      finalBasePrice = pkg.price; // The regular price is what's on the package
-      const calculatedSalePrice =
-        pkg.price - pkg.price * activeDiscount.discount_percentage;
-      finalSalePrice = parseFloat(calculatedSalePrice.toFixed(2));
+    const discountedCalc = calculateDiscountedPrice(pkg.price, activeDiscounts);
 
-      if (activeDiscount.start_date && activeDiscount.end_date) {
-        effectiveDate = `${new Date(activeDiscount.start_date).toISOString()}/${new Date(activeDiscount.end_date).toISOString()}`;
+    // 2. Check if there is a global dynamic discount running
+    if (discountedCalc.isDiscounted && discountedCalc.discountPercentage > 0) {
+      finalBasePrice = pkg.price; // The regular price is what's on the package
+      finalSalePrice = parseFloat(discountedCalc.price.toFixed(2));
+
+      const bestDiscount = activeDiscounts?.find(
+        (d) => d.name === discountedCalc.discountName,
+      );
+      if (bestDiscount?.start_date && bestDiscount?.end_date) {
+        effectiveDate = `${new Date(bestDiscount.start_date).toISOString()}/${new Date(bestDiscount.end_date).toISOString()}`;
       }
     }
 
@@ -225,7 +266,7 @@ export async function GET(request: Request) {
       const filteredGallery = pkg.gallery_images
         .map((img: string) => cleanImage(img))
         .filter((img: string) => img && img !== rawImageUrl);
-      
+
       const limitedGallery = filteredGallery.slice(0, 10);
       limitedGallery.forEach((imgUrl: string) => {
         xml += `\n      <g:additional_image_link>${escapeXml(cropTo4x5(imgUrl))}</g:additional_image_link>`;

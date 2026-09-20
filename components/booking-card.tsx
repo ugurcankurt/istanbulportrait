@@ -34,6 +34,8 @@ import { cn } from "@/lib/utils";
 import { type PackageId } from "@/lib/validations";
 import { type DiscountDB } from "@/lib/discount-service";
 import type { TimeSurcharge } from "@/lib/availability-service";
+import type { AddonDB } from "@/lib/addons-service";
+import { Checkbox } from "@/components/ui/checkbox";
 
 interface BookingCardProps {
   packageId: PackageId;
@@ -61,12 +63,17 @@ interface BookingCardProps {
   isPerPerson: boolean;
   onCheckAvailability: () => void;
   isFlat?: boolean;
-  activeDiscount?: DiscountDB | null;
+  activeDiscounts?: DiscountDB[] | null;
   timeSurcharges?: TimeSurcharge[];
   isInsideModal?: boolean;
   whatsappNumber?: string;
   onYieldChange?: (multiplier: number, reason: string) => void;
   yieldReason?: string;
+  availableAddons?: AddonDB[];
+  selectedAddons?: string[];
+  setSelectedAddons?: (addons: string[]) => void;
+  addonQuantities?: Record<string, number>;
+  setAddonQuantities?: (quantities: Record<string, number>) => void;
 }
 
 export function BookingCard({
@@ -88,16 +95,22 @@ export function BookingCard({
   isPerPerson,
   onCheckAvailability,
   isFlat = false,
-  activeDiscount = null,
+  activeDiscounts = null,
   timeSurcharges = [],
   isInsideModal = false,
   whatsappNumber,
   onYieldChange,
   yieldReason = "standard",
+  availableAddons = [],
+  selectedAddons = [],
+  setSelectedAddons,
+  addonQuantities = {},
+  setAddonQuantities,
 }: BookingCardProps) {
   const isMobile = useIsMobile();
-  const { formatPrice } = useCurrency();
+  const { formatPrice, currency } = useCurrency();
   const tValidation = useTranslations("validation");
+  const tui = useTranslations("ui");
   const [isPeoplePopoverOpen, setIsPeoplePopoverOpen] = useState(false);
   const [isDatePopoverOpen, setIsDatePopoverOpen] = useState(false);
   const [isTimePopoverOpen, setIsTimePopoverOpen] = useState(false);
@@ -236,18 +249,18 @@ export function BookingCard({
   };
 
   const isDateDiscounted = (date: Date) => {
-    if (
-      !activeDiscount ||
-      !activeDiscount.start_date ||
-      !activeDiscount.end_date
-    )
-      return false;
-    const start = new Date(activeDiscount.start_date);
-    start.setHours(0, 0, 0, 0);
-    const end = new Date(activeDiscount.end_date);
-    end.setHours(23, 59, 59, 999);
+    if (!activeDiscounts || activeDiscounts.length === 0) return false;
+    
     const checkTime = date.getTime();
-    return checkTime >= start.getTime() && checkTime <= end.getTime();
+    
+    return activeDiscounts.some((discount) => {
+      if (!discount.start_date || !discount.end_date) return false;
+      const start = new Date(discount.start_date);
+      start.setHours(0, 0, 0, 0);
+      const end = new Date(discount.end_date);
+      end.setHours(23, 59, 59, 999);
+      return checkTime >= start.getTime() && checkTime <= end.getTime();
+    });
   };
 
   return (
@@ -285,18 +298,25 @@ export function BookingCard({
                 {formatPrice(displayPrice)}
               </span>
               {pricing.isDiscounted && (
-                <span
-                  className={cn(
-                    "text-muted-foreground line-through font-medium leading-none ml-1",
-                    isInsideModal ? "text-base" : "text-lg",
+                <div className="flex items-center">
+                  <span
+                    className={cn(
+                      "text-muted-foreground line-through font-medium leading-none ml-1",
+                      isInsideModal ? "text-base" : "text-lg",
+                    )}
+                  >
+                    {formatPrice(pricing.originalPrice || basePrice)}
+                  </span>
+                  {pricing.discountPercentage && pricing.discountPercentage > 0 && (
+                    <Badge className="bg-red-600 backdrop-blur-md text-white border border-red-500 font-serif tracking-widest uppercase text-xs px-3 py-1 shadow-sm ml-2">
+                      {tui("save_percentage", {
+                        percentage: Math.round(pricing.discountPercentage * 100),
+                      })}
+                    </Badge>
                   )}
-                >
-                  {formatPrice(pricing.originalPrice || basePrice)}
-                </span>
+                </div>
               )}
-              <span className="text-sm font-bold text-muted-foreground ml-1">
-                / {packageDuration}
-              </span>
+
             </div>
           </div>
         </div>
@@ -618,6 +638,105 @@ export function BookingCard({
           )}
         </div>
 
+        {/* Add-ons Selector */}
+        {availableAddons && availableAddons.length > 0 && setSelectedAddons && (
+          <div className="space-y-3 pt-4 border-t border-border/50">
+            <h4 className="text-sm font-bold text-foreground">
+              {tCheckout("form.addons") || "Add-ons"}
+            </h4>
+            <div className="space-y-2">
+              {availableAddons.map((addon) => {
+                const addonPrice = Number(addon.price);
+                const isSelected = selectedAddons.includes(addon.id);
+                const qty = addonQuantities[addon.id] || 1;
+                const displayAddonPrice = addon.is_per_person
+                    ? addonPrice * qty
+                    : addonPrice;
+
+                return (
+                  <div
+                    key={addon.id}
+                    className="flex flex-col space-y-2 rounded-md border p-3 shadow-sm bg-background"
+                  >
+                    <div className="flex flex-row items-start space-x-3">
+                      <Checkbox
+                        checked={isSelected}
+                        onCheckedChange={(checked) => {
+                          const newSelected = checked
+                            ? [...selectedAddons, addon.id]
+                            : selectedAddons.filter((id) => id !== addon.id);
+                          setSelectedAddons(newSelected);
+                          
+                          // If checking a per-person addon, ensure it has a default quantity (1)
+                          if (checked && addon.is_per_person && setAddonQuantities) {
+                            setAddonQuantities({ ...addonQuantities, [addon.id]: 1 });
+                          }
+                        }}
+                        id={`addon-${addon.id}`}
+                      />
+                      <div className="flex-1 space-y-1 leading-none">
+                        <label
+                          htmlFor={`addon-${addon.id}`}
+                          className="text-sm font-bold leading-none cursor-pointer"
+                        >
+                          {addon.title?.[dateFnsLocale?.code?.split("-")[0] || "en"] || addon.title?.en}
+                        </label>
+                        <p className="text-[11px] text-muted-foreground line-clamp-2">
+                          {addon.description?.[dateFnsLocale?.code?.split("-")[0] || "en"] || addon.description?.en}
+                        </p>
+                      </div>
+                      <div className="font-bold text-sm text-primary whitespace-nowrap">
+                        +{formatPrice(displayAddonPrice)}
+                      </div>
+                    </div>
+                    
+                    {addon.is_per_person && isSelected && (
+                      <div className="flex items-center justify-between pt-2 mt-2 border-t border-border/50 pl-7">
+                        <span className="text-xs font-medium text-muted-foreground">
+                          {tCheckout("person")}
+                        </span>
+                        <div className="flex items-center gap-3">
+                          <Button
+                            variant="outline"
+                            size="icon"
+                            className="h-6 w-6 rounded-md border-border text-primary hover:border-primary/50 hover:bg-primary/5 disabled:opacity-30"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              if (setAddonQuantities) {
+                                setAddonQuantities({ ...addonQuantities, [addon.id]: Math.max(1, qty - 1) });
+                              }
+                            }}
+                            disabled={qty <= 1}
+                          >
+                            <MinusCircle className="h-3 w-3 stroke-[2]" />
+                          </Button>
+                          <span className="w-3 text-center text-xs font-bold text-foreground">
+                            {qty}
+                          </span>
+                          <Button
+                            variant="outline"
+                            size="icon"
+                            className="h-6 w-6 rounded-md border-border text-primary hover:border-primary/50 hover:bg-primary/5 disabled:opacity-30"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              if (setAddonQuantities) {
+                                setAddonQuantities({ ...addonQuantities, [addon.id]: Math.min(peopleCount, qty + 1) });
+                              }
+                            }}
+                            disabled={qty >= peopleCount}
+                          >
+                            <PlusCircle className="h-3 w-3 stroke-[2]" />
+                          </Button>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
         {/* Check Availability — 3 states: idle / checking / success */}
         {checkState === "checking" && (
           <div className="w-full h-11 rounded-md border border-primary/30 bg-primary/5 flex items-center justify-between px-4 overflow-hidden relative">
@@ -698,6 +817,18 @@ export function BookingCard({
             >
               {tCheckout("buttons.continue")}
             </Button>
+          </div>
+        )}
+
+        {/* Total Price Summary for Per Person Packages */}
+        {isPerPerson && peopleCount > 0 && (
+          <div className="flex items-center justify-between p-3 mt-2 bg-primary/5 rounded-lg border border-primary/10">
+            <span className="text-sm font-medium text-foreground">
+              {t("total_price") || "Total Price"} ({peopleCount} 👤)
+            </span>
+            <span className="text-lg font-bold text-primary">
+              {formatPrice(displayPrice * peopleCount)}
+            </span>
           </div>
         )}
 

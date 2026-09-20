@@ -41,6 +41,7 @@ import { createBookingSchema } from "@/lib/validations";
 import type { DiscountDB } from "@/lib/discount-service";
 import type { TimeSurcharge } from "@/lib/availability-service";
 import { useCurrency } from "@/contexts/currency-context";
+import type { AddonDB } from "@/lib/addons-service";
 
 import {
   Sheet,
@@ -65,11 +66,14 @@ interface BookingModalProps {
   packageFeatures: string[];
   packagePhotos: number | string;
   isPerPerson: boolean;
-  activeDiscount: DiscountDB | null;
+  activeDiscounts: DiscountDB[] | null;
   timeSurcharges?: TimeSurcharge[];
   whatsappNumber?: string;
   yieldMultiplier?: number;
   yieldReason?: string;
+  availableAddons?: AddonDB[];
+  initialSelectedAddons?: string[];
+  initialAddonQuantities?: Record<string, number>;
 }
 
 // Generate time slots from 6 AM to 6 PM
@@ -98,11 +102,14 @@ export function BookingModal({
   packageFeatures,
   packagePhotos,
   isPerPerson,
-  activeDiscount,
-  timeSurcharges = [],
+  activeDiscounts,
+  timeSurcharges,
   whatsappNumber,
   yieldMultiplier = 1.0,
   yieldReason = "standard",
+  availableAddons = [],
+  initialSelectedAddons = [],
+  initialAddonQuantities = {},
 }: BookingModalProps) {
   const locale = useLocale();
   const { formatPrice, rate } = useCurrency();
@@ -171,8 +178,13 @@ export function BookingModal({
       notes: "",
       totalAmount: 0,
       peopleCount: initialPeopleCount || 1,
+      selectedAddons: initialSelectedAddons,
+      addonQuantities: initialAddonQuantities,
     },
   });
+
+  const [selectedAddons, setSelectedAddons] = useState<string[]>(initialSelectedAddons);
+  const [addonQuantities, setAddonQuantities] = useState<Record<string, number>>(initialAddonQuantities);
 
   // Sync initial props when modal opens or props change
   useEffect(() => {
@@ -191,6 +203,10 @@ export function BookingModal({
       if (selectedPackage) {
         form.setValue("packageId", selectedPackage);
       }
+      setSelectedAddons(initialSelectedAddons);
+      form.setValue("selectedAddons", initialSelectedAddons);
+      setAddonQuantities(initialAddonQuantities || {});
+      form.setValue("addonQuantities", initialAddonQuantities || {});
     }
   }, [
     isOpen,
@@ -229,14 +245,18 @@ export function BookingModal({
       const priceBreakdown = getPackagePricing(
         selectedPackage,
         basePrice, // Passed from parent
-        activeDiscount,
+        activeDiscounts,
         null,
         dateValue,
-        count,
+        peopleCount,
         undefined,
         undefined,
         surchargePercentage,
         localYieldMultiplier,
+        availableAddons,
+        selectedAddons,
+        isPerPerson,
+        addonQuantities,
       );
 
       setPricing({
@@ -260,8 +280,10 @@ export function BookingModal({
     peopleCount,
     form.watch("bookingDate"),
     form.watch("bookingTime"),
+    selectedAddons,
+    addonQuantities,
     form,
-  ]); // Watch date, time, and peopleCount changes
+  ]); // Watch date, time, peopleCount, and addons changes
 
   const packageInfo =
     selectedPackage && basePrice
@@ -342,6 +364,8 @@ export function BookingModal({
             body: JSON.stringify({
               ...data,
               totalAmount: pricing?.totalPrice || basePrice,
+              selectedAddons,
+              addonQuantities,
               locale,
             }),
           });
@@ -349,7 +373,7 @@ export function BookingModal({
           const draftResult = await draftResponse.json();
           const extraInfo = {
             isPerPerson,
-            activeDiscount,
+            activeDiscounts,
             packageDisplayName,
             packageDuration,
             packagePhotos,
@@ -366,6 +390,8 @@ export function BookingModal({
                 basePrice,
                 originalPrice: pricing?.originalPrice,
                 bookingId: draftResult.bookingId,
+                selectedAddons,
+                addonQuantities,
               }
             : {
                 ...data,
@@ -373,6 +399,8 @@ export function BookingModal({
                 totalAmount: pricing?.totalPrice || basePrice,
                 basePrice,
                 originalPrice: pricing?.originalPrice,
+                selectedAddons,
+                addonQuantities,
               };
 
           sessionStorage.setItem(
@@ -400,6 +428,8 @@ export function BookingModal({
               packageLocations,
               packageFeatures: packageFeatures || [],
               totalAmount: pricing?.totalPrice || basePrice,
+              selectedAddons,
+              addonQuantities,
               basePrice,
               originalPrice: pricing?.originalPrice,
             }),
@@ -601,11 +631,16 @@ export function BookingModal({
                   isPerPerson={isPerPerson}
                   onCheckAvailability={() => setStep("details")}
                   isFlat={true}
-                  activeDiscount={activeDiscount}
+                  activeDiscounts={activeDiscounts}
                   timeSurcharges={timeSurcharges}
                   isInsideModal={true}
                   whatsappNumber={whatsappNumber}
                   yieldReason={localYieldReason}
+                  availableAddons={availableAddons}
+                  selectedAddons={selectedAddons}
+                  setSelectedAddons={setSelectedAddons}
+                  addonQuantities={addonQuantities}
+                  setAddonQuantities={setAddonQuantities}
                   onYieldChange={(multiplier, reason) => {
                     setLocalYieldMultiplier(multiplier);
                     setLocalYieldReason(reason);

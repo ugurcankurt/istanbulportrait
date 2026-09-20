@@ -30,6 +30,7 @@ import {
 } from "@/lib/seo-utils";
 import { GoogleAdsTracker } from "@/components/google-ads-tracker";
 import { Suspense } from "react";
+import { TopDiscountBanner } from "@/components/top-discount-banner";
 
 const WhatsAppButton = dynamic(() =>
   import("@/components/whatsapp-button").then((mod) => mod.WhatsAppButton),
@@ -156,6 +157,7 @@ export default async function LocaleLayout({
     { cookies },
     { getServerUser },
     { getConsentCookie },
+    { discountService },
   ] = await Promise.all([
     import("@/lib/pages-content-service"),
     import("@/lib/settings-service"),
@@ -163,6 +165,7 @@ export default async function LocaleLayout({
     import("next/headers"),
     import("@/lib/auth-server"),
     import("@/app/actions/consent"),
+    import("@/lib/discount-service"),
   ]);
 
   // Execute all asynchronous data fetching in parallel
@@ -174,6 +177,7 @@ export default async function LocaleLayout({
     cookieStore,
     user,
     consentData,
+    activeDiscounts,
   ] = await Promise.all([
     getMessages(),
     pagesContentService.getDynamicCoreNavData(locale),
@@ -182,6 +186,7 @@ export default async function LocaleLayout({
     cookies(),
     getServerUser(),
     getConsentCookie(),
+    discountService.getActiveDiscounts(),
   ]);
 
   let selectedCurrency = cookieStore.get("NEXT_CURRENCY")?.value;
@@ -249,6 +254,7 @@ export default async function LocaleLayout({
               <CurrencyProvider rate={currentRate} currency={selectedCurrency}>
                 <TooltipProvider>
                   <div className="flex min-h-[100dvh] flex-col">
+                    <TopDiscountBanner discounts={activeDiscounts} />
                     <Navigation
                       dynamicNavData={dynamicNavData}
                       settings={settings}

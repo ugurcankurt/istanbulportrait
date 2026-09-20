@@ -95,9 +95,24 @@ export default async function CustomerPaymentsPage() {
               >
                 <div className="bg-gradient-to-br from-primary/5 to-transparent p-6 border-b border-border/50 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
                   <div>
-                    <Badge variant="outline" className="mb-2 bg-background">
-                      {booking.package_id.replace(/-/g, " ")}
-                    </Badge>
+                    <div className="flex flex-wrap items-center gap-2 mb-2">
+                      <Badge variant="outline" className="bg-background">
+                        {booking.package_id.replace(/-/g, " ")}
+                      </Badge>
+                      {booking.selected_addon_details &&
+                        booking.selected_addon_details.length > 0 &&
+                        booking.selected_addon_details.map(
+                          (addon: any, idx: number) => (
+                            <Badge
+                              key={addon.id || `${addon.name}-${idx}`}
+                              variant="secondary"
+                              className="bg-primary/10 text-primary border border-primary/20 text-xs font-medium"
+                            >
+                              +{addon.name}{addon.quantity && addon.quantity > 1 ? ` (x${addon.quantity})` : ""}
+                            </Badge>
+                          ),
+                        )}
+                    </div>
                     <p className="text-sm font-medium text-muted-foreground">
                       Booking ID:{" "}
                       <span className="font-mono text-foreground/80">

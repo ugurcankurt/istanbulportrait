@@ -12,6 +12,8 @@ export const baseBookingSchema = z.object({
   notes: z.string().optional(),
   totalAmount: z.number().positive("validation.amount_positive"),
   peopleCount: z.number().int().min(1).max(10).optional(),
+  selectedAddons: z.array(z.string()).optional(),
+  addonQuantities: z.record(z.string(), z.number()).optional(),
 });
 
 export const bookingSchema = baseBookingSchema;
@@ -57,6 +59,8 @@ export const createBookingSchema = (t: any) =>
     notes: z.string().optional(),
     totalAmount: z.number().positive(t("amount_positive")),
     peopleCount: z.number().int().min(1).max(10).optional(),
+    selectedAddons: z.array(z.string()).optional(),
+    addonQuantities: z.record(z.string(), z.number()).optional(),
   });
 
 export const createPaymentSchema = (t: any) =>

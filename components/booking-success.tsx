@@ -130,6 +130,39 @@ export function BookingSuccess({
                   </span>
                 </div>
 
+                {/* People Count */}
+                {isPerPerson && peopleCount > 1 && (
+                  <div className="flex justify-between items-center">
+                    <span className="text-muted-foreground text-sm sm:text-base">
+                      {tsuccess("people_count") || "People"}:
+                    </span>
+                    <span className="font-semibold text-sm sm:text-base">
+                      {peopleCount}
+                    </span>
+                  </div>
+                )}
+
+                {/* Addons */}
+                {confirmedBooking?.selected_addon_details && confirmedBooking.selected_addon_details.length > 0 && (
+                  <div className="pt-2 border-t mt-2">
+                    <span className="text-muted-foreground text-sm font-semibold mb-2 block">
+                      {t("labels.addons") || "Add-ons"}:
+                    </span>
+                    <div className="space-y-1.5">
+                      {confirmedBooking.selected_addon_details.map((addon: any) => (
+                        <div key={addon.id} className="flex justify-between items-center text-sm">
+                          <span className="text-muted-foreground">
+                            + {addon.name} {addon.quantity > 1 ? `(x${addon.quantity})` : ""}
+                          </span>
+                          <span className="font-medium text-muted-foreground">
+                            +{formatCurrency(addon.price * addon.quantity, locale)}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
                 <div className="flex flex-col gap-2 w-full pt-2">
                   <div className="space-y-2 w-full mt-2">
                     {/* Conditional Discount Details */}
@@ -267,14 +300,25 @@ export function BookingSuccess({
                       </div>
                     )}
 
-                    {(customerData?.notes || confirmedBooking?.notes) && (
-                      <div className="flex justify-between items-start">
-                        <span className="text-muted-foreground text-sm sm:text-base mr-4 whitespace-nowrap">
-                          {tsuccess("notes")}:
+                    {(confirmedBooking?.notes || customerData?.notes) && (
+                      <div className="flex justify-between items-start pt-2 border-t">
+                        <span className="text-muted-foreground text-sm sm:text-base w-1/3">
+                          {t("labels.notes") || "Notes"}:
                         </span>
-                        <span className="font-semibold text-sm sm:text-base text-right max-w-[60%]">
+                        <span className="font-medium text-sm sm:text-base w-2/3 text-right">
                           {confirmedBooking?.notes || customerData?.notes}
                         </span>
+                      </div>
+                    )}
+
+                    {(confirmedBooking?.applied_promo_code || promoCode) && (
+                      <div className="flex justify-between items-center pt-2">
+                        <span className="text-muted-foreground text-sm sm:text-base">
+                          {tsuccess("promo_code") || "Promo Code"}:
+                        </span>
+                        <Badge variant="secondary" className="font-mono text-xs">
+                          {confirmedBooking?.applied_promo_code || promoCode}
+                        </Badge>
                       </div>
                     )}
                   </div>

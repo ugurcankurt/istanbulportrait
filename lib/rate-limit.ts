@@ -18,6 +18,15 @@ export async function checkRateLimit(
     maxRequests: 10,
   },
 ): Promise<RateLimitResult> {
+  // Bypass rate limiting in development environment for easier testing
+  if (process.env.NODE_ENV === "development") {
+    return {
+      success: true,
+      remaining: options.maxRequests,
+      resetTime: Date.now() + options.windowMs,
+    };
+  }
+
   try {
     const now = new Date();
     const windowStart = new Date(now.getTime() - options.windowMs);

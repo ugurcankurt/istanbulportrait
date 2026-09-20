@@ -101,7 +101,8 @@
       "cvc": "CVC",
       "terms": "Acepto los términos y condiciones",
       "month_short": "MM",
-      "year_short": "AA"
+      "year_short": "AA",
+      "addons": "Servicios adicionales"
     },
     "buttons": {
       "continue": "Continuar",
@@ -447,7 +448,8 @@
     "related_packages": "Paquetes Relacionados",
     "gyg_title": "Explora más en Estambul",
     "gyg_subtitle": "Actividades y excursiones recomendadas por nuestro socio GetYourGuide",
-    "starting_from": "Desde"
+    "starting_from": "Desde",
+    "total_price": "Precio Total"
   },
   "gallery": {
     "title": "Portafolio",
@@ -631,6 +633,7 @@
   },
   "account": {
     "dashboard": {
+      "extraServices": "Servicios Adicionales",
       "noReservationsDesc": "Parece que aún no tienes ninguna sesión de fotos programada.",
       "people": "Personas",
       "totalAmount": "Cantidad total",

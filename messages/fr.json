@@ -101,7 +101,8 @@
       "cvc": "CVC",
       "terms": "J'accepte les termes et conditions",
       "month_short": "MM",
-      "year_short": "AA"
+      "year_short": "AA",
+      "addons": "Services supplémentaires"
     },
     "buttons": {
       "continue": "Continuer",
@@ -447,7 +448,8 @@
     "related_packages": "Forfaits Similaires",
     "gyg_title": "Explorez plus à Istanbul",
     "gyg_subtitle": "Activités et visites recommandées par notre partenaire GetYourGuide",
-    "starting_from": "À partir de"
+    "starting_from": "À partir de",
+    "total_price": "Prix Total"
   },
   "gallery": {
     "title": "Portefeuille",
@@ -631,6 +633,7 @@
   },
   "account": {
     "dashboard": {
+      "extraServices": "Services Supplémentaires",
       "noReservationsDesc": "Il semble que vous n'ayez pas encore de séance photo programmée.",
       "people": "Personnes",
       "totalAmount": "Montant total",

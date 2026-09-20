@@ -101,7 +101,8 @@
       "cvc": "CVC",
       "terms": "Şartlar ve koşulları kabul ediyorum",
       "month_short": "AA",
-      "year_short": "YY"
+      "year_short": "YY",
+      "addons": "Ekstra Hizmetler"
     },
     "buttons": {
       "continue": "Devam Et",
@@ -447,7 +448,8 @@
     "related_packages": "İlginizi Çekebilecek Diğer Paketler",
     "gyg_title": "İstanbul'da Daha Fazlasını Keşfedin",
     "gyg_subtitle": "Çözüm ortağımız GetYourGuide'ın seçkin aktiviteleri",
-    "starting_from": "Başlangıç"
+    "starting_from": "Başlangıç",
+    "total_price": "Toplam Fiyat"
   },
   "gallery": {
     "title": "Portföyümüz",
@@ -660,6 +662,7 @@
       "logout": "Çıkış Yap"
     },
     "dashboard": {
+      "extraServices": "Ekstra Hizmetler",
       "noReservationsDesc": "Görünüşe göre henüz planlanmış bir fotoğraf çekiminiz yok.",
       "people": "Kişi",
       "totalAmount": "Toplam Tutar",

@@ -1,6 +1,8 @@
 import { PackageForm } from "@/components/admin/packages/package-form";
+import { addonsService } from "@/lib/addons-service";
 
-export default function NewPackagePage() {
+export default async function NewPackagePage() {
+  const availableAddons = await addonsService.getAllAddonsAdmin();
   return (
     <div className="space-y-6">
       <div>
@@ -10,7 +12,7 @@ export default function NewPackagePage() {
         </p>
       </div>
 
-      <PackageForm />
+      <PackageForm availableAddons={availableAddons} />
     </div>
   );
 }

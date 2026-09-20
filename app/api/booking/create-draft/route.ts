@@ -2,6 +2,7 @@ import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
 import { z } from "zod";
+import { addonsService } from "@/lib/addons-service";
 import {
   DatabaseConnectionError,
   handleSupabaseError,
@@ -75,8 +76,10 @@ export async function POST(request: NextRequest) {
       totalAmount,
       locale,
       peopleCount,
+      selectedAddons,
     } = validationResult.data;
 
+    const addonQuantitiesMap = (validationResult.data.addonQuantities || {}) as Record<string, number>;
     try {
       // 1. Upsert Customer
       const { error: customerError } = await supabaseAdmin
@@ -100,6 +103,29 @@ export async function POST(request: NextRequest) {
       }
 
       // 2. Create Draft Booking
+      const selectedAddonIds: string[] = selectedAddons || [];
+      let addonDetails: Array<{ id: string; name: string; price: number }> = [];
+      if (selectedAddonIds.length > 0) {
+        try {
+          const allAddons = await addonsService.getAllAddonsAdmin();
+          addonDetails = selectedAddonIds
+            .map((id) => allAddons.find((a) => a.id === id))
+            .filter((a): a is NonNullable<typeof a> => Boolean(a))
+            .map((a) => ({
+              id: a.id,
+              name:
+                a.title[locale || "en"] ||
+                a.title.en ||
+                Object.values(a.title)[0] ||
+                a.slug,
+              price: a.price,
+              quantity: a.is_per_person ? (addonQuantitiesMap[a.id] || 1) : 1,
+            }));
+        } catch (addonErr) {
+          console.error("Failed to resolve addon details for draft:", addonErr);
+        }
+      }
+
       const { data: booking, error } = await supabaseAdmin
         .from("bookings")
         .insert({
@@ -115,6 +141,8 @@ export async function POST(request: NextRequest) {
           locale: locale, // Save language preference
           abandoned_email_sent: false,
           people_count: peopleCount || null,
+          selected_addons: selectedAddons || [],
+          selected_addon_details: addonDetails,
         })
         .select()
         .single();

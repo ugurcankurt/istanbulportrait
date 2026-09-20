@@ -13,10 +13,10 @@ export interface DiscountDB {
 
 export const discountService = {
   /**
-   * Fetches the currently active discount campaign from Supabase.
-   * Returns null if no active campaign is running.
+   * Fetches the currently active discount campaigns from Supabase.
+   * Returns an array of all active campaigns.
    */
-  async getActiveDiscount(): Promise<DiscountDB | null> {
+  async getActiveDiscounts(): Promise<DiscountDB[]> {
     try {
       const { data, error } = await supabase
         .from("discounts")
@@ -24,33 +24,14 @@ export const discountService = {
         .eq("is_active", true);
 
       if (error) {
-        console.error("Supabase Error fetching active discount:", error);
-        return null;
+        console.error("Supabase Error fetching active discounts:", error);
+        return [];
       }
 
-      if (!data || data.length === 0) return null;
-
-      const now = new Date();
-      // Filter the active discount based on date constraints
-      const validDiscount = data.find((discount: any) => {
-        let isValid = true;
-        if (discount.start_date) {
-          const start = new Date(discount.start_date);
-          start.setHours(0, 0, 0, 0);
-          if (now.getTime() < start.getTime()) isValid = false;
-        }
-        if (discount.end_date) {
-          const end = new Date(discount.end_date);
-          end.setHours(23, 59, 59, 999);
-          if (now.getTime() > end.getTime()) isValid = false;
-        }
-        return isValid;
-      });
-
-      return validDiscount || null;
+      return (data || []) as DiscountDB[];
     } catch (e) {
-      console.error("Unexpected error fetching active discount:", e);
-      return null;
+      console.error("Unexpected error fetching active discounts:", e);
+      return [];
     }
   },
 

@@ -125,7 +125,7 @@ export default async function HomePage({
     reviews,
     activePackages,
     settings,
-    activeDiscount,
+    activeDiscounts,
     allPages,
   ] = await Promise.all([
     getTranslations({ locale, namespace: "reviews" }),
@@ -137,7 +137,7 @@ export default async function HomePage({
     reviewsService.fetchGoogleReviews(locale),
     packagesService.getActivePackages(),
     settingsService.getSettings(),
-    discountService.getActiveDiscount(),
+    discountService.getActiveDiscounts(),
     pagesContentService.getAllPages(),
   ]);
 
@@ -251,14 +251,14 @@ export default async function HomePage({
             tUi("portrait_photography"),
           )}
           backgroundImage={getDynamicImage("home-hero", undefined)}
-          activeDiscount={activeDiscount}
+          activeDiscounts={activeDiscounts}
         />
 
         <div className="section-contain-auto">
           <PackagesSection
             aggregateRating={aggregateRating}
             dbPackages={activePackages}
-            activeDiscount={activeDiscount}
+            activeDiscounts={activeDiscounts}
             header={
               <div
                 key="packages-header"

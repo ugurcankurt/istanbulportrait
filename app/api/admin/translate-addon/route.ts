@@ -26,25 +26,9 @@ export async function POST(req: Request) {
     }
 
     const body = await req.json();
-    const {
-      title,
-      description,
-      duration,
-      features,
-      meta_description,
-      meta_keywords,
-      targetLocale,
-    } = body;
+    const { title, description, targetLocale } = body;
 
-    if (
-      !title ||
-      !description ||
-      !features ||
-      !duration ||
-      !meta_description ||
-      !meta_keywords ||
-      !targetLocale
-    ) {
+    if (!title || !description || !targetLocale) {
       return NextResponse.json(
         { error: "Missing required fields" },
         { status: 400 },
@@ -63,27 +47,17 @@ export async function POST(req: Request) {
     }
 
     const prompt = `
-You are a professional localization expert. Your task is to translate the following English photography package details into the following language code: ${targetLocale}.
+You are a professional localization expert. Your task is to translate the following English add-on details into the following language code: ${targetLocale}.
 
 English Source:
 Title: ${title}
-Duration: ${duration}
 Description: ${description}
-Meta Description (SEO snippet max 160 chars): ${meta_description}
-Meta Keywords (SEO):
-${meta_keywords.map((k: string) => `- ${k}`).join("\n")}
-Features:
-${features.map((f: string) => `- ${f}`).join("\n")}
 
 Respond ONLY with a valid minified JSON object mapping the locale code to the translated object. Ensure the JSON format matches exactly this structure:
 {
   "${targetLocale}": {
     "title": "...",
-    "duration": "...",
-    "description": "...",
-    "meta_description": "...",
-    "meta_keywords": ["...", "..."],
-    "features": ["...", "..."]
+    "description": "..."
   }
 }
 

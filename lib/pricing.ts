@@ -11,8 +11,12 @@ import {
   type TaxBreakdown,
 } from "./tax";
 import { type PackageId } from "./validations";
-import { type DiscountDB } from "./discount-service";
-export const DEPOSIT_PERCENTAGE = 0;
+import type { DiscountDB } from "./discount-service";
+import type { TimeSurcharge } from "./availability-service";
+import type { AddonDB } from "./addons-service";
+
+export const DEPOSIT_PERCENTAGE = 0.5; // From previous constants or logic
+
 
 export function matchActiveSurcharge(
   timeString: string | undefined | null,
@@ -43,6 +47,8 @@ export interface PriceBreakdown extends TaxBreakdown {
   remainingAmount: number;
   promoCode?: string;
   promoAmount?: number;
+  discountName?: string;
+  addonsAmount?: number;
 }
 
 export interface FormattedPriceBreakdown extends FormattedTaxBreakdown {
@@ -59,6 +65,8 @@ export interface FormattedPriceBreakdown extends FormattedTaxBreakdown {
   remainingAmount: string;
   promoCode?: string;
   promoAmount?: string;
+  discountName?: string;
+  addonsAmount?: string;
 }
 
 /**
@@ -75,7 +83,7 @@ export interface AppliedPromo {
 
 export function calculateDiscountedPrice(
   basePrice: number,
-  activeDiscount: DiscountDB | null,
+  activeDiscounts: DiscountDB[] | null,
   appliedPromo?: AppliedPromo | null,
   bookingDate?: Date | string,
 ): {
@@ -86,32 +94,41 @@ export function calculateDiscountedPrice(
   isDiscounted: boolean;
   promoCode?: string;
   promoAmount?: number;
+  discountName?: string;
 } {
   let currentPrice = basePrice;
   let campaignPercentage = 0;
   let campaignAmount = 0;
+  let campaignName: string | undefined = undefined;
 
-  let isCampaignValidForDate = true;
+  if (activeDiscounts && activeDiscounts.length > 0) {
+    const targetDate = bookingDate ? new Date(bookingDate) : new Date();
+    targetDate.setHours(12, 0, 0, 0); // use noon to avoid timezone edge cases
 
-  if (activeDiscount && activeDiscount.is_active) {
-    if (bookingDate && activeDiscount.start_date && activeDiscount.end_date) {
-      const checkDate = new Date(bookingDate);
-      checkDate.setHours(12, 0, 0, 0); // use noon to avoid timezone edge cases
-
-      const startDate = new Date(activeDiscount.start_date);
-      startDate.setHours(0, 0, 0, 0);
-
-      const endDate = new Date(activeDiscount.end_date);
-      endDate.setHours(23, 59, 59, 999);
-
-      if (checkDate.getTime() < startDate.getTime() || checkDate.getTime() > endDate.getTime()) {
-        isCampaignValidForDate = false;
+    const validDiscounts = activeDiscounts.filter((discount) => {
+      if (!discount.is_active) return false;
+      
+      let isValid = true;
+      if (discount.start_date) {
+        const startDate = new Date(discount.start_date);
+        startDate.setHours(0, 0, 0, 0);
+        if (targetDate.getTime() < startDate.getTime()) isValid = false;
       }
-    }
+      if (discount.end_date) {
+        const endDate = new Date(discount.end_date);
+        endDate.setHours(23, 59, 59, 999);
+        if (targetDate.getTime() > endDate.getTime()) isValid = false;
+      }
+      return isValid;
+    });
 
-    if (isCampaignValidForDate) {
-      campaignPercentage = Number(activeDiscount.discount_percentage);
+    if (validDiscounts.length > 0) {
+      validDiscounts.sort((a, b) => Number(b.discount_percentage) - Number(a.discount_percentage));
+      const bestDiscount = validDiscounts[0];
+      
+      campaignPercentage = Number(bestDiscount.discount_percentage);
       campaignAmount = basePrice * campaignPercentage;
+      campaignName = bestDiscount.name;
       currentPrice -= campaignAmount;
     }
   }
@@ -135,6 +152,7 @@ export function calculateDiscountedPrice(
     isDiscounted: campaignPercentage > 0 || promoPercentage > 0,
     promoCode: appliedPromo?.code,
     promoAmount: promoAmount,
+    discountName: campaignName,
   };
 }
 
@@ -153,7 +171,7 @@ export function calculateDiscountedPrice(
 export function getPackagePricing(
   packageId: PackageId,
   basePrice: number,
-  activeDiscount: DiscountDB | null,
+  activeDiscounts: DiscountDB[] | null,
   appliedPromo?: AppliedPromo | null,
   bookingDate?: Date | string,
   peopleCount?: number,
@@ -161,99 +179,95 @@ export function getPackagePricing(
   packageNameOverride?: string,
   surchargePercentage: number = 0,
   yieldMultiplier: number = 1.0,
+  availableAddons: AddonDB[] = [],
+  selectedAddons: string[] = [],
+  isPerPerson?: boolean,
+  addonQuantities: Record<string, number> = {},
 ): PriceBreakdown {
   const timeSurchargeAmount = basePrice * (surchargePercentage / 100);
   const priceBeforeYield = basePrice + timeSurchargeAmount;
   const yieldAmount = priceBeforeYield * (yieldMultiplier - 1);
-  const originalPrice = priceBeforeYield + yieldAmount;
+  const packageUnitPrice = priceBeforeYield + yieldAmount;
 
-  // Special handling for packages with per-person pricing
-  if (peopleCount && peopleCount >= 1) {
-    // Calculate per-person discounts
-    const {
-      price: discountedPerPerson,
-      discountPercentage,
-      promoCode,
-      promoAmount: perPersonPromoAmount,
-    } = calculateDiscountedPrice(
-      originalPrice,
-      activeDiscount,
-      appliedPromo,
-      bookingDate,
-    );
+  // Determine whether this package calculates base price per person
+  const isPackagePerPerson =
+    isPerPerson ?? (peopleCount !== undefined && peopleCount >= 1);
 
-    // Calculate total based on people count
-    const originalTotal = originalPrice * peopleCount;
-    const discountedTotal = discountedPerPerson * peopleCount;
-    const seasonalAmount = originalPrice * discountPercentage * peopleCount;
-    
-    const rawBaseTotal = basePrice * peopleCount;
-    const surchargeTotal = timeSurchargeAmount * peopleCount;
-    const yieldTotal = yieldAmount * peopleCount;
+  // 1. Calculate base original total for the package ONLY
+  const packageOriginalTotal = isPackagePerPerson
+    ? packageUnitPrice * (peopleCount || 1)
+    : packageUnitPrice;
 
-    const taxBreakdown = getTaxBreakdownFromTotal(discountedTotal, taxRate);
-
-    // Calculate deposit and remaining
-    const depositAmount =
-      Math.round(discountedTotal * DEPOSIT_PERCENTAGE * 100) / 100;
-    const remainingAmount =
-      Math.round((discountedTotal - depositAmount) * 100) / 100;
-
-    return {
-      ...taxBreakdown,
-      packageId,
-      displayName: packageNameOverride || packageId,
-      rawBasePrice: rawBaseTotal,
-      timeSurchargeAmount: surchargeTotal,
-      yieldAmount: yieldTotal,
-      originalPrice: originalTotal,
-      discountAmount: seasonalAmount,
-      isDiscounted: discountPercentage > 0,
-      appliedDiscountPercentage: discountPercentage,
-      depositAmount,
-      remainingAmount,
-      promoCode,
-      promoAmount: perPersonPromoAmount
-        ? perPersonPromoAmount * peopleCount
-        : undefined,
-    };
-  }
-
-  // Standard pricing for other packages
+  // 2. Calculate discounts ONLY on the package (add-ons are NEVER discounted!)
   const {
-    price: totalPrice,
+    price: discountedPackagePrice,
     discountPercentage,
     discountAmount: seasonalAmount,
     promoCode,
     promoAmount,
+    discountName,
   } = calculateDiscountedPrice(
-    originalPrice,
-    activeDiscount,
+    packageOriginalTotal,
+    activeDiscounts,
     appliedPromo,
     bookingDate,
   );
 
-  const taxBreakdown = getTaxBreakdownFromTotal(totalPrice, taxRate);
+  // 3. Calculate Addons total at FULL price (NO website discounts or promos applied)
+  let totalAddonsAmount = 0;
+  if (selectedAddons.length > 0 && availableAddons.length > 0) {
+    const addons = availableAddons.filter((a) => selectedAddons.includes(a.id));
+    for (const addon of addons) {
+      if (addon.is_per_person) {
+        const qty = addonQuantities[addon.id] || 1;
+        totalAddonsAmount += Number(addon.price) * qty;
+      } else {
+        totalAddonsAmount += Number(addon.price);
+      }
+    }
+  }
+
+  // 4. Combine discounted package price + full-price addons
+  const finalOriginalTotal = packageOriginalTotal + totalAddonsAmount;
+  const finalTotalPrice = discountedPackagePrice + totalAddonsAmount;
+
+  const rawBaseTotal = isPackagePerPerson
+    ? basePrice * (peopleCount || 1)
+    : basePrice;
+  const surchargeTotal = isPackagePerPerson
+    ? timeSurchargeAmount * (peopleCount || 1)
+    : timeSurchargeAmount;
+  const yieldTotal = isPackagePerPerson
+    ? yieldAmount * (peopleCount || 1)
+    : yieldAmount;
+
+  const taxBreakdown = getTaxBreakdownFromTotal(finalTotalPrice, taxRate);
 
   // Calculate deposit and remaining
-  const depositAmount = Math.round(totalPrice * DEPOSIT_PERCENTAGE * 100) / 100;
-  const remainingAmount = Math.round((totalPrice - depositAmount) * 100) / 100;
+  const depositAmount =
+    Math.round(finalTotalPrice * DEPOSIT_PERCENTAGE * 100) / 100;
+  const remainingAmount =
+    Math.round((finalTotalPrice - depositAmount) * 100) / 100;
 
   return {
     ...taxBreakdown,
     packageId,
     displayName: packageNameOverride || packageId,
-    rawBasePrice: basePrice,
-    timeSurchargeAmount,
-    yieldAmount,
-    originalPrice,
+    rawBasePrice: rawBaseTotal,
+    timeSurchargeAmount: surchargeTotal,
+    yieldAmount: yieldTotal,
+    originalPrice: finalOriginalTotal,
+    totalPrice: finalTotalPrice,
     discountAmount: seasonalAmount,
-    isDiscounted: discountPercentage > 0,
+    isDiscounted:
+      discountPercentage > 0 || (promoAmount !== undefined && promoAmount > 0),
     appliedDiscountPercentage: discountPercentage,
     depositAmount,
     remainingAmount,
     promoCode,
     promoAmount,
+    discountName,
+    addonsAmount: totalAddonsAmount,
   };
 }
 
@@ -263,7 +277,7 @@ export function getPackagePricing(
 export function formatPackagePricing(
   packageId: PackageId,
   basePrice: number,
-  activeDiscount: DiscountDB | null,
+  activeDiscounts: DiscountDB[] | null,
   appliedPromo?: AppliedPromo | null,
   bookingDate?: Date | string,
   locale: string = "en",
@@ -272,11 +286,15 @@ export function formatPackagePricing(
   packageNameOverride?: string,
   surchargePercentage: number = 0,
   yieldMultiplier: number = 1.0,
+  availableAddons: AddonDB[] = [],
+  selectedAddons: string[] = [],
+  isPerPerson?: boolean,
+  addonQuantities: Record<string, number> = {},
 ): FormattedPriceBreakdown {
   const breakdown = getPackagePricing(
     packageId,
     basePrice,
-    activeDiscount,
+    activeDiscounts,
     appliedPromo,
     bookingDate,
     peopleCount,
@@ -284,6 +302,10 @@ export function formatPackagePricing(
     packageNameOverride,
     surchargePercentage,
     yieldMultiplier,
+    availableAddons,
+    selectedAddons,
+    isPerPerson,
+    addonQuantities,
   );
 
   const formatted = formatTaxBreakdown(breakdown, locale);
@@ -307,8 +329,8 @@ export function formatPackagePricing(
     depositAmount: formatter.format(breakdown.depositAmount),
     remainingAmount: formatter.format(breakdown.remainingAmount),
     promoCode: breakdown.promoCode,
-    promoAmount: breakdown.promoAmount
-      ? formatter.format(breakdown.promoAmount)
-      : undefined,
+    promoAmount: breakdown.promoAmount ? formatter.format(breakdown.promoAmount) : undefined,
+    discountName: breakdown.discountName,
+    addonsAmount: breakdown.addonsAmount ? formatter.format(breakdown.addonsAmount) : undefined,
   };
 }

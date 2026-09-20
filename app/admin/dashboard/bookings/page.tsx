@@ -1,5 +1,6 @@
 "use client";
 
+import { RiWhatsappFill } from "@remixicon/react";
 import {
   AlertCircle,
   Calendar,
@@ -11,9 +12,9 @@ import {
   Eye,
   MoreHorizontal,
   Search,
+  Sparkles,
   XCircle,
 } from "lucide-react";
-import { RiWhatsappFill } from "@remixicon/react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
@@ -42,12 +43,12 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from "@/components/ui/empty";
+import { Input } from "@/components/ui/input";
 import {
   InputGroup,
   InputGroupAddon,
   InputGroupInput,
 } from "@/components/ui/input-group";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -80,44 +81,68 @@ const formatCurrency = (amount: number) => {
 
 const generateWhatsAppLink = (booking: Booking) => {
   if (!booking.user_phone) return "#";
-  const phone = booking.user_phone.replace(/[^0-9+]/g, '');
+  const phone = booking.user_phone.replace(/[^0-9+]/g, "");
 
-  const eWave = String.fromCodePoint(0x1F44B);
-  const eCamera = String.fromCodePoint(0x1F4F8);
+  const eWave = String.fromCodePoint(0x1f44b);
+  const eCamera = String.fromCodePoint(0x1f4f8);
   const eCheck = String.fromCodePoint(0x2705);
-  const eEuro = String.fromCodePoint(0x1F4B6);
-  const ePeople = String.fromCodePoint(0x1F465);
-  const eCash = String.fromCodePoint(0x1F4B5);
+  const eEuro = String.fromCodePoint(0x1f4b6);
+  const ePeople = String.fromCodePoint(0x1f465);
+  const eCash = String.fromCodePoint(0x1f4b5);
   const eSparkles = String.fromCodePoint(0x2728);
-  const eDove = String.fromCodePoint(0x1F54A, 0xFE0F);
-  const eSpeech = String.fromCodePoint(0x1F4AC);
+  const eDove = String.fromCodePoint(0x1f54a, 0xfe0f);
+  const eSpeech = String.fromCodePoint(0x1f4ac);
 
   let text = "";
   if (booking.status === "confirmed") {
     let detailsStr = `Total Amount: ${formatCurrency(booking.total_amount)} 💶\n`;
-    
+
     if (booking.people_count && booking.people_count > 0) {
       detailsStr += `Number of People: ${booking.people_count} 👥\n`;
     }
-    
+
+    if (
+      booking.selected_addon_details &&
+      booking.selected_addon_details.length > 0
+    ) {
+      detailsStr += `Extra Services: ${booking.selected_addon_details.map((a) => `${a.name}${a.quantity && a.quantity > 1 ? ` (x${a.quantity})` : ""}`).join(", ")} ✨\n`;
+    }
+
     let featuresText = "";
     const packages = usePackagesStore.getState().packages;
-    const pkg = packages.find(p => p.slug === booking.package_id || p.id === booking.package_id);
+    const pkg = packages.find(
+      (p) => p.slug === booking.package_id || p.id === booking.package_id,
+    );
     if (pkg?.features?.en?.length) {
-      featuresText = `\nPackage Includes:\n${pkg.features.en.map((f: string) => `• ${f}`).join('\n')}\n`;
+      featuresText = `\nPackage Includes:\n${pkg.features.en.map((f: string) => `• ${f}`).join("\n")}\n`;
     }
-    
+
     text = `Hello ${booking.user_name} 👋,\n\nThank you for your interest in Istanbul Portrait! 📸\n\nYour reservation for the ${booking.package_id} package on ${booking.booking_date} at ${booking.booking_time} is confirmed! ✅\n\n${detailsStr}${featuresText}\nPlease note that payments are cash-only on the day of the photoshoot. 💵\n\nWe look forward to welcoming you! ✨\n\nBest regards,\nIstanbul Portrait 🕊️`;
   } else if (booking.status === "pending") {
-    text = `Hello ${booking.user_name} ${eWave},\n\nWe noticed your reservation at Istanbul Portrait isn't complete yet. Would you like to join us? ${eCamera}\n\nYou can reach out to us through this message to complete your reservation or if you need any assistance! ${eSpeech}\n\nBest regards,\nIstanbul Portrait ${eDove}`;
+    let detailsStr = "";
+    if (
+      booking.selected_addon_details &&
+      booking.selected_addon_details.length > 0
+    ) {
+      detailsStr = ` (and your selected extra services: ${booking.selected_addon_details.map((a) => a.name).join(", ")})`;
+    }
+
+    text = `Hello ${booking.user_name} ${eWave},\n\nWe noticed your reservation for the ${booking.package_id} package${detailsStr} at Istanbul Portrait isn't complete yet. Would you like to join us? ${eCamera}\n\nYou can reach out to us through this message to complete your reservation or if you need any assistance! ${eSpeech}\n\nBest regards,\nIstanbul Portrait ${eDove}`;
   } else if (booking.status === "completed") {
-    const driveLink = booking.drive_folder_id ? `\n\nGoogle Drive Link:\nhttps://drive.google.com/drive/folders/${booking.drive_folder_id}` : "";
-    
-    let editedCountText = "Please select the photos you want us to edit from the link. ";
+    const driveLink = booking.drive_folder_id
+      ? `\n\nGoogle Drive Link:\nhttps://drive.google.com/drive/folders/${booking.drive_folder_id}`
+      : "";
+
+    let editedCountText =
+      "Please select the photos you want us to edit from the link. ";
     const packages = usePackagesStore.getState().packages;
-    const pkg = packages.find(p => p.slug === booking.package_id || p.id === booking.package_id);
+    const pkg = packages.find(
+      (p) => p.slug === booking.package_id || p.id === booking.package_id,
+    );
     if (pkg?.features?.en) {
-      const editedFeature = pkg.features.en.find((f: string) => /edit|retouch/i.test(f));
+      const editedFeature = pkg.features.en.find((f: string) =>
+        /edit|retouch/i.test(f),
+      );
       if (editedFeature) {
         const match = editedFeature.match(/(\d+)/);
         if (match) {
@@ -125,24 +150,39 @@ const generateWhatsAppLink = (booking: Booking) => {
         }
       }
     }
-    
-    text = `Hello ${booking.user_name} ${eWave},\n\nThank you for a wonderful photoshoot! ${eCamera}${driveLink}\n\n${editedCountText}Please review the photos in the folder and reply to this message with the file numbers of your selections! ${eSparkles}\n\nBest regards,\nIstanbul Portrait ${eDove}`;
+
+    let addonsText = "";
+    if (
+      booking.selected_addon_details &&
+      booking.selected_addon_details.length > 0
+    ) {
+      addonsText = `\n\nAlso, a quick reminder of your Extra Services: ${booking.selected_addon_details.map((a) => `${a.name}${a.quantity && a.quantity > 1 ? ` (x${a.quantity})` : ""}`).join(", ")} ✨`;
+    }
+
+    text = `Hello ${booking.user_name} ${eWave},\n\nThank you for a wonderful photoshoot! ${eCamera}${driveLink}${addonsText}\n\n${editedCountText}Please review the photos in the folder and reply to this message with the file numbers of your selections! ${eSparkles}\n\nBest regards,\nIstanbul Portrait ${eDove}`;
   } else {
-     text = `Hello ${booking.user_name} ${eWave},\n\nWe are contacting you regarding your reservation at Istanbul Portrait. ${eCamera}`;
+    let detailsStr = "";
+    if (
+      booking.selected_addon_details &&
+      booking.selected_addon_details.length > 0
+    ) {
+      detailsStr = ` (and Extra Services: ${booking.selected_addon_details.map((a) => a.name).join(", ")})`;
+    }
+    text = `Hello ${booking.user_name} ${eWave},\n\nWe are contacting you regarding your reservation for the ${booking.package_id} package${detailsStr} at Istanbul Portrait. ${eCamera}`;
   }
-  
+
   return `https://api.whatsapp.com/send?phone=${phone}&text=${encodeURIComponent(text)}`;
 };
 
 const generateReviewLink = (booking: Booking) => {
   if (!booking.user_phone) return "#";
-  const phone = booking.user_phone.replace(/[^0-9+]/g, '');
+  const phone = booking.user_phone.replace(/[^0-9+]/g, "");
 
-  const eWave = String.fromCodePoint(0x1F44B);
-  const eCamera = String.fromCodePoint(0x1F4F8);
+  const eWave = String.fromCodePoint(0x1f44b);
+  const eCamera = String.fromCodePoint(0x1f4f8);
   const eSparkles = String.fromCodePoint(0x2728);
-  const eDove = String.fromCodePoint(0x1F54A, 0xFE0F);
-  const eStar = String.fromCodePoint(0x2B50);
+  const eDove = String.fromCodePoint(0x1f54a, 0xfe0f);
+  const eStar = String.fromCodePoint(0x2b50);
 
   const text = `Hello ${booking.user_name} ${eWave},\n\nThank you for choosing Istanbul Portrait! ${eCamera} We hope you enjoyed your photoshoot experience with us.\n\nWe would love to hear your feedback! If you have a moment, please leave us a review on Google:\nhttps://g.page/r/CQbrbmj8_EInEBM/review ${eStar}\n\nYour support means the world to us! ${eSparkles}\n\nBest regards,\nIstanbul Portrait ${eDove}`;
 
@@ -265,6 +305,46 @@ function BookingDetailsDialog({ booking }: { booking: Booking }) {
                 >
                   Open in Drive
                 </a>
+              </div>
+            </div>
+          )}
+
+          {((booking.selected_addon_details &&
+            booking.selected_addon_details.length > 0) ||
+            (booking.selected_addons &&
+              booking.selected_addons.length > 0)) && (
+            <div className="space-y-2 p-3 bg-primary/5 border border-primary/20 rounded-lg">
+              <Label className="text-sm font-semibold flex items-center gap-2">
+                <Sparkles className="w-4 h-4 text-primary" />
+                Ekstra Hizmetler (Add-ons)
+              </Label>
+              <div className="space-y-1.5">
+                {booking.selected_addon_details &&
+                booking.selected_addon_details.length > 0
+                  ? booking.selected_addon_details.map((addon, idx) => (
+                      <div
+                        key={addon.id || `${addon.name}-${idx}`}
+                        className="flex items-center justify-between text-sm py-1 border-b border-border/40 last:border-0"
+                      >
+                        <span className="font-medium text-foreground">
+                          {addon.name}
+                          {addon.quantity && addon.quantity > 1
+                            ? ` (x${addon.quantity})`
+                            : ""}
+                        </span>
+                        <Badge
+                          variant="secondary"
+                          className="font-mono text-xs"
+                        >
+                          +{formatCurrency(addon.price * (addon.quantity || 1))}
+                        </Badge>
+                      </div>
+                    ))
+                  : booking.selected_addons?.map((id, idx) => (
+                      <Badge key={id || idx} variant="outline" className="mr-1">
+                        {id}
+                      </Badge>
+                    ))}
               </div>
             </div>
           )}
@@ -659,6 +739,23 @@ export default function BookingsPage() {
                     </TableCell>
                     <TableCell>
                       <Badge variant="outline">{booking.package_id}</Badge>
+                      {booking.selected_addon_details &&
+                        booking.selected_addon_details.length > 0 && (
+                          <div className="mt-1.5 flex flex-wrap gap-1">
+                            {booking.selected_addon_details.map((addon, i) => (
+                              <Badge
+                                key={addon.id || `${addon.name}-${i}`}
+                                variant="secondary"
+                                className="text-[10px] px-1.5 py-0 bg-primary/10 text-primary border-primary/20"
+                              >
+                                +{addon.name}
+                                {addon.quantity && addon.quantity > 1
+                                  ? ` (x${addon.quantity})`
+                                  : ""}
+                              </Badge>
+                            ))}
+                          </div>
+                        )}
                     </TableCell>
                     <TableCell>
                       <div>
@@ -704,22 +801,33 @@ export default function BookingsPage() {
                             <DropdownMenuLabel>Actions</DropdownMenuLabel>
                             {booking.user_phone && (
                               <DropdownMenuItem
-                                onClick={() => window.open(generateWhatsAppLink(booking), '_blank')}
+                                onClick={() =>
+                                  window.open(
+                                    generateWhatsAppLink(booking),
+                                    "_blank",
+                                  )
+                                }
                                 className="cursor-pointer"
                               >
                                 <RiWhatsappFill className="w-4 h-4 mr-2 text-[#25D366]" />
                                 WhatsApp Message
                               </DropdownMenuItem>
                             )}
-                            {booking.user_phone && booking.status === "completed" && (
-                              <DropdownMenuItem
-                                onClick={() => window.open(generateReviewLink(booking), '_blank')}
-                                className="cursor-pointer"
-                              >
-                                <RiWhatsappFill className="w-4 h-4 mr-2 text-yellow-500" />
-                                Request Review
-                              </DropdownMenuItem>
-                            )}
+                            {booking.user_phone &&
+                              booking.status === "completed" && (
+                                <DropdownMenuItem
+                                  onClick={() =>
+                                    window.open(
+                                      generateReviewLink(booking),
+                                      "_blank",
+                                    )
+                                  }
+                                  className="cursor-pointer"
+                                >
+                                  <RiWhatsappFill className="w-4 h-4 mr-2 text-yellow-500" />
+                                  Request Review
+                                </DropdownMenuItem>
+                              )}
                             <BookingDetailsDialog booking={booking} />
                             <EditBookingDialog
                               booking={booking}

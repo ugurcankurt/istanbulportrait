@@ -101,7 +101,8 @@
       "cvc": "CVC",
       "terms": "Ich stimme den Allgemeinen Geschäftsbedingungen zu",
       "month_short": "MM",
-      "year_short": "JJ"
+      "year_short": "JJ",
+      "addons": "Zusätzliche Leistungen"
     },
     "buttons": {
       "continue": "Weiter",
@@ -447,7 +448,8 @@
     "related_packages": "Ähnliche Pakete",
     "gyg_title": "Entdecken Sie mehr in Istanbul",
     "gyg_subtitle": "Empfohlene Aktivitäten und Touren von unserem Partner GetYourGuide",
-    "starting_from": "Ab"
+    "starting_from": "Ab",
+    "total_price": "Gesamtpreis"
   },
   "gallery": {
     "title": "Portfolio",
@@ -631,6 +633,7 @@
   },
   "account": {
     "dashboard": {
+      "extraServices": "Zusatzleistungen",
       "noReservationsDesc": "Es sieht so aus, als hätten Sie noch keine bevorstehenden Fotoshootings geplant.",
       "people": "Personen",
       "totalAmount": "Gesamtbetrag",

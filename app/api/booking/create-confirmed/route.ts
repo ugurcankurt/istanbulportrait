@@ -1,5 +1,6 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
+import { addonsService } from "@/lib/addons-service";
 import {
   DatabaseConnectionError,
   handleSupabaseError,
@@ -120,6 +121,32 @@ export async function POST(request: NextRequest) {
       ? activeSurcharge.surcharge_percentage
       : 0;
 
+    // Resolve addon details early — used for pricing calculation, DB save AND email
+    const selectedAddonIds: string[] = body.selectedAddons || [];
+    const addonQuantities: Record<string, number> = body.addonQuantities || {};
+    let allAddons: any[] = [];
+    let addonDetails: Array<{ id: string; name: string; price: number; quantity: number }> = [];
+    if (selectedAddonIds.length > 0) {
+      try {
+        allAddons = await addonsService.getAllAddonsAdmin();
+        addonDetails = selectedAddonIds
+          .map((id) => allAddons.find((a) => a.id === id))
+          .filter((a): a is NonNullable<typeof a> => Boolean(a))
+          .map((a) => ({
+            id: a.id,
+            name:
+              a.title[locale || "en"] ||
+              a.title.en ||
+              Object.values(a.title)[0] ||
+              a.slug,
+            price: a.price,
+            quantity: a.is_per_person ? (addonQuantities[a.id] || 1) : 1,
+          }));
+      } catch (addonErr) {
+        console.error("Failed to resolve addon details:", addonErr);
+      }
+    }
+
     // Validate that the totalAmount matches the expected price
     // We check against the booking date and promo code for correct discounts
     const packagePricing = getPackagePricing(
@@ -128,11 +155,15 @@ export async function POST(request: NextRequest) {
       body.activeDiscount || null,
       body.appliedPromo,
       bookingDate,
-      body.isPerPerson ? peopleCount : undefined,
+      peopleCount,
       undefined,
       undefined,
       surchargePercentage,
       body.yieldMultiplier || 1.0,
+      allAddons,
+      selectedAddonIds,
+      Boolean(body.isPerPerson),
+      addonQuantities,
     );
 
     const expectedTotal = packagePricing.totalPrice;
@@ -266,6 +297,8 @@ export async function POST(request: NextRequest) {
               gbraid: gbraid || null,
               wbraid: wbraid || null,
               ip_address: ip || null,
+              selected_addons: selectedAddonIds,
+              selected_addon_details: addonDetails,
             })
             .eq("id", bookingId)
             .select()
@@ -286,7 +319,7 @@ export async function POST(request: NextRequest) {
             user_phone: customerPhone,
             booking_date: bookingDate,
             booking_time: bookingTime,
-            status: "confirmed", // Directly confirmed since payment succeeded
+            status: "confirmed",
             total_amount: totalAmount,
             notes: notes || null,
             applied_promo_code: body.appliedPromo?.code || promoCode || null,
@@ -296,6 +329,8 @@ export async function POST(request: NextRequest) {
             gbraid: gbraid || null,
             wbraid: wbraid || null,
             ip_address: ip || null,
+            selected_addons: selectedAddonIds,
+            selected_addon_details: addonDetails,
           })
           .select()
           .single();
@@ -337,6 +372,7 @@ export async function POST(request: NextRequest) {
         const emailPromoDiscount = packagePricing.promoAmount;
 
         const settings = await settingsService.getSettings();
+        // addonDetails already resolved above — reuse for email
 
         await sendBookingConfirmation(
           {
@@ -348,15 +384,15 @@ export async function POST(request: NextRequest) {
             bookingTime,
             totalAmount,
             originalAmount: emailOriginalPrice,
-            discountAmount: emailSeasonalDiscount + (emailPromoDiscount || 0), // Total discount for now, can be split if template supports it
+            discountAmount: emailSeasonalDiscount + (emailPromoDiscount || 0),
             bookingId: booking.id,
             peopleCount: peopleCount,
             depositAmount: body.provider === "cash" ? 0 : depositAmount,
             remainingAmount:
               body.provider === "cash" ? totalAmount : remainingAmount,
             locale: locale || "en",
-            // Add extra details if needed
             promoCode: promoCode || undefined,
+            addonDetails,
           },
           settings,
         );
@@ -381,6 +417,7 @@ export async function POST(request: NextRequest) {
             locale: locale || "en",
             promoCode: promoCode || undefined,
             notes: notes || undefined,
+            addonDetails,
           },
           settings,
         );

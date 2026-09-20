@@ -12,13 +12,7 @@ export async function PATCH(
     const body = await request.json();
     const { id } = await params;
 
-    // If making this one active, deactivate all others first
-    if (body.is_active === true) {
-      await supabaseAdmin
-        .from("discounts")
-        .update({ is_active: false })
-        .neq("id", id);
-    }
+
 
     const { data, error } = await supabaseAdmin
       .from("discounts")

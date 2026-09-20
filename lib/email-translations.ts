@@ -19,6 +19,7 @@ export const EMAIL_TRANSLATIONS: Record<string, any> = {
     whatsNextDesc:
       "We will contact you 24 hours before your session to confirm the location and any special requirements.",
     questions: "Have questions? Contact us at",
+    addons: "Extra Services",
   },
   ru: {
     subject: "Подтверждение бронирования",
@@ -40,6 +41,7 @@ export const EMAIL_TRANSLATIONS: Record<string, any> = {
     whatsNextDesc:
       "Мы свяжемся с вами за 24 часа до сессии, чтобы подтвердить место проведения.",
     questions: "Есть вопросы? Свяжитесь с нами:",
+    addons: "Дополнительные услуги",
   },
   tr: {
     subject: "Rezervasyon Onayı",
@@ -62,6 +64,7 @@ export const EMAIL_TRANSLATIONS: Record<string, any> = {
     whatsNextDesc:
       "Çekim lokasyonunu ve diğer detayları netleştirmek için seansınızdan 24 saat önce sizinle iletişime geçeceğiz.",
     questions: "İletişim bilgilerimiz:",
+    addons: "Ekstra Hizmetler",
   },
   de: {
     subject: "Buchungsbestätigung",
@@ -83,6 +86,7 @@ export const EMAIL_TRANSLATIONS: Record<string, any> = {
     whatsNextDesc:
       "Wir werden Sie 24 Stunden vor Ihrem Termin kontaktieren, um den Ort und etwaige spezielle Anforderungen zu bestätigen.",
     questions: "Haben Sie Fragen? Kontaktieren Sie uns unter",
+    addons: "Zusätzliche Leistungen",
   },
   es: {
     subject: "Confirmación de reserva",
@@ -105,6 +109,7 @@ export const EMAIL_TRANSLATIONS: Record<string, any> = {
     whatsNextDesc:
       "Nos pondremos en contacto con usted 24 horas antes de su sesión para confirmar la ubicación.",
     questions: "¿Tienes preguntas? Contáctenos en",
+    addons: "Servicios adicionales",
   },
   fr: {
     subject: "Confirmation de réservation",
@@ -127,6 +132,7 @@ export const EMAIL_TRANSLATIONS: Record<string, any> = {
     whatsNextDesc:
       "Nous vous contacterons 24 heures avant votre séance pour confirmer l'emplacement.",
     questions: "Avez-vous des questions ? Contactez-nous à",
+    addons: "Services supplémentaires",
   },
   ro: {
     subject: "Confirmare rezervare",
@@ -149,6 +155,7 @@ export const EMAIL_TRANSLATIONS: Record<string, any> = {
     whatsNextDesc:
       "Vă vom contacta cu 24 de ore înainte de sesiune pentru a confirma locația.",
     questions: "Aveți întrebări? Contactați-ne la",
+    addons: "Servicii suplimentare",
   },
   ar: {
     subject: "تأكيد الحجز",
@@ -169,6 +176,7 @@ export const EMAIL_TRANSLATIONS: Record<string, any> = {
     whatsNext: "ماذا بعد؟",
     whatsNextDesc: "سنتصل بك قبل 24 ساعة من موعد جلستك لتأكيد الموقع.",
     questions: "هل لديك أسئلة؟ اتصل بنا على",
+    addons: "الخدمات الإضافية",
   },
   zh: {
     subject: "预订确认",
@@ -189,6 +197,7 @@ export const EMAIL_TRANSLATIONS: Record<string, any> = {
     whatsNext: "接下来呢？",
     whatsNextDesc: "我们将在拍摄前24小时与您联系，以确认地点。",
     questions: "有任何问题吗？请联系我们：",
+    addons: "额外服务",
   },
 };
 

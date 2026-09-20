@@ -3,6 +3,7 @@ import { discountService } from "@/lib/discount-service";
 import { packagesService } from "@/lib/packages-service";
 import { reviewsService } from "@/lib/reviews-service";
 import { generateSeoDescription, getBaseUrl } from "@/lib/seo-utils";
+import { calculateDiscountedPrice } from "@/lib/pricing";
 
 export const dynamic = "force-dynamic";
 
@@ -12,7 +13,7 @@ export async function GET(request: Request) {
 
   const baseUrl = getBaseUrl();
   const packages = await packagesService.getAllPackages();
-  const activeDiscount = await discountService.getActiveDiscount();
+  const activeDiscounts = await discountService.getActiveDiscounts();
 
   // Fetch real Google Reviews aggregate data for the dynamic images
   const { average, count } = await reviewsService.getAggregateRating();
@@ -63,14 +64,14 @@ export async function GET(request: Request) {
     let priceStr = `${pkg.price} EUR`;
     let salePriceStr = "";
 
+    const discountedCalc = calculateDiscountedPrice(pkg.price, activeDiscounts);
+
     if (pkg.original_price && pkg.original_price > pkg.price) {
       priceStr = `${pkg.original_price} EUR`;
       salePriceStr = `${pkg.price} EUR`;
-    } else if (activeDiscount && activeDiscount.discount_percentage > 0) {
+    } else if (discountedCalc.isDiscounted && discountedCalc.discountPercentage > 0) {
       priceStr = `${pkg.price} EUR`;
-      const calculatedSalePrice =
-        pkg.price - pkg.price * activeDiscount.discount_percentage;
-      salePriceStr = `${parseFloat(calculatedSalePrice.toFixed(2))} EUR`;
+      salePriceStr = `${parseFloat(discountedCalc.price.toFixed(2))} EUR`;
     }
 
     // CSV Escape helper
