@@ -208,9 +208,9 @@
     "remove": "Elimină",
     "promo_code_applied": "%{percentage} Reducere promoțională",
     "yield": {
-      "high_demand": "Cerere Mare",
-      "last_minute": "Ultimul Minut",
-      "early_bird": "Rezervare Timpurie"
+      "high_demand": "High Demand (+10%)",
+      "last_minute": "Last Minute Discount (-10%)",
+      "early_bird": "Early Bird (-30%)"
     }
   },
   "footer": {
@@ -516,7 +516,11 @@
     "price_breakdown": "Defalcare de preț",
     "subtotal": "Subtotal",
     "vat": "TVA",
-    "final_total": "Total final"
+    "final_total": "Total final",
+    "raw_base_price": "Package Base Price",
+    "time_surcharge": "Time Surcharge",
+    "yield_adjustment_positive": "High Demand Adjustment",
+    "yield_adjustment_negative": "Early Bird / Last Minute Discount"
   },
   "notfound": {
     "title": "Pagina nu a fost găsită",

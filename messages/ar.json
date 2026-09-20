@@ -208,9 +208,9 @@
     "remove": "إزالة",
     "promo_code_applied": "خصم %{percentage}",
     "yield": {
-      "high_demand": "طلب عالي",
-      "last_minute": "اللحظة الأخيرة",
-      "early_bird": "حجز مبكر"
+      "high_demand": "High Demand (+10%)",
+      "last_minute": "Last Minute Discount (-10%)",
+      "early_bird": "Early Bird (-30%)"
     }
   },
   "footer": {
@@ -516,7 +516,11 @@
     "price_breakdown": "انهيار الأسعار",
     "subtotal": "المجموع الفرعي",
     "vat": "ضريبة (VAT)",
-    "final_total": "المجموع النهائي"
+    "final_total": "المجموع النهائي",
+    "raw_base_price": "Package Base Price",
+    "time_surcharge": "Time Surcharge",
+    "yield_adjustment_positive": "High Demand Adjustment",
+    "yield_adjustment_negative": "Early Bird / Last Minute Discount"
   },
   "notfound": {
     "title": "لم يتم العثور على الصفحة",

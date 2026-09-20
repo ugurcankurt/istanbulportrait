@@ -264,28 +264,7 @@ export function BookingCard({
       >
         <div className="space-y-4">
           <div className="flex flex-wrap items-center gap-2 mb-2">
-            {yieldReason === "high_demand" && (
-              <Badge className="bg-orange-500/10 text-orange-600 dark:text-orange-400 border-orange-200 dark:border-orange-900 shadow-none font-bold">
-                🔥{" "}
-                {tCheckout("yield.high_demand", {
-                  defaultValue: "High Demand",
-                })}
-              </Badge>
-            )}
-            {yieldReason === "last_minute" && (
-              <Badge className="bg-red-500/10 text-red-600 dark:text-red-400 border-red-200 dark:border-red-900 shadow-none font-bold">
-                🕒{" "}
-                {tCheckout("yield.last_minute", {
-                  defaultValue: "Last Minute",
-                })}
-              </Badge>
-            )}
-            {yieldReason === "early_bird" && (
-              <Badge className="bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-200 dark:border-emerald-900 shadow-none font-bold">
-                🕊️{" "}
-                {tCheckout("yield.early_bird", { defaultValue: "Early Bird" })}
-              </Badge>
-            )}
+
             {isPerPerson && (
               <Badge className="bg-primary/10 text-primary border-primary/20 shadow-none font-bold uppercase tracking-widest text-[10px]">
                 👤 {t("per_person")}

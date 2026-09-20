@@ -107,15 +107,18 @@ function Step1Summary({
 
   const pricing = {
     ...rawPricing,
+    rawBasePrice: formatPrice(rawPricing.rawBasePrice),
+    timeSurchargeAmount: formatPrice(rawPricing.timeSurchargeAmount),
+    yieldAmount: formatPrice(Math.abs(rawPricing.yieldAmount)),
     originalPrice: formatPrice(rawPricing.originalPrice),
-    discountAmount: formatPrice(rawPricing.discountAmount),
-    depositAmount: formatPrice(rawPricing.depositAmount),
-    remainingAmount: formatPrice(rawPricing.remainingAmount),
     totalPrice: formatPrice(rawPricing.totalPrice),
-    taxAmount: formatPrice(rawPricing.taxAmount),
+    discountAmount: formatPrice(rawPricing.discountAmount),
     promoAmount: rawPricing.promoAmount
       ? formatPrice(rawPricing.promoAmount)
       : undefined,
+    depositAmount: formatPrice(rawPricing.depositAmount),
+    remainingAmount: formatPrice(rawPricing.remainingAmount),
+    taxAmount: formatPrice(rawPricing.taxAmount),
   };
   return (
     <div className="flex flex-col h-full">
@@ -231,6 +234,24 @@ function Step1Summary({
         <div className="rounded-2xl border-[0.5px] border-border/50 bg-background overflow-hidden mt-4">
           <div className="px-3 py-2 space-y-1.5">
             <div className="flex justify-between text-xs">
+              <span className="text-muted-foreground">
+                {tPricing("raw_base_price") || "Package Price"}
+              </span>
+              <span>{pricing.rawBasePrice}</span>
+            </div>
+            
+            {rawPricing.timeSurchargeAmount !== 0 && (
+              <div className="flex justify-between text-xs text-amber-600 dark:text-amber-500">
+                <span>
+                  {tPricing("time_surcharge") || "Time Surcharge"}
+                </span>
+                <span>+{pricing.timeSurchargeAmount}</span>
+              </div>
+            )}
+            
+            <Separator className="my-1 border-dashed" />
+            
+            <div className="flex justify-between text-xs font-medium">
               <span className="text-muted-foreground">
                 {tPricing("subtotal")}
               </span>

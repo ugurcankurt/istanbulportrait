@@ -208,9 +208,9 @@
     "remove": "移除",
     "promo_code_applied": "%{percentage} 促销折扣",
     "yield": {
-      "high_demand": "需求旺盛",
-      "last_minute": "最后一分钟",
-      "early_bird": "早鸟优惠"
+      "high_demand": "High Demand (+10%)",
+      "last_minute": "Last Minute Discount (-10%)",
+      "early_bird": "Early Bird (-30%)"
     }
   },
   "footer": {
@@ -516,7 +516,11 @@
     "price_breakdown": "价格细目",
     "subtotal": "小计",
     "vat": "增值税",
-    "final_total": "最终总计"
+    "final_total": "最终总计",
+    "raw_base_price": "Package Base Price",
+    "time_surcharge": "Time Surcharge",
+    "yield_adjustment_positive": "High Demand Adjustment",
+    "yield_adjustment_negative": "Early Bird / Last Minute Discount"
   },
   "notfound": {
     "title": "找不到页面",

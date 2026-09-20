@@ -208,9 +208,9 @@
     "remove": "Kaldır",
     "promo_code_applied": "%{percentage} Promosyon İndirimi",
     "yield": {
-      "high_demand": "Yüksek Talep",
-      "last_minute": "Son Dakika",
-      "early_bird": "Erken Rezervasyon"
+      "high_demand": "Yoğun Gün (+%10)",
+      "last_minute": "Son Dakika İndirimi (-%10)",
+      "early_bird": "Erken Rezervasyon (-%30)"
     }
   },
   "footer": {
@@ -516,7 +516,11 @@
     "price_breakdown": "Fiyat Dağılımı",
     "subtotal": "Ara Toplam",
     "vat": "KDV",
-    "final_total": "Genel Toplam"
+    "final_total": "Genel Toplam",
+    "raw_base_price": "Paket Ücreti",
+    "time_surcharge": "Saat Farkı",
+    "yield_adjustment_positive": "Yoğunluk Farkı",
+    "yield_adjustment_negative": "Erken Rez. / Son Dakika İndirimi"
   },
   "notfound": {
     "title": "Sayfa Bulunamadı",

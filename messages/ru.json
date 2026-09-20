@@ -208,9 +208,9 @@
     "remove": "Удалить",
     "promo_code_applied": "Скидка %{percentage}",
     "yield": {
-      "high_demand": "Высокий Спрос",
-      "last_minute": "В Последнюю Минуту",
-      "early_bird": "Раннее Бронирование"
+      "high_demand": "High Demand (+10%)",
+      "last_minute": "Last Minute Discount (-10%)",
+      "early_bird": "Early Bird (-30%)"
     }
   },
   "footer": {
@@ -516,7 +516,11 @@
     "price_breakdown": "Распределение цен",
     "subtotal": "Итого",
     "vat": "НДС",
-    "final_total": "Итоговый итог"
+    "final_total": "Итоговый итог",
+    "raw_base_price": "Package Base Price",
+    "time_surcharge": "Time Surcharge",
+    "yield_adjustment_positive": "High Demand Adjustment",
+    "yield_adjustment_negative": "Early Bird / Last Minute Discount"
   },
   "notfound": {
     "title": "Страница не найдена",

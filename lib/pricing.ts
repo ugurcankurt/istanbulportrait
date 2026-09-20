@@ -32,6 +32,9 @@ export function matchActiveSurcharge(
 export interface PriceBreakdown extends TaxBreakdown {
   packageId: PackageId;
   displayName: string;
+  rawBasePrice: number;
+  timeSurchargeAmount: number;
+  yieldAmount: number;
   originalPrice: number;
   discountAmount: number;
   isDiscounted: boolean;
@@ -45,6 +48,9 @@ export interface PriceBreakdown extends TaxBreakdown {
 export interface FormattedPriceBreakdown extends FormattedTaxBreakdown {
   packageId: PackageId;
   displayName: string;
+  rawBasePrice: string;
+  timeSurchargeAmount: string;
+  yieldAmount: string;
   originalPrice: string;
   discountAmount: string;
   isDiscounted: boolean;
@@ -85,10 +91,29 @@ export function calculateDiscountedPrice(
   let campaignPercentage = 0;
   let campaignAmount = 0;
 
+  let isCampaignValidForDate = true;
+
   if (activeDiscount && activeDiscount.is_active) {
-    campaignPercentage = Number(activeDiscount.discount_percentage);
-    campaignAmount = basePrice * campaignPercentage;
-    currentPrice -= campaignAmount;
+    if (bookingDate && activeDiscount.start_date && activeDiscount.end_date) {
+      const checkDate = new Date(bookingDate);
+      checkDate.setHours(12, 0, 0, 0); // use noon to avoid timezone edge cases
+
+      const startDate = new Date(activeDiscount.start_date);
+      startDate.setHours(0, 0, 0, 0);
+
+      const endDate = new Date(activeDiscount.end_date);
+      endDate.setHours(23, 59, 59, 999);
+
+      if (checkDate.getTime() < startDate.getTime() || checkDate.getTime() > endDate.getTime()) {
+        isCampaignValidForDate = false;
+      }
+    }
+
+    if (isCampaignValidForDate) {
+      campaignPercentage = Number(activeDiscount.discount_percentage);
+      campaignAmount = basePrice * campaignPercentage;
+      currentPrice -= campaignAmount;
+    }
   }
 
   let promoPercentage = 0;
@@ -137,8 +162,10 @@ export function getPackagePricing(
   surchargePercentage: number = 0,
   yieldMultiplier: number = 1.0,
 ): PriceBreakdown {
-  const originalPrice =
-    basePrice * (1 + surchargePercentage / 100) * yieldMultiplier;
+  const timeSurchargeAmount = basePrice * (surchargePercentage / 100);
+  const priceBeforeYield = basePrice + timeSurchargeAmount;
+  const yieldAmount = priceBeforeYield * (yieldMultiplier - 1);
+  const originalPrice = priceBeforeYield + yieldAmount;
 
   // Special handling for packages with per-person pricing
   if (peopleCount && peopleCount >= 1) {
@@ -159,6 +186,10 @@ export function getPackagePricing(
     const originalTotal = originalPrice * peopleCount;
     const discountedTotal = discountedPerPerson * peopleCount;
     const seasonalAmount = originalPrice * discountPercentage * peopleCount;
+    
+    const rawBaseTotal = basePrice * peopleCount;
+    const surchargeTotal = timeSurchargeAmount * peopleCount;
+    const yieldTotal = yieldAmount * peopleCount;
 
     const taxBreakdown = getTaxBreakdownFromTotal(discountedTotal, taxRate);
 
@@ -172,6 +203,9 @@ export function getPackagePricing(
       ...taxBreakdown,
       packageId,
       displayName: packageNameOverride || packageId,
+      rawBasePrice: rawBaseTotal,
+      timeSurchargeAmount: surchargeTotal,
+      yieldAmount: yieldTotal,
       originalPrice: originalTotal,
       discountAmount: seasonalAmount,
       isDiscounted: discountPercentage > 0,
@@ -209,6 +243,9 @@ export function getPackagePricing(
     ...taxBreakdown,
     packageId,
     displayName: packageNameOverride || packageId,
+    rawBasePrice: basePrice,
+    timeSurchargeAmount,
+    yieldAmount,
     originalPrice,
     discountAmount: seasonalAmount,
     isDiscounted: discountPercentage > 0,
@@ -260,6 +297,9 @@ export function formatPackagePricing(
     ...formatted,
     packageId: breakdown.packageId,
     displayName: breakdown.displayName,
+    rawBasePrice: formatter.format(breakdown.rawBasePrice),
+    timeSurchargeAmount: formatter.format(breakdown.timeSurchargeAmount),
+    yieldAmount: formatter.format(Math.abs(breakdown.yieldAmount)), // format absolute value, we can add +/- in UI
     originalPrice: formatter.format(breakdown.originalPrice),
     discountAmount: formatter.format(breakdown.discountAmount),
     isDiscounted: breakdown.isDiscounted,

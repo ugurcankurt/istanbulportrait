@@ -208,9 +208,9 @@
     "remove": "Entfernen",
     "promo_code_applied": "%{percentage} Aktionsrabatt",
     "yield": {
-      "high_demand": "Hohe Nachfrage",
-      "last_minute": "Last Minute",
-      "early_bird": "Frühbucher"
+      "high_demand": "High Demand (+10%)",
+      "last_minute": "Last Minute Discount (-10%)",
+      "early_bird": "Early Bird (-30%)"
     }
   },
   "footer": {
@@ -516,7 +516,11 @@
     "price_breakdown": "Preisaufschlüsselung",
     "subtotal": "Zwischensumme",
     "vat": "MwSt",
-    "final_total": "Endgültige Summe"
+    "final_total": "Endgültige Summe",
+    "raw_base_price": "Package Base Price",
+    "time_surcharge": "Time Surcharge",
+    "yield_adjustment_positive": "High Demand Adjustment",
+    "yield_adjustment_negative": "Early Bird / Last Minute Discount"
   },
   "notfound": {
     "title": "Seite nicht gefunden",

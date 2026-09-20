@@ -63,15 +63,12 @@ export function PackagesSection({
           ? generateNativeSlug(pkg.title[locale])
           : pkg.slug;
 
-        const earlyBirdMultiplier = 0.7;
-        const earlyBirdBasePrice = pkg.price * earlyBirdMultiplier;
-
         return {
           id: nativeSlug,
           dbSlug: pkg.slug,
           name: locName,
-          basePrice: earlyBirdBasePrice,
-          pricing: calculateDiscountedPrice(earlyBirdBasePrice, activeDiscount),
+          basePrice: pkg.price,
+          pricing: calculateDiscountedPrice(pkg.price, activeDiscount),
           duration: locDuration,
           photos: extractPhotosCount(locFeatures),
           locations: pkg.locations || 1,
