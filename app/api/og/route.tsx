@@ -39,6 +39,15 @@ export async function GET(req: NextRequest) {
     const fontBuffer = readFileSync(fontPath);
     const fontData = Uint8Array.from(fontBuffer).buffer;
 
+    const arabicFontPath = join(
+      process.cwd(),
+      "public",
+      "fonts",
+      "NotoSansArabic-Regular.ttf",
+    );
+    const arabicFontBuffer = readFileSync(arabicFontPath);
+    const arabicFontData = Uint8Array.from(arabicFontBuffer).buffer;
+
     return new ImageResponse(
       <div
         style={{
@@ -48,7 +57,7 @@ export async function GET(req: NextRequest) {
           alignItems: "center",
           justifyContent: "center",
           backgroundColor: "#000",
-          fontFamily: '"Inter"',
+          fontFamily: '"Inter", "Noto Sans Arabic"',
         }}
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -69,6 +78,12 @@ export async function GET(req: NextRequest) {
           {
             name: "Inter",
             data: fontData,
+            style: "normal",
+            weight: 400,
+          },
+          {
+            name: "Noto Sans Arabic",
+            data: arabicFontData,
             style: "normal",
             weight: 400,
           },
