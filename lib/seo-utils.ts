@@ -51,14 +51,7 @@ export function generateSeoTitle(
   fallbackTitle: string = "",
 ): string {
   if (!title) return fallbackTitle;
-  if (title.length <= 60) return title;
-  const truncated = title.substring(0, 60);
-  return (
-    truncated.substring(
-      0,
-      Math.min(truncated.length, truncated.lastIndexOf(" ")),
-    ) + "..."
-  );
+  return title;
 }
 
 /**

@@ -91,7 +91,7 @@ export async function generateMetadata({
   languages["x-default"] = `${baseUrl}/en`;
 
   return {
-    title: { absolute: title },
+    title,
     description: desc,
     alternates: {
       canonical: `${baseUrl}/${locale}`,
