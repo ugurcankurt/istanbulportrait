@@ -1,11 +1,11 @@
 "use client";
 
 import { ImagePlus, X } from "lucide-react";
-import { Spinner } from "@/components/ui/spinner";
 import Image from "next/image";
 import { useCallback, useState } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/spinner";
 import { createClientSupabaseClient } from "@/lib/supabase/client";
 
 interface ImageUploadProps {
@@ -99,7 +99,7 @@ export function ImageUpload({
         e.target.value = "";
       }
     },
-    [bucketName, onChange, supabase.storage],
+    [bucketName, onChange, supabase.storage, convertToWebP],
   );
 
   if (value) {

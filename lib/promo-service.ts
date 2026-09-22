@@ -18,7 +18,7 @@ export const promoService = {
    * Validates a promo code. Returns the promo code object if valid, or null if invalid/expired/exhausted.
    */
   async validate(code: string): Promise<PromoCodeDB | null> {
-    if (!code || !code.trim()) return null;
+    if (!code?.trim()) return null;
 
     try {
       const { data, error } = await supabase
@@ -84,7 +84,7 @@ export const promoService = {
 
       if (updateError) return false;
       return true;
-    } catch (e) {
+    } catch (_e) {
       return false;
     }
   },

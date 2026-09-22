@@ -7,7 +7,7 @@ export async function GET(request: NextRequest) {
   try {
     // 1. HTTP Basic Authentication
     const authHeader = request.headers.get("authorization");
-    if (!authHeader || !authHeader.startsWith("Basic ")) {
+    if (!authHeader?.startsWith("Basic ")) {
       return new NextResponse("Unauthorized", {
         status: 401,
         headers: {

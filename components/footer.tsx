@@ -3,13 +3,13 @@
 import {
   Facebook,
   Instagram,
+  Linkedin,
   Mail,
   MapPin,
-  Phone,
-  Youtube,
-  Video,
   MessageCircle,
-  Linkedin,
+  Phone,
+  Video,
+  Youtube,
 } from "lucide-react";
 import Image from "next/image";
 import { useLocale, useTranslations } from "next-intl";
@@ -18,7 +18,7 @@ import { useEffect, useState } from "react";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { useConsent } from "@/contexts/consent-context";
 import { Link, usePathname } from "@/i18n/routing";
-import { packagesService, type PackageDB } from "@/lib/packages-service";
+import { type PackageDB, packagesService } from "@/lib/packages-service";
 
 interface FooterProps {
   dynamicNavData?: Record<string, { path: string; title: string | null }>;
@@ -117,7 +117,7 @@ export function Footer({ dynamicNavData = {}, settings }: FooterProps) {
                     src={
                       (resolvedTheme === "dark"
                         ? settings?.logo_dark_url
-                        : settings?.logo_url) || settings?.logo_url!
+                        : settings?.logo_url) || (settings?.logo_url as string)
                     }
                     alt={settings?.site_name || "Istanbul photographer"}
                     fill

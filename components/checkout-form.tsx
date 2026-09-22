@@ -9,7 +9,7 @@ import {
   Lock,
   MapPin,
 } from "lucide-react";
-import { useCurrency } from "@/contexts/currency-context";
+import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
@@ -21,26 +21,21 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
+import { useCurrency } from "@/contexts/currency-context";
+import type { AddonDB } from "@/lib/addons-service";
 import {
   saveUserDataForAdvancedMatching,
   trackBeginCheckout,
   trackPaymentEvent,
   trackPurchase,
 } from "@/lib/analytics";
+import type { TimeSurcharge } from "@/lib/availability-service";
+import type { DiscountDB } from "@/lib/discount-service";
 import { fbPixel, hashCustomerData, hashPhoneNumber } from "@/lib/facebook";
+import { getPackagePricing, matchActiveSurcharge } from "@/lib/pricing";
 import { settingsService } from "@/lib/settings-service";
-import {
-  formatPackagePricing,
-  getPackagePricing,
-  matchActiveSurcharge,
-} from "@/lib/pricing";
-import { cn, formatCurrency } from "@/lib/utils";
 import type { BookingFormData, PackageId } from "@/lib/validations";
 import { createBookingSchema } from "@/lib/validations";
-import Link from "next/link";
-import type { TimeSurcharge } from "@/lib/availability-service";
-import type { AddonDB } from "@/lib/addons-service";
-import type { DiscountDB } from "@/lib/discount-service";
 
 // ─── Step 1: Booking Summary ──────────────────────────────────────────────────
 
@@ -252,25 +247,23 @@ function Step1Summary({
               </span>
               <span>{pricing.rawBasePrice}</span>
             </div>
-            
+
             {rawPricing.timeSurchargeAmount !== 0 && (
               <div className="flex justify-between text-xs text-amber-600 dark:text-amber-500">
-                <span>
-                  {tPricing("time_surcharge") || "Time Surcharge"}
-                </span>
+                <span>{tPricing("time_surcharge") || "Time Surcharge"}</span>
                 <span>+{pricing.timeSurchargeAmount}</span>
               </div>
             )}
-            
+
             {(rawPricing.addonsAmount || 0) > 0 && (
               <div className="flex justify-between text-xs font-medium text-emerald-600 dark:text-emerald-500">
                 <span>{tCheckout("form.addons") || "Add-ons"}</span>
                 <span>+{formatPrice(rawPricing.addonsAmount || 0)}</span>
               </div>
             )}
-            
+
             <Separator className="my-1 border-dashed" />
-            
+
             <div className="flex justify-between text-xs font-medium">
               <span className="text-muted-foreground">
                 {tPricing("subtotal")}
@@ -377,7 +370,7 @@ export function CheckoutForm({
   } | null>(null);
   const [promoError, setPromoError] = useState("");
   const [isLoadingPromo, setIsLoadingPromo] = useState(false);
-  const [turinvoiceOrder, setTurinvoiceOrder] = useState<{
+  const [_turinvoiceOrder, _setTurinvoiceOrder] = useState<{
     idOrder: number;
     paymentUrl: string;
     amountTRY: number;
@@ -387,13 +380,15 @@ export function CheckoutForm({
   const [confirmedBooking, setConfirmedBooking] = useState<any>(null);
   const [eventId, setEventId] = useState<string>("");
   const { trackPurchase: trackYandexPurchase } = useYandexMetrica();
-  const pricing = selectedPackage
+  const _pricing = selectedPackage
     ? getPackagePricing(
         selectedPackage,
         (preFilledBookingData as any)?.basePrice ||
           preFilledBookingData?.totalAmount ||
           0,
-        (preFilledBookingData as any)?.activeDiscounts ?? activeDiscounts ?? null,
+        (preFilledBookingData as any)?.activeDiscounts ??
+          activeDiscounts ??
+          null,
         appliedPromo,
         preFilledBookingData?.bookingDate,
         (preFilledBookingData as any)?.peopleCount,
@@ -431,7 +426,7 @@ export function CheckoutForm({
         percentage: data.discount_percentage,
       });
       setPromoError("");
-    } catch (error) {
+    } catch (_error) {
       setPromoError("Failed to validate promo code");
       setAppliedPromo(null);
     } finally {
@@ -529,7 +524,7 @@ export function CheckoutForm({
             code: data.code,
             percentage: data.discount_percentage,
           });
-        } catch (error) {
+        } catch (_error) {
           setPromoError("Failed to validate promo code");
         } finally {
           setIsLoadingPromo(false);
@@ -538,7 +533,14 @@ export function CheckoutForm({
 
       autoApply();
     }
-  }, [searchParams, selectedPackage, appliedPromo]);
+  }, [
+    searchParams,
+    selectedPackage,
+    appliedPromo,
+    isLoadingPromo,
+    promoError,
+    promoCodeInput,
+  ]);
 
   const packageInfo = selectedPackage
     ? {
@@ -565,7 +567,12 @@ export function CheckoutForm({
         (preFilledBookingData as any)?.yieldReason || "standard",
       );
     }
-  }, [selectedPackage, packageInfo, eventId]);
+  }, [
+    selectedPackage,
+    packageInfo,
+    eventId,
+    (preFilledBookingData as any)?.yieldReason,
+  ]);
 
   const customerEmail = bookingForm.watch("customerEmail");
   const customerPhone = bookingForm.watch("customerPhone");
@@ -656,10 +663,13 @@ export function CheckoutForm({
           addonQuantities: (preFilledBookingData as any)?.addonQuantities || {},
           basePrice: (preFilledBookingData as any)?.basePrice,
           isPerPerson: (preFilledBookingData as any)?.isPerPerson,
-          activeDiscount: (preFilledBookingData as any)?.activeDiscounts ?? activeDiscounts ?? null,
+          activeDiscount:
+            (preFilledBookingData as any)?.activeDiscounts ??
+            activeDiscounts ??
+            null,
           totalAmount: pricingCalc.totalPrice,
-          paymentId: "cash_" + Date.now(),
-          conversationId: "cash_" + Date.now(),
+          paymentId: `cash_${Date.now()}`,
+          conversationId: `cash_${Date.now()}`,
           provider: "cash",
           providerResponse: { method: "cash" },
           eventId,
@@ -762,7 +772,7 @@ export function CheckoutForm({
     );
   }
 
-  const handleExpire = () => {
+  const _handleExpire = () => {
     toast.error(
       t("expired") || "Reservation expired. Please select a new time.",
     );

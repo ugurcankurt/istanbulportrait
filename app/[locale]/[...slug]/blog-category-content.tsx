@@ -41,7 +41,7 @@ export async function BlogCategoryContent({
 
   const dbPage = await pagesContentService.getPageBySlug("blog");
   const parentSegment = dbPage?.title?.[locale]
-    ? generateNativeSlug(dbPage.title[locale]!)
+    ? generateNativeSlug(dbPage.title[locale] || "")
     : "blog";
 
   let decodedSlug = slug;

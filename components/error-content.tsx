@@ -18,7 +18,7 @@ interface ErrorContentProps {
 }
 
 export function ErrorContent({ error, reset }: ErrorContentProps) {
-  const t = useTranslations("ui");
+  const _t = useTranslations("ui");
 
   return (
     <div className="container flex items-center justify-center min-h-[80vh] px-4 py-12">

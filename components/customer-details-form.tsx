@@ -1,14 +1,15 @@
 "use client";
 
 import { format } from "date-fns";
-import { useDateFnsLocale } from "@/hooks/use-date-fns-locale";
 import { Calendar as CalendarIcon, Clock } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useState } from "react";
 import type { UseFormReturn } from "react-hook-form";
 import PhoneInput from "react-phone-number-input";
+import { useDateFnsLocale } from "@/hooks/use-date-fns-locale";
 import "react-phone-number-input/style.css";
 
+import { useEffect } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
@@ -23,11 +24,9 @@ import {
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
-
 import { cn } from "@/lib/utils";
 import type { BookingFormData, PackageId } from "@/lib/validations";
 import { usePackagesStore } from "@/stores/packages-store";
-import { useEffect } from "react";
 
 interface CustomerDetailsFormProps {
   form: UseFormReturn<BookingFormData>;
@@ -58,7 +57,7 @@ export function CustomerDetailsForm({
 }: CustomerDetailsFormProps) {
   const locale = useLocale();
   const t = useTranslations("checkout");
-  const tPackages = useTranslations("packages");
+  const _tPackages = useTranslations("packages");
   const tui = useTranslations("ui");
   const tplaceholders = useTranslations("placeholders");
   const tsuccess = useTranslations("success");
@@ -88,13 +87,13 @@ export function CustomerDetailsForm({
   const packageInfo = {
     name:
       packageDBInfo?.title?.[locale] ||
-      packageDBInfo?.title?.["en"] ||
+      packageDBInfo?.title?.en ||
       packageDBInfo?.slug ||
       selectedPackage,
     price: basePrice,
     duration:
       packageDBInfo?.duration?.[locale] ||
-      packageDBInfo?.duration?.["en"] ||
+      packageDBInfo?.duration?.en ||
       "1 Hour",
     photos: 15,
   };

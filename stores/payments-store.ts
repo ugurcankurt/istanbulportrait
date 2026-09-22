@@ -16,6 +16,7 @@ export interface PaymentAdmin {
   provider: string;
   created_at: string;
   bookings?: BookingDetails | null;
+  // biome-ignore lint/suspicious/noExplicitAny: Provider response varies
   provider_response?: any;
 }
 
@@ -51,7 +52,7 @@ interface PaymentsState {
   loading: boolean;
   error: string | null;
   filters: PaymentsFilters;
-  
+
   monthlySummaries: MonthlySummary[];
   loadingSummaries: boolean;
 
@@ -87,7 +88,7 @@ export const usePaymentsStore = create<PaymentsState>()(
       loading: false,
       error: null,
       filters: initialFilters,
-      
+
       monthlySummaries: [],
       loadingSummaries: false,
 
@@ -122,7 +123,7 @@ export const usePaymentsStore = create<PaymentsState>()(
           let data: unknown;
           try {
             data = JSON.parse(rawData);
-          } catch (parseError) {
+          } catch (_parseError) {
             throw new Error("Invalid JSON response from server");
           }
 
@@ -170,7 +171,7 @@ export const usePaymentsStore = create<PaymentsState>()(
         set({ loadingSummaries: true, error: null });
 
         try {
-          const response = await fetch('/api/admin/payments/summary');
+          const response = await fetch("/api/admin/payments/summary");
 
           if (!response.ok) {
             const errorText = await response.text();
@@ -187,7 +188,9 @@ export const usePaymentsStore = create<PaymentsState>()(
         } catch (error) {
           console.error("Payments Store: Fetch summaries error:", error);
           const errorMessage =
-            error instanceof Error ? error.message : "Failed to fetch summaries";
+            error instanceof Error
+              ? error.message
+              : "Failed to fetch summaries";
 
           set({
             monthlySummaries: [],

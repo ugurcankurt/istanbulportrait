@@ -1,11 +1,20 @@
 "use client";
 
-import { Globe, Menu, User, Instagram, Facebook, MessageCircle } from "lucide-react";
+import {
+  Facebook,
+  Globe,
+  Instagram,
+  Menu,
+  MessageCircle,
+  User,
+} from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { Button, buttonVariants } from "@/components/ui/button";
 import {
   Dialog,
@@ -23,11 +32,9 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { usePathname, useRouter } from "@/i18n/routing";
-import Link from "next/link";
-import { cn } from "@/lib/utils";
-import { ThemeToggle } from "@/components/theme-toggle";
 import { useCurrency } from "@/contexts/currency-context";
+import { usePathname, useRouter } from "@/i18n/routing";
+import { cn } from "@/lib/utils";
 
 const locales = [
   { code: "en", name: "English", flag: "🇬🇧" },
@@ -51,9 +58,9 @@ export function Navigation({ dynamicNavData = {}, settings }: NavigationProps) {
   const locale = useLocale();
   const pathname = usePathname();
   const router = useRouter();
-  const params = useParams();
+  const _params = useParams();
   const [isOpen, setIsOpen] = useState(false);
-  const [mounted, setMounted] = useState(false);
+  const [_mounted, setMounted] = useState(false);
   const { resolvedTheme } = useTheme();
   const { currency } = useCurrency();
 
@@ -117,7 +124,7 @@ export function Navigation({ dynamicNavData = {}, settings }: NavigationProps) {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-white/10 dark:border-white/5 bg-background/40 backdrop-blur-2xl shadow-sm supports-[backdrop-filter]:bg-background/40">
-      <div className="container mx-auto flex h-14 sm:h-16 items-center justify-between px-4 sm:px-6 lg:px-8">
+      <div className="container mx-auto flex h-12 sm:h-14 items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Logo */}
         <Link
           href={`/${locale}`}
@@ -297,7 +304,7 @@ export function Navigation({ dynamicNavData = {}, settings }: NavigationProps) {
                       const currentCurrency =
                         typeof document !== "undefined"
                           ? document.cookie.replace(
-                              /(?:(?:^|.*;\s*)NEXT_CURRENCY\s*\=\s*([^;]*).*$)|^.*$/,
+                              /(?:(?:^|.*;\s*)NEXT_CURRENCY\s*=\s*([^;]*).*$)|^.*$/,
                               "$1",
                             ) || "EUR"
                           : "EUR";
@@ -437,7 +444,7 @@ export function Navigation({ dynamicNavData = {}, settings }: NavigationProps) {
                 </div>
 
                 {/* Mobile Social Links */}
-                <div 
+                <div
                   className="animate-slide-in-right mt-auto pt-6 flex justify-center space-x-6 rtl:space-x-reverse border-t border-border/50"
                   style={{ animationDelay: `${(navItems.length + 1) * 100}ms` }}
                 >

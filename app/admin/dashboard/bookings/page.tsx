@@ -85,10 +85,10 @@ const generateWhatsAppLink = (booking: Booking) => {
 
   const eWave = String.fromCodePoint(0x1f44b);
   const eCamera = String.fromCodePoint(0x1f4f8);
-  const eCheck = String.fromCodePoint(0x2705);
-  const eEuro = String.fromCodePoint(0x1f4b6);
-  const ePeople = String.fromCodePoint(0x1f465);
-  const eCash = String.fromCodePoint(0x1f4b5);
+  const _eCheck = String.fromCodePoint(0x2705);
+  const _eEuro = String.fromCodePoint(0x1f4b6);
+  const _ePeople = String.fromCodePoint(0x1f465);
+  const _eCash = String.fromCodePoint(0x1f4b5);
   const eSparkles = String.fromCodePoint(0x2728);
   const eDove = String.fromCodePoint(0x1f54a, 0xfe0f);
   const eSpeech = String.fromCodePoint(0x1f4ac);

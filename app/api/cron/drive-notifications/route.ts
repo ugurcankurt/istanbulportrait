@@ -91,7 +91,7 @@ export async function GET(request: Request) {
           // Find the most recently uploaded raw file
           const newestRaw = groupedFiles.raw.reduce(
             (latest: any, file: any) => {
-              if (!latest || !latest.createdTime) return file;
+              if (!latest?.createdTime) return file;
               if (!file.createdTime) return latest;
               return new Date(file.createdTime) > new Date(latest.createdTime)
                 ? file
@@ -100,7 +100,7 @@ export async function GET(request: Request) {
             null,
           );
 
-          if (newestRaw && newestRaw.createdTime) {
+          if (newestRaw?.createdTime) {
             const timeSinceLastUpload =
               Date.now() - new Date(newestRaw.createdTime).getTime();
 
@@ -119,7 +119,7 @@ export async function GET(request: Request) {
           // Find the most recently uploaded edited file
           const newestEdited = groupedFiles.final.reduce(
             (latest: any, file: any) => {
-              if (!latest || !latest.createdTime) return file;
+              if (!latest?.createdTime) return file;
               if (!file.createdTime) return latest;
               return new Date(file.createdTime) > new Date(latest.createdTime)
                 ? file
@@ -128,7 +128,7 @@ export async function GET(request: Request) {
             null,
           );
 
-          if (newestEdited && newestEdited.createdTime) {
+          if (newestEdited?.createdTime) {
             const timeSinceLastUpload =
               Date.now() - new Date(newestEdited.createdTime).getTime();
 

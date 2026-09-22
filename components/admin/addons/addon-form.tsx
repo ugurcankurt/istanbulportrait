@@ -1,17 +1,11 @@
 "use client";
 
+import { Save, Sparkles } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { Sparkles, Save, Puzzle } from "lucide-react";
-import { Spinner } from "@/components/ui/spinner";
-
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Switch } from "@/components/ui/switch";
-import { Label } from "@/components/ui/label";
 import {
   Card,
   CardContent,
@@ -19,7 +13,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Form,
   FormControl,
@@ -28,8 +21,13 @@ import {
   FormItem,
   FormLabel,
 } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Spinner } from "@/components/ui/spinner";
+import { Switch } from "@/components/ui/switch";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Textarea } from "@/components/ui/textarea";
 
-import { type AddonDB } from "@/lib/addons-service";
+import type { AddonDB } from "@/lib/addons-service";
 import { generateNativeSlug } from "@/lib/slug-generator";
 
 interface AddonFormProps {
@@ -90,7 +88,9 @@ export function AddonForm({ initialData }: AddonFormProps) {
       }
 
       toast.success(
-        initialData ? "Addon updated successfully" : "Addon created successfully",
+        initialData
+          ? "Addon updated successfully"
+          : "Addon created successfully",
       );
       router.push("/admin/dashboard/addons");
       router.refresh();
@@ -106,7 +106,9 @@ export function AddonForm({ initialData }: AddonFormProps) {
     if (activeTab === "en") return;
     const data = form.getValues();
     if (!data.title?.en || !data.description?.en) {
-      toast.error("Please fill in all English fields first before auto-translating.");
+      toast.error(
+        "Please fill in all English fields first before auto-translating.",
+      );
       return;
     }
 
@@ -128,16 +130,22 @@ export function AddonForm({ initialData }: AddonFormProps) {
 
       if (translateRes.ok) {
         const translateData = await translateRes.json();
-        if (translateData.translations && translateData.translations[activeTab]) {
+        if (translateData.translations?.[activeTab]) {
           const translated = translateData.translations[activeTab];
-          form.setValue(`title.${activeTab}`, translated.title, { shouldDirty: true });
-          form.setValue(`description.${activeTab}`, translated.description, { shouldDirty: true });
+          form.setValue(`title.${activeTab}`, translated.title, {
+            shouldDirty: true,
+          });
+          form.setValue(`description.${activeTab}`, translated.description, {
+            shouldDirty: true,
+          });
 
           toast.success(`${activeTab.toUpperCase()} translation successful!`, {
             id: "ai-translation",
           });
         } else {
-          toast.error("AI translation returned empty.", { id: "ai-translation" });
+          toast.error("AI translation returned empty.", {
+            id: "ai-translation",
+          });
         }
       } else {
         const errData = await translateRes.json();
@@ -145,7 +153,9 @@ export function AddonForm({ initialData }: AddonFormProps) {
       }
     } catch (error: any) {
       console.error(error);
-      toast.error(error.message || "Failed to translate.", { id: "ai-translation" });
+      toast.error(error.message || "Failed to translate.", {
+        id: "ai-translation",
+      });
     } finally {
       setIsTranslating(false);
     }
@@ -199,7 +209,11 @@ export function AddonForm({ initialData }: AddonFormProps) {
                   )}
                 </div>
 
-                <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+                <Tabs
+                  value={activeTab}
+                  onValueChange={setActiveTab}
+                  className="w-full"
+                >
                   <TabsList className="flex flex-wrap h-auto w-full justify-start bg-muted/50 p-1 mb-4">
                     {SUPPORTED_LOCALES.map((locale) => (
                       <TabsTrigger
@@ -212,13 +226,19 @@ export function AddonForm({ initialData }: AddonFormProps) {
                     ))}
                   </TabsList>
                   {SUPPORTED_LOCALES.map((locale) => (
-                    <TabsContent key={locale} value={locale} className="space-y-4">
+                    <TabsContent
+                      key={locale}
+                      value={locale}
+                      className="space-y-4"
+                    >
                       <FormField
                         control={form.control}
                         name={`title.${locale}`}
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Title ({locale.toUpperCase()})</FormLabel>
+                            <FormLabel>
+                              Title ({locale.toUpperCase()})
+                            </FormLabel>
                             <FormControl>
                               <Input
                                 placeholder={`e.g. Professional Makeup`}
@@ -296,7 +316,9 @@ export function AddonForm({ initialData }: AddonFormProps) {
                           type="number"
                           placeholder="50"
                           {...field}
-                          onChange={(e) => field.onChange(parseFloat(e.target.value) || 0)}
+                          onChange={(e) =>
+                            field.onChange(parseFloat(e.target.value) || 0)
+                          }
                         />
                       </FormControl>
                     </FormItem>
@@ -309,9 +331,12 @@ export function AddonForm({ initialData }: AddonFormProps) {
                   render={({ field }) => (
                     <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
                       <div className="space-y-0.5">
-                        <FormLabel className="text-base">Per Person Pricing</FormLabel>
+                        <FormLabel className="text-base">
+                          Per Person Pricing
+                        </FormLabel>
                         <FormDescription>
-                          If enabled, the price will be multiplied by the number of people selected during booking.
+                          If enabled, the price will be multiplied by the number
+                          of people selected during booking.
                         </FormDescription>
                       </div>
                       <FormControl>
@@ -330,7 +355,9 @@ export function AddonForm({ initialData }: AddonFormProps) {
                   render={({ field }) => (
                     <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
                       <div className="space-y-0.5">
-                        <FormLabel className="text-base">Active Status</FormLabel>
+                        <FormLabel className="text-base">
+                          Active Status
+                        </FormLabel>
                         <FormDescription>
                           Enable or disable this add-on across the site.
                         </FormDescription>

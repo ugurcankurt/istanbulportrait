@@ -18,7 +18,10 @@ import "../globals.css";
 import type { Metadata } from "next";
 import dynamic from "next/dynamic";
 import { ThemeProvider } from "next-themes";
+import { Suspense } from "react";
+import { GoogleAdsTracker } from "@/components/google-ads-tracker";
 import { SchemaInjector } from "@/components/schema-injector";
+import { TopDiscountBanner } from "@/components/top-discount-banner";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { CurrencyProvider } from "@/contexts/currency-context";
@@ -28,9 +31,6 @@ import {
   getBaseUrl,
   optimizeSeoImage,
 } from "@/lib/seo-utils";
-import { GoogleAdsTracker } from "@/components/google-ads-tracker";
-import { Suspense } from "react";
-import { TopDiscountBanner } from "@/components/top-discount-banner";
 
 const WhatsAppButton = dynamic(() =>
   import("@/components/whatsapp-button").then((mod) => mod.WhatsAppButton),
@@ -85,6 +85,7 @@ export async function generateMetadata({
   const { locale } = await params;
   const { routing } = await import("@/i18n/routing");
 
+  // biome-ignore lint/suspicious/noExplicitAny: Routing locale matching
   if (!routing.locales.includes(locale as any)) {
     return { title: "Not Found" };
   }
@@ -146,6 +147,7 @@ export default async function LocaleLayout({
   const { routing } = await import("@/i18n/routing");
   const { notFound } = await import("next/navigation");
 
+  // biome-ignore lint/suspicious/noExplicitAny: Routing locale matching
   if (!routing.locales.includes(locale as any)) {
     notFound();
   }
@@ -213,6 +215,7 @@ export default async function LocaleLayout({
         {/* Ad-hoc Custom Head Scripts Injected from Settings Dashboard */}
         {settings.custom_head_scripts && (
           <div
+            // biome-ignore lint/security/noDangerouslySetInnerHtml: Dynamic script
             dangerouslySetInnerHTML={{ __html: settings.custom_head_scripts }}
           />
         )}
@@ -222,6 +225,7 @@ export default async function LocaleLayout({
         <Script
           id="google-consent-default"
           strategy="beforeInteractive"
+          // biome-ignore lint/security/noDangerouslySetInnerHtml: Consent script
           dangerouslySetInnerHTML={{
             __html: `
               window.dataLayer = window.dataLayer || [];
@@ -266,6 +270,7 @@ export default async function LocaleLayout({
                       <Script
                         id="google-ads-config"
                         strategy="afterInteractive"
+                        // biome-ignore lint/security/noDangerouslySetInnerHtml: Google Ads
                         dangerouslySetInnerHTML={{
                           __html: `
                             window.__GOOGLE_ADS_ID__ = "${settings.google_ads_id || ""}";
@@ -313,6 +318,7 @@ export default async function LocaleLayout({
         {/* Ad-hoc Custom Body Scripts Injected from Settings Dashboard */}
         {settings.custom_body_scripts && (
           <div
+            // biome-ignore lint/security/noDangerouslySetInnerHtml: Dynamic script
             dangerouslySetInnerHTML={{ __html: settings.custom_body_scripts }}
           />
         )}

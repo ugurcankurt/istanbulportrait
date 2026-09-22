@@ -1,10 +1,9 @@
 "use client";
 
-import { useState } from "react";
-
 import { Award, Camera, Heart, MapPin, Star, Users } from "lucide-react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
+import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -30,7 +29,7 @@ export function AboutSection({
   const tabout = useTranslations("about");
   const tui = useTranslations("ui");
   const taboutHighlights = useTranslations("about_highlights");
-  const taboutCta = useTranslations("about_cta");
+  const _taboutCta = useTranslations("about_cta");
 
   const dynAbout = dbPage?.content?.about;
 

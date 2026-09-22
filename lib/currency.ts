@@ -102,7 +102,7 @@ export async function convertCurrency(
  */
 export async function getEURtoTRYRate(): Promise<number> {
   const rates = await getRatesForBase("EUR");
-  return rates["TRY"] || 36.5;
+  return rates.TRY || 36.5;
 }
 
 /**

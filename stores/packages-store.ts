@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { packagesService, type PackageDB } from "@/lib/packages-service";
+import { type PackageDB, packagesService } from "@/lib/packages-service";
 import { createClientSupabaseClient } from "@/lib/supabase/client";
 
 interface PackagesState {
@@ -10,7 +10,7 @@ interface PackagesState {
   deletePackage: (id: string) => Promise<boolean>;
 }
 
-export const usePackagesStore = create<PackagesState>((set, get) => ({
+export const usePackagesStore = create<PackagesState>((set, _get) => ({
   packages: [],
   loading: false,
   error: null,

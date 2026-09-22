@@ -2,7 +2,6 @@
 
 import { createContext, useContext, useEffect, useState } from "react";
 import {
-  type ConsentData,
   clearConsentCookie,
   getConsentCookie,
   setConsentCookie,

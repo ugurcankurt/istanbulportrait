@@ -2,7 +2,7 @@ import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
-const TARGET_LOCALES = ["ar", "ru", "es", "zh", "de", "fr", "ro", "tr"];
+const _TARGET_LOCALES = ["ar", "ru", "es", "zh", "de", "fr", "ro", "tr"];
 
 async function fetchWithRetry(
   url: string,
@@ -35,12 +35,12 @@ async function fetchWithRetry(
             delaySeconds = parsedDelay + 2; // add 2s buffer
           }
         }
-      } catch (e) {
+      } catch (_e) {
         // ignore
       }
 
       console.warn(
-        `NVIDIA API returned ${res.status}. Retrying in ${delaySeconds}s...`,
+        `Gemini API returned ${res.status}. Retrying in ${delaySeconds}s...`,
       );
       await new Promise((r) => setTimeout(r, delaySeconds * 1000));
       return fetchWithRetry(url, options, retries + 1);
@@ -96,7 +96,9 @@ export async function POST(req: Request) {
       );
     }
 
-    const apiKey = process.env.NVIDIA_API_KEY;
+    const { settingsService } = await import("@/lib/settings-service");
+    const settings = await settingsService.getSettings();
+    const apiKey = settings.gemini_api_key;
     if (!apiKey) {
       return NextResponse.json(
         { error: "API Key is not configured." },
@@ -140,18 +142,20 @@ Content to translate (Preserve Original Formatting):
 ${content}
 `;
 
-    const url = `https://integrate.api.nvidia.com/v1/chat/completions`;
+    const url =
+      "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent";
     const response = await fetchWithRetry(url, {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${apiKey}`,
         "Content-Type": "application/json",
+        "X-goog-api-key": apiKey.trim(),
       },
       body: JSON.stringify({
-        model: "deepseek-ai/deepseek-v4-flash-0731",
-        messages: [{ role: "user", content: prompt }],
-        temperature: 0.2,
-        response_format: { type: "json_object" },
+        contents: [{ parts: [{ text: prompt }] }],
+        generationConfig: {
+          responseMimeType: "application/json",
+          temperature: 0.2,
+        },
       }),
     });
 
@@ -165,19 +169,19 @@ ${content}
     }
 
     const data = await response.json();
-    const textOutput = data.choices?.[0]?.message?.content;
+    const textOutput = data.candidates?.[0]?.content?.parts?.[0]?.text;
 
     if (!textOutput) {
-      console.error(`No content from DeepSeek for ${targetLocale}`);
+      console.error(`No content from Gemini for ${targetLocale}`);
       return NextResponse.json({ error: "Empty AI response" }, { status: 500 });
     }
 
     let parsed;
     try {
       parsed = JSON.parse(textOutput.trim());
-    } catch (e) {
+    } catch (_e) {
       console.error(
-        `Invalid JSON from DeepSeek for ${targetLocale}: ${textOutput}`,
+        `Invalid JSON from Gemini for ${targetLocale}: ${textOutput}`,
       );
       return NextResponse.json(
         { error: "Invalid JSON from AI" },

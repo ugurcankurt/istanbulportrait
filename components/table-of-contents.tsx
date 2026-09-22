@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import NextLink from "next/link";
+import { useEffect, useState } from "react";
 import { generateSlugFromTitle } from "@/lib/slug-generator";
 
 interface TocItem {

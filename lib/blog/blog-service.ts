@@ -3,8 +3,9 @@
  * Database operations for blog system using Supabase
  */
 
-import { supabaseAdmin } from "@/lib/supabase";
 import { cache } from "react";
+import { generateSlugFromTitle } from "@/lib/slug-generator";
+import { supabaseAdmin } from "@/lib/supabase";
 import type {
   BlogCategoryListResponse,
   BlogCategoryWithTranslation,
@@ -20,7 +21,6 @@ import type {
   TagFormData,
 } from "@/types/blog";
 import { calculateReadingTime } from "./blog-utils";
-import { generateSlugFromTitle } from "@/lib/slug-generator";
 
 // =============================================
 // BLOG POSTS
@@ -29,25 +29,24 @@ import { generateSlugFromTitle } from "@/lib/slug-generator";
 /**
  * Get published blog posts (public)
  */
-export const getPublishedBlogPosts = cache(async function (
-  params: BlogQueryParams,
-): Promise<BlogPostListResponse> {
-  const {
-    page = 1,
-    limit = 20,
-    search = "",
-    category_id,
-    tag_id,
-    locale = "en",
-    is_featured,
-    sort_by = "published_at",
-    sort_order = "desc",
-  } = params;
+export const getPublishedBlogPosts = cache(
+  async (params: BlogQueryParams): Promise<BlogPostListResponse> => {
+    const {
+      page = 1,
+      limit = 20,
+      search = "",
+      category_id,
+      tag_id,
+      locale = "en",
+      is_featured,
+      sort_by = "published_at",
+      sort_order = "desc",
+    } = params;
 
-  let query = supabaseAdmin
-    .from("blog_posts")
-    .select(
-      `
+    let query = supabaseAdmin
+      .from("blog_posts")
+      .select(
+        `
       *,
       translation:blog_post_translations!inner(
         id,
@@ -82,104 +81,106 @@ export const getPublishedBlogPosts = cache(async function (
         social_links
       )
     `,
-      { count: "exact" },
-    )
-    .eq("status", "published")
-    .eq("translation.locale", locale)
-    .not("published_at", "is", null);
+        { count: "exact" },
+      )
+      .eq("status", "published")
+      .eq("translation.locale", locale)
+      .not("published_at", "is", null);
 
-  // Apply filters
-  if (search) {
-    query = query.ilike("translation.title", `%${search}%`);
-  }
-
-  if (category_id && category_id !== "all") {
-    const { data: catPosts } = await supabaseAdmin
-      .from("blog_post_categories")
-      .select("post_id")
-      .eq("category_id", category_id);
-    const postIds = catPosts?.map((p: any) => p.post_id) || [];
-    if (postIds.length > 0) {
-      query = query.in("id", postIds);
-    } else {
-      query = query.eq("id", "00000000-0000-0000-0000-000000000000");
+    // Apply filters
+    if (search) {
+      query = query.ilike("translation.title", `%${search}%`);
     }
-  }
 
-  if (tag_id && tag_id !== "all") {
-    const { data: tagPosts } = await supabaseAdmin
-      .from("blog_post_tags")
-      .select("post_id")
-      .eq("tag_id", tag_id);
-    const postIds = tagPosts?.map((p: any) => p.post_id) || [];
-    if (postIds.length > 0) {
-      query = query.in("id", postIds);
-    } else {
-      query = query.eq("id", "00000000-0000-0000-0000-000000000000");
+    if (category_id && category_id !== "all") {
+      const { data: catPosts } = await supabaseAdmin
+        .from("blog_post_categories")
+        .select("post_id")
+        .eq("category_id", category_id);
+      const postIds = catPosts?.map((p: any) => p.post_id) || [];
+      if (postIds.length > 0) {
+        query = query.in("id", postIds);
+      } else {
+        query = query.eq("id", "00000000-0000-0000-0000-000000000000");
+      }
     }
-  }
 
-  if (typeof is_featured === "boolean") {
-    query = query.eq("is_featured", is_featured);
-  }
+    if (tag_id && tag_id !== "all") {
+      const { data: tagPosts } = await supabaseAdmin
+        .from("blog_post_tags")
+        .select("post_id")
+        .eq("tag_id", tag_id);
+      const postIds = tagPosts?.map((p: any) => p.post_id) || [];
+      if (postIds.length > 0) {
+        query = query.in("id", postIds);
+      } else {
+        query = query.eq("id", "00000000-0000-0000-0000-000000000000");
+      }
+    }
 
-  // Sorting
-  query = query.order(sort_by, { ascending: sort_order === "asc" });
+    if (typeof is_featured === "boolean") {
+      query = query.eq("is_featured", is_featured);
+    }
 
-  // Pagination
-  const from = (page - 1) * limit;
-  const to = from + limit - 1;
-  query = query.range(from, to);
+    // Sorting
+    query = query.order(sort_by, { ascending: sort_order === "asc" });
 
-  const { data, error, count } = await query;
+    // Pagination
+    const from = (page - 1) * limit;
+    const to = from + limit - 1;
+    query = query.range(from, to);
 
-  if (error) {
-    console.error("Error fetching blog posts:", error);
-    throw new Error("Failed to fetch blog posts");
-  }
+    const { data, error, count } = await query;
 
-  // Transform array translations to objects and filter by locale
-  const transformedPosts = (data || []).map((post: any) => ({
-    ...post,
-    translation: Array.isArray(post.translation)
-      ? post.translation[0]
-      : post.translation,
-    categories: (post.categories || [])
-      .filter((cat: any) => cat.category)
-      .map((cat: any) => ({
-        ...cat,
-        category: {
-          ...cat.category,
-          translation: Array.isArray(cat.category.translations)
-            ? cat.category.translations.find((t: any) => t.locale === locale) ||
-              cat.category.translations[0]
-            : cat.category.translations,
-        },
-      })),
-    tags: (post.tags || [])
-      .filter((tag: any) => tag.tag)
-      .map((tag: any) => ({
-        ...tag,
-        tag: {
-          ...tag.tag,
-          translation: Array.isArray(tag.tag.translations)
-            ? tag.tag.translations.find((t: any) => t.locale === locale) ||
-              tag.tag.translations[0]
-            : tag.tag.translations,
-        },
-      })),
-  }));
+    if (error) {
+      console.error("Error fetching blog posts:", error);
+      throw new Error("Failed to fetch blog posts");
+    }
 
-  return {
-    posts: transformedPosts as unknown as BlogPostWithRelations[],
-    pagination: {
-      page,
-      limit,
-      total: count || 0,
-      totalPages: Math.ceil((count || 0) / limit),
-    },
-  };
-});
+    // Transform array translations to objects and filter by locale
+    const transformedPosts = (data || []).map((post: any) => ({
+      ...post,
+      translation: Array.isArray(post.translation)
+        ? post.translation[0]
+        : post.translation,
+      categories: (post.categories || [])
+        .filter((cat: any) => cat.category)
+        .map((cat: any) => ({
+          ...cat,
+          category: {
+            ...cat.category,
+            translation: Array.isArray(cat.category.translations)
+              ? cat.category.translations.find(
+                  (t: any) => t.locale === locale,
+                ) || cat.category.translations[0]
+              : cat.category.translations,
+          },
+        })),
+      tags: (post.tags || [])
+        .filter((tag: any) => tag.tag)
+        .map((tag: any) => ({
+          ...tag,
+          tag: {
+            ...tag.tag,
+            translation: Array.isArray(tag.tag.translations)
+              ? tag.tag.translations.find((t: any) => t.locale === locale) ||
+                tag.tag.translations[0]
+              : tag.tag.translations,
+          },
+        })),
+    }));
+
+    return {
+      posts: transformedPosts as unknown as BlogPostWithRelations[],
+      pagination: {
+        page,
+        limit,
+        total: count || 0,
+        totalPages: Math.ceil((count || 0) / limit),
+      },
+    };
+  },
+);
 
 /**
  * Get all blog posts (admin)
@@ -346,14 +347,15 @@ export async function getAllBlogPosts(
 /**
  * Get blog post by slug
  */
-export const getBlogPostBySlug = cache(async function (
-  slug: string,
-  locale: Locale = "en",
-): Promise<BlogPostWithRelations | null> {
-  const { data, error } = await supabaseAdmin
-    .from("blog_posts")
-    .select(
-      `
+export const getBlogPostBySlug = cache(
+  async (
+    slug: string,
+    locale: Locale = "en",
+  ): Promise<BlogPostWithRelations | null> => {
+    const { data, error } = await supabaseAdmin
+      .from("blog_posts")
+      .select(
+        `
       *,
       translation:blog_post_translations!inner(
         id,
@@ -390,52 +392,54 @@ export const getBlogPostBySlug = cache(async function (
         social_links
       )
     `,
-    )
-    .eq("translation.slug", slug)
-    .eq("translation.locale", locale)
-    .maybeSingle();
+      )
+      .eq("translation.slug", slug)
+      .eq("translation.locale", locale)
+      .maybeSingle();
 
-  if (error) {
-    console.error("Error fetching blog post by slug:", error);
-    return null;
-  }
+    if (error) {
+      console.error("Error fetching blog post by slug:", error);
+      return null;
+    }
 
-  if (!data) return null;
+    if (!data) return null;
 
-  // Transform array translations to objects and filter by locale
-  const transformedPost = {
-    ...data,
-    translation: Array.isArray(data.translation)
-      ? data.translation[0]
-      : data.translation,
-    categories: (data.categories || [])
-      .filter((cat: any) => cat.category)
-      .map((cat: any) => ({
-        ...cat,
-        category: {
-          ...cat.category,
-          translation: Array.isArray(cat.category.translations)
-            ? cat.category.translations.find((t: any) => t.locale === locale) ||
-              cat.category.translations[0]
-            : cat.category.translations,
-        },
-      })),
-    tags: (data.tags || [])
-      .filter((tag: any) => tag.tag)
-      .map((tag: any) => ({
-        ...tag,
-        tag: {
-          ...tag.tag,
-          translation: Array.isArray(tag.tag.translations)
-            ? tag.tag.translations.find((t: any) => t.locale === locale) ||
-              tag.tag.translations[0]
-            : tag.tag.translations,
-        },
-      })),
-  };
+    // Transform array translations to objects and filter by locale
+    const transformedPost = {
+      ...data,
+      translation: Array.isArray(data.translation)
+        ? data.translation[0]
+        : data.translation,
+      categories: (data.categories || [])
+        .filter((cat: any) => cat.category)
+        .map((cat: any) => ({
+          ...cat,
+          category: {
+            ...cat.category,
+            translation: Array.isArray(cat.category.translations)
+              ? cat.category.translations.find(
+                  (t: any) => t.locale === locale,
+                ) || cat.category.translations[0]
+              : cat.category.translations,
+          },
+        })),
+      tags: (data.tags || [])
+        .filter((tag: any) => tag.tag)
+        .map((tag: any) => ({
+          ...tag,
+          tag: {
+            ...tag.tag,
+            translation: Array.isArray(tag.tag.translations)
+              ? tag.tag.translations.find((t: any) => t.locale === locale) ||
+                tag.tag.translations[0]
+              : tag.tag.translations,
+          },
+        })),
+    };
 
-  return transformedPost as unknown as BlogPostWithRelations;
-});
+    return transformedPost as unknown as BlogPostWithRelations;
+  },
+);
 
 /**
  * Attempts to salvage a 404 by checking if the slug belongs to another locale,
@@ -476,14 +480,15 @@ export async function getSalvagedBlogSlug(
 /**
  * Get blog post by ID
  */
-export const getBlogPostById = cache(async function (
-  id: string,
-  locale: Locale = "en",
-): Promise<BlogPostWithRelations | null> {
-  const { data, error } = await supabaseAdmin
-    .from("blog_posts")
-    .select(
-      `
+export const getBlogPostById = cache(
+  async (
+    id: string,
+    locale: Locale = "en",
+  ): Promise<BlogPostWithRelations | null> => {
+    const { data, error } = await supabaseAdmin
+      .from("blog_posts")
+      .select(
+        `
       *,
       translation:blog_post_translations!inner(
         id,
@@ -518,61 +523,62 @@ export const getBlogPostById = cache(async function (
         social_links
       )
     `,
-    )
-    .eq("id", id)
-    .eq("translation.locale", locale)
-    .single();
+      )
+      .eq("id", id)
+      .eq("translation.locale", locale)
+      .single();
 
-  if (error) {
-    console.error("Error fetching blog post by ID:", error);
-    return null;
-  }
+    if (error) {
+      console.error("Error fetching blog post by ID:", error);
+      return null;
+    }
 
-  // Transform array translations to objects
-  const transformedPost = {
-    ...data,
-    translation: Array.isArray(data.translation)
-      ? data.translation[0]
-      : data.translation,
-    categories: (data.categories || [])
-      .filter((cat: any) => cat.category)
-      .map((cat: any) => ({
-        ...cat,
-        category: {
-          ...cat.category,
-          translation: Array.isArray(cat.category.translations)
-            ? cat.category.translations.find((t: any) => t.locale === locale) ||
-              cat.category.translations[0]
-            : cat.category.translations,
-        },
-      })),
-    tags: (data.tags || [])
-      .filter((tag: any) => tag.tag)
-      .map((tag: any) => ({
-        ...tag,
-        tag: {
-          ...tag.tag,
-          translation: Array.isArray(tag.tag.translations)
-            ? tag.tag.translations.find((t: any) => t.locale === locale) ||
-              tag.tag.translations[0]
-            : tag.tag.translations,
-        },
-      })),
-  };
+    // Transform array translations to objects
+    const transformedPost = {
+      ...data,
+      translation: Array.isArray(data.translation)
+        ? data.translation[0]
+        : data.translation,
+      categories: (data.categories || [])
+        .filter((cat: any) => cat.category)
+        .map((cat: any) => ({
+          ...cat,
+          category: {
+            ...cat.category,
+            translation: Array.isArray(cat.category.translations)
+              ? cat.category.translations.find(
+                  (t: any) => t.locale === locale,
+                ) || cat.category.translations[0]
+              : cat.category.translations,
+          },
+        })),
+      tags: (data.tags || [])
+        .filter((tag: any) => tag.tag)
+        .map((tag: any) => ({
+          ...tag,
+          tag: {
+            ...tag.tag,
+            translation: Array.isArray(tag.tag.translations)
+              ? tag.tag.translations.find((t: any) => t.locale === locale) ||
+                tag.tag.translations[0]
+              : tag.tag.translations,
+          },
+        })),
+    };
 
-  return transformedPost as unknown as BlogPostWithRelations;
-});
+    return transformedPost as unknown as BlogPostWithRelations;
+  },
+);
 
 /**
  * Get blog post by ID with ALL translations (for editing)
  */
-export const getBlogPostByIdWithAllTranslations = cache(async function (
-  id: string,
-): Promise<BlogPostWithAllTranslations | null> {
-  const { data, error } = await supabaseAdmin
-    .from("blog_posts")
-    .select(
-      `
+export const getBlogPostByIdWithAllTranslations = cache(
+  async (id: string): Promise<BlogPostWithAllTranslations | null> => {
+    const { data, error } = await supabaseAdmin
+      .from("blog_posts")
+      .select(
+        `
       *,
       translations:blog_post_translations(
         id,
@@ -612,62 +618,63 @@ export const getBlogPostByIdWithAllTranslations = cache(async function (
         social_links
       )
     `,
-    )
-    .eq("id", id)
-    .single();
+      )
+      .eq("id", id)
+      .single();
 
-  if (error) {
-    console.error("Error fetching blog post with all translations:", error);
-    return null;
-  }
+    if (error) {
+      console.error("Error fetching blog post with all translations:", error);
+      return null;
+    }
 
-  // Transform translations array to locale-keyed object
-  const translationsArray = data.translations || [];
-  const translationsObj = {
-    en: translationsArray.find((t: any) => t.locale === "en") || null,
-    ar: translationsArray.find((t: any) => t.locale === "ar") || null,
-    ru: translationsArray.find((t: any) => t.locale === "ru") || null,
-    es: translationsArray.find((t: any) => t.locale === "es") || null,
-    zh: translationsArray.find((t: any) => t.locale === "zh") || null,
-    fr: translationsArray.find((t: any) => t.locale === "fr") || null,
-    de: translationsArray.find((t: any) => t.locale === "de") || null,
-    ro: translationsArray.find((t: any) => t.locale === "ro") || null,
-    tr: translationsArray.find((t: any) => t.locale === "tr") || null,
-  };
+    // Transform translations array to locale-keyed object
+    const translationsArray = data.translations || [];
+    const translationsObj = {
+      en: translationsArray.find((t: any) => t.locale === "en") || null,
+      ar: translationsArray.find((t: any) => t.locale === "ar") || null,
+      ru: translationsArray.find((t: any) => t.locale === "ru") || null,
+      es: translationsArray.find((t: any) => t.locale === "es") || null,
+      zh: translationsArray.find((t: any) => t.locale === "zh") || null,
+      fr: translationsArray.find((t: any) => t.locale === "fr") || null,
+      de: translationsArray.find((t: any) => t.locale === "de") || null,
+      ro: translationsArray.find((t: any) => t.locale === "ro") || null,
+      tr: translationsArray.find((t: any) => t.locale === "tr") || null,
+    };
 
-  // Transform categories and tags
-  const transformedCategories = (data.categories || [])
-    .filter((cat: any) => cat.category)
-    .map((cat: any) => ({
-      category: {
-        ...cat.category,
-        translation: Array.isArray(cat.category.translation)
-          ? cat.category.translation[0]
-          : cat.category.translation,
-      },
-    }));
+    // Transform categories and tags
+    const transformedCategories = (data.categories || [])
+      .filter((cat: any) => cat.category)
+      .map((cat: any) => ({
+        category: {
+          ...cat.category,
+          translation: Array.isArray(cat.category.translation)
+            ? cat.category.translation[0]
+            : cat.category.translation,
+        },
+      }));
 
-  const transformedTags = (data.tags || [])
-    .filter((tag: any) => tag.tag)
-    .map((tag: any) => ({
-      tag: {
-        ...tag.tag,
-        translation: Array.isArray(tag.tag.translation)
-          ? tag.tag.translation[0]
-          : tag.tag.translation,
-      },
-    }));
+    const transformedTags = (data.tags || [])
+      .filter((tag: any) => tag.tag)
+      .map((tag: any) => ({
+        tag: {
+          ...tag.tag,
+          translation: Array.isArray(tag.tag.translation)
+            ? tag.tag.translation[0]
+            : tag.tag.translation,
+        },
+      }));
 
-  const transformedPost = {
-    ...data,
-    translations: translationsObj,
-    categories: transformedCategories,
-    tags: transformedTags,
-    author: data.author,
-  };
+    const transformedPost = {
+      ...data,
+      translations: translationsObj,
+      categories: transformedCategories,
+      tags: transformedTags,
+      author: data.author,
+    };
 
-  return transformedPost as unknown as BlogPostWithAllTranslations;
-});
+    return transformedPost as unknown as BlogPostWithAllTranslations;
+  },
+);
 
 /**
  * Create blog post

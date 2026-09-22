@@ -68,6 +68,7 @@ export default async function CheckoutPage({
     >
       <BookingSuccess
         bookingId={booking.id}
+        // biome-ignore lint/suspicious/noExplicitAny: Type mismatch
         packageId={booking.package_id as any}
         confirmedBooking={confirmedBookingData}
       />

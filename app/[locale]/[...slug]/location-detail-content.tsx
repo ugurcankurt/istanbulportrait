@@ -138,9 +138,9 @@ export async function LocationDetailPageContent({
                   {t("photographyTips")}
                 </h2>
                 <div className="grid sm:grid-cols-2 gap-3 sm:gap-4">
-                  {photographyTips.map((tip, index) => (
+                  {photographyTips.map((tip, _index) => (
                     <Card
-                      key={index}
+                      key={tip}
                       className="group hover:shadow-lg hover:border-primary/20 transition-all duration-300 py-0 gap-0"
                     >
                       <CardContent className="p-4 sm:p-5 flex items-start gap-3 sm:gap-4">
@@ -168,7 +168,7 @@ export async function LocationDetailPageContent({
                   <div className="grid grid-cols-2 gap-3 sm:gap-4">
                     {galleryImages.map((img, index) => (
                       <div
-                        key={index}
+                        key={img}
                         className="relative aspect-[4/3] rounded-xl overflow-hidden group cursor-pointer shadow-md hover:shadow-xl transition-shadow"
                       >
                         <Image
@@ -279,6 +279,7 @@ export async function LocationDetailPageContent({
                   </p>
                   <Button
                     nativeButton={false}
+                    // biome-ignore lint/suspicious/noExplicitAny: Type mismatch
                     render={<Link href={"/packages" as any} />}
                     variant="secondary"
                     className="w-full font-semibold shadow-lg hover:shadow-xl transition-all"

@@ -1,6 +1,6 @@
 "use client";
 
-import { Save, Sparkles, RefreshCcw } from "lucide-react";
+import { RefreshCcw, Save, Sparkles } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { ThemeCustomizer } from "@/components/admin/theme-customizer";
@@ -44,13 +44,15 @@ export default function SettingsPage() {
     try {
       const res = await fetch("/api/admin/meta-crm-sync", { method: "POST" });
       const data = await res.json();
-      
+
       if (res.ok && data.success) {
         toast.success(`CRM Sync Complete! Sent ${data.sent} events.`);
       } else {
-        toast.error(`CRM Sync failed: ${data.error_detail || data.message || "Unknown error"}`);
+        toast.error(
+          `CRM Sync failed: ${data.error_detail || data.message || "Unknown error"}`,
+        );
       }
-    } catch (err) {
+    } catch (_err) {
       toast.error("Failed to connect to CRM Sync API");
     } finally {
       setIsSyncingCrm(false);
@@ -74,7 +76,7 @@ export default function SettingsPage() {
       }
     }
     fetchSettings();
-  }, [toast]);
+  }, []);
 
   const handleSave = async () => {
     setSaving(true);
@@ -88,7 +90,7 @@ export default function SettingsPage() {
       if (!response.ok) throw new Error("Failed to save settings");
 
       toast.success("Site settings have been successfully saved.");
-    } catch (error) {
+    } catch (_error) {
       toast.error("There was an error updating your site settings.");
     } finally {
       setSaving(false);
@@ -541,24 +543,24 @@ export default function SettingsPage() {
                 />
               </div>
               <div className="space-y-2">
-                <Label>OpenRouter API Key (Auto Translate)</Label>
+                <Label>Gemini API Key (AI Translations)</Label>
                 <Input
                   type="password"
                   value={settings.gemini_api_key || ""}
                   onChange={(e) =>
                     updateSetting("gemini_api_key", e.target.value)
                   }
-                  placeholder="sk-or-v1-..."
+                  placeholder="AIza..."
                 />
                 <p className="text-xs text-muted-foreground">
                   Get it from{" "}
                   <a
-                    href="https://openrouter.ai/keys"
+                    href="https://aistudio.google.com/app/apikey"
                     target="_blank"
                     className="text-primary hover:underline"
                     rel="noopener"
                   >
-                    OpenRouter
+                    Google AI Studio
                   </a>
                 </p>
               </div>
@@ -581,17 +583,6 @@ export default function SettingsPage() {
                     updateSetting("resend_audience_id", e.target.value)
                   }
                   placeholder="aud_xxxxxxxxxxxxx"
-                />
-              </div>
-              <div className="space-y-2 pt-2 border-t mt-4">
-                <Label>Groq API Key (100% Free System AI)</Label>
-                <Input
-                  type="password"
-                  value={settings.gemini_api_key || ""}
-                  onChange={(e) =>
-                    updateSetting("gemini_api_key", e.target.value)
-                  }
-                  placeholder="gsk_..."
                 />
               </div>
             </div>
@@ -700,15 +691,16 @@ export default function SettingsPage() {
                 placeholder="EAAR..."
               />
             </div>
-            
+
             <div className="col-span-1 md:col-span-2 pt-4 flex flex-col md:flex-row gap-4 justify-between items-center border-t mt-2">
               <div className="text-sm text-muted-foreground">
                 <strong className="block text-foreground">Meta CRM Sync</strong>
-                Send historical confirmed bookings to Meta Conversions API to train Lookalike Audiences and resolve "Send CRM Event" warnings.
+                Send historical confirmed bookings to Meta Conversions API to
+                train Lookalike Audiences and resolve "Send CRM Event" warnings.
               </div>
-              <Button 
-                variant="outline" 
-                onClick={handleMetaCrmSync} 
+              <Button
+                variant="outline"
+                onClick={handleMetaCrmSync}
                 disabled={isSyncingCrm}
                 className="whitespace-nowrap"
               >

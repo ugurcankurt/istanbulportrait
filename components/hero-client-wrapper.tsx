@@ -1,16 +1,16 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { ArrowRight } from "lucide-react";
+import { useEffect, useState } from "react";
+import {
+  type LastVisited,
+  ResumeViewingCard,
+} from "@/components/resume-viewing-card";
 import { Button } from "@/components/ui/button";
 import { Link } from "@/i18n/routing";
 import { trackEvent } from "@/lib/analytics";
-import { cn } from "@/lib/utils";
-import {
-  ResumeViewingCard,
-  type LastVisited,
-} from "@/components/resume-viewing-card";
 import type { DiscountDB } from "@/lib/discount-service";
+import { cn } from "@/lib/utils";
 
 interface HeroClientWrapperProps {
   packagesButtonText: string;

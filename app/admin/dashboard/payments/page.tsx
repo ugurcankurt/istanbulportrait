@@ -45,7 +45,6 @@ import {
   InputGroupAddon,
   InputGroupInput,
 } from "@/components/ui/input-group";
-import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
@@ -58,10 +57,10 @@ import {
   Table,
   TableBody,
   TableCell,
+  TableFooter,
   TableHead,
   TableHeader,
   TableRow,
-  TableFooter,
 } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { usePaymentsStore } from "@/stores/payments-store";
@@ -326,26 +325,29 @@ export default function PaymentsPage() {
   }, [searchInput, search, setFilters]);
 
   const totalsByCurrency = Object.values(
-    monthlySummaries.reduce((acc, curr) => {
-      if (!acc[curr.currency]) {
-        acc[curr.currency] = {
-          currency: curr.currency,
-          transaction_count: 0,
-          total_amount: 0,
-          net_amount: 0,
-          vat_amount: 0,
-          commission_amount: 0,
-          final_profit: 0,
-        };
-      }
-      acc[curr.currency].transaction_count += curr.transaction_count;
-      acc[curr.currency].total_amount += curr.total_amount;
-      acc[curr.currency].net_amount += curr.net_amount;
-      acc[curr.currency].vat_amount += curr.vat_amount;
-      acc[curr.currency].commission_amount += curr.commission_amount;
-      acc[curr.currency].final_profit += curr.final_profit;
-      return acc;
-    }, {} as Record<string, any>)
+    monthlySummaries.reduce(
+      (acc, curr) => {
+        if (!acc[curr.currency]) {
+          acc[curr.currency] = {
+            currency: curr.currency,
+            transaction_count: 0,
+            total_amount: 0,
+            net_amount: 0,
+            vat_amount: 0,
+            commission_amount: 0,
+            final_profit: 0,
+          };
+        }
+        acc[curr.currency].transaction_count += curr.transaction_count;
+        acc[curr.currency].total_amount += curr.total_amount;
+        acc[curr.currency].net_amount += curr.net_amount;
+        acc[curr.currency].vat_amount += curr.vat_amount;
+        acc[curr.currency].commission_amount += curr.commission_amount;
+        acc[curr.currency].final_profit += curr.final_profit;
+        return acc;
+      },
+      {} as Record<string, any>,
+    ),
   );
 
   return (
@@ -374,217 +376,227 @@ export default function PaymentsPage() {
 
         <TabsContent value="transactions" className="space-y-6 m-0">
           {/* Filters */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-lg">Filters</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="flex flex-col sm:flex-row gap-4">
-            <div className="flex-1">
-              <InputGroup>
-                <InputGroupAddon align="inline-start">
-                  <Search className="size-4" />
-                </InputGroupAddon>
-                <InputGroupInput
-                  placeholder="Search by customer name or email..."
-                  value={searchInput}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                    setSearchInput(e.target.value)
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Filters</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex flex-col sm:flex-row gap-4">
+                <div className="flex-1">
+                  <InputGroup>
+                    <InputGroupAddon align="inline-start">
+                      <Search className="size-4" />
+                    </InputGroupAddon>
+                    <InputGroupInput
+                      placeholder="Search by customer name or email..."
+                      value={searchInput}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                        setSearchInput(e.target.value)
+                      }
+                      className="pl-10"
+                    />
+                  </InputGroup>
+                </div>
+                <Select
+                  value={statusFilter}
+                  onValueChange={(value) =>
+                    setFilters({ statusFilter: value || "all" })
                   }
-                  className="pl-10"
-                />
-              </InputGroup>
-            </div>
-            <Select
-              value={statusFilter}
-              onValueChange={(value) =>
-                setFilters({ statusFilter: value || "all" })
-              }
-            >
-              <SelectTrigger className="w-40">
-                <SelectValue placeholder="Status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Status</SelectItem>
-                <SelectItem value="success">Success</SelectItem>
-                <SelectItem value="pending">Pending</SelectItem>
-                <SelectItem value="failure">Failure</SelectItem>
-              </SelectContent>
-            </Select>
-            <Select
-              value={`${sortBy}-${sortOrder}`}
-              onValueChange={(value) => {
-                if (!value) return;
-                const [field, order] = value.split("-");
-                setFilters({
-                  sortBy: field,
-                  sortOrder: order as "asc" | "desc",
-                });
-              }}
-            >
-              <SelectTrigger className="w-48">
-                <SelectValue placeholder="Sort by" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="created_at-desc">Newest First</SelectItem>
-                <SelectItem value="created_at-asc">Oldest First</SelectItem>
-                <SelectItem value="amount-desc">
-                  Amount (High to Low)
-                </SelectItem>
-                <SelectItem value="amount-asc">Amount (Low to High)</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </CardContent>
-      </Card>
+                >
+                  <SelectTrigger className="w-40">
+                    <SelectValue placeholder="Status" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Status</SelectItem>
+                    <SelectItem value="success">Success</SelectItem>
+                    <SelectItem value="pending">Pending</SelectItem>
+                    <SelectItem value="failure">Failure</SelectItem>
+                  </SelectContent>
+                </Select>
+                <Select
+                  value={`${sortBy}-${sortOrder}`}
+                  onValueChange={(value) => {
+                    if (!value) return;
+                    const [field, order] = value.split("-");
+                    setFilters({
+                      sortBy: field,
+                      sortOrder: order as "asc" | "desc",
+                    });
+                  }}
+                >
+                  <SelectTrigger className="w-48">
+                    <SelectValue placeholder="Sort by" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="created_at-desc">
+                      Newest First
+                    </SelectItem>
+                    <SelectItem value="created_at-asc">Oldest First</SelectItem>
+                    <SelectItem value="amount-desc">
+                      Amount (High to Low)
+                    </SelectItem>
+                    <SelectItem value="amount-asc">
+                      Amount (Low to High)
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </CardContent>
+          </Card>
 
-      {/* Payments Table */}
-      <Card>
-        <CardContent className="p-0">
-          {loading ? (
-            <div className="p-8 text-center">
-              <Spinner className="size-8 mx-auto" />
-              <p className="mt-2 text-muted-foreground">Loading payments...</p>
-            </div>
-          ) : payments.length === 0 ? (
-            <div className="p-8">
-              <Empty>
-                <EmptyMedia variant="icon">
-                  <CreditCard className="size-12" />
-                </EmptyMedia>
-                <EmptyTitle>No payments found</EmptyTitle>
-                <EmptyDescription>
-                  Payments will appear here when customers complete
-                  transactions.
-                </EmptyDescription>
-              </Empty>
-            </div>
-          ) : (
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Customer</TableHead>
-                  <TableHead>Date</TableHead>
-                  <TableHead>Provider</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead className="text-right">Net Amount</TableHead>
-                  <TableHead className="text-right">VAT (20%)</TableHead>
-                  <TableHead className="text-right font-bold">
-                    Total Amount
-                  </TableHead>
-                  <TableHead className="w-[50px]"></TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {payments.map((payment) => {
-                  // Calculate VAT (KDV)
-                  // Total = Net * 1.20 => Net = Total / 1.20
-                  const total = payment.amount || 0;
-                  const net = total / 1.2;
-                  const vat = total - net;
-
-                  return (
-                    <TableRow key={payment.id}>
-                      <TableCell>
-                        {payment.bookings ? (
-                          <div>
-                            <p className="font-medium">
-                              {payment.bookings.user_name}
-                            </p>
-                            <p className="text-sm text-muted-foreground">
-                              {payment.bookings.user_email}
-                            </p>
-                          </div>
-                        ) : (
-                          <p className="text-sm text-muted-foreground italic">
-                            Unknown / Deleted
-                          </p>
-                        )}
-                      </TableCell>
-                      <TableCell>
-                        <p className="text-sm">
-                          {new Date(payment.created_at).toLocaleDateString()}
-                        </p>
-                        <p className="text-xs text-muted-foreground">
-                          {new Date(payment.created_at).toLocaleTimeString()}
-                        </p>
-                      </TableCell>
-                      <TableCell>
-                        <Badge variant="outline" className="capitalize">
-                          {payment.provider}
-                        </Badge>
-                      </TableCell>
-                      <TableCell>
-                        <StatusBadge status={payment.status} />
-                      </TableCell>
-                      <TableCell className="text-right font-medium text-muted-foreground">
-                        {formatCurrency(net, payment.currency)}
-                      </TableCell>
-                      <TableCell className="text-right font-medium text-muted-foreground">
-                        {formatCurrency(vat, payment.currency)}
-                      </TableCell>
-                      <TableCell className="text-right font-bold text-success">
-                        {formatCurrency(total, payment.currency)}
-                      </TableCell>
-                      <TableCell>
-                        <DropdownMenu>
-                          <DropdownMenuTrigger
-                            render={<Button variant="ghost" size="sm" />}
-                          >
-                            <MoreHorizontal className="w-4 h-4" />
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
-                            <DropdownMenuGroup>
-                              <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                              <PaymentDetailsDialog payment={payment} />
-                            </DropdownMenuGroup>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </TableCell>
+          {/* Payments Table */}
+          <Card>
+            <CardContent className="p-0">
+              {loading ? (
+                <div className="p-8 text-center">
+                  <Spinner className="size-8 mx-auto" />
+                  <p className="mt-2 text-muted-foreground">
+                    Loading payments...
+                  </p>
+                </div>
+              ) : payments.length === 0 ? (
+                <div className="p-8">
+                  <Empty>
+                    <EmptyMedia variant="icon">
+                      <CreditCard className="size-12" />
+                    </EmptyMedia>
+                    <EmptyTitle>No payments found</EmptyTitle>
+                    <EmptyDescription>
+                      Payments will appear here when customers complete
+                      transactions.
+                    </EmptyDescription>
+                  </Empty>
+                </div>
+              ) : (
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Customer</TableHead>
+                      <TableHead>Date</TableHead>
+                      <TableHead>Provider</TableHead>
+                      <TableHead>Status</TableHead>
+                      <TableHead className="text-right">Net Amount</TableHead>
+                      <TableHead className="text-right">VAT (20%)</TableHead>
+                      <TableHead className="text-right font-bold">
+                        Total Amount
+                      </TableHead>
+                      <TableHead className="w-[50px]"></TableHead>
                     </TableRow>
-                  );
-                })}
-              </TableBody>
-            </Table>
-          )}
-        </CardContent>
-      </Card>
+                  </TableHeader>
+                  <TableBody>
+                    {payments.map((payment) => {
+                      // Calculate VAT (KDV)
+                      // Total = Net * 1.20 => Net = Total / 1.20
+                      const total = payment.amount || 0;
+                      const net = total / 1.2;
+                      const vat = total - net;
 
-      {/* Pagination */}
-      {pagination.totalPages > 1 && (
-        <div className="flex items-center justify-between">
-          <p className="text-sm text-muted-foreground">
-            Showing {(pagination.page - 1) * pagination.limit + 1} to{" "}
-            {Math.min(pagination.page * pagination.limit, pagination.total)} of{" "}
-            {pagination.total} payments
-          </p>
-          <div className="flex items-center space-x-2">
-            <ButtonGroup>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setPage(pagination.page - 1)}
-                disabled={pagination.page === 1}
-              >
-                <ChevronLeft className="w-4 h-4 mr-1" />
-                Previous
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setPage(pagination.page + 1)}
-                disabled={pagination.page === pagination.totalPages}
-              >
-                Next
-                <ChevronRight className="w-4 h-4 ml-1" />
-              </Button>
-            </ButtonGroup>
-            <span className="text-sm px-4 py-2">
-              Page {pagination.page} of {pagination.totalPages}
-            </span>
-          </div>
-        </div>
-      )}
+                      return (
+                        <TableRow key={payment.id}>
+                          <TableCell>
+                            {payment.bookings ? (
+                              <div>
+                                <p className="font-medium">
+                                  {payment.bookings.user_name}
+                                </p>
+                                <p className="text-sm text-muted-foreground">
+                                  {payment.bookings.user_email}
+                                </p>
+                              </div>
+                            ) : (
+                              <p className="text-sm text-muted-foreground italic">
+                                Unknown / Deleted
+                              </p>
+                            )}
+                          </TableCell>
+                          <TableCell>
+                            <p className="text-sm">
+                              {new Date(
+                                payment.created_at,
+                              ).toLocaleDateString()}
+                            </p>
+                            <p className="text-xs text-muted-foreground">
+                              {new Date(
+                                payment.created_at,
+                              ).toLocaleTimeString()}
+                            </p>
+                          </TableCell>
+                          <TableCell>
+                            <Badge variant="outline" className="capitalize">
+                              {payment.provider}
+                            </Badge>
+                          </TableCell>
+                          <TableCell>
+                            <StatusBadge status={payment.status} />
+                          </TableCell>
+                          <TableCell className="text-right font-medium text-muted-foreground">
+                            {formatCurrency(net, payment.currency)}
+                          </TableCell>
+                          <TableCell className="text-right font-medium text-muted-foreground">
+                            {formatCurrency(vat, payment.currency)}
+                          </TableCell>
+                          <TableCell className="text-right font-bold text-success">
+                            {formatCurrency(total, payment.currency)}
+                          </TableCell>
+                          <TableCell>
+                            <DropdownMenu>
+                              <DropdownMenuTrigger
+                                render={<Button variant="ghost" size="sm" />}
+                              >
+                                <MoreHorizontal className="w-4 h-4" />
+                              </DropdownMenuTrigger>
+                              <DropdownMenuContent align="end">
+                                <DropdownMenuGroup>
+                                  <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                                  <PaymentDetailsDialog payment={payment} />
+                                </DropdownMenuGroup>
+                              </DropdownMenuContent>
+                            </DropdownMenu>
+                          </TableCell>
+                        </TableRow>
+                      );
+                    })}
+                  </TableBody>
+                </Table>
+              )}
+            </CardContent>
+          </Card>
+
+          {/* Pagination */}
+          {pagination.totalPages > 1 && (
+            <div className="flex items-center justify-between">
+              <p className="text-sm text-muted-foreground">
+                Showing {(pagination.page - 1) * pagination.limit + 1} to{" "}
+                {Math.min(pagination.page * pagination.limit, pagination.total)}{" "}
+                of {pagination.total} payments
+              </p>
+              <div className="flex items-center space-x-2">
+                <ButtonGroup>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setPage(pagination.page - 1)}
+                    disabled={pagination.page === 1}
+                  >
+                    <ChevronLeft className="w-4 h-4 mr-1" />
+                    Previous
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setPage(pagination.page + 1)}
+                    disabled={pagination.page === pagination.totalPages}
+                  >
+                    Next
+                    <ChevronRight className="w-4 h-4 ml-1" />
+                  </Button>
+                </ButtonGroup>
+                <span className="text-sm px-4 py-2">
+                  Page {pagination.page} of {pagination.totalPages}
+                </span>
+              </div>
+            </div>
+          )}
         </TabsContent>
 
         <TabsContent value="monthly" className="m-0">
@@ -596,14 +608,17 @@ export default function PaymentsPage() {
               {loadingSummaries ? (
                 <div className="p-8 text-center">
                   <Spinner className="size-8 mx-auto" />
-                  <p className="mt-2 text-muted-foreground">Loading summaries...</p>
+                  <p className="mt-2 text-muted-foreground">
+                    Loading summaries...
+                  </p>
                 </div>
               ) : monthlySummaries.length === 0 ? (
                 <div className="p-8">
                   <Empty>
                     <EmptyTitle>No earnings data</EmptyTitle>
                     <EmptyDescription>
-                      Earnings will appear here once there are successful payments.
+                      Earnings will appear here once there are successful
+                      payments.
                     </EmptyDescription>
                   </Empty>
                 </div>
@@ -614,23 +629,44 @@ export default function PaymentsPage() {
                       <TableHead>Period</TableHead>
                       <TableHead>Transactions</TableHead>
                       <TableHead className="text-right">Gross Total</TableHead>
-                      <TableHead className="text-right text-muted-foreground">Net Amount</TableHead>
-                      <TableHead className="text-right text-muted-foreground">VAT</TableHead>
-                      <TableHead className="text-right text-muted-foreground">Commission</TableHead>
-                      <TableHead className="text-right text-success font-bold">Final Profit</TableHead>
+                      <TableHead className="text-right text-muted-foreground">
+                        Net Amount
+                      </TableHead>
+                      <TableHead className="text-right text-muted-foreground">
+                        VAT
+                      </TableHead>
+                      <TableHead className="text-right text-muted-foreground">
+                        Commission
+                      </TableHead>
+                      <TableHead className="text-right text-success font-bold">
+                        Final Profit
+                      </TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {monthlySummaries.map((summary) => (
-                      <TableRow key={`${summary.year}-${summary.month}-${summary.currency}`}>
+                      <TableRow
+                        key={`${summary.year}-${summary.month}-${summary.currency}`}
+                      >
                         <TableCell className="font-medium">
-                          {new Date(summary.year, summary.month - 1).toLocaleString('en-US', { month: 'long', year: 'numeric' })}
+                          {new Date(
+                            summary.year,
+                            summary.month - 1,
+                          ).toLocaleString("en-US", {
+                            month: "long",
+                            year: "numeric",
+                          })}
                         </TableCell>
                         <TableCell>
-                          <Badge variant="outline">{summary.transaction_count}</Badge>
+                          <Badge variant="outline">
+                            {summary.transaction_count}
+                          </Badge>
                         </TableCell>
                         <TableCell className="text-right font-medium">
-                          {formatCurrency(summary.total_amount, summary.currency)}
+                          {formatCurrency(
+                            summary.total_amount,
+                            summary.currency,
+                          )}
                         </TableCell>
                         <TableCell className="text-right text-muted-foreground">
                           {formatCurrency(summary.net_amount, summary.currency)}
@@ -639,10 +675,16 @@ export default function PaymentsPage() {
                           {formatCurrency(summary.vat_amount, summary.currency)}
                         </TableCell>
                         <TableCell className="text-right text-muted-foreground">
-                          {formatCurrency(summary.commission_amount, summary.currency)}
+                          {formatCurrency(
+                            summary.commission_amount,
+                            summary.currency,
+                          )}
                         </TableCell>
                         <TableCell className="text-right font-bold text-success">
-                          {formatCurrency(summary.final_profit, summary.currency)}
+                          {formatCurrency(
+                            summary.final_profit,
+                            summary.currency,
+                          )}
                         </TableCell>
                       </TableRow>
                     ))}
@@ -650,13 +692,30 @@ export default function PaymentsPage() {
                   <TableFooter>
                     {totalsByCurrency.map((total) => (
                       <TableRow key={`total-${total.currency}`}>
-                        <TableCell className="font-bold">Total ({total.currency})</TableCell>
-                        <TableCell className="font-bold">{total.transaction_count}</TableCell>
-                        <TableCell className="text-right font-bold">{formatCurrency(total.total_amount, total.currency)}</TableCell>
-                        <TableCell className="text-right font-bold">{formatCurrency(total.net_amount, total.currency)}</TableCell>
-                        <TableCell className="text-right font-bold">{formatCurrency(total.vat_amount, total.currency)}</TableCell>
-                        <TableCell className="text-right font-bold">{formatCurrency(total.commission_amount, total.currency)}</TableCell>
-                        <TableCell className="text-right font-bold text-success">{formatCurrency(total.final_profit, total.currency)}</TableCell>
+                        <TableCell className="font-bold">
+                          Total ({total.currency})
+                        </TableCell>
+                        <TableCell className="font-bold">
+                          {total.transaction_count}
+                        </TableCell>
+                        <TableCell className="text-right font-bold">
+                          {formatCurrency(total.total_amount, total.currency)}
+                        </TableCell>
+                        <TableCell className="text-right font-bold">
+                          {formatCurrency(total.net_amount, total.currency)}
+                        </TableCell>
+                        <TableCell className="text-right font-bold">
+                          {formatCurrency(total.vat_amount, total.currency)}
+                        </TableCell>
+                        <TableCell className="text-right font-bold">
+                          {formatCurrency(
+                            total.commission_amount,
+                            total.currency,
+                          )}
+                        </TableCell>
+                        <TableCell className="text-right font-bold text-success">
+                          {formatCurrency(total.final_profit, total.currency)}
+                        </TableCell>
                       </TableRow>
                     ))}
                   </TableFooter>

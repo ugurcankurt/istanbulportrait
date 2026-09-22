@@ -10,7 +10,7 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 import {
   AlertDialog,
@@ -40,7 +40,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { type PackageDB, packagesService } from "@/lib/packages-service";
-import { deletePackageImage } from "@/lib/storage-utils";
 
 export default function PackagesAdminPage() {
   const [packages, setPackages] = useState<PackageDB[]>([]);
@@ -49,11 +48,7 @@ export default function PackagesAdminPage() {
     null,
   );
 
-  useEffect(() => {
-    fetchPackages();
-  }, []);
-
-  const fetchPackages = async () => {
+  const fetchPackages = useCallback(async () => {
     setIsLoading(true);
     try {
       const data = await packagesService.getAllPackages();
@@ -64,7 +59,11 @@ export default function PackagesAdminPage() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    fetchPackages();
+  }, [fetchPackages]);
 
   const handleDelete = async () => {
     if (!packageToDelete) return;

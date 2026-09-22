@@ -40,7 +40,7 @@ export async function BlogDetailPageContent({
   const settings = await settingsService.getSettings();
   const t = await getTranslations({ locale, namespace: "blog" });
 
-  if (!post || post.status !== "published") {
+  if (post?.status !== "published") {
     // Attempt to salvage the navigation by checking if the slug belongs to another language
     const salvagedSlug = await getSalvagedBlogSlug(decodedSlug, locale);
     if (salvagedSlug) {
@@ -221,6 +221,7 @@ export async function BlogDetailPageContent({
                 {relatedPosts.map((relatedPost) => (
                   <BlogCard
                     key={relatedPost.id}
+                    // biome-ignore lint/suspicious/noExplicitAny: Type mismatch
                     post={relatedPost as any}
                     locale={locale}
                     parentSegment={parentSlug}

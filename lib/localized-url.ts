@@ -1,6 +1,5 @@
 import { routing } from "@/i18n/routing";
 
-import { packagesService } from "@/lib/packages-service";
 import { generateNativeSlug } from "@/lib/slug-generator";
 
 type LocalePath = keyof typeof routing.pathnames;
@@ -29,7 +28,7 @@ export function getLocalizedPaths(
   });
 
   // Add x-default pointing to English version
-  languages["x-default"] = languages["en"];
+  languages["x-default"] = languages.en;
 
   return {
     canonical: (locale: string) => {
@@ -63,15 +62,15 @@ export function getBlogPostLocalizedPaths(
       typeof blogPathConfig === "object" && l in blogPathConfig
         ? blogPathConfig[l as keyof typeof blogPathConfig]
         : "/blog";
-    const localeSlug = slugs[l] || slugs["en"] || ""; // Fallback to EN if missing
+    const localeSlug = slugs[l] || slugs.en || ""; // Fallback to EN if missing
     if (localeSlug) {
       languages[l] = `${baseUrl}/${l}${bp}/${localeSlug}`;
     }
   });
 
   // Add x-default pointing to English version
-  if (languages["en"]) {
-    languages["x-default"] = languages["en"];
+  if (languages.en) {
+    languages["x-default"] = languages.en;
   }
 
   return {
@@ -80,7 +79,7 @@ export function getBlogPostLocalizedPaths(
         typeof blogPathConfig === "object" && locale in blogPathConfig
           ? blogPathConfig[locale as keyof typeof blogPathConfig]
           : "/blog";
-      const localeSlug = slugs[locale] || slugs["en"] || "";
+      const localeSlug = slugs[locale] || slugs.en || "";
       return localeSlug ? `${baseUrl}/${locale}${bp}/${localeSlug}` : "";
     },
     languages,
@@ -126,7 +125,7 @@ export async function getPackageLocalizedPaths(
     ? generateNativeSlug(packagesPage.title.en)
     : "packages";
   languages["x-default"] =
-    languages["en"] || `${baseUrl}/en/${defaultParent}/${slug}`;
+    languages.en || `${baseUrl}/en/${defaultParent}/${slug}`;
 
   return {
     canonical: (locale: string) => {
@@ -187,7 +186,7 @@ export async function getLocationLocalizedPaths(
     ? generateNativeSlug(locationsPage.title.en)
     : "locations";
   languages["x-default"] =
-    languages["en"] || `${baseUrl}/en/${defaultParent}/${slug}`;
+    languages.en || `${baseUrl}/en/${defaultParent}/${slug}`;
 
   return {
     canonical: (locale: string) => {
@@ -252,7 +251,7 @@ export function getDynamicCoreLocalizedPaths(
   });
 
   // Add x-default pointing to English version
-  languages["x-default"] = languages["en"] || `${baseUrl}/en/${internalSlug}`;
+  languages["x-default"] = languages.en || `${baseUrl}/en/${internalSlug}`;
 
   return {
     canonical: (locale: string) => {

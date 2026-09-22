@@ -3,7 +3,7 @@ import { promoService } from "@/lib/promo-service";
 
 export const dynamic = "force-dynamic";
 
-export async function GET(request: Request) {
+export async function GET(_request: Request) {
   try {
     // 1. Fetch all promo codes from the database
     const allPromos = await promoService.getAllPromoCodes();
@@ -19,7 +19,7 @@ export async function GET(request: Request) {
       if (p.end_date) {
         const end = new Date(p.end_date);
         end.setHours(23, 59, 59, 999);
-        if (new Date().getTime() > end.getTime()) return false;
+        if (Date.now() > end.getTime()) return false;
       }
 
       return true;
@@ -49,8 +49,8 @@ export async function GET(request: Request) {
         ? new Date(promo.end_date)
         : new Date(now.getTime() + 365 * 24 * 60 * 60 * 1000);
 
-      const start_date_time = defaultStart.toISOString().split(".")[0] + "Z";
-      const end_date_time = defaultEnd.toISOString().split(".")[0] + "Z";
+      const start_date_time = `${defaultStart.toISOString().split(".")[0]}Z`;
+      const end_date_time = `${defaultEnd.toISOString().split(".")[0]}Z`;
 
       // Escape helper to prevent CSV breaking with commas
       const escapeCsv = (str: string) => `"${str.replace(/"/g, '""')}"`;

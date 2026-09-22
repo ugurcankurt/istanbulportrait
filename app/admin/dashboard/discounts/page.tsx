@@ -1,15 +1,7 @@
 "use client";
 
 import { format } from "date-fns";
-import {
-  CheckCircle2,
-  Edit2,
-  Plus,
-  Save,
-  TicketPercent,
-  Trash2,
-  X,
-} from "lucide-react";
+import { Edit2, Plus, Save, TicketPercent, Trash2, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -37,7 +29,7 @@ export default function DiscountsPage() {
       if (!res.ok) throw new Error("Failed to fetch");
       const data = await res.json();
       setDiscounts(data);
-    } catch (error) {
+    } catch (_error) {
       toast.error("Failed to load discounts.");
     } finally {
       setIsLoading(false);
@@ -46,7 +38,7 @@ export default function DiscountsPage() {
 
   useEffect(() => {
     fetchDiscounts();
-  }, []);
+  }, [fetchDiscounts]);
 
   const handleSave = async () => {
     if (!formData.name.trim()) return toast.error("Campaign name is required");
@@ -93,7 +85,7 @@ export default function DiscountsPage() {
         end_date: "",
       });
       fetchDiscounts();
-    } catch (e) {
+    } catch (_e) {
       toast.error("An error occurred");
       setIsLoading(false);
     }
@@ -120,7 +112,7 @@ export default function DiscountsPage() {
       if (!res.ok) throw new Error("Failed to delete");
       toast.success("Campaign deleted");
       fetchDiscounts();
-    } catch (e) {
+    } catch (_e) {
       toast.error("Failed to delete campaign");
     }
   };
@@ -135,7 +127,7 @@ export default function DiscountsPage() {
       if (!res.ok) throw new Error("Failed to toggle");
       toast.success("Campaign status updated");
       fetchDiscounts();
-    } catch (e) {
+    } catch (_e) {
       toast.error("Failed to update status");
     }
   };
@@ -148,8 +140,8 @@ export default function DiscountsPage() {
             Seasonal Campaigns
           </h1>
           <p className="text-muted-foreground mt-2">
-            Manage your site-wide seasonal discounts (e.g. Winter Sale %20).
-            You can have multiple active campaigns for different dates.
+            Manage your site-wide seasonal discounts (e.g. Winter Sale %20). You
+            can have multiple active campaigns for different dates.
           </p>
         </div>
         {!isFormOpen && (

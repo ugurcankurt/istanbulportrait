@@ -1,28 +1,26 @@
 "use client";
 
-import { Clock, Image as ImageIcon, MapPin, Star } from "lucide-react";
+import { Image as ImageIcon, Star } from "lucide-react";
 import Image from "next/image";
-import { useTranslations, useLocale } from "next-intl";
+import Link from "next/link";
+import { useLocale, useTranslations } from "next-intl";
 import { useEffect, useMemo } from "react";
-import { useCurrency } from "@/contexts/currency-context";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardHeader } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import {
   Carousel,
   CarouselContent,
   CarouselItem,
 } from "@/components/ui/carousel";
-import Link from "next/link";
+import { useCurrency } from "@/contexts/currency-context";
 import { trackSelectItem, trackViewItemList } from "@/lib/analytics";
-import { calculateDiscountedPrice } from "@/lib/pricing";
-import type { AggregateRating } from "@/types/reviews";
-import { cn } from "@/lib/utils";
-import { extractPhotosCount } from "@/lib/features-parser";
-
-import type { PackageDB } from "@/lib/packages-service";
 import type { DiscountDB } from "@/lib/discount-service";
+import { extractPhotosCount } from "@/lib/features-parser";
+import type { PackageDB } from "@/lib/packages-service";
+import { calculateDiscountedPrice } from "@/lib/pricing";
 import { generateNativeSlug } from "@/lib/slug-generator";
-import { useSearchIntent } from "@/hooks/use-search-intent";
+import { cn } from "@/lib/utils";
+import type { AggregateRating } from "@/types/reviews";
 
 interface PackagesSectionProps {
   header?: React.ReactNode;
@@ -45,18 +43,17 @@ export function PackagesSection({
   const tui = useTranslations("ui");
   const locale = useLocale();
   const { formatPrice } = useCurrency();
-  const { intentSlug } = useSearchIntent();
 
   const packages = useMemo(() => {
-    const today = new Date();
+    const _today = new Date();
 
     // If we have dynamic packages from DB, use them
     if (dbPackages && dbPackages.length > 0) {
       return dbPackages.map((pkg) => {
         // Find correct language string or fallback to english
-        const locName = pkg.title[locale] || pkg.title["en"] || pkg.slug;
-        const locDuration = pkg.duration[locale] || pkg.duration["en"] || "";
-        const locFeatures = pkg.features[locale] || pkg.features["en"] || [];
+        const locName = pkg.title[locale] || pkg.title.en || pkg.slug;
+        const locDuration = pkg.duration[locale] || pkg.duration.en || "";
+        const locFeatures = pkg.features[locale] || pkg.features.en || [];
 
         // Generate native slug if translation exists, otherwise strict fallback
         const nativeSlug = pkg.title[locale]
@@ -81,17 +78,9 @@ export function PackagesSection({
     }
 
     return [];
-  }, [dbPackages, locale]);
+  }, [dbPackages, locale, activeDiscounts]);
 
-  const sortedPackages = useMemo(() => {
-    if (!intentSlug) return packages;
-    return [...packages].sort((a, b) => {
-      // AI Recommended package goes first
-      if (a.dbSlug === intentSlug && b.dbSlug !== intentSlug) return -1;
-      if (b.dbSlug === intentSlug && a.dbSlug !== intentSlug) return 1;
-      return 0;
-    });
-  }, [packages, intentSlug]);
+  const sortedPackages = packages;
 
   // Track view_item_list (GA4 funnel step 1)
   useEffect(() => {
@@ -103,7 +92,7 @@ export function PackagesSection({
         price: pkg.pricing.price,
       })),
     );
-  }, [packages]);
+  }, [sortedPackages.map]);
 
   const handlePackageClick = (pkg: any) => {
     trackSelectItem({
@@ -171,11 +160,12 @@ export function PackagesSection({
                 {tui("most_popular")}
               </Badge>
             )}
-            {pkg.pricing?.isDiscounted && pkg.pricing.discountPercentage > 0 && (
-              <Badge className="bg-red-600 backdrop-blur-md border border-red-500 text-white px-2 py-0.5 text-[10px] shadow-sm">
-                {pkg.pricing.discountName}
-              </Badge>
-            )}
+            {pkg.pricing?.isDiscounted &&
+              pkg.pricing.discountPercentage > 0 && (
+                <Badge className="bg-red-600 backdrop-blur-md border border-red-500 text-white px-2 py-0.5 text-[10px] shadow-sm">
+                  {pkg.pricing.discountName}
+                </Badge>
+              )}
           </div>
 
           {/* Footer Content Area Overlaid on Image */}
@@ -241,41 +231,39 @@ export function PackagesSection({
   );
 
   return (
-    <>
-      <section className="py-8 sm:py-10">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          {header}
+    <section className="py-8 sm:py-10">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        {header}
 
-          {/* Mobile Carousel View (Visible only on small screens) */}
-          <div className="sm:hidden -mx-4">
-            <Carousel
-              opts={{
-                align: "center", // Center the cards for a balanced look
-                // dragFree: false is default, which enables snapping
-              }}
-              className="w-full"
-            >
-              {/* Added py-4 to prevent ring/shadow clipping */}
-              <CarouselContent className="-ms-4 px-4 py-4">
-                {sortedPackages.map((pkg, idx) => (
-                  <CarouselItem key={pkg.id} className="ps-4 basis-[78%]">
-                    <div className="h-full px-0.5">
-                      {renderPackageCard(pkg, false, idx)}
-                    </div>
-                  </CarouselItem>
-                ))}
-              </CarouselContent>
-            </Carousel>
-          </div>
-
-          {/* Desktop & Tablet Grid View (Hidden on mobile) */}
-          <div className="hidden sm:grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8 mx-auto">
-            {sortedPackages.map((pkg, idx) => (
-              <div key={pkg.id}>{renderPackageCard(pkg, true, idx)}</div>
-            ))}
-          </div>
+        {/* Mobile Carousel View (Visible only on small screens) */}
+        <div className="sm:hidden -mx-4">
+          <Carousel
+            opts={{
+              align: "center", // Center the cards for a balanced look
+              // dragFree: false is default, which enables snapping
+            }}
+            className="w-full"
+          >
+            {/* Added py-4 to prevent ring/shadow clipping */}
+            <CarouselContent className="-ms-4 px-4 py-4">
+              {sortedPackages.map((pkg, idx) => (
+                <CarouselItem key={pkg.id} className="ps-4 basis-[78%]">
+                  <div className="h-full px-0.5">
+                    {renderPackageCard(pkg, false, idx)}
+                  </div>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+          </Carousel>
         </div>
-      </section>
-    </>
+
+        {/* Desktop & Tablet Grid View (Hidden on mobile) */}
+        <div className="hidden sm:grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8 mx-auto">
+          {sortedPackages.map((pkg, idx) => (
+            <div key={pkg.id}>{renderPackageCard(pkg, true, idx)}</div>
+          ))}
+        </div>
+      </div>
+    </section>
   );
 }

@@ -3,6 +3,8 @@
  * Integrates with package pricing, tax calculations, and dynamic CMS discounts.
  */
 
+import type { AddonDB } from "./addons-service";
+import type { DiscountDB } from "./discount-service";
 import {
   type FormattedTaxBreakdown,
   formatTaxBreakdown,
@@ -10,13 +12,9 @@ import {
   TAX_RATES,
   type TaxBreakdown,
 } from "./tax";
-import { type PackageId } from "./validations";
-import type { DiscountDB } from "./discount-service";
-import type { TimeSurcharge } from "./availability-service";
-import type { AddonDB } from "./addons-service";
+import type { PackageId } from "./validations";
 
 export const DEPOSIT_PERCENTAGE = 0.5; // From previous constants or logic
-
 
 export function matchActiveSurcharge(
   timeString: string | undefined | null,
@@ -99,7 +97,7 @@ export function calculateDiscountedPrice(
   let currentPrice = basePrice;
   let campaignPercentage = 0;
   let campaignAmount = 0;
-  let campaignName: string | undefined = undefined;
+  let campaignName: string | undefined;
 
   if (activeDiscounts && activeDiscounts.length > 0) {
     const targetDate = bookingDate ? new Date(bookingDate) : new Date();
@@ -107,7 +105,7 @@ export function calculateDiscountedPrice(
 
     const validDiscounts = activeDiscounts.filter((discount) => {
       if (!discount.is_active) return false;
-      
+
       let isValid = true;
       if (discount.start_date) {
         const startDate = new Date(discount.start_date);
@@ -123,9 +121,11 @@ export function calculateDiscountedPrice(
     });
 
     if (validDiscounts.length > 0) {
-      validDiscounts.sort((a, b) => Number(b.discount_percentage) - Number(a.discount_percentage));
+      validDiscounts.sort(
+        (a, b) => Number(b.discount_percentage) - Number(a.discount_percentage),
+      );
       const bestDiscount = validDiscounts[0];
-      
+
       campaignPercentage = Number(bestDiscount.discount_percentage);
       campaignAmount = basePrice * campaignPercentage;
       campaignName = bestDiscount.name;
@@ -329,8 +329,12 @@ export function formatPackagePricing(
     depositAmount: formatter.format(breakdown.depositAmount),
     remainingAmount: formatter.format(breakdown.remainingAmount),
     promoCode: breakdown.promoCode,
-    promoAmount: breakdown.promoAmount ? formatter.format(breakdown.promoAmount) : undefined,
+    promoAmount: breakdown.promoAmount
+      ? formatter.format(breakdown.promoAmount)
+      : undefined,
     discountName: breakdown.discountName,
-    addonsAmount: breakdown.addonsAmount ? formatter.format(breakdown.addonsAmount) : undefined,
+    addonsAmount: breakdown.addonsAmount
+      ? formatter.format(breakdown.addonsAmount)
+      : undefined,
   };
 }

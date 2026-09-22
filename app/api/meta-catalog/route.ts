@@ -1,10 +1,10 @@
 import { NextResponse } from "next/server";
 import { discountService } from "@/lib/discount-service";
 import { packagesService } from "@/lib/packages-service";
+import { calculateDiscountedPrice } from "@/lib/pricing";
 import { reviewsService } from "@/lib/reviews-service";
 import { generateSeoDescription, getBaseUrl } from "@/lib/seo-utils";
 import { settingsService } from "@/lib/settings-service";
-import { calculateDiscountedPrice } from "@/lib/pricing";
 
 export const dynamic = "force-dynamic";
 
@@ -93,7 +93,7 @@ export async function GET(request: Request) {
       let title = pkg.title?.[locale] || pkg.title?.en || "";
       // Meta secondary feeds have a strict 65-character limit for titles
       if (title.length > 65) {
-        title = title.substring(0, 62) + "...";
+        title = `${title.substring(0, 62)}...`;
       }
 
       const desc = pkg.description?.[locale] || pkg.description?.en || "";
@@ -101,7 +101,7 @@ export async function GET(request: Request) {
       const link = `${baseUrl}/${locale}/packages/${pkg.slug}`;
 
       const rawImageUrl = cleanImage(
-        pkg.cover_image || (pkg.gallery_images && pkg.gallery_images[0]),
+        pkg.cover_image || pkg.gallery_images?.[0],
       );
       let imageUrl = rawImageUrl;
 
@@ -119,9 +119,10 @@ export async function GET(request: Request) {
           discountedCalc.isDiscounted &&
           discountedCalc.discountPercentage > 0
         ) {
-          const discountPct = discountedCalc.discountPercentage <= 1 
-            ? Math.round(discountedCalc.discountPercentage * 100) 
-            : Math.round(discountedCalc.discountPercentage);
+          const discountPct =
+            discountedCalc.discountPercentage <= 1
+              ? Math.round(discountedCalc.discountPercentage * 100)
+              : Math.round(discountedCalc.discountPercentage);
           discountParam = `&discount=${discountPct}`;
         } else if (pkg.original_price && pkg.original_price > pkg.price) {
           const discountPct = Math.round(
@@ -181,9 +182,7 @@ export async function GET(request: Request) {
     const rawDesc = pkg.description?.[locale] || pkg.description?.en || title;
     const cleanDesc = generateSeoDescription(rawDesc, 500);
 
-    const rawImageUrl = cleanImage(
-      pkg.cover_image || (pkg.gallery_images && pkg.gallery_images[0]),
-    );
+    const rawImageUrl = cleanImage(pkg.cover_image || pkg.gallery_images?.[0]);
     let imageUrl = rawImageUrl;
 
     // Generate GetYourGuide style dynamic ad image if we have a base image
@@ -201,9 +200,10 @@ export async function GET(request: Request) {
         discountedCalc.isDiscounted &&
         discountedCalc.discountPercentage > 0
       ) {
-        const discountPct = discountedCalc.discountPercentage <= 1 
-          ? Math.round(discountedCalc.discountPercentage * 100) 
-          : Math.round(discountedCalc.discountPercentage);
+        const discountPct =
+          discountedCalc.discountPercentage <= 1
+            ? Math.round(discountedCalc.discountPercentage * 100)
+            : Math.round(discountedCalc.discountPercentage);
         discountParam = `&discount=${discountPct}`;
       } else if (pkg.original_price && pkg.original_price > pkg.price) {
         const discountPct = Math.round(

@@ -70,7 +70,7 @@ export function InstagramFeed({ header, instagramUrl }: InstagramFeedProps) {
     }
 
     fetchPosts();
-  }, []);
+  }, [tui]);
 
   return (
     <section className="py-10 sm:py-16 bg-muted/10 border-y border-border/50">

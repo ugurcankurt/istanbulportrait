@@ -104,7 +104,7 @@ export default function AvailabilityPage() {
       setSettings(fetchedSettings);
       setBlockedSlots(fetchedBlocked);
       setSurcharges(fetchedSurcharges);
-    } catch (e) {
+    } catch (_e) {
       toast.error("Failed to load availability data");
     } finally {
       setIsLoading(false);
@@ -119,7 +119,7 @@ export default function AvailabilityPage() {
         settings.end_time,
       );
       toast.success("Working hours updated successfully");
-    } catch (e) {
+    } catch (_e) {
       toast.error("Failed to save working hours");
     } finally {
       setIsSaving(false);
@@ -149,7 +149,7 @@ export default function AvailabilityPage() {
       setNewBlockReason("");
 
       await fetchData();
-    } catch (e) {
+    } catch (_e) {
       toast.error("Failed to add blocked slot");
     } finally {
       setIsSaving(false);
@@ -161,14 +161,14 @@ export default function AvailabilityPage() {
       await availabilityService.deleteBlockedSlot(id);
       toast.success("Block removed");
       setBlockedSlots((slots) => slots.filter((s) => s.id !== id));
-    } catch (e) {
+    } catch (_e) {
       toast.error("Failed to remove block");
     }
   };
 
   const handleAddSurcharge = async () => {
     const p = parseFloat(newSurchargePercent);
-    if (!newSurchargeTime || isNaN(p) || p <= 0) {
+    if (!newSurchargeTime || Number.isNaN(p) || p <= 0) {
       toast.error("Please provide a valid time and increasing percentage.");
       return;
     }
@@ -194,7 +194,7 @@ export default function AvailabilityPage() {
       await availabilityService.deleteTimeSurcharge(id);
       toast.success("Surcharge removed");
       setSurcharges((s) => s.filter((x) => x.id !== id));
-    } catch (e) {
+    } catch (_e) {
       toast.error("Failed to remove surcharge");
     }
   };

@@ -12,8 +12,6 @@ export async function PATCH(
     const body = await request.json();
     const { id } = await params;
 
-
-
     const { data, error } = await supabaseAdmin
       .from("discounts")
       .update({
@@ -32,7 +30,7 @@ export async function PATCH(
 }
 
 export async function DELETE(
-  request: Request,
+  _request: Request,
   { params }: { params: Promise<{ id: string }> },
 ) {
   try {

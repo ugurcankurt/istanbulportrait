@@ -3,12 +3,12 @@
  * Slug generation, reading time calculation, text processing
  */
 
+import { generateNativeSlug } from "@/lib/slug-generator";
 import type {
   Locale,
   ReadingTimeResult,
   SlugGenerationOptions,
 } from "@/types/blog";
-import { generateNativeSlug } from "@/lib/slug-generator";
 
 // =============================================
 // SLUG GENERATION
@@ -43,8 +43,8 @@ export function generateSlug(
  * Check if slug already exists (to be used with database)
  */
 export async function isSlugUnique(
-  slug: string,
-  excludeId?: string,
+  _slug: string,
+  _excludeId?: string,
 ): Promise<boolean> {
   // This will be implemented in the blog service
   // For now, return true
@@ -175,8 +175,8 @@ export function generateExcerpt(
   // Otherwise, truncate at last space and add ellipsis
   const lastSpace = truncated.lastIndexOf(" ");
   return lastSpace > 0
-    ? truncated.substring(0, lastSpace) + "..."
-    : truncated + "...";
+    ? `${truncated.substring(0, lastSpace)}...`
+    : `${truncated}...`;
 }
 
 /**
@@ -428,8 +428,8 @@ export function truncateText(text: string, maxLength: number): string {
   const lastSpace = truncated.lastIndexOf(" ");
 
   return lastSpace > 0
-    ? truncated.substring(0, lastSpace) + "..."
-    : truncated + "...";
+    ? `${truncated.substring(0, lastSpace)}...`
+    : `${truncated}...`;
 }
 
 // =============================================

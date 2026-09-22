@@ -258,8 +258,8 @@ export async function PATCH(request: NextRequest) {
             // Create a new cash payment record
             await supabase.from("payments").insert({
               booking_id: bookingId,
-              payment_id: "cash_" + Date.now(),
-              conversation_id: "cash_" + Date.now(),
+              payment_id: `cash_${Date.now()}`,
+              conversation_id: `cash_${Date.now()}`,
               status: "success",
               amount: currentBooking.total_amount,
               currency: "EUR",

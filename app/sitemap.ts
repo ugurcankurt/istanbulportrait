@@ -59,8 +59,12 @@ export default async function sitemap({
 
   if (resolvedId === "core") {
     const corePages = await pagesContentService.getAllPages();
-    const homeHero = corePages.find((p) => p.slug === "home-hero" || p.slug === "home");
-    const homeImage = homeHero?.cover_image ? cleanImage(homeHero.cover_image) : null;
+    const homeHero = corePages.find(
+      (p) => p.slug === "home-hero" || p.slug === "home",
+    );
+    const homeImage = homeHero?.cover_image
+      ? cleanImage(homeHero.cover_image)
+      : null;
 
     // 1. Root Domain (x-default fallback)
     sitemapData.push({
@@ -143,43 +147,45 @@ export default async function sitemap({
               : pkg.cover_image || "";
 
           videos.push({
-            title: escapeXml(pkg.title?.[locale] || pkg.title?.["en"] || pkg.slug),
+            title: escapeXml(pkg.title?.[locale] || pkg.title?.en || pkg.slug),
             thumbnail_loc: cleanImage(thumbnail),
             description: escapeXml(
-              pkg.description?.[locale] || pkg.description?.["en"] || "Package Video"
+              pkg.description?.[locale] ||
+                pkg.description?.en ||
+                "Package Video",
             ),
             ...(isYouTube ? {} : { content_loc: pkg.video_url }),
           });
         }
 
-          const packageImages: string[] = [];
-          if (pkg.cover_image) {
-            packageImages.push(cleanImage(pkg.cover_image));
-          }
-          if (pkg.gallery_images && pkg.gallery_images.length > 0) {
-            pkg.gallery_images.forEach((img) => {
-              packageImages.push(cleanImage(img));
-            });
-          }
-          const uniqueImages = Array.from(new Set(packageImages));
-
-          sitemapData.push({
-            url: encodeURI(`${baseUrl}/${locale}/${pSeg}/${pkgSeg}`),
-            lastModified: new Date(pkg.updated_at || Date.now()).toISOString(),
-            changeFrequency: "weekly",
-            priority: 0.9,
-            alternates: getAlternates((loc) => {
-              const tTitle = packagesParent?.title?.[loc];
-              const tSeg = tTitle ? generateNativeSlug(tTitle) : "packages";
-              const tPkgTitle = pkg.title?.[loc];
-              const tPkgSeg = tPkgTitle
-                ? generateNativeSlug(tPkgTitle) || pkg.slug
-                : pkg.slug;
-              return `/${tSeg}/${tPkgSeg}`;
-            }),
-            ...(uniqueImages.length > 0 ? { images: uniqueImages } : {}),
-            ...(videos.length > 0 ? { videos } : {}),
+        const packageImages: string[] = [];
+        if (pkg.cover_image) {
+          packageImages.push(cleanImage(pkg.cover_image));
+        }
+        if (pkg.gallery_images && pkg.gallery_images.length > 0) {
+          pkg.gallery_images.forEach((img) => {
+            packageImages.push(cleanImage(img));
           });
+        }
+        const uniqueImages = Array.from(new Set(packageImages));
+
+        sitemapData.push({
+          url: encodeURI(`${baseUrl}/${locale}/${pSeg}/${pkgSeg}`),
+          lastModified: new Date(pkg.updated_at || Date.now()).toISOString(),
+          changeFrequency: "weekly",
+          priority: 0.9,
+          alternates: getAlternates((loc) => {
+            const tTitle = packagesParent?.title?.[loc];
+            const tSeg = tTitle ? generateNativeSlug(tTitle) : "packages";
+            const tPkgTitle = pkg.title?.[loc];
+            const tPkgSeg = tPkgTitle
+              ? generateNativeSlug(tPkgTitle) || pkg.slug
+              : pkg.slug;
+            return `/${tSeg}/${tPkgSeg}`;
+          }),
+          ...(uniqueImages.length > 0 ? { images: uniqueImages } : {}),
+          ...(videos.length > 0 ? { videos } : {}),
+        });
       });
     }
   }
@@ -268,8 +274,8 @@ export default async function sitemap({
               }
             });
 
-            if (postAlternates["en"]) {
-              postAlternates["x-default"] = postAlternates["en"];
+            if (postAlternates.en) {
+              postAlternates["x-default"] = postAlternates.en;
             } else if (translatedLocales.length > 0) {
               const firstLoc = translatedLocales[0];
               postAlternates["x-default"] = postAlternates[firstLoc];
@@ -324,8 +330,7 @@ export default async function sitemap({
                 `${baseUrl}/${loc}/${bSeg}/category/${bc.slug}`,
               );
             });
-            if (catAlternates["en"])
-              catAlternates["x-default"] = catAlternates["en"];
+            if (catAlternates.en) catAlternates["x-default"] = catAlternates.en;
             else if (translatedLocales.length > 0)
               catAlternates["x-default"] = catAlternates[translatedLocales[0]];
 
@@ -369,8 +374,7 @@ export default async function sitemap({
                 `${baseUrl}/${loc}/${bSeg}/tag/${bt.slug}`,
               );
             });
-            if (tagAlternates["en"])
-              tagAlternates["x-default"] = tagAlternates["en"];
+            if (tagAlternates.en) tagAlternates["x-default"] = tagAlternates.en;
             else if (translatedLocales.length > 0)
               tagAlternates["x-default"] = tagAlternates[translatedLocales[0]];
 

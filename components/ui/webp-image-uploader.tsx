@@ -1,10 +1,10 @@
 "use client";
 
-import { useState, useRef } from "react";
-import { Upload, X, Image as ImageIcon } from "lucide-react";
-import { Spinner } from "@/components/ui/spinner";
-import { Button } from "@/components/ui/button";
+import { Image as ImageIcon, Upload, X } from "lucide-react";
+import { useRef, useState } from "react";
 import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/spinner";
 import { createClientSupabaseClient } from "@/lib/supabase/client";
 
 interface ImageUploaderProps {

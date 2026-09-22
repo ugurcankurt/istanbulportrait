@@ -2,16 +2,16 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
-import { useDateFnsLocale } from "@/hooks/use-date-fns-locale";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import PhoneInput from "react-phone-number-input";
+import { useDateFnsLocale } from "@/hooks/use-date-fns-locale";
 import "react-phone-number-input/style.css";
 import { useYandexMetrica } from "@/components/analytics/yandex-metrica";
-import { Button } from "@/components/ui/button";
 import { BookingCard } from "@/components/booking-card";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -28,21 +28,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import {
-  trackLead,
-  saveUserDataForAdvancedMatching,
-  trackPackageAddToCart,
-} from "@/lib/analytics";
-import { getPackagePricing, matchActiveSurcharge } from "@/lib/pricing";
-import { cn } from "@/lib/utils";
-import type { BookingFormData } from "@/lib/validations";
-import { createBookingSchema } from "@/lib/validations";
-import type { DiscountDB } from "@/lib/discount-service";
-import type { TimeSurcharge } from "@/lib/availability-service";
-import { useCurrency } from "@/contexts/currency-context";
-import type { AddonDB } from "@/lib/addons-service";
-
 import {
   Sheet,
   SheetContent,
@@ -51,6 +36,20 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import { Spinner } from "@/components/ui/spinner";
+import { Textarea } from "@/components/ui/textarea";
+import { useCurrency } from "@/contexts/currency-context";
+import type { AddonDB } from "@/lib/addons-service";
+import {
+  saveUserDataForAdvancedMatching,
+  trackLead,
+  trackPackageAddToCart,
+} from "@/lib/analytics";
+import type { TimeSurcharge } from "@/lib/availability-service";
+import type { DiscountDB } from "@/lib/discount-service";
+import { getPackagePricing, matchActiveSurcharge } from "@/lib/pricing";
+import { cn } from "@/lib/utils";
+import type { BookingFormData } from "@/lib/validations";
+import { createBookingSchema } from "@/lib/validations";
 
 interface BookingModalProps {
   isOpen: boolean;
@@ -86,7 +85,7 @@ const generateTimeSlots = () => {
   return slots;
 };
 
-const timeSlots = generateTimeSlots();
+const _timeSlots = generateTimeSlots();
 
 export function BookingModal({
   isOpen,
@@ -117,11 +116,11 @@ export function BookingModal({
   const searchParams = useSearchParams();
   const t = useTranslations("checkout");
   const tPackages = useTranslations("packages");
-  const tui = useTranslations("ui");
+  const _tui = useTranslations("ui");
   const tplaceholders = useTranslations("placeholders");
   const tValidation = useTranslations("validation");
 
-  const [showTimeSelection, setShowTimeSelection] = useState(false);
+  const [_showTimeSelection, setShowTimeSelection] = useState(false);
   const [peopleCount, setPeopleCount] = useState<number>(1);
   const [isNavigating, setIsNavigating] = useState(false);
   const hasTrackedOpen = useRef(false);
@@ -183,8 +182,12 @@ export function BookingModal({
     },
   });
 
-  const [selectedAddons, setSelectedAddons] = useState<string[]>(initialSelectedAddons);
-  const [addonQuantities, setAddonQuantities] = useState<Record<string, number>>(initialAddonQuantities);
+  const [selectedAddons, setSelectedAddons] = useState<string[]>(
+    initialSelectedAddons,
+  );
+  const [addonQuantities, setAddonQuantities] = useState<
+    Record<string, number>
+  >(initialAddonQuantities);
 
   // Sync initial props when modal opens or props change
   useEffect(() => {
@@ -215,6 +218,8 @@ export function BookingModal({
     initialPeopleCount,
     selectedPackage,
     form,
+    initialSelectedAddons,
+    initialAddonQuantities,
   ]);
 
   // Update form values when selectedPackage changes
@@ -235,7 +240,7 @@ export function BookingModal({
       const dateValue = form.getValues("bookingDate");
 
       // Use people count for packages with per-person pricing, undefined for others
-      const count = isPerPerson ? peopleCount : undefined;
+      const _count = isPerPerson ? peopleCount : undefined;
       const tValue = form.getValues("bookingTime");
       const activeSurcharge = matchActiveSurcharge(tValue, timeSurcharges);
       const surchargePercentage = activeSurcharge
@@ -278,11 +283,15 @@ export function BookingModal({
   }, [
     selectedPackage,
     peopleCount,
-    form.watch("bookingDate"),
-    form.watch("bookingTime"),
     selectedAddons,
     addonQuantities,
     form,
+    availableAddons,
+    basePrice,
+    timeSurcharges,
+    localYieldMultiplier,
+    isPerPerson,
+    activeDiscounts,
   ]); // Watch date, time, peopleCount, and addons changes
 
   const packageInfo =
@@ -323,7 +332,13 @@ export function BookingModal({
         localYieldReason,
       );
     }
-  }, [isOpen, selectedPackage, packageInfo, trackPackageView]);
+  }, [
+    isOpen,
+    selectedPackage,
+    packageInfo,
+    trackPackageView,
+    localYieldReason,
+  ]);
 
   const handleSubmit = form.handleSubmit(
     async (data) => {
@@ -339,7 +354,7 @@ export function BookingModal({
         });
 
         // Generate unique event ID for deduplication
-        const eventId = crypto.randomUUID();
+        const _eventId = crypto.randomUUID();
 
         // GA4 Lead Event
         trackLead(

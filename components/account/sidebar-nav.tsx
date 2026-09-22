@@ -1,8 +1,8 @@
 "use client";
 
-import { LayoutDashboard, CreditCard } from "lucide-react";
-import { Link, usePathname } from "@/i18n/routing";
+import { CreditCard, LayoutDashboard } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { Link, usePathname } from "@/i18n/routing";
 
 export function SidebarNav() {
   const pathname = usePathname();

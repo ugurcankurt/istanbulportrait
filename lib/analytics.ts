@@ -1,8 +1,3 @@
-/**
- * Analytics utilities for tracking events
- */
-import { fbPixel } from "./facebook";
-
 export interface AnalyticsUserData {
   email?: string;
   phone?: string;
@@ -53,7 +48,7 @@ export function getUserDataForAdvancedMatching():
   try {
     const raw = localStorage.getItem(AM_STORAGE_KEY);
     return raw ? JSON.parse(raw) : undefined;
-  } catch (e) {
+  } catch (_e) {
     return undefined;
   }
 }
@@ -74,7 +69,7 @@ export function getExternalId(): string | undefined {
       localStorage.setItem(EXT_ID_STORAGE_KEY, extId);
     }
     return extId;
-  } catch (e) {
+  } catch (_e) {
     return undefined;
   }
 }
@@ -84,7 +79,7 @@ export function getExternalId(): string | undefined {
  */
 export function getCookie(name: string): string | undefined {
   if (typeof document === "undefined") return undefined;
-  const match = document.cookie.match(new RegExp("(^| )" + name + "=([^;]+)"));
+  const match = document.cookie.match(new RegExp(`(^| )${name}=([^;]+)`));
   if (match) return match[2];
   return undefined;
 }

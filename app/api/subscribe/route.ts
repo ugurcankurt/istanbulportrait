@@ -78,7 +78,7 @@ export async function POST(req: Request) {
     const allPromos = await promoService.getAllPromoCodes();
 
     // Pick the first promo code that is active and hasn't expired/run out
-    const now = new Date().getTime();
+    const now = Date.now();
     let selectedPromo = null;
 
     for (const promo of allPromos) {

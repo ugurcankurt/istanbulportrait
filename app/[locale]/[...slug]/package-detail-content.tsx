@@ -4,23 +4,16 @@ import { BreadcrumbNav } from "@/components/breadcrumb-nav";
 import { PackageDetails } from "@/components/package-details";
 import { PackagesSection } from "@/components/packages-section";
 import { SchemaInjector } from "@/components/schema-injector";
+import { addonsService } from "@/lib/addons-service";
 import { availabilityService } from "@/lib/availability-service";
 import { discountService } from "@/lib/discount-service";
 import { packagesService } from "@/lib/packages-service";
-import { addonsService } from "@/lib/addons-service";
 import { reviewsService } from "@/lib/reviews-service";
 import {
   buildServiceSchema,
   generateSeoDescription,
   getBaseUrl,
 } from "@/lib/seo-utils";
-
-interface PackagePageProps {
-  params: Promise<{
-    locale: string;
-    slug: string;
-  }>;
-}
 
 // Package Detail Modular Component
 export async function PackageDetailPageContent({
@@ -34,7 +27,7 @@ export async function PackageDetailPageContent({
 }) {
   const pkg = await packagesService.getPackageBySlug(slug);
 
-  if (!pkg || !pkg.is_active) {
+  if (!pkg?.is_active) {
     notFound();
   }
 
@@ -46,10 +39,10 @@ export async function PackageDetailPageContent({
   const aggregateRating = await reviewsService.getAggregateRating();
   const { reviews } = await reviewsService.fetchGoogleReviews(locale);
 
-  const title = pkg.title[locale] || pkg.title["en"] || pkg.slug;
-  const desc = pkg.description[locale] || pkg.description["en"] || "";
-  const feat = pkg.features[locale] || pkg.features["en"] || [];
-  const dur = pkg.duration[locale] || pkg.duration["en"] || "1 hour";
+  const title = pkg.title[locale] || pkg.title.en || pkg.slug;
+  const desc = pkg.description[locale] || pkg.description.en || "";
+  const _feat = pkg.features[locale] || pkg.features.en || [];
+  const _dur = pkg.duration[locale] || pkg.duration.en || "1 hour";
   const { settingsService } = await import("@/lib/settings-service");
   const settings = await settingsService.getSettings();
 
@@ -63,7 +56,8 @@ export async function PackageDetailPageContent({
     reviewCount: aggregateRating.count || 1,
     providerName: settings.organization_name || settings.site_name,
     providerUrl: getBaseUrl(),
-    discount: activeDiscounts && activeDiscounts.length > 0 ? activeDiscounts[0] : null,
+    discount:
+      activeDiscounts && activeDiscounts.length > 0 ? activeDiscounts[0] : null,
     reviews: reviews,
     url: `${getBaseUrl()}/${locale}/${parentSlug}/${slug}`,
   });

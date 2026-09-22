@@ -1,6 +1,13 @@
 "use client";
 
-import { CheckCircle2, Pencil, Plus, Trash2, XCircle, Puzzle } from "lucide-react";
+import {
+  CheckCircle2,
+  Pencil,
+  Plus,
+  Puzzle,
+  Trash2,
+  XCircle,
+} from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -126,7 +133,10 @@ export default function AddonsAdminPage() {
                 </TableRow>
               ) : addons.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={5} className="h-48 text-center text-muted-foreground p-0">
+                  <TableCell
+                    colSpan={5}
+                    className="h-48 text-center text-muted-foreground p-0"
+                  >
                     <Empty className="py-6 border-0 w-full flex-col justify-center items-center shadow-none">
                       <EmptyMedia variant="icon">
                         <Puzzle className="w-8 h-8 text-muted-foreground" />
@@ -142,17 +152,20 @@ export default function AddonsAdminPage() {
                 addons.map((addon) => (
                   <TableRow key={addon.id}>
                     <TableCell className="font-medium">
-                      {addon.title?.en || <span className="text-muted-foreground italic">Untitled</span>}
+                      {addon.title?.en || (
+                        <span className="text-muted-foreground italic">
+                          Untitled
+                        </span>
+                      )}
                     </TableCell>
-                    <TableCell>
-                      €{addon.price}
-                    </TableCell>
-                    <TableCell>
-                      {addon.is_per_person ? "Yes" : "No"}
-                    </TableCell>
+                    <TableCell>€{addon.price}</TableCell>
+                    <TableCell>{addon.is_per_person ? "Yes" : "No"}</TableCell>
                     <TableCell>
                       {addon.is_active ? (
-                        <Badge variant="default" className="bg-green-500 hover:bg-green-600 gap-1">
+                        <Badge
+                          variant="default"
+                          className="bg-green-500 hover:bg-green-600 gap-1"
+                        >
                           <CheckCircle2 className="w-3 h-3" /> Active
                         </Badge>
                       ) : (
@@ -167,7 +180,11 @@ export default function AddonsAdminPage() {
                           nativeButton={false}
                           variant="outline"
                           size="icon"
-                          render={<Link href={`/admin/dashboard/addons/${addon.id}`} />}
+                          render={
+                            <Link
+                              href={`/admin/dashboard/addons/${addon.id}`}
+                            />
+                          }
                         >
                           <Pencil className="w-4 h-4" />
                         </Button>
@@ -198,7 +215,8 @@ export default function AddonsAdminPage() {
             <AlertDialogTitle>Are you sure?</AlertDialogTitle>
             <AlertDialogDescription>
               This will permanently delete the add-on{" "}
-              <strong>{addonToDelete?.title?.en || addonToDelete?.slug}</strong>. This action cannot be undone.
+              <strong>{addonToDelete?.title?.en || addonToDelete?.slug}</strong>
+              . This action cannot be undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

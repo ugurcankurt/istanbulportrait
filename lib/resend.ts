@@ -1,14 +1,14 @@
 import { Resend } from "resend";
-import type { SiteSettings } from "./settings-service";
 import {
-  EMAIL_TRANSLATIONS,
-  NEWSLETTER_TRANSLATIONS,
   ABANDONED_TRANSLATIONS,
-  RAW_PHOTOS_READY_TRANSLATIONS,
-  FINAL_EDITS_READY_TRANSLATIONS,
   CANCELLATION_TRANSLATIONS,
+  EMAIL_TRANSLATIONS,
+  FINAL_EDITS_READY_TRANSLATIONS,
+  NEWSLETTER_TRANSLATIONS,
+  RAW_PHOTOS_READY_TRANSLATIONS,
   RESCHEDULE_TRANSLATIONS,
 } from "./email-translations";
+import type { SiteSettings } from "./settings-service";
 
 export const getEmailColors = (settings: SiteSettings) => {
   const isDark = settings.color_mode === "dark";
@@ -49,7 +49,7 @@ const resolveLocaleValue = (
   fallback: string = "",
 ) => {
   if (!dict) return fallback;
-  return dict[locale] || dict["en"] || Object.values(dict)[0] || fallback;
+  return dict[locale] || dict.en || Object.values(dict)[0] || fallback;
 };
 
 export const renderEmailLayout = (
@@ -183,7 +183,12 @@ export interface BookingConfirmationData {
   notes?: string;
   packageId?: string;
   /** Selected addon details to display in email */
-  addonDetails?: Array<{ id: string; name: string; price: number; quantity: number }>;
+  addonDetails?: Array<{
+    id: string;
+    name: string;
+    price: number;
+    quantity: number;
+  }>;
 }
 
 export const sendBookingConfirmation = async (
@@ -243,11 +248,15 @@ export const sendBookingConfirmation = async (
           </tr>
           ${
             data.addonDetails && data.addonDetails.length > 0
-              ? data.addonDetails.map((addon) => `
+              ? data.addonDetails
+                  .map(
+                    (addon) => `
           <tr>
             <td style="padding: 8px 0 8px 12px; border-bottom: 1px solid ${colors.border}; color: ${colors.textMuted}; font-size: 13px;">+ ${addon.name}${addon.quantity > 1 ? ` (x${addon.quantity})` : ""}</td>
             <td style="padding: 8px 0; border-bottom: 1px solid ${colors.border}; text-align: right; color: ${colors.textMuted}; font-size: 13px;">+€${(addon.price * addon.quantity).toFixed(2)}</td>
-          </tr>`).join("")
+          </tr>`,
+                  )
+                  .join("")
               : ""
           }
           ${
@@ -379,11 +388,15 @@ export const sendAdminBookingNotification = async (
           ${
             data.addonDetails && data.addonDetails.length > 0
               ? `<tr><td colspan="2" style="padding: 8px 0 4px 0; color: ${colors.textMuted}; font-size: 12px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px;">Extra Services</td></tr>` +
-                data.addonDetails.map((addon) => `
+                data.addonDetails
+                  .map(
+                    (addon) => `
           <tr>
             <td style="padding: 6px 0 6px 12px; border-bottom: 1px solid ${colors.border}; color: ${colors.textMuted}; font-size: 13px;">+ ${addon.name}${addon.quantity > 1 ? ` (x${addon.quantity})` : ""}</td>
             <td style="padding: 6px 0; border-bottom: 1px solid ${colors.border}; text-align: right; color: ${colors.textMuted}; font-size: 13px;">+€${(addon.price * addon.quantity).toFixed(2)}</td>
-          </tr>`).join("")
+          </tr>`,
+                  )
+                  .join("")
               : ""
           }
           ${
@@ -556,7 +569,7 @@ export const sendNewsletterWelcomeEmail = async (
 
     const resend = new Resend(apiKey);
     const colors = getEmailColors(settings);
-    const t = NEWSLETTER_TRANSLATIONS[locale] || NEWSLETTER_TRANSLATIONS["en"];
+    const t = NEWSLETTER_TRANSLATIONS[locale] || NEWSLETTER_TRANSLATIONS.en;
 
     const content = `
       <h2 style="color: ${colors.text}; margin-top: 0; font-size: 24px;">${t.title}</h2>
@@ -696,8 +709,7 @@ export const sendRawPhotosReadyEmail = async (
     const resend = new Resend(apiKey);
     const locale = booking.locale || "en";
     const t =
-      RAW_PHOTOS_READY_TRANSLATIONS[locale] ||
-      RAW_PHOTOS_READY_TRANSLATIONS["en"];
+      RAW_PHOTOS_READY_TRANSLATIONS[locale] || RAW_PHOTOS_READY_TRANSLATIONS.en;
     const colors = getEmailColors(settings);
 
     // Replace dynamic tags
@@ -766,7 +778,7 @@ export const sendFinalEditsReadyEmail = async (
     const locale = booking.locale || "en";
     const t =
       FINAL_EDITS_READY_TRANSLATIONS[locale] ||
-      FINAL_EDITS_READY_TRANSLATIONS["en"];
+      FINAL_EDITS_READY_TRANSLATIONS.en;
     const colors = getEmailColors(settings);
 
     // Replace dynamic tags
@@ -898,8 +910,7 @@ export const sendBookingCancellationEmail = async (
 
     const resend = new Resend(apiKey);
     const locale = booking.locale || "en";
-    const t =
-      CANCELLATION_TRANSLATIONS[locale] || CANCELLATION_TRANSLATIONS["en"];
+    const t = CANCELLATION_TRANSLATIONS[locale] || CANCELLATION_TRANSLATIONS.en;
     const colors = getEmailColors(settings);
 
     // Replace dynamic tags
@@ -920,7 +931,7 @@ export const sendBookingCancellationEmail = async (
     const packageName =
       booking.package_name ||
       (booking.packages ? booking.packages.name : formattedPackageId);
-    let body1Text = t.body1
+    const body1Text = t.body1
       .replace("{package}", packageName)
       .replace("{date}", booking.booking_date)
       .replace("{time}", booking.booking_time);
@@ -1005,7 +1016,7 @@ export const sendBookingRescheduledEmail = async (
 
     const resend = new Resend(apiKey);
     const locale = booking.locale || "en";
-    const t = RESCHEDULE_TRANSLATIONS[locale] || RESCHEDULE_TRANSLATIONS["en"];
+    const t = RESCHEDULE_TRANSLATIONS[locale] || RESCHEDULE_TRANSLATIONS.en;
     const colors = getEmailColors(settings);
 
     // Replace dynamic tags

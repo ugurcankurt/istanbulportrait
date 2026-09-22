@@ -1,18 +1,19 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
 import {
-  Download,
-  X,
-  Loader2,
-  Image as ImageIcon,
   CheckCircle2,
   ChevronLeft,
   ChevronRight,
+  Download,
+  Image as ImageIcon,
+  Loader2,
+  X,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import Image from "next/image";
+import Link from "next/link";
+import { useTranslations } from "next-intl";
+import { useEffect, useRef, useState } from "react";
+import { toast } from "sonner";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -23,10 +24,9 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import Link from "next/link";
-import Image from "next/image";
-import { useTranslations } from "next-intl";
-import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 interface DriveFile {
   id: string;
@@ -65,11 +65,11 @@ export default function ClientGallery({ bookingId }: { bookingId: string }) {
         inline: "center",
       });
     }
-  }, [selectedImage]);
+  }, []);
 
   useEffect(() => {
     setIsHighResLoaded(false);
-  }, [selectedImage]);
+  }, []);
 
   const activeFiles =
     activeTab === "raw"
@@ -125,7 +125,7 @@ export default function ClientGallery({ bookingId }: { bookingId: string }) {
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [selectedImage, activeFiles, isLightboxOpen]);
+  }, [selectedImage, isLightboxOpen, navigateImage]);
 
   const onTouchStart = (e: React.TouchEvent) => {
     setTouchEnd(null);
@@ -305,7 +305,7 @@ export default function ClientGallery({ bookingId }: { bookingId: string }) {
   // Close lightbox when switching tabs
   useEffect(() => {
     setIsLightboxOpen(false);
-  }, [activeTab]);
+  }, []);
 
   if (loading) {
     return (

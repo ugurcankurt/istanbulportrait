@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server";
 import { discountService } from "@/lib/discount-service";
 import { packagesService } from "@/lib/packages-service";
+import { calculateDiscountedPrice } from "@/lib/pricing";
 import { reviewsService } from "@/lib/reviews-service";
 import { generateSeoDescription, getBaseUrl } from "@/lib/seo-utils";
-import { calculateDiscountedPrice } from "@/lib/pricing";
 
 export const dynamic = "force-dynamic";
 
@@ -50,9 +50,7 @@ export async function GET(request: Request) {
     const finalUrl = `${baseUrl}/${locale}/packages/${pkg.slug}`;
 
     // 5. Image URL (Use our beautiful dynamic getyourguide-style image!)
-    const rawImageUrl = cleanImage(
-      pkg.cover_image || (pkg.gallery_images && pkg.gallery_images[0]),
-    );
+    const rawImageUrl = cleanImage(pkg.cover_image || pkg.gallery_images?.[0]);
     let imageUrl = rawImageUrl;
     if (rawImageUrl) {
       const rating = average > 0 ? average.toFixed(1) : "5.0";
@@ -69,7 +67,10 @@ export async function GET(request: Request) {
     if (pkg.original_price && pkg.original_price > pkg.price) {
       priceStr = `${pkg.original_price} EUR`;
       salePriceStr = `${pkg.price} EUR`;
-    } else if (discountedCalc.isDiscounted && discountedCalc.discountPercentage > 0) {
+    } else if (
+      discountedCalc.isDiscounted &&
+      discountedCalc.discountPercentage > 0
+    ) {
       priceStr = `${pkg.price} EUR`;
       salePriceStr = `${parseFloat(discountedCalc.price.toFixed(2))} EUR`;
     }

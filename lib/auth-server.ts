@@ -1,9 +1,9 @@
 import type { User } from "@supabase/supabase-js";
+import { settingsService } from "./settings-service";
 import {
   createServerSupabaseAdminClient,
   createServerSupabaseClient,
 } from "./supabase/server";
-import { settingsService } from "./settings-service";
 
 // Server-side authentication utilities
 // ONLY use these in Server Components, API routes, and middleware

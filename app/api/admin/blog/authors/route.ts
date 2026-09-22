@@ -5,7 +5,7 @@ import { getAllAuthors } from "@/lib/blog/blog-service";
 export async function GET() {
   try {
     const user = await getServerUser();
-    if (!user || user.role !== "admin") {
+    if (user?.role !== "admin") {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
     const authors = await getAllAuthors();

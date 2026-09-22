@@ -164,7 +164,7 @@ function TagDialog({
       } else {
         toast.error("AI translation failed.", { id: "ai-translation" });
       }
-    } catch (err) {
+    } catch (_err) {
       toast.error("AI translation error.", { id: "ai-translation" });
     }
   };

@@ -2,16 +2,16 @@
 
 import { Calendar, CheckCircle, Clock, Mail, Phone } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
+import { useEffect, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Link } from "@/i18n/routing";
+import { type SiteSettings, settingsService } from "@/lib/settings-service";
 import { formatCurrency, localizeNumerals } from "@/lib/utils";
 import type { BookingFormData, PackageId } from "@/lib/validations";
 import { usePackagesStore } from "@/stores/packages-store";
-import { settingsService, type SiteSettings } from "@/lib/settings-service";
-import { useEffect, useState } from "react";
 
 interface BookingSuccessProps {
   bookingId: string;
@@ -30,7 +30,7 @@ export function BookingSuccess({
 }: BookingSuccessProps) {
   const locale = useLocale();
   const t = useTranslations("checkout");
-  const tPackages = useTranslations("packages");
+  const _tPackages = useTranslations("packages");
   const tsuccess = useTranslations("success");
   const tui = useTranslations("ui");
   const tcontact = useTranslations("contact");
@@ -49,7 +49,7 @@ export function BookingSuccess({
   const packageInfo = {
     name:
       packageDBInfo?.title?.[locale] ||
-      packageDBInfo?.title?.["en"] ||
+      packageDBInfo?.title?.en ||
       packageDBInfo?.slug ||
       packageId,
     price: basePrice,
@@ -143,25 +143,38 @@ export function BookingSuccess({
                 )}
 
                 {/* Addons */}
-                {confirmedBooking?.selected_addon_details && confirmedBooking.selected_addon_details.length > 0 && (
-                  <div className="pt-2 border-t mt-2">
-                    <span className="text-muted-foreground text-sm font-semibold mb-2 block">
-                      {t("labels.addons") || "Add-ons"}:
-                    </span>
-                    <div className="space-y-1.5">
-                      {confirmedBooking.selected_addon_details.map((addon: any) => (
-                        <div key={addon.id} className="flex justify-between items-center text-sm">
-                          <span className="text-muted-foreground">
-                            + {addon.name} {addon.quantity > 1 ? `(x${addon.quantity})` : ""}
-                          </span>
-                          <span className="font-medium text-muted-foreground">
-                            +{formatCurrency(addon.price * addon.quantity, locale)}
-                          </span>
-                        </div>
-                      ))}
+                {confirmedBooking?.selected_addon_details &&
+                  confirmedBooking.selected_addon_details.length > 0 && (
+                    <div className="pt-2 border-t mt-2">
+                      <span className="text-muted-foreground text-sm font-semibold mb-2 block">
+                        {t("labels.addons") || "Add-ons"}:
+                      </span>
+                      <div className="space-y-1.5">
+                        {confirmedBooking.selected_addon_details.map(
+                          (addon: any) => (
+                            <div
+                              key={addon.id}
+                              className="flex justify-between items-center text-sm"
+                            >
+                              <span className="text-muted-foreground">
+                                + {addon.name}{" "}
+                                {addon.quantity > 1
+                                  ? `(x${addon.quantity})`
+                                  : ""}
+                              </span>
+                              <span className="font-medium text-muted-foreground">
+                                +
+                                {formatCurrency(
+                                  addon.price * addon.quantity,
+                                  locale,
+                                )}
+                              </span>
+                            </div>
+                          ),
+                        )}
+                      </div>
                     </div>
-                  </div>
-                )}
+                  )}
 
                 <div className="flex flex-col gap-2 w-full pt-2">
                   <div className="space-y-2 w-full mt-2">
@@ -316,7 +329,10 @@ export function BookingSuccess({
                         <span className="text-muted-foreground text-sm sm:text-base">
                           {tsuccess("promo_code") || "Promo Code"}:
                         </span>
-                        <Badge variant="secondary" className="font-mono text-xs">
+                        <Badge
+                          variant="secondary"
+                          className="font-mono text-xs"
+                        >
                           {confirmedBooking?.applied_promo_code || promoCode}
                         </Badge>
                       </div>

@@ -1,15 +1,14 @@
 "use client";
 
-import { Instagram, Globe, Linkedin, Twitter } from "lucide-react";
+import { Globe, Instagram, Linkedin, Twitter } from "lucide-react";
 import Image from "next/image";
+import { useParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-
-import type { BlogAuthor as BlogAuthorType, Locale } from "@/types/blog";
 import type { SiteSettings } from "@/lib/settings-service";
-import { useParams } from "next/navigation";
+import type { BlogAuthor as BlogAuthorType, Locale } from "@/types/blog";
 
 interface BlogAuthorProps {
   author?: BlogAuthorType;

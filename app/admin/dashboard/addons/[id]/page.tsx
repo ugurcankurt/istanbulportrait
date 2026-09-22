@@ -8,7 +8,7 @@ export default async function EditAddonPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  
+
   const { data: addon, error } = await supabaseAdmin
     .from("addons")
     .select("*")

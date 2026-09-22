@@ -25,8 +25,6 @@ export async function POST(req: Request) {
     const { name, discount_percentage, is_active, start_date, end_date } =
       await req.json();
 
-
-
     const { data, error } = await supabaseAdmin
       .from("discounts")
       .insert([{ name, discount_percentage, is_active, start_date, end_date }])

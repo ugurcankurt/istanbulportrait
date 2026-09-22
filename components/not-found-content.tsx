@@ -1,10 +1,9 @@
 "use client";
 
-import { useState } from "react";
-
 import { ArrowLeft, Camera, Home, MapPin } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 
 interface NotFoundContentProps {

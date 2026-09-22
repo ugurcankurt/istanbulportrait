@@ -125,7 +125,12 @@ export async function POST(request: NextRequest) {
     const selectedAddonIds: string[] = body.selectedAddons || [];
     const addonQuantities: Record<string, number> = body.addonQuantities || {};
     let allAddons: any[] = [];
-    let addonDetails: Array<{ id: string; name: string; price: number; quantity: number }> = [];
+    let addonDetails: Array<{
+      id: string;
+      name: string;
+      price: number;
+      quantity: number;
+    }> = [];
     if (selectedAddonIds.length > 0) {
       try {
         allAddons = await addonsService.getAllAddonsAdmin();
@@ -140,7 +145,7 @@ export async function POST(request: NextRequest) {
               Object.values(a.title)[0] ||
               a.slug,
             price: a.price,
-            quantity: a.is_per_person ? (addonQuantities[a.id] || 1) : 1,
+            quantity: a.is_per_person ? addonQuantities[a.id] || 1 : 1,
           }));
       } catch (addonErr) {
         console.error("Failed to resolve addon details:", addonErr);
@@ -228,7 +233,7 @@ export async function POST(request: NextRequest) {
           folderName,
           "1rKj5qIUzm8nTZ-hm7hspZaWupsKkiOCS",
         );
-        if (folder && folder.id) {
+        if (folder?.id) {
           driveFolderId = folder.id;
         }
       } catch (err) {
@@ -520,8 +525,8 @@ export async function POST(request: NextRequest) {
       // Non-blocking: we don't await this or we catch errors internally
       try {
         const nameParts = customerName.split(" ");
-        const firstName = nameParts[0];
-        const lastName =
+        const _firstName = nameParts[0];
+        const _lastName =
           nameParts.length > 1 ? nameParts.slice(1).join(" ") : "";
 
         // Execute in background

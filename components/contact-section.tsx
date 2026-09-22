@@ -1,6 +1,6 @@
 "use client";
 
-import { Clock, Mail, MapPin, Phone, Building } from "lucide-react";
+import { Clock, Mail, MapPin, Phone } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 

@@ -1,8 +1,8 @@
 import { Suspense } from "react";
 import { CheckoutForm } from "@/components/checkout-form";
 import { Skeleton } from "@/components/ui/skeleton";
-import { availabilityService } from "@/lib/availability-service";
 import { addonsService } from "@/lib/addons-service";
+import { availabilityService } from "@/lib/availability-service";
 import { discountService } from "@/lib/discount-service";
 import { getLocalizedPaths } from "@/lib/localized-url";
 

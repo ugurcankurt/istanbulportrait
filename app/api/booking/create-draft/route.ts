@@ -3,14 +3,7 @@ import { NextResponse } from "next/server";
 import { Resend } from "resend";
 import { z } from "zod";
 import { addonsService } from "@/lib/addons-service";
-import {
-  DatabaseConnectionError,
-  handleSupabaseError,
-  logError,
-  sanitizeErrorForProduction,
-  ValidationError,
-} from "@/lib/errors";
-import { calculateDiscountedPrice } from "@/lib/pricing";
+import { handleSupabaseError, logError } from "@/lib/errors";
 import {
   checkRateLimit,
   createRateLimitError,
@@ -26,7 +19,7 @@ const draftSchema = baseBookingSchema
     locale: z.string().default("en"),
   })
   .refine(
-    (data) => {
+    (_data) => {
       // Removed hardcoded "rooftop" check. Schema handles basic validation.
       return true;
     },
@@ -37,7 +30,7 @@ const draftSchema = baseBookingSchema
   );
 
 export async function POST(request: NextRequest) {
-  const startTime = Date.now();
+  const _startTime = Date.now();
 
   try {
     const ip = getClientIP(request);
@@ -79,7 +72,8 @@ export async function POST(request: NextRequest) {
       selectedAddons,
     } = validationResult.data;
 
-    const addonQuantitiesMap = (validationResult.data.addonQuantities || {}) as Record<string, number>;
+    const addonQuantitiesMap = (validationResult.data.addonQuantities ||
+      {}) as Record<string, number>;
     try {
       // 1. Upsert Customer
       const { error: customerError } = await supabaseAdmin
@@ -119,7 +113,7 @@ export async function POST(request: NextRequest) {
                 Object.values(a.title)[0] ||
                 a.slug,
               price: a.price,
-              quantity: a.is_per_person ? (addonQuantitiesMap[a.id] || 1) : 1,
+              quantity: a.is_per_person ? addonQuantitiesMap[a.id] || 1 : 1,
             }));
         } catch (addonErr) {
           console.error("Failed to resolve addon details for draft:", addonErr);

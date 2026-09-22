@@ -49,6 +49,7 @@ export async function generateMetadata({
   const { locale } = await params;
   const { routing } = await import("@/i18n/routing");
 
+  // biome-ignore lint/suspicious/noExplicitAny: Routing locale matching
   if (!routing.locales.includes(locale as any)) {
     return { title: "Not Found" };
   }
@@ -145,40 +146,44 @@ export default async function HomePage({
 
   const getDynamicTitle = (slug: string, fallback: string) => {
     const page = pageMap.get(slug);
-    if (!page || !page.is_active) return fallback;
+    if (!page?.is_active) return fallback;
     const val = page.title?.[locale] || page.title?.en;
     return val ? val : fallback;
   };
 
   const getDynamicSubtitle = (slug: string, fallback: string) => {
     const page = pageMap.get(slug);
-    if (!page || !page.is_active) return fallback;
+    if (!page?.is_active) return fallback;
     const val = page.subtitle?.[locale] || page.subtitle?.en;
     return val ? val : fallback;
   };
 
   const getDynamicImage = (slug: string, fallback?: string) => {
     const page = pageMap.get(slug);
-    if (!page || !page.is_active || !page.cover_image) return fallback;
+    if (!page?.is_active || !page.cover_image) return fallback;
     return page.cover_image;
   };
 
   const getDynamicFaqs = () => {
     const page = pageMap.get("home-faq");
-    if (!page || !page.is_active || !page.content?.faqs) return null;
+    if (!page?.is_active || !page.content?.faqs) return null;
 
     // Transform faqs array focusing on current locale
-    return page.content.faqs
-      .map((faq: any, index: number) => ({
-        id: `dynamic-faq-${index}`,
-        question: faq.question?.[locale] || faq.question?.en || "",
-        answer: faq.answer?.[locale] || faq.answer?.en || "",
-        keywords: [],
-      }))
-      .filter((f: any) => f.question && f.answer);
+    return (
+      page.content.faqs
+        // biome-ignore lint/suspicious/noExplicitAny: Dynamic data
+        .map((faq: any, index: number) => ({
+          id: `dynamic-faq-${index}`,
+          question: faq.question?.[locale] || faq.question?.en || "",
+          answer: faq.answer?.[locale] || faq.answer?.en || "",
+          keywords: [],
+        }))
+        // biome-ignore lint/suspicious/noExplicitAny: Dynamic data
+        .filter((f: any) => f.question && f.answer)
+    );
   };
 
-  const renderStars = (rating: number) => {
+  const _renderStars = (rating: number) => {
     return (
       <div className="flex items-center space-x-0.5">
         {[1, 2, 3, 4, 5].map((star) => (
@@ -198,11 +203,11 @@ export default async function HomePage({
   const dynamicFaqs = getDynamicFaqs();
 
   // Dynamic Price Range Calculation for LocalBusiness Schema (Google April 2026 guidelines)
-  let priceRangeStr;
+  let priceRangeStr: string | undefined;
   if (activePackages && activePackages.length > 0) {
     const prices = activePackages
       .map((p) => p.price)
-      .filter((p) => !isNaN(p) && p > 0);
+      .filter((p) => !Number.isNaN(p) && p > 0);
     if (prices.length > 0) {
       const minPrice = Math.min(...prices);
       const maxPrice = Math.max(...prices);

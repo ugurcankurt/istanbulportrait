@@ -1,7 +1,7 @@
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import { ImageResponse } from "next/og";
 import type { NextRequest } from "next/server";
-import { readFileSync } from "fs";
-import { join } from "path";
 
 export const runtime = "nodejs";
 
@@ -208,7 +208,7 @@ export async function GET(req: NextRequest) {
               textShadow: "0 2px 10px rgba(0,0,0,0.5)",
             }}
           >
-            {title.length > 55 ? title.substring(0, 52) + "..." : title}
+            {title.length > 55 ? `${title.substring(0, 52)}...` : title}
           </div>
 
           {/* Subtle Divider */}

@@ -6,7 +6,6 @@ export const revalidate = 60;
 import type { Metadata } from "next";
 import {
   getBlogCategoryBySlug,
-  getBlogPostBySlug,
   getBlogTagBySlug,
 } from "@/lib/blog/blog-service";
 import { locationsService } from "@/lib/locations-service";
@@ -15,7 +14,6 @@ import {
   constructOpenGraph,
   generateSeoDescription,
   generateSeoTitle,
-  getBaseUrl,
   optimizeSeoImage,
 } from "@/lib/seo-utils";
 import { AboutPageContent } from "./about-content";
@@ -34,9 +32,10 @@ export async function generateMetadata(props: {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }): Promise<Metadata> {
   const params = await props.params;
-  const searchParams = await props.searchParams;
+  const _searchParams = await props.searchParams;
   const { routing } = await import("@/i18n/routing");
 
+  // biome-ignore lint/suspicious/noExplicitAny: Routing locale matching
   if (!routing.locales.includes(params.locale as any)) {
     notFound();
     return {};
@@ -52,7 +51,7 @@ export async function generateMetadata(props: {
   ]);
 
   const fallbackTitle = settings.site_name || "";
-  if (!dbPage || !dbPage.is_active) {
+  if (!dbPage?.is_active) {
     notFound();
     return {};
   }
@@ -104,7 +103,7 @@ export async function generateMetadata(props: {
       }
     }
     const currentSeg = dbPage.title?.[params.locale]
-      ? generateNativeSlug(dbPage.title[params.locale]!)
+      ? generateNativeSlug(dbPage.title[params.locale] || "")
       : dbPage.slug;
 
     return {
@@ -147,6 +146,7 @@ export async function generateMetadata(props: {
     if (type === "category") {
       const category = await getBlogCategoryBySlug(
         childSlug,
+        // biome-ignore lint/suspicious/noExplicitAny: Dynamic data
         params.locale as any,
       );
       if (category) {
@@ -154,6 +154,7 @@ export async function generateMetadata(props: {
         dynamicDesc = category.translation?.description || "";
       }
     } else if (type === "tag") {
+      // biome-ignore lint/suspicious/noExplicitAny: Dynamic data
       const tag = await getBlogTagBySlug(childSlug, params.locale as any);
       if (tag) {
         dynamicTitle = tag.translation?.name || tag.slug;
@@ -236,6 +237,7 @@ export async function generateMetadata(props: {
       keywords =
         pkg.meta_keywords?.[params.locale] ||
         pkg.meta_keywords?.en ||
+        // biome-ignore lint/suspicious/noExplicitAny: Dynamic data
         (pkg as any).meta_keywords ||
         [];
       getAlternatesFn = (loc: string) => {
@@ -261,6 +263,7 @@ export async function generateMetadata(props: {
         (locItem.gallery_images && locItem.gallery_images.length > 0
           ? locItem.gallery_images[0]
           : ogImage);
+      // biome-ignore lint/suspicious/noExplicitAny: Dynamic data
       keywords = (locItem as any).meta_keywords || [];
       getAlternatesFn = (loc: string) => {
         const pTitle = dbPage.title?.[loc];
@@ -274,6 +277,7 @@ export async function generateMetadata(props: {
     } else if (dbPage.slug === "blog") {
       const { getBlogPostBySlug, getBlogPostByIdWithAllTranslations } =
         await import("@/lib/blog/blog-service");
+      // biome-ignore lint/suspicious/noExplicitAny: Dynamic data
       const post = await getBlogPostBySlug(childSlug, params.locale as any);
       if (post) {
         dynamicTitle = post.translation.title;
@@ -289,10 +293,11 @@ export async function generateMetadata(props: {
           authors = [post.author.name];
         }
         const fullPost = await getBlogPostByIdWithAllTranslations(post.id);
-        if (fullPost && fullPost.translations) {
+        if (fullPost?.translations) {
           getAlternatesFn = (loc: string) => {
             const pTitle = dbPage.title?.[loc];
             const pSeg = pTitle ? generateNativeSlug(pTitle) : "blog";
+            // biome-ignore lint/suspicious/noExplicitAny: Dynamic data
             const locTranslation = (fullPost.translations as any)[loc];
             if (!locTranslation) return null;
 
@@ -309,8 +314,8 @@ export async function generateMetadata(props: {
     const title = generateSeoTitle(dynamicTitle, params.locale, fallbackTitle);
     const desc = generateSeoDescription(dynamicDesc);
 
-    const currentSeg = dbPage.title?.[params.locale]
-      ? generateNativeSlug(dbPage.title[params.locale]!)
+    const _currentSeg = dbPage.title?.[params.locale]
+      ? generateNativeSlug(dbPage.title[params.locale] || "")
       : dbPage.slug;
 
     return {
@@ -372,8 +377,11 @@ export default async function GenericCorePage(props: {
       if (type === "category" || type === "tag") {
         return (
           <BlogCategoryContent
+            // biome-ignore lint/suspicious/noExplicitAny: Props mismatch
             params={props.params as any}
+            // biome-ignore lint/suspicious/noExplicitAny: Props mismatch
             searchParams={props.searchParams as any}
+            // biome-ignore lint/suspicious/noExplicitAny: Props mismatch
             type={type as any}
             slug={slugArray[2]}
           />
@@ -383,7 +391,7 @@ export default async function GenericCorePage(props: {
     notFound(); // Max depth supported is 3
   }
 
-  if (!dbPage || !dbPage.is_active) {
+  if (!dbPage?.is_active) {
     notFound();
   }
 
@@ -412,8 +420,10 @@ export default async function GenericCorePage(props: {
         return (
           <BlogPageContent
             params={
+              // biome-ignore lint/suspicious/noExplicitAny: Props mismatch
               Promise.resolve({ locale: params.locale, slug: rootSlug }) as any
             }
+            // biome-ignore lint/suspicious/noExplicitAny: Props mismatch
             searchParams={props.searchParams as any}
           />
         );

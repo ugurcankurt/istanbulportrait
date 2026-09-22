@@ -34,12 +34,10 @@ export function generateSeoDescription(
 
   // Truncate cleanly at word boundary
   const truncated = cleanText.substring(0, maxLength);
-  return (
-    truncated.substring(
-      0,
-      Math.min(truncated.length, truncated.lastIndexOf(" ")),
-    ) + "..."
-  );
+  return `${truncated.substring(
+    0,
+    Math.min(truncated.length, truncated.lastIndexOf(" ")),
+  )}...`;
 }
 
 /**
@@ -47,7 +45,7 @@ export function generateSeoDescription(
  */
 export function generateSeoTitle(
   title: string | null | undefined,
-  locale: string,
+  _locale: string,
   fallbackTitle: string = "",
 ): string {
   if (!title) return fallbackTitle;
@@ -245,7 +243,7 @@ export function buildOrganizationSchema(settings: SiteSettings) {
     "@context": "https://schema.org",
     "@type": "Organization",
     name: settings.organization_name || settings.site_name,
-    "@id": getBaseUrl() + "/#organization",
+    "@id": `${getBaseUrl()}/#organization`,
     url: getBaseUrl(),
     logo: imageUrl
       ? {
@@ -383,7 +381,7 @@ export function buildServiceSchema({
       priceCurrency: currency,
       price: finalPrice,
       availability: "https://schema.org/InStock",
-      validFrom: new Date().getFullYear() + "-01-01",
+      validFrom: `${new Date().getFullYear()}-01-01`,
       hasMerchantReturnPolicy: {
         "@type": "MerchantReturnPolicy",
         applicableCountry: "TR",

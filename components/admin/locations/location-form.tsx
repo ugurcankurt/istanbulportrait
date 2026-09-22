@@ -1,26 +1,14 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useForm, useFieldArray } from "react-hook-form";
-import { useRouter } from "next/navigation";
-import { toast } from "sonner";
-import {
-  MapPin,
-  Trash2,
-  UploadCloud,
-  ImageIcon,
-  Plus,
-  Sparkles,
-  Navigation,
-} from "lucide-react";
-import { Spinner } from "@/components/ui/spinner";
+import { ImageIcon, Plus, Sparkles, Trash2 } from "lucide-react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useFieldArray, useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { Badge } from "@/components/ui/badge";
 
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Switch } from "@/components/ui/switch";
-import { Label } from "@/components/ui/label";
 import {
   Card,
   CardContent,
@@ -28,8 +16,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Badge } from "@/components/ui/badge";
 import {
   Form,
   FormControl,
@@ -38,10 +24,16 @@ import {
   FormItem,
   FormLabel,
 } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Spinner } from "@/components/ui/spinner";
+import { Switch } from "@/components/ui/switch";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Textarea } from "@/components/ui/textarea";
 
-import { locationsService, type LocationDB } from "@/lib/locations-service";
-import { uploadLocationImage, deleteLocationImage } from "@/lib/storage-utils";
+import { type LocationDB, locationsService } from "@/lib/locations-service";
 import { generateNativeSlug } from "@/lib/slug-generator";
+import { deleteLocationImage, uploadLocationImage } from "@/lib/storage-utils";
 
 interface LocationFormProps {
   initialData?: LocationDB;
@@ -209,7 +201,7 @@ export function LocationForm({ initialData }: LocationFormProps) {
           id: "upload-gallery",
         });
       }
-    } catch (error: any) {
+    } catch (_error: any) {
       toast.error("Failed to upload some images", { id: "upload-gallery" });
     } finally {
       setIsSubmitting(false);
@@ -223,7 +215,7 @@ export function LocationForm({ initialData }: LocationFormProps) {
       setCoverImagePreview(null);
       form.setValue("cover_image", null);
       toast.success("Cover image removed");
-    } catch (error) {
+    } catch (_error) {
       toast.error("Failed to remove cover image");
     }
   };
@@ -236,7 +228,7 @@ export function LocationForm({ initialData }: LocationFormProps) {
       setGalleryPreviews(updatedGallery);
       form.setValue("gallery_images", updatedGallery);
       toast.success("Image removed from gallery");
-    } catch (error) {
+    } catch (_error) {
       toast.error("Failed to remove image");
     }
   };
@@ -313,7 +305,7 @@ export function LocationForm({ initialData }: LocationFormProps) {
       const payload: Partial<LocationDB> = {
         slug: data.slug,
         is_active: data.is_active,
-        sort_order: parseInt(data.sort_order),
+        sort_order: parseInt(data.sort_order, 10),
         cover_image: data.cover_image,
         gallery_images: data.gallery_images,
         title: data.title,

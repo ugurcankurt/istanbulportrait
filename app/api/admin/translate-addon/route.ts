@@ -65,12 +65,14 @@ Provide accurate, professional, marketing-friendly translations suitable for a h
 `;
 
     // Connect to Google Gemini API
-    const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${apiKey}`;
+    const geminiUrl =
+      "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent";
 
     const response = await fetch(geminiUrl, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        "X-goog-api-key": apiKey.trim(),
       },
       body: JSON.stringify({
         contents: [{ parts: [{ text: prompt }] }],
@@ -108,7 +110,7 @@ Provide accurate, professional, marketing-friendly translations suitable for a h
       parsedTranslations = JSON.parse(
         cleanJsonStr.replace(/```(?:json)?/gi, "").trim(),
       );
-    } catch (e) {
+    } catch (_e) {
       console.error("Failed to parse JSON:", textOutput);
       return NextResponse.json(
         { error: "AI returned invalid JSON" },

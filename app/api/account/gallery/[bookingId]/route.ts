@@ -1,11 +1,11 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { getServerUser } from "@/lib/auth-server";
 import { extractPhotosCount } from "@/lib/features-parser";
-import { getGalleryFilesGrouped, listFilesInFolder } from "@/lib/google-drive";
+import { getGalleryFilesGrouped } from "@/lib/google-drive";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 
 export async function GET(
-  request: NextRequest,
+  _request: NextRequest,
   { params }: { params: Promise<{ bookingId: string }> },
 ) {
   try {

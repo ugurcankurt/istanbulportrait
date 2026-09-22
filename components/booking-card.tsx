@@ -1,41 +1,41 @@
 "use client";
+import { format } from "date-fns";
 import {
-  Clock,
-  ChevronDown,
+  Banknote,
   Calendar as CalendarIcon,
   CheckCircle2,
-  PlusCircle,
+  ChevronDown,
+  Clock,
   MinusCircle,
-  User2,
-  Sunrise,
+  PlusCircle,
   Sun,
+  Sunrise,
   Sunset,
-  Banknote,
+  User2,
 } from "lucide-react";
-import { trackSchedule } from "@/lib/analytics";
-import { matchActiveSurcharge } from "@/lib/pricing";
-import { useCurrency } from "@/contexts/currency-context";
-import { useState, useEffect } from "react";
-import { useIsMobile } from "@/hooks/use-mobile";
-import { toast } from "sonner";
-import { format } from "date-fns";
 import { useTranslations } from "next-intl";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Card, CardContent } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { cn } from "@/lib/utils";
-import { type PackageId } from "@/lib/validations";
-import { type DiscountDB } from "@/lib/discount-service";
-import type { TimeSurcharge } from "@/lib/availability-service";
+import { useCurrency } from "@/contexts/currency-context";
+import { useIsMobile } from "@/hooks/use-mobile";
 import type { AddonDB } from "@/lib/addons-service";
-import { Checkbox } from "@/components/ui/checkbox";
+import { trackSchedule } from "@/lib/analytics";
+import type { TimeSurcharge } from "@/lib/availability-service";
+import type { DiscountDB } from "@/lib/discount-service";
+import { matchActiveSurcharge } from "@/lib/pricing";
+import { cn } from "@/lib/utils";
+import type { PackageId } from "@/lib/validations";
 
 interface BookingCardProps {
   packageId: PackageId;
@@ -130,7 +130,7 @@ export function BookingCard({
     if (checkState === "ready" || checkState === "success") {
       setCheckState("idle");
     }
-  }, [selectedDate, selectedTime, peopleCount]);
+  }, [checkState]);
 
   useEffect(() => {
     if (!selectedDate || !packageId) {
@@ -168,7 +168,7 @@ export function BookingCard({
     };
 
     fetchAvailability();
-  }, [selectedDate, packageId]);
+  }, [selectedDate, packageId, setSelectedTime, selectedTime, onYieldChange]);
 
   const handleCheckAvailability = () => {
     if (!selectedDate || !selectedTime) {
@@ -250,9 +250,9 @@ export function BookingCard({
 
   const isDateDiscounted = (date: Date) => {
     if (!activeDiscounts || activeDiscounts.length === 0) return false;
-    
+
     const checkTime = date.getTime();
-    
+
     return activeDiscounts.some((discount) => {
       if (!discount.start_date || !discount.end_date) return false;
       const start = new Date(discount.start_date);
@@ -277,7 +277,6 @@ export function BookingCard({
       >
         <div className="space-y-4">
           <div className="flex flex-wrap items-center gap-2 mb-2">
-
             {isPerPerson && (
               <Badge className="bg-primary/10 text-primary border-primary/20 shadow-none font-bold uppercase tracking-widest text-[10px]">
                 👤 {t("per_person")}
@@ -307,16 +306,18 @@ export function BookingCard({
                   >
                     {formatPrice(pricing.originalPrice || basePrice)}
                   </span>
-                  {pricing.discountPercentage && pricing.discountPercentage > 0 && (
-                    <Badge className="bg-red-600 backdrop-blur-md text-white border border-red-500 font-serif tracking-widest uppercase text-xs px-3 py-1 shadow-sm ml-2">
-                      {tui("save_percentage", {
-                        percentage: Math.round(pricing.discountPercentage * 100),
-                      })}
-                    </Badge>
-                  )}
+                  {pricing.discountPercentage &&
+                    pricing.discountPercentage > 0 && (
+                      <Badge className="bg-red-600 backdrop-blur-md text-white border border-red-500 font-serif tracking-widest uppercase text-xs px-3 py-1 shadow-sm ml-2">
+                        {tui("save_percentage", {
+                          percentage: Math.round(
+                            pricing.discountPercentage * 100,
+                          ),
+                        })}
+                      </Badge>
+                    )}
                 </div>
               )}
-
             </div>
           </div>
         </div>
@@ -650,8 +651,8 @@ export function BookingCard({
                 const isSelected = selectedAddons.includes(addon.id);
                 const qty = addonQuantities[addon.id] || 1;
                 const displayAddonPrice = addon.is_per_person
-                    ? addonPrice * qty
-                    : addonPrice;
+                  ? addonPrice * qty
+                  : addonPrice;
 
                 return (
                   <div
@@ -666,10 +667,17 @@ export function BookingCard({
                             ? [...selectedAddons, addon.id]
                             : selectedAddons.filter((id) => id !== addon.id);
                           setSelectedAddons(newSelected);
-                          
+
                           // If checking a per-person addon, ensure it has a default quantity (1)
-                          if (checked && addon.is_per_person && setAddonQuantities) {
-                            setAddonQuantities({ ...addonQuantities, [addon.id]: 1 });
+                          if (
+                            checked &&
+                            addon.is_per_person &&
+                            setAddonQuantities
+                          ) {
+                            setAddonQuantities({
+                              ...addonQuantities,
+                              [addon.id]: 1,
+                            });
                           }
                         }}
                         id={`addon-${addon.id}`}
@@ -679,17 +687,21 @@ export function BookingCard({
                           htmlFor={`addon-${addon.id}`}
                           className="text-sm font-bold leading-none cursor-pointer"
                         >
-                          {addon.title?.[dateFnsLocale?.code?.split("-")[0] || "en"] || addon.title?.en}
+                          {addon.title?.[
+                            dateFnsLocale?.code?.split("-")[0] || "en"
+                          ] || addon.title?.en}
                         </label>
                         <p className="text-[11px] text-muted-foreground line-clamp-2">
-                          {addon.description?.[dateFnsLocale?.code?.split("-")[0] || "en"] || addon.description?.en}
+                          {addon.description?.[
+                            dateFnsLocale?.code?.split("-")[0] || "en"
+                          ] || addon.description?.en}
                         </p>
                       </div>
                       <div className="font-bold text-sm text-primary whitespace-nowrap">
                         +{formatPrice(displayAddonPrice)}
                       </div>
                     </div>
-                    
+
                     {addon.is_per_person && isSelected && (
                       <div className="flex items-center justify-between pt-2 mt-2 border-t border-border/50 pl-7">
                         <span className="text-xs font-medium text-muted-foreground">
@@ -703,7 +715,10 @@ export function BookingCard({
                             onClick={(e) => {
                               e.preventDefault();
                               if (setAddonQuantities) {
-                                setAddonQuantities({ ...addonQuantities, [addon.id]: Math.max(1, qty - 1) });
+                                setAddonQuantities({
+                                  ...addonQuantities,
+                                  [addon.id]: Math.max(1, qty - 1),
+                                });
                               }
                             }}
                             disabled={qty <= 1}
@@ -720,7 +735,10 @@ export function BookingCard({
                             onClick={(e) => {
                               e.preventDefault();
                               if (setAddonQuantities) {
-                                setAddonQuantities({ ...addonQuantities, [addon.id]: Math.min(peopleCount, qty + 1) });
+                                setAddonQuantities({
+                                  ...addonQuantities,
+                                  [addon.id]: Math.min(peopleCount, qty + 1),
+                                });
                               }
                             }}
                             disabled={qty >= peopleCount}

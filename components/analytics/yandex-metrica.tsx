@@ -3,6 +3,7 @@
 import { usePathname } from "next/navigation";
 import Script from "next/script";
 import { useEffect } from "react";
+
 // Dynamic pricing replaces static packagePrices
 
 declare global {

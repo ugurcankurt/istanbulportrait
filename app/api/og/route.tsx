@@ -1,7 +1,7 @@
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import { ImageResponse } from "next/og";
 import type { NextRequest } from "next/server";
-import { readFileSync } from "fs";
-import { join } from "path";
 
 export const runtime = "nodejs";
 
@@ -35,7 +35,12 @@ export async function GET(req: NextRequest) {
     }
 
     // Load custom font to avoid Satori's default font rendering bugs
-    const fontPath = join(process.cwd(), "public", "fonts", "Inter-Regular.ttf");
+    const fontPath = join(
+      process.cwd(),
+      "public",
+      "fonts",
+      "Inter-Regular.ttf",
+    );
     const fontBuffer = readFileSync(fontPath);
     const fontData = Uint8Array.from(fontBuffer).buffer;
 

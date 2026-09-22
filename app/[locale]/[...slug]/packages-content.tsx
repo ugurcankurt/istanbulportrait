@@ -9,7 +9,7 @@ const PackagesSection = dynamic(() =>
 import { GygActivitiesSection } from "@/components/gyg-activities-section";
 import { SchemaInjector } from "@/components/schema-injector";
 import { discountService } from "@/lib/discount-service";
-import { type PackageDB, packagesService } from "@/lib/packages-service";
+import { packagesService } from "@/lib/packages-service";
 import { pagesContentService } from "@/lib/pages-content-service";
 import { reviewsService } from "@/lib/reviews-service";
 import {

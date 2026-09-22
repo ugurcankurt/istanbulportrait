@@ -1,8 +1,10 @@
 "use client";
 
 import { ChevronRight, Home } from "lucide-react";
+import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
+import { SchemaInjector } from "@/components/schema-injector";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -11,9 +13,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import Link from "next/link";
 import { routing } from "@/i18n/routing";
-import { SchemaInjector } from "@/components/schema-injector";
 import { buildBreadcrumbSchema } from "@/lib/seo-utils";
 
 interface BreadcrumbNavProps {
@@ -33,7 +33,7 @@ export function BreadcrumbNav(props: BreadcrumbNavProps) {
   try {
     decodedPathname = decodeURIComponent(pathname);
     pathWithoutLocale = decodeURIComponent(pathWithoutLocale);
-  } catch (error) {
+  } catch (_error) {
     console.warn("Failed to decode URL path:", pathWithoutLocale);
   }
 

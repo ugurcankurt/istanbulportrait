@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect } from "react";
 import { useSearchParams } from "next/navigation";
+import { useEffect } from "react";
 
 /**
  * Hook to capture Google Ads tracking parameters (GBRAID, WBRAID) from the URL

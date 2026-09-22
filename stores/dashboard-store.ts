@@ -68,13 +68,13 @@ export const useDashboardStore = create<DashboardState>()(
         set({ loading: true, error: null });
 
         try {
-          const today = new Date().toISOString().split('T')[0];
+          const today = new Date().toISOString().split("T")[0];
 
           // Fetch both stats and recent bookings in parallel
           const [statsResponse, bookingsResponse] = await Promise.all([
             fetch("/api/admin/stats"),
             fetch(
-              `/api/admin/bookings?limit=5&sortBy=booking_date&sortOrder=asc&fromDate=${today}&status=confirmed`
+              `/api/admin/bookings?limit=5&sortBy=booking_date&sortOrder=asc&fromDate=${today}&status=confirmed`,
             ),
           ]);
 

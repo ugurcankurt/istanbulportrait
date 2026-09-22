@@ -1,17 +1,12 @@
 "use client";
 
-import { useState } from "react";
-import { useForm, useFieldArray } from "react-hook-form";
-import { useRouter } from "next/navigation";
-import { toast } from "sonner";
-import { Sparkles, Trash2, UploadCloud, Plus } from "lucide-react";
-import { Spinner } from "@/components/ui/spinner";
+import { Plus, Sparkles, Trash2, UploadCloud } from "lucide-react";
 import Image from "next/image";
-
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { useFieldArray, useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Switch } from "@/components/ui/switch";
-import { Label } from "@/components/ui/label";
 import {
   Card,
   CardContent,
@@ -19,7 +14,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Form,
   FormControl,
@@ -29,9 +23,14 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Spinner } from "@/components/ui/spinner";
+import { Switch } from "@/components/ui/switch";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-import { pagesContentService, type PageDB } from "@/lib/pages-content-service";
-import { uploadPackageImage, deletePackageImage } from "@/lib/storage-utils";
+import { type PageDB, pagesContentService } from "@/lib/pages-content-service";
+import { deletePackageImage, uploadPackageImage } from "@/lib/storage-utils";
 
 interface PageFormProps {
   initialData?: PageDB;
@@ -261,7 +260,7 @@ export function PageForm({ initialData }: PageFormProps) {
           id: "ai-translation",
         });
       }
-    } catch (err) {
+    } catch (_err) {
       toast.error("AI translation API error.", { id: "ai-translation" });
     }
   };
@@ -867,8 +866,7 @@ export function PageForm({ initialData }: PageFormProps) {
                                   onClick={async () => {
                                     if (confirm("Remove cover image?")) {
                                       if (
-                                        coverImagePreview &&
-                                        coverImagePreview.startsWith("http")
+                                        coverImagePreview?.startsWith("http")
                                       ) {
                                         try {
                                           await deletePackageImage(
@@ -891,7 +889,7 @@ export function PageForm({ initialData }: PageFormProps) {
                                             initialData.id,
                                             { cover_image: null },
                                           );
-                                        } catch (e) {}
+                                        } catch (_e) {}
                                       }
                                     }
                                   }}
@@ -929,8 +927,7 @@ export function PageForm({ initialData }: PageFormProps) {
 
                                       // Silinecek olan eski resim varsa öksüz kalmaması için önce bucket'tan sil (storage cleanup)
                                       if (
-                                        coverImagePreview &&
-                                        coverImagePreview.startsWith("http")
+                                        coverImagePreview?.startsWith("http")
                                       ) {
                                         try {
                                           await deletePackageImage(
@@ -986,7 +983,7 @@ export function PageForm({ initialData }: PageFormProps) {
                                         } else {
                                           throw new Error(error);
                                         }
-                                      } catch (err) {
+                                      } catch (_err) {
                                         setCoverImagePreview(null);
                                         toast.error("Upload failed.", {
                                           id: "upload-cover",

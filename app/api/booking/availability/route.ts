@@ -30,10 +30,10 @@ export async function GET(request: Request) {
     .single();
 
   const startHour = settingsData?.start_time
-    ? parseInt(settingsData.start_time.split(":")[0])
+    ? parseInt(settingsData.start_time.split(":")[0], 10)
     : 6;
   const endHour = settingsData?.end_time
-    ? parseInt(settingsData.end_time.split(":")[0])
+    ? parseInt(settingsData.end_time.split(":")[0], 10)
     : 20;
 
   // Fetch all packages to get exact durations dynamically
@@ -49,10 +49,10 @@ export async function GET(request: Request) {
       let mins = 60;
       if (durStr.includes("hour")) {
         const h = parseFloat(durStr);
-        if (!isNaN(h)) mins = h * 60;
+        if (!Number.isNaN(h)) mins = h * 60;
       } else if (durStr.includes("min")) {
-        const m = parseInt(durStr);
-        if (!isNaN(m)) mins = m;
+        const m = parseInt(durStr, 10);
+        if (!Number.isNaN(m)) mins = m;
       }
       dynamicDurations[p.slug] = mins;
     }
@@ -118,7 +118,7 @@ export async function GET(request: Request) {
     const requestedEnd = requestedStart + requestedDuration;
 
     // Block if outside working hours
-    const h = parseInt(slot.split(":")[0]);
+    const h = parseInt(slot.split(":")[0], 10);
     if (h < startHour || h > endHour) {
       blockedSlots.push(slot);
       continue;

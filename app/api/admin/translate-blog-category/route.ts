@@ -40,7 +40,7 @@ export async function POST(req: Request) {
 
     const { settingsService } = await import("@/lib/settings-service");
     const settings = await settingsService.getSettings();
-    const apiKey = process.env.NVIDIA_API_KEY;
+    const apiKey = settings.gemini_api_key;
     if (!apiKey) {
       return NextResponse.json(
         { error: "API Key is not configured." },
@@ -67,26 +67,28 @@ Respond ONLY with a valid minified JSON object mapping each locale code to the t
 Provide accurate, professional, context-aware translations suitable for a high-end photography blog. If Description is empty, leave it empty in the translations.
 `;
 
-    // Connect to NVIDIA NIM API (DeepSeek)
-    const nvidiaUrl = `https://integrate.api.nvidia.com/v1/chat/completions`;
+    // Connect to Google Gemini API
+    const geminiUrl =
+      "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent";
 
-    const response = await fetch(nvidiaUrl, {
+    const response = await fetch(geminiUrl, {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${process.env.NVIDIA_API_KEY}`,
         "Content-Type": "application/json",
+        "X-goog-api-key": apiKey.trim(),
       },
       body: JSON.stringify({
-        model: "deepseek-ai/deepseek-v4-flash-0731",
-        messages: [{ role: "user", content: prompt }],
-        temperature: 0.2,
-        response_format: { type: "json_object" },
+        contents: [{ parts: [{ text: prompt }] }],
+        generationConfig: {
+          responseMimeType: "application/json",
+          temperature: 0.2,
+        },
       }),
     });
 
     if (!response.ok) {
       const errorData = await response.text();
-      console.error("DeepSeek API Error:", errorData);
+      console.error("Gemini API Error:", errorData);
       return NextResponse.json(
         { error: "Failed to communicate with AI" },
         { status: 500 },
@@ -94,7 +96,7 @@ Provide accurate, professional, context-aware translations suitable for a high-e
     }
 
     const data = await response.json();
-    const textOutput = data.choices?.[0]?.message?.content;
+    const textOutput = data.candidates?.[0]?.content?.parts?.[0]?.text;
 
     if (!textOutput) {
       return NextResponse.json(
@@ -108,7 +110,7 @@ Provide accurate, professional, context-aware translations suitable for a high-e
       parsedTranslations = JSON.parse(
         textOutput.replace(/```(?:json)?/gi, "").trim(),
       );
-    } catch (e) {
+    } catch (_e) {
       console.error("Failed to parse OpenRouter JSON:", textOutput);
       return NextResponse.json(
         { error: "AI returned invalid JSON" },

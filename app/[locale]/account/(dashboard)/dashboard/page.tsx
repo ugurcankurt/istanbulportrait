@@ -1,7 +1,6 @@
 import {
   ArrowRight,
   Calendar,
-  CheckCircle,
   Clock,
   Image as ImageIcon,
   Package,
@@ -62,9 +61,10 @@ export default async function CustomerDashboardPage() {
         </Card>
       ) : (
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+          {/* biome-ignore lint/suspicious/noExplicitAny: Data is dynamic */}
           {bookings.map((booking: any) => {
             const date = new Date(booking.booking_date);
-            const isUpcoming = date > new Date();
+            const _isUpcoming = date > new Date();
 
             return (
               <Card
@@ -111,13 +111,17 @@ export default async function CustomerDashboardPage() {
                         </div>
                         <div className="flex flex-wrap gap-1.5">
                           {booking.selected_addon_details.map(
+                            // biome-ignore lint/suspicious/noExplicitAny: Data is dynamic
                             (addon: any, idx: number) => (
                               <Badge
                                 key={addon.id || `${addon.name}-${idx}`}
                                 variant="secondary"
                                 className="text-xs bg-primary/10 text-primary border border-primary/20 font-medium"
                               >
-                                +{addon.name}{addon.quantity && addon.quantity > 1 ? ` (x${addon.quantity})` : ""}
+                                +{addon.name}
+                                {addon.quantity && addon.quantity > 1
+                                  ? ` (x${addon.quantity})`
+                                  : ""}
                               </Badge>
                             ),
                           )}

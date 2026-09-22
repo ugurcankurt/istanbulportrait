@@ -1,6 +1,6 @@
 "use client";
 
-import { CheckCircle2, Pencil, Plus, Trash2, XCircle } from "lucide-react";
+import { CheckCircle2, Pencil, XCircle } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";

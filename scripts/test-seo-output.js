@@ -1,4 +1,4 @@
-const http = require("http");
+const http = require("node:http");
 
 async function fetchPage(path) {
   return new Promise((resolve, reject) => {
@@ -32,8 +32,8 @@ function extractTags(html) {
   for (const match of jsonLdMatches) {
     try {
       jsonLds.push(JSON.parse(match[1]));
-    } catch (e) {
-      jsonLds.push("INVALID JSON: " + match[1]);
+    } catch (_e) {
+      jsonLds.push(`INVALID JSON: ${match[1]}`);
     }
   }
 
@@ -62,7 +62,7 @@ async function run() {
   console.log("Schema count:", homeTags.schemaCount);
   console.log(
     "Schema types:",
-    homeTags.schemas.map((s) => s && s["@type"]),
+    homeTags.schemas.map((s) => s?.["@type"]),
   );
 
   console.log("\n--- Testing Package Page (/tr/paketler/istanbul-paketi) ---");

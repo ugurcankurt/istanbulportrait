@@ -1,19 +1,17 @@
 "use client";
 
+import { CreditCard, LayoutDashboard, LogOut, Menu } from "lucide-react";
+import Image from "next/image";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 import {
   Sheet,
   SheetContent,
-  SheetTrigger,
-  SheetTitle,
   SheetHeader,
+  SheetTitle,
+  SheetTrigger,
 } from "@/components/ui/sheet";
-import { Button } from "@/components/ui/button";
-import { Menu, LayoutDashboard, CreditCard, LogOut } from "lucide-react";
-import { Link } from "@/i18n/routing";
-import { usePathname } from "@/i18n/routing";
-import { useTranslations } from "next-intl";
-import Image from "next/image";
+import { Link, usePathname } from "@/i18n/routing";
 import { cn } from "@/lib/utils";
 
 export function MobileNav({

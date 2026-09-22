@@ -245,7 +245,7 @@ export const settingsService = {
         featurable_widget_id:
           rawData.featurable_widget_id || defaultSettings.featurable_widget_id,
       };
-    } catch (e) {
+    } catch (_e) {
       return defaultSettings;
     }
   }, ["site-settings"]),

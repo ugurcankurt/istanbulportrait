@@ -2,11 +2,11 @@
 
 import { ArrowRight, Clock, MapPin } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
+import { useLocale, useTranslations } from "next-intl";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-import Link from "next/link";
 import type { LocationDB } from "@/lib/locations-service";
-import { useLocale, useTranslations } from "next-intl";
 import { generateNativeSlug } from "@/lib/slug-generator";
 
 interface LocationCardProps {

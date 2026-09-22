@@ -11,7 +11,7 @@ export async function GET(request: NextRequest) {
     const searchParams = request.nextUrl.searchParams;
     const url = searchParams.get("url");
 
-    if (!url || !url.startsWith("https://lh3.googleusercontent.com/")) {
+    if (!url?.startsWith("https://lh3.googleusercontent.com/")) {
       return new NextResponse("Invalid URL", { status: 400 });
     }
 

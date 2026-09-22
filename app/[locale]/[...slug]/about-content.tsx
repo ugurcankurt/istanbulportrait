@@ -54,6 +54,7 @@ export async function AboutPageContent({
 
       <div className="section-contain-auto">
         <AboutSection
+          // biome-ignore lint/suspicious/noExplicitAny: Type mismatch
           dbPage={dbPage as any}
           locale={locale}
           founderImageUrl={settings.founder_image_url}

@@ -24,7 +24,6 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import {
   DropdownMenu,
@@ -56,7 +55,7 @@ import { type Customer, useCustomersStore } from "@/stores/customers-store";
 function CustomerDetailsDialog({ customer }: { customer: Customer }) {
   const [open, setOpen] = useState(false);
   const formatCurrency = (amount: number) => `€${amount.toLocaleString()}`;
-  const averageSpent =
+  const _averageSpent =
     customer.confirmed_bookings > 0
       ? customer.total_value / customer.confirmed_bookings
       : 0;

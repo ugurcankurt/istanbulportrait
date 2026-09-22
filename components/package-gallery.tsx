@@ -1,7 +1,7 @@
 "use client";
 
-import useEmblaCarousel from "embla-carousel-react";
 import { Dialog as DialogPrimitive } from "@base-ui/react/dialog";
+import useEmblaCarousel from "embla-carousel-react";
 import {
   ChevronLeft,
   ChevronRight,
@@ -11,13 +11,12 @@ import {
   X,
 } from "lucide-react";
 import Image from "next/image";
+import { useLocale, useTranslations } from "next-intl";
 import * as React from "react";
-import { Button, buttonVariants } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Dialog, DialogClose, DialogTitle } from "@/components/ui/dialog";
-import { useTranslations, useLocale } from "next-intl";
-import { getTextDirection } from "@/lib/utils";
+import { cn, getTextDirection } from "@/lib/utils";
 
 interface PackageGalleryProps {
   images: string[];
@@ -77,7 +76,7 @@ const VideoPlayer = ({
       ) {
         return { type: "mp4", src: url };
       }
-    } catch (e) {
+    } catch (_e) {
       return null;
     }
     return null;

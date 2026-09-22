@@ -53,30 +53,33 @@ export const addonsService = {
     if (!res.ok) throw new Error("Failed to delete addon");
   },
 
-  getActiveAddonsForPackage: cache(async (packageId: string): Promise<AddonDB[]> => {
-    const supabase = getSupabaseClient();
+  getActiveAddonsForPackage: cache(
+    async (packageId: string): Promise<AddonDB[]> => {
+      const supabase = getSupabaseClient();
 
-    const { data: packageAddons, error: relationError } = await supabase
-      .from("package_addons")
-      .select("addon_id")
-      .eq("package_id", packageId);
+      const { data: packageAddons, error: relationError } = await supabase
+        .from("package_addons")
+        .select("addon_id")
+        .eq("package_id", packageId);
 
-    if (relationError || !packageAddons || packageAddons.length === 0) return [];
+      if (relationError || !packageAddons || packageAddons.length === 0)
+        return [];
 
-    const addonIds = packageAddons.map((pa: any) => pa.addon_id);
+      const addonIds = packageAddons.map((pa: any) => pa.addon_id);
 
-    const { data: addons, error } = await supabase
-      .from("addons")
-      .select("*")
-      .in("id", addonIds)
-      .eq("is_active", true)
-      .order("created_at", { ascending: false });
+      const { data: addons, error } = await supabase
+        .from("addons")
+        .select("*")
+        .in("id", addonIds)
+        .eq("is_active", true)
+        .order("created_at", { ascending: false });
 
-    if (error) {
-      console.error("Error fetching addons for package:", error);
-      return [];
-    }
+      if (error) {
+        console.error("Error fetching addons for package:", error);
+        return [];
+      }
 
-    return addons as AddonDB[];
-  }),
+      return addons as AddonDB[];
+    },
+  ),
 };

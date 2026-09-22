@@ -16,7 +16,7 @@ function truncateReviewText(text: string, maxLength: number = 150): string {
   const lastSpace = truncated.lastIndexOf(" ");
 
   // If no space found, just truncate at max length
-  if (lastSpace === -1) return truncated + "...";
+  if (lastSpace === -1) return `${truncated}...`;
 
   // Return text up to last complete word
   const result = truncated.substring(0, lastSpace);
@@ -37,10 +37,12 @@ export const getTranslatedReview = unstable_cache(
     }
 
     try {
-      const apiKey = process.env.NVIDIA_API_KEY;
+      const { settingsService } = await import("@/lib/settings-service");
+      const settings = await settingsService.getSettings();
+      const apiKey = settings.gemini_api_key || process.env.GEMINI_API_KEY;
 
       if (!apiKey) {
-        console.warn("No NVIDIA API key found for review translation.");
+        console.warn("No Gemini API key found for review translation.");
         return text;
       }
 
@@ -53,46 +55,49 @@ Review to translate:
 ${text}
 `;
 
-      const nvidiaUrl = `https://integrate.api.nvidia.com/v1/chat/completions`;
+      const geminiUrl =
+        "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent";
       let response;
 
       try {
         const controller = new AbortController();
-        // 4 seconds max timeout for a SINGLE review translation
-        const timeoutId = setTimeout(() => controller.abort(), 4000);
+        // 15 seconds max timeout for a SINGLE review translation
+        const timeoutId = setTimeout(() => controller.abort(), 15000);
 
-        response = await fetch(nvidiaUrl, {
+        response = await fetch(geminiUrl, {
           method: "POST",
           headers: {
-            Authorization: `Bearer ${apiKey}`,
             "Content-Type": "application/json",
+            "x-goog-api-key": apiKey.trim(),
           },
           body: JSON.stringify({
-            model: "deepseek-ai/deepseek-v4-flash-0731",
-            messages: [{ role: "user", content: prompt }],
-            temperature: 0.2,
+            contents: [{ parts: [{ text: prompt }] }],
+            generationConfig: {
+              temperature: 0.2,
+            },
           }),
           signal: controller.signal,
         });
         clearTimeout(timeoutId);
       } catch (err) {
         console.warn(`Translation API timed out for review ${id}:`, err);
-        return text; // Fallback to original
+        throw new Error("Translation API timed out");
       }
 
-      if (!response || !response.ok) {
+      if (!response?.ok) {
+        const errorText = await response.text().catch(() => "Unknown error");
         console.warn(
-          `NVIDIA API Error for review ${id}. Status:`,
-          response?.status,
+          `Gemini API Error for review ${id}. Status: ${response?.status}`,
+          errorText,
         );
-        return text; // Fallback to original
+        throw new Error(`Gemini API Error: ${response?.status} - ${errorText}`);
       }
 
       const data = await response.json();
-      let textOutput = data.choices?.[0]?.message?.content;
+      let textOutput = data.candidates?.[0]?.content?.parts?.[0]?.text;
 
       if (!textOutput) {
-        return text;
+        throw new Error("No translation output");
       }
 
       // Clean up potential quotes if the AI added them anyway
@@ -109,7 +114,7 @@ ${text}
     }
   },
   ["gemini-review-translation-single-v1"],
-  { revalidate: 31536000 }, // Cache for 1 year
+  { revalidate: 31536000 }, // Cache for 365 days
 );
 
 class ReviewsService {
@@ -207,9 +212,30 @@ class ReviewsService {
         .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
         .slice(0, this.config.maxReviews || 100);
 
-      // We removed the native translation logic here to prevent blocking SSR.
-      // Translations are now handled client-side via /api/reviews/translate
-      const finalReviews = sortedReviews;
+      // Translate top 15 reviews for the requested locale during SSR
+      const reviewsToTranslate = sortedReviews.slice(0, 15);
+      const remainingReviews = sortedReviews.slice(15);
+
+      const translatedTopReviews = await Promise.all(
+        reviewsToTranslate.map(async (review) => {
+          if (locale === "en") return review;
+          try {
+            const translatedText = await getTranslatedReview(
+              review.id,
+              review.text,
+              locale,
+            );
+            return { ...review, text: translatedText };
+          } catch (e) {
+            console.error(`Failed to translate review ${review.id} in SSR:`, e);
+            // Fallback to original text on failure (so page doesn't crash),
+            // but since getTranslatedReview threw, unstable_cache won't cache it!
+            return review;
+          }
+        }),
+      );
+
+      const finalReviews = [...translatedTopReviews, ...remainingReviews];
 
       return {
         reviews: finalReviews,

@@ -72,14 +72,17 @@ export default async function CustomerPaymentsPage() {
         </Card>
       ) : (
         <div className="space-y-8">
+          {/* biome-ignore lint/suspicious/noExplicitAny: Data is dynamic */}
           {bookings.map((booking: any) => {
             const successfulPayments =
+              // biome-ignore lint/suspicious/noExplicitAny: Data is dynamic
               booking.payments?.filter((p: any) =>
                 ["success", "completed", "paid"].includes(
                   p.status?.toLowerCase(),
                 ),
               ) || [];
             const totalPaid = successfulPayments.reduce(
+              // biome-ignore lint/suspicious/noExplicitAny: Data is dynamic
               (sum: number, p: any) => sum + Number(p.amount),
               0,
             );
@@ -102,13 +105,17 @@ export default async function CustomerPaymentsPage() {
                       {booking.selected_addon_details &&
                         booking.selected_addon_details.length > 0 &&
                         booking.selected_addon_details.map(
+                          // biome-ignore lint/suspicious/noExplicitAny: Data is dynamic
                           (addon: any, idx: number) => (
                             <Badge
                               key={addon.id || `${addon.name}-${idx}`}
                               variant="secondary"
                               className="bg-primary/10 text-primary border border-primary/20 text-xs font-medium"
                             >
-                              +{addon.name}{addon.quantity && addon.quantity > 1 ? ` (x${addon.quantity})` : ""}
+                              +{addon.name}
+                              {addon.quantity && addon.quantity > 1
+                                ? ` (x${addon.quantity})`
+                                : ""}
                             </Badge>
                           ),
                         )}
@@ -157,6 +164,7 @@ export default async function CustomerPaymentsPage() {
                 <CardContent className="p-0">
                   {booking.payments && booking.payments.length > 0 ? (
                     <div className="divide-y divide-border/50">
+                      {/* biome-ignore lint/suspicious/noExplicitAny: Data is dynamic */}
                       {booking.payments.map((payment: any) => (
                         <div
                           key={payment.id}

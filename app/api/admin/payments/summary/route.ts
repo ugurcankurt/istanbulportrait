@@ -8,7 +8,7 @@ import {
   sanitizeErrorForProduction,
 } from "@/lib/errors";
 
-export async function GET(request: NextRequest) {
+export async function GET(_request: NextRequest) {
   try {
     // Verify admin access
     await requireServerAdmin();
@@ -35,7 +35,7 @@ export async function GET(request: NextRequest) {
         const year = date.getFullYear();
         const month = date.getMonth() + 1; // 1-12
         const currency = payment.currency || "EUR";
-        
+
         let amount = payment.amount || 0;
         let tryNet = 0;
         let tryVat = 0;
@@ -48,10 +48,11 @@ export async function GET(request: NextRequest) {
           if (payment.provider_response?.paidPrice) {
             amount = payment.provider_response.paidPrice;
             const fixedFee = payment.provider_response.iyziCommissionFee || 0;
-            const rateAmount = payment.provider_response.iyziCommissionRateAmount || 0;
+            const rateAmount =
+              payment.provider_response.iyziCommissionRateAmount || 0;
             iyzicoFee = fixedFee + rateAmount;
           }
-          
+
           tryNet = amount / 1.2;
           tryVat = amount - tryNet;
           tryCommission = iyzicoFee;

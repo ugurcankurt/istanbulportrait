@@ -1,6 +1,6 @@
 "use client";
 
-import { useTranslations, useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 
 const localeMap: Record<string, string> = {
   en: "en-US",
@@ -45,7 +45,7 @@ export function GygActivitiesSection() {
               Powered by{" "}
               <a
                 target="_blank"
-                rel="sponsored"
+                rel="noopener sponsored"
                 href="https://www.getyourguide.com/istanbul-l56/"
               >
                 GetYourGuide

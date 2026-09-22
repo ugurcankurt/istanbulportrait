@@ -1,5 +1,5 @@
-import { useId } from "react";
 import Script from "next/script";
+import { useId } from "react";
 
 interface SchemaInjectorProps {
   schema: any;

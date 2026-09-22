@@ -1,27 +1,20 @@
 "use client";
 
-import { useState } from "react";
-import { useForm, useFieldArray } from "react-hook-form";
-import { useRouter } from "next/navigation";
-import { toast } from "sonner";
 import {
-  Trash2,
-  UploadCloud,
-  Plus,
-  Sparkles,
   ChevronLeft,
   ChevronRight,
+  Plus,
+  Sparkles,
+  Trash2,
+  UploadCloud,
 } from "lucide-react";
-import { Spinner } from "@/components/ui/spinner";
 import Image from "next/image";
-
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { useFieldArray, useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { ButtonGroup } from "@/components/ui/button-group";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Switch } from "@/components/ui/switch";
-import { Label } from "@/components/ui/label";
-import { Field, FieldLabel } from "@/components/ui/field";
 import {
   Card,
   CardContent,
@@ -29,7 +22,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Field, FieldLabel } from "@/components/ui/field";
 import {
   Form,
   FormControl,
@@ -39,14 +32,19 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-
-import { packagesService, type PackageDB } from "@/lib/packages-service";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Spinner } from "@/components/ui/spinner";
+import { Switch } from "@/components/ui/switch";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Textarea } from "@/components/ui/textarea";
+import type { AddonDB } from "@/lib/addons-service";
+import { type PackageDB, packagesService } from "@/lib/packages-service";
 import {
-  uploadPackageImage,
   deletePackageImage,
+  uploadPackageImage,
   uploadPackageVideo,
 } from "@/lib/storage-utils";
-import { type AddonDB } from "@/lib/addons-service";
 
 interface PackageFormProps {
   initialData?: PackageDB;
@@ -65,7 +63,10 @@ const SUPPORTED_LOCALES = [
   "tr",
 ];
 
-export function PackageForm({ initialData, availableAddons = [] }: PackageFormProps) {
+export function PackageForm({
+  initialData,
+  availableAddons = [],
+}: PackageFormProps) {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [coverImagePreview, setCoverImagePreview] = useState<string | null>(
@@ -156,7 +157,7 @@ export function PackageForm({ initialData, availableAddons = [] }: PackageFormPr
 
   const handleRemoveCover = async () => {
     const currentUrl = form.getValues("cover_image");
-    if (currentUrl && currentUrl.startsWith("http")) {
+    if (currentUrl?.startsWith("http")) {
       // Best effort try to delete from bucket
       await deletePackageImage(currentUrl);
     }
@@ -227,7 +228,7 @@ export function PackageForm({ initialData, availableAddons = [] }: PackageFormPr
         form.setValue("gallery_images", updatedGallery, { shouldDirty: true });
         toast.success("Gallery images uploaded!", { id: "upload-gallery" });
       }
-    } catch (err) {
+    } catch (_err) {
       toast.error("Failed to upload some gallery images", {
         id: "upload-gallery",
       });
@@ -240,7 +241,7 @@ export function PackageForm({ initialData, availableAddons = [] }: PackageFormPr
     const currentGallery = form.getValues("gallery_images") || [];
     const urlToRemove = currentGallery[index];
 
-    if (urlToRemove && urlToRemove.startsWith("http")) {
+    if (urlToRemove?.startsWith("http")) {
       await deletePackageImage(urlToRemove);
     }
 
@@ -313,10 +314,7 @@ export function PackageForm({ initialData, availableAddons = [] }: PackageFormPr
 
       if (translateRes.ok) {
         const translateData = await translateRes.json();
-        if (
-          translateData.translations &&
-          translateData.translations[activeTab]
-        ) {
+        if (translateData.translations?.[activeTab]) {
           const translated = translateData.translations[activeTab];
           form.setValue(`title.${activeTab}`, translated.title, {
             shouldDirty: true,
@@ -354,7 +352,7 @@ export function PackageForm({ initialData, availableAddons = [] }: PackageFormPr
           id: "ai-translation",
         });
       }
-    } catch (err) {
+    } catch (_err) {
       toast.error("AI translation API error.", { id: "ai-translation" });
     }
   };
@@ -876,12 +874,16 @@ export function PackageForm({ initialData, availableAddons = [] }: PackageFormPr
                                     onCheckedChange={(checked) => {
                                       const currentValue = field.value || [];
                                       return checked
-                                        ? field.onChange([...currentValue, addon.id])
+                                        ? field.onChange([
+                                            ...currentValue,
+                                            addon.id,
+                                          ])
                                         : field.onChange(
                                             currentValue.filter(
-                                              (value: string) => value !== addon.id
-                                            )
-                                          )
+                                              (value: string) =>
+                                                value !== addon.id,
+                                            ),
+                                          );
                                     }}
                                   />
                                 </FormControl>
@@ -896,7 +898,7 @@ export function PackageForm({ initialData, availableAddons = [] }: PackageFormPr
                                   )}
                                 </div>
                               </FormItem>
-                            )
+                            );
                           }}
                         />
                       ))}

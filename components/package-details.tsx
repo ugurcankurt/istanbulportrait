@@ -1,48 +1,45 @@
 "use client";
 
-import { toast } from "sonner";
+import { format } from "date-fns";
 import {
+  Banknote,
   Check,
   CheckCircle2,
   Clock,
-  Banknote,
+  Heart,
   Image as ImageIcon,
   MapPin,
-  Telescope,
-  Star,
   Share2,
-  Heart,
+  Star,
+  Telescope,
 } from "lucide-react";
-import { useTranslations, useLocale } from "next-intl";
-import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState, useMemo } from "react";
-import { format } from "date-fns";
-import { useDateFnsLocale } from "@/hooks/use-date-fns-locale";
 import dynamic from "next/dynamic";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useLocale, useTranslations } from "next-intl";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
 import { BookingCard } from "@/components/booking-card";
 import { PackageGallery } from "@/components/package-gallery";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { useDateFnsLocale } from "@/hooks/use-date-fns-locale";
 
 const BookingModal = dynamic(
   () => import("@/components/booking-modal").then((mod) => mod.BookingModal),
   { ssr: false },
 );
-import { trackViewItem } from "@/lib/analytics";
-import {
-  calculateDiscountedPrice,
-  matchActiveSurcharge,
-  getPackagePricing,
-} from "@/lib/pricing";
-import { extractPhotosCount } from "@/lib/features-parser";
-import type { PackageDB } from "@/lib/packages-service";
-import type { DiscountDB } from "@/lib/discount-service";
+
 import { PackageReviews } from "@/components/package-reviews";
-import type { GoogleReview, AggregateRating } from "@/types/reviews";
-import { cn } from "@/lib/utils";
-import type { TimeSurcharge } from "@/lib/availability-service";
 import { useCurrency } from "@/contexts/currency-context";
 import type { AddonDB } from "@/lib/addons-service";
+import { trackViewItem } from "@/lib/analytics";
+import type { TimeSurcharge } from "@/lib/availability-service";
+import type { DiscountDB } from "@/lib/discount-service";
+import { extractPhotosCount } from "@/lib/features-parser";
+import type { PackageDB } from "@/lib/packages-service";
+import { getPackagePricing, matchActiveSurcharge } from "@/lib/pricing";
+import { cn } from "@/lib/utils";
+import type { AggregateRating, GoogleReview } from "@/types/reviews";
 
 export interface PackageDetailsProps {
   packageData: PackageDB;
@@ -80,7 +77,9 @@ export function PackageDetails({
   );
   const [peopleCount, setPeopleCount] = useState<number>(1);
   const [selectedAddons, setSelectedAddons] = useState<string[]>([]);
-  const [addonQuantities, setAddonQuantities] = useState<Record<string, number>>({});
+  const [addonQuantities, setAddonQuantities] = useState<
+    Record<string, number>
+  >({});
   const [isSaved, setIsSaved] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [yieldMultiplier, setYieldMultiplier] = useState<number>(1.0);
@@ -104,7 +103,7 @@ export function PackageDetails({
   const basePrice = Number(packageData.price);
 
   // Calculate package unit price before discount
-  const packageUnitPrice =
+  const _packageUnitPrice =
     basePrice * (1 + surchargePercentage / 100) * yieldMultiplier;
 
   // Calculate full dynamic pricing including people count for the correct deposit logic
@@ -144,16 +143,14 @@ export function PackageDetails({
     remainingAmount: fullPricing.remainingAmount,
   };
 
-
-
   const features =
-    packageData.features[locale] || packageData.features["en"] || [];
+    packageData.features[locale] || packageData.features.en || [];
   const packageName =
-    packageData.title[locale] || packageData.title["en"] || packageData.slug;
+    packageData.title[locale] || packageData.title.en || packageData.slug;
   const packageDesc =
-    packageData.description[locale] || packageData.description["en"] || "";
+    packageData.description[locale] || packageData.description.en || "";
   const packageDur =
-    packageData.duration[locale] || packageData.duration["en"] || "1 Hour";
+    packageData.duration[locale] || packageData.duration.en || "1 Hour";
   const gallery =
     packageData.gallery_images && packageData.gallery_images.length > 0
       ? packageData.gallery_images
@@ -168,15 +165,7 @@ export function PackageDetails({
       convertPrice(pricing.price),
       currency,
     );
-  }, [
-    packageData.slug,
-    packageName,
-    pricing.price,
-    pricing.isDiscounted,
-    basePrice,
-    currency,
-    convertPrice,
-  ]);
+  }, [packageData.slug, packageName, pricing.price, currency, convertPrice]);
 
   useEffect(() => {
     const savedPackages = JSON.parse(
@@ -400,7 +389,9 @@ export function PackageDetails({
                         </span>
                         <Badge className="bg-red-600 backdrop-blur-md text-white border border-red-500 font-serif tracking-widest uppercase text-xs px-3 py-1 shadow-sm">
                           {tui("save_percentage", {
-                            percentage: Math.round(pricing.discountPercentage * 100),
+                            percentage: Math.round(
+                              pricing.discountPercentage * 100,
+                            ),
                           })}
                         </Badge>
                       </div>

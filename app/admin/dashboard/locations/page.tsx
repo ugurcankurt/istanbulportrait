@@ -10,7 +10,7 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 import {
   AlertDialog,
@@ -55,11 +55,7 @@ export default function LocationsAdminPage() {
     null,
   );
 
-  useEffect(() => {
-    fetchLocations();
-  }, []);
-
-  const fetchLocations = async () => {
+  const fetchLocations = useCallback(async () => {
     setIsLoading(true);
     try {
       const data = await locationsService.getAllLocationsAdmin();
@@ -70,7 +66,11 @@ export default function LocationsAdminPage() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    fetchLocations();
+  }, [fetchLocations]);
 
   const handleDelete = async () => {
     if (!locationToDelete) return;

@@ -43,10 +43,10 @@ export function FacebookPixel({ pixelId }: { pixelId?: string | null }) {
       if (!pixelId || typeof window === "undefined" || !window.fbq) return;
 
       const userData = getUserDataForAdvancedMatching();
-      let hashed: Record<string, string> = {};
+      const hashed: Record<string, string> = {};
 
       // Check URL for advanced matching parameters passed from email campaigns
-      let updatedUserData = { ...userData };
+      const updatedUserData = { ...userData };
       let hasUrlUserData = false;
 
       const urlEm = searchParams.get("em");

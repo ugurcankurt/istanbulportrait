@@ -41,9 +41,5 @@ export async function HomeGalleryWrapper({
     return imagesList;
   });
 
-  return (
-    <>
-      <GallerySection header={header} images={galleryImages} />
-    </>
-  );
+  return <GallerySection header={header} images={galleryImages} />;
 }

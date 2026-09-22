@@ -1,21 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { Clock, History, Images } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useTranslations } from "next-intl";
-import { generateNativeSlug } from "@/lib/slug-generator";
-import { calculateDiscountedPrice } from "@/lib/pricing";
-import type { PackageId } from "@/lib/validations";
-import { usePackagesStore } from "@/stores/packages-store";
-import type { DiscountDB } from "@/lib/discount-service";
-import { Card, CardHeader } from "@/components/ui/card";
+import { useFormatter, useLocale, useTranslations } from "next-intl";
+import { useEffect, useState } from "react";
 import { Badge } from "@/components/ui/badge";
-import { useLocale, useFormatter } from "next-intl";
-import { useCurrency } from "@/contexts/currency-context";
-import { cn } from "@/lib/utils";
-import { extractPhotosCount } from "@/lib/features-parser";
+import { Card, CardHeader } from "@/components/ui/card";
 import {
   Carousel,
   CarouselContent,
@@ -23,6 +14,14 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
+import { useCurrency } from "@/contexts/currency-context";
+import type { DiscountDB } from "@/lib/discount-service";
+import { extractPhotosCount } from "@/lib/features-parser";
+import { calculateDiscountedPrice } from "@/lib/pricing";
+import { generateNativeSlug } from "@/lib/slug-generator";
+import { cn } from "@/lib/utils";
+import type { PackageId } from "@/lib/validations";
+import { usePackagesStore } from "@/stores/packages-store";
 
 export interface LastVisited {
   id: PackageId;
@@ -45,7 +44,7 @@ export function ResumeViewingCard({
   activeDiscounts = null,
 }: ResumeViewingCardProps) {
   const [localVisited, setLocalVisited] = useState<LastVisited[]>([]);
-  const t = useTranslations("packages");
+  const _t = useTranslations("packages");
   const thero = useTranslations("hero");
   const tui = useTranslations("ui");
 
@@ -144,14 +143,14 @@ export function ResumeViewingCard({
 
               // Use dynamic translations
               const locFeatures =
-                packageDb?.features[locale] || packageDb?.features["en"] || [];
+                packageDb?.features[locale] || packageDb?.features.en || [];
               const locName =
                 packageDb?.title[locale] ||
-                packageDb?.title["en"] ||
+                packageDb?.title.en ||
                 packageDb?.slug ||
                 packageId;
               const locDuration =
-                packageDb?.duration[locale] || packageDb?.duration["en"] || "";
+                packageDb?.duration[locale] || packageDb?.duration.en || "";
               const locPhotos = extractPhotosCount(locFeatures);
               const packageImage = packageDb?.cover_image || "";
 
@@ -223,11 +222,12 @@ export function ResumeViewingCard({
                               </span>
                             )}
                           </div>
-                          {pricing.isDiscounted && pricing.discountPercentage > 0 && (
-                            <Badge className="bg-red-600 backdrop-blur-md border border-red-500 text-white px-2 py-0.5 text-[10px] shadow-sm ml-2 whitespace-nowrap">
-                              {pricing.discountName}
-                            </Badge>
-                          )}
+                          {pricing.isDiscounted &&
+                            pricing.discountPercentage > 0 && (
+                              <Badge className="bg-red-600 backdrop-blur-md border border-red-500 text-white px-2 py-0.5 text-[10px] shadow-sm ml-2 whitespace-nowrap">
+                                {pricing.discountName}
+                              </Badge>
+                            )}
                         </div>
                       </CardHeader>
                     </Card>

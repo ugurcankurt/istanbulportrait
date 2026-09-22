@@ -41,6 +41,7 @@ import { useAuthStore } from "@/stores/auth-store";
 
 interface AdminLayoutClientProps {
   children: React.ReactNode;
+  // biome-ignore lint/suspicious/noExplicitAny: Settings type varies
   settings?: any;
 }
 

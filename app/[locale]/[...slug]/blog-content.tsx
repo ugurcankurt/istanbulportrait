@@ -1,13 +1,10 @@
-import Image from "next/image";
 import NextLink from "next/link";
 import { getTranslations } from "next-intl/server";
 import { BlogCard } from "@/components/blog-card";
 import { BreadcrumbNav } from "@/components/breadcrumb-nav";
 import { PageHeroSection } from "@/components/page-hero-section";
 import { SchemaInjector } from "@/components/schema-injector";
-import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { getPublishedBlogPosts } from "@/lib/blog/blog-service";
-import { formatBlogDate } from "@/lib/blog/blog-utils";
 import { pagesContentService } from "@/lib/pages-content-service";
 import {
   buildCollectionPageSchema,
@@ -37,7 +34,7 @@ export async function BlogPageContent({
   const dynamicSubtitle =
     dbPage?.subtitle?.[locale] || dbPage?.subtitle?.en || "";
   const parentSegment = dbPage?.title?.[locale]
-    ? generateNativeSlug(dbPage.title[locale]!)
+    ? generateNativeSlug(dbPage.title[locale] || "")
     : "blog";
 
   const { posts, pagination } = await getPublishedBlogPosts({

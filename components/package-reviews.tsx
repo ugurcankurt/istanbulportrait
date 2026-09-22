@@ -1,17 +1,9 @@
-import {
-  CheckCircle,
-  Info,
-  Quote,
-  Star,
-  ThumbsUp,
-  X,
-  ChevronDown,
-} from "lucide-react";
+import { CheckCircle, ChevronDown, Info, Star, X } from "lucide-react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
-import { useState, useMemo } from "react";
-import { cn } from "@/lib/utils";
+import { useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import type { AggregateRating, GoogleReview } from "@/types/reviews";
 
 interface PackageReviewsProps {
@@ -73,7 +65,7 @@ export function PackageReviews({
     return reviews.filter((review) => review.rating === filterRating);
   }, [reviews, filterRating]);
 
-  const handleHelpfulClick = () => {
+  const _handleHelpfulClick = () => {
     window.open("https://maps.app.goo.gl/Q2v1FDMw5LJHBBCA9", "_blank");
   };
 

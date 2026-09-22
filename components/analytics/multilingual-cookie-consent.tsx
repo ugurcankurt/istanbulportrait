@@ -1,11 +1,11 @@
 "use client";
 
 import { useLocale, useTranslations } from "next-intl";
+import { useEffect, useRef } from "react";
 import { FacebookPixelConsentUpdate } from "@/components/analytics/facebook-pixel";
 import { GoogleAnalyticsConsentUpdate } from "@/components/analytics/google-analytics";
 import { useConsent } from "@/contexts/consent-context";
 import { Link } from "@/i18n/routing";
-import { useEffect, useRef } from "react";
 
 export function MultilingualCookieConsent() {
   const locale = useLocale();
@@ -33,7 +33,7 @@ export function MultilingualCookieConsent() {
     // Resize observer to handle dynamic height changes (e.g. orientation change)
     if (consent === null && bannerRef.current) {
       const resizeObserver = new ResizeObserver((entries) => {
-        for (let entry of entries) {
+        for (const entry of entries) {
           const newHeight = entry.target.getBoundingClientRect().height;
           document.documentElement.style.setProperty(
             "--cookie-banner-height",

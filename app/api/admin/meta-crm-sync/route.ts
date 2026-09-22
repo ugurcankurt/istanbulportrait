@@ -124,7 +124,7 @@ async function handleSync(request: NextRequest) {
         const eventTime = rawTime < sevenDaysAgo ? sevenDaysAgo : rawTime;
 
         const userData: any = {};
-        
+
         if (booking.user_email) {
           userData.em = [await hashCustomerData(booking.user_email)];
         }

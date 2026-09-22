@@ -1,7 +1,7 @@
-import { useState, useEffect } from "react";
 import type { Locale } from "date-fns";
-import { useLocale } from "next-intl";
 import { enUS } from "date-fns/locale/en-US";
+import { useLocale } from "next-intl";
+import { useEffect, useState } from "react";
 
 export function useDateFnsLocale() {
   const locale = useLocale();

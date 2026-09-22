@@ -192,7 +192,7 @@ export const useBlogStore = create<BlogState>()(
             throw new Error(errorData.error || "Failed to create post");
           }
 
-          const data = await response.json();
+          const _data = await response.json();
 
           set({ loading: false, error: null });
 

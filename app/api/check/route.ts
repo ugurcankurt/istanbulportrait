@@ -15,7 +15,7 @@ export async function GET() {
     payments: {
       data: payments,
       error: pErr,
-      hasTable: !pErr || pErr.code !== "42P01",
+      hasTable: pErr?.code !== "42P01",
     },
     bookings: {
       columns: bookings && bookings.length > 0 ? Object.keys(bookings[0]) : [],

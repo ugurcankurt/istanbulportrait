@@ -30,7 +30,7 @@ export default function PromoCodesPage() {
       if (!res.ok) throw new Error("Failed to fetch");
       const data = await res.json();
       setPromos(data);
-    } catch (error) {
+    } catch (_error) {
       toast.error("Failed to load promo codes.");
     } finally {
       setIsLoading(false);
@@ -39,7 +39,7 @@ export default function PromoCodesPage() {
 
   useEffect(() => {
     fetchPromos();
-  }, []);
+  }, [fetchPromos]);
 
   const handleSave = async () => {
     if (!formData.code.trim()) return toast.error("Promo code is required");
@@ -60,7 +60,7 @@ export default function PromoCodesPage() {
         code: formData.code.trim().toUpperCase(),
         discount_percentage: percentageVal,
         is_active: formData.is_active,
-        max_uses: formData.max_uses ? parseInt(formData.max_uses) : null,
+        max_uses: formData.max_uses ? parseInt(formData.max_uses, 10) : null,
         start_date: formData.start_date || null,
         end_date: formData.end_date || null,
       };
@@ -85,7 +85,7 @@ export default function PromoCodesPage() {
         end_date: "",
       });
       fetchPromos();
-    } catch (e) {
+    } catch (_e) {
       toast.error("An error occurred. Check if the code is already used.");
       setIsLoading(false);
     }
@@ -113,7 +113,7 @@ export default function PromoCodesPage() {
       if (!res.ok) throw new Error("Failed to delete");
       toast.success("Promo code deleted");
       fetchPromos();
-    } catch (e) {
+    } catch (_e) {
       toast.error("Failed to delete promo code");
     }
   };
@@ -128,7 +128,7 @@ export default function PromoCodesPage() {
       if (!res.ok) throw new Error("Failed to toggle");
       toast.success("Promo code status updated");
       fetchPromos();
-    } catch (e) {
+    } catch (_e) {
       toast.error("Failed to update status");
     }
   };

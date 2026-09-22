@@ -27,6 +27,7 @@ export async function PrivacyPageContent({
       </div>
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-24 max-w-4xl">
         <div className="space-y-6">
+          {/* biome-ignore lint/suspicious/noExplicitAny: Data is dynamic */}
           {sections.map((section: any, idx: number) => {
             const secTitle = section.title?.[locale] || section.title?.en || "";
             const secDesc =
@@ -46,6 +47,7 @@ export async function PrivacyPageContent({
             if (!secTitle && !secDesc && secItems.length === 0) return null;
 
             return (
+              // biome-ignore lint/suspicious/noArrayIndexKey: Safe usage
               <Card key={idx}>
                 {secTitle && (
                   <CardHeader>
@@ -62,6 +64,7 @@ export async function PrivacyPageContent({
                   {secItems.length > 0 && (
                     <ul className="list-disc list-inside space-y-2 text-sm text-muted-foreground">
                       {secItems.map((item: string, i: number) => (
+                        // biome-ignore lint/suspicious/noArrayIndexKey: Safe usage
                         <li key={i}>{item}</li>
                       ))}
                     </ul>

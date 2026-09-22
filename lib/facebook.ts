@@ -7,8 +7,14 @@ export async function hashCustomerData(value: string): Promise<string> {
 
   // Normalize the data before hashing
   const normalized = value.toLowerCase().trim();
-  
-  if (!normalized || normalized === "undefined" || normalized === "null" || normalized === "none") return "";
+
+  if (
+    !normalized ||
+    normalized === "undefined" ||
+    normalized === "null" ||
+    normalized === "none"
+  )
+    return "";
 
   // For both Browser and Node.js 19+ environment
   const msgUint8 = new TextEncoder().encode(normalized);
@@ -27,7 +33,7 @@ export async function hashPhoneNumber(phone: string): Promise<string> {
 
   // Remove all non-digit characters
   const digitsOnly = phone.replace(/\D/g, "");
-  
+
   if (!digitsOnly || digitsOnly.length < 7) return "";
 
   // Add country code if not present (assume Turkey +90)
@@ -88,7 +94,7 @@ export interface FacebookConversionEvent {
 // Returns true on success, or error string on failure
 export async function sendToFacebookConversionsAPI(
   events: FacebookConversionEvent[],
-  maxRetries = 2
+  maxRetries = 2,
 ): Promise<boolean | string> {
   const settings = await settingsService.getSettings();
   const FACEBOOK_ACCESS_TOKEN = settings.facebook_access_token;
@@ -127,11 +133,13 @@ export async function sendToFacebookConversionsAPI(
 
       // Return full error object for debugging
       lastErrorDetail = JSON.stringify(result?.error || result);
-      
+
       // Check if it is a transient error to retry
       if (result?.error?.is_transient && attempt < maxRetries) {
         attempt++;
-        console.warn(`Facebook API transient error (attempt ${attempt}). Retrying...`);
+        console.warn(
+          `Facebook API transient error (attempt ${attempt}). Retrying...`,
+        );
         await new Promise((resolve) => setTimeout(resolve, attempt * 1500));
         continue;
       }
@@ -139,10 +147,13 @@ export async function sendToFacebookConversionsAPI(
       console.error("Facebook Conversions API Error:", lastErrorDetail);
       return lastErrorDetail;
     } catch (error) {
-      lastErrorDetail = error instanceof Error ? error.message : "Network error";
+      lastErrorDetail =
+        error instanceof Error ? error.message : "Network error";
       if (attempt < maxRetries) {
         attempt++;
-        console.warn(`Facebook API network error (attempt ${attempt}). Retrying...`);
+        console.warn(
+          `Facebook API network error (attempt ${attempt}). Retrying...`,
+        );
         await new Promise((resolve) => setTimeout(resolve, attempt * 1500));
         continue;
       }
@@ -150,7 +161,7 @@ export async function sendToFacebookConversionsAPI(
       return lastErrorDetail;
     }
   }
-  
+
   return lastErrorDetail;
 }
 

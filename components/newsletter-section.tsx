@@ -1,12 +1,12 @@
 "use client";
 
+import { ArrowRight, CheckCircle2, Loader2, Mail } from "lucide-react";
+import { useLocale, useTranslations } from "next-intl";
 import { useState } from "react";
-import { useTranslations, useLocale } from "next-intl";
-import { Mail, ArrowRight, Loader2, CheckCircle2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Card, CardContent } from "@/components/ui/card";
 import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 
 export function NewsletterSection() {
   const t = useTranslations("ui");
