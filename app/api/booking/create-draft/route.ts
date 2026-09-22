@@ -120,26 +120,43 @@ export async function POST(request: NextRequest) {
         }
       }
 
-      const { data: booking, error } = await supabaseAdmin
+      const draftInsertData: Record<string, any> = {
+        package_id: packageId,
+        user_name: customerName,
+        user_email: customerEmail,
+        user_phone: customerPhone,
+        booking_date: bookingDate,
+        booking_time: bookingTime,
+        status: "draft", // IMPORTANT: Draft status
+        total_amount: totalAmount,
+        notes: notes || null,
+        locale: locale, // Save language preference
+        abandoned_email_sent: false,
+        people_count: peopleCount || null,
+        selected_addons: selectedAddons || [],
+        selected_addon_details: addonDetails,
+        gclid: body.gclid || null,
+        gbraid: body.gbraid || null,
+        wbraid: body.wbraid || null,
+        ip_address: ip || null,
+      };
+
+      let { data: booking, error } = await supabaseAdmin
         .from("bookings")
-        .insert({
-          package_id: packageId,
-          user_name: customerName,
-          user_email: customerEmail,
-          user_phone: customerPhone,
-          booking_date: bookingDate,
-          booking_time: bookingTime,
-          status: "draft", // IMPORTANT: Draft status
-          total_amount: totalAmount,
-          notes: notes || null,
-          locale: locale, // Save language preference
-          abandoned_email_sent: false,
-          people_count: peopleCount || null,
-          selected_addons: selectedAddons || [],
-          selected_addon_details: addonDetails,
-        })
+        .insert(draftInsertData)
         .select()
         .single();
+
+      if (error && error.message?.includes("gclid")) {
+        delete draftInsertData.gclid;
+        const retry = await supabaseAdmin
+          .from("bookings")
+          .insert(draftInsertData)
+          .select()
+          .single();
+        booking = retry.data;
+        error = retry.error;
+      }
 
       if (error) throw error;
 

@@ -644,14 +644,10 @@ export function CheckoutForm({
       const fbc = getCookie("_fbc");
       const fbp = getCookie("_fbp");
 
-      const gbraid =
-        typeof window !== "undefined"
-          ? localStorage.getItem("google_ads_gbraid")
-          : null;
-      const wbraid =
-        typeof window !== "undefined"
-          ? localStorage.getItem("google_ads_wbraid")
-          : null;
+      const { getGoogleAdsClickIdentifiers } = await import(
+        "@/hooks/use-google-ads-tracking"
+      );
+      const googleAdsIdentifiers = getGoogleAdsClickIdentifiers();
 
       const bookingResponse = await fetch("/api/booking/create-confirmed", {
         method: "POST",
@@ -659,6 +655,9 @@ export function CheckoutForm({
         body: JSON.stringify({
           appliedPromo,
           ...bookingData,
+          gclid: googleAdsIdentifiers.gclid,
+          gbraid: googleAdsIdentifiers.gbraid,
+          wbraid: googleAdsIdentifiers.wbraid,
           selectedAddons: (preFilledBookingData as any)?.selectedAddons || [],
           addonQuantities: (preFilledBookingData as any)?.addonQuantities || {},
           basePrice: (preFilledBookingData as any)?.basePrice,
@@ -673,8 +672,6 @@ export function CheckoutForm({
           provider: "cash",
           providerResponse: { method: "cash" },
           eventId,
-          gbraid,
-          wbraid,
           bookingId: bookingId || undefined,
           locale,
           fbc,
@@ -716,6 +713,8 @@ export function CheckoutForm({
         eventId,
         (preFilledBookingData as any)?.yieldReason || "standard",
       );
+      // Mark this booking as already tracked so SuccessTracker won't double-fire
+      sessionStorage.setItem(`purchase_tracked_${bookingResult.booking.id}`, "1");
       trackYandexPurchase(
         bookingResult.booking.id,
         selectedPackage,

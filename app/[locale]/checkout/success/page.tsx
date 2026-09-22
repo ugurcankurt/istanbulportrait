@@ -1,5 +1,6 @@
 import { Suspense } from "react";
 import { BookingSuccess } from "@/components/booking-success";
+import { SuccessTracker } from "@/components/success-tracker";
 
 export default async function CheckoutPage({
   searchParams,
@@ -58,20 +59,31 @@ export default async function CheckoutPage({
   };
 
   return (
-    <Suspense
-      fallback={
-        <div className="h-dvh flex flex-col items-center justify-center space-y-4 animate-pulse">
-          <div className="w-16 h-16 rounded-full bg-primary/20"></div>
-          <p className="text-muted-foreground">Loading booking...</p>
-        </div>
-      }
-    >
-      <BookingSuccess
+    <>
+      {/* Fire purchase tracking on direct URL access (email link, bookmark, etc.) */}
+      <SuccessTracker
         bookingId={booking.id}
-        // biome-ignore lint/suspicious/noExplicitAny: Type mismatch
-        packageId={booking.package_id as any}
-        confirmedBooking={confirmedBookingData}
+        packageId={booking.package_id}
+        totalAmount={booking.total_amount}
+        customerEmail={booking.user_email}
+        customerPhone={booking.user_phone}
+        customerName={booking.user_name}
       />
-    </Suspense>
+      <Suspense
+        fallback={
+          <div className="h-dvh flex flex-col items-center justify-center space-y-4 animate-pulse">
+            <div className="w-16 h-16 rounded-full bg-primary/20"></div>
+            <p className="text-muted-foreground">Loading booking...</p>
+          </div>
+        }
+      >
+        <BookingSuccess
+          bookingId={booking.id}
+          // biome-ignore lint/suspicious/noExplicitAny: Type mismatch
+          packageId={booking.package_id as any}
+          confirmedBooking={confirmedBookingData}
+        />
+      </Suspense>
+    </>
   );
 }

@@ -229,8 +229,8 @@ export default async function LocaleLayout({
           dangerouslySetInnerHTML={{
             __html: `
               window.dataLayer = window.dataLayer || [];
-              function gtag(){dataLayer.push(arguments);}
-              gtag('consent', 'default', {
+              window.gtag = window.gtag || function(){ (window.dataLayer = window.dataLayer || []).push(arguments); };
+              window.gtag('consent', 'default', {
                 'analytics_storage': '${isGranted}',
                 'ad_storage': '${isGranted}',
                 'ad_user_data': '${isGranted}',
@@ -243,6 +243,22 @@ export default async function LocaleLayout({
           }}
         />
         <SchemaInjector schema={buildOrganizationSchema(settings)} />
+        {/* Google Ads label variables — loaded early (beforeInteractive) so they are
+            available even if the user navigates directly to /checkout and purchases
+            before any scroll/click interaction triggers the InteractionLoader */}
+        <Script
+          id="google-ads-config"
+          strategy="beforeInteractive"
+          // biome-ignore lint/security/noDangerouslySetInnerHtml: Google Ads labels
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.__GOOGLE_ADS_ID__ = "${settings.google_ads_id || ""}";
+              window.__GOOGLE_ADS_PURCHASE_LABEL__ = "${settings.google_ads_purchase_label || ""}";
+              window.__GOOGLE_ADS_LEAD_LABEL__ = "${settings.google_ads_lead_label || ""}";
+              window.__GOOGLE_ADS_CHECKOUT_LABEL__ = "${settings.google_ads_begin_checkout_label || ""}";
+            `,
+          }}
+        />
         <Suspense fallback={null}>
           <GoogleAdsTracker />
         </Suspense>
@@ -267,17 +283,6 @@ export default async function LocaleLayout({
 
                     {/* Non-critical Analytics — deferred until first interaction to minimize main-thread work */}
                     <InteractionLoader>
-                      <Script
-                        id="google-ads-config"
-                        strategy="afterInteractive"
-                        // biome-ignore lint/security/noDangerouslySetInnerHtml: Google Ads
-                        dangerouslySetInnerHTML={{
-                          __html: `
-                            window.__GOOGLE_ADS_ID__ = "${settings.google_ads_id || ""}";
-                            window.__GOOGLE_ADS_LABEL__ = "${settings.google_ads_webhook_key || ""}";
-                          `,
-                        }}
-                      />
                       <FacebookPixel pixelId={settings.facebook_pixel_id} />
                       <DeferredAnalytics
                         gaId={settings.google_analytics_id}

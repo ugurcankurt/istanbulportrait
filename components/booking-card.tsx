@@ -30,7 +30,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useCurrency } from "@/contexts/currency-context";
 import { useIsMobile } from "@/hooks/use-mobile";
 import type { AddonDB } from "@/lib/addons-service";
-import { trackSchedule } from "@/lib/analytics";
+import { trackPackageAddToCart, trackSchedule } from "@/lib/analytics";
 import type { TimeSurcharge } from "@/lib/availability-service";
 import type { DiscountDB } from "@/lib/discount-service";
 import { matchActiveSurcharge } from "@/lib/pricing";
@@ -127,10 +127,10 @@ export function BookingCard({
 
   // Reset state when selection changes
   useEffect(() => {
-    if (checkState === "ready" || checkState === "success") {
-      setCheckState("idle");
-    }
-  }, [checkState]);
+    setCheckState((prev) =>
+      prev === "ready" || prev === "success" ? "idle" : prev,
+    );
+  }, [selectedDate, selectedTime, peopleCount]);
 
   useEffect(() => {
     if (!selectedDate || !packageId) {
@@ -831,7 +831,16 @@ export function BookingCard({
             <Button
               variant="default"
               className="w-full h-12 font-bold shadow-lg transition-transform active:scale-[0.98]"
-              onClick={onCheckAvailability}
+              onClick={() => {
+                // Fire add_to_cart before navigating to checkout
+                trackPackageAddToCart(
+                  packageId,
+                  packageDisplayName,
+                  displayPrice,
+                  "EUR",
+                );
+                onCheckAvailability();
+              }}
             >
               {tCheckout("buttons.continue")}
             </Button>

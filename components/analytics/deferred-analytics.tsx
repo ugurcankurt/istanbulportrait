@@ -45,7 +45,7 @@ export function DeferredAnalytics({
 }) {
   return (
     <>
-      {gaId && (
+      {(gaId || googleAdsId) && (
         <GoogleAnalytics
           gaId={gaId}
           userId={userId}

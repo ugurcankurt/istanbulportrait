@@ -12,22 +12,30 @@ export function GoogleAnalytics({
   userId?: string | null;
   googleAdsId?: string | null;
 }) {
-  if (!gaId) {
+  if (!gaId && !googleAdsId) {
     return null;
   }
 
+  const primaryTagId = gaId || googleAdsId;
+
   return (
     <>
-      <NextGoogleAnalytics gaId={gaId} />
+      {primaryTagId && <NextGoogleAnalytics gaId={primaryTagId} />}
       <Script
         id="google-analytics-custom-config"
         dangerouslySetInnerHTML={{
           __html: `
             window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
+            window.gtag = window.gtag || function(){ (window.dataLayer = window.dataLayer || []).push(arguments); };
             
-            ${userId ? `gtag('set', 'user_id', '${userId}');` : ""}
-            ${googleAdsId ? `gtag('config', '${googleAdsId}');` : ""}
+            ${userId ? `window.gtag('set', 'user_id', '${userId}');` : ""}
+            ${
+              googleAdsId
+                ? `window.gtag('config', '${googleAdsId}', {
+                    allow_enhanced_conversions: true
+                  });`
+                : ""
+            }
           `,
         }}
       />

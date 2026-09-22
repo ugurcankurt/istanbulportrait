@@ -32,7 +32,7 @@ const BookingModal = dynamic(
 import { PackageReviews } from "@/components/package-reviews";
 import { useCurrency } from "@/contexts/currency-context";
 import type { AddonDB } from "@/lib/addons-service";
-import { trackViewItem } from "@/lib/analytics";
+import { trackPackageAddToCart, trackViewItem } from "@/lib/analytics";
 import type { TimeSurcharge } from "@/lib/availability-service";
 import type { DiscountDB } from "@/lib/discount-service";
 import { extractPhotosCount } from "@/lib/features-parser";
@@ -485,7 +485,16 @@ export function PackageDetails({
                 t={t}
                 packageDuration={packageDur}
                 isPerPerson={packageData.is_per_person}
-                onCheckAvailability={() => setIsModalOpen(true)}
+                onCheckAvailability={() => {
+                  // Desktop: fire add_to_cart before opening booking modal
+                  trackPackageAddToCart(
+                    packageData.slug,
+                    packageName,
+                    fullPricing.totalPrice,
+                    "EUR",
+                  );
+                  setIsModalOpen(true);
+                }}
                 activeDiscounts={activeDiscounts}
                 timeSurcharges={timeSurcharges}
                 availableAddons={availableAddons}
@@ -600,7 +609,16 @@ export function PackageDetails({
           <Button
             size="lg"
             className="flex-1 max-w-[180px] h-12 text-sm font-black"
-            onClick={() => setIsModalOpen(true)}
+           onClick={() => {
+              // Mobile: fire add_to_cart before opening booking modal
+              trackPackageAddToCart(
+                packageData.slug,
+                packageName,
+                fullPricing.totalPrice,
+                "EUR",
+              );
+              setIsModalOpen(true);
+            }}
           >
             {tui("book_package")}
           </Button>

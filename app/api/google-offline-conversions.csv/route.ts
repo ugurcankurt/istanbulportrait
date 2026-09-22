@@ -1,7 +1,20 @@
+import { createHash } from "node:crypto";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { createServerAdminClient } from "@/lib/auth-server";
 import { settingsService } from "@/lib/settings-service";
+
+function sha256(value: string): string {
+  return createHash("sha256").update(value.trim().toLowerCase()).digest("hex");
+}
+
+function normalizeE164Phone(phone: string): string {
+  let cleaned = phone.replace(/[^\d+]/g, "");
+  if (!cleaned.startsWith("+")) {
+    cleaned = `+${cleaned}`;
+  }
+  return cleaned;
+}
 
 export async function GET(request: NextRequest) {
   try {
@@ -42,7 +55,7 @@ export async function GET(request: NextRequest) {
     const { data: bookings, error } = await supabase
       .from("bookings")
       .select(
-        "id, user_email, user_phone, total_amount, status, updated_at, gbraid, wbraid, ip_address",
+        "id, user_email, user_phone, total_amount, status, updated_at, gclid, gbraid, wbraid, ip_address",
       )
       .in("status", ["confirmed", "completed"])
       .gte("updated_at", thirtyDaysAgo.toISOString())
@@ -52,35 +65,40 @@ export async function GET(request: NextRequest) {
       throw error;
     }
 
-    // Required columns generally: Email, Phone Number, Conversion Name, Conversion Time, Conversion Value, Conversion Currency, Transaction ID, Event Source
-    // Added Consent columns for DMA compliance: Ad User Data Consent, Ad Personalization Consent
-    // Added Attribution columns: GBRAID, WBRAID, IP Address
+    // Google Ads Official Offline Conversion Format with Enhanced Conversions (SHA-256):
+    // Columns: Google Click ID,Email,Phone Number,Conversion Name,Conversion Time,Conversion Value,Conversion Currency,Transaction ID,Ad User Data Consent,Ad Personalization Consent,GBRAID,WBRAID
     let csvContent =
-      "Email,Phone Number,Conversion Name,Conversion Time,Conversion Value,Conversion Currency,Transaction ID,Event Source,Ad User Data Consent,Ad Personalization Consent,GBRAID,WBRAID,IP Address\n";
+      "Google Click ID,Email,Phone Number,Conversion Name,Conversion Time,Conversion Value,Conversion Currency,Transaction ID,Ad User Data Consent,Ad Personalization Consent,GBRAID,WBRAID\n";
 
     if (bookings) {
-      for (const booking of bookings) {
-        // Format time to YYYY-MM-DD HH:MM:SS
-        const conversionTime = new Date(booking.updated_at)
-          .toISOString()
-          .replace("T", " ")
-          .substring(0, 19);
+      const conversionName = '"Purchase"';
 
-        // Safely wrap fields in quotes to prevent CSV injection or formatting issues
-        const email = `"${booking.user_email || ""}"`;
-        const phone = `"${booking.user_phone || ""}"`;
-        const conversionName = '"Offline Booking Confirmed"';
+      for (const booking of bookings) {
+        // Format time to YYYY-MM-DD HH:MM:SS+00:00 ISO with explicit UTC offset
+        const d = new Date(booking.updated_at);
+        const pad = (n: number) => n.toString().padStart(2, "0");
+        const conversionTime = `${d.getUTCFullYear()}-${pad(d.getUTCMonth() + 1)}-${pad(d.getUTCDate())} ${pad(d.getUTCHours())}:${pad(d.getUTCMinutes())}:${pad(d.getUTCSeconds())}+00:00`;
+
+        // Hash email & phone with SHA-256 per Google Ads Enhanced Conversions requirements
+        const rawEmail = booking.user_email?.trim().toLowerCase();
+        const email = rawEmail ? `"${sha256(rawEmail)}"` : '""';
+
+        let phone = '""';
+        if (booking.user_phone) {
+          const normPhone = normalizeE164Phone(booking.user_phone);
+          phone = `"${sha256(normPhone)}"`;
+        }
+
+        const gclid = booking.gclid ? `"${booking.gclid}"` : '""';
         const value = booking.total_amount || 0;
         const currency = '"EUR"';
         const transactionId = `"${booking.id}"`;
-        const eventSource = '"CRM"';
         const adUserDataConsent = '"GRANTED"';
         const adPersonalizationConsent = '"GRANTED"';
         const gbraid = booking.gbraid ? `"${booking.gbraid}"` : '""';
         const wbraid = booking.wbraid ? `"${booking.wbraid}"` : '""';
-        const ipAddress = booking.ip_address ? `"${booking.ip_address}"` : '""';
 
-        csvContent += `${email},${phone},${conversionName},"${conversionTime}",${value},${currency},${transactionId},${eventSource},${adUserDataConsent},${adPersonalizationConsent},${gbraid},${wbraid},${ipAddress}\n`;
+        csvContent += `${gclid},${email},${phone},${conversionName},"${conversionTime}",${value},${currency},${transactionId},${adUserDataConsent},${adPersonalizationConsent},${gbraid},${wbraid}\n`;
       }
     }
 

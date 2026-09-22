@@ -49,6 +49,7 @@ export async function POST(request: NextRequest) {
       conversationId,
       locale,
       promoCode,
+      gclid,
       gbraid,
       wbraid,
       ...bookingData
@@ -299,6 +300,7 @@ export async function POST(request: NextRequest) {
               people_count: peopleCount || null,
               user_id: authUserId || null,
               drive_folder_id: driveFolderId || null,
+              gclid: gclid || null,
               gbraid: gbraid || null,
               wbraid: wbraid || null,
               ip_address: ip || null,
@@ -310,35 +312,83 @@ export async function POST(request: NextRequest) {
             .single();
 
         if (updateError) {
-          throw updateError;
+          // If gclid column doesn't exist yet in Supabase, retry without it
+          if (updateError.message?.includes("gclid")) {
+            const { data: retryBooking, error: retryError } =
+              await supabaseAdmin
+                .from("bookings")
+                .update({
+                  package_id: packageId,
+                  user_name: customerName,
+                  user_email: customerEmail,
+                  user_phone: customerPhone,
+                  booking_date: bookingDate,
+                  booking_time: bookingTime,
+                  status: "confirmed",
+                  total_amount: totalAmount,
+                  notes: notes || null,
+                  applied_promo_code:
+                    body.appliedPromo?.code || promoCode || null,
+                  people_count: peopleCount || null,
+                  user_id: authUserId || null,
+                  drive_folder_id: driveFolderId || null,
+                  gbraid: gbraid || null,
+                  wbraid: wbraid || null,
+                  ip_address: ip || null,
+                  selected_addons: selectedAddonIds,
+                  selected_addon_details: addonDetails,
+                })
+                .eq("id", bookingId)
+                .select()
+                .single();
+            if (retryError) throw retryError;
+            booking = retryBooking;
+          } else {
+            throw updateError;
+          }
+        } else {
+          booking = existingBooking;
         }
-        booking = existingBooking;
       } else {
         // Create confirmed booking in Supabase (fallback)
-        const { data: newBooking, error: insertError } = await supabaseAdmin
+        const bookingInsertData: Record<string, any> = {
+          package_id: packageId,
+          user_name: customerName,
+          user_email: customerEmail,
+          user_phone: customerPhone,
+          booking_date: bookingDate,
+          booking_time: bookingTime,
+          status: "confirmed",
+          total_amount: totalAmount,
+          notes: notes || null,
+          applied_promo_code: body.appliedPromo?.code || promoCode || null,
+          people_count: peopleCount || null,
+          user_id: authUserId || null,
+          drive_folder_id: driveFolderId || null,
+          gclid: gclid || null,
+          gbraid: gbraid || null,
+          wbraid: wbraid || null,
+          ip_address: ip || null,
+          selected_addons: selectedAddonIds,
+          selected_addon_details: addonDetails,
+        };
+
+        let { data: newBooking, error: insertError } = await supabaseAdmin
           .from("bookings")
-          .insert({
-            package_id: packageId,
-            user_name: customerName,
-            user_email: customerEmail,
-            user_phone: customerPhone,
-            booking_date: bookingDate,
-            booking_time: bookingTime,
-            status: "confirmed",
-            total_amount: totalAmount,
-            notes: notes || null,
-            applied_promo_code: body.appliedPromo?.code || promoCode || null,
-            people_count: peopleCount || null,
-            user_id: authUserId || null,
-            drive_folder_id: driveFolderId || null,
-            gbraid: gbraid || null,
-            wbraid: wbraid || null,
-            ip_address: ip || null,
-            selected_addons: selectedAddonIds,
-            selected_addon_details: addonDetails,
-          })
+          .insert(bookingInsertData)
           .select()
           .single();
+
+        if (insertError && insertError.message?.includes("gclid")) {
+          delete bookingInsertData.gclid;
+          const retry = await supabaseAdmin
+            .from("bookings")
+            .insert(bookingInsertData)
+            .select()
+            .single();
+          newBooking = retry.data;
+          insertError = retry.error;
+        }
 
         if (insertError) {
           throw insertError;
@@ -490,15 +540,17 @@ export async function POST(request: NextRequest) {
             // Non-blocking error
           }
 
+          // ── GA4 & Google Ads Client Attribution ──
+          const { extractClientIdFromCookie } = await import(
+            "@/lib/ga4-server"
+          );
+          const rawGaCookie = request.cookies.get("_ga")?.value;
+          const gaClientId = extractClientIdFromCookie(rawGaCookie);
+
           // ── GA4 Measurement Protocol (Server-Side Purchase Tracking) ──
           try {
-            const {
-              trackGA4ServerPurchase,
-              extractClientIdFromCookie,
-              PACKAGE_DISPLAY_NAMES,
-            } = await import("@/lib/ga4-server");
-            const rawGaCookie = request.cookies.get("_ga")?.value;
-            const gaClientId = extractClientIdFromCookie(rawGaCookie);
+            const { trackGA4ServerPurchase, PACKAGE_DISPLAY_NAMES } =
+              await import("@/lib/ga4-server");
             const packageName =
               PACKAGE_DISPLAY_NAMES[packageId] ||
               `${packageId.charAt(0).toUpperCase() + packageId.slice(1)} Package`;
@@ -513,6 +565,32 @@ export async function POST(request: NextRequest) {
             );
           } catch (ga4Error) {
             console.error("GA4 Measurement Protocol Error:", ga4Error);
+            // Non-blocking error
+          }
+
+          // ── Google Ads Conversion API (Server-Side — ad-block & Safari proof) ──
+          try {
+            const { trackGoogleAdsPurchaseConversion } = await import(
+              "@/lib/google-ads-server"
+            );
+            await trackGoogleAdsPurchaseConversion(
+              booking.id,
+              totalAmount,
+              "EUR",
+              settings,
+              gbraid || null,
+              wbraid || null,
+              gclid || null,
+              {
+                email: customerEmail,
+                phone: customerPhone,
+                firstName,
+                lastName,
+              },
+              gaClientId || null,
+            );
+          } catch (gadsError) {
+            console.error("Google Ads Conversion API Error:", gadsError);
             // Non-blocking error
           }
         }

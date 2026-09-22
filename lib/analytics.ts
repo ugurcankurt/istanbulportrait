@@ -172,6 +172,31 @@ export function trackPaymentEvent(
   trackEvent(`payment_${status}`, "Payment", packageId, value);
 }
 
+/**
+ * Helper to normalize user data for Enhanced Conversions & Advanced Matching
+ */
+export function normalizeAnalyticsUserData(
+  userData?: AnalyticsUserData,
+): AnalyticsUserData | undefined {
+  if (!userData) return undefined;
+  const normalizedEmail = userData.email
+    ? userData.email.trim().toLowerCase()
+    : undefined;
+  let normalizedPhone = userData.phone
+    ? userData.phone.replace(/[^\d+]/g, "")
+    : undefined;
+  if (normalizedPhone && !normalizedPhone.startsWith("+")) {
+    normalizedPhone = `+${normalizedPhone}`;
+  }
+  return {
+    ...userData,
+    email: normalizedEmail,
+    phone: normalizedPhone,
+    firstName: userData.firstName ? userData.firstName.trim() : undefined,
+    lastName: userData.lastName ? userData.lastName.trim() : undefined,
+  };
+}
+
 // Track purchase events (GA4 Enhanced Ecommerce)
 export function trackPurchase(
   transactionId: string,
@@ -193,12 +218,13 @@ export function trackPurchase(
   if (typeof window !== "undefined" && window.gtag) {
     // Set Enhanced Conversions user data for GA4/Google Ads
     if (userData) {
+      const normalized = normalizeAnalyticsUserData(userData);
       window.gtag("set", "user_data", {
-        email: userData.email,
-        phone_number: userData.phone,
+        email: normalized?.email,
+        phone_number: normalized?.phone,
         address: {
-          first_name: userData.firstName,
-          last_name: userData.lastName,
+          first_name: normalized?.firstName,
+          last_name: normalized?.lastName,
           city: userData.city || "Istanbul",
           country: userData.country || "TR",
         },
@@ -222,10 +248,14 @@ export function trackPurchase(
     });
 
     const googleAdsId = (window as any).__GOOGLE_ADS_ID__;
-    const googleAdsLabel = (window as any).__GOOGLE_ADS_LABEL__;
-    if (googleAdsId && googleAdsLabel) {
+    const googleAdsPurchaseLabel = (window as any)
+      .__GOOGLE_ADS_PURCHASE_LABEL__;
+    if (googleAdsId && googleAdsPurchaseLabel) {
+      const sendTo = googleAdsPurchaseLabel.includes("/")
+        ? googleAdsPurchaseLabel
+        : `${googleAdsId}/${googleAdsPurchaseLabel}`;
       window.gtag("event", "conversion", {
-        send_to: `${googleAdsId}/${googleAdsLabel}`,
+        send_to: sendTo,
         value: value,
         currency: currency,
         transaction_id: transactionId,
@@ -396,6 +426,21 @@ export function trackBeginCheckout(
         },
       ],
     });
+
+    // Google Ads — begin_checkout conversion (client-side)
+    const googleAdsId = (window as any).__GOOGLE_ADS_ID__;
+    const googleAdsCheckoutLabel = (window as any)
+      .__GOOGLE_ADS_CHECKOUT_LABEL__;
+    if (googleAdsId && googleAdsCheckoutLabel) {
+      const sendTo = googleAdsCheckoutLabel.includes("/")
+        ? googleAdsCheckoutLabel
+        : `${googleAdsId}/${googleAdsCheckoutLabel}`;
+      window.gtag("event", "conversion", {
+        send_to: sendTo,
+        value: value,
+        currency: currency,
+      });
+    }
   }
 
   // Facebook Pixel — InitiateCheckout (client-side)
@@ -534,7 +579,8 @@ export function trackLead(
 
   if (typeof window !== "undefined" && window.gtag) {
     // Lead Enhanced Conversions for Google Ads 2026
-    const userData = getUserDataForAdvancedMatching();
+    const rawUserData = getUserDataForAdvancedMatching();
+    const userData = normalizeAnalyticsUserData(rawUserData);
     if (userData?.email || userData?.phone) {
       window.gtag("set", "user_data", {
         email: userData.email,
@@ -561,10 +607,13 @@ export function trackLead(
     });
 
     const googleAdsId = (window as any).__GOOGLE_ADS_ID__;
-    const googleAdsLabel = (window as any).__GOOGLE_ADS_LABEL__;
-    if (googleAdsId && googleAdsLabel) {
+    const googleAdsLeadLabel = (window as any).__GOOGLE_ADS_LEAD_LABEL__;
+    if (googleAdsId && googleAdsLeadLabel) {
+      const sendTo = googleAdsLeadLabel.includes("/")
+        ? googleAdsLeadLabel
+        : `${googleAdsId}/${googleAdsLeadLabel}`;
       window.gtag("event", "conversion", {
-        send_to: `${googleAdsId}/${googleAdsLabel}`,
+        send_to: sendTo,
         value: value || 0,
         currency: currency,
       });
@@ -700,20 +749,37 @@ export function trackContact(method: string) {
     );
   }
 
-  // Google Analytics
+  // Google Analytics & Google Ads
   if (typeof window !== "undefined" && window.gtag) {
     window.gtag("event", "contact", {
       event_category: "Engagement",
       event_label: method,
+      transport_type: "beacon",
     });
+
+    const googleAdsId = (window as any).__GOOGLE_ADS_ID__;
+    const googleAdsLeadLabel = (window as any).__GOOGLE_ADS_LEAD_LABEL__;
+    if (googleAdsId && googleAdsLeadLabel) {
+      const sendTo = googleAdsLeadLabel.includes("/")
+        ? googleAdsLeadLabel
+        : `${googleAdsId}/${googleAdsLeadLabel}`;
+      window.gtag("event", "conversion", {
+        send_to: sendTo,
+        event_category: "Contact",
+        event_label: method,
+        transport_type: "beacon",
+      });
+    }
   }
 
   // Facebook CAPI — Contact
   if (typeof window !== "undefined") {
-    const userData = getUserDataForAdvancedMatching();
+    const rawUserData = getUserDataForAdvancedMatching();
+    const userData = normalizeAnalyticsUserData(rawUserData);
     fetch("/api/facebook/conversions", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
+      keepalive: true,
       body: JSON.stringify({
         event_name: "Contact",
         event_id: eventId,
