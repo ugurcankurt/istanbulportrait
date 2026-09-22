@@ -124,7 +124,7 @@ export function Navigation({ dynamicNavData = {}, settings }: NavigationProps) {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-white/10 dark:border-white/5 bg-background/40 backdrop-blur-2xl shadow-sm supports-[backdrop-filter]:bg-background/40">
-      <div className="container mx-auto flex h-12 sm:h-14 items-center justify-between px-4 sm:px-6 lg:px-8">
+      <div className="container mx-auto flex h-14 sm:h-16 items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Logo */}
         <Link
           href={`/${locale}`}

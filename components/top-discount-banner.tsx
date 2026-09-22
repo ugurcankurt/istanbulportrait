@@ -14,7 +14,7 @@ export function TopDiscountBanner({
   if (!discounts || discounts.length === 0) return null;
 
   return (
-    <div className="w-full bg-red-600 text-white text-xs sm:text-sm font-bold overflow-hidden flex whitespace-nowrap py-2 relative z-50 border-b border-black/10 shadow-sm">
+    <div className="w-full bg-red-600 text-white text-xs sm:text-sm font-bold overflow-hidden flex whitespace-nowrap py-1.5 relative z-50 border-b border-black/10 shadow-sm">
       <div className="flex animate-marquee w-max">
         {/* We duplicate the content to create an infinite scroll effect */}
         {[...Array(6)].map((_, i) => (
