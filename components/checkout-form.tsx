@@ -12,7 +12,7 @@ import {
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { useYandexMetrica } from "@/components/analytics/yandex-metrica";
@@ -556,8 +556,16 @@ export function CheckoutForm({
       }
     : null;
 
+  const hasTrackedCheckout = useRef(false);
+
   useEffect(() => {
-    if (selectedPackage && packageInfo && eventId) {
+    if (
+      selectedPackage &&
+      packageInfo &&
+      eventId &&
+      !hasTrackedCheckout.current
+    ) {
+      hasTrackedCheckout.current = true;
       trackBeginCheckout(
         selectedPackage,
         packageInfo.name,
@@ -569,7 +577,9 @@ export function CheckoutForm({
     }
   }, [
     selectedPackage,
-    packageInfo,
+    packageInfo?.name, // Use name instead of entire object to prevent unnecessary re-evaluations
+    packageInfo?.price,
+    packageInfo?.currency,
     eventId,
     (preFilledBookingData as any)?.yieldReason,
   ]);
@@ -714,7 +724,10 @@ export function CheckoutForm({
         (preFilledBookingData as any)?.yieldReason || "standard",
       );
       // Mark this booking as already tracked so SuccessTracker won't double-fire
-      sessionStorage.setItem(`purchase_tracked_${bookingResult.booking.id}`, "1");
+      sessionStorage.setItem(
+        `purchase_tracked_${bookingResult.booking.id}`,
+        "1",
+      );
       trackYandexPurchase(
         bookingResult.booking.id,
         selectedPackage,

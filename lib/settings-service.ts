@@ -256,7 +256,8 @@ export const settingsService = {
           rawData.google_ads_purchase_label ||
           defaultSettings.google_ads_purchase_label,
         google_ads_lead_label:
-          rawData.google_ads_lead_label || defaultSettings.google_ads_lead_label,
+          rawData.google_ads_lead_label ||
+          defaultSettings.google_ads_lead_label,
         google_ads_begin_checkout_label:
           rawData.google_ads_begin_checkout_label ||
           defaultSettings.google_ads_begin_checkout_label,

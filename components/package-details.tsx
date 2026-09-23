@@ -16,7 +16,7 @@ import {
 import dynamic from "next/dynamic";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { toast } from "sonner";
 import { BookingCard } from "@/components/booking-card";
 import { PackageGallery } from "@/components/package-gallery";
@@ -158,13 +158,18 @@ export function PackageDetails({
         ? [packageData.cover_image]
         : [];
 
+  const hasTrackedView = useRef(false);
+
   useEffect(() => {
-    trackViewItem(
-      packageData.slug,
-      packageName,
-      convertPrice(pricing.price),
-      currency,
-    );
+    if (!hasTrackedView.current) {
+      hasTrackedView.current = true;
+      trackViewItem(
+        packageData.slug,
+        packageName,
+        convertPrice(pricing.price),
+        currency,
+      );
+    }
   }, [packageData.slug, packageName, pricing.price, currency, convertPrice]);
 
   useEffect(() => {
@@ -609,7 +614,7 @@ export function PackageDetails({
           <Button
             size="lg"
             className="flex-1 max-w-[180px] h-12 text-sm font-black"
-           onClick={() => {
+            onClick={() => {
               // Mobile: fire add_to_cart before opening booking modal
               trackPackageAddToCart(
                 packageData.slug,

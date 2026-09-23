@@ -906,8 +906,8 @@ export default function SettingsPage() {
                 placeholder="istanbulportrait_google_ads_webhook_2026"
               />
               <p className="text-xs text-muted-foreground">
-                Google Ads Lead Form webhook güvenlik anahtarı. Bu bir
-                dönüşüm etiketi değil, webhook doğrulama şifresidir.
+                Google Ads Lead Form webhook güvenlik anahtarı. Bu bir dönüşüm
+                etiketi değil, webhook doğrulama şifresidir.
               </p>
             </div>
 
