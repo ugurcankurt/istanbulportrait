@@ -281,15 +281,17 @@ export default async function LocaleLayout({
                     />
                     <main className="flex-1">{children}</main>
 
+                    {/* Critical Analytics — loaded immediately on client side to ensure accurate conversion tracking and Tag Assistant detection */}
+                    <FacebookPixel pixelId={settings.facebook_pixel_id} />
+                    <DeferredAnalytics
+                      gaId={settings.google_analytics_id}
+                      clarityId={settings.clarity_project_id}
+                      userId={user?.id}
+                      googleAdsId={settings.google_ads_id}
+                    />
+
                     {/* Non-critical Analytics — deferred until first interaction to minimize main-thread work */}
                     <InteractionLoader>
-                      <FacebookPixel pixelId={settings.facebook_pixel_id} />
-                      <DeferredAnalytics
-                        gaId={settings.google_analytics_id}
-                        clarityId={settings.clarity_project_id}
-                        userId={user?.id}
-                        googleAdsId={settings.google_ads_id}
-                      />
                       <ConsentGate consent="accepted_all">
                         <YandexMetrica
                           id={settings.yandex_metrica_id || undefined}
