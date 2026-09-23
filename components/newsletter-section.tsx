@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { trackLead } from "@/lib/analytics";
 
 export function NewsletterSection() {
   const t = useTranslations("ui");
@@ -45,6 +46,16 @@ export function NewsletterSection() {
       if (!res.ok) {
         throw new Error(data.error || "Failed to subscribe");
       }
+
+      // Track lead for newsletter subscription
+      trackLead(
+        "newsletter",
+        "Newsletter Subscription",
+        0,
+        "EUR",
+        undefined,
+        "newsletter",
+      );
 
       setIsSuccess(true);
       toast.success(

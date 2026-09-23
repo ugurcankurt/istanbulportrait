@@ -369,6 +369,27 @@ export function BookingModal({
         // Track Booking Start Event
         trackBookingStart(selectedPackage);
 
+        // Save to Leads Table as 'abandoned_booking' (in case they don't finish checkout)
+        fetch("/api/leads", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            firstName: nameParts[0],
+            lastName: nameParts.length > 1 ? nameParts.slice(1).join(" ") : "",
+            email: data.customerEmail,
+            phone: data.customerPhone,
+            leadSource: "booking_started",
+            rawData: {
+              packageId: selectedPackage,
+              packageName: packageInfo.name,
+              price: packageInfo.price,
+              bookingDate: data.bookingDate ? format(new Date(data.bookingDate), "yyyy-MM-dd") : "",
+              bookingTime: data.bookingTime,
+              locale: locale,
+            },
+          }),
+        }).catch((e) => console.error("Failed to save lead:", e));
+
         // Note: InitiateCheckout is handled exclusively by checkout-form.tsx to prevent duplication
 
         try {

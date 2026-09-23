@@ -74,6 +74,28 @@ export async function POST(req: Request) {
       }
     }
 
+    // Insert into Leads table
+    try {
+      const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+      const supabaseKey =
+        process.env.SUPABASE_SERVICE_ROLE_KEY ||
+        process.env.SUPABASE_SERVICE_KEY;
+      if (supabaseUrl && supabaseKey) {
+        const { createClient } = require("@supabase/supabase-js");
+        const supabase = createClient(supabaseUrl, supabaseKey);
+        await supabase.from("leads").insert([
+          {
+            first_name: firstName,
+            last_name: lastName,
+            email: email,
+            lead_source: "newsletter",
+          },
+        ]);
+      }
+    } catch (e) {
+      console.error("Failed to save newsletter subscriber to leads table:", e);
+    }
+
     // 4. Fetch the active promo-code
     const allPromos = await promoService.getAllPromoCodes();
 
