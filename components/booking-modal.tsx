@@ -394,10 +394,7 @@ export function BookingModal({
 
         try {
           setIsNavigating(true);
-          const { getGoogleAdsClickIdentifiers } = await import(
-            "@/hooks/use-google-ads-tracking"
-          );
-          const gadsIdentifiers = getGoogleAdsClickIdentifiers();
+
 
           const draftResponse = await fetch("/api/booking/create-draft", {
             method: "POST",
@@ -408,9 +405,7 @@ export function BookingModal({
               selectedAddons,
               addonQuantities,
               locale,
-              gclid: gadsIdentifiers.gclid,
-              gbraid: gadsIdentifiers.gbraid,
-              wbraid: gadsIdentifiers.wbraid,
+
             }),
           });
 

@@ -135,9 +135,7 @@ export async function POST(request: NextRequest) {
         people_count: peopleCount || null,
         selected_addons: selectedAddons || [],
         selected_addon_details: addonDetails,
-        gclid: body.gclid || null,
-        gbraid: body.gbraid || null,
-        wbraid: body.wbraid || null,
+
         ip_address: ip || null,
       };
 
@@ -147,16 +145,7 @@ export async function POST(request: NextRequest) {
         .select()
         .single();
 
-      if (error && error.message?.includes("gclid")) {
-        delete draftInsertData.gclid;
-        const retry = await supabaseAdmin
-          .from("bookings")
-          .insert(draftInsertData)
-          .select()
-          .single();
-        booking = retry.data;
-        error = retry.error;
-      }
+
 
       if (error) throw error;
 

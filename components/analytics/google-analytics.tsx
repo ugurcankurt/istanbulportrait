@@ -6,21 +6,17 @@ import Script from "next/script";
 export function GoogleAnalytics({
   gaId,
   userId,
-  googleAdsId,
 }: {
   gaId?: string | null;
   userId?: string | null;
-  googleAdsId?: string | null;
 }) {
-  if (!gaId && !googleAdsId) {
+  if (!gaId) {
     return null;
   }
 
-  const primaryTagId = gaId || googleAdsId;
-
   return (
     <>
-      {primaryTagId && <NextGoogleAnalytics gaId={primaryTagId} />}
+      <NextGoogleAnalytics gaId={gaId} />
       <Script
         id="google-analytics-custom-config"
         dangerouslySetInnerHTML={{
@@ -29,13 +25,6 @@ export function GoogleAnalytics({
             window.gtag = window.gtag || function(){ (window.dataLayer = window.dataLayer || []).push(arguments); };
             
             ${userId ? `window.gtag('set', 'user_id', '${userId}');` : ""}
-            ${
-              googleAdsId
-                ? `window.gtag('config', '${googleAdsId}', {
-                    allow_enhanced_conversions: true
-                  });`
-                : ""
-            }
           `,
         }}
       />

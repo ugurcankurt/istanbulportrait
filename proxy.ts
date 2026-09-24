@@ -79,58 +79,11 @@ export default async function proxy(request: NextRequest) {
 
   const response = intlMiddleware(request);
 
-  // Capture Google Ads attribution parameters from query params and set them via HTTP response headers
-  // This produces first-party server cookies that Safari ITP cannot downgrade to 7 days / 24 hours.
+  // Capture Facebook attribution parameters
   const searchParams = request.nextUrl.searchParams;
-  const gclid = searchParams.get("gclid");
-  const gbraid = searchParams.get("gbraid");
-  const wbraid = searchParams.get("wbraid");
-  const gadSource = searchParams.get("gad_source");
   const fbclid = searchParams.get("fbclid");
 
   const ninetyDays = 90 * 24 * 60 * 60; // 90 days in seconds
-
-  if (gclid) {
-    response.cookies.set("gads_gclid", gclid, {
-      maxAge: ninetyDays,
-      path: "/",
-      sameSite: "lax",
-      httpOnly: false,
-    });
-    response.cookies.set("_gcl_aw", `GCL.${Date.now()}.${gclid}`, {
-      maxAge: ninetyDays,
-      path: "/",
-      sameSite: "lax",
-      httpOnly: false,
-    });
-  }
-
-  if (gbraid) {
-    response.cookies.set("gads_gbraid", gbraid, {
-      maxAge: ninetyDays,
-      path: "/",
-      sameSite: "lax",
-      httpOnly: false,
-    });
-  }
-
-  if (wbraid) {
-    response.cookies.set("gads_wbraid", wbraid, {
-      maxAge: ninetyDays,
-      path: "/",
-      sameSite: "lax",
-      httpOnly: false,
-    });
-  }
-
-  if (gadSource) {
-    response.cookies.set("gads_gad_source", gadSource, {
-      maxAge: ninetyDays,
-      path: "/",
-      sameSite: "lax",
-      httpOnly: false,
-    });
-  }
 
   if (fbclid) {
     response.cookies.set("_fbc", `fb.1.${Date.now()}.${fbclid}`, {

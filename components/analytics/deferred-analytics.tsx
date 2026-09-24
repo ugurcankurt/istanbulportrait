@@ -36,20 +36,17 @@ export function DeferredAnalytics({
   gaId,
   clarityId,
   userId,
-  googleAdsId,
 }: {
   gaId?: string | null;
   clarityId?: string | null;
   userId?: string | null;
-  googleAdsId?: string | null;
 }) {
   return (
     <>
-      {(gaId || googleAdsId) && (
+      {gaId && (
         <GoogleAnalytics
           gaId={gaId}
           userId={userId}
-          googleAdsId={googleAdsId}
         />
       )}
       {clarityId && <MicrosoftClarity clarityId={clarityId} />}

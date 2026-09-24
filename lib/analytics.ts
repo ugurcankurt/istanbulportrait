@@ -247,20 +247,7 @@ export function trackPurchase(
       ],
     });
 
-    const googleAdsId = (window as any).__GOOGLE_ADS_ID__;
-    const googleAdsPurchaseLabel = (window as any)
-      .__GOOGLE_ADS_PURCHASE_LABEL__;
-    if (googleAdsId && googleAdsPurchaseLabel) {
-      const sendTo = googleAdsPurchaseLabel.includes("/")
-        ? googleAdsPurchaseLabel
-        : `${googleAdsId}/${googleAdsPurchaseLabel}`;
-      window.gtag("event", "conversion", {
-        send_to: sendTo,
-        value: value,
-        currency: currency,
-        transaction_id: transactionId,
-      });
-    }
+
   }
 
   // Track Facebook Purchase (client-side)
@@ -427,20 +414,7 @@ export function trackBeginCheckout(
       ],
     });
 
-    // Google Ads — begin_checkout conversion (client-side)
-    const googleAdsId = (window as any).__GOOGLE_ADS_ID__;
-    const googleAdsCheckoutLabel = (window as any)
-      .__GOOGLE_ADS_CHECKOUT_LABEL__;
-    if (googleAdsId && googleAdsCheckoutLabel) {
-      const sendTo = googleAdsCheckoutLabel.includes("/")
-        ? googleAdsCheckoutLabel
-        : `${googleAdsId}/${googleAdsCheckoutLabel}`;
-      window.gtag("event", "conversion", {
-        send_to: sendTo,
-        value: value,
-        currency: currency,
-      });
-    }
+
   }
 
   // Facebook Pixel — InitiateCheckout (client-side)
@@ -606,18 +580,7 @@ export function trackLead(
       ],
     });
 
-    const googleAdsId = (window as any).__GOOGLE_ADS_ID__;
-    const googleAdsLeadLabel = (window as any).__GOOGLE_ADS_LEAD_LABEL__;
-    if (googleAdsId && googleAdsLeadLabel) {
-      const sendTo = googleAdsLeadLabel.includes("/")
-        ? googleAdsLeadLabel
-        : `${googleAdsId}/${googleAdsLeadLabel}`;
-      window.gtag("event", "conversion", {
-        send_to: sendTo,
-        value: value || 0,
-        currency: currency,
-      });
-    }
+
   }
 
   // Facebook Pixel — Lead
@@ -757,19 +720,7 @@ export function trackContact(method: string) {
       transport_type: "beacon",
     });
 
-    const googleAdsId = (window as any).__GOOGLE_ADS_ID__;
-    const googleAdsLeadLabel = (window as any).__GOOGLE_ADS_LEAD_LABEL__;
-    if (googleAdsId && googleAdsLeadLabel) {
-      const sendTo = googleAdsLeadLabel.includes("/")
-        ? googleAdsLeadLabel
-        : `${googleAdsId}/${googleAdsLeadLabel}`;
-      window.gtag("event", "conversion", {
-        send_to: sendTo,
-        event_category: "Contact",
-        event_label: method,
-        transport_type: "beacon",
-      });
-    }
+
   }
 
   // Facebook CAPI — Contact

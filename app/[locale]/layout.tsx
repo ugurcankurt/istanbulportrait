@@ -19,7 +19,7 @@ import type { Metadata } from "next";
 import dynamic from "next/dynamic";
 import { ThemeProvider } from "next-themes";
 import { Suspense } from "react";
-import { GoogleAdsTracker } from "@/components/google-ads-tracker";
+
 import { SchemaInjector } from "@/components/schema-injector";
 import { TopDiscountBanner } from "@/components/top-discount-banner";
 import { Toaster } from "@/components/ui/sonner";
@@ -243,25 +243,7 @@ export default async function LocaleLayout({
           }}
         />
         <SchemaInjector schema={buildOrganizationSchema(settings)} />
-        {/* Google Ads label variables — loaded early (beforeInteractive) so they are
-            available even if the user navigates directly to /checkout and purchases
-            before any scroll/click interaction triggers the InteractionLoader */}
-        <Script
-          id="google-ads-config"
-          strategy="beforeInteractive"
-          // biome-ignore lint/security/noDangerouslySetInnerHtml: Google Ads labels
-          dangerouslySetInnerHTML={{
-            __html: `
-              window.__GOOGLE_ADS_ID__ = "${settings.google_ads_id || ""}";
-              window.__GOOGLE_ADS_PURCHASE_LABEL__ = "${settings.google_ads_purchase_label || ""}";
-              window.__GOOGLE_ADS_LEAD_LABEL__ = "${settings.google_ads_lead_label || ""}";
-              window.__GOOGLE_ADS_CHECKOUT_LABEL__ = "${settings.google_ads_begin_checkout_label || ""}";
-            `,
-          }}
-        />
-        <Suspense fallback={null}>
-          <GoogleAdsTracker />
-        </Suspense>
+
 
         <ThemeProvider
           attribute="class"
@@ -287,7 +269,6 @@ export default async function LocaleLayout({
                       gaId={settings.google_analytics_id}
                       clarityId={settings.clarity_project_id}
                       userId={user?.id}
-                      googleAdsId={settings.google_ads_id}
                     />
 
                     {/* Non-critical Analytics — deferred until first interaction to minimize main-thread work */}

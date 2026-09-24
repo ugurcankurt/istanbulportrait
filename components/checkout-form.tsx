@@ -654,10 +654,7 @@ export function CheckoutForm({
       const fbc = getCookie("_fbc");
       const fbp = getCookie("_fbp");
 
-      const { getGoogleAdsClickIdentifiers } = await import(
-        "@/hooks/use-google-ads-tracking"
-      );
-      const googleAdsIdentifiers = getGoogleAdsClickIdentifiers();
+
 
       const bookingResponse = await fetch("/api/booking/create-confirmed", {
         method: "POST",
@@ -665,9 +662,7 @@ export function CheckoutForm({
         body: JSON.stringify({
           appliedPromo,
           ...bookingData,
-          gclid: googleAdsIdentifiers.gclid,
-          gbraid: googleAdsIdentifiers.gbraid,
-          wbraid: googleAdsIdentifiers.wbraid,
+
           selectedAddons: (preFilledBookingData as any)?.selectedAddons || [],
           addonQuantities: (preFilledBookingData as any)?.addonQuantities || {},
           basePrice: (preFilledBookingData as any)?.basePrice,

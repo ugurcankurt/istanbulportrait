@@ -60,13 +60,7 @@ export interface SiteSettings {
   indexnow_api_key: string | null;
 
   behold_url: string | null;
-  google_ads_id: string | null;
-  google_ads_webhook_key: string | null;
-  google_ads_purchase_label: string | null;
-  google_ads_lead_label: string | null;
-  google_ads_begin_checkout_label: string | null;
-  google_ads_developer_token: string | null;
-  google_ads_customer_id: string | null;
+
   featurable_widget_id: string | null;
 }
 
@@ -121,13 +115,7 @@ export const defaultSettings: SiteSettings = {
   bing_webmaster_key: null,
   indexnow_api_key: null,
   behold_url: null,
-  google_ads_id: null,
-  google_ads_webhook_key: null,
-  google_ads_purchase_label: null,
-  google_ads_lead_label: null,
-  google_ads_begin_checkout_label: null,
-  google_ads_developer_token: null,
-  google_ads_customer_id: null,
+
   featurable_widget_id: null,
   resend_audience_id: null,
 };
@@ -248,25 +236,7 @@ export const settingsService = {
           rawData.indexnow_api_key || defaultSettings.indexnow_api_key,
 
         behold_url: rawData.behold_url || defaultSettings.behold_url,
-        google_ads_id: rawData.google_ads_id || defaultSettings.google_ads_id,
-        google_ads_webhook_key:
-          rawData.google_ads_webhook_key ||
-          defaultSettings.google_ads_webhook_key,
-        google_ads_purchase_label:
-          rawData.google_ads_purchase_label ||
-          defaultSettings.google_ads_purchase_label,
-        google_ads_lead_label:
-          rawData.google_ads_lead_label ||
-          defaultSettings.google_ads_lead_label,
-        google_ads_begin_checkout_label:
-          rawData.google_ads_begin_checkout_label ||
-          defaultSettings.google_ads_begin_checkout_label,
-        google_ads_developer_token:
-          rawData.google_ads_developer_token ||
-          defaultSettings.google_ads_developer_token,
-        google_ads_customer_id:
-          rawData.google_ads_customer_id ||
-          defaultSettings.google_ads_customer_id,
+
         featurable_widget_id:
           rawData.featurable_widget_id || defaultSettings.featurable_widget_id,
       };
