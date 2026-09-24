@@ -219,16 +219,22 @@ export function trackPurchase(
     // Set Enhanced Conversions user data for GA4/Google Ads
     if (userData) {
       const normalized = normalizeAnalyticsUserData(userData);
-      window.gtag("set", "user_data", {
-        email: normalized?.email,
-        phone_number: normalized?.phone,
-        address: {
-          first_name: normalized?.firstName,
-          last_name: normalized?.lastName,
-          city: userData.city || "Istanbul",
-          country: userData.country || "TR",
-        },
-      });
+      
+      const userDataObj: any = {};
+      if (normalized?.email) userDataObj.email = normalized.email;
+      if (normalized?.phone) userDataObj.phone_number = normalized.phone;
+      
+      if (normalized?.firstName || normalized?.lastName || userData.city || userData.country) {
+        userDataObj.address = {};
+        if (normalized?.firstName) userDataObj.address.first_name = normalized.firstName;
+        if (normalized?.lastName) userDataObj.address.last_name = normalized.lastName;
+        if (userData.city) userDataObj.address.city = userData.city;
+        if (userData.country) userDataObj.address.country = userData.country;
+      }
+
+      if (Object.keys(userDataObj).length > 0) {
+        window.gtag("set", "user_data", userDataObj);
+      }
     }
 
     // Google Analytics 4 — Purchase (Ecommerce)
@@ -555,15 +561,20 @@ export function trackLead(
     // Lead Enhanced Conversions for Google Ads 2026
     const rawUserData = getUserDataForAdvancedMatching();
     const userData = normalizeAnalyticsUserData(rawUserData);
-    if (userData?.email || userData?.phone) {
-      window.gtag("set", "user_data", {
-        email: userData.email,
-        phone_number: userData.phone,
-        address: {
-          first_name: userData.firstName,
-          last_name: userData.lastName,
-        },
-      });
+    if (userData) {
+      const userDataObj: any = {};
+      if (userData.email) userDataObj.email = userData.email;
+      if (userData.phone) userDataObj.phone_number = userData.phone;
+      
+      if (userData.firstName || userData.lastName) {
+        userDataObj.address = {};
+        if (userData.firstName) userDataObj.address.first_name = userData.firstName;
+        if (userData.lastName) userDataObj.address.last_name = userData.lastName;
+      }
+
+      if (Object.keys(userDataObj).length > 0) {
+        window.gtag("set", "user_data", userDataObj);
+      }
     }
 
     window.gtag("event", "generate_lead", {
