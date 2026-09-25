@@ -87,6 +87,7 @@ export interface FacebookConversionEvent {
     transaction_id?: string;
     num_items?: number;
     yield_category?: string;
+    checkin_date?: string;
   };
 }
 
@@ -285,6 +286,7 @@ export interface FacebookEventOptions {
   dateOfBirth?: string;
   gender?: string;
   yieldCategory?: string;
+  checkinDate?: string;
 }
 
 // Istanbul Portrait specific tracking functions
@@ -452,6 +454,7 @@ export const trackFacebookPurchase = async (
       currency: "EUR",
       transaction_id: transactionId,
       yield_category: options?.yieldCategory,
+      checkin_date: options?.checkinDate,
     },
   };
 

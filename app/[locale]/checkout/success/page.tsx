@@ -68,6 +68,7 @@ export default async function CheckoutPage({
         customerEmail={booking.user_email}
         customerPhone={booking.user_phone}
         customerName={booking.user_name}
+        bookingDate={booking.booking_date}
       />
       <Suspense
         fallback={

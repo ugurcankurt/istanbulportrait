@@ -10,6 +10,7 @@ interface SuccessTrackerProps {
   customerEmail?: string;
   customerPhone?: string;
   customerName?: string;
+  bookingDate?: string;
 }
 
 /**
@@ -24,6 +25,7 @@ export function SuccessTracker({
   customerEmail,
   customerPhone,
   customerName,
+  bookingDate,
 }: SuccessTrackerProps) {
   const hasFired = useRef(false);
 
@@ -50,7 +52,7 @@ export function SuccessTracker({
       phone: customerPhone,
       firstName,
       lastName,
-    });
+    }, undefined, undefined, bookingDate);
   }, [
     bookingId,
     packageId,
@@ -58,6 +60,7 @@ export function SuccessTracker({
     customerEmail,
     customerPhone,
     customerName,
+    bookingDate,
   ]);
 
   return null;

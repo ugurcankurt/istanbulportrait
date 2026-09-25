@@ -463,6 +463,7 @@ export async function POST(request: NextRequest) {
               clientUserAgent,
               firstName,
               lastName,
+              checkinDate: bookingDate,
             },
           );
         } catch (facebookError) {
@@ -511,9 +512,9 @@ export async function POST(request: NextRequest) {
 
         // ── GA4 Measurement Protocol (Server-Side Purchase Tracking) ──
         try {
-          const { trackGA4ServerPurchase, PACKAGE_DISPLAY_NAMES } =
+          const { trackGA4ServerPurchase } =
             await import("@/lib/ga4-server");
-          const packageName = PACKAGE_DISPLAY_NAMES[packageId] || packageId;
+          const packageName = packageId;
 
           await trackGA4ServerPurchase(
             booking.id,

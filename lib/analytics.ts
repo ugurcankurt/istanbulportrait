@@ -1,21 +1,7 @@
 /**
  * Package display names (for GA4 item_name standardization)
  */
-export const PACKAGE_DISPLAY_NAMES: Record<string, string> = {
-  essential: "Classic Istanbul Portrait",
-  premium: "Istanbul Discovery Photoshoot",
-  luxury: "Bosphorus Luxury Collection",
-  rooftop: "Flying Dress Rooftop Photo Shoot",
-  "rooftop-swing": "Rooftop & Swing Photography",
-  cappadocia: "Cappadocia Hot Air Balloon Shoot",
-};
 
-export function getStandardPackageName(
-  packageId: string,
-  fallbackName: string,
-): string {
-  return PACKAGE_DISPLAY_NAMES[packageId] || fallbackName;
-}
 
 export interface AnalyticsUserData {
   email?: string;
@@ -233,8 +219,9 @@ export function trackPurchase(
   },
   eventId?: string,
   yieldCategory?: string,
+  bookingDate?: string,
 ) {
-  const stdPackageName = getStandardPackageName(packageId, packageName);
+  const stdPackageName = packageName;
 
   if (typeof window !== "undefined" && window.gtag) {
     // Set Enhanced Conversions user data for GA4/Google Ads
@@ -295,6 +282,7 @@ export function trackPurchase(
       currency: currency,
       transaction_id: transactionId,
       yield_category: yieldCategory,
+      checkin_date: bookingDate,
     },
     resolvedEventId,
   );
@@ -321,6 +309,7 @@ export function trackPurchase(
           content_name: packageName,
           currency: currency,
           yield_category: yieldCategory,
+          checkin_date: bookingDate,
         },
         event_source_url: window.location.href,
         external_id: getExternalId(),
@@ -355,7 +344,7 @@ export function trackViewItem(
   eventId?: string,
   providedUserData?: AnalyticsUserData,
 ) {
-  const stdPackageName = getStandardPackageName(itemId, itemName);
+  const stdPackageName = itemName;
 
   // Use provided data or fall back to persisted data
   const userData = providedUserData || getUserDataForAdvancedMatching();
@@ -435,8 +424,9 @@ export function trackBeginCheckout(
   currency: string = "EUR",
   eventId?: string,
   yieldCategory?: string,
+  bookingDate?: string,
 ) {
-  const stdPackageName = getStandardPackageName(packageId, packageName);
+  const stdPackageName = packageName;
 
   if (typeof window !== "undefined" && window.gtag) {
     window.gtag("event", "begin_checkout", {
@@ -464,6 +454,7 @@ export function trackBeginCheckout(
       value: value,
       currency: currency,
       yield_category: yieldCategory,
+      checkin_date: bookingDate,
     },
     eventId,
   );
@@ -487,6 +478,7 @@ export function trackBeginCheckout(
         custom_data: {
           content_name: stdPackageName,
           yield_category: yieldCategory,
+          checkin_date: bookingDate,
         },
         event_source_url: window.location.href,
         external_id: getExternalId(),
@@ -508,7 +500,7 @@ export function trackAddPaymentInfo(
   currency: string = "EUR",
   eventId?: string,
 ) {
-  const stdPackageName = getStandardPackageName(packageId, packageName);
+  const stdPackageName = packageName;
 
   // Generate event_id for Pixel/CAPI deduplication if not provided
   const resolvedEventId =
@@ -586,7 +578,7 @@ export function trackLead(
   eventId?: string,
   yieldCategory?: string,
 ) {
-  const stdPackageName = getStandardPackageName(packageId, packageName);
+  const stdPackageName = packageName;
 
   const resolvedEventId =
     eventId ||
@@ -679,7 +671,7 @@ export function trackSchedule(
   scheduledDate: string,
   eventId?: string,
 ) {
-  const stdPackageName = getStandardPackageName(packageId, packageName);
+  const stdPackageName = packageName;
 
   const resolvedEventId =
     eventId ||
@@ -813,7 +805,7 @@ export function trackViewItemList(
       item_list_name: listName,
       items: items.map((item, index) => ({
         item_id: item.id,
-        item_name: getStandardPackageName(item.id, item.name),
+        item_name: item.name,
         item_category: item.category || "Photography Package",
         price: item.price,
         quantity: 1,
@@ -839,7 +831,7 @@ export function trackSelectItem(
       items: [
         {
           item_id: item.id,
-          item_name: getStandardPackageName(item.id, item.name),
+          item_name: item.name,
           item_category: item.category || "Photography Package",
           price: item.price,
           quantity: 1,
@@ -1145,6 +1137,56 @@ export function trackPrintBeginCheckout(
         custom_data: {
           content_ids: contentIds,
           num_items: items.reduce((acc, curr) => acc + curr.quantity, 0),
+        },
+        event_source_url: window.location.href,
+        external_id: getExternalId(),
+        fbc: getValidFbc(),
+        fbp: getValidFbp(),
+      }),
+    }).catch(() => {});
+  }
+}
+
+// Track search event (GA4 + Meta)
+export function trackSearch(
+  searchTerm?: string,
+  destination?: string,
+  checkinDate?: string,
+) {
+  if (typeof window !== "undefined" && window.gtag) {
+    window.gtag("event", "search", {
+      search_term: searchTerm,
+      destination: destination,
+      checkin_date: checkinDate,
+    });
+  }
+
+  // Facebook Pixel — Search
+  if (typeof window !== "undefined" && window.fbq) {
+    window.fbq("track", "Search", {
+      search_string: searchTerm,
+      destination_airport: destination,
+      checkin_date: checkinDate,
+    });
+  }
+
+  // CAPI Search
+  if (typeof window !== "undefined") {
+    const userData = getUserDataForAdvancedMatching();
+    fetch("/api/facebook/conversions", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        event_name: "Search",
+        event_id: typeof crypto !== "undefined" ? crypto.randomUUID() : undefined,
+        customer_email: userData?.email,
+        customer_phone: userData?.phone,
+        first_name: userData?.firstName,
+        last_name: userData?.lastName,
+        custom_data: {
+          search_string: searchTerm,
+          destination_airport: destination,
+          checkin_date: checkinDate,
         },
         event_source_url: window.location.href,
         external_id: getExternalId(),

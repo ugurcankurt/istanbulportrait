@@ -573,6 +573,7 @@ export function CheckoutForm({
         packageInfo.currency,
         eventId,
         (preFilledBookingData as any)?.yieldReason || "standard",
+        preFilledBookingData?.bookingDate || undefined,
       );
     }
   }, [
@@ -715,6 +716,7 @@ export function CheckoutForm({
         },
         eventId,
         (preFilledBookingData as any)?.yieldReason || "standard",
+        bookingData.bookingDate || undefined,
       );
       // Mark this booking as already tracked so SuccessTracker won't double-fire
       sessionStorage.setItem(

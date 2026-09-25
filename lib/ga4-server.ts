@@ -202,11 +202,3 @@ export async function trackGA4ServerRefund(
 /**
  * Package display names (for GA4 item_name)
  */
-export const PACKAGE_DISPLAY_NAMES: Record<string, string> = {
-  essential: "Classic Istanbul Portrait",
-  premium: "Istanbul Discovery Photoshoot",
-  luxury: "Bosphorus Luxury Collection",
-  rooftop: "Flying Dress Rooftop Photo Shoot",
-  "rooftop-swing": "Rooftop & Swing Photography",
-  cappadocia: "Cappadocia Hot Air Balloon Shoot",
-};
