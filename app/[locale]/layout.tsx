@@ -244,7 +244,6 @@ export default async function LocaleLayout({
         />
         <SchemaInjector schema={buildOrganizationSchema(settings)} />
 
-
         <ThemeProvider
           attribute="class"
           defaultTheme={settings.color_mode || "system"}

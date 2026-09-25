@@ -654,8 +654,6 @@ export function CheckoutForm({
       const fbc = getCookie("_fbc");
       const fbp = getCookie("_fbp");
 
-
-
       const bookingResponse = await fetch("/api/booking/create-confirmed", {
         method: "POST",
         headers: { "Content-Type": "application/json" },

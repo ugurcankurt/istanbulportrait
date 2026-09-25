@@ -145,8 +145,6 @@ export async function POST(request: NextRequest) {
         .select()
         .single();
 
-
-
       if (error) throw error;
 
       // 3. Add to Resend Audience/Contacts if enabled

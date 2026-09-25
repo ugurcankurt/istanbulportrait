@@ -43,12 +43,7 @@ export function DeferredAnalytics({
 }) {
   return (
     <>
-      {gaId && (
-        <GoogleAnalytics
-          gaId={gaId}
-          userId={userId}
-        />
-      )}
+      {gaId && <GoogleAnalytics gaId={gaId} userId={userId} />}
       {clarityId && <MicrosoftClarity clarityId={clarityId} />}
     </>
   );

@@ -1,3 +1,22 @@
+/**
+ * Package display names (for GA4 item_name standardization)
+ */
+export const PACKAGE_DISPLAY_NAMES: Record<string, string> = {
+  essential: "Classic Istanbul Portrait",
+  premium: "Istanbul Discovery Photoshoot",
+  luxury: "Bosphorus Luxury Collection",
+  rooftop: "Flying Dress Rooftop Photo Shoot",
+  "rooftop-swing": "Rooftop & Swing Photography",
+  cappadocia: "Cappadocia Hot Air Balloon Shoot",
+};
+
+export function getStandardPackageName(
+  packageId: string,
+  fallbackName: string,
+): string {
+  return PACKAGE_DISPLAY_NAMES[packageId] || fallbackName;
+}
+
 export interface AnalyticsUserData {
   email?: string;
   phone?: string;
@@ -215,19 +234,28 @@ export function trackPurchase(
   eventId?: string,
   yieldCategory?: string,
 ) {
+  const stdPackageName = getStandardPackageName(packageId, packageName);
+
   if (typeof window !== "undefined" && window.gtag) {
     // Set Enhanced Conversions user data for GA4/Google Ads
     if (userData) {
       const normalized = normalizeAnalyticsUserData(userData);
-      
+
       const userDataObj: any = {};
       if (normalized?.email) userDataObj.email = normalized.email;
       if (normalized?.phone) userDataObj.phone_number = normalized.phone;
-      
-      if (normalized?.firstName || normalized?.lastName || userData.city || userData.country) {
+
+      if (
+        normalized?.firstName ||
+        normalized?.lastName ||
+        userData.city ||
+        userData.country
+      ) {
         userDataObj.address = {};
-        if (normalized?.firstName) userDataObj.address.first_name = normalized.firstName;
-        if (normalized?.lastName) userDataObj.address.last_name = normalized.lastName;
+        if (normalized?.firstName)
+          userDataObj.address.first_name = normalized.firstName;
+        if (normalized?.lastName)
+          userDataObj.address.last_name = normalized.lastName;
         if (userData.city) userDataObj.address.city = userData.city;
         if (userData.country) userDataObj.address.country = userData.country;
       }
@@ -245,29 +273,30 @@ export function trackPurchase(
       items: [
         {
           item_id: packageId,
-          item_name: packageName,
+          item_name: stdPackageName,
           item_category: "Photography Package",
           price: value,
           quantity: 1,
         },
       ],
     });
-
-
   }
+
+  // Force transactionId as the deduplication key for Purchase events per Meta best practices
+  const resolvedEventId = transactionId || eventId;
 
   // Track Facebook Purchase (client-side)
   trackFacebookEvent(
     "Purchase",
     {
       content_ids: [packageId],
-      content_name: packageName,
+      content_name: stdPackageName,
       value: value,
       currency: currency,
       transaction_id: transactionId,
       yield_category: yieldCategory,
     },
-    eventId,
+    resolvedEventId,
   );
 
   // Facebook CAPI — Purchase (server-side)
@@ -278,7 +307,7 @@ export function trackPurchase(
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         event_name: "Purchase",
-        event_id: eventId,
+        event_id: resolvedEventId,
         package_id: packageId,
         amount: value,
         transaction_id: transactionId,
@@ -326,6 +355,8 @@ export function trackViewItem(
   eventId?: string,
   providedUserData?: AnalyticsUserData,
 ) {
+  const stdPackageName = getStandardPackageName(itemId, itemName);
+
   // Use provided data or fall back to persisted data
   const userData = providedUserData || getUserDataForAdvancedMatching();
 
@@ -341,7 +372,7 @@ export function trackViewItem(
       items: [
         {
           item_id: itemId,
-          item_name: itemName,
+          item_name: stdPackageName,
           item_category: "Photography Package",
           price: value || 0,
           quantity: 1,
@@ -358,7 +389,7 @@ export function trackViewItem(
       {
         content_ids: [itemId],
         content_type: "product",
-        content_name: itemName,
+        content_name: stdPackageName,
         value: value,
         currency: currency,
       },
@@ -386,7 +417,7 @@ export function trackViewItem(
         country: userData?.country,
         dob: userData?.dob,
         gender: userData?.gender,
-        custom_data: { content_name: itemName, currency: currency },
+        custom_data: { content_name: stdPackageName, currency: currency },
         event_source_url: window.location.href,
         external_id: getExternalId(),
         fbc: getValidFbc(),
@@ -405,6 +436,8 @@ export function trackBeginCheckout(
   eventId?: string,
   yieldCategory?: string,
 ) {
+  const stdPackageName = getStandardPackageName(packageId, packageName);
+
   if (typeof window !== "undefined" && window.gtag) {
     window.gtag("event", "begin_checkout", {
       currency: currency,
@@ -412,15 +445,13 @@ export function trackBeginCheckout(
       items: [
         {
           item_id: packageId,
-          item_name: packageName,
+          item_name: stdPackageName,
           item_category: "Photography Package",
           price: value,
           quantity: 1,
         },
       ],
     });
-
-
   }
 
   // Facebook Pixel — InitiateCheckout (client-side)
@@ -428,7 +459,7 @@ export function trackBeginCheckout(
     "InitiateCheckout",
     {
       content_ids: [packageId],
-      content_name: packageName,
+      content_name: stdPackageName,
       content_type: "product",
       value: value,
       currency: currency,
@@ -454,7 +485,7 @@ export function trackBeginCheckout(
         first_name: userData?.firstName,
         last_name: userData?.lastName,
         custom_data: {
-          content_name: packageName,
+          content_name: stdPackageName,
           yield_category: yieldCategory,
         },
         event_source_url: window.location.href,
@@ -477,6 +508,8 @@ export function trackAddPaymentInfo(
   currency: string = "EUR",
   eventId?: string,
 ) {
+  const stdPackageName = getStandardPackageName(packageId, packageName);
+
   // Generate event_id for Pixel/CAPI deduplication if not provided
   const resolvedEventId =
     eventId ||
@@ -506,7 +539,7 @@ export function trackAddPaymentInfo(
       "AddPaymentInfo",
       {
         content_ids: [packageId],
-        content_name: packageName,
+        content_name: stdPackageName,
         content_type: "product",
         value: value,
         currency: currency,
@@ -531,7 +564,7 @@ export function trackAddPaymentInfo(
         first_name: userData?.firstName,
         last_name: userData?.lastName,
         custom_data: {
-          content_name: packageName,
+          content_name: stdPackageName,
           payment_type: paymentType,
           currency: currency,
         },
@@ -553,6 +586,8 @@ export function trackLead(
   eventId?: string,
   yieldCategory?: string,
 ) {
+  const stdPackageName = getStandardPackageName(packageId, packageName);
+
   const resolvedEventId =
     eventId ||
     (typeof crypto !== "undefined" ? crypto.randomUUID() : undefined);
@@ -565,11 +600,13 @@ export function trackLead(
       const userDataObj: any = {};
       if (userData.email) userDataObj.email = userData.email;
       if (userData.phone) userDataObj.phone_number = userData.phone;
-      
+
       if (userData.firstName || userData.lastName) {
         userDataObj.address = {};
-        if (userData.firstName) userDataObj.address.first_name = userData.firstName;
-        if (userData.lastName) userDataObj.address.last_name = userData.lastName;
+        if (userData.firstName)
+          userDataObj.address.first_name = userData.firstName;
+        if (userData.lastName)
+          userDataObj.address.last_name = userData.lastName;
       }
 
       if (Object.keys(userDataObj).length > 0) {
@@ -583,15 +620,13 @@ export function trackLead(
       items: [
         {
           item_id: packageId,
-          item_name: packageName,
+          item_name: stdPackageName,
           item_category: "Photography Package",
           price: value || 0,
           quantity: 1,
         },
       ],
     });
-
-
   }
 
   // Facebook Pixel — Lead
@@ -599,7 +634,7 @@ export function trackLead(
     "Lead",
     {
       content_ids: [packageId],
-      content_name: packageName,
+      content_name: stdPackageName,
       content_type: "product",
       value: value,
       currency: currency,
@@ -624,7 +659,7 @@ export function trackLead(
         first_name: userData?.firstName,
         last_name: userData?.lastName,
         custom_data: {
-          content_name: packageName,
+          content_name: stdPackageName,
           currency: currency,
           yield_category: yieldCategory,
         },
@@ -644,6 +679,8 @@ export function trackSchedule(
   scheduledDate: string,
   eventId?: string,
 ) {
+  const stdPackageName = getStandardPackageName(packageId, packageName);
+
   const resolvedEventId =
     eventId ||
     (typeof crypto !== "undefined" ? crypto.randomUUID() : undefined);
@@ -662,7 +699,7 @@ export function trackSchedule(
       "Schedule",
       {
         content_ids: [packageId],
-        content_name: packageName,
+        content_name: stdPackageName,
         content_category: "Photography Session",
         content_type: "product",
       },
@@ -692,7 +729,7 @@ export function trackSchedule(
         dob: userData?.dob,
         gender: userData?.gender,
         custom_data: {
-          content_name: packageName,
+          content_name: stdPackageName,
           scheduled_date: scheduledDate,
           content_type: "product",
           currency: "EUR",
@@ -730,8 +767,6 @@ export function trackContact(method: string) {
       event_label: method,
       transport_type: "beacon",
     });
-
-
   }
 
   // Facebook CAPI — Contact
@@ -778,7 +813,7 @@ export function trackViewItemList(
       item_list_name: listName,
       items: items.map((item, index) => ({
         item_id: item.id,
-        item_name: item.name,
+        item_name: getStandardPackageName(item.id, item.name),
         item_category: item.category || "Photography Package",
         price: item.price,
         quantity: 1,
@@ -804,7 +839,7 @@ export function trackSelectItem(
       items: [
         {
           item_id: item.id,
-          item_name: item.name,
+          item_name: getStandardPackageName(item.id, item.name),
           item_category: item.category || "Photography Package",
           price: item.price,
           quantity: 1,

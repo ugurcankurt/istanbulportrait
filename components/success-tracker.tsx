@@ -45,19 +45,12 @@ export function SuccessTracker({
       nameParts.length > 1 ? nameParts.slice(1).join(" ") : undefined;
 
     // Fire purchase event with Enhanced Conversions (GA4 + Google Ads + Meta Pixel)
-    trackPurchase(
-      bookingId,
-      packageId,
-      `${packageId.charAt(0).toUpperCase() + packageId.slice(1)} Package`,
-      totalAmount,
-      "EUR",
-      {
-        email: customerEmail,
-        phone: customerPhone,
-        firstName,
-        lastName,
-      },
-    );
+    trackPurchase(bookingId, packageId, packageId, totalAmount, "EUR", {
+      email: customerEmail,
+      phone: customerPhone,
+      firstName,
+      lastName,
+    });
   }, [
     bookingId,
     packageId,

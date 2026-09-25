@@ -340,8 +340,6 @@ export async function POST(request: NextRequest) {
           .select()
           .single();
 
-
-
         if (insertError) {
           throw insertError;
         }
@@ -428,103 +426,108 @@ export async function POST(request: NextRequest) {
           },
           settings,
         );
-
-        // Track Facebook CAPI Purchase
-        // We do this here because we now have a guaranteed Booking ID (Transaction ID)
-        // and we are running server-side.
-        if (body.eventId) {
-          // Extract EMQ parameters for Meta CAPI
-          const fbc = body.fbc || request.cookies.get("_fbc")?.value;
-          const fbp = body.fbp || request.cookies.get("_fbp")?.value;
-          const clientUserAgent =
-            request.headers.get("user-agent") || undefined;
-          const clientIpAddress = ip; // Already extracted via getClientIP at the top
-
-          const nameParts = customerName.split(" ");
-          const firstName = nameParts[0];
-          const lastName =
-            nameParts.length > 1 ? nameParts.slice(1).join(" ") : undefined;
-
-          try {
-            const { trackFacebookPurchase } = await import("@/lib/facebook");
-            await trackFacebookPurchase(
-              customerEmail,
-              customerPhone,
-              packageId,
-              totalAmount,
-              booking.id, // Transaction ID
-              body.eventId, // Deduplication Key
-              {
-                eventSourceUrl,
-                fbc,
-                fbp,
-                clientIpAddress,
-                clientUserAgent,
-                firstName,
-                lastName,
-              },
-            );
-          } catch (facebookError) {
-            console.error("Facebook CAPI Error:", facebookError);
-            // Non-blocking error
-          }
-
-          // ── Meta CRM Lead Event (auto-fires on every confirmed booking) ──
-          try {
-            const { trackMetaCRMLeadEvent } = await import("@/lib/facebook");
-            await trackMetaCRMLeadEvent(
-              customerEmail,
-              customerPhone,
-              booking.id,
-              body.eventId ? `crm_${body.eventId}` : undefined,
-              {
-                eventSourceUrl,
-                fbc,
-                fbp,
-                clientIpAddress,
-                clientUserAgent,
-                firstName,
-                lastName,
-              },
-            );
-          } catch (crmError) {
-            console.error("Meta CRM Lead Event Error:", crmError);
-            // Non-blocking error
-          }
-
-          // ── GA4 & Google Ads Client Attribution ──
-          const { extractClientIdFromCookie } = await import(
-            "@/lib/ga4-server"
-          );
-          const rawGaCookie = request.cookies.get("_ga")?.value;
-          const gaClientId = extractClientIdFromCookie(rawGaCookie);
-
-          // ── GA4 Measurement Protocol (Server-Side Purchase Tracking) ──
-          try {
-            const { trackGA4ServerPurchase, PACKAGE_DISPLAY_NAMES } =
-              await import("@/lib/ga4-server");
-            const packageName =
-              PACKAGE_DISPLAY_NAMES[packageId] ||
-              `${packageId.charAt(0).toUpperCase() + packageId.slice(1)} Package`;
-
-            await trackGA4ServerPurchase(
-              booking.id,
-              packageId,
-              packageName,
-              totalAmount,
-              "EUR",
-              gaClientId,
-            );
-          } catch (ga4Error) {
-            console.error("GA4 Measurement Protocol Error:", ga4Error);
-            // Non-blocking error
-          }
-
-
-        }
       } catch (emailError) {
         console.error("❌ Failed to send confirmation email:", emailError);
         // Don't fail the booking creation if email fails
+      }
+
+      // Track Facebook CAPI Purchase
+      // We do this here because we now have a guaranteed Booking ID (Transaction ID)
+      // and we are running server-side.
+      if (body.eventId) {
+        // Extract EMQ parameters for Meta CAPI
+        const fbc = body.fbc || request.cookies.get("_fbc")?.value;
+        const fbp = body.fbp || request.cookies.get("_fbp")?.value;
+        const clientUserAgent = request.headers.get("user-agent") || undefined;
+        const clientIpAddress = ip; // Already extracted via getClientIP at the top
+
+        const nameParts = customerName.split(" ");
+        const firstName = nameParts[0];
+        const lastName =
+          nameParts.length > 1 ? nameParts.slice(1).join(" ") : undefined;
+
+        try {
+          const { trackFacebookPurchase } = await import("@/lib/facebook");
+          await trackFacebookPurchase(
+            customerEmail,
+            customerPhone,
+            packageId,
+            totalAmount,
+            booking.id, // Transaction ID
+            booking.id, // Deduplication Key (event_id forced to transaction_id)
+            {
+              eventSourceUrl,
+              fbc,
+              fbp,
+              clientIpAddress,
+              clientUserAgent,
+              firstName,
+              lastName,
+            },
+          );
+        } catch (facebookError) {
+          console.error("Facebook CAPI Error:", facebookError);
+          // Non-blocking error
+        }
+
+        // ── Meta CRM Lead Event (auto-fires on every confirmed booking) ──
+        try {
+          const { trackMetaCRMLeadEvent } = await import("@/lib/facebook");
+          await trackMetaCRMLeadEvent(
+            customerEmail,
+            customerPhone,
+            booking.id,
+            body.eventId ? `crm_${body.eventId}` : undefined,
+            {
+              eventSourceUrl,
+              fbc,
+              fbp,
+              clientIpAddress,
+              clientUserAgent,
+              firstName,
+              lastName,
+            },
+          );
+        } catch (crmError) {
+          console.error("Meta CRM Lead Event Error:", crmError);
+          // Non-blocking error
+        }
+
+        // ── GA4 & Google Ads Client Attribution ──
+        const { extractClientIdFromCookie } = await import("@/lib/ga4-server");
+        const rawGaCookie = request.cookies.get("_ga")?.value;
+        const gaClientId = extractClientIdFromCookie(rawGaCookie);
+
+        let gaSessionId;
+        const measurementIdCookie = request.cookies
+          .getAll()
+          .find((c) => c.name.startsWith("_ga_"))?.value;
+        if (measurementIdCookie) {
+          const parts = measurementIdCookie.split(".");
+          if (parts.length >= 3) {
+            gaSessionId = parts[2];
+          }
+        }
+
+        // ── GA4 Measurement Protocol (Server-Side Purchase Tracking) ──
+        try {
+          const { trackGA4ServerPurchase, PACKAGE_DISPLAY_NAMES } =
+            await import("@/lib/ga4-server");
+          const packageName = PACKAGE_DISPLAY_NAMES[packageId] || packageId;
+
+          await trackGA4ServerPurchase(
+            booking.id,
+            packageId,
+            packageName,
+            totalAmount,
+            "EUR",
+            gaClientId,
+            gaSessionId,
+          );
+        } catch (ga4Error) {
+          console.error("GA4 Measurement Protocol Error:", ga4Error);
+          // Non-blocking error
+        }
       }
 
       // Add to Resend Audience (Newsletter/Marketing)

@@ -383,7 +383,9 @@ export function BookingModal({
               packageId: selectedPackage,
               packageName: packageInfo.name,
               price: packageInfo.price,
-              bookingDate: data.bookingDate ? format(new Date(data.bookingDate), "yyyy-MM-dd") : "",
+              bookingDate: data.bookingDate
+                ? format(new Date(data.bookingDate), "yyyy-MM-dd")
+                : "",
               bookingTime: data.bookingTime,
               locale: locale,
             },
@@ -395,7 +397,6 @@ export function BookingModal({
         try {
           setIsNavigating(true);
 
-
           const draftResponse = await fetch("/api/booking/create-draft", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -405,7 +406,6 @@ export function BookingModal({
               selectedAddons,
               addonQuantities,
               locale,
-
             }),
           });
 

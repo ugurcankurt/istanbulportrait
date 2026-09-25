@@ -63,6 +63,7 @@ export async function trackGA4ServerPurchase(
   totalAmount: number,
   currency: string = "EUR",
   clientId?: string, // Optional: GA4 client_id from cookie (_ga)
+  sessionId?: string, // Optional: GA4 session_id from cookie (_ga_MEASUREMENTID)
 ): Promise<void> {
   const settings = await settingsService.getSettings();
   const GA4_MEASUREMENT_ID = settings.google_analytics_id;
@@ -88,6 +89,7 @@ export async function trackGA4ServerPurchase(
           transaction_id: bookingId,
           value: totalAmount,
           currency: currency,
+          ...(sessionId && { session_id: sessionId }),
           items: [
             {
               item_id: packageId,

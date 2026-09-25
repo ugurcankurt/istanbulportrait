@@ -834,9 +834,6 @@ export default function SettingsPage() {
                 placeholder="ce9..."
               />
             </div>
-
-
-
           </CardContent>
         </Card>
       </div>
