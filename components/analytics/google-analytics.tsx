@@ -24,6 +24,7 @@ export function GoogleAnalytics({
             window.dataLayer = window.dataLayer || [];
             window.gtag = window.gtag || function(){ (window.dataLayer = window.dataLayer || []).push(arguments); };
             
+            window.gtag('set', 'allow_enhanced_conversions', true);
             ${userId ? `window.gtag('set', 'user_id', '${userId}');` : ""}
           `,
         }}
