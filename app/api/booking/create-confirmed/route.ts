@@ -279,6 +279,7 @@ export async function POST(request: NextRequest) {
 
       let booking;
       const { bookingId } = body;
+      const gclid = request.cookies.get("gclid")?.value || null;
 
       if (bookingId) {
         // Update existing draft booking
@@ -302,6 +303,7 @@ export async function POST(request: NextRequest) {
               ip_address: ip || null,
               selected_addons: selectedAddonIds,
               selected_addon_details: addonDetails,
+              gclid: gclid,
             })
             .eq("id", bookingId)
             .select()
@@ -332,9 +334,10 @@ export async function POST(request: NextRequest) {
           ip_address: ip || null,
           selected_addons: selectedAddonIds,
           selected_addon_details: addonDetails,
+          gclid: gclid,
         };
 
-        let { data: newBooking, error: insertError } = await supabaseAdmin
+        const { data: newBooking, error: insertError } = await supabaseAdmin
           .from("bookings")
           .insert(bookingInsertData)
           .select()
@@ -512,8 +515,7 @@ export async function POST(request: NextRequest) {
 
         // ── GA4 Measurement Protocol (Server-Side Purchase Tracking) ──
         try {
-          const { trackGA4ServerPurchase } =
-            await import("@/lib/ga4-server");
+          const { trackGA4ServerPurchase } = await import("@/lib/ga4-server");
           const packageName = packageId;
 
           await trackGA4ServerPurchase(

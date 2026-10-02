@@ -2,7 +2,6 @@
  * Package display names (for GA4 item_name standardization)
  */
 
-
 export interface AnalyticsUserData {
   email?: string;
   phone?: string;
@@ -1178,7 +1177,8 @@ export function trackSearch(
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         event_name: "Search",
-        event_id: typeof crypto !== "undefined" ? crypto.randomUUID() : undefined,
+        event_id:
+          typeof crypto !== "undefined" ? crypto.randomUUID() : undefined,
         customer_email: userData?.email,
         customer_phone: userData?.phone,
         first_name: userData?.firstName,

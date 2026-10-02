@@ -120,6 +120,8 @@ export async function POST(request: NextRequest) {
         }
       }
 
+      const gclid = request.cookies.get("gclid")?.value || null;
+
       const draftInsertData: Record<string, any> = {
         package_id: packageId,
         user_name: customerName,
@@ -137,9 +139,10 @@ export async function POST(request: NextRequest) {
         selected_addon_details: addonDetails,
 
         ip_address: ip || null,
+        gclid: gclid,
       };
 
-      let { data: booking, error } = await supabaseAdmin
+      const { data: booking, error } = await supabaseAdmin
         .from("bookings")
         .insert(draftInsertData)
         .select()

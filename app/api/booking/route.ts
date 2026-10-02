@@ -151,6 +151,9 @@ export async function POST(request: NextRequest) {
         // Continue even if customer upsert fails for demo mode compatibility
       }
 
+      // Extract Google Click ID (GCLID) from cookies if present
+      const gclid = request.cookies.get("gclid")?.value || null;
+
       // Now create booking in Supabase (customer already exists)
       const { data: booking, error } = await supabaseAdmin
         .from("bookings")
@@ -164,6 +167,7 @@ export async function POST(request: NextRequest) {
           status: "pending",
           total_amount: totalAmount,
           notes: notes || null,
+          gclid: gclid,
         })
         .select()
         .single();

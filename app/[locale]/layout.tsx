@@ -10,6 +10,7 @@ import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
 import { CoreWebVitals } from "@/components/analytics/core-web-vitals";
 import { FacebookPixel } from "@/components/analytics/facebook-pixel";
+import { GclidTracker } from "@/components/analytics/gclid-tracker";
 import { InteractionLoader } from "@/components/analytics/interaction-loader";
 import { YandexMetrica } from "@/components/analytics/yandex-metrica";
 import { ConsentGate } from "@/components/consent-gate";
@@ -263,6 +264,7 @@ export default async function LocaleLayout({
                     <main className="flex-1">{children}</main>
 
                     {/* Critical Analytics — loaded immediately on client side to ensure accurate conversion tracking and Tag Assistant detection */}
+                    <GclidTracker />
                     <FacebookPixel pixelId={settings.facebook_pixel_id} />
                     <DeferredAnalytics
                       gaId={settings.google_analytics_id}

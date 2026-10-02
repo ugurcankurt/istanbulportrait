@@ -30,7 +30,12 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useCurrency } from "@/contexts/currency-context";
 import { useIsMobile } from "@/hooks/use-mobile";
 import type { AddonDB } from "@/lib/addons-service";
-import { trackContact, trackPackageAddToCart, trackSchedule, trackSearch } from "@/lib/analytics";
+import {
+  trackContact,
+  trackPackageAddToCart,
+  trackSchedule,
+  trackSearch,
+} from "@/lib/analytics";
 import type { TimeSurcharge } from "@/lib/availability-service";
 import type { DiscountDB } from "@/lib/discount-service";
 import { matchActiveSurcharge } from "@/lib/pricing";
@@ -250,7 +255,7 @@ export function BookingCard({
 
     const encoded = encodeURIComponent(msg);
     const number = (whatsappNumber || "905367093724").replace(/[^\d]/g, "");
-    
+
     // Track WhatsApp contact intent for GA4 / Meta Pixel
     trackContact("whatsapp");
 

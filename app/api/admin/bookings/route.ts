@@ -203,9 +203,7 @@ export async function PATCH(request: NextRequest) {
 
         // Track GA4 Server Refund
         try {
-          const { trackGA4ServerRefund } = await import(
-            "@/lib/ga4-server"
-          );
+          const { trackGA4ServerRefund } = await import("@/lib/ga4-server");
           const packageName = currentBooking.package_id;
           await trackGA4ServerRefund(
             bookingId,
