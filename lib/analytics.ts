@@ -115,7 +115,16 @@ export function getValidFbp(): string | undefined {
     return fbp;
   }
 
-  return `fb.1.${Date.now()}.${Math.floor(Math.random() * 10000000000)}`;
+  // Generate a new one and SAVE it to the cookie
+  const newFbp = `fb.1.${Date.now()}.${Math.floor(Math.random() * 10000000000)}`;
+  if (typeof document !== "undefined") {
+    const days = 90;
+    const date = new Date();
+    date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
+    document.cookie = `_fbp=${newFbp};expires=${date.toUTCString()};path=/;SameSite=Lax`;
+  }
+  
+  return newFbp;
 }
 
 // Google Analytics event tracking //
