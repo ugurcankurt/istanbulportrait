@@ -1,0 +1,85 @@
+"use client";
+
+import { useEffect, useRef } from "react";
+import { setAnalyticsUserId, trackPurchase } from "@/lib/analytics";
+
+interface SuccessTrackerProps {
+  bookingId: string;
+  packageId: string;
+  totalAmount: number;
+  customerEmail?: string;
+  customerPhone?: string;
+  customerName?: string;
+  bookingDate?: string;
+  packageName?: string;
+  /** GA4 User-ID, passed only when the server verified analytics consent */
+  userId?: string | null;
+}
+
+/**
+ * SuccessTracker — fires GA4 purchase + Google Ads conversion with Enhanced Conversions
+ * (hashed user data) when the /checkout/success page is accessed.
+ * Guards against double-firing using sessionStorage deduplication.
+ */
+export function SuccessTracker({
+  bookingId,
+  packageId,
+  totalAmount,
+  customerEmail,
+  customerPhone,
+  customerName,
+  bookingDate,
+  packageName,
+  userId,
+}: SuccessTrackerProps) {
+  const hasFired = useRef(false);
+
+  useEffect(() => {
+    if (hasFired.current) return;
+    hasFired.current = true;
+
+    // Deduplication: skip if checkout-form already fired for this booking
+    const firedKey = `purchase_tracked_${bookingId}`;
+    const alreadyTracked = sessionStorage.getItem(firedKey);
+    if (alreadyTracked) return;
+
+    // Mark as tracked to prevent double-counting
+    sessionStorage.setItem(firedKey, "1");
+
+    const nameParts = (customerName || "").trim().split(" ");
+    const firstName = nameParts[0] || undefined;
+    const lastName =
+      nameParts.length > 1 ? nameParts.slice(1).join(" ") : undefined;
+
+    setAnalyticsUserId(userId);
+
+    // Fire purchase event with Enhanced Conversions (GA4 + Google Ads + Meta Pixel)
+    trackPurchase(
+      bookingId,
+      packageId,
+      packageName || packageId,
+      totalAmount,
+      "EUR",
+      {
+        email: customerEmail,
+        phone: customerPhone,
+        firstName,
+        lastName,
+      },
+      undefined,
+      undefined,
+      bookingDate,
+    );
+  }, [
+    bookingId,
+    packageId,
+    totalAmount,
+    customerEmail,
+    customerPhone,
+    customerName,
+    bookingDate,
+    userId,
+  ]);
+
+  return null;
+}

@@ -1,0 +1,718 @@
+import { settingsService } from "./settings-service";
+
+// SHA256 hashing for customer data (required by Meta/Facebook)
+// Uses native Web Crypto API (crypto.subtle) which is built-in and saves bundle size.
+export async function hashCustomerData(value: string): Promise<string> {
+  if (!value) return "";
+
+  // Normalize the data before hashing
+  const normalized = value.toLowerCase().trim();
+
+  if (
+    !normalized ||
+    normalized === "undefined" ||
+    normalized === "null" ||
+    normalized === "none"
+  )
+    return "";
+
+  // For both Browser and Node.js 19+ environment
+  const msgUint8 = new TextEncoder().encode(normalized);
+  const hashBuffer = await crypto.subtle.digest("SHA-256", msgUint8);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  const hashHex = hashArray
+    .map((b) => b.toString(16).padStart(2, "0"))
+    .join("");
+
+  return hashHex;
+}
+
+// Phone number normalization and hashing
+export async function hashPhoneNumber(phone: string): Promise<string> {
+  if (!phone) return "";
+
+  const trimmed = phone.trim();
+  // Remove all non-digit characters
+  let digitsOnly = trimmed.replace(/\D/g, "");
+
+  if (!digitsOnly || digitsOnly.length < 7) return "";
+
+  if (trimmed.startsWith("+")) {
+    // E.164 — country code already present
+  } else if (digitsOnly.startsWith("00")) {
+    digitsOnly = digitsOnly.slice(2);
+  } else if (digitsOnly.startsWith("0")) {
+    // Local Turkish format (05xx...) — drop trunk prefix, add country code
+    digitsOnly = `90${digitsOnly.slice(1)}`;
+  } else if (digitsOnly.length === 10) {
+    // National number without country code (Turkey)
+    digitsOnly = `90${digitsOnly}`;
+  }
+
+  return await hashCustomerData(digitsOnly);
+}
+
+// Generate Lead ID (15-17 digits as per Meta requirement)
+export function generateLeadId(): number {
+  // Generate a 15-digit number to avoid JavaScript integer precision issues
+  const min = 100000000000000; // 15 digits
+  const max = 999999999999999; // 15 digits
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+// Facebook Conversions API Event Interface
+export interface FacebookConversionEvent {
+  event_name: string;
+  event_time: number;
+  event_id?: string; // Critical for deduplication
+  event_source_url?: string; // URL where the event took place
+  action_source: "system_generated" | "website";
+  user_data: {
+    em?: string[]; // hashed email
+    ph?: string[]; // hashed phone
+    fn?: string[]; // hashed first name
+    ln?: string[]; // hashed last name
+    ct?: string[]; // hashed city
+    st?: string[]; // hashed state
+    zp?: string[]; // hashed zip
+    country?: string[]; // hashed country
+    db?: string[]; // hashed dob (YYYYMMDD)
+    ge?: string[]; // hashed gender (m or f)
+    lead_id?: number | string;
+    fbc?: string; // Facebook click ID
+    fbp?: string; // Facebook browser ID
+    external_id?: string[]; // Unique external ID (hashed)
+    client_ip_address?: string; // Required when em/ph is missing
+    client_user_agent?: string; // Required when em/ph is missing
+  };
+  custom_data?: {
+    event_source?: "crm" | "website";
+    lead_event_source?: string;
+    content_ids?: string[];
+    content_type?: string;
+    value?: number;
+    currency?: string;
+    transaction_id?: string;
+    num_items?: number;
+    yield_category?: string;
+    checkin_date?: string;
+  };
+}
+
+// Send event to Facebook Conversions API
+// Returns true on success, or error string on failure
+export async function sendToFacebookConversionsAPI(
+  events: FacebookConversionEvent[],
+  maxRetries = 2,
+): Promise<boolean | string> {
+  const settings = await settingsService.getSettings();
+  const FACEBOOK_ACCESS_TOKEN = settings.facebook_access_token;
+  const FACEBOOK_DATASET_ID = settings.facebook_dataset_id;
+
+  if (!FACEBOOK_ACCESS_TOKEN || !FACEBOOK_DATASET_ID) {
+    const msg =
+      "Facebook Conversions API: Missing FACEBOOK_ACCESS_TOKEN or FACEBOOK_DATASET_ID in admin settings";
+    console.error(msg);
+    return msg;
+  }
+
+  let attempt = 0;
+  let lastErrorDetail = "Unknown Error";
+
+  while (attempt <= maxRetries) {
+    try {
+      const response = await fetch(
+        `https://graph.facebook.com/v26.0/${FACEBOOK_DATASET_ID}/events?access_token=${FACEBOOK_ACCESS_TOKEN}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            data: events,
+          }),
+        },
+      );
+
+      const result = await response.json();
+
+      if (response.ok) {
+        return true;
+      }
+
+      // Return full error object for debugging
+      lastErrorDetail = JSON.stringify(result?.error || result);
+
+      // Check if it is a transient error to retry
+      if (result?.error?.is_transient && attempt < maxRetries) {
+        attempt++;
+        console.warn(
+          `Facebook API transient error (attempt ${attempt}). Retrying...`,
+        );
+        await new Promise((resolve) => setTimeout(resolve, attempt * 1500));
+        continue;
+      }
+
+      console.error("Facebook Conversions API Error:", lastErrorDetail);
+      return lastErrorDetail;
+    } catch (error) {
+      lastErrorDetail =
+        error instanceof Error ? error.message : "Network error";
+      if (attempt < maxRetries) {
+        attempt++;
+        console.warn(
+          `Facebook API network error (attempt ${attempt}). Retrying...`,
+        );
+        await new Promise((resolve) => setTimeout(resolve, attempt * 1500));
+        continue;
+      }
+      console.error("Facebook Conversions API Network Error:", lastErrorDetail);
+      return lastErrorDetail;
+    }
+  }
+
+  return lastErrorDetail;
+}
+
+// Client-side Facebook Pixel functions
+export const fbPixel = {
+  // Initialize Facebook Pixel
+  init: (pixelId: string, userData?: Record<string, string>) => {
+    if (typeof window === "undefined" || !pixelId) return;
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const fb = (window as any).fbq;
+    if (fb) {
+      if (userData) {
+        fb("init", pixelId, userData);
+      } else {
+        fb("init", pixelId);
+      }
+      fb("track", "PageView");
+    }
+  },
+
+  // Track custom events
+  track: (
+    eventName: string,
+    parameters?: Record<string, unknown>,
+    eventId?: string,
+  ) => {
+    if (typeof window === "undefined") return;
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const fb = (window as any).fbq;
+    if (fb) {
+      if (eventId) {
+        fb("track", eventName, parameters, { eventID: eventId });
+      } else {
+        fb("track", eventName, parameters);
+      }
+    }
+  },
+
+  // Track ViewContent event
+  trackViewContent: (contentId: string, value?: number, eventId?: string) => {
+    fbPixel.track(
+      "ViewContent",
+      {
+        content_ids: [contentId],
+        content_type: "product",
+        value: value,
+        currency: "EUR",
+      },
+      eventId,
+    );
+  },
+
+  // Track Lead event
+  trackLead: (value?: number, eventId?: string) => {
+    fbPixel.track(
+      "Lead",
+      {
+        value: value,
+        currency: "EUR",
+      },
+      eventId,
+    );
+  },
+
+  // Track InitiateCheckout event
+  trackInitiateCheckout: (
+    contentId: string,
+    value: number,
+    eventId?: string,
+  ) => {
+    fbPixel.track(
+      "InitiateCheckout",
+      {
+        content_ids: [contentId],
+        content_type: "product",
+        value: value,
+        currency: "EUR",
+      },
+      eventId,
+    );
+  },
+
+  // Track Purchase event
+  trackPurchase: (
+    contentId: string,
+    value: number,
+    transactionId: string,
+    eventId?: string,
+    yieldCategory?: string,
+  ) => {
+    fbPixel.track(
+      "Purchase",
+      {
+        content_ids: [contentId],
+        content_type: "product",
+        value: value,
+        currency: "EUR",
+        transaction_id: transactionId,
+        yield_category: yieldCategory,
+      },
+      eventId,
+    );
+  },
+};
+
+export interface FacebookEventOptions {
+  fbc?: string;
+  fbp?: string;
+  externalId?: string;
+  clientIpAddress?: string;
+  clientUserAgent?: string;
+  eventSourceUrl?: string;
+  firstName?: string;
+  lastName?: string;
+  city?: string;
+  state?: string;
+  zip?: string;
+  country?: string;
+  dateOfBirth?: string;
+  gender?: string;
+  yieldCategory?: string;
+  checkinDate?: string;
+}
+
+// Istanbul Portrait specific tracking functions
+export const trackFacebookLead = async (
+  customerEmail: string,
+  customerPhone: string,
+  packageId: string,
+  amount: number,
+  leadId?: number,
+  eventId?: string,
+  options?: FacebookEventOptions,
+) => {
+  const generatedLeadId = leadId || generateLeadId();
+
+  // Prepare hashed data
+  const hashedEmail = customerEmail
+    ? [await hashCustomerData(customerEmail)]
+    : [];
+  const hashedPhone = customerPhone
+    ? [await hashPhoneNumber(customerPhone)]
+    : [];
+  const hashedFirstName = options?.firstName
+    ? [await hashCustomerData(options.firstName)]
+    : undefined;
+  const hashedLastName = options?.lastName
+    ? [await hashCustomerData(options.lastName)]
+    : undefined;
+  const hashedCity = options?.city
+    ? [await hashCustomerData(options.city)]
+    : undefined;
+  const hashedState = options?.state
+    ? [await hashCustomerData(options.state)]
+    : undefined;
+  const hashedZip = options?.zip
+    ? [await hashCustomerData(options.zip)]
+    : undefined;
+  const hashedCountry = options?.country
+    ? [await hashCustomerData(options.country)]
+    : undefined;
+  const hashedDob = options?.dateOfBirth
+    ? [await hashCustomerData(options.dateOfBirth)]
+    : undefined;
+  const hashedGender = options?.gender
+    ? [await hashCustomerData(options.gender)]
+    : undefined;
+
+  // Prepare event for Conversions API
+  const event: FacebookConversionEvent = {
+    event_name: "Lead",
+    event_time: Math.floor(Date.now() / 1000),
+    event_id: eventId,
+    event_source_url: options?.eventSourceUrl,
+    action_source: "website", // Usually lead from a web form
+    user_data: {
+      em: hashedEmail,
+      ph: hashedPhone,
+      fn: hashedFirstName,
+      ln: hashedLastName,
+      ct: hashedCity,
+      st: hashedState,
+      zp: hashedZip,
+      country: hashedCountry,
+      db: hashedDob,
+      ge: hashedGender,
+      lead_id: generatedLeadId,
+      fbc: options?.fbc,
+      fbp: options?.fbp,
+      client_ip_address: options?.clientIpAddress,
+      client_user_agent: options?.clientUserAgent,
+      external_id: options?.externalId ? [options.externalId] : undefined,
+    },
+    custom_data: {
+      event_source: "crm",
+      lead_event_source: "Istanbul Portrait CRM",
+      content_ids: [packageId],
+      content_type: "product",
+      value: amount,
+      currency: "EUR",
+    },
+  };
+
+  // Send to Conversions API (server-side)
+  // Only send CAPI if we have sufficient data or if it's critical
+  // For leads, we might rely on client-side mostly, but CAPI helps
+  const success = await sendToFacebookConversionsAPI([event]);
+
+  // Client-side pixel should be called from the component, but if called here:
+  if (typeof window !== "undefined") {
+    fbPixel.trackLead(amount, eventId);
+  }
+
+  return { success, leadId: generatedLeadId };
+};
+
+export const trackFacebookPurchase = async (
+  customerEmail: string,
+  customerPhone: string,
+  packageId: string,
+  amount: number,
+  transactionId: string,
+  eventId?: string,
+  options?: FacebookEventOptions,
+) => {
+  // Prepare hashed data
+  const hashedEmail = customerEmail
+    ? [await hashCustomerData(customerEmail)]
+    : [];
+  const hashedPhone = customerPhone
+    ? [await hashPhoneNumber(customerPhone)]
+    : [];
+  const hashedFirstName = options?.firstName
+    ? [await hashCustomerData(options.firstName)]
+    : undefined;
+  const hashedLastName = options?.lastName
+    ? [await hashCustomerData(options.lastName)]
+    : undefined;
+  const hashedCity = options?.city
+    ? [await hashCustomerData(options.city)]
+    : undefined;
+  const hashedState = options?.state
+    ? [await hashCustomerData(options.state)]
+    : undefined;
+  const hashedZip = options?.zip
+    ? [await hashCustomerData(options.zip)]
+    : undefined;
+  const hashedCountry = options?.country
+    ? [await hashCustomerData(options.country)]
+    : undefined;
+  const hashedDob = options?.dateOfBirth
+    ? [await hashCustomerData(options.dateOfBirth)]
+    : undefined;
+  const hashedGender = options?.gender
+    ? [await hashCustomerData(options.gender)]
+    : undefined;
+
+  // Prepare event for Conversions API
+  const event: FacebookConversionEvent = {
+    event_name: "Purchase",
+    event_time: Math.floor(Date.now() / 1000),
+    event_id: eventId,
+    event_source_url: options?.eventSourceUrl,
+    action_source: "website",
+    user_data: {
+      em: hashedEmail,
+      ph: hashedPhone,
+      fn: hashedFirstName,
+      ln: hashedLastName,
+      ct: hashedCity,
+      st: hashedState,
+      zp: hashedZip,
+      country: hashedCountry,
+      db: hashedDob,
+      ge: hashedGender,
+      fbc: options?.fbc,
+      fbp: options?.fbp,
+      client_ip_address: options?.clientIpAddress,
+      client_user_agent: options?.clientUserAgent,
+      external_id: options?.externalId ? [options.externalId] : undefined,
+    },
+    custom_data: {
+      event_source: "website",
+      content_ids: [packageId],
+      content_type: "product",
+      value: amount,
+      currency: "EUR",
+      transaction_id: transactionId,
+      yield_category: options?.yieldCategory,
+      checkin_date: options?.checkinDate,
+    },
+  };
+
+  // Send to Conversions API (server-side)
+  const success = await sendToFacebookConversionsAPI([event]);
+
+  // Client-side pixel tracking logic is usually separate for Purchase
+  // (e.g. on Thank You page), but if this function is called client-side:
+  if (typeof window !== "undefined") {
+    fbPixel.trackPurchase(
+      packageId,
+      amount,
+      transactionId,
+      eventId,
+      options?.yieldCategory,
+    );
+  }
+
+  return { success };
+};
+
+export const trackFacebookPrintPurchase = async (
+  customerEmail: string,
+  customerPhone: string,
+  items: Array<{ sku: string; price: number; quantity: number }>,
+  totalAmount: number,
+  transactionId: string,
+  eventId?: string,
+  options?: FacebookEventOptions,
+) => {
+  // Aggregate content IDs
+  const contentIds = items.map((item) => item.sku);
+
+  // Prepare hashed data
+  const hashedEmail = customerEmail
+    ? [await hashCustomerData(customerEmail)]
+    : [];
+  const hashedPhone = customerPhone
+    ? [await hashPhoneNumber(customerPhone)]
+    : [];
+  const hashedFirstName = options?.firstName
+    ? [await hashCustomerData(options.firstName)]
+    : undefined;
+  const hashedLastName = options?.lastName
+    ? [await hashCustomerData(options.lastName)]
+    : undefined;
+  const hashedCity = options?.city
+    ? [await hashCustomerData(options.city)]
+    : undefined;
+  const hashedState = options?.state
+    ? [await hashCustomerData(options.state)]
+    : undefined;
+  const hashedZip = options?.zip
+    ? [await hashCustomerData(options.zip)]
+    : undefined;
+  const hashedCountry = options?.country
+    ? [await hashCustomerData(options.country)]
+    : undefined;
+  const hashedDob = options?.dateOfBirth
+    ? [await hashCustomerData(options.dateOfBirth)]
+    : undefined;
+  const hashedGender = options?.gender
+    ? [await hashCustomerData(options.gender)]
+    : undefined;
+
+  // Prepare event for Conversions API
+  const event: FacebookConversionEvent = {
+    event_name: "Purchase",
+    event_time: Math.floor(Date.now() / 1000),
+    event_id: eventId,
+    event_source_url: options?.eventSourceUrl,
+    action_source: "website",
+    user_data: {
+      em: hashedEmail,
+      ph: hashedPhone,
+      fn: hashedFirstName,
+      ln: hashedLastName,
+      ct: hashedCity,
+      st: hashedState,
+      zp: hashedZip,
+      country: hashedCountry,
+      db: hashedDob,
+      ge: hashedGender,
+      fbc: options?.fbc,
+      fbp: options?.fbp,
+      client_ip_address: options?.clientIpAddress,
+      client_user_agent: options?.clientUserAgent,
+      external_id: options?.externalId ? [options.externalId] : undefined,
+    },
+    custom_data: {
+      event_source: "website",
+      content_ids: contentIds,
+      content_type: "product",
+      value: totalAmount,
+      currency: "EUR",
+      transaction_id: transactionId,
+      num_items: items.reduce((acc, curr) => acc + curr.quantity, 0),
+    },
+  };
+
+  // Send to Conversions API
+  const success = await sendToFacebookConversionsAPI([event]);
+  return { success };
+};
+
+/**
+ * Tracks a Meta CRM Lead event — fires automatically on every confirmed booking.
+ */
+export const trackMetaCRMLeadEvent = async (
+  customerEmail: string,
+  customerPhone: string,
+  bookingId: string,
+  eventId?: string,
+  options?: FacebookEventOptions,
+): Promise<void> => {
+  try {
+    // Derive a stable 15-digit lead_id from bookingId
+    const leadId =
+      (Math.abs(
+        bookingId
+          .split("")
+          .reduce((acc, ch) => acc + ch.charCodeAt(0), 100000000000000),
+      ) %
+        900000000000000) +
+      100000000000000;
+
+    const cleanId = bookingId.replace(/[^a-zA-Z0-9_-]/g, "_");
+
+    // Prepare hashed data
+    const hashedEmail = customerEmail
+      ? [await hashCustomerData(customerEmail)]
+      : [];
+    const hashedPhone = customerPhone
+      ? [await hashPhoneNumber(customerPhone)]
+      : [];
+    const hashedFirstName = options?.firstName
+      ? [await hashCustomerData(options.firstName)]
+      : undefined;
+    const hashedLastName = options?.lastName
+      ? [await hashCustomerData(options.lastName)]
+      : undefined;
+    const hashedCity = options?.city
+      ? [await hashCustomerData(options.city)]
+      : undefined;
+    const hashedState = options?.state
+      ? [await hashCustomerData(options.state)]
+      : undefined;
+    const hashedZip = options?.zip
+      ? [await hashCustomerData(options.zip)]
+      : undefined;
+    const hashedCountry = options?.country
+      ? [await hashCustomerData(options.country)]
+      : undefined;
+    const hashedDob = options?.dateOfBirth
+      ? [await hashCustomerData(options.dateOfBirth)]
+      : undefined;
+    const hashedGender = options?.gender
+      ? [await hashCustomerData(options.gender)]
+      : undefined;
+
+    const event: FacebookConversionEvent = {
+      event_name: "Lead",
+      event_time: Math.floor(Date.now() / 1000),
+      event_id: eventId || `crm_auto_${cleanId}_${Date.now()}`,
+      event_source_url: options?.eventSourceUrl,
+      action_source: "system_generated",
+      user_data: {
+        em: hashedEmail,
+        ph: hashedPhone,
+        fn: hashedFirstName,
+        ln: hashedLastName,
+        ct: hashedCity,
+        st: hashedState,
+        zp: hashedZip,
+        country: hashedCountry,
+        db: hashedDob,
+        ge: hashedGender,
+        lead_id: leadId,
+        fbc: options?.fbc,
+        fbp: options?.fbp,
+        client_ip_address: options?.clientIpAddress,
+        client_user_agent: options?.clientUserAgent,
+      },
+      custom_data: {
+        event_source: "crm",
+        lead_event_source: "Istanbul Portrait CRM",
+      },
+    };
+
+    await sendToFacebookConversionsAPI([event]);
+  } catch (err) {
+    // Non-blocking: log error but never throw
+    console.error("[Meta CRM] trackMetaCRMLeadEvent failed:", err);
+  }
+};
+
+/**
+ * Tracks a Meta CRM status change (Qualified or Converted).
+ */
+export const trackMetaCRMStatusEvent = async (
+  customerEmail: string | undefined | null,
+  customerPhone: string | undefined | null,
+  bookingId: string,
+  newStatus: "confirmed" | "completed",
+): Promise<void> => {
+  try {
+    // Derive a stable 15-digit lead_id from bookingId
+    const leadId =
+      (Math.abs(
+        bookingId
+          .split("")
+          .reduce((acc, ch) => acc + ch.charCodeAt(0), 100000000000000),
+      ) %
+        900000000000000) +
+      100000000000000;
+
+    const cleanId = bookingId.replace(/[^a-zA-Z0-9_-]/g, "_");
+
+    // Prepare hashed data
+    const hashedEmail = customerEmail
+      ? [await hashCustomerData(customerEmail)]
+      : [];
+    const hashedPhone = customerPhone
+      ? [await hashPhoneNumber(customerPhone)]
+      : [];
+
+    const eventName = newStatus === "confirmed" ? "Qualified" : "Converted";
+
+    const event: FacebookConversionEvent = {
+      event_name: eventName,
+      event_time: Math.floor(Date.now() / 1000),
+      event_id: `crm_${eventName.toLowerCase()}_${cleanId}_${Date.now()}`,
+      action_source: "system_generated",
+      user_data: {
+        em: hashedEmail,
+        ph: hashedPhone,
+        lead_id: leadId,
+      },
+      custom_data: {
+        event_source: "crm",
+        lead_event_source: "Istanbul Portrait CRM",
+      },
+    };
+
+    await sendToFacebookConversionsAPI([event]);
+  } catch (err) {
+    // Non-blocking: log error but never throw
+    console.error(
+      `[Meta CRM] trackMetaCRMStatusEvent (${newStatus}) failed:`,
+      err,
+    );
+  }
+};

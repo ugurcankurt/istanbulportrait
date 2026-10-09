@@ -1,0 +1,1257 @@
+/**
+ * Package display names (for GA4 item_name standardization)
+ */
+
+export interface AnalyticsUserData {
+  email?: string;
+  phone?: string;
+  firstName?: string;
+  lastName?: string;
+  city?: string;
+  state?: string;
+  zip?: string;
+  country?: string;
+  dob?: string;
+  gender?: string;
+}
+
+/**
+ * Storage key for hashed user data to persist Advanced Matching
+ */
+const AM_STORAGE_KEY = "istanbul_portrait_am_data";
+
+/**
+ * Safely saves hashed user data for Advanced Matching persistence
+ */
+export function saveUserDataForAdvancedMatching(userData: AnalyticsUserData) {
+  if (typeof window === "undefined") return;
+
+  try {
+    // Get existing data to merge
+    const existingRaw = localStorage.getItem(AM_STORAGE_KEY);
+    const existing = existingRaw ? JSON.parse(existingRaw) : {};
+
+    const updated = { ...existing, ...userData };
+    localStorage.setItem(AM_STORAGE_KEY, JSON.stringify(updated));
+
+    // Also update the Pixel's active user data if possible
+    // Note: This won't re-init the pixel, but it can be used for future events
+  } catch (e) {
+    console.error("Failed to save AM data", e);
+  }
+}
+
+/**
+ * Retrieves persisted user data for Advanced Matching
+ */
+export function getUserDataForAdvancedMatching():
+  | AnalyticsUserData
+  | undefined {
+  if (typeof window === "undefined") return undefined;
+
+  try {
+    const raw = localStorage.getItem(AM_STORAGE_KEY);
+    return raw ? JSON.parse(raw) : undefined;
+  } catch (_e) {
+    return undefined;
+  }
+}
+
+/**
+ * Cross-browser unique ID generator (event_id / external_id).
+ * crypto.randomUUID() is unavailable on iOS Safari < 15.4, older Android
+ * WebViews and non-secure contexts, so we fall back gracefully.
+ */
+export function generateEventId(): string {
+  try {
+    if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
+      return crypto.randomUUID();
+    }
+    if (typeof crypto !== "undefined" && crypto.getRandomValues) {
+      const b = crypto.getRandomValues(new Uint8Array(16));
+      b[6] = (b[6] & 0x0f) | 0x40;
+      b[8] = (b[8] & 0x3f) | 0x80;
+      const h = Array.from(b, (x) => x.toString(16).padStart(2, "0")).join("");
+      return `${h.slice(0, 8)}-${h.slice(8, 12)}-${h.slice(12, 16)}-${h.slice(16, 20)}-${h.slice(20)}`;
+    }
+  } catch (_e) {
+    // fall through
+  }
+  return `ip_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`;
+}
+
+/**
+ * Generates or retrieves a unique external_id for the user
+ */
+const EXT_ID_STORAGE_KEY = "istanbul_portrait_ext_id";
+export function getExternalId(): string | undefined {
+  if (typeof window === "undefined") return undefined;
+  try {
+    let extId = localStorage.getItem(EXT_ID_STORAGE_KEY);
+    if (!extId) {
+      extId =
+        generateEventId();
+      localStorage.setItem(EXT_ID_STORAGE_KEY, extId);
+    }
+    return extId;
+  } catch (_e) {
+    return undefined;
+  }
+}
+
+/**
+ * Reads a cookie value safely from the document, handles multiple cookies of same name
+ */
+export function getCookie(name: string): string | undefined {
+  if (typeof document === "undefined") return undefined;
+  const match = document.cookie.match(new RegExp(`(^| )${name}=([^;]+)`));
+  if (match) return match[2];
+  return undefined;
+}
+
+export function getValidFbc(): string | undefined {
+  if (typeof window === "undefined") return undefined;
+
+  const fbclid = new URLSearchParams(window.location.search).get("fbclid");
+  if (fbclid && /^[a-zA-Z0-9_=-]+$/.test(fbclid)) {
+    return `fb.1.${Date.now()}.${fbclid}`;
+  }
+
+  const fbc = getCookie("_fbc");
+  if (
+    fbc &&
+    /^fb\.[0-9]\.[0-9]{13,}\.[a-zA-Z0-9_=-]+(\.[a-zA-Z0-9_=-]+)?$/.test(fbc)
+  ) {
+    return fbc;
+  }
+
+  return undefined;
+}
+
+export function getValidFbp(): string | undefined {
+  if (typeof window === "undefined") return undefined;
+
+  const fbp = getCookie("_fbp");
+  if (fbp && /^fb\.[0-9]\.[0-9]{13,}\.[0-9]+(\.[a-zA-Z0-9_=-]+)?$/.test(fbp)) {
+    return fbp;
+  }
+
+  // Generate a new one and SAVE it to the cookie
+  const newFbp = `fb.1.${Date.now()}.${Math.floor(Math.random() * 10000000000)}`;
+  if (typeof document !== "undefined") {
+    const days = 90;
+    const date = new Date();
+    date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
+    document.cookie = `_fbp=${newFbp};expires=${date.toUTCString()};path=/;SameSite=Lax`;
+  }
+  
+  return newFbp;
+}
+
+// Google Analytics event tracking //
+export function trackEvent(
+  action: string,
+  category: string,
+  label?: string,
+  value?: number,
+) {
+  if (typeof window !== "undefined" && window.gtag) {
+    window.gtag("event", action, {
+      event_category: category,
+      event_label: label,
+      value: value,
+    });
+  }
+}
+
+// Track booking events
+/**
+ * Attach the GA4 User-ID to subsequent events (guest → account stitching after
+ * checkout). Falsy values are ignored. Only call with IDs the server released under
+ * analytics consent.
+ */
+export function setAnalyticsUserId(userId?: string | null) {
+  if (typeof window !== "undefined" && window.gtag && userId) {
+    window.gtag("set", { user_id: userId } as any);
+  }
+}
+
+export function trackBookingEvent(
+  eventType: string,
+  packageId?: string,
+  value?: number,
+) {
+  trackEvent(eventType, "Booking", packageId, value);
+}
+
+// Track page views
+export function trackPageView(url: string, title?: string) {
+  if (typeof window !== "undefined" && window.gtag) {
+    const gaId =
+      (window as any).__GA_ID ||
+      process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID ||
+      "";
+    window.gtag("config", gaId, {
+      page_location: url,
+      page_title: title,
+    });
+  }
+}
+
+// Track package interest
+export function trackPackageInterest(packageName: string) {
+  trackEvent("package_interest", "Packages", packageName);
+}
+
+// Track form submissions
+export function trackFormSubmission(formType: string) {
+  trackEvent("form_submit", "Forms", formType);
+}
+
+// Track payment events
+export function trackPaymentEvent(
+  packageId: string,
+  value: number,
+  status: string,
+) {
+  trackEvent(`payment_${status}`, "Payment", packageId, value);
+}
+
+/**
+ * Helper to normalize user data for Enhanced Conversions & Advanced Matching
+ */
+export function normalizeAnalyticsUserData(
+  userData?: AnalyticsUserData,
+): AnalyticsUserData | undefined {
+  if (!userData) return undefined;
+  const normalizedEmail = userData.email
+    ? userData.email.trim().toLowerCase()
+    : undefined;
+  let normalizedPhone = userData.phone
+    ? userData.phone.replace(/[^\d+]/g, "")
+    : undefined;
+  if (normalizedPhone && !normalizedPhone.startsWith("+")) {
+    normalizedPhone = `+${normalizedPhone}`;
+  }
+  return {
+    ...userData,
+    email: normalizedEmail,
+    phone: normalizedPhone,
+    firstName: userData.firstName ? userData.firstName.trim() : undefined,
+    lastName: userData.lastName ? userData.lastName.trim() : undefined,
+  };
+}
+
+// Track purchase events (GA4 Enhanced Ecommerce)
+export function trackPurchase(
+  transactionId: string,
+  packageId: string,
+  packageName: string,
+  value: number,
+  currency: string = "EUR",
+  userData?: {
+    email?: string;
+    phone?: string;
+    firstName?: string;
+    lastName?: string;
+    city?: string;
+    country?: string;
+  },
+  eventId?: string,
+  yieldCategory?: string,
+  bookingDate?: string,
+) {
+  const stdPackageName = packageName;
+
+  if (typeof window !== "undefined" && window.gtag) {
+    // Set Enhanced Conversions user data for GA4/Google Ads
+    if (userData) {
+      const normalized = normalizeAnalyticsUserData(userData);
+
+      const userDataObj: any = {};
+      if (normalized?.email) userDataObj.email = normalized.email;
+      if (normalized?.phone) userDataObj.phone_number = normalized.phone;
+
+      if (
+        normalized?.firstName ||
+        normalized?.lastName ||
+        userData.city ||
+        userData.country
+      ) {
+        userDataObj.address = {};
+        if (normalized?.firstName)
+          userDataObj.address.first_name = normalized.firstName;
+        if (normalized?.lastName)
+          userDataObj.address.last_name = normalized.lastName;
+        if (userData.city) userDataObj.address.city = userData.city;
+        if (userData.country) userDataObj.address.country = userData.country;
+      }
+
+      if (Object.keys(userDataObj).length > 0) {
+        window.gtag("set", "user_data", userDataObj);
+      }
+    }
+
+    // Google Analytics 4 — Purchase (Ecommerce)
+    window.gtag("event", "purchase", {
+      transaction_id: transactionId,
+      currency: currency,
+      value: value,
+      items: [
+        {
+          item_id: packageId,
+          item_name: stdPackageName,
+          item_category: "Photography Package",
+          price: value,
+          quantity: 1,
+        },
+      ],
+    });
+
+    // Google Ads — Explicit Purchase Conversion
+    window.gtag("event", "conversion", {
+      send_to: "AW-1007335227",
+      value: value,
+      currency: currency,
+      transaction_id: transactionId,
+    });
+  }
+
+  // Force transactionId as the deduplication key for Purchase events per Meta best practices
+  const resolvedEventId = transactionId || eventId;
+
+  // Track Facebook Purchase (client-side)
+  trackFacebookEvent(
+    "Purchase",
+    {
+      content_ids: [packageId],
+      content_name: stdPackageName,
+      value: value,
+      currency: currency,
+      transaction_id: transactionId,
+      yield_category: yieldCategory,
+      checkin_date: bookingDate,
+    },
+    resolvedEventId,
+  );
+
+  // Facebook CAPI — Purchase (server-side)
+  if (typeof window !== "undefined") {
+    const resolvedUserData = userData || getUserDataForAdvancedMatching();
+    fetch("/api/facebook/conversions", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        event_name: "Purchase",
+        event_id: resolvedEventId,
+        package_id: packageId,
+        amount: value,
+        transaction_id: transactionId,
+        customer_email: resolvedUserData?.email,
+        customer_phone: resolvedUserData?.phone,
+        first_name: resolvedUserData?.firstName,
+        last_name: resolvedUserData?.lastName,
+        city: resolvedUserData?.city,
+        country: resolvedUserData?.country,
+        custom_data: {
+          content_name: packageName,
+          currency: currency,
+          yield_category: yieldCategory,
+          checkin_date: bookingDate,
+        },
+        event_source_url: window.location.href,
+        external_id: getExternalId(),
+        fbc: getValidFbc(),
+        fbp: getValidFbp(),
+      }),
+    }).catch(() => {});
+  }
+}
+
+// Track Facebook events
+export function trackFacebookEvent(
+  eventType: string,
+  data?: any,
+  eventId?: string,
+) {
+  if (typeof window !== "undefined" && window.fbq) {
+    if (eventId) {
+      window.fbq("track", eventType, data, { eventID: eventId });
+    } else {
+      window.fbq("track", eventType, data);
+    }
+  }
+}
+
+// Track view item events (GA4 Enhanced Ecommerce + Facebook Pixel + CAPI)
+export function trackViewItem(
+  itemId: string,
+  itemName: string,
+  value?: number,
+  currency: string = "EUR",
+  eventId?: string,
+  providedUserData?: AnalyticsUserData,
+) {
+  const stdPackageName = itemName;
+
+  // Use provided data or fall back to persisted data
+  const userData = providedUserData || getUserDataForAdvancedMatching();
+
+  // Generate event_id for Pixel/CAPI deduplication if not provided
+  const resolvedEventId =
+    eventId ||
+    (generateEventId());
+
+  if (typeof window !== "undefined" && window.gtag) {
+    window.gtag("event", "view_item", {
+      currency: currency,
+      value: value || 0,
+      items: [
+        {
+          item_id: itemId,
+          item_name: stdPackageName,
+          item_category: "Photography Package",
+          price: value || 0,
+          quantity: 1,
+        },
+      ],
+    });
+  }
+
+  // Facebook Pixel — ViewContent (client-side)
+  if (typeof window !== "undefined" && window.fbq) {
+    window.fbq(
+      "track",
+      "ViewContent",
+      {
+        content_ids: [itemId],
+        content_type: "product",
+        content_name: stdPackageName,
+        value: value,
+        currency: currency,
+      },
+      resolvedEventId ? { eventID: resolvedEventId } : undefined,
+    );
+  }
+
+  // Facebook CAPI — ViewContent (server-side, Safari-proof)
+  if (typeof window !== "undefined") {
+    fetch("/api/facebook/conversions", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        event_name: "ViewContent",
+        event_id: resolvedEventId,
+        package_id: itemId,
+        amount: value,
+        customer_email: userData?.email,
+        customer_phone: userData?.phone,
+        first_name: userData?.firstName,
+        last_name: userData?.lastName,
+        city: userData?.city,
+        state: userData?.state,
+        zip: userData?.zip,
+        country: userData?.country,
+        dob: userData?.dob,
+        gender: userData?.gender,
+        custom_data: { content_name: stdPackageName, currency: currency },
+        event_source_url: window.location.href,
+        external_id: getExternalId(),
+        fbc: getValidFbc(),
+        fbp: getValidFbp(),
+      }),
+    }).catch(() => {});
+  }
+}
+
+// Track begin checkout event (GA4 Enhanced Ecommerce + Facebook Pixel + CAPI)
+export function trackBeginCheckout(
+  packageId: string,
+  packageName: string,
+  value: number,
+  currency: string = "EUR",
+  eventId?: string,
+  yieldCategory?: string,
+  bookingDate?: string,
+) {
+  const stdPackageName = packageName;
+
+  if (typeof window !== "undefined" && window.gtag) {
+    window.gtag("event", "begin_checkout", {
+      currency: currency,
+      value: value,
+      items: [
+        {
+          item_id: packageId,
+          item_name: stdPackageName,
+          item_category: "Photography Package",
+          price: value,
+          quantity: 1,
+        },
+      ],
+    });
+  }
+
+  // Facebook Pixel — InitiateCheckout (client-side)
+  trackFacebookEvent(
+    "InitiateCheckout",
+    {
+      content_ids: [packageId],
+      content_name: stdPackageName,
+      content_type: "product",
+      value: value,
+      currency: currency,
+      yield_category: yieldCategory,
+      checkin_date: bookingDate,
+    },
+    eventId,
+  );
+
+  // Facebook CAPI — InitiateCheckout (server-side, Safari-proof)
+  // Fire-and-forget via our existing /api/facebook/conversions endpoint
+  if (typeof window !== "undefined") {
+    const userData = getUserDataForAdvancedMatching();
+    fetch("/api/facebook/conversions", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        event_name: "InitiateCheckout",
+        event_id: eventId,
+        package_id: packageId,
+        amount: value,
+        customer_email: userData?.email,
+        customer_phone: userData?.phone,
+        first_name: userData?.firstName,
+        last_name: userData?.lastName,
+        custom_data: {
+          content_name: stdPackageName,
+          yield_category: yieldCategory,
+          checkin_date: bookingDate,
+        },
+        event_source_url: window.location.href,
+        external_id: getExternalId(),
+        fbc: getValidFbc(),
+        fbp: getValidFbp(),
+      }),
+    }).catch(() => {
+      // Non-blocking — pixel already fired above
+    });
+  }
+}
+
+// Track add payment info event (GA4 Enhanced Ecommerce + Facebook)
+export function trackAddPaymentInfo(
+  packageId: string,
+  packageName: string,
+  value: number,
+  paymentType: string = "credit_card",
+  currency: string = "EUR",
+  eventId?: string,
+) {
+  const stdPackageName = packageName;
+
+  // Generate event_id for Pixel/CAPI deduplication if not provided
+  const resolvedEventId =
+    eventId ||
+    (generateEventId());
+
+  if (typeof window !== "undefined" && window.gtag) {
+    window.gtag("event", "add_payment_info", {
+      currency: currency,
+      value: value,
+      payment_type: paymentType,
+      items: [
+        {
+          item_id: packageId,
+          item_name: packageName,
+          item_category: "Photography Package",
+          price: value,
+          quantity: 1,
+        },
+      ],
+    });
+  }
+
+  // Facebook Pixel — AddPaymentInfo (client-side)
+  if (typeof window !== "undefined" && window.fbq) {
+    window.fbq(
+      "track",
+      "AddPaymentInfo",
+      {
+        content_ids: [packageId],
+        content_name: stdPackageName,
+        content_type: "product",
+        value: value,
+        currency: currency,
+      },
+      resolvedEventId ? { eventID: resolvedEventId } : undefined,
+    );
+  }
+
+  // Facebook CAPI — AddPaymentInfo (server-side, Safari-proof)
+  if (typeof window !== "undefined") {
+    const userData = getUserDataForAdvancedMatching();
+    fetch("/api/facebook/conversions", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        event_name: "AddPaymentInfo",
+        event_id: resolvedEventId,
+        package_id: packageId,
+        amount: value,
+        customer_email: userData?.email,
+        customer_phone: userData?.phone,
+        first_name: userData?.firstName,
+        last_name: userData?.lastName,
+        custom_data: {
+          content_name: stdPackageName,
+          payment_type: paymentType,
+          currency: currency,
+        },
+        event_source_url: window.location.href,
+        external_id: getExternalId(),
+        fbc: getValidFbc(),
+        fbp: getValidFbp(),
+      }),
+    }).catch(() => {});
+  }
+}
+
+// Track lead generation event (GA4)
+export function trackLead(
+  packageId: string,
+  packageName: string,
+  value?: number,
+  currency: string = "EUR",
+  eventId?: string,
+  yieldCategory?: string,
+) {
+  const stdPackageName = packageName;
+
+  const resolvedEventId =
+    eventId ||
+    (generateEventId());
+
+  if (typeof window !== "undefined" && window.gtag) {
+    // Lead Enhanced Conversions for Google Ads 2026
+    const rawUserData = getUserDataForAdvancedMatching();
+    const userData = normalizeAnalyticsUserData(rawUserData);
+    if (userData) {
+      const userDataObj: any = {};
+      if (userData.email) userDataObj.email = userData.email;
+      if (userData.phone) userDataObj.phone_number = userData.phone;
+
+      if (userData.firstName || userData.lastName) {
+        userDataObj.address = {};
+        if (userData.firstName)
+          userDataObj.address.first_name = userData.firstName;
+        if (userData.lastName)
+          userDataObj.address.last_name = userData.lastName;
+      }
+
+      if (Object.keys(userDataObj).length > 0) {
+        window.gtag("set", "user_data", userDataObj);
+      }
+    }
+
+    window.gtag("event", "generate_lead", {
+      currency: currency,
+      value: value || 0,
+      items: [
+        {
+          item_id: packageId,
+          item_name: stdPackageName,
+          item_category: "Photography Package",
+          price: value || 0,
+          quantity: 1,
+        },
+      ],
+    });
+
+    // Google Ads — Explicit Lead Conversion
+    window.gtag("event", "conversion", {
+      send_to: "AW-1007335227",
+      value: value || 0,
+      currency: currency,
+    });
+  }
+
+  // Facebook Pixel — Lead
+  trackFacebookEvent(
+    "Lead",
+    {
+      content_ids: [packageId],
+      content_name: stdPackageName,
+      content_type: "product",
+      value: value,
+      currency: currency,
+      yield_category: yieldCategory,
+    },
+    resolvedEventId,
+  );
+
+  // Facebook CAPI — Lead (server-side, Safari-proof)
+  if (typeof window !== "undefined") {
+    const userData = getUserDataForAdvancedMatching();
+    fetch("/api/facebook/conversions", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        event_name: "Lead",
+        event_id: resolvedEventId,
+        package_id: packageId,
+        amount: value,
+        customer_email: userData?.email,
+        customer_phone: userData?.phone,
+        first_name: userData?.firstName,
+        last_name: userData?.lastName,
+        custom_data: {
+          content_name: stdPackageName,
+          currency: currency,
+          yield_category: yieldCategory,
+        },
+        event_source_url: window.location.href,
+        external_id: getExternalId(),
+        fbc: getValidFbc(),
+        fbp: getValidFbp(),
+      }),
+    }).catch(() => {});
+  }
+}
+
+// Track schedule event (When user picks a date via calendar)
+export function trackSchedule(
+  packageId: string,
+  packageName: string,
+  scheduledDate: string,
+  eventId?: string,
+) {
+  const stdPackageName = packageName;
+
+  const resolvedEventId =
+    eventId ||
+    (generateEventId());
+
+  if (typeof window !== "undefined" && window.gtag) {
+    window.gtag("event", "schedule", {
+      event_category: "Booking",
+      event_label: packageId,
+    });
+  }
+
+  // Facebook Pixel — Schedule
+  if (typeof window !== "undefined" && window.fbq) {
+    window.fbq(
+      "track",
+      "Schedule",
+      {
+        content_ids: [packageId],
+        content_name: stdPackageName,
+        content_category: "Photography Session",
+        content_type: "product",
+      },
+      resolvedEventId ? { eventID: resolvedEventId } : undefined,
+    );
+  }
+
+  // Facebook CAPI — Schedule
+  if (typeof window !== "undefined") {
+    const userData = getUserDataForAdvancedMatching();
+    fetch("/api/facebook/conversions", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        event_name: "Schedule",
+        event_id: resolvedEventId,
+        package_id: packageId,
+        amount: 0,
+        customer_email: userData?.email,
+        customer_phone: userData?.phone,
+        first_name: userData?.firstName,
+        last_name: userData?.lastName,
+        city: userData?.city,
+        state: userData?.state,
+        zip: userData?.zip,
+        country: userData?.country,
+        dob: userData?.dob,
+        gender: userData?.gender,
+        custom_data: {
+          content_name: stdPackageName,
+          scheduled_date: scheduledDate,
+          content_type: "product",
+          currency: "EUR",
+        },
+        event_source_url: window.location.href,
+        external_id: getExternalId(),
+        fbc: getValidFbc(),
+        fbp: getValidFbp(),
+      }),
+    }).catch(() => {});
+  }
+}
+
+export function trackContact(method: string) {
+  const eventId =
+    generateEventId();
+
+  // Facebook Pixel — Contact
+  if (typeof window !== "undefined" && window.fbq) {
+    window.fbq(
+      "track",
+      "Contact",
+      {
+        content_name: method,
+        content_category: "Photography Inquiry",
+      },
+      eventId ? { eventID: eventId } : undefined,
+    );
+  }
+
+  // Google Analytics & Google Ads
+  if (typeof window !== "undefined" && window.gtag) {
+    window.gtag("event", "contact", {
+      event_category: "Engagement",
+      event_label: method,
+      transport_type: "beacon",
+    });
+  }
+
+  // Facebook CAPI — Contact
+  if (typeof window !== "undefined") {
+    const rawUserData = getUserDataForAdvancedMatching();
+    const userData = normalizeAnalyticsUserData(rawUserData);
+    fetch("/api/facebook/conversions", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      keepalive: true,
+      body: JSON.stringify({
+        event_name: "Contact",
+        event_id: eventId,
+        package_id: "general",
+        amount: 0,
+        customer_email: userData?.email,
+        customer_phone: userData?.phone,
+        first_name: userData?.firstName,
+        last_name: userData?.lastName,
+        custom_data: { contact_method: method, currency: "EUR" },
+        event_source_url: window.location.href,
+        external_id: getExternalId(),
+        fbc: getValidFbc(),
+        fbp: getValidFbp(),
+      }),
+    }).catch(() => {});
+  }
+}
+
+// Track view item list event (GA4 Enhanced Ecommerce — funnel step 1)
+export function trackViewItemList(
+  items: Array<{
+    id: string;
+    name: string;
+    price: number;
+    category?: string;
+  }>,
+  listId: string = "packages",
+  listName: string = "Photography Packages",
+) {
+  if (typeof window !== "undefined" && window.gtag) {
+    window.gtag("event", "view_item_list", {
+      item_list_id: listId,
+      item_list_name: listName,
+      items: items.map((item, index) => ({
+        item_id: item.id,
+        item_name: item.name,
+        item_category: item.category || "Photography Package",
+        price: item.price,
+        quantity: 1,
+        index: index + 1,
+      })),
+    });
+  }
+}
+
+// Track select item event (GA4 Enhanced Ecommerce — funnel step 2)
+export function trackSelectItem(
+  item: {
+    id: string;
+    name: string;
+    price: number;
+    category?: string;
+  },
+  listName: string = "Photography Packages",
+) {
+  if (typeof window !== "undefined" && window.gtag) {
+    window.gtag("event", "select_item", {
+      item_list_name: listName,
+      items: [
+        {
+          item_id: item.id,
+          item_name: item.name,
+          item_category: item.category || "Photography Package",
+          price: item.price,
+          quantity: 1,
+        },
+      ],
+    });
+  }
+}
+
+// Track package add to cart (GA4 Enhanced Ecommerce + Meta)
+export function trackPackageAddToCart(
+  packageId: string,
+  packageName: string,
+  value: number,
+  currency: string = "EUR",
+  eventId?: string,
+  yieldCategory?: string,
+) {
+  const resolvedEventId =
+    eventId ||
+    (generateEventId());
+
+  if (typeof window !== "undefined" && window.gtag) {
+    window.gtag("event", "add_to_cart", {
+      currency: currency,
+      value: value,
+      items: [
+        {
+          item_id: packageId,
+          item_name: packageName,
+          item_category: "Photography Package",
+          price: value,
+          quantity: 1,
+        },
+      ],
+    });
+  }
+
+  // Facebook Pixel — AddToCart
+  if (typeof window !== "undefined" && window.fbq) {
+    window.fbq(
+      "track",
+      "AddToCart",
+      {
+        content_ids: [packageId],
+        content_type: "product",
+        content_name: packageName,
+        value: value,
+        currency: currency,
+        yield_category: yieldCategory,
+      },
+      resolvedEventId ? { eventID: resolvedEventId } : undefined,
+    );
+  }
+
+  // Facebook CAPI — AddToCart
+  if (typeof window !== "undefined") {
+    const userData = getUserDataForAdvancedMatching();
+    fetch("/api/facebook/conversions", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        event_name: "AddToCart",
+        event_id: resolvedEventId,
+        package_id: packageId,
+        amount: value,
+        customer_email: userData?.email,
+        customer_phone: userData?.phone,
+        first_name: userData?.firstName,
+        last_name: userData?.lastName,
+        city: userData?.city,
+        state: userData?.state,
+        zip: userData?.zip,
+        country: userData?.country,
+        dob: userData?.dob,
+        gender: userData?.gender,
+        custom_data: {
+          content_name: packageName,
+          currency: currency,
+          yield_category: yieldCategory,
+        },
+        event_source_url: window.location.href,
+        external_id: getExternalId(),
+        fbc: getValidFbc(),
+        fbp: getValidFbp(),
+      }),
+    }).catch(() => {});
+  }
+}
+
+// Print Specific Tracking Functions //
+
+export function trackPrintViewItem(
+  sku: string,
+  name: string,
+  category: string,
+  price: number,
+  currency: string = "EUR",
+  eventId?: string,
+) {
+  const resolvedEventId =
+    eventId ||
+    (generateEventId());
+
+  if (typeof window !== "undefined" && window.gtag) {
+    window.gtag("event", "view_item", {
+      currency: currency,
+      value: price,
+      items: [
+        {
+          item_id: sku,
+          item_name: name,
+          item_category: "Print",
+          item_variant: category,
+          price: price,
+          quantity: 1,
+        },
+      ],
+    });
+  }
+
+  // Facebook Pixel — ViewContent for Catalog
+  if (typeof window !== "undefined" && window.fbq) {
+    window.fbq(
+      "track",
+      "ViewContent",
+      {
+        content_ids: [sku],
+        content_type: "product",
+        content_name: name,
+        content_category: category,
+        value: price,
+        currency: currency,
+      },
+      resolvedEventId ? { eventID: resolvedEventId } : undefined,
+    );
+  }
+
+  // Facebook CAPI — ViewContent
+  if (typeof window !== "undefined") {
+    fetch("/api/facebook/conversions", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        event_name: "ViewContent",
+        event_id: resolvedEventId,
+        package_id: sku,
+        amount: price,
+        custom_data: {
+          content_name: name,
+          content_category: category,
+          currency: currency,
+        },
+        event_source_url: window.location.href,
+        external_id: getExternalId(),
+        fbc: getValidFbc(),
+        fbp: getValidFbp(),
+      }),
+    }).catch(() => {});
+  }
+}
+
+export function trackPrintAddToCart(
+  sku: string,
+  name: string,
+  category: string,
+  price: number,
+  currency: string = "EUR",
+  eventId?: string,
+) {
+  const resolvedEventId =
+    eventId ||
+    (generateEventId());
+
+  if (typeof window !== "undefined" && window.gtag) {
+    window.gtag("event", "add_to_cart", {
+      currency: currency,
+      value: price,
+      items: [
+        {
+          item_id: sku,
+          item_name: name,
+          item_category: "Print",
+          item_variant: category,
+          price: price,
+          quantity: 1,
+        },
+      ],
+    });
+  }
+
+  // Facebook Pixel — AddToCart for Catalog
+  if (typeof window !== "undefined" && window.fbq) {
+    window.fbq(
+      "track",
+      "AddToCart",
+      {
+        content_ids: [sku],
+        content_type: "product",
+        content_name: name,
+        content_category: category,
+        value: price,
+        currency: currency,
+      },
+      resolvedEventId ? { eventID: resolvedEventId } : undefined,
+    );
+  }
+
+  // Facebook CAPI — AddToCart
+  if (typeof window !== "undefined") {
+    const userData = getUserDataForAdvancedMatching();
+    fetch("/api/facebook/conversions", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        event_name: "AddToCart",
+        event_id: resolvedEventId,
+        package_id: sku,
+        amount: price,
+        customer_email: userData?.email,
+        customer_phone: userData?.phone,
+        first_name: userData?.firstName,
+        last_name: userData?.lastName,
+        city: userData?.city,
+        state: userData?.state,
+        zip: userData?.zip,
+        country: userData?.country,
+        dob: userData?.dob,
+        gender: userData?.gender,
+        custom_data: {
+          content_name: name,
+          content_category: category,
+          currency: currency,
+        },
+        event_source_url: window.location.href,
+        external_id: getExternalId(),
+        fbc: getValidFbc(),
+        fbp: getValidFbp(),
+      }),
+    }).catch(() => {});
+  }
+}
+
+export function trackPrintBeginCheckout(
+  items: Array<{
+    sku: string;
+    name: string;
+    category: string;
+    price: number;
+    quantity: number;
+  }>,
+  totalValue: number,
+  currency: string = "EUR",
+  eventId?: string,
+) {
+  const resolvedEventId =
+    eventId ||
+    (generateEventId());
+
+  if (typeof window !== "undefined" && window.gtag) {
+    window.gtag("event", "begin_checkout", {
+      currency: currency,
+      value: totalValue,
+      items: items.map((item) => ({
+        item_id: item.sku,
+        item_name: item.name,
+        item_category: "Print",
+        item_variant: item.category,
+        price: item.price,
+        quantity: item.quantity,
+      })),
+    });
+  }
+
+  const contentIds = items.map((item) => item.sku);
+
+  // Facebook Pixel — InitiateCheckout
+  if (typeof window !== "undefined" && window.fbq) {
+    window.fbq(
+      "track",
+      "InitiateCheckout",
+      {
+        content_ids: contentIds,
+        content_type: "product",
+        value: totalValue,
+        currency: currency,
+        num_items: items.reduce((acc, curr) => acc + curr.quantity, 0),
+      },
+      resolvedEventId ? { eventID: resolvedEventId } : undefined,
+    );
+  }
+
+  // Facebook CAPI — InitiateCheckout
+  if (typeof window !== "undefined") {
+    fetch("/api/facebook/conversions", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        event_name: "InitiateCheckout",
+        event_id: resolvedEventId,
+        package_id: contentIds[0] || "print_checkout", // Use first item or fallback for CAPI validation
+        amount: totalValue,
+        custom_data: {
+          content_ids: contentIds,
+          num_items: items.reduce((acc, curr) => acc + curr.quantity, 0),
+        },
+        event_source_url: window.location.href,
+        external_id: getExternalId(),
+        fbc: getValidFbc(),
+        fbp: getValidFbp(),
+      }),
+    }).catch(() => {});
+  }
+}
+
+// Track search event (GA4 + Meta)
+export function trackSearch(
+  searchTerm?: string,
+  destination?: string,
+  checkinDate?: string,
+) {
+  if (typeof window !== "undefined" && window.gtag) {
+    window.gtag("event", "search", {
+      search_term: searchTerm,
+      destination: destination,
+      checkin_date: checkinDate,
+    });
+  }
+
+  // Facebook Pixel — Search
+  if (typeof window !== "undefined" && window.fbq) {
+    window.fbq("track", "Search", {
+      search_string: searchTerm,
+      destination_airport: destination,
+      checkin_date: checkinDate,
+    });
+  }
+
+  // CAPI Search
+  if (typeof window !== "undefined") {
+    const userData = getUserDataForAdvancedMatching();
+    fetch("/api/facebook/conversions", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        event_name: "Search",
+        event_id:
+          generateEventId(),
+        customer_email: userData?.email,
+        customer_phone: userData?.phone,
+        first_name: userData?.firstName,
+        last_name: userData?.lastName,
+        custom_data: {
+          search_string: searchTerm,
+          destination_airport: destination,
+          checkin_date: checkinDate,
+        },
+        event_source_url: window.location.href,
+        external_id: getExternalId(),
+        fbc: getValidFbc(),
+        fbp: getValidFbp(),
+      }),
+    }).catch(() => {});
+  }
+}
+
+// Generic event function (alias for trackEvent)
+export const event = trackEvent;

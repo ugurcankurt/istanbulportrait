@@ -1,0 +1,14 @@
+{
+  "installCommand": "pnpm install",
+  "buildCommand": "pnpm run build",
+  "crons": [
+    {
+      "path": "/api/cron/abandoned-bookings",
+      "schedule": "*/2 * * * *"
+    },
+    {
+      "path": "/api/cron/drive-notifications",
+      "schedule": "*/10 * * * *"
+    }
+  ]
+}
