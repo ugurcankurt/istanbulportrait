@@ -46,6 +46,18 @@ export async function PackageDetailPageContent({
   const { settingsService } = await import("@/lib/settings-service");
   const settings = await settingsService.getSettings();
 
+  const { pagesContentService } = await import("@/lib/pages-content-service");
+  const { generateNativeSlug } = await import("@/lib/slug-generator");
+  const packagesPage = await pagesContentService.getPageBySlug("packages");
+  const parentTitle = packagesPage?.title?.[locale];
+  const parentSegment = parentTitle
+    ? generateNativeSlug(parentTitle) || parentSlug
+    : packagesPage?.slug || parentSlug;
+  const localPkgTitle = pkg.title?.[locale];
+  const canonicalPackageSegment = localPkgTitle
+    ? generateNativeSlug(localPkgTitle) || pkg.slug
+    : pkg.slug;
+
   const serviceSchema = buildServiceSchema({
     name: title,
     description: generateSeoDescription(desc),
@@ -59,7 +71,9 @@ export async function PackageDetailPageContent({
     discount:
       activeDiscounts && activeDiscounts.length > 0 ? activeDiscounts[0] : null,
     reviews: reviews,
-    url: `${getBaseUrl()}/${locale}/${parentSlug}/${slug}`,
+    url: encodeURI(
+      `${getBaseUrl()}/${locale}/${parentSegment}/${canonicalPackageSegment}`,
+    ),
   });
 
   const videoSchema = pkg.video_url

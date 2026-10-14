@@ -1,4 +1,4 @@
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import { pagesContentService } from "@/lib/pages-content-service";
 
 export const revalidate = 60;
@@ -122,6 +122,7 @@ export async function generateMetadata(props: {
         ogImage,
         fallbackTitle,
         params.locale,
+        { url: encodeURI(`${baseUrl}/${params.locale}/${currentSeg}`) },
       ),
       twitter: {
         card: "summary_large_image",
@@ -166,14 +167,19 @@ export async function generateMetadata(props: {
 
     const title = generateSeoTitle(dynamicTitle, params.locale, fallbackTitle);
     const desc = generateSeoDescription(dynamicDesc);
+    const blogLocTitle = dbPage.title?.[params.locale];
+    const blogSeg = blogLocTitle
+      ? generateNativeSlug(blogLocTitle)
+      : dbPage.slug;
+    const categoryCanonical = encodeURI(
+      `${baseUrl}/${params.locale}/${blogSeg}/${type}/${childSlug}`,
+    );
 
     return {
       title,
       description: desc,
       alternates: {
-        canonical: encodeURI(
-          `${baseUrl}/${params.locale}/${dbPage.slug}/${type}/${childSlug}`,
-        ),
+        canonical: categoryCanonical,
         ...getAlternates((loc) => {
           const tLoc = dbPage.title?.[loc];
           const bSeg = tLoc ? generateNativeSlug(tLoc) : dbPage.slug;
@@ -186,6 +192,7 @@ export async function generateMetadata(props: {
         settings.default_og_image_url || "",
         fallbackTitle,
         params.locale,
+        { url: categoryCanonical },
       ),
       twitter: {
         card: "summary_large_image",
@@ -317,6 +324,10 @@ export async function generateMetadata(props: {
     const _currentSeg = dbPage.title?.[params.locale]
       ? generateNativeSlug(dbPage.title[params.locale] || "")
       : dbPage.slug;
+    const currentPath = getAlternatesFn(params.locale);
+    const detailCanonical = currentPath
+      ? encodeURI(`${baseUrl}/${params.locale}${currentPath}`)
+      : encodeURI(`${baseUrl}/${params.locale}/${rootSlug}/${childSlug}`);
 
     return {
       title,
@@ -340,13 +351,14 @@ export async function generateMetadata(props: {
         params.locale,
         dbPage.slug === "blog"
           ? {
+              url: detailCanonical,
               type: "article",
               publishedTime,
               modifiedTime,
               authors,
               tags: keywords.length > 0 ? keywords : undefined,
             }
-          : {},
+          : { url: detailCanonical },
       ),
       twitter: {
         card: "summary_large_image",
@@ -369,6 +381,74 @@ export default async function GenericCorePage(props: {
 
   const rootSlug = slugArray[0];
   const dbPage = await pagesContentService.getPageBySlug(rootSlug);
+
+  // Canonical redirect: any slug that belongs to another locale (or differs
+  // in casing/encoding) is permanently redirected to this locale's canonical URL.
+  if (dbPage?.is_active && slugArray.length >= 1 && slugArray.length <= 3) {
+    const { generateNativeSlug } = await import("@/lib/slug-generator");
+    const normalize = (s: string) => {
+      try {
+        return decodeURIComponent(s).trim().toLowerCase();
+      } catch {
+        return s.toLowerCase();
+      }
+    };
+
+    const localizedTitle = dbPage.title?.[params.locale];
+    const expectedRoot = localizedTitle
+      ? generateNativeSlug(localizedTitle) || dbPage.slug
+      : dbPage.slug;
+
+    const expectedSegments = [expectedRoot];
+    let resolvable = true;
+
+    if (slugArray.length >= 2) {
+      let expectedChild = normalize(slugArray[1]);
+      if (slugArray.length === 2 && dbPage.slug === "packages") {
+        const pkg = await packagesService.getPackageBySlug(slugArray[1]);
+        if (pkg) {
+          const t = pkg.title?.[params.locale];
+          expectedChild = t ? generateNativeSlug(t) || pkg.slug : pkg.slug;
+        } else {
+          resolvable = false;
+        }
+      } else if (slugArray.length === 2 && dbPage.slug === "locations") {
+        const loc = await locationsService.getLocationBySlug(slugArray[1]);
+        if (loc) {
+          const t = loc.title?.[params.locale];
+          expectedChild = t ? generateNativeSlug(t) || loc.slug : loc.slug;
+        } else {
+          resolvable = false;
+        }
+      }
+      expectedSegments.push(expectedChild);
+      if (slugArray.length === 3) {
+        expectedSegments.push(normalize(slugArray[2]));
+      }
+    }
+
+    const matches =
+      slugArray.length === expectedSegments.length &&
+      slugArray.every(
+        (seg, i) => normalize(seg) === expectedSegments[i].toLowerCase(),
+      );
+
+    if (resolvable && !matches) {
+      const sp = await props.searchParams;
+      const qs = new URLSearchParams();
+      for (const [key, value] of Object.entries(sp || {})) {
+        if (Array.isArray(value)) {
+          for (const v of value) qs.append(key, v);
+        } else if (value !== undefined) {
+          qs.set(key, value);
+        }
+      }
+      const query = qs.toString();
+      permanentRedirect(
+        `${encodeURI(`/${params.locale}/${expectedSegments.join("/")}`)}${query ? `?${query}` : ""}`,
+      );
+    }
+  }
 
   // Level 3+ Deep nested pages
   if (slugArray.length > 2) {

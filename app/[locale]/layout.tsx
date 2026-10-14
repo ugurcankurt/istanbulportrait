@@ -102,11 +102,6 @@ export async function generateMetadata({
   const ogImage = settings.default_og_image_url || "";
 
   const baseUrl = settings.app_base_url || getBaseUrl();
-  const languages: Record<string, string> = {};
-  routing.locales.forEach((loc) => {
-    languages[loc] = `${baseUrl}/${loc}`;
-  });
-  languages["x-default"] = `${baseUrl}/en`;
 
   return {
     metadataBase: new URL(baseUrl),
@@ -213,7 +208,7 @@ export default async function LocaleLayout({
 
   return (
     <html
-      lang={locale}
+      lang={locale === "zh" ? "zh-CN" : locale}
       dir={locale === "ar" ? "rtl" : "ltr"}
       data-scroll-behavior="smooth"
       className={`${fontSans.variable} ${fontHeading.variable} ${geistMono.variable} theme-${settings.theme_color || "violet"}`}

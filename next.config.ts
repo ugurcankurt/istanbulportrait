@@ -98,6 +98,10 @@ const nextConfig: NextConfig = {
         destination:
           "https://xfntnamwfnqjgqmyxwfz.supabase.co/storage/v1/object/public/:path*",
       },
+      {
+        source: "/sitemap.xml",
+        destination: "/sitemap-index.xml",
+      },
     ];
   },
   // Production optimizations

@@ -53,13 +53,27 @@ export async function LocationDetailPageContent({
     : `${baseUrl}/images/locations/${slug}-hero.webp`;
   const galleryImages = location.gallery_images || [];
 
+  const { pagesContentService } = await import("@/lib/pages-content-service");
+  const { generateNativeSlug } = await import("@/lib/slug-generator");
+  const locationsPage = await pagesContentService.getPageBySlug("locations");
+  const parentTitle = locationsPage?.title?.[locale];
+  const parentSegment = parentTitle
+    ? generateNativeSlug(parentTitle) || parentSlug
+    : locationsPage?.slug || parentSlug;
+  const localTitle = location.title?.[locale];
+  const canonicalLocationSegment = localTitle
+    ? generateNativeSlug(localTitle) || location.slug
+    : location.slug;
+
   const touristAttractionSchema = buildTouristAttractionSchema({
     name: dynamicTitle,
     description: generateSeoDescription(dynamicDesc),
     image: heroImage,
     lat: location.coordinates?.lat,
     lng: location.coordinates?.lng,
-    url: `${baseUrl}/${locale}/locations/${slug}`,
+    url: encodeURI(
+      `${baseUrl}/${locale}/${parentSegment}/${canonicalLocationSegment}`,
+    ),
   });
 
   return (

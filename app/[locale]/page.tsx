@@ -38,6 +38,7 @@ import {
   generateSeoDescription,
   generateSeoTitle,
   getBaseUrl,
+  optimizeSeoImage,
 } from "@/lib/seo-utils";
 import { settingsService } from "@/lib/settings-service";
 
@@ -104,7 +105,14 @@ export async function generateMetadata({
       ogImage,
       settings.site_name || title,
       locale,
+      { url: `${baseUrl}/${locale}` },
     ),
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description: desc,
+      images: ogImage ? [optimizeSeoImage(ogImage, 1200)] : [],
+    },
   };
 }
 
@@ -223,11 +231,7 @@ export default async function HomePage({
           "@type": "WebSite",
           name: settings.site_name || "Website",
           url: `${getBaseUrl()}/${locale}`,
-          potentialAction: {
-            "@type": "SearchAction",
-            target: `${getBaseUrl()}/${locale}/packages?search={search_term_string}`,
-            "query-input": "required name=search_term_string",
-          },
+          inLanguage: locale,
         }}
       />
       <SchemaInjector

@@ -150,8 +150,7 @@ export function buildLocalBusinessSchema(
           copyrightNotice: "IstanbulPortrait 2026",
           creator: { "@type": "Organization", name: "Istanbul Portrait" },
           creditText: "Istanbul Portrait",
-          license: `${getBaseUrl()}/terms-and-conditions`,
-          acquireLicensePage: `${getBaseUrl()}/contact`,
+          acquireLicensePage: `${getBaseUrl()}/en/contact`,
         }
       : undefined,
     "@id": getBaseUrl(),
@@ -254,8 +253,7 @@ export function buildOrganizationSchema(settings: SiteSettings) {
           copyrightNotice: "IstanbulPortrait 2026",
           creator: { "@type": "Organization", name: "Istanbul Portrait" },
           creditText: "Istanbul Portrait",
-          license: `${getBaseUrl()}/terms-and-conditions`,
-          acquireLicensePage: `${getBaseUrl()}/contact`,
+          acquireLicensePage: `${getBaseUrl()}/en/contact`,
         }
       : undefined,
     image: imageUrl
@@ -267,8 +265,7 @@ export function buildOrganizationSchema(settings: SiteSettings) {
           copyrightNotice: "IstanbulPortrait 2026",
           creator: { "@type": "Organization", name: "Istanbul Portrait" },
           creditText: "Istanbul Portrait",
-          license: `${getBaseUrl()}/terms-and-conditions`,
-          acquireLicensePage: `${getBaseUrl()}/contact`,
+          acquireLicensePage: `${getBaseUrl()}/en/contact`,
         }
       : undefined,
     founder: settings.founder_name
@@ -288,8 +285,7 @@ export function buildOrganizationSchema(settings: SiteSettings) {
                     name: "Istanbul Portrait",
                   },
                   creditText: "Istanbul Portrait",
-                  license: `${getBaseUrl()}/terms-and-conditions`,
-                  acquireLicensePage: `${getBaseUrl()}/contact`,
+                  acquireLicensePage: `${getBaseUrl()}/en/contact`,
                 },
               }
             : {}),
@@ -364,8 +360,7 @@ export function buildServiceSchema({
           copyrightNotice: "IstanbulPortrait 2026",
           creator: { "@type": "Organization", name: "Istanbul Portrait" },
           creditText: "Istanbul Portrait",
-          license: `${getBaseUrl()}/terms-and-conditions`,
-          acquireLicensePage: `${getBaseUrl()}/contact`,
+          acquireLicensePage: `${getBaseUrl()}/en/contact`,
         }
       : undefined,
     description: description || undefined,
@@ -530,8 +525,7 @@ export function buildArticleSchema({
             copyrightNotice: "IstanbulPortrait 2026",
             creator: { "@type": "Organization", name: "Istanbul Portrait" },
             creditText: "Istanbul Portrait",
-            license: `${getBaseUrl()}/terms-and-conditions`,
-            acquireLicensePage: `${getBaseUrl()}/contact`,
+            acquireLicensePage: `${getBaseUrl()}/en/contact`,
           },
         ]
       : [],
@@ -563,8 +557,7 @@ export function buildArticleSchema({
                     name: "Istanbul Portrait",
                   },
                   creditText: "Istanbul Portrait",
-                  license: `${getBaseUrl()}/terms-and-conditions`,
-                  acquireLicensePage: `${getBaseUrl()}/contact`,
+                  acquireLicensePage: `${getBaseUrl()}/en/contact`,
                 },
               }
             : {}),
@@ -651,8 +644,7 @@ export function buildTouristAttractionSchema({
           copyrightNotice: "IstanbulPortrait 2026",
           creator: { "@type": "Organization", name: "Istanbul Portrait" },
           creditText: "Istanbul Portrait",
-          license: `${getBaseUrl()}/terms-and-conditions`,
-          acquireLicensePage: `${getBaseUrl()}/contact`,
+          acquireLicensePage: `${getBaseUrl()}/en/contact`,
         }
       : undefined,
     geo:
@@ -763,8 +755,7 @@ export function buildCollectionPageSchema({
                 copyrightNotice: "IstanbulPortrait 2026",
                 creator: { "@type": "Organization", name: "Istanbul Portrait" },
                 creditText: "Istanbul Portrait",
-                license: `${getBaseUrl()}/terms-and-conditions`,
-                acquireLicensePage: `${getBaseUrl()}/contact`,
+                acquireLicensePage: `${getBaseUrl()}/en/contact`,
               },
             }
           : {}),

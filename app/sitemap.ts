@@ -27,22 +27,43 @@ export default async function sitemap({
   const baseUrl = getBaseUrl();
   const locales = routing.locales;
 
-  const getAlternates = (pathResolver: (locale: string) => string) => {
+  const getAlternates = (
+    pathResolver: (locale: string) => string,
+    available: readonly string[] = locales,
+  ) => {
     const languages: Record<string, string> = {};
-    locales.forEach((loc) => {
+    available.forEach((loc) => {
       languages[loc] = encodeURI(`${baseUrl}/${loc}${pathResolver(loc)}`);
     });
     // Fallback for unmatched languages
-    languages["x-default"] = encodeURI(`${baseUrl}/en${pathResolver("en")}`);
+    const defaultLoc = available.includes("en") ? "en" : available[0];
+    if (defaultLoc) {
+      languages["x-default"] = languages[defaultLoc];
+    }
     return { languages };
   };
 
-  const cleanImage = (url?: string | null) => {
+  // Locales that have a real translation (title); falls back to English only.
+  const translatedLocales = (
+    title?: Record<string, string | undefined> | null,
+  ): string[] => {
+    const found = locales.filter((l) => !!title?.[l]);
+    return found.length > 0 ? found : ["en"];
+  };
+
+  const cleanImage = (url?: string | null): string => {
     if (!url) return "";
-    return url.replace(
+    const replaced = url.replace(
       "https://xfntnamwfnqjgqmyxwfz.supabase.co/storage/v1/object/public",
       `${baseUrl}/storage`,
     );
+    if (replaced.startsWith("http://") || replaced.startsWith("https://")) {
+      return replaced;
+    }
+    if (replaced.startsWith("/")) {
+      return `${baseUrl}${replaced}`;
+    }
+    return `${baseUrl}/${replaced}`;
   };
 
   const escapeXml = (unsafe: string) => {
@@ -66,21 +87,16 @@ export default async function sitemap({
       ? cleanImage(homeHero.cover_image)
       : null;
 
-    // 1. Root Domain (x-default fallback)
-    sitemapData.push({
-      url: encodeURI(`${baseUrl}/`),
-      lastModified: new Date(),
-      changeFrequency: "daily",
-      priority: 1.0,
-      alternates: getAlternates(() => ""),
-      ...(homeImage ? { images: [homeImage] } : {}),
-    });
+    // Root domain is intentionally omitted: it redirects to a locale
+    // (redirecting URLs should not be listed in sitemaps).
 
-    // 2. Home Pages (All Locales)
+    // Home Pages (All Locales)
     locales.forEach((locale) => {
       sitemapData.push({
         url: encodeURI(`${baseUrl}/${locale}`),
-        lastModified: new Date(),
+        lastModified: new Date(
+          homeHero?.updated_at || homeHero?.created_at || Date.now(),
+        ),
         changeFrequency: "daily",
         priority: 1.0,
         alternates: getAlternates(() => ""),
@@ -96,7 +112,7 @@ export default async function sitemap({
     for (const page of activeCorePages) {
       if (page.slug === "home") continue;
 
-      locales.forEach((locale) => {
+      translatedLocales(page.title).forEach((locale) => {
         const titleLoc = page.title?.[locale];
         const pageSeg = titleLoc
           ? `/${generateNativeSlug(titleLoc)}`
@@ -112,7 +128,7 @@ export default async function sitemap({
           alternates: getAlternates((loc) => {
             const tLoc = page.title?.[loc];
             return tLoc ? `/${generateNativeSlug(tLoc)}` : `/${page.slug}`;
-          }),
+          }, translatedLocales(page.title)),
           ...(page.cover_image
             ? { images: [cleanImage(page.cover_image)] }
             : {}),
@@ -127,7 +143,7 @@ export default async function sitemap({
     const packagesParent = corePages.find((p) => p.slug === "packages");
 
     for (const pkg of activePackages) {
-      locales.forEach((locale) => {
+      translatedLocales(pkg.title).forEach((locale) => {
         const pTitle = packagesParent?.title?.[locale];
         const pSeg = pTitle ? generateNativeSlug(pTitle) : "packages";
         const pkgTitleLoc = pkg.title?.[locale];
@@ -135,27 +151,42 @@ export default async function sitemap({
           ? generateNativeSlug(pkgTitleLoc) || pkg.slug
           : pkg.slug;
 
-        // Video logic for sitemap
+        // Video logic for Google Video Sitemaps (requires thumbnail_loc AND either content_loc or player_loc)
         const videos: any[] = [];
         if (pkg.video_url) {
-          const isYouTube =
-            pkg.video_url.includes("youtube.com") ||
-            pkg.video_url.includes("youtu.be");
           const thumbnail =
             pkg.gallery_images && pkg.gallery_images.length > 0
               ? pkg.gallery_images[0]
-              : pkg.cover_image || "";
+              : pkg.cover_image;
 
-          videos.push({
-            title: escapeXml(pkg.title?.[locale] || pkg.title?.en || pkg.slug),
-            thumbnail_loc: cleanImage(thumbnail),
-            description: escapeXml(
-              pkg.description?.[locale] ||
-                pkg.description?.en ||
-                "Package Video",
-            ),
-            ...(isYouTube ? {} : { content_loc: pkg.video_url }),
-          });
+          const cleanThumb = cleanImage(thumbnail);
+          if (cleanThumb) {
+            let playerLoc: string | undefined;
+            let contentLoc: string | undefined;
+
+            const ytMatch = pkg.video_url.match(
+              /(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=|shorts\/))([\w-]{11})/,
+            );
+            if (ytMatch && ytMatch[1]) {
+              playerLoc = `https://www.youtube.com/embed/${ytMatch[1]}`;
+            } else {
+              contentLoc = pkg.video_url;
+            }
+
+            videos.push({
+              title: escapeXml(
+                pkg.title?.[locale] || pkg.title?.en || pkg.slug,
+              ),
+              thumbnail_loc: cleanThumb,
+              description: escapeXml(
+                pkg.description?.[locale] ||
+                  pkg.description?.en ||
+                  "Package Video",
+              ),
+              ...(playerLoc ? { player_loc: playerLoc } : {}),
+              ...(contentLoc ? { content_loc: contentLoc } : {}),
+            });
+          }
         }
 
         const packageImages: string[] = [];
@@ -167,7 +198,7 @@ export default async function sitemap({
             packageImages.push(cleanImage(img));
           });
         }
-        const uniqueImages = Array.from(new Set(packageImages));
+        const uniqueImages = Array.from(new Set(packageImages.filter(Boolean)));
 
         sitemapData.push({
           url: encodeURI(`${baseUrl}/${locale}/${pSeg}/${pkgSeg}`),
@@ -182,7 +213,7 @@ export default async function sitemap({
               ? generateNativeSlug(tPkgTitle) || pkg.slug
               : pkg.slug;
             return `/${tSeg}/${tPkgSeg}`;
-          }),
+          }, translatedLocales(pkg.title)),
           ...(uniqueImages.length > 0 ? { images: uniqueImages } : {}),
           ...(videos.length > 0 ? { videos } : {}),
         });
@@ -196,7 +227,7 @@ export default async function sitemap({
     const locationsParent = corePages.find((p) => p.slug === "locations");
 
     for (const locItem of activeLocations) {
-      locales.forEach((locale) => {
+      translatedLocales(locItem.title).forEach((locale) => {
         const pTitle = locationsParent?.title?.[locale];
         const pSeg = pTitle ? generateNativeSlug(pTitle) : "locations";
         const locTitleLoc = locItem.title?.[locale];
@@ -219,7 +250,7 @@ export default async function sitemap({
               ? generateNativeSlug(tLocTitle) || locItem.slug
               : locItem.slug;
             return `/${tSeg}/${tLocSeg}`;
-          }),
+          }, translatedLocales(locItem.title)),
           ...(locItem.cover_image
             ? { images: [cleanImage(locItem.cover_image)] }
             : {}),
