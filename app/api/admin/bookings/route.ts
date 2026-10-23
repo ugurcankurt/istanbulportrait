@@ -201,11 +201,27 @@ export async function PATCH(request: NextRequest) {
           console.error("Failed to send cancellation email:", emailError);
         }
 
+        // Trash Google Drive folder if linked
+        if (currentBooking.drive_folder_id) {
+          try {
+            const { trashDriveFolder } = await import("@/lib/google-drive");
+            await trashDriveFolder(currentBooking.drive_folder_id);
+          } catch (driveError) {
+            console.error(
+              "Failed to trash Google Drive folder for cancelled booking:",
+              driveError,
+            );
+          }
+        }
+
         // Track GA4 Server Refund ONLY if the booking was actually confirmed/completed and paid
-        if (currentBooking.status === "confirmed" || currentBooking.status === "completed") {
+        if (
+          currentBooking.status === "confirmed" ||
+          currentBooking.status === "completed"
+        ) {
           try {
             const { trackGA4ServerRefund } = await import("@/lib/ga4-server");
-            
+
             // Fetch package name for accurate GA4 tracking
             const { data: packageData } = await supabase
               .from("packages")
@@ -214,7 +230,10 @@ export async function PATCH(request: NextRequest) {
               .single();
 
             const localeKey = currentBooking.locale || "en";
-            const packageName = packageData?.title?.[localeKey] || packageData?.title?.en || currentBooking.package_id;
+            const packageName =
+              packageData?.title?.[localeKey] ||
+              packageData?.title?.en ||
+              currentBooking.package_id;
 
             await trackGA4ServerRefund(
               bookingId,

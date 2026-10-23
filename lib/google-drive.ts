@@ -194,3 +194,22 @@ export const moveFilesToFolder = async (
     throw err;
   }
 };
+
+// Move a folder to trash (used when a booking is cancelled)
+export const trashDriveFolder = async (folderId: string) => {
+  const auth = getGoogleAuth();
+  const drive = google.drive({ version: "v3", auth });
+
+  try {
+    await drive.files.update({
+      fileId: folderId,
+      requestBody: {
+        trashed: true,
+      },
+    });
+    return true;
+  } catch (err) {
+    console.error("Google Drive trash folder error:", err);
+    throw err;
+  }
+};
