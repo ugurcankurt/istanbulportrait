@@ -2,14 +2,20 @@ import { google } from "googleapis";
 
 // Helper to get Google Auth
 export const getGoogleAuth = () => {
-  const privateKey = process.env.GOOGLE_PRIVATE_KEY?.replace(/\\n/g, "\n");
-  const clientEmail = process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL;
+  const rawKey = process.env.GOOGLE_PRIVATE_KEY;
+  const rawEmail = process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL;
 
-  if (!privateKey || !clientEmail) {
+  if (!rawKey || !rawEmail) {
     throw new Error(
       "Google API credentials are missing from environment variables.",
     );
   }
+
+  const clientEmail = rawEmail.trim().replace(/^["']|["']$/g, "");
+  const privateKey = rawKey
+    .trim()
+    .replace(/^["']|["']$/g, "")
+    .replace(/\\n/g, "\n");
 
   return new google.auth.GoogleAuth({
     credentials: {
@@ -88,10 +94,10 @@ export const getGalleryFilesGrouped = async (folderId: string) => {
 
     const rootItems = rootRes.data.files || [];
     const rootFiles = rootItems.filter(
-      (f) => f.mimeType !== "application/vnd.google-apps.folder",
+      (f: any) => f.mimeType !== "application/vnd.google-apps.folder",
     );
     const subfolders = rootItems.filter(
-      (f) => f.mimeType === "application/vnd.google-apps.folder",
+      (f: any) => f.mimeType === "application/vnd.google-apps.folder",
     );
 
     let editedFiles: any[] = [];
