@@ -19,19 +19,31 @@ export default function robots(): MetadataRoute.Robots {
   }
 
   return {
-    rules: {
-      userAgent: "*",
-      allow: "/",
-      disallow: [
-        "/admin/",
-        "/api/",
-        "/private/",
-        "/*?*booking=", // Disallow parameterized booking tracking
-        "/*?*payment=", // Disallow payment gateways
-        "/*?*search=", // Disallow parameterized search
-        ...checkoutDisallows,
-      ],
-    },
+    rules: [
+      {
+        userAgent: "*",
+        allow: "/",
+        disallow: [
+          "/admin/",
+          "/api/",
+          "/private/",
+          "/*?*booking=", // Disallow parameterized booking tracking
+          "/*?*payment=", // Disallow payment gateways
+          "/*?*search=", // Disallow parameterized search
+          ...checkoutDisallows,
+        ],
+      },
+      {
+        userAgent: "Googlebot-Image",
+        allow: ["/", "/storage/", "/_next/image"],
+        disallow: ["/admin/", "/api/"],
+      },
+      {
+        userAgent: "Bingbot",
+        allow: ["/", "/storage/", "/_next/image"],
+        disallow: ["/admin/", "/api/", ...checkoutDisallows],
+      },
+    ],
     sitemap: [
       `${getBaseUrl()}/sitemap.xml`,
       `${getBaseUrl()}/sitemap-index.xml`,

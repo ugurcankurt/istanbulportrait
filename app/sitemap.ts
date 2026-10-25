@@ -94,6 +94,15 @@ export default async function sitemap({
     const homeCover = homePage?.cover_image || homeHero?.cover_image;
     const homeImage = homeCover ? cleanImage(homeCover) : null;
 
+    const activePackages = await packagesService.getActivePackages();
+    const packageCoverImages = (activePackages || [])
+      .map((p) => cleanImage(p.cover_image))
+      .filter(Boolean);
+
+    const homeImages = Array.from(
+      new Set([homeImage, ...packageCoverImages].filter(Boolean) as string[]),
+    );
+
     // Root domain is intentionally omitted: it redirects to a locale
     // (redirecting URLs should not be listed in sitemaps).
 
@@ -105,7 +114,7 @@ export default async function sitemap({
         changeFrequency: "daily",
         priority: 1.0,
         alternates: getAlternates(() => ""),
-        ...(homeImage ? { images: [homeImage] } : {}),
+        ...(homeImages.length > 0 ? { images: homeImages } : {}),
       });
     });
 

@@ -33,6 +33,7 @@ import { pagesContentService } from "@/lib/pages-content-service";
 import { reviewsService } from "@/lib/reviews-service";
 import {
   buildFAQSchema,
+  buildImageGallerySchema,
   buildLocalBusinessSchema,
   constructOpenGraph,
   generateSeoDescription,
@@ -254,8 +255,39 @@ export default async function HomePage({
           getDynamicImage("home-hero", undefined) ||
             getDynamicImage("home", undefined),
           locale,
+          activePackages,
         )}
       />
+      {activePackages && activePackages.length > 0 && (
+        <SchemaInjector
+          schema={buildImageGallerySchema({
+            name: `${settings.site_name || "Istanbul Portrait"} Photoshoot Portfolio`,
+            description: `${settings.site_name || "Istanbul Portrait"} professional photography portfolio in Istanbul`,
+            url: `${getBaseUrl()}/${locale}`,
+            images: activePackages
+              .flatMap((pkg) => {
+                const pkgTitle = pkg.title[locale] || pkg.title.en || pkg.slug;
+                const list = [];
+                if (pkg.cover_image) {
+                  list.push({
+                    url: pkg.cover_image,
+                    caption: `${pkgTitle} in Istanbul`,
+                  });
+                }
+                if (pkg.gallery_images && Array.isArray(pkg.gallery_images)) {
+                  pkg.gallery_images.slice(0, 2).forEach((src) => {
+                    list.push({
+                      url: src,
+                      caption: `${pkgTitle} Photography Portfolio`,
+                    });
+                  });
+                }
+                return list;
+              })
+              .slice(0, 12),
+          })}
+        />
+      )}
       {dynamicFaqs && dynamicFaqs.length > 0 && (
         <SchemaInjector schema={buildFAQSchema(dynamicFaqs)} />
       )}

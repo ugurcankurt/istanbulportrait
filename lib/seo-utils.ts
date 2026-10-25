@@ -124,6 +124,38 @@ export function constructOpenGraph(
 // SCHEMA.ORG (JSON-LD) GENERATORS
 // ----------------------------------------------------
 
+/**
+ * Resolves an image URL for Schema.org JSON-LD structured data.
+ * Guarantees a direct canonical URL served from this website (e.g. https://istanbulportrait.com/storage/...)
+ * so Googlebot-Image crawls and associates the image directly with this domain,
+ * free of third-party proxy canonicals or x-robots-tag penalties.
+ */
+export function resolveSchemaImage(
+  imageUrl: string | null | undefined,
+): string {
+  if (!imageUrl) return "";
+
+  const baseUrl = getBaseUrl();
+
+  // Rewrite direct Supabase storage URLs to our canonical domain storage route
+  const resolved = imageUrl.replace(
+    "https://xfntnamwfnqjgqmyxwfz.supabase.co/storage/v1/object/public",
+    `${baseUrl}/storage`,
+  );
+
+  // If already full http(s) URL
+  if (resolved.startsWith("http://") || resolved.startsWith("https://")) {
+    return resolved;
+  }
+
+  // If relative path
+  if (resolved.startsWith("/")) {
+    return `${baseUrl}${resolved}`;
+  }
+
+  return `${baseUrl}/${resolved}`;
+}
+
 export function buildLocalBusinessSchema(
   settings: SiteSettings,
   priceRange?: string,
@@ -132,10 +164,10 @@ export function buildLocalBusinessSchema(
   reviewCount?: number,
   coverImage?: string,
   locale?: string,
+  packages?: any[],
 ) {
-  const imageUrl = optimizeSeoImage(
+  const imageUrl = resolveSchemaImage(
     coverImage || settings.logo_url || settings.default_og_image_url,
-    1200,
   );
 
   const localizedStreet =
@@ -153,6 +185,7 @@ export function buildLocalBusinessSchema(
       ? {
           "@type": "ImageObject",
           url: imageUrl,
+          contentUrl: imageUrl,
           width: 1200,
           height: 630,
           copyrightNotice: "IstanbulPortrait 2026",
@@ -241,13 +274,56 @@ export function buildLocalBusinessSchema(
       }));
   }
 
+  // Include dynamic packages in OfferCatalog for rich snippet discovery and Google Image Pack indexing
+  if (packages && packages.length > 0) {
+    schema.hasOfferCatalog = {
+      "@type": "OfferCatalog",
+      name: `${settings.organization_name || settings.site_name} Photoshoot Packages`,
+      itemListElement: packages.map((pkg: any) => {
+        const pkgTitle =
+          pkg.title?.[locale || "en"] || pkg.title?.en || pkg.slug;
+        const pkgDesc =
+          pkg.description?.[locale || "en"] || pkg.description?.en || "";
+        const pkgCover =
+          pkg.cover_image || pkg.gallery_images?.[0];
+        const pkgImageUrl = resolveSchemaImage(pkgCover);
+        const pkgUrl = `${getBaseUrl()}/${locale || "en"}/packages/${pkg.slug}`;
+
+        return {
+          "@type": "Offer",
+          name: pkgTitle,
+          url: pkgUrl,
+          price: pkg.price,
+          priceCurrency: "EUR",
+          availability: "https://schema.org/InStock",
+          ...(pkgImageUrl ? { image: pkgImageUrl } : {}),
+          itemOffered: {
+            "@type": "Service",
+            name: pkgTitle,
+            description: generateSeoDescription(pkgDesc, 200),
+            url: pkgUrl,
+            ...(pkgImageUrl
+              ? {
+                  image: {
+                    "@type": "ImageObject",
+                    url: pkgImageUrl,
+                    contentUrl: pkgImageUrl,
+                    caption: pkgTitle,
+                  },
+                }
+              : {}),
+          },
+        };
+      }),
+    };
+  }
+
   return schema;
 }
 
 export function buildOrganizationSchema(settings: SiteSettings) {
-  const imageUrl = optimizeSeoImage(
+  const imageUrl = resolveSchemaImage(
     settings.logo_url || settings.default_og_image_url,
-    1200,
   );
 
   return {
@@ -260,6 +336,7 @@ export function buildOrganizationSchema(settings: SiteSettings) {
       ? {
           "@type": "ImageObject",
           url: imageUrl,
+          contentUrl: imageUrl,
           width: 1200,
           height: 630,
           copyrightNotice: "IstanbulPortrait 2026",
@@ -272,6 +349,7 @@ export function buildOrganizationSchema(settings: SiteSettings) {
       ? {
           "@type": "ImageObject",
           url: imageUrl,
+          contentUrl: imageUrl,
           width: 1200,
           height: 630,
           copyrightNotice: "IstanbulPortrait 2026",
@@ -288,7 +366,8 @@ export function buildOrganizationSchema(settings: SiteSettings) {
             ? {
                 image: {
                   "@type": "ImageObject",
-                  url: optimizeSeoImage(settings.founder_image_url, 1200),
+                  url: resolveSchemaImage(settings.founder_image_url),
+                  contentUrl: resolveSchemaImage(settings.founder_image_url),
                   width: 1200,
                   height: 630,
                   copyrightNotice: "IstanbulPortrait 2026",
@@ -352,6 +431,8 @@ export function buildServiceSchema({
       ? price - (price * discount.discount_percentage) / 100
       : price;
 
+  const schemaImageUrl = resolveSchemaImage(image);
+
   const schema: any = {
     "@context": "https://schema.org/",
     "@type": "Product",
@@ -363,10 +444,11 @@ export function buildServiceSchema({
       : undefined,
     url: url,
     name,
-    image: image
+    image: schemaImageUrl
       ? {
           "@type": "ImageObject",
-          url: optimizeSeoImage(image, 1200),
+          url: schemaImageUrl,
+          contentUrl: schemaImageUrl,
           width: 1200,
           height: 630,
           copyrightNotice: "IstanbulPortrait 2026",
@@ -531,7 +613,8 @@ export function buildArticleSchema({
       ? [
           {
             "@type": "ImageObject",
-            url: optimizeSeoImage(image, 1200),
+            url: resolveSchemaImage(image),
+            contentUrl: resolveSchemaImage(image),
             width: 1200,
             height: 630,
             copyrightNotice: "IstanbulPortrait 2026",
@@ -560,7 +643,8 @@ export function buildArticleSchema({
             ? {
                 logo: {
                   "@type": "ImageObject",
-                  url: optimizeSeoImage(publisherLogo, 1200),
+                  url: resolveSchemaImage(publisherLogo),
+                  contentUrl: resolveSchemaImage(publisherLogo),
                   width: 1200,
                   height: 630,
                   copyrightNotice: "IstanbulPortrait 2026",
@@ -635,6 +719,8 @@ export function buildTouristAttractionSchema({
   lng?: number;
   url?: string;
 }) {
+  const schemaImageUrl = resolveSchemaImage(image);
+
   return {
     "@context": "https://schema.org",
     "@type": "TouristAttraction",
@@ -647,10 +733,11 @@ export function buildTouristAttractionSchema({
     name,
     description,
     url: url || getBaseUrl(),
-    image: image
+    image: schemaImageUrl
       ? {
           "@type": "ImageObject",
-          url: optimizeSeoImage(image, 1200),
+          url: schemaImageUrl,
+          contentUrl: schemaImageUrl,
           width: 1200,
           height: 630,
           copyrightNotice: "IstanbulPortrait 2026",
@@ -751,27 +838,72 @@ export function buildCollectionPageSchema({
     url: url || getBaseUrl(),
     mainEntity: {
       "@type": "ItemList",
-      itemListElement: items.map((item, index) => ({
-        "@type": "ListItem",
-        position: index + 1,
-        url: item.url,
-        name: item.name,
-        ...(item.description ? { description: item.description } : {}),
-        ...(item.image
-          ? {
-              image: {
-                "@type": "ImageObject",
-                url: optimizeSeoImage(item.image, 1200),
-                width: 1200,
-                height: 630,
-                copyrightNotice: "IstanbulPortrait 2026",
-                creator: { "@type": "Organization", name: "Istanbul Portrait" },
-                creditText: "Istanbul Portrait",
-                acquireLicensePage: `${getBaseUrl()}/en/contact`,
-              },
-            }
-          : {}),
-      })),
+      itemListElement: items.map((item, index) => {
+        const itemImageUrl = resolveSchemaImage(item.image);
+        return {
+          "@type": "ListItem",
+          position: index + 1,
+          url: item.url,
+          name: item.name,
+          ...(item.description ? { description: item.description } : {}),
+          ...(itemImageUrl
+            ? {
+                image: {
+                  "@type": "ImageObject",
+                  url: itemImageUrl,
+                  contentUrl: itemImageUrl,
+                  width: 1200,
+                  height: 630,
+                  copyrightNotice: "IstanbulPortrait 2026",
+                  creator: {
+                    "@type": "Organization",
+                    name: "Istanbul Portrait",
+                  },
+                  creditText: "Istanbul Portrait",
+                  acquireLicensePage: `${getBaseUrl()}/en/contact`,
+                },
+              }
+            : {}),
+        };
+      }),
     },
+  };
+}
+
+export function buildImageGallerySchema({
+  name,
+  description,
+  url,
+  images,
+}: {
+  name: string;
+  description?: string;
+  url: string;
+  images: Array<{
+    url: string;
+    caption?: string;
+  }>;
+}) {
+  if (!images || images.length === 0) return null;
+
+  return {
+    "@context": "https://schema.org",
+    "@type": "ImageGallery",
+    name,
+    description: description || undefined,
+    url: url || getBaseUrl(),
+    image: images.map((img) => {
+      const cleanUrl = resolveSchemaImage(img.url);
+      return {
+        "@type": "ImageObject",
+        contentUrl: cleanUrl,
+        url: cleanUrl,
+        caption: img.caption || name,
+        copyrightNotice: "IstanbulPortrait 2026",
+        creator: { "@type": "Organization", name: "Istanbul Portrait" },
+        creditText: "Istanbul Portrait",
+        acquireLicensePage: `${getBaseUrl()}/contact`,
+      };
+    }),
   };
 }

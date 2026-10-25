@@ -94,11 +94,6 @@ const nextConfig: NextConfig = {
   async rewrites() {
     return [
       {
-        source: "/storage/:path*",
-        destination:
-          "https://xfntnamwfnqjgqmyxwfz.supabase.co/storage/v1/object/public/:path*",
-      },
-      {
         source: "/sitemap.xml",
         destination: "/sitemap-index.xml",
       },
@@ -154,6 +149,23 @@ const nextConfig: NextConfig = {
         ],
       },
 
+      {
+        source: "/storage/:path*",
+        headers: [
+          {
+            key: "X-Robots-Tag",
+            value: "all, max-image-preview:large",
+          },
+          {
+            key: "Cache-Control",
+            value: "public, max-age=31536000, immutable",
+          },
+          {
+            key: "Access-Control-Allow-Origin",
+            value: "*",
+          },
+        ],
+      },
       {
         source: "/(.*)\\.(jpg|jpeg|png|webp|avif|ico|svg)$",
         headers: [
