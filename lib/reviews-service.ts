@@ -344,16 +344,13 @@ class ReviewsService {
         };
       }
 
-      // Translate top 15 reviews for the requested locale during SSR
-      const reviewsToTranslate = sortedReviews.slice(0, 15);
-      const remainingReviews = sortedReviews.slice(15);
-
       // Load existing translations from DB & memory
       const allCachedTranslations = await loadPersistedTranslations();
       const newlyTranslatedMap: Record<string, Record<string, string>> = {};
 
-      const translatedTopReviews = await Promise.all(
-        reviewsToTranslate.map(async (review) => {
+      // Translate all reviews for the requested locale
+      const finalReviews = await Promise.all(
+        sortedReviews.map(async (review) => {
           if (!review.text || review.text.trim() === "") return review;
 
           // 1. Check if translation exists in permanent cache
@@ -402,19 +399,6 @@ class ReviewsService {
           console.error("Async DB persist error for reviews:", err),
         );
       }
-
-      // Apply cached translations for remaining reviews if they already exist in database
-      const resolvedRemainingReviews = remainingReviews.map((review) => {
-        const cached =
-          allCachedTranslations[review.id]?.[locale] ||
-          inMemoryReviewTranslations[review.id]?.[locale];
-        return cached ? { ...review, text: cached } : review;
-      });
-
-      const finalReviews = [
-        ...translatedTopReviews,
-        ...resolvedRemainingReviews,
-      ];
 
       return {
         reviews: finalReviews,
