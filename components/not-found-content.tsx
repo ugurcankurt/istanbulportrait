@@ -15,6 +15,7 @@ interface NotFoundContentProps {
   packagesButton: string;
   goBack: string;
   settings?: any;
+  packagesHref?: string;
 }
 
 export function NotFoundContent({
@@ -26,6 +27,7 @@ export function NotFoundContent({
   packagesButton,
   goBack,
   settings,
+  packagesHref,
 }: NotFoundContentProps) {
   const [imgError, setImgError] = useState(false);
   const bgImage = settings?.default_og_image_url || settings?.founder_image_url;
@@ -128,7 +130,10 @@ export function NotFoundContent({
               nativeButton={false}
               render={
                 <Link
-                  href={`/${locale}/packages`}
+                  href={
+                    packagesHref ||
+                    (locale === "en" ? "/en/packages" : `/${locale}`)
+                  }
                   className="flex items-center gap-2 sm:gap-3"
                 />
               }

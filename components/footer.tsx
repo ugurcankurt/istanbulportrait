@@ -19,6 +19,7 @@ import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { useConsent } from "@/contexts/consent-context";
 import { Link, usePathname } from "@/i18n/routing";
 import { type PackageDB, packagesService } from "@/lib/packages-service";
+import { generateNativeSlug } from "@/lib/slug-generator";
 
 interface FooterProps {
   dynamicNavData?: Record<string, { path: string; title: string | null }>;
@@ -175,18 +176,24 @@ export function Footer({ dynamicNavData = {}, settings }: FooterProps) {
             <ul className="space-y-2 text-sm text-muted-foreground">
               {mounted ? (
                 activePackages.length > 0 ? (
-                  activePackages.map((pkg) => (
-                    <li key={pkg.id}>
-                      <Link
-                        href={
-                          `/${dynamicNavData.packages?.path || "packages"}/${pkg.slug}` as any
-                        }
-                        className="hover:text-foreground transition-colors line-clamp-1"
-                      >
-                        {pkg.title?.[locale] || pkg.title?.en || pkg.slug}
-                      </Link>
-                    </li>
-                  ))
+                  activePackages.map((pkg) => {
+                    const pkgTitle = pkg.title?.[locale];
+                    const pkgSeg = pkgTitle
+                      ? generateNativeSlug(pkgTitle) || pkg.slug
+                      : pkg.slug;
+                    return (
+                      <li key={pkg.id}>
+                        <Link
+                          href={
+                            `/${dynamicNavData.packages?.path || "packages"}/${pkgSeg}` as any
+                          }
+                          className="hover:text-foreground transition-colors line-clamp-1"
+                        >
+                          {pkgTitle || pkg.title?.en || pkg.slug}
+                        </Link>
+                      </li>
+                    );
+                  })
                 ) : (
                   <li className="text-xs italic text-muted-foreground select-none">
                     ...

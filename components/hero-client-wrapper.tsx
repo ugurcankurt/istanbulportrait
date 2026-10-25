@@ -17,6 +17,8 @@ interface HeroClientWrapperProps {
   checkLocationsButtonText: string;
   children: React.ReactNode;
   activeDiscounts?: DiscountDB[] | null;
+  packagesHref?: string;
+  locationsHref?: string;
 }
 
 export function HeroClientWrapper({
@@ -24,6 +26,8 @@ export function HeroClientWrapper({
   checkLocationsButtonText,
   children,
   activeDiscounts,
+  packagesHref,
+  locationsHref,
 }: HeroClientWrapperProps) {
   const [visitedPackages, setVisitedPackages] = useState<LastVisited[]>([]);
   const [hasVisited, setHasVisited] = useState(false);
@@ -68,7 +72,7 @@ export function HeroClientWrapper({
             nativeButton={false}
             render={
               <Link
-                href={"/packages" as any}
+                href={(packagesHref || "/packages") as any}
                 prefetch={true}
                 className="flex items-center justify-center gap-2"
               >
@@ -84,7 +88,10 @@ export function HeroClientWrapper({
           <Button
             nativeButton={false}
             render={
-              <Link href={"/locations" as any} prefetch={true}>
+              <Link
+                href={(locationsHref || "/locations") as any}
+                prefetch={true}
+              >
                 {checkLocationsButtonText}
               </Link>
             }

@@ -36,6 +36,8 @@ export async function AboutPageContent({
   });
 
   const organizationSchema = buildOrganizationSchema(settings);
+  const dynamicNavData =
+    await pagesContentService.getDynamicCoreNavData(locale);
   const aboutSchema = buildAboutPageSchema({
     name: dynamicTitle,
     description: generateSeoDescription(dynamicSubtitle),
@@ -58,6 +60,8 @@ export async function AboutPageContent({
           dbPage={dbPage as any}
           locale={locale}
           founderImageUrl={settings.founder_image_url}
+          packagesHref={`/${locale}/${dynamicNavData.packages?.path || "packages"}`}
+          locationsHref={`/${locale}/${dynamicNavData.locations?.path || "locations"}`}
           highlightsHeader={
             <h2
               key="highlights-header"

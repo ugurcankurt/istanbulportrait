@@ -15,6 +15,8 @@ interface AboutSectionProps {
   dbPage?: any;
   locale?: string;
   founderImageUrl?: string | null;
+  packagesHref?: string;
+  locationsHref?: string;
 }
 
 export function AboutSection({
@@ -23,6 +25,8 @@ export function AboutSection({
   dbPage,
   locale = "en",
   founderImageUrl,
+  packagesHref,
+  locationsHref,
 }: AboutSectionProps) {
   const [imgError, setImgError] = useState(false);
 
@@ -142,7 +146,12 @@ export function AboutSection({
             <div className="pt-2 sm:pt-4">
               <Button
                 nativeButton={false}
-                render={<Link href={"/packages" as any} prefetch={true} />}
+                render={
+                  <Link
+                    href={(packagesHref || "/packages") as any}
+                    prefetch={true}
+                  />
+                }
                 size="sm"
                 className="sm:size-lg text-xs sm:text-sm active:scale-[0.98] transition-transform shadow-md"
               >
@@ -205,7 +214,12 @@ export function AboutSection({
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
               <Button
                 nativeButton={false}
-                render={<Link href={"/locations" as any} prefetch={true} />}
+                render={
+                  <Link
+                    href={(locationsHref || "/locations") as any}
+                    prefetch={true}
+                  />
+                }
                 size="lg"
                 className="h-12 px-8 rounded-xl font-bold active:scale-[0.98] transition-transform shadow-lg"
               >
@@ -213,7 +227,12 @@ export function AboutSection({
               </Button>
               <Button
                 nativeButton={false}
-                render={<Link href={"/packages" as any} prefetch={true} />}
+                render={
+                  <Link
+                    href={(packagesHref || "/packages") as any}
+                    prefetch={true}
+                  />
+                }
                 variant="outline"
                 size="lg"
                 className="h-12 px-8 rounded-xl font-bold bg-background/50 border-white/20 dark:border-white/10 active:scale-[0.98] transition-transform shadow-lg backdrop-blur-md"

@@ -27,6 +27,8 @@ export default function robots(): MetadataRoute.Robots {
           "/admin/",
           "/api/",
           "/private/",
+          "/account/",
+          "/*/account/",
           "/*?*booking=", // Disallow parameterized booking tracking
           "/*?*payment=", // Disallow payment gateways
           "/*?*search=", // Disallow parameterized search
@@ -36,12 +38,18 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: "Googlebot-Image",
         allow: ["/", "/storage/", "/_next/image"],
-        disallow: ["/admin/", "/api/"],
+        disallow: ["/admin/", "/api/", "/account/", "/*/account/"],
       },
       {
         userAgent: "Bingbot",
         allow: ["/", "/storage/", "/_next/image"],
-        disallow: ["/admin/", "/api/", ...checkoutDisallows],
+        disallow: [
+          "/admin/",
+          "/api/",
+          "/account/",
+          "/*/account/",
+          ...checkoutDisallows,
+        ],
       },
     ],
     sitemap: [

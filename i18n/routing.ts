@@ -4,7 +4,7 @@ import { defineRouting } from "next-intl/routing";
 export const routing = defineRouting({
   locales: ["en", "ar", "ru", "es", "zh", "fr", "de", "ro", "tr"],
   defaultLocale: "en",
-  localeDetection: true,
+  localeDetection: false,
   // Disable automatic hreflang headers - we manage them in page metadata
   // This prevents conflict between header and HTML hreflang tags
   alternateLinks: false,

@@ -352,7 +352,7 @@ export const getBlogPostBySlug = cache(
     slug: string,
     locale: Locale = "en",
   ): Promise<BlogPostWithRelations | null> => {
-    const { data, error } = await supabaseAdmin
+    let { data, error } = await supabaseAdmin
       .from("blog_posts")
       .select(
         `
@@ -400,6 +400,117 @@ export const getBlogPostBySlug = cache(
     if (error) {
       console.error("Error fetching blog post by slug:", error);
       return null;
+    }
+
+    if (!data) {
+      // Cross-locale lookup: check if the slug belongs to this post in any other locale
+      const { data: crossTrans } = await supabaseAdmin
+        .from("blog_post_translations")
+        .select("post_id")
+        .eq("slug", slug)
+        .maybeSingle();
+
+      if (crossTrans?.post_id) {
+        // Try fetching the post with the current requested locale first
+        const { data: postInLocale } = await supabaseAdmin
+          .from("blog_posts")
+          .select(
+            `
+          *,
+          translation:blog_post_translations!inner(
+            id,
+            title,
+            slug,
+            excerpt,
+            content,
+            meta_description,
+            meta_keywords,
+            locale
+          ),
+          categories:blog_post_categories(
+            category:blog_categories(
+              id,
+              slug,
+              icon,
+              color,
+              translations:blog_category_translations(name, description, locale)
+            )
+          ),
+          tags:blog_post_tags(
+            tag:blog_tags(
+              id,
+              slug,
+              translations:blog_tag_translations(name, locale)
+            )
+          ),
+          author:blog_authors(
+            id,
+            name,
+            bio,
+            avatar_url,
+            role,
+            social_links
+          )
+        `,
+          )
+          .eq("id", crossTrans.post_id)
+          .eq("translation.locale", locale)
+          .maybeSingle();
+
+        if (postInLocale) {
+          data = postInLocale;
+        } else if (locale !== "en") {
+          // Fallback to English translation
+          const { data: postInEn } = await supabaseAdmin
+            .from("blog_posts")
+            .select(
+              `
+            *,
+            translation:blog_post_translations!inner(
+              id,
+              title,
+              slug,
+              excerpt,
+              content,
+              meta_description,
+              meta_keywords,
+              locale
+            ),
+            categories:blog_post_categories(
+              category:blog_categories(
+                id,
+                slug,
+                icon,
+                color,
+                translations:blog_category_translations(name, description, locale)
+              )
+            ),
+            tags:blog_post_tags(
+              tag:blog_tags(
+                id,
+                slug,
+                translations:blog_tag_translations(name, locale)
+              )
+            ),
+            author:blog_authors(
+              id,
+              name,
+              bio,
+              avatar_url,
+              role,
+              social_links
+            )
+          `,
+            )
+            .eq("id", crossTrans.post_id)
+            .eq("translation.locale", "en")
+            .maybeSingle();
+
+          if (postInEn) {
+            data = postInEn;
+          }
+        }
+      }
     }
 
     if (!data) return null;
@@ -1080,6 +1191,10 @@ export async function getBlogCategoryBySlug(
     return null;
   }
 
+  if (!data && locale !== "en") {
+    return getBlogCategoryBySlug(slug, "en");
+  }
+
   return data as unknown as BlogCategoryWithTranslation;
 }
 
@@ -1351,6 +1466,13 @@ export async function getBlogTagBySlug(
 
   if (error) {
     console.error("Error fetching tag by slug:", error);
+    return null;
+  }
+
+  if (!data) {
+    if (locale !== "en") {
+      return getBlogTagBySlug(slug, "en");
+    }
     return null;
   }
 

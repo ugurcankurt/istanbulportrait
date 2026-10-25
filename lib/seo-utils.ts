@@ -1,10 +1,10 @@
 import type { SiteSettings } from "./settings-service";
 
 export function getBaseUrl() {
+  if (process.env.NEXT_PUBLIC_APP_URL) return process.env.NEXT_PUBLIC_APP_URL;
   if (process.env.VERCEL_PROJECT_PRODUCTION_URL)
     return `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`;
   if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`;
-  if (process.env.NEXT_PUBLIC_APP_URL) return process.env.NEXT_PUBLIC_APP_URL;
   return "https://istanbulportrait.com";
 }
 
@@ -284,8 +284,7 @@ export function buildLocalBusinessSchema(
           pkg.title?.[locale || "en"] || pkg.title?.en || pkg.slug;
         const pkgDesc =
           pkg.description?.[locale || "en"] || pkg.description?.en || "";
-        const pkgCover =
-          pkg.cover_image || pkg.gallery_images?.[0];
+        const pkgCover = pkg.cover_image || pkg.gallery_images?.[0];
         const pkgImageUrl = resolveSchemaImage(pkgCover);
         const pkgUrl = `${getBaseUrl()}/${locale || "en"}/packages/${pkg.slug}`;
 

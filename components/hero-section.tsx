@@ -8,11 +8,15 @@ export async function HeroSection({
   subtitle,
   backgroundImage,
   activeDiscounts,
+  packagesHref,
+  locationsHref,
 }: {
   title?: string;
   subtitle?: string;
   backgroundImage?: string;
   activeDiscounts?: DiscountDB[] | null;
+  packagesHref?: string;
+  locationsHref?: string;
 } = {}) {
   const tui = await getTranslations("ui");
 
@@ -45,6 +49,8 @@ export async function HeroSection({
             packagesButtonText={tui("packages_button")}
             checkLocationsButtonText={tui("check_locations")}
             activeDiscounts={activeDiscounts}
+            packagesHref={packagesHref}
+            locationsHref={locationsHref}
           >
             {/* Main Title - Server Rendered for LCP */}
             <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-serif font-normal mb-6 leading-[1.1] tracking-tight drop-shadow-2xl text-white">
