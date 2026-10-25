@@ -3,6 +3,7 @@ import { Geist_Mono, Outfit, Playfair_Display } from "next/font/google";
 import { ThemeProvider } from "next-themes";
 import { settingsService } from "@/lib/settings-service";
 import { AdminLayoutClient } from "./admin-layout-client";
+import "@/app/globals.css";
 
 export const metadata: Metadata = {
   title: "Admin Portal | Istanbul Portrait",
