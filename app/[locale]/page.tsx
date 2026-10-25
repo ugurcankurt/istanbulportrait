@@ -75,7 +75,10 @@ export async function generateMetadata({
     settings.site_name || "",
   );
   const rawDesc =
-    seoSource?.subtitle?.[locale] || seoSource?.subtitle?.en || "";
+    seoSource?.subtitle?.[locale] ||
+    seoSource?.subtitle?.en ||
+    settingsService.resolveTranslatable(settings.site_description, locale) ||
+    "";
   const desc = generateSeoDescription(rawDesc);
   const ogImage =
     seoSource?.cover_image ||
@@ -95,6 +98,13 @@ export async function generateMetadata({
   return {
     title,
     description: desc,
+    robots: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
     alternates: {
       canonical: `${baseUrl}/${locale}`,
       languages,
@@ -243,6 +253,7 @@ export default async function HomePage({
           aggregateRating?.count,
           getDynamicImage("home-hero", undefined) ||
             getDynamicImage("home", undefined),
+          locale,
         )}
       />
       {dynamicFaqs && dynamicFaqs.length > 0 && (

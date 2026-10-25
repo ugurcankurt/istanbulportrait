@@ -60,7 +60,10 @@ export function HeroClientWrapper({
         {children}
 
         {/* CTA Buttons - Client side tracking and layout adjustment */}
-        <div className="flex flex-row flex-wrap justify-start items-center gap-4 w-full mb-8">
+        <div
+          data-nosnippet
+          className="flex flex-row flex-wrap justify-start items-center gap-4 w-full mb-8"
+        >
           <Button
             nativeButton={false}
             render={

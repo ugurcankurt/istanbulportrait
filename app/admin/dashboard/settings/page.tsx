@@ -38,6 +38,27 @@ export default function SettingsPage() {
   const [saving, setSaving] = useState(false);
   const [isTranslating, setTranslating] = useState(false);
   const [isSyncingCrm, setIsSyncingCrm] = useState(false);
+  const [isSyncingIndexNow, setIsSyncingIndexNow] = useState(false);
+
+  const handleIndexNowSync = async () => {
+    setIsSyncingIndexNow(true);
+    try {
+      const res = await fetch("/api/admin/indexnow", { method: "POST" });
+      const data = await res.json();
+
+      if (res.ok && data.success) {
+        toast.success(
+          data.message || "Successfully submitted URLs to IndexNow!",
+        );
+      } else {
+        toast.error(data.message || data.error || "IndexNow submission failed");
+      }
+    } catch (_err) {
+      toast.error("Failed to connect to IndexNow API");
+    } finally {
+      setIsSyncingIndexNow(false);
+    }
+  };
 
   const handleMetaCrmSync = async () => {
     setIsSyncingCrm(true);
@@ -797,7 +818,20 @@ export default function SettingsPage() {
               />
             </div>
             <div className="space-y-2">
-              <Label>IndexNow API Key</Label>
+              <div className="flex items-center justify-between">
+                <Label>IndexNow API Key</Label>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  disabled={isSyncingIndexNow || !settings.indexnow_api_key}
+                  onClick={handleIndexNowSync}
+                  className="h-7 text-xs"
+                >
+                  {isSyncingIndexNow && <Spinner className="w-3 h-3 mr-1" />}
+                  Ping IndexNow (Bing/Yandex)
+                </Button>
+              </div>
               <Input
                 value={settings.indexnow_api_key || ""}
                 onChange={(e) =>

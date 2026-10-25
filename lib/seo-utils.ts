@@ -131,16 +131,24 @@ export function buildLocalBusinessSchema(
   aggregateRatingValue?: number,
   reviewCount?: number,
   coverImage?: string,
+  locale?: string,
 ) {
   const imageUrl = optimizeSeoImage(
     coverImage || settings.logo_url || settings.default_og_image_url,
     1200,
   );
 
+  const localizedStreet =
+    (locale && settings.address?.[locale]) ||
+    settings.address?.en ||
+    settings.city ||
+    "Istanbul, Turkey";
+
   const schema: any = {
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
     name: settings.organization_name || settings.site_name,
+    inLanguage: locale || "en",
     image: imageUrl
       ? {
           "@type": "ImageObject",
@@ -153,16 +161,15 @@ export function buildLocalBusinessSchema(
           acquireLicensePage: `${getBaseUrl()}/en/contact`,
         }
       : undefined,
-    "@id": getBaseUrl(),
-    url: getBaseUrl(),
+    "@id": `${getBaseUrl()}/#localbusiness`,
+    url: `${getBaseUrl()}${locale ? `/${locale}` : ""}`,
     telephone: settings.contact_phone || settings.whatsapp_number,
     priceRange: priceRange || undefined,
     address: {
       "@type": "PostalAddress",
       addressLocality: settings.city || "Istanbul",
       addressCountry: settings.country_code || "TR",
-      streetAddress:
-        settings.address?.en || settings.city || "Istanbul, Turkey",
+      streetAddress: localizedStreet,
       postalCode: "34116", // Default fallback if not defined elsewhere
     },
     geo:
@@ -211,22 +218,27 @@ export function buildLocalBusinessSchema(
     };
   }
 
+  // Include individual reviews with language tagging
   if (reviews && reviews.length > 0) {
-    schema.review = reviews.slice(0, 5).map((r: any) => ({
-      "@type": "Review",
-      author: {
-        "@type": "Person",
-        name: r.author?.name || "Customer",
-      },
-      datePublished: r.date ? r.date.split("T")[0] : undefined,
-      reviewBody: r.text,
-      reviewRating: {
-        "@type": "Rating",
-        bestRating: "5",
-        ratingValue: r.rating?.toString() || "5",
-        worstRating: "1",
-      },
-    }));
+    schema.review = reviews
+      .filter((r: any) => r.text && r.text.trim().length > 0)
+      .slice(0, 5)
+      .map((r: any) => ({
+        "@type": "Review",
+        inLanguage: locale || "en",
+        author: {
+          "@type": "Person",
+          name: r.author?.name || "Customer",
+        },
+        datePublished: r.date ? r.date.split("T")[0] : undefined,
+        reviewBody: r.text,
+        reviewRating: {
+          "@type": "Rating",
+          bestRating: "5",
+          ratingValue: r.rating?.toString() || "5",
+          worstRating: "1",
+        },
+      }));
   }
 
   return schema;

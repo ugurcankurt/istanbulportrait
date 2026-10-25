@@ -1,25 +1,24 @@
-import Script from "next/script";
-import { useId } from "react";
-
 interface SchemaInjectorProps {
-  schema: any;
+  schema:
+    | Record<string, unknown>
+    | Array<Record<string, unknown>>
+    | null
+    | undefined;
   id?: string;
 }
 
 /**
  * Safely injects structured data JSON-LD into the page for search engines.
- * This is totally invisible to the user but critical for SEO.
+ * Uses native <script> so it is rendered directly in initial server HTML for crawlers.
  */
 export function SchemaInjector({ schema, id }: SchemaInjectorProps) {
-  const generatedId = useId();
   if (!schema) return null;
 
-  const uniqueId = id || `schema-jsonld-${generatedId}`;
-
   return (
-    <Script
-      id={uniqueId}
+    <script
+      id={id}
       type="application/ld+json"
+      // biome-ignore lint/security/noDangerouslySetInnerHtml: JSON-LD structured data requires raw JSON script
       dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
     />
   );

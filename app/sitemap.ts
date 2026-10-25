@@ -80,12 +80,19 @@ export default async function sitemap({
 
   if (resolvedId === "core") {
     const corePages = await pagesContentService.getAllPages();
-    const homeHero = corePages.find(
-      (p) => p.slug === "home-hero" || p.slug === "home",
+    const homePage = corePages.find((p) => p.slug === "home");
+    const homeHero = corePages.find((p) => p.slug === "home-hero");
+
+    // Fix: Select the latest updated timestamp between home and home-hero
+    const homeUpdatedTime = Math.max(
+      homePage?.updated_at ? new Date(homePage.updated_at).getTime() : 0,
+      homeHero?.updated_at ? new Date(homeHero.updated_at).getTime() : 0,
+      Date.now() - 86400000,
     );
-    const homeImage = homeHero?.cover_image
-      ? cleanImage(homeHero.cover_image)
-      : null;
+    const homeLastMod = new Date(homeUpdatedTime);
+
+    const homeCover = homePage?.cover_image || homeHero?.cover_image;
+    const homeImage = homeCover ? cleanImage(homeCover) : null;
 
     // Root domain is intentionally omitted: it redirects to a locale
     // (redirecting URLs should not be listed in sitemaps).
@@ -94,9 +101,7 @@ export default async function sitemap({
     locales.forEach((locale) => {
       sitemapData.push({
         url: encodeURI(`${baseUrl}/${locale}`),
-        lastModified: new Date(
-          homeHero?.updated_at || homeHero?.created_at || Date.now(),
-        ),
+        lastModified: homeLastMod,
         changeFrequency: "daily",
         priority: 1.0,
         alternates: getAlternates(() => ""),

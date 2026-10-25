@@ -26,96 +26,206 @@ function truncateReviewText(text: string, maxLength: number = 150): string {
 }
 
 /**
- * Internal helper to translate a single review via Gemini/NVIDIA.
- * We use unstable_cache so the translation is persistently cached.
+ * Internal helper to translate a single review using Gemini (primary) with fallback to NVIDIA AI.
  */
-export const getTranslatedReview = unstable_cache(
-  async (id: string, text: string, locale: string) => {
-    const supportedLocales = ["ar", "ru", "es", "zh", "fr", "de", "ro", "tr"];
-    if (!supportedLocales.includes(locale) || !text || text.trim() === "") {
-      return text;
-    }
+export async function translateReviewWithAI(
+  text: string,
+  locale: string,
+): Promise<string> {
+  const supportedLocales = ["ar", "ru", "es", "zh", "fr", "de", "ro", "tr"];
+  if (!supportedLocales.includes(locale) || !text || text.trim() === "") {
+    return text;
+  }
 
-    try {
-      const { settingsService } = await import("@/lib/settings-service");
-      const settings = await settingsService.getSettings();
-      const apiKey = settings.gemini_api_key || process.env.GEMINI_API_KEY;
+  const prompt = `You are a professional localization expert. Translate the following customer review into language code "${locale}". Maintain the original positive and natural tone. Return ONLY the translation, with no explanation or extra quotes:\n\n${text}`;
 
-      if (!apiKey) {
-        console.warn("No Gemini API key found for review translation.");
-        return text;
-      }
+  // 1. Try Google Gemini API if key is available
+  try {
+    const { settingsService } = await import("@/lib/settings-service");
+    const settings = await settingsService.getSettings();
+    const geminiKey = settings.gemini_api_key || process.env.GEMINI_API_KEY;
 
-      const prompt = `
-You are a professional localization expert. Translate the following user review from its original language into the language code: "${locale}".
-Maintain the original tone, which is likely positive and related to a photography business in Istanbul.
-Return ONLY the translated text without any formatting, quotes, or JSON. Just the plain text.
-
-Review to translate:
-${text}
-`;
-
+    if (geminiKey) {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 6000);
       const geminiUrl =
-        "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent";
-      let response;
+        "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent";
 
-      try {
-        const controller = new AbortController();
-        // 15 seconds max timeout for a SINGLE review translation
-        const timeoutId = setTimeout(() => controller.abort(), 15000);
+      const res = await fetch(geminiUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-goog-api-key": geminiKey.trim(),
+        },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: prompt }] }],
+          generationConfig: {
+            temperature: 0.1,
+            maxOutputTokens: 250,
+          },
+        }),
+        signal: controller.signal,
+      });
+      clearTimeout(timeoutId);
 
-        response = await fetch(geminiUrl, {
+      if (res.ok) {
+        const data = await res.json();
+        const output = data.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
+        if (output) {
+          return output.replace(/^["']|["']$/g, "").trim();
+        }
+      }
+    }
+  } catch (_e) {
+    // Failover to secondary provider
+  }
+
+  // 2. High-performance Fallback: NVIDIA AI API
+  try {
+    const nvidiaKey = process.env.NVIDIA_API_KEY;
+    if (nvidiaKey) {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 6000);
+
+      const res = await fetch(
+        "https://integrate.api.nvidia.com/v1/chat/completions",
+        {
           method: "POST",
           headers: {
+            Authorization: `Bearer ${nvidiaKey.trim()}`,
             "Content-Type": "application/json",
-            "x-goog-api-key": apiKey.trim(),
           },
           body: JSON.stringify({
-            contents: [{ parts: [{ text: prompt }] }],
-            generationConfig: {
-              temperature: 0.2,
-            },
+            model: "meta/llama-3.2-11b-vision-instruct",
+            messages: [{ role: "user", content: prompt }],
+            temperature: 0.1,
+            max_tokens: 250,
           }),
           signal: controller.signal,
-        });
-        clearTimeout(timeoutId);
-      } catch (err) {
-        console.warn(`Translation API timed out for review ${id}:`, err);
-        throw new Error("Translation API timed out");
+        },
+      );
+      clearTimeout(timeoutId);
+
+      if (res.ok) {
+        const data = await res.json();
+        const output = data.choices?.[0]?.message?.content?.trim();
+        if (output) {
+          return output.replace(/^["']|["']$/g, "").trim();
+        }
       }
-
-      if (!response?.ok) {
-        const errorText = await response.text().catch(() => "Unknown error");
-        console.warn(
-          `Gemini API Error for review ${id}. Status: ${response?.status}`,
-          errorText,
-        );
-        throw new Error(`Gemini API Error: ${response?.status} - ${errorText}`);
-      }
-
-      const data = await response.json();
-      let textOutput = data.candidates?.[0]?.content?.parts?.[0]?.text;
-
-      if (!textOutput) {
-        throw new Error("No translation output");
-      }
-
-      // Clean up potential quotes if the AI added them anyway
-      textOutput = textOutput.trim();
-      if (textOutput.startsWith('"') && textOutput.endsWith('"')) {
-        textOutput = textOutput.slice(1, -1);
-      }
-
-      return textOutput;
-    } catch (err) {
-      console.error(`Failed to translate review ${id}.`, err);
-      // We throw to prevent caching a failed execution if it was a catastrophic error
-      throw err;
     }
-  },
-  ["gemini-review-translation-single-v1"],
-  { revalidate: 31536000 }, // Cache for 365 days
-);
+  } catch (_e) {
+    // Return original text if both AI providers fail
+  }
+
+  return text;
+}
+
+// In-memory cache for fast access within the active Node process
+const inMemoryReviewTranslations: Record<string, Record<string, string>> = {};
+
+/**
+ * Load persisted review translations from the Supabase "pages" table (slug: "home-reviews")
+ */
+async function loadPersistedTranslations(): Promise<
+  Record<string, Record<string, string>>
+> {
+  try {
+    const { createClient } = await import("@supabase/supabase-js");
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const supabaseKey =
+      process.env.SUPABASE_SERVICE_KEY ||
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+    if (!supabaseUrl || !supabaseKey) return inMemoryReviewTranslations;
+
+    const supabase = createClient(supabaseUrl, supabaseKey);
+    const { data } = await supabase
+      .from("pages")
+      .select("content")
+      .eq("slug", "home-reviews")
+      .single();
+
+    const dbTranslations =
+      (data?.content?.review_translations as Record<
+        string,
+        Record<string, string>
+      >) || {};
+
+    // Synchronize to in-memory cache
+    for (const [reviewId, locMap] of Object.entries(dbTranslations)) {
+      if (!inMemoryReviewTranslations[reviewId]) {
+        inMemoryReviewTranslations[reviewId] = {};
+      }
+      Object.assign(inMemoryReviewTranslations[reviewId], locMap);
+    }
+
+    return inMemoryReviewTranslations;
+  } catch (err) {
+    console.error("Failed to load persisted review translations:", err);
+    return inMemoryReviewTranslations;
+  }
+}
+
+/**
+ * Persist newly translated reviews into Supabase so they are permanently cached
+ */
+async function persistTranslationsToDb(
+  newTranslations: Record<string, Record<string, string>>,
+): Promise<void> {
+  try {
+    const { createClient } = await import("@supabase/supabase-js");
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const supabaseKey =
+      process.env.SUPABASE_SERVICE_KEY ||
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+    if (!supabaseUrl || !supabaseKey) return;
+
+    const supabase = createClient(supabaseUrl, supabaseKey);
+    const { data: pageData } = await supabase
+      .from("pages")
+      .select("id, content")
+      .eq("slug", "home-reviews")
+      .single();
+
+    if (!pageData) return;
+
+    const currentContent = pageData.content || {};
+    const existingTranslations =
+      (currentContent.review_translations as Record<
+        string,
+        Record<string, string>
+      >) || {};
+
+    let hasChanges = false;
+    for (const [id, locMap] of Object.entries(newTranslations)) {
+      if (!existingTranslations[id]) {
+        existingTranslations[id] = {};
+      }
+      for (const [loc, text] of Object.entries(locMap)) {
+        if (existingTranslations[id][loc] !== text) {
+          existingTranslations[id][loc] = text;
+          hasChanges = true;
+        }
+      }
+    }
+
+    if (hasChanges) {
+      await supabase
+        .from("pages")
+        .update({
+          content: {
+            ...currentContent,
+            review_translations: existingTranslations,
+          },
+        })
+        .eq("id", pageData.id);
+    }
+  } catch (err) {
+    console.error("Failed to persist review translations to DB:", err);
+  }
+}
 
 class ReviewsService {
   private config: ReviewsServiceConfig;
@@ -125,9 +235,9 @@ class ReviewsService {
   }
 
   /**
-   * Fetch reviews from Featurable API dynamically
+   * Internal direct fetch from Featurable and translation logic
    */
-  async fetchGoogleReviews(locale: string = "en"): Promise<{
+  async fetchGoogleReviewsDirect(locale: string = "en"): Promise<{
     reviews: GoogleReview[];
     totalCount: number;
     averageRating: number;
@@ -140,7 +250,7 @@ class ReviewsService {
       const pageData = await pagesContentService.getPageBySlug("home-reviews");
       const rawInput = pageData?.content?.featurable_code || "";
 
-      // 2. Safely extract the UUID from the raw configuration (it could be a script tag, a URL, or just the ID)
+      // 2. Safely extract the UUID from the raw configuration
       const uuidRegex =
         /[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}/;
       const match = rawInput.match(uuidRegex);
@@ -172,7 +282,7 @@ class ReviewsService {
           headers: {
             "Content-Type": "application/json",
           },
-          // Cache for 7 days to avoid hitting limits and reduce latency on Vercel
+          // Cache Featurable response for 7 days to minimize external latency
           next: { revalidate: 604800, tags: ["reviews"] },
         },
       );
@@ -184,27 +294,40 @@ class ReviewsService {
       const data = await response.json();
 
       // Featurable API response structure adaptation
-      const reviews = data.reviews || [];
+      interface RawFeaturableReview {
+        reviewId?: string;
+        id?: string;
+        reviewer?: { displayName?: string; profilePhotoUrl?: string };
+        starRating?: number | string;
+        comment?: string;
+        createTime?: string;
+        relativePublishTimeDescription?: string;
+      }
+      const reviews: RawFeaturableReview[] = data.reviews || [];
       const totalCount = Number(data.totalReviewCount) || reviews.length;
       const averageRatingRaw = Number(data.averageRating) || 5;
       const averageRating = Math.round(averageRatingRaw * 10) / 10;
 
-      // Transform to our GoogleReview interface
+      // Transform to our GoogleReview interface with stable ID
       const transformedReviews: GoogleReview[] = reviews.map(
-        (review: any, index: number) => ({
-          id:
+        (review: RawFeaturableReview, index: number) => {
+          const rawId =
+            review.reviewId ||
             review.id ||
-            `review-${review.reviewer?.displayName || "anon"}-${review.createTime || index}`,
-          author: {
-            name: review.reviewer?.displayName || "Anonymous",
-            photoUrl: review.reviewer?.profilePhotoUrl,
-          },
-          rating: Number(review.starRating) || 5,
-          text: truncateReviewText(review.comment || "", 500),
-          date: review.createTime || new Date().toISOString(),
-          relativeTimeDescription:
-            review.relativePublishTimeDescription || "Recent",
-        }),
+            `review-${review.reviewer?.displayName || "anon"}-${review.createTime || index}`;
+          return {
+            id: String(rawId),
+            author: {
+              name: review.reviewer?.displayName || "Anonymous",
+              photoUrl: review.reviewer?.profilePhotoUrl,
+            },
+            rating: Number(review.starRating) || 5,
+            text: truncateReviewText(review.comment || "", 500),
+            date: review.createTime || new Date().toISOString(),
+            relativeTimeDescription:
+              review.relativePublishTimeDescription || "Recent",
+          };
+        },
       );
 
       // Sort by date (newest first) and limit results
@@ -212,30 +335,86 @@ class ReviewsService {
         .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
         .slice(0, this.config.maxReviews || 100);
 
+      // If locale is English, no translation needed
+      if (locale === "en") {
+        return {
+          reviews: sortedReviews,
+          totalCount,
+          averageRating,
+        };
+      }
+
       // Translate top 15 reviews for the requested locale during SSR
       const reviewsToTranslate = sortedReviews.slice(0, 15);
       const remainingReviews = sortedReviews.slice(15);
 
+      // Load existing translations from DB & memory
+      const allCachedTranslations = await loadPersistedTranslations();
+      const newlyTranslatedMap: Record<string, Record<string, string>> = {};
+
       const translatedTopReviews = await Promise.all(
         reviewsToTranslate.map(async (review) => {
-          if (locale === "en") return review;
+          if (!review.text || review.text.trim() === "") return review;
+
+          // 1. Check if translation exists in permanent cache
+          const cached =
+            allCachedTranslations[review.id]?.[locale] ||
+            inMemoryReviewTranslations[review.id]?.[locale];
+
+          if (cached) {
+            return { ...review, text: cached };
+          }
+
+          // 2. Not cached yet: translate with AI once
           try {
-            const translatedText = await getTranslatedReview(
-              review.id,
+            const translatedText = await translateReviewWithAI(
               review.text,
               locale,
             );
-            return { ...review, text: translatedText };
+
+            if (translatedText && translatedText !== review.text) {
+              if (!inMemoryReviewTranslations[review.id]) {
+                inMemoryReviewTranslations[review.id] = {};
+              }
+              inMemoryReviewTranslations[review.id][locale] = translatedText;
+
+              if (!newlyTranslatedMap[review.id]) {
+                newlyTranslatedMap[review.id] = {};
+              }
+              newlyTranslatedMap[review.id][locale] = translatedText;
+
+              return { ...review, text: translatedText };
+            }
           } catch (e) {
-            console.error(`Failed to translate review ${review.id} in SSR:`, e);
-            // Fallback to original text on failure (so page doesn't crash),
-            // but since getTranslatedReview threw, unstable_cache won't cache it!
-            return review;
+            console.error(
+              `Failed to translate review ${review.id} for locale ${locale}:`,
+              e,
+            );
           }
+
+          return review;
         }),
       );
 
-      const finalReviews = [...translatedTopReviews, ...remainingReviews];
+      // Persist any newly translated reviews asynchronously to Supabase
+      if (Object.keys(newlyTranslatedMap).length > 0) {
+        persistTranslationsToDb(newlyTranslatedMap).catch((err) =>
+          console.error("Async DB persist error for reviews:", err),
+        );
+      }
+
+      // Apply cached translations for remaining reviews if they already exist in database
+      const resolvedRemainingReviews = remainingReviews.map((review) => {
+        const cached =
+          allCachedTranslations[review.id]?.[locale] ||
+          inMemoryReviewTranslations[review.id]?.[locale];
+        return cached ? { ...review, text: cached } : review;
+      });
+
+      const finalReviews = [
+        ...translatedTopReviews,
+        ...resolvedRemainingReviews,
+      ];
 
       return {
         reviews: finalReviews,
@@ -245,13 +424,27 @@ class ReviewsService {
     } catch (error) {
       console.error("Error fetching Google reviews:", error);
 
-      // Return empty data if API fails to avoid showing hardcoded mock reviews
       return {
         reviews: [],
         totalCount: 0,
         averageRating: 0,
       };
     }
+  }
+
+  /**
+   * Cached fetch for Google reviews per locale with 24h Next.js cache + permanent DB translation store
+   */
+  async fetchGoogleReviews(locale: string = "en"): Promise<{
+    reviews: GoogleReview[];
+    totalCount: number;
+    averageRating: number;
+  }> {
+    return unstable_cache(
+      async () => this.fetchGoogleReviewsDirect(locale),
+      [`google-reviews-v2-${locale}`],
+      { revalidate: 86400, tags: ["reviews", `reviews-${locale}`] },
+    )();
   }
 
   /**

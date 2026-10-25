@@ -214,16 +214,16 @@ export default async function LocaleLayout({
       className={`${fontSans.variable} ${fontHeading.variable} ${geistMono.variable} theme-${settings.theme_color || "violet"}`}
       suppressHydrationWarning
     >
-      <head>
-        {/* Ad-hoc Custom Head Scripts Injected from Settings Dashboard */}
+      <head />
+      <body className="antialiased" suppressHydrationWarning>
         {settings.custom_head_scripts && (
           <div
+            id="custom-head-scripts"
+            className="hidden"
             // biome-ignore lint/security/noDangerouslySetInnerHtml: Dynamic script
             dangerouslySetInnerHTML={{ __html: settings.custom_head_scripts }}
           />
         )}
-      </head>
-      <body className="antialiased" suppressHydrationWarning>
         {/* Google Consent Mode v2 Default State - MUST be first before any analytics */}
         <Script
           id="google-consent-default"

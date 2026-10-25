@@ -1,9 +1,17 @@
+import type { Metadata } from "next";
 import { Geist_Mono, Outfit, Playfair_Display } from "next/font/google";
+import { ThemeProvider } from "next-themes";
 import { settingsService } from "@/lib/settings-service";
 import { AdminLayoutClient } from "./admin-layout-client";
-import "../globals.css";
 
-import { ThemeProvider } from "next-themes";
+export const metadata: Metadata = {
+  title: "Admin Portal | Istanbul Portrait",
+  robots: {
+    index: false,
+    follow: false,
+    nocache: true,
+  },
+};
 
 const fontHeading = Playfair_Display({
   variable: "--font-heading",

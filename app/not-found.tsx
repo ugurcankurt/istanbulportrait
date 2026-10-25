@@ -1,6 +1,15 @@
 import "@/app/globals.css";
+import type { Metadata } from "next";
 import { NotFoundContent } from "@/components/not-found-content";
 import { settingsService } from "@/lib/settings-service";
+
+export const metadata: Metadata = {
+  title: "Page Not Found | Istanbul Portrait",
+  robots: {
+    index: false,
+    follow: false,
+  },
+};
 
 export default async function RootNotFound() {
   const settings = await settingsService.getSettings().catch(() => null);

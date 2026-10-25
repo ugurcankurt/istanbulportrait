@@ -76,6 +76,7 @@ export function PackageReviews({
   return (
     <section
       id="reviews"
+      data-nosnippet
       className="pt-12 pb-6 sm:py-16 border-t border-slate-300 scroll-mt-24"
     >
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-16">
@@ -128,6 +129,7 @@ export function PackageReviews({
                 return (
                   <button
                     key={stars}
+                    type="button"
                     onClick={() => {
                       setFilterRating(filterRating === stars ? null : stars);
                       setVisibleCount(10);
