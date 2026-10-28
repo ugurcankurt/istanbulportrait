@@ -378,6 +378,38 @@ export function trackPurchase(
   );
 }
 
+/**
+ * Helper to sanitize Meta Pixel event data to adhere strictly to Meta's parameters specification:
+ * - Currency must be an ISO 4217 3-letter uppercase code.
+ * - Currency MUST only be sent if value is a valid positive number (> 0).
+ * - If value is missing, 0, null, or undefined, currency must NOT be sent.
+ */
+export function sanitizeMetaPixelPayload(
+  data?: Record<string, any>,
+): Record<string, any> | undefined {
+  if (!data || typeof data !== "object") return data;
+  const clean = { ...data };
+
+  const hasValidValue =
+    typeof clean.value === "number" &&
+    !Number.isNaN(clean.value) &&
+    clean.value > 0;
+
+  if (hasValidValue) {
+    const rawCurrency = clean.currency;
+    clean.currency =
+      typeof rawCurrency === "string" &&
+      /^[a-zA-Z]{3}$/.test(rawCurrency.trim())
+        ? rawCurrency.trim().toUpperCase()
+        : "EUR";
+  } else {
+    delete clean.currency;
+    delete clean.value;
+  }
+
+  return clean;
+}
+
 // Track Facebook events
 export function trackFacebookEvent(
   eventType: string,
@@ -385,10 +417,11 @@ export function trackFacebookEvent(
   eventId?: string,
 ) {
   if (typeof window !== "undefined" && window.fbq) {
+    const cleanData = sanitizeMetaPixelPayload(data);
     if (eventId) {
-      window.fbq("track", eventType, data, { eventID: eventId });
+      window.fbq("track", eventType, cleanData, { eventID: eventId });
     } else {
-      window.fbq("track", eventType, data);
+      window.fbq("track", eventType, cleanData);
     }
   }
 }
@@ -429,20 +462,17 @@ export function trackViewItem(
   }
 
   // Facebook Pixel — ViewContent (client-side)
-  if (typeof window !== "undefined" && window.fbq) {
-    window.fbq(
-      "track",
-      "ViewContent",
-      {
-        content_ids: [itemId],
-        content_type: "product",
-        content_name: stdPackageName,
-        value: value,
-        currency: currency,
-      },
-      resolvedEventId ? { eventID: resolvedEventId } : undefined,
-    );
-  }
+  trackFacebookEvent(
+    "ViewContent",
+    {
+      content_ids: [itemId],
+      content_type: "product",
+      content_name: stdPackageName,
+      value: value,
+      currency: currency,
+    },
+    resolvedEventId,
+  );
 
   // Facebook CAPI — ViewContent (server-side, Safari-proof)
   if (typeof window !== "undefined") {
@@ -595,20 +625,17 @@ export function trackAddPaymentInfo(
   }
 
   // Facebook Pixel — AddPaymentInfo (client-side)
-  if (typeof window !== "undefined" && window.fbq) {
-    window.fbq(
-      "track",
-      "AddPaymentInfo",
-      {
-        content_ids: [packageId],
-        content_name: stdPackageName,
-        content_type: "product",
-        value: value,
-        currency: currency,
-      },
-      resolvedEventId ? { eventID: resolvedEventId } : undefined,
-    );
-  }
+  trackFacebookEvent(
+    "AddPaymentInfo",
+    {
+      content_ids: [packageId],
+      content_name: stdPackageName,
+      content_type: "product",
+      value: value,
+      currency: currency,
+    },
+    resolvedEventId,
+  );
 
   // Facebook CAPI — AddPaymentInfo (server-side, Safari-proof)
   if (typeof window !== "undefined") {
@@ -957,21 +984,18 @@ export function trackPackageAddToCart(
   }
 
   // Facebook Pixel — AddToCart
-  if (typeof window !== "undefined" && window.fbq) {
-    window.fbq(
-      "track",
-      "AddToCart",
-      {
-        content_ids: [packageId],
-        content_type: "product",
-        content_name: packageName,
-        value: value,
-        currency: currency,
-        yield_category: yieldCategory,
-      },
-      resolvedEventId ? { eventID: resolvedEventId } : undefined,
-    );
-  }
+  trackFacebookEvent(
+    "AddToCart",
+    {
+      content_ids: [packageId],
+      content_type: "product",
+      content_name: packageName,
+      value: value,
+      currency: currency,
+      yield_category: yieldCategory,
+    },
+    resolvedEventId,
+  );
 
   // Facebook CAPI — AddToCart
   if (typeof window !== "undefined") {
@@ -1040,21 +1064,18 @@ export function trackPrintViewItem(
   }
 
   // Facebook Pixel — ViewContent for Catalog
-  if (typeof window !== "undefined" && window.fbq) {
-    window.fbq(
-      "track",
-      "ViewContent",
-      {
-        content_ids: [sku],
-        content_type: "product",
-        content_name: name,
-        content_category: category,
-        value: price,
-        currency: currency,
-      },
-      resolvedEventId ? { eventID: resolvedEventId } : undefined,
-    );
-  }
+  trackFacebookEvent(
+    "ViewContent",
+    {
+      content_ids: [sku],
+      content_type: "product",
+      content_name: name,
+      content_category: category,
+      value: price,
+      currency: currency,
+    },
+    resolvedEventId,
+  );
 
   // Facebook CAPI — ViewContent
   if (typeof window !== "undefined") {
@@ -1108,21 +1129,18 @@ export function trackPrintAddToCart(
   }
 
   // Facebook Pixel — AddToCart for Catalog
-  if (typeof window !== "undefined" && window.fbq) {
-    window.fbq(
-      "track",
-      "AddToCart",
-      {
-        content_ids: [sku],
-        content_type: "product",
-        content_name: name,
-        content_category: category,
-        value: price,
-        currency: currency,
-      },
-      resolvedEventId ? { eventID: resolvedEventId } : undefined,
-    );
-  }
+  trackFacebookEvent(
+    "AddToCart",
+    {
+      content_ids: [sku],
+      content_type: "product",
+      content_name: name,
+      content_category: category,
+      value: price,
+      currency: currency,
+    },
+    resolvedEventId,
+  );
 
   // Facebook CAPI — AddToCart
   if (typeof window !== "undefined") {
@@ -1193,20 +1211,17 @@ export function trackPrintBeginCheckout(
   const contentIds = items.map((item) => item.sku);
 
   // Facebook Pixel — InitiateCheckout
-  if (typeof window !== "undefined" && window.fbq) {
-    window.fbq(
-      "track",
-      "InitiateCheckout",
-      {
-        content_ids: contentIds,
-        content_type: "product",
-        value: totalValue,
-        currency: currency,
-        num_items: items.reduce((acc, curr) => acc + curr.quantity, 0),
-      },
-      resolvedEventId ? { eventID: resolvedEventId } : undefined,
-    );
-  }
+  trackFacebookEvent(
+    "InitiateCheckout",
+    {
+      content_ids: contentIds,
+      content_type: "product",
+      value: totalValue,
+      currency: currency,
+      num_items: items.reduce((acc, curr) => acc + curr.quantity, 0),
+    },
+    resolvedEventId,
+  );
 
   // Facebook CAPI — InitiateCheckout
   if (typeof window !== "undefined") {

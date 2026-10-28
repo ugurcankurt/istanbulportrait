@@ -203,10 +203,28 @@ export const fbPixel = {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const fb = (window as any).fbq;
     if (fb) {
+      const cleanParams = parameters ? { ...parameters } : undefined;
+      if (cleanParams) {
+        const hasValidValue =
+          typeof cleanParams.value === "number" &&
+          !Number.isNaN(cleanParams.value) &&
+          cleanParams.value > 0;
+        if (hasValidValue) {
+          const rawCurr = cleanParams.currency;
+          cleanParams.currency =
+            typeof rawCurr === "string" && /^[a-zA-Z]{3}$/.test(rawCurr.trim())
+              ? rawCurr.trim().toUpperCase()
+              : "EUR";
+        } else {
+          delete cleanParams.currency;
+          delete cleanParams.value;
+        }
+      }
+
       if (eventId) {
-        fb("track", eventName, parameters, { eventID: eventId });
+        fb("track", eventName, cleanParams, { eventID: eventId });
       } else {
-        fb("track", eventName, parameters);
+        fb("track", eventName, cleanParams);
       }
     }
   },
