@@ -9,11 +9,14 @@ import {
   sanitizeErrorForProduction,
   ValidationError,
 } from "@/lib/errors";
+import { submitToIndexNow } from "@/lib/indexnow";
+import { pagesContentService } from "@/lib/pages-content-service";
 import {
   checkRateLimit,
   createRateLimitError,
   getClientIP,
 } from "@/lib/rate-limit";
+import { generateNativeSlug } from "@/lib/slug-generator";
 
 import { blogFormSchema } from "@/lib/validations/blog-validations";
 import type { BlogQueryParams } from "@/types/blog";
@@ -122,7 +125,29 @@ export async function POST(request: NextRequest) {
       // Revalidate layout to include the new post
       revalidatePath("/", "layout");
 
-      // Broadcast removed.
+      // Automatically notify IndexNow when a published blog post is created
+      if (validationResult.data.status === "published") {
+        pagesContentService
+          .getPageBySlug("blog")
+          .then((blogPage) => {
+            const urls: string[] = [];
+            for (const [loc, trans] of Object.entries(
+              validationResult.data.translations || {},
+            )) {
+              if (trans?.slug) {
+                const parentTitle = blogPage?.title?.[loc];
+                const parentSeg = parentTitle
+                  ? generateNativeSlug(parentTitle)
+                  : "blog";
+                urls.push(`/${loc}/${parentSeg}/${trans.slug}`);
+              }
+            }
+            if (urls.length > 0) {
+              return submitToIndexNow(urls);
+            }
+          })
+          .catch(() => {});
+      }
 
       return NextResponse.json({
         success: true,

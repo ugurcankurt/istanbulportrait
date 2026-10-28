@@ -98,7 +98,7 @@ export const pagesContentService = {
       return data as PageDB[];
     },
     ["pages", "all-pages"],
-    { tags: ["pages"] },
+    { tags: ["pages"], revalidate: 60 },
   ),
 
   /**
@@ -121,7 +121,7 @@ export const pagesContentService = {
       return data as PageDB;
     },
     ["pages", "page-by-id"],
-    { tags: ["pages"] },
+    { tags: ["pages"], revalidate: 60 },
   ),
 
   /**

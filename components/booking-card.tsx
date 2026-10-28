@@ -30,11 +30,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useCurrency } from "@/contexts/currency-context";
 import { useIsMobile } from "@/hooks/use-mobile";
 import type { AddonDB } from "@/lib/addons-service";
-import {
-  trackContact,
-  trackSchedule,
-  trackSearch,
-} from "@/lib/analytics";
+import { trackContact, trackSchedule, trackSearch } from "@/lib/analytics";
 import type { TimeSurcharge } from "@/lib/availability-service";
 import type { DiscountDB } from "@/lib/discount-service";
 import { matchActiveSurcharge } from "@/lib/pricing";
@@ -205,7 +201,7 @@ export function BookingCard({
 
     if (selectedDate) {
       const formattedDate = format(selectedDate, "yyyy-MM-dd");
-      trackSearch(packageDisplayName, "Istanbul", formattedDate);
+      trackSearch(packageDisplayName, "Istanbul", formattedDate, packageId);
     }
 
     const startTime = Date.now();

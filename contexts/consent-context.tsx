@@ -18,12 +18,25 @@ interface ConsentContextType {
 
 const ConsentContext = createContext<ConsentContextType | undefined>(undefined);
 
-export function ConsentProvider({ children }: { children: React.ReactNode }) {
-  const [consent, setConsentState] = useState<ConsentChoice>(null);
-  const [isLoading, setIsLoading] = useState(true);
+export function ConsentProvider({
+  children,
+  initialConsent,
+}: {
+  children: React.ReactNode;
+  initialConsent?: ConsentChoice;
+}) {
+  const [consent, setConsentState] = useState<ConsentChoice>(
+    initialConsent ?? null,
+  );
+  const [isLoading, setIsLoading] = useState(initialConsent === undefined);
 
-  // Load consent from httpOnly cookie on mount
+  // Load consent from httpOnly cookie on mount if not already provided by Server Component
   useEffect(() => {
+    if (initialConsent !== undefined) {
+      setIsLoading(false);
+      return;
+    }
+
     async function loadConsent() {
       try {
         const consentData = await getConsentCookie();
@@ -39,7 +52,7 @@ export function ConsentProvider({ children }: { children: React.ReactNode }) {
     }
 
     loadConsent();
-  }, []);
+  }, [initialConsent]);
 
   // Save to httpOnly cookie when changed
   const setConsent = async (choice: ConsentChoice) => {

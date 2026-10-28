@@ -35,6 +35,18 @@ export function AboutSection({
   const taboutHighlights = useTranslations("about_highlights");
   const _taboutCta = useTranslations("about_cta");
 
+  const normalizeIntlHref = (href: string | undefined, fallback: string) => {
+    if (!href) return fallback;
+    const prefix = `/${locale}/`;
+    if (href.startsWith(prefix)) {
+      return `/${href.slice(prefix.length)}`;
+    }
+    return href.startsWith("/") ? href : `/${href}`;
+  };
+
+  const resolvedPackagesHref = normalizeIntlHref(packagesHref, "/packages");
+  const resolvedLocationsHref = normalizeIntlHref(locationsHref, "/locations");
+
   const dynAbout = dbPage?.content?.about;
 
   const stats = [
@@ -147,10 +159,7 @@ export function AboutSection({
               <Button
                 nativeButton={false}
                 render={
-                  <Link
-                    href={(packagesHref || "/packages") as any}
-                    prefetch={true}
-                  />
+                  <Link href={resolvedPackagesHref as any} prefetch={true} />
                 }
                 size="sm"
                 className="sm:size-lg text-xs sm:text-sm active:scale-[0.98] transition-transform shadow-md"
@@ -215,10 +224,7 @@ export function AboutSection({
               <Button
                 nativeButton={false}
                 render={
-                  <Link
-                    href={(locationsHref || "/locations") as any}
-                    prefetch={true}
-                  />
+                  <Link href={resolvedLocationsHref as any} prefetch={true} />
                 }
                 size="lg"
                 className="h-12 px-8 rounded-xl font-bold active:scale-[0.98] transition-transform shadow-lg"
@@ -228,10 +234,7 @@ export function AboutSection({
               <Button
                 nativeButton={false}
                 render={
-                  <Link
-                    href={(packagesHref || "/packages") as any}
-                    prefetch={true}
-                  />
+                  <Link href={resolvedPackagesHref as any} prefetch={true} />
                 }
                 variant="outline"
                 size="lg"

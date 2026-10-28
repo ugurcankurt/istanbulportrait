@@ -44,11 +44,24 @@ export async function PrivacyPageContent({
               secTitle.toLowerCase().includes("çerez") ||
               secTitle.toLowerCase().includes("kuki");
 
+            const isTerms =
+              (secTitle.toLowerCase().includes("term") ||
+                secTitle.toLowerCase().includes("licens") ||
+                secTitle.toLowerCase().includes("koşul") ||
+                secTitle.toLowerCase().includes("şart") ||
+                secTitle.toLowerCase().includes("lisans") ||
+                idx === sections.length - 1) &&
+              !isCookie;
+
             if (!secTitle && !secDesc && secItems.length === 0) return null;
 
             return (
               // biome-ignore lint/suspicious/noArrayIndexKey: Safe usage
-              <Card key={idx}>
+              <Card
+                key={idx}
+                id={isTerms ? "terms" : undefined}
+                className={isTerms ? "scroll-mt-24" : undefined}
+              >
                 {secTitle && (
                   <CardHeader>
                     <CardTitle>{secTitle}</CardTitle>

@@ -13,11 +13,14 @@ import {
   sanitizeErrorForProduction,
   ValidationError,
 } from "@/lib/errors";
+import { submitToIndexNow } from "@/lib/indexnow";
+import { pagesContentService } from "@/lib/pages-content-service";
 import {
   checkRateLimit,
   createRateLimitError,
   getClientIP,
 } from "@/lib/rate-limit";
+import { generateNativeSlug } from "@/lib/slug-generator";
 
 import { blogUpdateSchema } from "@/lib/validations/blog-validations";
 
@@ -139,7 +142,29 @@ export async function PATCH(
       // Revalidate the entire site layout so updated blog data shows immediately on frontend
       revalidatePath("/", "layout");
 
-      // Broadcast removed.
+      // Automatically notify IndexNow when a published blog post is updated or newly published
+      const translationsMap =
+        validationResult.data.translations || currentPost?.translations;
+      if (post.status === "published" && translationsMap) {
+        pagesContentService
+          .getPageBySlug("blog")
+          .then((blogPage) => {
+            const urls: string[] = [];
+            for (const [loc, trans] of Object.entries(translationsMap)) {
+              if (trans?.slug) {
+                const parentTitle = blogPage?.title?.[loc];
+                const parentSeg = parentTitle
+                  ? generateNativeSlug(parentTitle)
+                  : "blog";
+                urls.push(`/${loc}/${parentSeg}/${trans.slug}`);
+              }
+            }
+            if (urls.length > 0) {
+              return submitToIndexNow(urls);
+            }
+          })
+          .catch(() => {});
+      }
 
       return NextResponse.json({
         success: true,

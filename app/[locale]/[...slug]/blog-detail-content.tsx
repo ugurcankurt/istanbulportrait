@@ -1,5 +1,6 @@
 import Image from "next/image";
-import { notFound, redirect } from "next/navigation";
+import NextLink from "next/link";
+import { notFound, permanentRedirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import ReactMarkdown from "react-markdown";
 import rehypeRaw from "rehype-raw";
@@ -44,7 +45,9 @@ export async function BlogDetailPageContent({
     // Attempt to salvage the navigation by checking if the slug belongs to another language
     const salvagedSlug = await getSalvagedBlogSlug(decodedSlug, locale);
     if (salvagedSlug) {
-      redirect(`/${locale}/blog/${encodeURIComponent(salvagedSlug)}`);
+      permanentRedirect(
+        `/${locale}/${parentSlug}/${encodeURIComponent(salvagedSlug)}`,
+      );
     }
     notFound();
   }
@@ -103,7 +106,7 @@ export async function BlogDetailPageContent({
         })}
       />
 
-      <BreadcrumbNav />
+      <BreadcrumbNav customLastLabel={post.translation.title} />
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
         <article className="mx-auto">
@@ -172,12 +175,15 @@ export async function BlogDetailPageContent({
             <div className="grid md:grid-cols-2 gap-6">
               {post.categories && post.categories.length > 0 && (
                 <div>
-                  <h2 className="text-sm font-semibold mb-3">Categories</h2>
+                  <h2 className="text-sm font-semibold mb-3">
+                    {t("categories")}
+                  </h2>
                   <div className="flex flex-wrap gap-2">
                     {post.categories.map((cat) => (
-                      <span
+                      <NextLink
                         key={cat.category.id}
-                        className="px-3 py-1.5 rounded-xl text-[10px] font-bold uppercase tracking-widest border-[0.5px] border-border/30 shadow-sm"
+                        href={`/${locale}/${parentSlug}/category/${cat.category.slug}`}
+                        className="px-3 py-1.5 rounded-xl text-[10px] font-bold uppercase tracking-widest border-[0.5px] border-border/30 shadow-sm hover:opacity-80 transition-opacity"
                         style={{
                           backgroundColor: `${cat.category.color}15`,
                           color: cat.category.color,
@@ -187,7 +193,7 @@ export async function BlogDetailPageContent({
                           <span className="mr-1">{cat.category.icon}</span>
                         )}
                         {cat.category.translation?.name || cat.category.slug}
-                      </span>
+                      </NextLink>
                     ))}
                   </div>
                 </div>
@@ -195,15 +201,16 @@ export async function BlogDetailPageContent({
 
               {post.tags && post.tags.length > 0 && (
                 <div>
-                  <h2 className="text-sm font-semibold mb-3">Tags</h2>
+                  <h2 className="text-sm font-semibold mb-3">{t("tags")}</h2>
                   <div className="flex flex-wrap gap-2">
                     {post.tags.map((tag) => (
-                      <span
+                      <NextLink
                         key={tag.tag.id}
+                        href={`/${locale}/${parentSlug}/tag/${tag.tag.slug}`}
                         className="px-4 py-1.5 border-[0.5px] border-border/50 bg-muted/20 hover:bg-primary/5 rounded-xl text-[10px] font-bold uppercase tracking-widest transition-colors shadow-sm"
                       >
                         #{tag.tag.translation?.name || tag.tag.slug}
-                      </span>
+                      </NextLink>
                     ))}
                   </div>
                 </div>

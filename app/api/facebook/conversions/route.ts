@@ -31,6 +31,7 @@ const facebookConversionSchema = z.object({
     "Schedule",
     "PageView",
     "AddToCart",
+    "Search",
   ]),
   event_id: z.string().optional(), // For deduplication with Pixel
   customer_email: z
@@ -48,7 +49,7 @@ const facebookConversionSchema = z.object({
   country: z.string().optional(),
   dob: z.string().optional(),
   gender: z.string().optional(),
-  package_id: z.string().min(1),
+  package_id: z.string().min(1).default("general"),
   amount: z.number().optional(),
   transaction_id: z.string().optional(),
   lead_id: z.number().optional(),
@@ -233,7 +234,7 @@ export async function POST(request: NextRequest) {
       ...custom_data,
     };
 
-    if (package_id && package_id !== "general") {
+    if (package_id && package_id !== "general" && package_id !== "newsletter") {
       customDataPayload.content_ids = [package_id];
       customDataPayload.content_type =
         customDataPayload.content_type || "product";

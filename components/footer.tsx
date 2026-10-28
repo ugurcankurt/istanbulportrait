@@ -258,12 +258,9 @@ export function Footer({ dynamicNavData = {}, settings }: FooterProps) {
                 {t("terms_of_service")}
               </Link>
               <button
+                type="button"
                 onClick={() => {
                   setConsent(null);
-                  window.scrollTo({
-                    top: document.body.scrollHeight,
-                    behavior: "smooth",
-                  });
                 }}
                 className="text-sm text-muted-foreground hover:text-foreground transition-colors underline-offset-4 hover:underline"
               >

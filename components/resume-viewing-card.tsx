@@ -34,6 +34,7 @@ interface ResumeViewingCardProps {
   withContainer?: boolean;
   isMainTitle?: boolean;
   activeDiscounts?: DiscountDB[] | null;
+  packagesHref?: string;
 }
 
 export function ResumeViewingCard({
@@ -42,6 +43,7 @@ export function ResumeViewingCard({
   withContainer = true,
   isMainTitle = false,
   activeDiscounts = null,
+  packagesHref,
 }: ResumeViewingCardProps) {
   const [localVisited, setLocalVisited] = useState<LastVisited[]>([]);
   const _t = useTranslations("packages");
@@ -164,7 +166,7 @@ export function ResumeViewingCard({
                   className="ps-2 md:ps-4 basis-[88%] sm:basis-1/2 lg:basis-[92%]"
                 >
                   <Link
-                    href={`/${locale}/packages/${nativeSlug}`}
+                    href={`/${locale}${packagesHref ? (packagesHref.startsWith("/") ? packagesHref : `/${packagesHref}`) : "/packages"}/${nativeSlug}`}
                     className="group block w-full"
                   >
                     <Card className="relative flex flex-row overflow-hidden p-2 gap-4 border-[0.5px] border-border/50 bg-white text-black transition-all duration-500 shadow-lg hover:shadow-xl rounded-[2rem] h-[120px] sm:h-[140px]">

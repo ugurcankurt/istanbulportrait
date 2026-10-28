@@ -28,6 +28,18 @@ export function CurrencyProvider({
   currency?: string;
 }) {
   const locale = useLocale();
+  const intlLocaleMap: Record<string, string> = {
+    en: "en-US",
+    ar: "ar-SA",
+    ru: "ru-RU",
+    es: "es-ES",
+    zh: "zh-CN",
+    fr: "fr-FR",
+    de: "de-DE",
+    ro: "ro-RO",
+    tr: "tr-TR",
+  };
+  const intlLocale = intlLocaleMap[locale] || "en-US";
 
   const convertPrice = (amountEUR: number) => {
     if (currency !== "EUR") {
@@ -38,7 +50,7 @@ export function CurrencyProvider({
 
   const formatPrice = (amountEUR: number, forceEur: boolean = false) => {
     if (forceEur) {
-      return new Intl.NumberFormat(locale === "tr" ? "tr-TR" : "en-US", {
+      return new Intl.NumberFormat(intlLocale, {
         style: "currency",
         currency: "EUR",
         minimumFractionDigits: 0,
@@ -49,7 +61,7 @@ export function CurrencyProvider({
     const amountConverted =
       currency === "EUR" ? amountEUR : Math.round(amountEUR * rate);
 
-    return new Intl.NumberFormat(locale === "tr" ? "tr-TR" : "en-US", {
+    return new Intl.NumberFormat(intlLocale, {
       style: "currency",
       currency: currency,
       minimumFractionDigits: 0,

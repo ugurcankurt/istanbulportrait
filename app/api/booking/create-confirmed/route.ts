@@ -296,32 +296,33 @@ export async function POST(request: NextRequest) {
       }
 
       if (bookingId) {
-        // Update existing draft booking
+        // Update existing draft booking while preserving existing gclid/gbraid/wbraid/ip_address if not present in current request
+        const updatePayload: Record<string, any> = {
+          status: "confirmed",
+          total_amount: totalAmount,
+          notes: notes || null,
+          applied_promo_code: body.appliedPromo?.code || promoCode || null,
+          // Update other fields in case they changed during checkout
+          user_name: customerName,
+          user_phone: customerPhone,
+          booking_date: bookingDate,
+          booking_time: bookingTime,
+          people_count: peopleCount || null,
+          user_id: authUserId || null,
+          drive_folder_id: driveFolderId || null,
+          selected_addons: selectedAddonIds,
+          selected_addon_details: addonDetails,
+          country_code: countryCode,
+        };
+        if (ip) updatePayload.ip_address = ip;
+        if (gclid) updatePayload.gclid = gclid;
+        if (gbraid) updatePayload.gbraid = gbraid;
+        if (wbraid) updatePayload.wbraid = wbraid;
+
         const { data: existingBooking, error: updateError } =
           await supabaseAdmin
             .from("bookings")
-            .update({
-              status: "confirmed",
-              total_amount: totalAmount,
-              notes: notes || null,
-              applied_promo_code: body.appliedPromo?.code || promoCode || null,
-              // Update other fields in case they changed during checkout
-              user_name: customerName,
-              user_phone: customerPhone,
-              booking_date: bookingDate,
-              booking_time: bookingTime,
-              people_count: peopleCount || null,
-              user_id: authUserId || null,
-              drive_folder_id: driveFolderId || null,
-
-              ip_address: ip || null,
-              selected_addons: selectedAddonIds,
-              selected_addon_details: addonDetails,
-              gclid: gclid,
-              gbraid: gbraid,
-              wbraid: wbraid,
-              country_code: countryCode,
-            })
+            .update(updatePayload)
             .eq("id", bookingId)
             .select()
             .single();
@@ -458,22 +459,20 @@ export async function POST(request: NextRequest) {
       // We do this here because we now have a guaranteed Booking ID (Transaction ID)
       // and we are running server-side.
       const marketingConsent = hasMarketingConsent(request);
-      if (body.eventId) {
-        // marketingConsent is computed above (before this block)
-        // Extract EMQ parameters for Meta CAPI
-        const fbc = body.fbc || request.cookies.get("_fbc")?.value;
-        const fbp = body.fbp || request.cookies.get("_fbp")?.value;
-        const clientUserAgent = request.headers.get("user-agent") || undefined;
-        const clientIpAddress = ip; // Already extracted via getClientIP at the top
+      // Extract EMQ parameters for Meta CAPI
+      const fbc = body.fbc || request.cookies.get("_fbc")?.value;
+      const fbp = body.fbp || request.cookies.get("_fbp")?.value;
+      const clientUserAgent = request.headers.get("user-agent") || undefined;
+      const clientIpAddress = ip; // Already extracted via getClientIP at the top
 
-        const nameParts = customerName.split(" ");
-        const firstName = nameParts[0];
-        const lastName =
-          nameParts.length > 1 ? nameParts.slice(1).join(" ") : undefined;
+      const nameParts = customerName.split(" ");
+      const firstName = nameParts[0];
+      const lastName =
+        nameParts.length > 1 ? nameParts.slice(1).join(" ") : undefined;
 
-        try {
-          const { trackFacebookPurchase } = await import("@/lib/facebook");
-          if (marketingConsent)
+      try {
+        const { trackFacebookPurchase } = await import("@/lib/facebook");
+        if (marketingConsent)
           await trackFacebookPurchase(
             customerEmail,
             customerPhone,
@@ -485,22 +484,25 @@ export async function POST(request: NextRequest) {
               eventSourceUrl,
               fbc,
               fbp,
+              externalId: body.externalId,
               clientIpAddress,
               clientUserAgent,
               firstName,
               lastName,
+              country: countryCode,
+              yieldCategory: body.yieldReason,
               checkinDate: bookingDate,
             },
           );
-        } catch (facebookError) {
-          console.error("Facebook CAPI Error:", facebookError);
-          // Non-blocking error
-        }
+      } catch (facebookError) {
+        console.error("Facebook CAPI Error:", facebookError);
+        // Non-blocking error
+      }
 
-        // ── Meta CRM Lead Event (auto-fires on every confirmed booking) ──
-        try {
-          const { trackMetaCRMLeadEvent } = await import("@/lib/facebook");
-          if (marketingConsent)
+      // ── Meta CRM Lead Event (auto-fires on every confirmed booking) ──
+      try {
+        const { trackMetaCRMLeadEvent } = await import("@/lib/facebook");
+        if (marketingConsent)
           await trackMetaCRMLeadEvent(
             customerEmail,
             customerPhone,
@@ -510,64 +512,68 @@ export async function POST(request: NextRequest) {
               eventSourceUrl,
               fbc,
               fbp,
+              externalId: body.externalId,
               clientIpAddress,
               clientUserAgent,
               firstName,
               lastName,
+              country: countryCode,
             },
           );
-        } catch (crmError) {
-          console.error("Meta CRM Lead Event Error:", crmError);
-          // Non-blocking error
+      } catch (crmError) {
+        console.error("Meta CRM Lead Event Error:", crmError);
+        // Non-blocking error
+      }
+
+      // ── GA4 & Google Ads Client Attribution ──
+      const { extractClientIdFromCookie } = await import("@/lib/ga4-server");
+      const rawGaCookie = request.cookies.get("_ga")?.value;
+      const gaClientId = extractClientIdFromCookie(rawGaCookie);
+
+      let gaSessionId;
+      const measurementIdCookie = request.cookies
+        .getAll()
+        .find((c) => c.name.startsWith("_ga_"))?.value;
+      if (measurementIdCookie) {
+        // GS1: GS1.1.<session_id>.<n>...   GS2: GS2.1.s<session_id>$o1$g1...
+        const raw = measurementIdCookie.split(".")[2] || "";
+        const match = raw.match(/^s?(\d+)/);
+        if (match) {
+          gaSessionId = match[1];
         }
+      }
 
-        // ── GA4 & Google Ads Client Attribution ──
-        const { extractClientIdFromCookie } = await import("@/lib/ga4-server");
-        const rawGaCookie = request.cookies.get("_ga")?.value;
-        const gaClientId = extractClientIdFromCookie(rawGaCookie);
+      // ── GA4 Measurement Protocol (Server-Side Purchase Tracking) ──
+      try {
+        const { trackGA4ServerPurchase } = await import("@/lib/ga4-server");
 
-        let gaSessionId;
-        const measurementIdCookie = request.cookies
-          .getAll()
-          .find((c) => c.name.startsWith("_ga_"))?.value;
-        if (measurementIdCookie) {
-          // GS1: GS1.1.<session_id>.<n>...   GS2: GS2.1.s<session_id>$o1$g1...
-          const raw = measurementIdCookie.split(".")[2] || "";
-          const match = raw.match(/^s?(\d+)/);
-          if (match) {
-            gaSessionId = match[1];
-          }
-        }
+        // Fetch package name for accurate GA4 tracking
+        const { data: packageData } = await supabaseAdmin
+          .from("packages")
+          .select("title")
+          .eq("slug", packageId)
+          .single();
 
-        // ── GA4 Measurement Protocol (Server-Side Purchase Tracking) ──
-        try {
-          const { trackGA4ServerPurchase } = await import("@/lib/ga4-server");
-          
-          // Fetch package name for accurate GA4 tracking
-          const { data: packageData } = await supabaseAdmin
-            .from("packages")
-            .select("title")
-            .eq("slug", packageId)
-            .single();
+        const localeKey = booking.locale || "en";
+        const packageName =
+          packageData?.title?.[localeKey] ||
+          packageData?.title?.en ||
+          packageId;
 
-          const localeKey = booking.locale || "en";
-          const packageName = packageData?.title?.[localeKey] || packageData?.title?.en || packageId;
-
-          await trackGA4ServerPurchase(
-            booking.id,
-            packageId,
-            packageName,
-            totalAmount,
-            "EUR",
-            gaClientId,
-            gaSessionId,
-            marketingConsent,
-            booking.user_id,
-          );
-        } catch (ga4Error) {
-          console.error("GA4 Measurement Protocol Error:", ga4Error);
-          // Non-blocking error
-        }
+        await trackGA4ServerPurchase(
+          booking.id,
+          packageId,
+          packageName,
+          totalAmount,
+          "EUR",
+          gaClientId,
+          gaSessionId,
+          marketingConsent,
+          booking.user_id,
+        );
+      } catch (ga4Error) {
+        console.error("GA4 Measurement Protocol Error:", ga4Error);
+        // Non-blocking error
       }
 
       // Add to Resend Audience (Newsletter/Marketing)

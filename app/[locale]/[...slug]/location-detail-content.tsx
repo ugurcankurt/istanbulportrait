@@ -55,11 +55,18 @@ export async function LocationDetailPageContent({
 
   const { pagesContentService } = await import("@/lib/pages-content-service");
   const { generateNativeSlug } = await import("@/lib/slug-generator");
-  const locationsPage = await pagesContentService.getPageBySlug("locations");
+  const [locationsPage, packagesPage] = await Promise.all([
+    pagesContentService.getPageBySlug("locations"),
+    pagesContentService.getPageBySlug("packages"),
+  ]);
   const parentTitle = locationsPage?.title?.[locale];
   const parentSegment = parentTitle
     ? generateNativeSlug(parentTitle) || parentSlug
     : locationsPage?.slug || parentSlug;
+  const packagesTitle = packagesPage?.title?.[locale];
+  const packagesSegment = packagesTitle
+    ? generateNativeSlug(packagesTitle) || "packages"
+    : packagesPage?.slug || "packages";
   const localTitle = location.title?.[locale];
   const canonicalLocationSegment = localTitle
     ? generateNativeSlug(localTitle) || location.slug
@@ -80,7 +87,7 @@ export async function LocationDetailPageContent({
     <div className="min-h-screen">
       <SchemaInjector schema={touristAttractionSchema} />
 
-      <BreadcrumbNav />
+      <BreadcrumbNav customLastLabel={dynamicTitle} />
 
       {/* Hero Section - Enhanced */}
       <section className="relative">
@@ -294,7 +301,7 @@ export async function LocationDetailPageContent({
                   <Button
                     nativeButton={false}
                     // biome-ignore lint/suspicious/noExplicitAny: Type mismatch
-                    render={<Link href={"/packages" as any} />}
+                    render={<Link href={`/${packagesSegment}` as any} />}
                     variant="secondary"
                     className="w-full font-semibold shadow-lg hover:shadow-xl transition-all"
                   >

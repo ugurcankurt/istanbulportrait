@@ -98,7 +98,7 @@ export async function generateMetadata({
   languages["x-default"] = `${baseUrl}/en`;
 
   return {
-    title,
+    title: /istanbul\s*portrait/i.test(title) ? { absolute: title } : title,
     description: desc,
     robots: {
       index: true,
@@ -269,6 +269,7 @@ export default async function HomePage({
             getDynamicImage("home", undefined),
           locale,
           activePackages,
+          packagesParentSlug,
         )}
       />
       {activePackages && activePackages.length > 0 && (
@@ -317,8 +318,8 @@ export default async function HomePage({
           )}
           backgroundImage={getDynamicImage("home-hero", undefined)}
           activeDiscounts={activeDiscounts}
-          packagesHref={`/${locale}/${packagesParentSlug}`}
-          locationsHref={`/${locale}/${locationsParentSlug}`}
+          packagesHref={`/${packagesParentSlug}`}
+          locationsHref={`/${locationsParentSlug}`}
         />
 
         <div className="section-contain-auto">

@@ -52,9 +52,6 @@ export default function robots(): MetadataRoute.Robots {
         ],
       },
     ],
-    sitemap: [
-      `${getBaseUrl()}/sitemap.xml`,
-      `${getBaseUrl()}/sitemap-index.xml`,
-    ],
+    sitemap: [`${getBaseUrl()}/sitemap.xml`],
   };
 }

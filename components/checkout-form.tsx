@@ -25,12 +25,13 @@ import { useCurrency } from "@/contexts/currency-context";
 import type { AddonDB } from "@/lib/addons-service";
 import {
   generateEventId,
+  getExternalId,
   saveUserDataForAdvancedMatching,
   setAnalyticsUserId,
+  trackAddPaymentInfo,
   trackBeginCheckout,
   trackPaymentEvent,
   trackPurchase,
-  trackAddPaymentInfo,
 } from "@/lib/analytics";
 import type { TimeSurcharge } from "@/lib/availability-service";
 import type { DiscountDB } from "@/lib/discount-service";
@@ -625,15 +626,15 @@ export function CheckoutForm({
 
   const handleCashPaymentSubmit = async () => {
     if (!selectedPackage || !packageInfo) return;
-    
+
     // Add missing GA4 Add Payment Info tracking step
     trackAddPaymentInfo(
-      selectedPackage, 
-      packageInfo.name, 
-      packageInfo.price, 
-      "cash"
+      selectedPackage,
+      packageInfo.name,
+      packageInfo.price,
+      "cash",
     );
-    
+
     setIsLoading(true);
     const bookingData = bookingForm.getValues();
 
@@ -688,6 +689,7 @@ export function CheckoutForm({
           provider: "cash",
           providerResponse: { method: "cash" },
           eventId,
+          externalId: getExternalId(),
           bookingId: bookingId || undefined,
           locale,
           fbc,

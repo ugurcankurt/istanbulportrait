@@ -1,4 +1,5 @@
 import type { SiteSettings } from "./settings-service";
+import { generateNativeSlug } from "./slug-generator";
 
 export function getBaseUrl() {
   if (process.env.NEXT_PUBLIC_APP_URL) return process.env.NEXT_PUBLIC_APP_URL;
@@ -156,6 +157,22 @@ export function resolveSchemaImage(
   return `${baseUrl}/${resolved}`;
 }
 
+/**
+ * Normalizes a URL for JSON-LD structured data to ensure RFC 3986 percent-encoding
+ * matching `<link rel="canonical">` without double-encoding already encoded URLs.
+ */
+export function normalizeSchemaUrl(url: string | null | undefined): string {
+  if (!url) return "";
+  const full = url.startsWith("http")
+    ? url
+    : `${getBaseUrl()}${url.startsWith("/") ? "" : "/"}${url}`;
+  try {
+    return encodeURI(decodeURI(full));
+  } catch {
+    return encodeURI(full);
+  }
+}
+
 export function buildLocalBusinessSchema(
   settings: SiteSettings,
   priceRange?: string,
@@ -165,6 +182,7 @@ export function buildLocalBusinessSchema(
   coverImage?: string,
   locale?: string,
   packages?: any[],
+  packagesParentSlug?: string,
 ) {
   const imageUrl = resolveSchemaImage(
     coverImage || settings.logo_url || settings.default_og_image_url,
@@ -205,14 +223,11 @@ export function buildLocalBusinessSchema(
       streetAddress: localizedStreet,
       postalCode: "34116", // Default fallback if not defined elsewhere
     },
-    geo:
-      settings.latitude && settings.longitude
-        ? {
-            "@type": "GeoCoordinates",
-            latitude: settings.latitude,
-            longitude: settings.longitude,
-          }
-        : undefined,
+    geo: {
+      "@type": "GeoCoordinates",
+      latitude: settings.latitude || 41.0082,
+      longitude: settings.longitude || 28.9784,
+    },
     openingHoursSpecification: {
       "@type": "OpeningHoursSpecification",
       dayOfWeek: settings.working_days || [
@@ -276,6 +291,7 @@ export function buildLocalBusinessSchema(
 
   // Include dynamic packages in OfferCatalog for rich snippet discovery and Google Image Pack indexing
   if (packages && packages.length > 0) {
+    const parentSeg = packagesParentSlug || "packages";
     schema.hasOfferCatalog = {
       "@type": "OfferCatalog",
       name: `${settings.organization_name || settings.site_name} Photoshoot Packages`,
@@ -286,7 +302,13 @@ export function buildLocalBusinessSchema(
           pkg.description?.[locale || "en"] || pkg.description?.en || "";
         const pkgCover = pkg.cover_image || pkg.gallery_images?.[0];
         const pkgImageUrl = resolveSchemaImage(pkgCover);
-        const pkgUrl = `${getBaseUrl()}/${locale || "en"}/packages/${pkg.slug}`;
+        const localPkgTitle = pkg.title?.[locale || "en"];
+        const pkgSeg = localPkgTitle
+          ? generateNativeSlug(localPkgTitle) || pkg.slug
+          : pkg.slug;
+        const pkgUrl = encodeURI(
+          `${getBaseUrl()}/${locale || "en"}/${parentSeg}/${pkgSeg}`,
+        );
 
         return {
           "@type": "Offer",
@@ -425,23 +447,30 @@ export function buildServiceSchema({
   reviews?: any[];
   url?: string;
 }) {
-  const finalPrice =
+  const rawDiscountPct =
     discount && discount.discount_percentage > 0
-      ? price - (price * discount.discount_percentage) / 100
+      ? Number(discount.discount_percentage)
+      : 0;
+  const discountFraction =
+    rawDiscountPct > 1 ? rawDiscountPct / 100 : rawDiscountPct;
+  const finalPrice =
+    discountFraction > 0
+      ? Number((price * (1 - discountFraction)).toFixed(2))
       : price;
 
   const schemaImageUrl = resolveSchemaImage(image);
+  const canonicalUrl = url ? normalizeSchemaUrl(url) : undefined;
 
   const schema: any = {
     "@context": "https://schema.org/",
     "@type": "Product",
-    mainEntityOfPage: url
+    mainEntityOfPage: canonicalUrl
       ? {
           "@type": "WebPage",
-          "@id": url,
+          "@id": canonicalUrl,
         }
       : undefined,
-    url: url,
+    url: canonicalUrl,
     name,
     image: schemaImageUrl
       ? {
@@ -465,9 +494,12 @@ export function buildServiceSchema({
       : undefined,
     offers: {
       "@type": "Offer",
-      url: providerUrl || getBaseUrl(),
+      url: canonicalUrl || providerUrl || getBaseUrl(),
       priceCurrency: currency,
       price: finalPrice,
+      priceValidUntil: discount?.end_date
+        ? discount.end_date.split("T")[0]
+        : `${new Date().getFullYear()}-12-31`,
       availability: "https://schema.org/InStock",
       validFrom: `${new Date().getFullYear()}-01-01`,
       hasMerchantReturnPolicy: {
@@ -596,16 +628,17 @@ export function buildArticleSchema({
   keywords?: string[];
   url?: string;
 }) {
+  const canonicalUrl = url ? normalizeSchemaUrl(url) : undefined;
   return {
     "@context": "https://schema.org",
     "@type": "Article",
-    mainEntityOfPage: url
+    mainEntityOfPage: canonicalUrl
       ? {
           "@type": "WebPage",
-          "@id": url,
+          "@id": canonicalUrl,
         }
       : undefined,
-    url: url,
+    url: canonicalUrl,
     headline: title,
     inLanguage: inLanguage,
     image: image
@@ -629,7 +662,7 @@ export function buildArticleSchema({
       {
         "@type": "Person",
         name: authorName,
-        ...(authorImage ? { image: authorImage } : {}),
+        ...(authorImage ? { image: resolveSchemaImage(authorImage) } : {}),
         ...(authorBio ? { description: authorBio } : {}),
         ...(authorUrls && authorUrls.length > 0 ? { sameAs: authorUrls } : {}),
       },
@@ -696,9 +729,7 @@ export function buildBreadcrumbSchema(
       "@type": "ListItem",
       position: index + 1,
       name: item.name,
-      item: item.url.startsWith("http")
-        ? item.url
-        : `${getBaseUrl()}${item.url}`,
+      item: normalizeSchemaUrl(item.url),
     })),
   };
 }
@@ -719,19 +750,20 @@ export function buildTouristAttractionSchema({
   url?: string;
 }) {
   const schemaImageUrl = resolveSchemaImage(image);
+  const canonicalUrl = url ? normalizeSchemaUrl(url) : undefined;
 
   return {
     "@context": "https://schema.org",
     "@type": "TouristAttraction",
-    mainEntityOfPage: url
+    mainEntityOfPage: canonicalUrl
       ? {
           "@type": "WebPage",
-          "@id": url,
+          "@id": canonicalUrl,
         }
       : undefined,
     name,
     description,
-    url: url || getBaseUrl(),
+    url: canonicalUrl || getBaseUrl(),
     image: schemaImageUrl
       ? {
           "@type": "ImageObject",
@@ -767,18 +799,19 @@ export function buildAboutPageSchema({
   url?: string;
   organizationSchema?: any;
 }) {
+  const canonicalUrl = url ? normalizeSchemaUrl(url) : undefined;
   return {
     "@context": "https://schema.org",
     "@type": "AboutPage",
-    mainEntityOfPage: url
+    mainEntityOfPage: canonicalUrl
       ? {
           "@type": "WebPage",
-          "@id": url,
+          "@id": canonicalUrl,
         }
       : undefined,
     name,
     description: description || undefined,
-    url: url || getBaseUrl(),
+    url: canonicalUrl || getBaseUrl(),
     ...(organizationSchema ? { mainEntity: organizationSchema } : {}),
   };
 }
@@ -792,18 +825,19 @@ export function buildContactPageSchema({
   description: string | null;
   url?: string;
 }) {
+  const canonicalUrl = url ? normalizeSchemaUrl(url) : undefined;
   return {
     "@context": "https://schema.org",
     "@type": "ContactPage",
-    mainEntityOfPage: url
+    mainEntityOfPage: canonicalUrl
       ? {
           "@type": "WebPage",
-          "@id": url,
+          "@id": canonicalUrl,
         }
       : undefined,
     name,
     description: description || undefined,
-    url: url || getBaseUrl(),
+    url: canonicalUrl || getBaseUrl(),
   };
 }
 
@@ -823,18 +857,19 @@ export function buildCollectionPageSchema({
     image?: string;
   }>;
 }) {
+  const canonicalUrl = url ? normalizeSchemaUrl(url) : undefined;
   return {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
-    mainEntityOfPage: url
+    mainEntityOfPage: canonicalUrl
       ? {
           "@type": "WebPage",
-          "@id": url,
+          "@id": canonicalUrl,
         }
       : undefined,
     name,
     description: description || undefined,
-    url: url || getBaseUrl(),
+    url: canonicalUrl || getBaseUrl(),
     mainEntity: {
       "@type": "ItemList",
       itemListElement: items.map((item, index) => {
@@ -842,7 +877,7 @@ export function buildCollectionPageSchema({
         return {
           "@type": "ListItem",
           position: index + 1,
-          url: item.url,
+          url: normalizeSchemaUrl(item.url),
           name: item.name,
           ...(item.description ? { description: item.description } : {}),
           ...(itemImageUrl
@@ -890,7 +925,7 @@ export function buildImageGallerySchema({
     "@type": "ImageGallery",
     name,
     description: description || undefined,
-    url: url || getBaseUrl(),
+    url: url ? normalizeSchemaUrl(url) : getBaseUrl(),
     image: images.map((img) => {
       const cleanUrl = resolveSchemaImage(img.url);
       return {
@@ -901,7 +936,7 @@ export function buildImageGallerySchema({
         copyrightNotice: "IstanbulPortrait 2026",
         creator: { "@type": "Organization", name: "Istanbul Portrait" },
         creditText: "Istanbul Portrait",
-        acquireLicensePage: `${getBaseUrl()}/contact`,
+        acquireLicensePage: `${getBaseUrl()}/en/contact`,
       };
     }),
   };

@@ -21,12 +21,17 @@ export async function submitToIndexNow(urls: string[]): Promise<{
     const baseUrl = settings.app_base_url || getBaseUrl();
     const host = new URL(baseUrl).hostname;
 
-    // Normalize URLs to fully qualified absolute URLs
+    // Normalize URLs to fully qualified RFC 3986 percent-encoded absolute URLs
     const fullUrls = urls.map((url) => {
-      if (url.startsWith("http://") || url.startsWith("https://")) {
-        return url;
+      const full =
+        url.startsWith("http://") || url.startsWith("https://")
+          ? url
+          : `${baseUrl}${url.startsWith("/") ? "" : "/"}${url}`;
+      try {
+        return encodeURI(decodeURI(full));
+      } catch {
+        return encodeURI(full);
       }
-      return `${baseUrl}${url.startsWith("/") ? "" : "/"}${url}`;
     });
 
     const payload = {

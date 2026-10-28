@@ -11,6 +11,7 @@ import { getMessages } from "next-intl/server";
 import { CoreWebVitals } from "@/components/analytics/core-web-vitals";
 import { FacebookPixel } from "@/components/analytics/facebook-pixel";
 import { GclidTracker } from "@/components/analytics/gclid-tracker";
+import { GoogleAnalytics } from "@/components/analytics/google-analytics";
 import { InteractionLoader } from "@/components/analytics/interaction-loader";
 import { YandexMetrica } from "@/components/analytics/yandex-metrica";
 import { ConsentGate } from "@/components/consent-gate";
@@ -19,7 +20,6 @@ import "../globals.css";
 import type { Metadata } from "next";
 import dynamic from "next/dynamic";
 import { ThemeProvider } from "next-themes";
-import { Suspense } from "react";
 
 import { SchemaInjector } from "@/components/schema-injector";
 import { TopDiscountBanner } from "@/components/top-discount-banner";
@@ -56,17 +56,17 @@ const DeferredCookieConsent = dynamic(() =>
 
 const fontHeading = Playfair_Display({
   variable: "--font-heading",
-  subsets: ["latin"],
+  subsets: ["latin", "latin-ext", "cyrillic"],
 });
 
 const fontSans = Instrument_Sans({
   variable: "--font-sans",
-  subsets: ["latin"],
+  subsets: ["latin", "latin-ext"],
 });
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
-  subsets: ["latin"],
+  subsets: ["latin", "latin-ext"],
 });
 
 export const viewport = {
@@ -127,7 +127,7 @@ export async function generateMetadata({
     icons: {
       icon: settings.favicon_url || "/favicon.ico",
       shortcut: settings.favicon_url || "/favicon.ico",
-      apple: "/apple-touch-icon.png",
+      apple: settings.favicon_url || "/favicon.ico",
     },
   };
 }
@@ -242,7 +242,37 @@ export default async function LocaleLayout({
                 'security_storage': 'granted',
                 'wait_for_update': 500
               });
+              window.gtag('set', 'url_passthrough', true);
+              window.gtag('set', 'ads_data_redaction', ${isGranted === "granted" ? "false" : "true"});
+              window.gtag('set', 'allow_enhanced_conversions', true);
+              window.__GA_ID = ${JSON.stringify(settings.google_analytics_id || null)};
+              window.__GOOGLE_ADS_CONFIG = ${JSON.stringify({
+                conversionId: settings.google_ads_id || null,
+                purchaseLabel: settings.google_ads_purchase_label || null,
+                leadLabel: settings.google_ads_lead_label || null,
+                beginCheckoutLabel:
+                  settings.google_ads_begin_checkout_label || null,
+              })};
               ${analyticsUserId ? `window.gtag('set', 'user_id', ${JSON.stringify(analyticsUserId)});` : ""}
+              window.gtag('js', new Date());
+              ${settings.google_analytics_id ? `window.gtag('config', ${JSON.stringify(settings.google_analytics_id)});` : ""}
+              ${settings.google_ads_id && settings.google_ads_id !== settings.google_analytics_id ? `window.gtag('config', ${JSON.stringify(settings.google_ads_id)});` : ""}
+              ${
+                settings.facebook_pixel_id
+                  ? `
+              !function(f,b,e,v,n,t,s)
+              {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+              n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+              if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+              n.queue=[]}(window, document,'script',
+              'https://connect.facebook.net/en_US/fbevents.js');
+              window.fbq('consent', '${isGranted === "granted" ? "grant" : "revoke"}');
+              window.fbq('dataProcessingOptions', ['LDU'], 0, 0);
+              window.fbq('init', ${JSON.stringify(settings.facebook_pixel_id)});
+              window._fbqInitialized = true;
+              `
+                  : ""
+              }
             `,
           }}
         />
@@ -254,11 +284,20 @@ export default async function LocaleLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <ConsentProvider>
+          <ConsentProvider initialConsent={consentData?.consent ?? null}>
             <NextIntlClientProvider messages={messages} now={new Date()}>
               <CurrencyProvider rate={currentRate} currency={selectedCurrency}>
                 <TooltipProvider>
                   <div className="flex min-h-[100dvh] flex-col">
+                    {/* Critical Analytics — mounted before <main> so their useEffect hooks (cookies, PageView) execute before child page effects (ViewContent, Purchase) */}
+                    <GclidTracker />
+                    <GoogleAnalytics
+                      gaId={settings.google_analytics_id}
+                      googleAdsId={settings.google_ads_id}
+                      userId={analyticsUserId}
+                    />
+                    <FacebookPixel pixelId={settings.facebook_pixel_id} />
+
                     <TopDiscountBanner discounts={activeDiscounts} />
                     <Navigation
                       dynamicNavData={dynamicNavData}
@@ -266,13 +305,8 @@ export default async function LocaleLayout({
                     />
                     <main className="flex-1">{children}</main>
 
-                    {/* Critical Analytics — loaded immediately on client side to ensure accurate conversion tracking and Tag Assistant detection */}
-                    <GclidTracker />
-                    <FacebookPixel pixelId={settings.facebook_pixel_id} />
                     <DeferredAnalytics
-                      gaId={settings.google_analytics_id}
                       clarityId={settings.clarity_project_id}
-                      userId={analyticsUserId}
                     />
 
                     {/* Non-critical Analytics — deferred until first interaction to minimize main-thread work */}

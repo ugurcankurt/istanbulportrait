@@ -1,6 +1,6 @@
 import { CheckCircle, ChevronDown, Info, Star, X } from "lucide-react";
 import Image from "next/image";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -16,6 +16,7 @@ export function PackageReviews({
   aggregateRating,
 }: PackageReviewsProps) {
   const t = useTranslations("reviews");
+  const locale = useLocale();
   const [filterRating, setFilterRating] = useState<number | null>(null);
   const [visibleCount, setVisibleCount] = useState(10);
 
@@ -50,7 +51,18 @@ export function PackageReviews({
   const formatDate = (dateString: string) => {
     try {
       const date = new Date(dateString);
-      return date.toLocaleDateString("en-US", {
+      const localeMap: Record<string, string> = {
+        en: "en-US",
+        ar: "ar-SA",
+        ru: "ru-RU",
+        es: "es-ES",
+        zh: "zh-CN",
+        fr: "fr-FR",
+        de: "de-DE",
+        ro: "ro-RO",
+        tr: "tr-TR",
+      };
+      return date.toLocaleDateString(localeMap[locale] || "en-US", {
         month: "long",
         day: "numeric",
         year: "numeric",

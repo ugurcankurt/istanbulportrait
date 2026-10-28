@@ -62,6 +62,14 @@ export interface SiteSettings {
   behold_url: string | null;
 
   featurable_widget_id: string | null;
+
+  // Google Ads Conversion Tracking
+  google_ads_id: string | null;
+  google_ads_purchase_label: string | null;
+  google_ads_lead_label: string | null;
+  google_ads_begin_checkout_label: string | null;
+  google_ads_customer_id: string | null;
+  google_ads_webhook_key: string | null;
 }
 
 export const defaultSettings: SiteSettings = {
@@ -118,6 +126,13 @@ export const defaultSettings: SiteSettings = {
 
   featurable_widget_id: null,
   resend_audience_id: null,
+
+  google_ads_id: null,
+  google_ads_purchase_label: null,
+  google_ads_lead_label: null,
+  google_ads_begin_checkout_label: null,
+  google_ads_customer_id: null,
+  google_ads_webhook_key: null,
 };
 
 export const settingsService = {
@@ -125,125 +140,150 @@ export const settingsService = {
    * Fetch site settings from Supabase (runs on Server or Client).
    * Falls back to default settings if query fails or table is empty.
    */
-  getSettings: unstable_cache(async (): Promise<SiteSettings> => {
-    try {
-      const { data, error } = await supabase
-        .from("site_settings")
-        .select("*")
-        .eq("id", 1)
-        .single();
+  getSettings: unstable_cache(
+    async (): Promise<SiteSettings> => {
+      try {
+        const { data, error } = await supabase
+          .from("site_settings")
+          .select("*")
+          .eq("id", 1)
+          .single();
 
-      if (error) {
-        console.error("Error fetching site settings:", error);
+        if (error) {
+          console.error("Error fetching site settings:", error);
+          return defaultSettings;
+        }
+
+        if (!data) return defaultSettings;
+
+        const rawData = data as any;
+
+        // Merge fetched data with defaults to ensure all fields exist
+        return {
+          contact_email: rawData.contact_email || defaultSettings.contact_email,
+          contact_phone: rawData.contact_phone || defaultSettings.contact_phone,
+          whatsapp_number:
+            rawData.whatsapp_number || defaultSettings.whatsapp_number,
+          instagram_url: rawData.instagram_url || defaultSettings.instagram_url,
+          facebook_url: rawData.facebook_url || defaultSettings.facebook_url,
+          youtube_url: rawData.youtube_url || defaultSettings.youtube_url,
+          tiktok_url: rawData.tiktok_url || defaultSettings.tiktok_url,
+          logo_url: rawData.logo_url || defaultSettings.logo_url,
+          logo_dark_url: rawData.logo_dark_url || defaultSettings.logo_dark_url,
+          favicon_url: rawData.favicon_url || defaultSettings.favicon_url,
+          address:
+            (rawData.address as Record<string, string>) ||
+            defaultSettings.address,
+          working_hours:
+            (rawData.working_hours as Record<string, string>) ||
+            defaultSettings.working_hours,
+          google_analytics_id:
+            rawData.google_analytics_id || defaultSettings.google_analytics_id,
+          yandex_metrica_id:
+            rawData.yandex_metrica_id || defaultSettings.yandex_metrica_id,
+          resend_api_key:
+            rawData.resend_api_key || defaultSettings.resend_api_key,
+          resend_audience_id:
+            rawData.resend_audience_id || defaultSettings.resend_audience_id,
+          custom_head_scripts:
+            rawData.custom_head_scripts || defaultSettings.custom_head_scripts,
+          custom_body_scripts:
+            rawData.custom_body_scripts || defaultSettings.custom_body_scripts,
+          gemini_api_key:
+            rawData.gemini_api_key || defaultSettings.gemini_api_key,
+          site_name: rawData.site_name || defaultSettings.site_name,
+          site_description:
+            (rawData.site_description as Record<string, string>) ||
+            defaultSettings.site_description,
+
+          default_og_image_url:
+            rawData.default_og_image_url ||
+            defaultSettings.default_og_image_url,
+          organization_name:
+            rawData.organization_name || defaultSettings.organization_name,
+          organization_founding_date:
+            rawData.organization_founding_date ||
+            defaultSettings.organization_founding_date,
+          founder_name: rawData.founder_name || defaultSettings.founder_name,
+          founder_image_url:
+            rawData.founder_image_url || defaultSettings.founder_image_url,
+          ai_search_config:
+            (rawData.ai_search_config as Record<string, any>) ||
+            defaultSettings.ai_search_config,
+          theme_color: rawData.theme_color || defaultSettings.theme_color,
+          color_mode: rawData.color_mode || defaultSettings.color_mode,
+          city: rawData.city || defaultSettings.city,
+          country_code: rawData.country_code || defaultSettings.country_code,
+          latitude: rawData.latitude || defaultSettings.latitude,
+          longitude: rawData.longitude || defaultSettings.longitude,
+          opening_time: rawData.opening_time || defaultSettings.opening_time,
+          closing_time: rawData.closing_time || defaultSettings.closing_time,
+          working_days: rawData.working_days || defaultSettings.working_days,
+
+          facebook_pixel_id:
+            rawData.facebook_pixel_id || defaultSettings.facebook_pixel_id,
+          facebook_dataset_id:
+            rawData.facebook_dataset_id || defaultSettings.facebook_dataset_id,
+          facebook_access_token:
+            rawData.facebook_access_token ||
+            defaultSettings.facebook_access_token,
+          facebook_verify_token:
+            rawData.facebook_verify_token ||
+            defaultSettings.facebook_verify_token,
+
+          instagram_access_token:
+            rawData.instagram_access_token ||
+            defaultSettings.instagram_access_token,
+          instagram_account_id:
+            rawData.instagram_account_id ||
+            defaultSettings.instagram_account_id,
+
+          ga4_measurement_protocol_secret:
+            rawData.ga4_measurement_protocol_secret ||
+            defaultSettings.ga4_measurement_protocol_secret,
+          app_base_url: rawData.app_base_url || defaultSettings.app_base_url,
+          admin_email: rawData.admin_email || defaultSettings.admin_email,
+
+          clarity_project_id:
+            rawData.clarity_project_id || defaultSettings.clarity_project_id,
+          yandex_webmaster_key:
+            rawData.yandex_webmaster_key ||
+            defaultSettings.yandex_webmaster_key,
+          bing_webmaster_key:
+            rawData.bing_webmaster_key || defaultSettings.bing_webmaster_key,
+          indexnow_api_key:
+            rawData.indexnow_api_key || defaultSettings.indexnow_api_key,
+
+          behold_url: rawData.behold_url || defaultSettings.behold_url,
+
+          featurable_widget_id:
+            rawData.featurable_widget_id ||
+            defaultSettings.featurable_widget_id,
+
+          google_ads_id: rawData.google_ads_id || defaultSettings.google_ads_id,
+          google_ads_purchase_label:
+            rawData.google_ads_purchase_label ||
+            defaultSettings.google_ads_purchase_label,
+          google_ads_lead_label:
+            rawData.google_ads_lead_label ||
+            defaultSettings.google_ads_lead_label,
+          google_ads_begin_checkout_label:
+            rawData.google_ads_begin_checkout_label ||
+            defaultSettings.google_ads_begin_checkout_label,
+          google_ads_customer_id:
+            rawData.google_ads_customer_id ||
+            defaultSettings.google_ads_customer_id,
+          google_ads_webhook_key:
+            rawData.google_ads_webhook_key ||
+            defaultSettings.google_ads_webhook_key,
+        };
+      } catch (_e) {
         return defaultSettings;
       }
-
-      if (!data) return defaultSettings;
-
-      const rawData = data as any;
-
-      // Merge fetched data with defaults to ensure all fields exist
-      return {
-        contact_email: rawData.contact_email || defaultSettings.contact_email,
-        contact_phone: rawData.contact_phone || defaultSettings.contact_phone,
-        whatsapp_number:
-          rawData.whatsapp_number || defaultSettings.whatsapp_number,
-        instagram_url: rawData.instagram_url || defaultSettings.instagram_url,
-        facebook_url: rawData.facebook_url || defaultSettings.facebook_url,
-        youtube_url: rawData.youtube_url || defaultSettings.youtube_url,
-        tiktok_url: rawData.tiktok_url || defaultSettings.tiktok_url,
-        logo_url: rawData.logo_url || defaultSettings.logo_url,
-        logo_dark_url: rawData.logo_dark_url || defaultSettings.logo_dark_url,
-        favicon_url: rawData.favicon_url || defaultSettings.favicon_url,
-        address:
-          (rawData.address as Record<string, string>) ||
-          defaultSettings.address,
-        working_hours:
-          (rawData.working_hours as Record<string, string>) ||
-          defaultSettings.working_hours,
-        google_analytics_id:
-          rawData.google_analytics_id || defaultSettings.google_analytics_id,
-        yandex_metrica_id:
-          rawData.yandex_metrica_id || defaultSettings.yandex_metrica_id,
-        resend_api_key:
-          rawData.resend_api_key || defaultSettings.resend_api_key,
-        resend_audience_id:
-          rawData.resend_audience_id || defaultSettings.resend_audience_id,
-        custom_head_scripts:
-          rawData.custom_head_scripts || defaultSettings.custom_head_scripts,
-        custom_body_scripts:
-          rawData.custom_body_scripts || defaultSettings.custom_body_scripts,
-        gemini_api_key:
-          rawData.gemini_api_key || defaultSettings.gemini_api_key,
-        site_name: rawData.site_name || defaultSettings.site_name,
-        site_description:
-          (rawData.site_description as Record<string, string>) ||
-          defaultSettings.site_description,
-
-        default_og_image_url:
-          rawData.default_og_image_url || defaultSettings.default_og_image_url,
-        organization_name:
-          rawData.organization_name || defaultSettings.organization_name,
-        organization_founding_date:
-          rawData.organization_founding_date ||
-          defaultSettings.organization_founding_date,
-        founder_name: rawData.founder_name || defaultSettings.founder_name,
-        founder_image_url:
-          rawData.founder_image_url || defaultSettings.founder_image_url,
-        ai_search_config:
-          (rawData.ai_search_config as Record<string, any>) ||
-          defaultSettings.ai_search_config,
-        theme_color: rawData.theme_color || defaultSettings.theme_color,
-        color_mode: rawData.color_mode || defaultSettings.color_mode,
-        city: rawData.city || defaultSettings.city,
-        country_code: rawData.country_code || defaultSettings.country_code,
-        latitude: rawData.latitude || defaultSettings.latitude,
-        longitude: rawData.longitude || defaultSettings.longitude,
-        opening_time: rawData.opening_time || defaultSettings.opening_time,
-        closing_time: rawData.closing_time || defaultSettings.closing_time,
-        working_days: rawData.working_days || defaultSettings.working_days,
-
-        facebook_pixel_id:
-          rawData.facebook_pixel_id || defaultSettings.facebook_pixel_id,
-        facebook_dataset_id:
-          rawData.facebook_dataset_id || defaultSettings.facebook_dataset_id,
-        facebook_access_token:
-          rawData.facebook_access_token ||
-          defaultSettings.facebook_access_token,
-        facebook_verify_token:
-          rawData.facebook_verify_token ||
-          defaultSettings.facebook_verify_token,
-
-        instagram_access_token:
-          rawData.instagram_access_token ||
-          defaultSettings.instagram_access_token,
-        instagram_account_id:
-          rawData.instagram_account_id || defaultSettings.instagram_account_id,
-
-        ga4_measurement_protocol_secret:
-          rawData.ga4_measurement_protocol_secret ||
-          defaultSettings.ga4_measurement_protocol_secret,
-        app_base_url: rawData.app_base_url || defaultSettings.app_base_url,
-        admin_email: rawData.admin_email || defaultSettings.admin_email,
-
-        clarity_project_id:
-          rawData.clarity_project_id || defaultSettings.clarity_project_id,
-        yandex_webmaster_key:
-          rawData.yandex_webmaster_key || defaultSettings.yandex_webmaster_key,
-        bing_webmaster_key:
-          rawData.bing_webmaster_key || defaultSettings.bing_webmaster_key,
-        indexnow_api_key:
-          rawData.indexnow_api_key || defaultSettings.indexnow_api_key,
-
-        behold_url: rawData.behold_url || defaultSettings.behold_url,
-
-        featurable_widget_id:
-          rawData.featurable_widget_id || defaultSettings.featurable_widget_id,
-      };
-    } catch (_e) {
-      return defaultSettings;
-    }
-  }, ["site-settings"]),
+    },
+    ["site-settings"],
+    { tags: ["site-settings"], revalidate: 60 },
+  ),
 
   /**
    * Helper to resolve translatable fields explicitly.

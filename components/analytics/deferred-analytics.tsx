@@ -8,14 +8,6 @@ import dynamic from "next/dynamic";
  * inside Server Components (like layout.tsx).
  */
 
-const GoogleAnalytics = dynamic(
-  () =>
-    import("@/components/analytics/google-analytics").then(
-      (mod) => mod.GoogleAnalytics,
-    ),
-  { ssr: false },
-);
-
 const MicrosoftClarity = dynamic(
   () =>
     import("@/components/analytics/microsoft-clarity").then(
@@ -33,20 +25,11 @@ const MultilingualCookieConsent = dynamic(
 );
 
 export function DeferredAnalytics({
-  gaId,
   clarityId,
-  userId,
 }: {
-  gaId?: string | null;
   clarityId?: string | null;
-  userId?: string | null;
 }) {
-  return (
-    <>
-      {gaId && <GoogleAnalytics gaId={gaId} userId={userId} />}
-      {clarityId && <MicrosoftClarity clarityId={clarityId} />}
-    </>
-  );
+  return <>{clarityId && <MicrosoftClarity clarityId={clarityId} />}</>;
 }
 
 export function DeferredCookieConsent() {

@@ -1,6 +1,7 @@
 "use client";
 
 import { ArrowRight } from "lucide-react";
+import { useLocale } from "next-intl";
 import { useEffect, useState } from "react";
 import {
   type LastVisited,
@@ -29,8 +30,21 @@ export function HeroClientWrapper({
   packagesHref,
   locationsHref,
 }: HeroClientWrapperProps) {
+  const locale = useLocale();
   const [visitedPackages, setVisitedPackages] = useState<LastVisited[]>([]);
   const [hasVisited, setHasVisited] = useState(false);
+
+  const normalizeIntlHref = (href: string | undefined, fallback: string) => {
+    if (!href) return fallback;
+    const prefix = `/${locale}/`;
+    if (href.startsWith(prefix)) {
+      return `/${href.slice(prefix.length)}`;
+    }
+    return href.startsWith("/") ? href : `/${href}`;
+  };
+
+  const resolvedPackagesHref = normalizeIntlHref(packagesHref, "/packages");
+  const resolvedLocationsHref = normalizeIntlHref(locationsHref, "/locations");
 
   useEffect(() => {
     const stored = localStorage.getItem("visited_packages");
@@ -72,7 +86,7 @@ export function HeroClientWrapper({
             nativeButton={false}
             render={
               <Link
-                href={(packagesHref || "/packages") as any}
+                href={resolvedPackagesHref as any}
                 prefetch={true}
                 className="flex items-center justify-center gap-2"
               >
@@ -88,10 +102,7 @@ export function HeroClientWrapper({
           <Button
             nativeButton={false}
             render={
-              <Link
-                href={(locationsHref || "/locations") as any}
-                prefetch={true}
-              >
+              <Link href={resolvedLocationsHref as any} prefetch={true}>
                 {checkLocationsButtonText}
               </Link>
             }
@@ -111,6 +122,7 @@ export function HeroClientWrapper({
             withContainer={false}
             isMainTitle={false}
             activeDiscounts={activeDiscounts}
+            packagesHref={resolvedPackagesHref}
           />
         </div>
       )}

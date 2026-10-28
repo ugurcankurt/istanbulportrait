@@ -55,7 +55,18 @@ export function ReviewsClient({
   const formatDate = (dateString: string) => {
     try {
       const date = new Date(dateString);
-      return date.toLocaleDateString("en-US", {
+      const localeMap: Record<string, string> = {
+        en: "en-US",
+        ar: "ar-SA",
+        ru: "ru-RU",
+        es: "es-ES",
+        zh: "zh-CN",
+        fr: "fr-FR",
+        de: "de-DE",
+        ro: "ro-RO",
+        tr: "tr-TR",
+      };
+      return date.toLocaleDateString(localeMap[locale] || "en-US", {
         month: "long",
         year: "numeric",
       });

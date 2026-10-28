@@ -13,6 +13,7 @@ import {
   buildServiceSchema,
   generateSeoDescription,
   getBaseUrl,
+  resolveSchemaImage,
 } from "@/lib/seo-utils";
 
 // Package Detail Modular Component
@@ -58,6 +59,28 @@ export async function PackageDetailPageContent({
     ? generateNativeSlug(localPkgTitle) || pkg.slug
     : pkg.slug;
 
+  const now = new Date();
+  now.setHours(12, 0, 0, 0);
+  const validDiscounts = (activeDiscounts || [])
+    .filter((d) => {
+      if (!d.is_active) return false;
+      if (d.start_date) {
+        const s = new Date(d.start_date);
+        s.setHours(0, 0, 0, 0);
+        if (now.getTime() < s.getTime()) return false;
+      }
+      if (d.end_date) {
+        const e = new Date(d.end_date);
+        e.setHours(23, 59, 59, 999);
+        if (now.getTime() > e.getTime()) return false;
+      }
+      return true;
+    })
+    .sort(
+      (a, b) => Number(b.discount_percentage) - Number(a.discount_percentage),
+    );
+  const currentDiscount = validDiscounts.length > 0 ? validDiscounts[0] : null;
+
   const serviceSchema = buildServiceSchema({
     name: title,
     description: generateSeoDescription(desc),
@@ -68,8 +91,7 @@ export async function PackageDetailPageContent({
     reviewCount: aggregateRating.count || 1,
     providerName: settings.organization_name || settings.site_name,
     providerUrl: getBaseUrl(),
-    discount:
-      activeDiscounts && activeDiscounts.length > 0 ? activeDiscounts[0] : null,
+    discount: currentDiscount,
     reviews: reviews,
     url: encodeURI(
       `${getBaseUrl()}/${locale}/${parentSegment}/${canonicalPackageSegment}`,
@@ -82,11 +104,12 @@ export async function PackageDetailPageContent({
         "@type": "VideoObject",
         name: `${title} - Video`,
         description: generateSeoDescription(desc),
-        thumbnailUrl:
+        thumbnailUrl: resolveSchemaImage(
           pkg.gallery_images?.[0] ||
-          pkg.cover_image ||
-          settings.default_og_image_url ||
-          "",
+            pkg.cover_image ||
+            settings.default_og_image_url ||
+            "",
+        ),
         uploadDate:
           pkg.created_at || pkg.updated_at || new Date().toISOString(),
         duration: "PT59S",

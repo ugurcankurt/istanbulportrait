@@ -13,15 +13,19 @@ export async function generateMetadata({
 }) {
   const { locale } = await params;
 
+  const { getTranslations } = await import("next-intl/server");
   const { settingsService } = await import("@/lib/settings-service");
-  const settings = await settingsService.getSettings();
+  const [settings, t] = await Promise.all([
+    settingsService.getSettings(),
+    getTranslations({ locale, namespace: "checkout" }),
+  ]);
 
   const baseUrl = settings.app_base_url || "https://istanbulportrait.com";
   const paths = getLocalizedPaths("/checkout", baseUrl);
 
   return {
-    title: "Secure Checkout | Istanbul Portrait",
-    description: "Secure checkout page for your Istanbul photography booking.",
+    title: t("title"),
+    description: t("description"),
     alternates: {
       canonical: paths.canonical(locale),
       languages: paths.languages,

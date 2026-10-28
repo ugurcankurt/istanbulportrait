@@ -168,31 +168,11 @@ export function FacebookPixel({ pixelId }: { pixelId?: string | null }) {
 
   return (
     <>
-      {/* Facebook Pixel Base Code */}
-      {/* Loads on all pages. Default consent is 'revoke' until user accepts. */}
+      {/* Facebook Pixel Base Script — fbq queue & init are bootstrapped in layout.tsx beforeInteractive */}
       <Script
         id="facebook-pixel"
-        strategy="lazyOnload"
-        // biome-ignore lint/security/noDangerouslySetInnerHtml: Facebook Pixel requires inline script
-        dangerouslySetInnerHTML={{
-          __html: `
-            !function(f,b,e,v,n,t,s)
-            {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-            n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-            if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-            n.queue=[];t=b.createElement(e);t.async=!0;
-            t.src=v;s=b.getElementsByTagName(e)[0];
-            s.parentNode.insertBefore(t,s)}(window, document,'script',
-            'https://connect.facebook.net/en_US/fbevents.js');
-
-            // Meta Consent Mode — default: revoked (GDPR / ePrivacy compliant)
-            // fbq('consent', 'grant') will be called by React after user accepts
-            fbq('consent', 'revoke');
-
-            // CCPA Compliance: Limited Data Use (LDU) for California
-            fbq('dataProcessingOptions', ['LDU'], 0, 0);
-          `,
-        }}
+        src="https://connect.facebook.net/en_US/fbevents.js"
+        strategy="afterInteractive"
       />
 
       {/* Facebook Pixel NoScript Fallback */}

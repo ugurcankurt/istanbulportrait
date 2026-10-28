@@ -314,9 +314,10 @@ export function formatBlogDate(
     fr: "fr-FR",
     de: "de-DE",
     ro: "ro-RO",
+    tr: "tr-TR",
   };
 
-  return dateObj.toLocaleDateString(localeMap[locale], {
+  return dateObj.toLocaleDateString(localeMap[locale] || "en-US", {
     year: "numeric",
     month: "long",
     day: "numeric",

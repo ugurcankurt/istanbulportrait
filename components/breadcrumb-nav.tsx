@@ -39,7 +39,68 @@ export function BreadcrumbNav(props: BreadcrumbNavProps) {
 
   // Create reverse mapping from localized paths to translation keys
   const createPathToKeyMapping = () => {
-    const pathToKey: Record<string, string> = {};
+    const pathToKey: Record<string, string> = {
+      // Dynamic CMS parent segments across all 9 supported locales
+      packages: "packages",
+      paketler: "packages",
+      pakete: "packages",
+      forfaits: "packages",
+      paquetes: "packages",
+      pachete: "packages",
+      пакеты: "packages",
+      الباقات: "packages",
+      套餐: "packages",
+      locations: "locations",
+      lokasyonlar: "locations",
+      standorte: "locations",
+      lieux: "locations",
+      ubicaciones: "locations",
+      locații: "locations",
+      locatii: "locations",
+      локации: "locations",
+      المواقع: "locations",
+      地点: "locations",
+      blog: "blog",
+      блог: "blog",
+      المدونة: "blog",
+      مدونة: "blog",
+      博客: "blog",
+      about: "about",
+      hakkımızda: "about",
+      hakkimizda: "about",
+      "über-uns": "about",
+      "uber-uns": "about",
+      "à-propos": "about",
+      "a-propos": "about",
+      "sobre-nosotros": "about",
+      "despre-noi": "about",
+      "о-нас": "about",
+      "من-نحن": "about",
+      关于我们: "about",
+      contact: "contact",
+      iletişim: "contact",
+      iletisim: "contact",
+      kontakt: "contact",
+      contacto: "contact",
+      контакты: "contact",
+      "اتصل-بنا": "contact",
+      联系我们: "contact",
+      privacy: "privacy",
+      "privacy-policy": "privacy",
+      "gizlilik-politikası": "privacy",
+      "gizlilik-politikasi": "privacy",
+      datenschutzerklärung: "privacy",
+      datenschutz: "privacy",
+      "política-de-privacidad": "privacy",
+      "politica-de-privacidad": "privacy",
+      "politique-de-confidentialité": "privacy",
+      "politique-de-confidentialite": "privacy",
+      "politica-de-confidențialitate": "privacy",
+      "politica-de-confidentialitate": "privacy",
+      "политика-конфиденциальности": "privacy",
+      "سياسة-الخصوصية": "privacy",
+      隐私政策: "privacy",
+    };
     const pathnames = routing.pathnames as Record<string, any>;
 
     Object.entries(pathnames).forEach(([key, value]) => {
@@ -63,13 +124,14 @@ export function BreadcrumbNav(props: BreadcrumbNavProps) {
 
   // Helper function to format unknown segments
   const formatSegment = (segment: string): string => {
+    const cleaned = segment.replace(/-/g, " ").trim();
     // For non-ASCII characters, try to keep them as-is but clean up
-    if (/[^\x00-\x7F]/.test(segment)) {
+    if (/[^\x00-\x7F]/.test(cleaned)) {
       // Contains non-ASCII characters (Cyrillic, Arabic, etc.)
-      return segment;
+      return cleaned;
     }
     // For ASCII, capitalize first letter
-    return segment.charAt(0).toUpperCase() + segment.slice(1);
+    return cleaned.charAt(0).toUpperCase() + cleaned.slice(1);
   };
 
   // Generate breadcrumb items based on path

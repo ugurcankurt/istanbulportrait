@@ -107,13 +107,22 @@ export function Navigation({ dynamicNavData = {}, settings }: NavigationProps) {
   ];
 
   const handleLocaleChange = (newLocale: string) => {
-    // Handle locale change by refreshing with new locale
-    // For dynamic routes, use window.location to preserve params
-    if (pathname.includes("[")) {
-      window.location.href = `/${newLocale}${window.location.pathname.replace(/^\/[a-z]{2}/, "")}`;
-    } else {
-      router.push(pathname as any, { locale: newLocale });
+    // Prefer canonical localized URL from <link rel="alternate" hreflang="..."> in <head>
+    // so dynamic localized slugs (packages, locations, blog posts, core pages) resolve directly without 308 redirect hops.
+    if (typeof document !== "undefined") {
+      const alternateLink = document
+        .querySelector(`link[rel="alternate"][hreflang="${newLocale}"]`)
+        ?.getAttribute("href");
+      if (alternateLink) {
+        try {
+          const targetUrl = new URL(alternateLink, window.location.origin);
+          window.location.href = `${targetUrl.pathname}${window.location.search}`;
+          return;
+        } catch {}
+      }
     }
+
+    router.push(pathname as any, { locale: newLocale });
   };
 
   const [isLangOpen, setIsLangOpen] = useState(false);
@@ -253,18 +262,17 @@ export function Navigation({ dynamicNavData = {}, settings }: NavigationProps) {
               <DialogHeader>
                 <DialogTitle className="text-center sm:text-left flex items-center gap-2">
                   <Globe className="h-4 w-4" />
-                  Language & Currency
+                  {t("selectLanguage")}
                 </DialogTitle>
                 <DialogDescription className="text-center sm:text-left">
-                  Choose your preferred language and currency to explore
-                  Istanbul Portrait.
+                  {t("selectLanguageDescription")}
                 </DialogDescription>
               </DialogHeader>
 
               <div className="space-y-6 pt-4">
                 <div>
                   <h4 className="text-sm font-semibold mb-3 text-muted-foreground uppercase tracking-wider">
-                    Language
+                    {t("selectLanguage")}
                   </h4>
                   <div className="grid grid-cols-2 gap-2">
                     {locales.map((loc) => (
@@ -304,13 +312,7 @@ export function Navigation({ dynamicNavData = {}, settings }: NavigationProps) {
                       { code: "CNY", symbol: "¥" },
                       { code: "RUB", symbol: "₽" },
                     ].map((curr) => {
-                      const currentCurrency =
-                        typeof document !== "undefined"
-                          ? document.cookie.replace(
-                              /(?:(?:^|.*;\s*)NEXT_CURRENCY\s*=\s*([^;]*).*$)|^.*$/,
-                              "$1",
-                            ) || "EUR"
-                          : "EUR";
+                      const currentCurrency = currency || "EUR";
                       return (
                         <Button
                           key={curr.code}

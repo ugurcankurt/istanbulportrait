@@ -846,8 +846,10 @@ export default function SettingsPage() {
         {/* Miscellaneous Integrations */}
         <Card className="lg:col-span-2">
           <CardHeader>
-            <CardTitle>Other Integrations</CardTitle>
-            <CardDescription>Featurable, Google Ads.</CardDescription>
+            <CardTitle>Other Integrations & Google Ads</CardTitle>
+            <CardDescription>
+              Featurable, Instagram Feed, and Google Ads Conversion Labels.
+            </CardDescription>
           </CardHeader>
           <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
@@ -866,6 +868,63 @@ export default function SettingsPage() {
                   updateSetting("featurable_widget_id", e.target.value)
                 }
                 placeholder="ce9..."
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>Google Ads Tag ID (Conversion ID)</Label>
+              <Input
+                value={settings.google_ads_id || ""}
+                onChange={(e) =>
+                  updateSetting("google_ads_id", e.target.value.trim())
+                }
+                placeholder="AW-1007335227"
+              />
+              <p className="text-xs text-muted-foreground">
+                Must start with AW- (e.g. AW-1007335227) for conversion
+                tracking.
+              </p>
+            </div>
+            <div className="space-y-2">
+              <Label>Google Ads Customer ID</Label>
+              <Input
+                value={settings.google_ads_customer_id || ""}
+                onChange={(e) =>
+                  updateSetting("google_ads_customer_id", e.target.value)
+                }
+                placeholder="665-014-2504"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>Google Ads Purchase Conversion Label</Label>
+              <Input
+                value={settings.google_ads_purchase_label || ""}
+                onChange={(e) =>
+                  updateSetting("google_ads_purchase_label", e.target.value)
+                }
+                placeholder="ZK4UCPjl-YIdELvuquAD"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>Google Ads Lead Conversion Label</Label>
+              <Input
+                value={settings.google_ads_lead_label || ""}
+                onChange={(e) =>
+                  updateSetting("google_ads_lead_label", e.target.value)
+                }
+                placeholder="4POQCKTq3oEdELvuquAD"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>Google Ads Begin Checkout Conversion Label</Label>
+              <Input
+                value={settings.google_ads_begin_checkout_label || ""}
+                onChange={(e) =>
+                  updateSetting(
+                    "google_ads_begin_checkout_label",
+                    e.target.value,
+                  )
+                }
+                placeholder="Z6sfCJew3YEdELvuquAD"
               />
             </div>
           </CardContent>

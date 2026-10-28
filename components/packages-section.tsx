@@ -84,19 +84,20 @@ export function PackagesSection({
 
   // Track view_item_list (GA4 funnel step 1)
   useEffect(() => {
-    // GA4 Enhanced Ecommerce — view_item_list
+    if (sortedPackages.length === 0) return;
+    // GA4 Enhanced Ecommerce — view_item_list (use canonical dbSlug for cross-locale funnel consistency)
     trackViewItemList(
       sortedPackages.map((pkg) => ({
-        id: pkg.id,
+        id: pkg.dbSlug || pkg.id,
         name: pkg.name,
         price: pkg.pricing.price,
       })),
     );
-  }, [sortedPackages.map]);
+  }, [sortedPackages]);
 
   const handlePackageClick = (pkg: any) => {
     trackSelectItem({
-      id: pkg.id,
+      id: pkg.dbSlug || pkg.id,
       name: pkg.name,
       price: pkg.pricing.price,
     });

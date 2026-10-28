@@ -3,7 +3,7 @@ import { routing } from "@/i18n/routing";
 import { locationsService } from "@/lib/locations-service";
 import { packagesService } from "@/lib/packages-service";
 import { pagesContentService } from "@/lib/pages-content-service";
-import { getBaseUrl } from "@/lib/seo-utils";
+import { generateSeoDescription, getBaseUrl } from "@/lib/seo-utils";
 import { generateNativeSlug } from "@/lib/slug-generator";
 
 export const dynamic = "force-dynamic";
@@ -119,8 +119,16 @@ export default async function sitemap({
     });
 
     // 3. Core Dynamic Pages from PagesContentService
+    const supportedCoreSlugs = new Set([
+      "about",
+      "packages",
+      "locations",
+      "blog",
+      "contact",
+      "privacy",
+    ]);
     const activeCorePages = corePages.filter(
-      (p) => p.is_active && !p.slug.includes("home-"),
+      (p) => p.is_active && supportedCoreSlugs.has(p.slug),
     );
 
     for (const page of activeCorePages) {
@@ -193,9 +201,10 @@ export default async function sitemap({
               ),
               thumbnail_loc: cleanThumb,
               description: escapeXml(
-                pkg.description?.[locale] ||
-                  pkg.description?.en ||
-                  "Package Video",
+                generateSeoDescription(
+                  pkg.description?.[locale] || pkg.description?.en,
+                  300,
+                ) || "Package Video",
               ),
               ...(playerLoc ? { player_loc: playerLoc } : {}),
               ...(contentLoc ? { content_loc: contentLoc } : {}),

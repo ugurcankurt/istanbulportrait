@@ -1,6 +1,27 @@
 /**
  * Package display names (for GA4 item_name standardization)
  */
+import { parsePhoneNumber } from "libphonenumber-js/min";
+
+function getGoogleAdsSendTo(
+  type: "purchase" | "lead" | "begin_checkout",
+): string | null {
+  const cfg =
+    typeof window !== "undefined"
+      ? (window as any).__GOOGLE_ADS_CONFIG
+      : undefined;
+  const conversionId = cfg?.conversionId;
+  if (!conversionId) return null;
+
+  const label =
+    type === "purchase"
+      ? cfg?.purchaseLabel
+      : type === "lead"
+        ? cfg?.leadLabel
+        : cfg?.beginCheckoutLabel;
+
+  return label ? `${conversionId}/${label}` : conversionId;
+}
 
 export interface AnalyticsUserData {
   email?: string;
@@ -64,7 +85,10 @@ export function getUserDataForAdvancedMatching():
  */
 export function generateEventId(): string {
   try {
-    if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
+    if (
+      typeof crypto !== "undefined" &&
+      typeof crypto.randomUUID === "function"
+    ) {
       return crypto.randomUUID();
     }
     if (typeof crypto !== "undefined" && crypto.getRandomValues) {
@@ -89,8 +113,7 @@ export function getExternalId(): string | undefined {
   try {
     let extId = localStorage.getItem(EXT_ID_STORAGE_KEY);
     if (!extId) {
-      extId =
-        generateEventId();
+      extId = generateEventId();
       localStorage.setItem(EXT_ID_STORAGE_KEY, extId);
     }
     return extId;
@@ -144,7 +167,7 @@ export function getValidFbp(): string | undefined {
     date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
     document.cookie = `_fbp=${newFbp};expires=${date.toUTCString()};path=/;SameSite=Lax`;
   }
-  
+
   return newFbp;
 }
 
@@ -233,12 +256,24 @@ export function normalizeAnalyticsUserData(
   if (normalizedPhone && !normalizedPhone.startsWith("+")) {
     normalizedPhone = `+${normalizedPhone}`;
   }
+  let resolvedCountry = userData.country?.trim().toUpperCase();
+  if (!resolvedCountry && normalizedPhone) {
+    try {
+      const parsed = parsePhoneNumber(normalizedPhone);
+      if (parsed?.country) {
+        resolvedCountry = parsed.country;
+      }
+    } catch {
+      // ignore invalid phone format
+    }
+  }
   return {
     ...userData,
     email: normalizedEmail,
     phone: normalizedPhone,
     firstName: userData.firstName ? userData.firstName.trim() : undefined,
     lastName: userData.lastName ? userData.lastName.trim() : undefined,
+    country: resolvedCountry,
   };
 }
 
@@ -275,16 +310,17 @@ export function trackPurchase(
       if (
         normalized?.firstName ||
         normalized?.lastName ||
-        userData.city ||
-        userData.country
+        normalized?.city ||
+        normalized?.country
       ) {
         userDataObj.address = {};
         if (normalized?.firstName)
           userDataObj.address.first_name = normalized.firstName;
         if (normalized?.lastName)
           userDataObj.address.last_name = normalized.lastName;
-        if (userData.city) userDataObj.address.city = userData.city;
-        if (userData.country) userDataObj.address.country = userData.country;
+        if (normalized?.city) userDataObj.address.city = normalized.city;
+        if (normalized?.country)
+          userDataObj.address.country = normalized.country;
       }
 
       if (Object.keys(userDataObj).length > 0) {
@@ -308,24 +344,30 @@ export function trackPurchase(
       ],
     });
 
-    // Google Ads — Explicit Purchase Conversion
-    window.gtag("event", "conversion", {
-      send_to: "AW-1007335227",
-      value: value,
-      currency: currency,
-      transaction_id: transactionId,
-    });
+    // Google Ads — Explicit Purchase Conversion (with Conversion Label from Supabase site_settings)
+    const purchaseSendTo = getGoogleAdsSendTo("purchase");
+    if (purchaseSendTo) {
+      window.gtag("event", "conversion", {
+        send_to: purchaseSendTo,
+        value: value,
+        currency: currency,
+        transaction_id: transactionId,
+      });
+    }
   }
 
   // Force transactionId as the deduplication key for Purchase events per Meta best practices
   const resolvedEventId = transactionId || eventId;
 
-  // Track Facebook Purchase (client-side)
+  // Track Facebook Purchase (client-side Pixel).
+  // Note: Server-side CAPI Purchase is already dispatched by /api/booking/create-confirmed
+  // with full server context (IP, User-Agent, cookies, and event_id = booking.id).
   trackFacebookEvent(
     "Purchase",
     {
       content_ids: [packageId],
       content_name: stdPackageName,
+      content_type: "product",
       value: value,
       currency: currency,
       transaction_id: transactionId,
@@ -334,38 +376,6 @@ export function trackPurchase(
     },
     resolvedEventId,
   );
-
-  // Facebook CAPI — Purchase (server-side)
-  if (typeof window !== "undefined") {
-    const resolvedUserData = userData || getUserDataForAdvancedMatching();
-    fetch("/api/facebook/conversions", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        event_name: "Purchase",
-        event_id: resolvedEventId,
-        package_id: packageId,
-        amount: value,
-        transaction_id: transactionId,
-        customer_email: resolvedUserData?.email,
-        customer_phone: resolvedUserData?.phone,
-        first_name: resolvedUserData?.firstName,
-        last_name: resolvedUserData?.lastName,
-        city: resolvedUserData?.city,
-        country: resolvedUserData?.country,
-        custom_data: {
-          content_name: packageName,
-          currency: currency,
-          yield_category: yieldCategory,
-          checkin_date: bookingDate,
-        },
-        event_source_url: window.location.href,
-        external_id: getExternalId(),
-        fbc: getValidFbc(),
-        fbp: getValidFbp(),
-      }),
-    }).catch(() => {});
-  }
 }
 
 // Track Facebook events
@@ -395,12 +405,12 @@ export function trackViewItem(
   const stdPackageName = itemName;
 
   // Use provided data or fall back to persisted data
-  const userData = providedUserData || getUserDataForAdvancedMatching();
+  const userData = normalizeAnalyticsUserData(
+    providedUserData || getUserDataForAdvancedMatching(),
+  );
 
   // Generate event_id for Pixel/CAPI deduplication if not provided
-  const resolvedEventId =
-    eventId ||
-    (generateEventId());
+  const resolvedEventId = eventId || generateEventId();
 
   if (typeof window !== "undefined" && window.gtag) {
     window.gtag("event", "view_item", {
@@ -475,6 +485,7 @@ export function trackBeginCheckout(
   bookingDate?: string,
 ) {
   const stdPackageName = packageName;
+  const resolvedEventId = eventId || generateEventId();
 
   if (typeof window !== "undefined" && window.gtag) {
     window.gtag("event", "begin_checkout", {
@@ -490,6 +501,16 @@ export function trackBeginCheckout(
         },
       ],
     });
+
+    // Google Ads — Explicit Begin Checkout Conversion (with Conversion Label from Supabase site_settings)
+    const checkoutSendTo = getGoogleAdsSendTo("begin_checkout");
+    if (checkoutSendTo) {
+      window.gtag("event", "conversion", {
+        send_to: checkoutSendTo,
+        value: value,
+        currency: currency,
+      });
+    }
   }
 
   // Facebook Pixel — InitiateCheckout (client-side)
@@ -504,25 +525,28 @@ export function trackBeginCheckout(
       yield_category: yieldCategory,
       checkin_date: bookingDate,
     },
-    eventId,
+    resolvedEventId,
   );
 
   // Facebook CAPI — InitiateCheckout (server-side, Safari-proof)
   // Fire-and-forget via our existing /api/facebook/conversions endpoint
   if (typeof window !== "undefined") {
-    const userData = getUserDataForAdvancedMatching();
+    const userData = normalizeAnalyticsUserData(
+      getUserDataForAdvancedMatching(),
+    );
     fetch("/api/facebook/conversions", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         event_name: "InitiateCheckout",
-        event_id: eventId,
+        event_id: resolvedEventId,
         package_id: packageId,
         amount: value,
         customer_email: userData?.email,
         customer_phone: userData?.phone,
         first_name: userData?.firstName,
         last_name: userData?.lastName,
+        country: userData?.country,
         custom_data: {
           content_name: stdPackageName,
           yield_category: yieldCategory,
@@ -551,9 +575,7 @@ export function trackAddPaymentInfo(
   const stdPackageName = packageName;
 
   // Generate event_id for Pixel/CAPI deduplication if not provided
-  const resolvedEventId =
-    eventId ||
-    (generateEventId());
+  const resolvedEventId = eventId || generateEventId();
 
   if (typeof window !== "undefined" && window.gtag) {
     window.gtag("event", "add_payment_info", {
@@ -590,7 +612,9 @@ export function trackAddPaymentInfo(
 
   // Facebook CAPI — AddPaymentInfo (server-side, Safari-proof)
   if (typeof window !== "undefined") {
-    const userData = getUserDataForAdvancedMatching();
+    const userData = normalizeAnalyticsUserData(
+      getUserDataForAdvancedMatching(),
+    );
     fetch("/api/facebook/conversions", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -603,6 +627,7 @@ export function trackAddPaymentInfo(
         customer_phone: userData?.phone,
         first_name: userData?.firstName,
         last_name: userData?.lastName,
+        country: userData?.country,
         custom_data: {
           content_name: stdPackageName,
           payment_type: paymentType,
@@ -628,25 +653,26 @@ export function trackLead(
 ) {
   const stdPackageName = packageName;
 
-  const resolvedEventId =
-    eventId ||
-    (generateEventId());
+  const resolvedEventId = eventId || generateEventId();
+  const userData =
+    typeof window !== "undefined"
+      ? normalizeAnalyticsUserData(getUserDataForAdvancedMatching())
+      : undefined;
 
   if (typeof window !== "undefined" && window.gtag) {
     // Lead Enhanced Conversions for Google Ads 2026
-    const rawUserData = getUserDataForAdvancedMatching();
-    const userData = normalizeAnalyticsUserData(rawUserData);
     if (userData) {
       const userDataObj: any = {};
       if (userData.email) userDataObj.email = userData.email;
       if (userData.phone) userDataObj.phone_number = userData.phone;
 
-      if (userData.firstName || userData.lastName) {
+      if (userData.firstName || userData.lastName || userData.country) {
         userDataObj.address = {};
         if (userData.firstName)
           userDataObj.address.first_name = userData.firstName;
         if (userData.lastName)
           userDataObj.address.last_name = userData.lastName;
+        if (userData.country) userDataObj.address.country = userData.country;
       }
 
       if (Object.keys(userDataObj).length > 0) {
@@ -668,21 +694,28 @@ export function trackLead(
       ],
     });
 
-    // Google Ads — Explicit Lead Conversion
-    window.gtag("event", "conversion", {
-      send_to: "AW-1007335227",
-      value: value || 0,
-      currency: currency,
-    });
+    // Google Ads — Explicit Lead Conversion (with Conversion Label from Supabase site_settings)
+    const leadSendTo = getGoogleAdsSendTo("lead");
+    if (leadSendTo) {
+      window.gtag("event", "conversion", {
+        send_to: leadSendTo,
+        value: value || 0,
+        currency: currency,
+      });
+    }
   }
+
+  const isCatalogProduct =
+    Boolean(packageId) && packageId !== "general" && packageId !== "newsletter";
 
   // Facebook Pixel — Lead
   trackFacebookEvent(
     "Lead",
     {
-      content_ids: [packageId],
+      ...(isCatalogProduct
+        ? { content_ids: [packageId], content_type: "product" }
+        : {}),
       content_name: stdPackageName,
-      content_type: "product",
       value: value,
       currency: currency,
       yield_category: yieldCategory,
@@ -692,7 +725,6 @@ export function trackLead(
 
   // Facebook CAPI — Lead (server-side, Safari-proof)
   if (typeof window !== "undefined") {
-    const userData = getUserDataForAdvancedMatching();
     fetch("/api/facebook/conversions", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -705,6 +737,7 @@ export function trackLead(
         customer_phone: userData?.phone,
         first_name: userData?.firstName,
         last_name: userData?.lastName,
+        country: userData?.country,
         custom_data: {
           content_name: stdPackageName,
           currency: currency,
@@ -728,9 +761,7 @@ export function trackSchedule(
 ) {
   const stdPackageName = packageName;
 
-  const resolvedEventId =
-    eventId ||
-    (generateEventId());
+  const resolvedEventId = eventId || generateEventId();
 
   if (typeof window !== "undefined" && window.gtag) {
     window.gtag("event", "schedule", {
@@ -756,7 +787,9 @@ export function trackSchedule(
 
   // Facebook CAPI — Schedule
   if (typeof window !== "undefined") {
-    const userData = getUserDataForAdvancedMatching();
+    const userData = normalizeAnalyticsUserData(
+      getUserDataForAdvancedMatching(),
+    );
     fetch("/api/facebook/conversions", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -791,8 +824,7 @@ export function trackSchedule(
 }
 
 export function trackContact(method: string) {
-  const eventId =
-    generateEventId();
+  const eventId = generateEventId();
 
   // Facebook Pixel — Contact
   if (typeof window !== "undefined" && window.fbq) {
@@ -833,6 +865,7 @@ export function trackContact(method: string) {
         customer_phone: userData?.phone,
         first_name: userData?.firstName,
         last_name: userData?.lastName,
+        country: userData?.country,
         custom_data: { contact_method: method, currency: "EUR" },
         event_source_url: window.location.href,
         external_id: getExternalId(),
@@ -905,9 +938,7 @@ export function trackPackageAddToCart(
   eventId?: string,
   yieldCategory?: string,
 ) {
-  const resolvedEventId =
-    eventId ||
-    (generateEventId());
+  const resolvedEventId = eventId || generateEventId();
 
   if (typeof window !== "undefined" && window.gtag) {
     window.gtag("event", "add_to_cart", {
@@ -944,7 +975,9 @@ export function trackPackageAddToCart(
 
   // Facebook CAPI — AddToCart
   if (typeof window !== "undefined") {
-    const userData = getUserDataForAdvancedMatching();
+    const userData = normalizeAnalyticsUserData(
+      getUserDataForAdvancedMatching(),
+    );
     fetch("/api/facebook/conversions", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -987,9 +1020,7 @@ export function trackPrintViewItem(
   currency: string = "EUR",
   eventId?: string,
 ) {
-  const resolvedEventId =
-    eventId ||
-    (generateEventId());
+  const resolvedEventId = eventId || generateEventId();
 
   if (typeof window !== "undefined" && window.gtag) {
     window.gtag("event", "view_item", {
@@ -1057,9 +1088,7 @@ export function trackPrintAddToCart(
   currency: string = "EUR",
   eventId?: string,
 ) {
-  const resolvedEventId =
-    eventId ||
-    (generateEventId());
+  const resolvedEventId = eventId || generateEventId();
 
   if (typeof window !== "undefined" && window.gtag) {
     window.gtag("event", "add_to_cart", {
@@ -1097,7 +1126,9 @@ export function trackPrintAddToCart(
 
   // Facebook CAPI — AddToCart
   if (typeof window !== "undefined") {
-    const userData = getUserDataForAdvancedMatching();
+    const userData = normalizeAnalyticsUserData(
+      getUserDataForAdvancedMatching(),
+    );
     fetch("/api/facebook/conversions", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -1142,9 +1173,7 @@ export function trackPrintBeginCheckout(
   currency: string = "EUR",
   eventId?: string,
 ) {
-  const resolvedEventId =
-    eventId ||
-    (generateEventId());
+  const resolvedEventId = eventId || generateEventId();
 
   if (typeof window !== "undefined" && window.gtag) {
     window.gtag("event", "begin_checkout", {
@@ -1207,7 +1236,10 @@ export function trackSearch(
   searchTerm?: string,
   destination?: string,
   checkinDate?: string,
+  packageId?: string,
 ) {
+  const resolvedEventId = generateEventId();
+
   if (typeof window !== "undefined" && window.gtag) {
     window.gtag("event", "search", {
       search_term: searchTerm,
@@ -1216,29 +1248,40 @@ export function trackSearch(
     });
   }
 
-  // Facebook Pixel — Search
+  // Facebook Pixel — Search (with shared eventID for CAPI deduplication)
   if (typeof window !== "undefined" && window.fbq) {
-    window.fbq("track", "Search", {
-      search_string: searchTerm,
-      destination_airport: destination,
-      checkin_date: checkinDate,
-    });
+    window.fbq(
+      "track",
+      "Search",
+      {
+        ...(packageId
+          ? { content_ids: [packageId], content_type: "product" }
+          : {}),
+        search_string: searchTerm,
+        destination_airport: destination,
+        checkin_date: checkinDate,
+      },
+      resolvedEventId ? { eventID: resolvedEventId } : undefined,
+    );
   }
 
   // CAPI Search
   if (typeof window !== "undefined") {
-    const userData = getUserDataForAdvancedMatching();
+    const userData = normalizeAnalyticsUserData(
+      getUserDataForAdvancedMatching(),
+    );
     fetch("/api/facebook/conversions", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         event_name: "Search",
-        event_id:
-          generateEventId(),
+        event_id: resolvedEventId,
+        package_id: packageId || "general",
         customer_email: userData?.email,
         customer_phone: userData?.phone,
         first_name: userData?.firstName,
         last_name: userData?.lastName,
+        country: userData?.country,
         custom_data: {
           search_string: searchTerm,
           destination_airport: destination,

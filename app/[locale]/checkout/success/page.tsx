@@ -53,7 +53,10 @@ export default async function CheckoutPage({
     .single();
 
   const localeKey = booking.locale || "en";
-  const packageName = packageData?.title?.[localeKey] || packageData?.title?.en || booking.package_id;
+  const packageName =
+    packageData?.title?.[localeKey] ||
+    packageData?.title?.en ||
+    booking.package_id;
 
   const consentData = await getConsentCookie();
   const analyticsUserId =
@@ -82,16 +85,16 @@ export default async function CheckoutPage({
       {/* Fire purchase tracking on direct URL access only if it's a very recent booking */}
       {isRecentBooking && (
         <SuccessTracker
-        bookingId={booking.id}
-        packageId={booking.package_id}
-        totalAmount={booking.total_amount}
-        customerEmail={booking.user_email}
-        customerPhone={booking.user_phone}
-        customerName={booking.user_name}
-        bookingDate={booking.booking_date}
-        packageName={packageName}
-        userId={analyticsUserId}
-      />
+          bookingId={booking.id}
+          packageId={booking.package_id}
+          totalAmount={booking.total_amount}
+          customerEmail={booking.user_email}
+          customerPhone={booking.user_phone}
+          customerName={booking.user_name}
+          bookingDate={booking.booking_date}
+          packageName={packageName}
+          userId={analyticsUserId}
+        />
       )}
       <Suspense
         fallback={

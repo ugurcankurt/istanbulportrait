@@ -14,9 +14,11 @@ import { generateNativeSlug } from "@/lib/slug-generator";
 export async function LocationsPageContent({
   params,
 }: {
-  params: { locale: string; slug: string };
+  params:
+    | Promise<{ locale: string; slug: string }>
+    | { locale: string; slug: string };
 }) {
-  const { locale, slug: parentSlug } = params;
+  const { locale, slug: parentSlug } = await params;
   const dbPage = await pagesContentService.getPageBySlug("locations");
   const dynamicTitle = dbPage?.title?.[locale] || dbPage?.title?.en || "";
   const dynamicSubtitle =

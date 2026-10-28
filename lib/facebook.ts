@@ -340,6 +340,9 @@ export const trackFacebookLead = async (
   const hashedGender = options?.gender
     ? [await hashCustomerData(options.gender)]
     : undefined;
+  const hashedExternalId = options?.externalId
+    ? [await hashCustomerData(options.externalId)]
+    : undefined;
 
   // Prepare event for Conversions API
   const event: FacebookConversionEvent = {
@@ -364,7 +367,7 @@ export const trackFacebookLead = async (
       fbp: options?.fbp,
       client_ip_address: options?.clientIpAddress,
       client_user_agent: options?.clientUserAgent,
-      external_id: options?.externalId ? [options.externalId] : undefined,
+      external_id: hashedExternalId,
     },
     custom_data: {
       event_source: "crm",
@@ -429,6 +432,9 @@ export const trackFacebookPurchase = async (
   const hashedGender = options?.gender
     ? [await hashCustomerData(options.gender)]
     : undefined;
+  const hashedExternalId = options?.externalId
+    ? [await hashCustomerData(options.externalId)]
+    : undefined;
 
   // Prepare event for Conversions API
   const event: FacebookConversionEvent = {
@@ -452,7 +458,7 @@ export const trackFacebookPurchase = async (
       fbp: options?.fbp,
       client_ip_address: options?.clientIpAddress,
       client_user_agent: options?.clientUserAgent,
-      external_id: options?.externalId ? [options.externalId] : undefined,
+      external_id: hashedExternalId,
     },
     custom_data: {
       event_source: "website",
@@ -527,6 +533,9 @@ export const trackFacebookPrintPurchase = async (
   const hashedGender = options?.gender
     ? [await hashCustomerData(options.gender)]
     : undefined;
+  const hashedExternalId = options?.externalId
+    ? [await hashCustomerData(options.externalId)]
+    : undefined;
 
   // Prepare event for Conversions API
   const event: FacebookConversionEvent = {
@@ -550,7 +559,7 @@ export const trackFacebookPrintPurchase = async (
       fbp: options?.fbp,
       client_ip_address: options?.clientIpAddress,
       client_user_agent: options?.clientUserAgent,
-      external_id: options?.externalId ? [options.externalId] : undefined,
+      external_id: hashedExternalId,
     },
     custom_data: {
       event_source: "website",
@@ -622,6 +631,9 @@ export const trackMetaCRMLeadEvent = async (
     const hashedGender = options?.gender
       ? [await hashCustomerData(options.gender)]
       : undefined;
+    const hashedExternalId = options?.externalId
+      ? [await hashCustomerData(options.externalId)]
+      : undefined;
 
     const event: FacebookConversionEvent = {
       event_name: "Lead",
@@ -645,6 +657,7 @@ export const trackMetaCRMLeadEvent = async (
         fbp: options?.fbp,
         client_ip_address: options?.clientIpAddress,
         client_user_agent: options?.clientUserAgent,
+        external_id: hashedExternalId,
       },
       custom_data: {
         event_source: "crm",

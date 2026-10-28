@@ -4,7 +4,16 @@
  */
 
 // Supported locales
-export type Locale = "en" | "ar" | "ru" | "es" | "zh" | "fr" | "de" | "ro";
+export type Locale =
+  | "en"
+  | "ar"
+  | "ru"
+  | "es"
+  | "zh"
+  | "fr"
+  | "de"
+  | "ro"
+  | "tr";
 
 // Blog post status
 export type BlogStatus = "draft" | "published" | "archived";
@@ -132,6 +141,7 @@ export interface BlogPostWithAllTranslations extends BlogPost {
     fr: BlogPostTranslation | null;
     de: BlogPostTranslation | null;
     ro: BlogPostTranslation | null;
+    tr: BlogPostTranslation | null;
   };
   categories?: Array<{
     category: BlogCategory & { translation: BlogCategoryTranslation };

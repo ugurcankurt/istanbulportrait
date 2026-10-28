@@ -79,19 +79,32 @@ export default async function proxy(request: NextRequest) {
 
   const response = intlMiddleware(request);
 
-  // Capture Facebook attribution parameters
+  // Capture Google Ads & Facebook attribution parameters as 1st-party HTTP cookies (90 days, Safari ITP safe)
   const searchParams = request.nextUrl.searchParams;
   const fbclid = searchParams.get("fbclid");
+  const gclid = searchParams.get("gclid");
+  const gbraid = searchParams.get("gbraid");
+  const wbraid = searchParams.get("wbraid");
 
   const ninetyDays = 90 * 24 * 60 * 60; // 90 days in seconds
+  const cookieOpts = {
+    maxAge: ninetyDays,
+    path: "/",
+    sameSite: "lax" as const,
+    httpOnly: false,
+  };
 
-  if (fbclid) {
-    response.cookies.set("_fbc", `fb.1.${Date.now()}.${fbclid}`, {
-      maxAge: ninetyDays,
-      path: "/",
-      sameSite: "lax",
-      httpOnly: false,
-    });
+  if (fbclid && /^[a-zA-Z0-9_=-]+$/.test(fbclid)) {
+    response.cookies.set("_fbc", `fb.1.${Date.now()}.${fbclid}`, cookieOpts);
+  }
+  if (gclid && /^[a-zA-Z0-9_=-]+$/.test(gclid)) {
+    response.cookies.set("gclid", gclid, cookieOpts);
+  }
+  if (gbraid && /^[a-zA-Z0-9_=-]+$/.test(gbraid)) {
+    response.cookies.set("gbraid", gbraid, cookieOpts);
+  }
+  if (wbraid && /^[a-zA-Z0-9_=-]+$/.test(wbraid)) {
+    response.cookies.set("wbraid", wbraid, cookieOpts);
   }
 
   return response;

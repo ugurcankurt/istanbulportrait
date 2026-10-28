@@ -60,8 +60,8 @@ export async function AboutPageContent({
           dbPage={dbPage as any}
           locale={locale}
           founderImageUrl={settings.founder_image_url}
-          packagesHref={`/${locale}/${dynamicNavData.packages?.path || "packages"}`}
-          locationsHref={`/${locale}/${dynamicNavData.locations?.path || "locations"}`}
+          packagesHref={`/${dynamicNavData.packages?.path || "packages"}`}
+          locationsHref={`/${dynamicNavData.locations?.path || "locations"}`}
           highlightsHeader={
             <h2
               key="highlights-header"

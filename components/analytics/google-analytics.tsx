@@ -1,15 +1,16 @@
 "use client";
 
-import { GoogleAnalytics as NextGoogleAnalytics } from "@next/third-parties/google";
 import Script from "next/script";
 import { useEffect, useRef } from "react";
 import { useConsent } from "@/contexts/consent-context";
 
 export function GoogleAnalytics({
   gaId,
+  googleAdsId,
   userId,
 }: {
   gaId?: string | null;
+  googleAdsId?: string | null;
   userId?: string | null;
 }) {
   const { consent, isLoading } = useConsent();
@@ -35,26 +36,17 @@ export function GoogleAnalytics({
     }
   }, [userId, consent, isLoading]);
 
-  if (!gaId) {
+  const primaryTagId = gaId || googleAdsId;
+  if (!primaryTagId) {
     return null;
   }
 
   return (
-    <>
-      <NextGoogleAnalytics gaId={gaId} />
-      <Script
-        id="google-analytics-custom-config"
-        dangerouslySetInnerHTML={{
-          __html: `
-            window.dataLayer = window.dataLayer || [];
-            window.gtag = window.gtag || function(){ (window.dataLayer = window.dataLayer || []).push(arguments); };
-            
-            window.gtag('set', 'allow_enhanced_conversions', true);
-            window.gtag('config', 'AW-1007335227');
-          `,
-        }}
-      />
-    </>
+    <Script
+      id="_next-ga"
+      src={`https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(primaryTagId)}`}
+      strategy="afterInteractive"
+    />
   );
 }
 
@@ -67,6 +59,7 @@ export function GoogleAnalyticsConsentUpdate(granted: boolean) {
         ad_user_data: "granted",
         ad_personalization: "granted",
       });
+      window.gtag("set", "ads_data_redaction", false as any);
     } else {
       window.gtag("consent", "update", {
         analytics_storage: "denied",
@@ -74,6 +67,7 @@ export function GoogleAnalyticsConsentUpdate(granted: boolean) {
         ad_user_data: "denied",
         ad_personalization: "denied",
       });
+      window.gtag("set", "ads_data_redaction", true as any);
     }
   }
 }

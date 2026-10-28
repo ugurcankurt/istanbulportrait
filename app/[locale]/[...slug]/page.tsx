@@ -32,7 +32,12 @@ export async function generateMetadata(props: {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }): Promise<Metadata> {
   const params = await props.params;
-  const _searchParams = await props.searchParams;
+  const searchParams = await props.searchParams;
+  const rawPage = Array.isArray(searchParams?.page)
+    ? searchParams.page[0]
+    : searchParams?.page;
+  const pageNum = Math.max(1, Number.parseInt(rawPage || "1", 10) || 1);
+  const pageQuerySuffix = pageNum > 1 ? `?page=${pageNum}` : "";
   const { routing } = await import("@/i18n/routing");
 
   // biome-ignore lint/suspicious/noExplicitAny: Routing locale matching
@@ -105,28 +110,31 @@ export async function generateMetadata(props: {
     const currentSeg = dbPage.title?.[params.locale]
       ? generateNativeSlug(dbPage.title[params.locale] || "")
       : dbPage.slug;
+    const isPaginatedBlog = dbPage.slug === "blog" && pageNum > 1;
+    const canonicalUrl = `${encodeURI(`${baseUrl}/${params.locale}/${currentSeg}`)}${isPaginatedBlog ? pageQuerySuffix : ""}`;
+    const paginatedTitle = isPaginatedBlog ? `${title} - ${pageNum}` : title;
 
     return {
-      title,
+      title: paginatedTitle,
       description: desc,
       alternates: {
-        canonical: encodeURI(`${baseUrl}/${params.locale}/${currentSeg}`),
+        canonical: canonicalUrl,
         ...getAlternates((loc) => {
           const tLoc = dbPage.title?.[loc];
-          return `/${tLoc ? generateNativeSlug(tLoc) : dbPage.slug}`;
+          return `/${tLoc ? generateNativeSlug(tLoc) : dbPage.slug}${isPaginatedBlog ? pageQuerySuffix : ""}`;
         }),
       },
       openGraph: constructOpenGraph(
-        title,
+        paginatedTitle,
         desc,
         ogImage,
         fallbackTitle,
         params.locale,
-        { url: encodeURI(`${baseUrl}/${params.locale}/${currentSeg}`) },
+        { url: canonicalUrl },
       ),
       twitter: {
         card: "summary_large_image",
-        title,
+        title: paginatedTitle,
         description: desc,
         images: ogImage ? [optimizeSeoImage(ogImage, 1200)] : [],
       },
@@ -150,30 +158,39 @@ export async function generateMetadata(props: {
         // biome-ignore lint/suspicious/noExplicitAny: Dynamic data
         params.locale as any,
       );
-      if (category) {
-        dynamicTitle = category.translation?.name || category.slug;
-        dynamicDesc = category.translation?.description || "";
+      if (!category) {
+        notFound();
+        return {};
       }
+      dynamicTitle = category.translation?.name || category.slug;
+      dynamicDesc = category.translation?.description || "";
     } else if (type === "tag") {
       // biome-ignore lint/suspicious/noExplicitAny: Dynamic data
       const tag = await getBlogTagBySlug(childSlug, params.locale as any);
-      if (tag) {
-        dynamicTitle = tag.translation?.name || tag.slug;
+      if (!tag) {
+        notFound();
+        return {};
       }
+      dynamicTitle = tag.translation?.name || tag.slug;
     } else {
       notFound();
       return {};
     }
 
-    const title = generateSeoTitle(dynamicTitle, params.locale, fallbackTitle);
+    const baseTitle = generateSeoTitle(
+      dynamicTitle,
+      params.locale,
+      fallbackTitle,
+    );
+    const title = pageNum > 1 ? `${baseTitle} - ${pageNum}` : baseTitle;
     const desc = generateSeoDescription(dynamicDesc);
     const blogLocTitle = dbPage.title?.[params.locale];
     const blogSeg = blogLocTitle
       ? generateNativeSlug(blogLocTitle)
       : dbPage.slug;
-    const categoryCanonical = encodeURI(
+    const categoryCanonical = `${encodeURI(
       `${baseUrl}/${params.locale}/${blogSeg}/${type}/${childSlug}`,
-    );
+    )}${pageQuerySuffix}`;
 
     return {
       title,
@@ -183,7 +200,7 @@ export async function generateMetadata(props: {
         ...getAlternates((loc) => {
           const tLoc = dbPage.title?.[loc];
           const bSeg = tLoc ? generateNativeSlug(tLoc) : dbPage.slug;
-          return `/${bSeg}/${type}/${childSlug}`;
+          return `/${bSeg}/${type}/${childSlug}${pageQuerySuffix}`;
         }),
       },
       openGraph: constructOpenGraph(
@@ -417,6 +434,18 @@ export default async function GenericCorePage(props: {
         if (loc) {
           const t = loc.title?.[params.locale];
           expectedChild = t ? generateNativeSlug(t) || loc.slug : loc.slug;
+        } else {
+          resolvable = false;
+        }
+      } else if (slugArray.length === 2 && dbPage.slug === "blog") {
+        const { getBlogPostBySlug } = await import("@/lib/blog/blog-service");
+        const post = await getBlogPostBySlug(
+          slugArray[1],
+          // biome-ignore lint/suspicious/noExplicitAny: Dynamic data
+          params.locale as any,
+        );
+        if (post?.translation?.slug) {
+          expectedChild = post.translation.slug;
         } else {
           resolvable = false;
         }

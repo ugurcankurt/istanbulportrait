@@ -43,14 +43,15 @@ export async function setConsentCookie(
 }
 
 /**
- * Gets the consent cookie and validates it
+ * Gets the consent cookie and validates it (read-only safe for Server Components)
  * @returns ConsentData if valid and not expired, null otherwise
  */
 export async function getConsentCookie(): Promise<ConsentData | null> {
   const cookieStore = await cookies();
   const consentCookie = cookieStore.get(CONSENT_COOKIE_NAME);
 
-  if (!consentCookie) {
+  // When cookieStore.delete() runs in a Server Action, Next.js sets value to "" during the same-request RSC re-render
+  if (!consentCookie?.value || !consentCookie.value.trim()) {
     return null;
   }
 
@@ -59,12 +60,11 @@ export async function getConsentCookie(): Promise<ConsentData | null> {
 
     // Validate structure
     if (
+      !consentData ||
       !consentData.consent ||
       !consentData.timestamp ||
       typeof consentData.timestamp !== "number"
     ) {
-      console.warn("Invalid consent cookie structure, clearing cookie");
-      await clearConsentCookie();
       return null;
     }
 
@@ -73,8 +73,6 @@ export async function getConsentCookie(): Promise<ConsentData | null> {
       consentData.consent !== "accepted_all" &&
       consentData.consent !== "essential_only"
     ) {
-      console.warn("Invalid consent value, clearing cookie");
-      await clearConsentCookie();
       return null;
     }
 
@@ -83,15 +81,13 @@ export async function getConsentCookie(): Promise<ConsentData | null> {
     const age = now - consentData.timestamp;
 
     if (age > CONSENT_EXPIRATION_MS) {
-      // Consent expired (>12 months), clearing cookie
-      await clearConsentCookie();
       return null;
     }
 
     return consentData;
-  } catch (error) {
-    console.error("Error parsing consent cookie:", error);
-    await clearConsentCookie();
+  } catch {
+    // Note: Do NOT call clearConsentCookie() here because getConsentCookie() is called
+    // inside Server Components (LocaleLayout), where mutating cookies throws a fatal Next.js error.
     return null;
   }
 }

@@ -163,14 +163,9 @@ export function PackageDetails({
   useEffect(() => {
     if (!hasTrackedView.current) {
       hasTrackedView.current = true;
-      trackViewItem(
-        packageData.slug,
-        packageName,
-        convertPrice(pricing.price),
-        currency,
-      );
+      trackViewItem(packageData.slug, packageName, pricing.price, "EUR");
     }
-  }, [packageData.slug, packageName, pricing.price, currency, convertPrice]);
+  }, [packageData.slug, packageName, pricing.price]);
 
   useEffect(() => {
     const savedPackages = JSON.parse(
