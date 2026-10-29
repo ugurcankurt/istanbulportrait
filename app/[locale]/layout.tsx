@@ -219,7 +219,7 @@ export default async function LocaleLayout({
         <link
           rel="ai-catalog"
           href="/.well-known/ai-catalog.json"
-          type="application/json"
+          type="application/ai-catalog+json"
         />
       </head>
       <body className="antialiased" suppressHydrationWarning>
