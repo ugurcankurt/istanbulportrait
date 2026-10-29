@@ -22,7 +22,13 @@ export default function robots(): MetadataRoute.Robots {
     rules: [
       {
         userAgent: "*",
-        allow: "/",
+        allow: [
+          "/",
+          "/llms.txt",
+          "/.well-known/ai-catalog.json",
+          "/api/packages",
+          "/api/booking/availability",
+        ],
         disallow: [
           "/admin/",
           "/api/",

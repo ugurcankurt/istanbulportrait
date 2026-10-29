@@ -13,6 +13,7 @@ import { FacebookPixel } from "@/components/analytics/facebook-pixel";
 import { GclidTracker } from "@/components/analytics/gclid-tracker";
 import { GoogleAnalytics } from "@/components/analytics/google-analytics";
 import { InteractionLoader } from "@/components/analytics/interaction-loader";
+import { WebMCPProvider } from "@/components/analytics/webmcp-provider";
 import { YandexMetrica } from "@/components/analytics/yandex-metrica";
 import { ConsentGate } from "@/components/consent-gate";
 import { ConsentProvider } from "@/contexts/consent-context";
@@ -214,7 +215,13 @@ export default async function LocaleLayout({
       className={`${fontSans.variable} ${fontHeading.variable} ${geistMono.variable} theme-${settings.theme_color || "violet"}`}
       suppressHydrationWarning
     >
-      <head />
+      <head>
+        <link
+          rel="ai-catalog"
+          href="/.well-known/ai-catalog.json"
+          type="application/json"
+        />
+      </head>
       <body className="antialiased" suppressHydrationWarning>
         {settings.custom_head_scripts && (
           <div
@@ -291,6 +298,7 @@ export default async function LocaleLayout({
                   <div className="flex min-h-[100dvh] flex-col">
                     {/* Critical Analytics — mounted before <main> so their useEffect hooks (cookies, PageView) execute before child page effects (ViewContent, Purchase) */}
                     <GclidTracker />
+                    <WebMCPProvider />
                     <GoogleAnalytics
                       gaId={settings.google_analytics_id}
                       googleAdsId={settings.google_ads_id}

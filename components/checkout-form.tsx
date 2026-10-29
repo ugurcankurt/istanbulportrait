@@ -133,7 +133,15 @@ function Step1Summary({
     taxAmount: formatPrice(rawPricing.taxAmount),
   };
   return (
-    <div className="flex flex-col h-full">
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        onSubmit();
+      }}
+      toolname="confirm_photoshoot_booking"
+      tooldescription="Confirm and finalize the Istanbul photoshoot reservation. No credit card or upfront deposit is required; full payment is made in cash on the photoshoot day."
+      className="flex flex-col h-full"
+    >
       <div className="flex-1 overflow-y-auto space-y-3 pb-2 min-h-0">
         {/* Package info row */}
         <div className="rounded-2xl border-[0.5px] border-primary/20 bg-primary/5 p-4">
@@ -209,6 +217,8 @@ function Step1Summary({
           </label>
           <div className="flex gap-2">
             <Input
+              name="promoCode"
+              toolparamdescription="Optional discount promo code (for example SPRING20)"
               value={promoCodeInput}
               onChange={(e) => setPromoCodeInput(e.target.value.toUpperCase())}
               placeholder="e.g. SPRING20"
@@ -217,6 +227,7 @@ function Step1Summary({
             />
             {!appliedPromo ? (
               <Button
+                type="button"
                 onClick={handleApplyPromo}
                 disabled={!promoCodeInput.trim() || isLoadingPromo}
                 className="h-11 rounded-xl"
@@ -229,6 +240,7 @@ function Step1Summary({
               </Button>
             ) : (
               <Button
+                type="button"
                 variant="outline"
                 onClick={() => {
                   setAppliedPromo(null);
@@ -314,7 +326,7 @@ function Step1Summary({
       {/* CTA */}
       <div className="pt-4 shrink-0">
         <Button
-          onClick={onSubmit}
+          type="submit"
           disabled={isSubmitting}
           className="w-full h-14 rounded-2xl font-bold text-base shadow-sm"
         >
@@ -325,7 +337,7 @@ function Step1Summary({
           )}
         </Button>
       </div>
-    </div>
+    </form>
   );
 }
 
@@ -768,6 +780,32 @@ export function CheckoutForm({
       setIsLoading(false);
     }
   };
+
+  const hasAutoConfirmedRef = useRef(false);
+  // biome-ignore lint/correctness/useExhaustiveDependencies: Auto-confirm once when AI agent requests autoconfirm=1
+  useEffect(() => {
+    if (
+      searchParams.get("autoconfirm") === "1" &&
+      preFilledBookingData &&
+      selectedPackage &&
+      eventId &&
+      !isLoadingPromo &&
+      !isLoading &&
+      !showSuccess &&
+      !hasAutoConfirmedRef.current
+    ) {
+      hasAutoConfirmedRef.current = true;
+      handleCashPaymentSubmit();
+    }
+  }, [
+    searchParams,
+    preFilledBookingData,
+    selectedPackage,
+    eventId,
+    isLoadingPromo,
+    isLoading,
+    showSuccess,
+  ]);
 
   // ── Success screen ──
   if (showSuccess && bookingId && selectedPackage) {

@@ -503,7 +503,12 @@ export function BookingModal({
   const FormContent = () => (
     <div className="max-w-5xl mx-auto w-full">
       <Form {...form}>
-        <form onSubmit={handleSubmit} className="space-y-8">
+        <form
+          onSubmit={handleSubmit}
+          className="space-y-8"
+          toolname="complete_photoshoot_reservation"
+          tooldescription="Enter customer contact details and special notes to proceed to checkout for the selected Istanbul photoshoot package."
+        >
           {/* Customer Details Section */}
           <div className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -519,6 +524,7 @@ export function BookingModal({
                       <Input
                         className="h-12 rounded-xl bg-muted/40 border-none focus:bg-background focus:ring-1 focus:ring-primary/30 transition-all"
                         placeholder={tplaceholders("enter_full_name")}
+                        toolparamdescription="Customer's full name for the photoshoot reservation"
                         {...field}
                       />
                     </FormControl>
@@ -539,6 +545,7 @@ export function BookingModal({
                         className="h-12 rounded-xl bg-muted/40 border-none focus:bg-background focus:ring-1 focus:ring-primary/30 transition-all"
                         type="email"
                         placeholder={tplaceholders("enter_email")}
+                        toolparamdescription="Customer's email address for booking confirmation and photo delivery"
                         {...field}
                       />
                     </FormControl>
@@ -561,6 +568,16 @@ export function BookingModal({
                       onChange={field.onChange}
                       defaultCountry="TR"
                       placeholder={tplaceholders("phone_number")}
+                      numberInputProps={{
+                        name: "customerPhone",
+                        toolparamdescription:
+                          "Customer's WhatsApp or mobile phone number with country code",
+                      }}
+                      countrySelectProps={{
+                        name: "customerPhoneCountry",
+                        toolparamdescription:
+                          "Country ISO code for customer phone number",
+                      }}
                       className="flex h-12 w-full rounded-xl bg-muted/40 border-none focus-within:bg-background focus-within:ring-1 focus-within:ring-primary/30 focus-within:ring-offset-0 transition-all font-medium px-4"
                     />
                   </FormControl>
@@ -580,6 +597,7 @@ export function BookingModal({
                   <FormControl>
                     <Textarea
                       placeholder={tplaceholders("special_requests")}
+                      toolparamdescription="Optional special requests, preferred locations, or outfit notes for the photographer"
                       className="min-h-[100px] rounded-xl bg-muted/40 border-none focus:bg-background focus:ring-1 focus:ring-primary/30 transition-all resize-none"
                       {...field}
                     />

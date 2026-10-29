@@ -130,10 +130,18 @@ export function NewsletterSection() {
                   </p>
                 </div>
               ) : (
-                <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+                <form
+                  onSubmit={handleSubmit}
+                  className="flex flex-col gap-4"
+                  toolname="subscribe_newsletter"
+                  tooldescription="Subscribe to the Istanbul Portrait newsletter to receive an instant discount promo code and seasonal photoshoot updates."
+                >
                   <div className="flex flex-col sm:flex-row gap-4">
                     <Input
                       type="text"
+                      name="firstName"
+                      autoComplete="given-name"
+                      toolparamdescription="Subscriber's first name"
                       placeholder={getTrans(
                         "newsletter_first_name",
                         "First Name",
@@ -146,6 +154,9 @@ export function NewsletterSection() {
                     />
                     <Input
                       type="text"
+                      name="lastName"
+                      autoComplete="family-name"
+                      toolparamdescription="Subscriber's last name"
                       placeholder={getTrans(
                         "newsletter_last_name",
                         "Last Name",
@@ -161,6 +172,9 @@ export function NewsletterSection() {
                     <div className="relative flex-1">
                       <Input
                         type="email"
+                        name="email"
+                        autoComplete="email"
+                        toolparamdescription="Subscriber's email address to receive the exclusive promo code"
                         placeholder={getTrans(
                           "newsletter_placeholder",
                           "Enter your email address...",

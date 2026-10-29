@@ -110,7 +110,12 @@ export function CustomerDetailsForm({
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4 lg:space-y-6">
-            <form onSubmit={handleSubmit} className="space-y-4 lg:space-y-6">
+            <form
+              onSubmit={handleSubmit}
+              className="space-y-4 lg:space-y-6"
+              toolname="submit_photoshoot_booking_details"
+              tooldescription="Provide customer contact details, date, time, and special requests to book an Istanbul photoshoot session."
+            >
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3 lg:gap-4">
                 <FormField
                   control={form.control}
@@ -121,6 +126,7 @@ export function CustomerDetailsForm({
                       <FormControl>
                         <Input
                           placeholder={tplaceholders("enter_full_name")}
+                          toolparamdescription="Customer's full name for the photoshoot reservation"
                           {...field}
                         />
                       </FormControl>
@@ -139,6 +145,7 @@ export function CustomerDetailsForm({
                         <Input
                           type="email"
                           placeholder={tplaceholders("enter_email")}
+                          toolparamdescription="Customer's email address for booking confirmation and photo gallery delivery"
                           {...field}
                         />
                       </FormControl>
@@ -160,6 +167,16 @@ export function CustomerDetailsForm({
                         onChange={field.onChange}
                         defaultCountry="TR"
                         placeholder={tplaceholders("phone_number")}
+                        numberInputProps={{
+                          name: "customerPhone",
+                          toolparamdescription:
+                            "Customer's WhatsApp or mobile phone number with country code",
+                        }}
+                        countrySelectProps={{
+                          name: "customerPhoneCountry",
+                          toolparamdescription:
+                            "Country ISO code for customer phone number",
+                        }}
                         className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                       />
                     </FormControl>
@@ -313,6 +330,7 @@ export function CustomerDetailsForm({
                       <FormControl>
                         <Textarea
                           placeholder={tplaceholders("special_requests")}
+                          toolparamdescription="Optional special requests, preferred locations, or outfit notes for the photographer"
                           className="min-h-[100px]"
                           {...field}
                         />

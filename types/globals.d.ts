@@ -55,6 +55,53 @@ declare global {
 
     dataLayer: Record<string, unknown>[];
   }
+
+  interface WebMCPToolDefinition {
+    name: string;
+    description: string;
+    inputSchema: {
+      type: "object";
+      properties: Record<
+        string,
+        {
+          type: string;
+          description: string;
+          enum?: string[];
+        }
+      >;
+      required?: string[];
+      additionalProperties?: boolean;
+    };
+    execute: (
+      args: Record<string, unknown>,
+    ) => Promise<{ content: Array<{ type: "text"; text: string }> }>;
+  }
+
+  interface ModelContext {
+    registerTool: (
+      tool: WebMCPToolDefinition,
+      options?: { signal?: AbortSignal },
+    ) => void;
+    unregisterTool?: (name: string) => void;
+  }
+
+  interface Navigator {
+    modelContext?: ModelContext;
+  }
+
+  interface Document {
+    modelContext?: ModelContext;
+  }
+}
+
+declare module "react" {
+  // biome-ignore lint/correctness/noUnusedVariables: Augmenting React HTMLAttributes
+  interface HTMLAttributes<T> {
+    toolname?: string;
+    tooldescription?: string;
+    toolparamdescription?: string;
+    toolautosubmit?: string;
+  }
 }
 
 export {};
