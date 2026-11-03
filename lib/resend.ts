@@ -12,10 +12,11 @@ import type { SiteSettings } from "./settings-service";
 
 export const getEmailColors = (settings: SiteSettings) => {
   const isDark = settings.color_mode === "dark";
-  const themeColor = settings.theme_color || "violet";
+  const themeColor = settings.theme_color || "bronze";
 
   // Map shadcn theme presets to realistic primary HEX colors
   const primaryColors: Record<string, string> = {
+    bronze: "#b45309",
     zinc: "#18181b",
     slate: "#0f172a",
     stone: "#1c1917",
@@ -30,7 +31,7 @@ export const getEmailColors = (settings: SiteSettings) => {
     violet: "#7c3aed",
   };
 
-  const primaryHex = primaryColors[themeColor] || "#7c3aed";
+  const primaryHex = primaryColors[themeColor] || "#b45309";
 
   return {
     primary: primaryHex,
@@ -116,7 +117,7 @@ export const renderEmailLayout = (
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <title>${title}</title>
     </head>
-    <body style="margin: 0; padding: 0; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; background-color: ${colors.background}; color: ${colors.text};">
+    <body style="margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: ${colors.background}; color: ${colors.text};">
       <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: ${colors.background}; padding: 20px 0;">
         <tr>
           <td align="center">

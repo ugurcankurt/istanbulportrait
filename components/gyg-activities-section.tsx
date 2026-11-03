@@ -23,10 +23,10 @@ export function GygActivitiesSection() {
     <section className="py-12 sm:py-16 bg-background border-t border-border/30">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-2xl mx-auto mb-8 sm:mb-12">
-          <h2 className="text-3xl sm:text-4xl font-serif mb-4 font-normal text-foreground leading-tight">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif mb-3 font-normal text-foreground leading-tight tracking-tight">
             {t("gyg_title")}
           </h2>
-          <p className="text-muted-foreground text-sm sm:text-base">
+          <p className="text-muted-foreground font-light text-base sm:text-lg max-w-xl mx-auto leading-relaxed">
             {t("gyg_subtitle")}
           </p>
         </div>

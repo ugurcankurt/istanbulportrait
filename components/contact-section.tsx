@@ -23,7 +23,7 @@ export function ContactSection({ settings }: { settings?: any } = {}) {
           <div className="group">
             <Card className="h-full flex flex-col rounded-[2rem] border border-white/20 dark:border-white/10 bg-background/40 backdrop-blur-3xl transition-all duration-500 shadow-xl hover:shadow-2xl">
               <CardHeader className="px-8 lg:px-12 pt-8 lg:pt-12 pb-6">
-                <CardTitle className="text-3xl sm:text-4xl font-serif text-center lg:text-left text-foreground leading-tight">
+                <CardTitle className="text-3xl sm:text-4xl font-serif font-normal text-center lg:text-left text-primary leading-tight tracking-tight">
                   {tui("contact_information")}
                 </CardTitle>
               </CardHeader>
@@ -34,10 +34,10 @@ export function ContactSection({ settings }: { settings?: any } = {}) {
                       <MapPin className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
                     </div>
                     <div className="flex-1 min-w-0 pt-1">
-                      <h3 className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-1.5">
+                      <h3 className="text-[11px] sm:text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground mb-1.5">
                         {tui("location")}
                       </h3>
-                      <p className="text-foreground/90 font-medium text-sm sm:text-base leading-relaxed">
+                      <p className="text-foreground/90 font-medium text-sm sm:text-base md:text-lg leading-relaxed">
                         {settings?.address?.[locale] ||
                           settings?.address?.en ||
                           t("info.location")}
@@ -50,12 +50,12 @@ export function ContactSection({ settings }: { settings?: any } = {}) {
                       <Mail className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
                     </div>
                     <div className="flex-1 min-w-0 pt-1">
-                      <h3 className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-1.5">
+                      <h3 className="text-[11px] sm:text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground mb-1.5">
                         {tui("email")}
                       </h3>
                       <a
                         href={`mailto:${settings?.contact_email || t("info.email")}`}
-                        className="text-foreground/90 hover:text-primary transition-colors text-sm sm:text-base break-all font-medium block"
+                        className="text-foreground/90 hover:text-primary transition-colors text-sm sm:text-base md:text-lg break-all font-medium block"
                         onClick={() => trackContact("Email")}
                       >
                         {settings?.contact_email || t("info.email")}
@@ -68,12 +68,12 @@ export function ContactSection({ settings }: { settings?: any } = {}) {
                       <Phone className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
                     </div>
                     <div className="flex-1 min-w-0 pt-1">
-                      <h3 className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-1.5">
+                      <h3 className="text-[11px] sm:text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground mb-1.5">
                         {tui("phone")}
                       </h3>
                       <a
                         href={`tel:${settings?.contact_phone || t("info.phone")}`}
-                        className="text-foreground/90 hover:text-primary transition-colors text-sm sm:text-base phone-number font-medium block"
+                        className="text-foreground/90 hover:text-primary transition-colors text-sm sm:text-base md:text-lg phone-number font-medium block"
                         onClick={() => trackContact("Phone")}
                       >
                         {settings?.contact_phone || t("info.phone")}
@@ -86,10 +86,10 @@ export function ContactSection({ settings }: { settings?: any } = {}) {
                       <Clock className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
                     </div>
                     <div className="flex-1 min-w-0 pt-1">
-                      <h3 className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-1.5">
+                      <h3 className="text-[11px] sm:text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground mb-1.5">
                         {tui("availability")}
                       </h3>
-                      <p className="text-foreground/90 font-medium text-sm sm:text-base">
+                      <p className="text-foreground/90 font-medium text-sm sm:text-base md:text-lg">
                         {settings?.working_hours?.[locale] ||
                           settings?.working_hours?.en ||
                           t("info.hours")}

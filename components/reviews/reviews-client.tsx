@@ -128,7 +128,7 @@ export function ReviewsClient({
 
                             {/* User Info */}
                             <div className="flex-1 min-w-0">
-                              <strong className="text-base font-bold text-foreground mb-1.5 block">
+                              <strong className="text-base sm:text-lg font-serif font-normal text-foreground mb-1 block tracking-tight">
                                 {review.author.name}
                               </strong>
                               <div className="flex items-center gap-2 mb-1.5">
@@ -137,7 +137,7 @@ export function ReviewsClient({
                                   {review.rating}/5
                                 </span>
                               </div>
-                              <span className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold">
+                              <span className="text-[11px] sm:text-xs uppercase tracking-[0.16em] text-muted-foreground font-medium">
                                 {formatDate(review.date)}
                               </span>
                             </div>

@@ -65,17 +65,17 @@ export async function AboutPageContent({
           highlightsHeader={
             <h2
               key="highlights-header"
-              className="text-3xl sm:text-4xl lg:text-5xl font-serif leading-tight text-center mb-8 sm:mb-10 lg:mb-12"
+              className="text-3xl sm:text-4xl lg:text-5xl font-serif font-normal tracking-tight leading-tight text-center mb-8 sm:mb-10 lg:mb-12"
             >
               {tAboutHighlights("title")}
             </h2>
           }
           ctaHeader={
             <div key="cta-header">
-              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-serif leading-tight mb-4 sm:mb-6">
+              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-serif font-normal tracking-tight leading-tight mb-4 sm:mb-6">
                 {tAboutCta("title")}
               </h2>
-              <p className="text-muted-foreground mb-6 sm:mb-8 text-sm sm:text-base lg:text-lg px-2">
+              <p className="text-muted-foreground font-light mb-6 sm:mb-8 text-base sm:text-lg lg:text-xl px-2 max-w-2xl mx-auto leading-relaxed">
                 {tAboutCta("description")}
               </p>
             </div>

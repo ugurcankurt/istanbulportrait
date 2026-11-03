@@ -106,10 +106,10 @@ export async function LocationDetailPageContent({
           {/* Hero Content - Bottom */}
           <div className="absolute bottom-0 left-0 right-0 pb-6 sm:pb-8 lg:pb-12">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-              <h1 className="text-2xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold text-white mb-3 sm:mb-4 drop-shadow-lg">
+              <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-serif font-normal text-white mb-3 sm:mb-4 drop-shadow-lg tracking-tight leading-[1.12] text-balance">
                 {dynamicTitle}
               </h1>
-              <p className="text-sm sm:text-lg lg:text-xl text-white/90 max-w-3xl leading-relaxed drop-shadow-md line-clamp-3">
+              <p className="text-base sm:text-lg lg:text-xl text-white/90 font-light leading-relaxed max-w-3xl drop-shadow-md line-clamp-3">
                 {dynamicDesc}
               </p>
 
@@ -143,19 +143,19 @@ export async function LocationDetailPageContent({
             <div className="lg:col-span-2 space-y-8 sm:space-y-10">
               {/* About Section */}
               <div className="space-y-4">
-                <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold flex items-center gap-2">
-                  <span className="w-1 h-6 sm:h-8 bg-primary rounded-full" />
+                <h2 className="text-2xl sm:text-3xl font-serif font-normal text-foreground tracking-tight flex items-center gap-2">
+                  <span className="w-1 h-6 sm:h-7 bg-primary rounded-full" />
                   {t("aboutLocation")}
                 </h2>
-                <p className="text-muted-foreground text-sm sm:text-base lg:text-lg leading-relaxed whitespace-pre-line">
+                <p className="text-muted-foreground font-light text-base sm:text-lg leading-relaxed whitespace-pre-line">
                   {dynamicDesc}
                 </p>
               </div>
 
               {/* Photography Tips Section */}
               <div className="space-y-4">
-                <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold flex items-center gap-2">
-                  <span className="w-1 h-6 sm:h-8 bg-primary rounded-full" />
+                <h2 className="text-2xl sm:text-3xl font-serif font-normal text-foreground tracking-tight flex items-center gap-2">
+                  <span className="w-1 h-6 sm:h-7 bg-primary rounded-full" />
                   {t("photographyTips")}
                 </h2>
                 <div className="grid sm:grid-cols-2 gap-3 sm:gap-4">
@@ -182,8 +182,8 @@ export async function LocationDetailPageContent({
               {/* Gallery Section */}
               {galleryImages.length > 0 && (
                 <div className="space-y-4">
-                  <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold flex items-center gap-2">
-                    <span className="w-1 h-6 sm:h-8 bg-primary rounded-full" />
+                  <h2 className="text-2xl sm:text-3xl font-serif font-normal text-foreground tracking-tight flex items-center gap-2">
+                    <span className="w-1 h-6 sm:h-7 bg-primary rounded-full" />
                     {t("gallery")}
                   </h2>
                   <div className="grid grid-cols-2 gap-3 sm:gap-4">

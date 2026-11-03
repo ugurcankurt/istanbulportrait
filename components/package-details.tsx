@@ -234,14 +234,14 @@ export function PackageDetails({
         <div className="container mx-auto px-4 lg:px-8">
           <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
             <div className="space-y-2">
-              <h1 className="text-4xl lg:text-5xl font-serif text-foreground leading-tight">
+              <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-serif font-normal text-foreground leading-[1.12] tracking-tight text-balance">
                 {packageName}
               </h1>
               <div className="flex flex-wrap items-center gap-x-2 gap-y-2 text-sm">
                 {pricing.isDiscounted && (
                   <Badge
                     variant="default"
-                    className="bg-red-600 backdrop-blur-md text-white border border-red-500 font-serif tracking-widest uppercase text-xs px-3 py-1 shadow-sm"
+                    className="bg-red-600/90 backdrop-blur-md text-white border border-red-500 tracking-wider uppercase text-xs px-3 py-1 shadow-sm font-medium"
                   >
                     {tui("save_percentage", {
                       percentage: Math.round(pricing.discountPercentage * 100),
@@ -249,7 +249,7 @@ export function PackageDetails({
                   </Badge>
                 )}
                 {packageData.is_per_person && (
-                  <Badge className="bg-primary/10 text-primary border-[0.5px] border-primary/20 font-serif tracking-widest uppercase text-[10px] px-3 py-1 shadow-sm">
+                  <Badge className="bg-primary/10 text-primary border-[0.5px] border-primary/20 tracking-wider uppercase text-[10px] px-3 py-1 shadow-sm font-medium">
                     👤 {t("per_person")}
                   </Badge>
                 )}
@@ -330,22 +330,22 @@ export function PackageDetails({
                 <div className="flex flex-wrap items-center gap-x-2 gap-y-2 text-sm">
                   <Badge
                     variant="secondary"
-                    className="bg-primary/5 text-primary border-[0.5px] border-primary/20 font-serif tracking-widest uppercase text-[10px] px-3 py-1 shadow-sm"
+                    className="bg-primary/5 text-primary border-[0.5px] border-primary/20 tracking-wider uppercase text-[10px] px-3 py-1 shadow-sm font-medium"
                   >
                     {tui("professional_photographer")}
                   </Badge>
                   {packageData.is_popular && (
-                    <Badge className="bg-black/80 backdrop-blur-md text-white border border-white/20 font-serif tracking-widest uppercase text-[10px] px-3 py-1 shadow-luxury">
+                    <Badge className="bg-black/80 backdrop-blur-md text-white border border-white/20 tracking-wider uppercase text-[10px] px-3 py-1 shadow-luxury font-medium">
                       {tui("most_popular")}
                     </Badge>
                   )}
                   {packageData.is_per_person && (
-                    <Badge className="bg-primary/10 text-primary border-[0.5px] border-primary/20 font-serif tracking-widest uppercase text-[10px] px-3 py-1 shadow-sm">
+                    <Badge className="bg-primary/10 text-primary border-[0.5px] border-primary/20 tracking-wider uppercase text-[10px] px-3 py-1 shadow-sm font-medium">
                       👤 {t("per_person")}
                     </Badge>
                   )}
                 </div>
-                <div className="text-4xl font-serif text-foreground leading-tight">
+                <div className="text-3xl sm:text-4xl font-serif font-normal text-foreground leading-[1.14] tracking-tight text-balance">
                   {packageName}
                 </div>
                 <div className="flex items-center gap-3">
@@ -376,18 +376,18 @@ export function PackageDetails({
                 </div>
                 <div className="flex items-center gap-3">
                   <div className="flex items-baseline gap-2">
-                    <span className="text-sm text-muted-foreground font-medium lowercase">
+                    <span className="text-xs sm:text-sm text-muted-foreground font-medium lowercase">
                       {t("starting_from")} /
                     </span>
-                    <div className="text-4xl font-bold text-primary">
+                    <div className="text-3xl sm:text-4xl font-serif font-semibold text-primary tracking-tight">
                       {formatPrice(pricing.price)}
                     </div>
                     {pricing.isDiscounted && (
                       <div className="flex items-center gap-2 ml-2">
-                        <span className="text-xl text-muted-foreground line-through font-medium">
+                        <span className="text-lg sm:text-xl text-muted-foreground line-through font-medium">
                           {formatPrice(pricing.originalPrice)}
                         </span>
-                        <Badge className="bg-red-600 backdrop-blur-md text-white border border-red-500 font-serif tracking-widest uppercase text-xs px-3 py-1 shadow-sm">
+                        <Badge className="bg-red-600/90 backdrop-blur-md text-white border border-red-500 tracking-wider uppercase text-xs px-2.5 py-0.5 shadow-sm font-medium">
                           {tui("save_percentage", {
                             percentage: Math.round(
                               pricing.discountPercentage * 100,
@@ -432,23 +432,23 @@ export function PackageDetails({
             {/* Shared Description */}
             <div className="space-y-8">
               <div className="prose prose-slate dark:prose-invert max-w-none">
-                <p className="text-xl text-muted-foreground leading-relaxed italic border-s-4 border-primary/20 ps-6 py-2">
+                <p className="text-lg sm:text-xl text-muted-foreground leading-relaxed italic border-s-4 border-primary/30 ps-5 sm:ps-6 py-2">
                   {packageDesc}
                 </p>
               </div>
 
               <div className="space-y-6 border-t pt-8">
-                <h3 className="text-3xl font-serif flex items-center gap-3">
+                <h3 className="text-2xl sm:text-3xl font-serif font-normal text-foreground tracking-tight flex items-center gap-3">
                   <Telescope className="h-6 w-6 text-primary" />
                   {tui("what_to_expect")}
                 </h3>
-                <ul className="grid grid-cols-1 sm:grid-cols-2 gap-y-5 gap-x-12">
+                <ul className="grid grid-cols-1 sm:grid-cols-2 gap-y-4 sm:gap-y-5 gap-x-8 sm:gap-x-12">
                   {features.map((feature, index) => (
-                    <li key={index} className="flex items-start gap-4 group">
-                      <div className="mt-1 bg-primary/10 p-1.5 rounded-full group-hover:bg-primary/20 transition-colors">
+                    <li key={index} className="flex items-start gap-3 sm:gap-4 group">
+                      <div className="mt-1 bg-primary/10 p-1.5 rounded-full group-hover:bg-primary/20 transition-colors shrink-0">
                         <Check className="h-3.5 w-3.5 text-primary stroke-[3]" />
                       </div>
-                      <span className="text-lg font-medium text-foreground">
+                      <span className="text-base sm:text-lg font-normal text-foreground/90 leading-snug">
                         {feature}
                       </span>
                     </li>

@@ -159,7 +159,7 @@ export function Navigation({ dynamicNavData = {}, settings }: NavigationProps) {
               priority
             />
           ) : (
-            <span className="text-xl font-bold dark:hidden tracking-tight">
+            <span className="text-xl sm:text-2xl font-serif font-normal text-foreground dark:hidden tracking-tight">
               {settings?.site_name || "Istanbul Portrait"}
             </span>
           )}
@@ -174,7 +174,7 @@ export function Navigation({ dynamicNavData = {}, settings }: NavigationProps) {
             />
           ) : (
             !settings?.logo_url && (
-              <span className="text-xl font-bold hidden dark:block tracking-tight">
+              <span className="text-xl sm:text-2xl font-serif font-normal text-foreground hidden dark:block tracking-tight">
                 {settings?.site_name || "Istanbul Portrait"}
               </span>
             )

@@ -95,14 +95,14 @@ export function PackageReviews({
         {/* LEFT SIDEBAR - Overall Rating & Summary */}
         <div className="lg:col-span-1 space-y-10 lg:sticky lg:top-28 h-fit">
           <div className="space-y-6">
-            <h3 className="text-2xl font-serif text-foreground">
+            <h3 className="text-2xl sm:text-3xl font-serif font-normal text-foreground tracking-tight">
               {t("overall_rating")}
             </h3>
             <div className="flex items-center gap-4">
-              <div className="text-6xl font-serif text-primary leading-none">
+              <div className="text-5xl sm:text-6xl font-serif font-semibold text-primary leading-none tracking-tight">
                 {Number(aggregateRating.average || 0).toFixed(1)}
               </div>
-              <div className="text-xl font-bold text-muted-foreground">/ 5</div>
+              <div className="text-lg sm:text-xl font-medium text-muted-foreground">/ 5</div>
             </div>
             {renderStars(Math.round(aggregateRating.average || 5), "lg")}
             <p className="text-sm font-medium text-muted-foreground">

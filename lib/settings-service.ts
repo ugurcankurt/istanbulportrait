@@ -99,7 +99,7 @@ export const defaultSettings: SiteSettings = {
   founder_name: "",
   founder_image_url: "",
   ai_search_config: {},
-  theme_color: "violet",
+  theme_color: "bronze",
   color_mode: "system",
   city: null,
   country_code: null,

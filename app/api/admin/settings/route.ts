@@ -62,7 +62,7 @@ export async function PATCH(request: Request) {
       );
     }
 
-    revalidateTag("site-settings", "max");
+    revalidateTag("site-settings");
     return NextResponse.json(result.data);
   } catch (error: any) {
     console.error("PATCH site_settings Unknown Error:", error);

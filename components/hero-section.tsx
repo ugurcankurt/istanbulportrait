@@ -43,7 +43,7 @@ export async function HeroSection({
       </div>
 
       {/* Content Wrapper */}
-      <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 mb-[5vh] mt-[5vh] sm:mb-[10vh] sm:mt-0 flex lg:justify-start">
+      <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 md:py-16 lg:py-20 flex lg:justify-start">
         <div className="text-left text-white w-full max-w-6xl">
           <HeroClientWrapper
             packagesButtonText={tui("packages_button")}
@@ -53,12 +53,12 @@ export async function HeroSection({
             locationsHref={locationsHref}
           >
             {/* Main Title - Server Rendered for LCP */}
-            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-serif font-normal mb-6 leading-[1.1] tracking-tight drop-shadow-2xl text-white">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-[3.25rem] xl:text-[3.75rem] font-serif font-normal mb-4 sm:mb-5 leading-[1.12] tracking-[-0.025em] drop-shadow-2xl text-white text-balance max-w-2xl">
               {title}
             </h1>
 
             {/* Subtitle - Server Rendered */}
-            <p className="text-lg md:text-xl lg:text-2xl mb-8 text-white/90 leading-relaxed font-light drop-shadow-md max-w-2xl">
+            <p className="text-sm sm:text-base md:text-lg mb-6 sm:mb-8 text-white/90 leading-relaxed font-light drop-shadow-md max-w-xl">
               {subtitle}
             </p>
           </HeroClientWrapper>

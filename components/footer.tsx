@@ -157,14 +157,14 @@ export function Footer({ dynamicNavData = {}, settings }: FooterProps) {
 
           {/* Quick Links */}
           <div className="space-y-4">
-            <p className="font-semibold">{t("quickLinks")}</p>
+            <p className="text-sm font-serif font-semibold text-foreground tracking-wide">{t("quickLinks")}</p>
             <ul className="space-y-2">
               {quickLinks.map((link) => (
                 <li key={link.href}>
                   <Link
                     href={link.href}
                     prefetch={true}
-                    className="text-muted-foreground hover:text-foreground transition-colors text-sm"
+                    className="text-muted-foreground hover:text-foreground transition-colors text-sm font-light"
                   >
                     {link.label}
                   </Link>
@@ -175,8 +175,8 @@ export function Footer({ dynamicNavData = {}, settings }: FooterProps) {
 
           {/* Services */}
           <div className="space-y-4">
-            <p className="font-semibold">{t("services")}</p>
-            <ul className="space-y-2 text-sm text-muted-foreground">
+            <p className="text-sm font-serif font-semibold text-foreground tracking-wide">{t("services")}</p>
+            <ul className="space-y-2 text-sm text-muted-foreground font-light">
               {mounted ? (
                 activePackages.length > 0 ? (
                   activePackages.map((pkg) => {
@@ -210,7 +210,7 @@ export function Footer({ dynamicNavData = {}, settings }: FooterProps) {
 
           {/* Contact Info */}
           <div className="space-y-4">
-            <p className="font-semibold">{tui("contact")}</p>
+            <p className="text-sm font-serif font-semibold text-foreground tracking-wide">{tui("contact")}</p>
             <div className="space-y-3 text-sm text-muted-foreground">
               <div className="flex items-start space-x-2 rtl:space-x-reverse">
                 <MapPin className="h-5 w-5 shrink-0" />

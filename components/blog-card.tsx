@@ -59,10 +59,10 @@ export async function BlogCard({ post, locale, parentSegment }: BlogCardProps) {
               ))}
             </div>
           )}
-          <h2 className="text-2xl font-serif leading-tight mb-3 group-hover:text-primary transition-colors line-clamp-2">
+          <h2 className="text-xl sm:text-2xl font-serif font-normal leading-snug tracking-tight mb-2.5 group-hover:text-primary transition-colors line-clamp-2">
             {post.translation.title}
           </h2>
-          <p className="text-[10px] uppercase tracking-widest font-bold text-muted-foreground mb-4 flex flex-wrap items-center gap-2">
+          <p className="text-[11px] sm:text-xs uppercase tracking-[0.16em] font-medium text-muted-foreground mb-3 flex flex-wrap items-center gap-2">
             <span>
               {formatBlogDate(
                 post.published_at || post.created_at,
@@ -75,7 +75,7 @@ export async function BlogCard({ post, locale, parentSegment }: BlogCardProps) {
             </span>
           </p>
           {post.translation.excerpt && (
-            <p className="text-muted-foreground/80 leading-relaxed line-clamp-3 flex-1 text-sm">
+            <p className="text-muted-foreground/90 font-light leading-relaxed line-clamp-3 flex-1 text-xs sm:text-sm">
               {post.translation.excerpt}
             </p>
           )}

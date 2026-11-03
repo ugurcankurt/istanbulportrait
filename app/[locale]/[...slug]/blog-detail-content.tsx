@@ -113,7 +113,7 @@ export async function BlogDetailPageContent({
           {/* Header */}
           <header className="mb-12">
             <div className="text-center max-w-4xl mx-auto px-4 mb-8">
-              <div className="flex flex-wrap justify-center items-center gap-3 text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-6">
+              <div className="flex flex-wrap justify-center items-center gap-3 text-xs sm:text-sm font-medium uppercase tracking-[0.16em] text-muted-foreground mb-5 sm:mb-6">
                 <time dateTime={post.published_at || post.created_at}>
                   {formatBlogDate(
                     post.published_at || post.created_at,
@@ -126,7 +126,7 @@ export async function BlogDetailPageContent({
                 </span>
               </div>
 
-              <h1 className="text-4xl md:text-6xl lg:text-7xl font-serif leading-tight text-foreground mb-8">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-serif font-normal leading-[1.12] tracking-tight text-foreground mb-6 sm:mb-8 text-balance">
                 {post.translation.title}
               </h1>
             </div>
@@ -221,7 +221,7 @@ export async function BlogDetailPageContent({
           {/* Related Posts */}
           {relatedPosts.length > 0 && (
             <div className="mt-16 pt-12 border-t border-border/50">
-              <h2 className="text-3xl font-serif text-foreground mb-8 text-center">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-serif font-normal tracking-tight text-foreground mb-8 text-center">
                 {t("related_posts")}
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">

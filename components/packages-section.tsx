@@ -148,7 +148,7 @@ export function PackagesSection({
           {/* Top Left Badges */}
           <div className="absolute top-3 start-3 z-10 flex flex-col gap-2 items-start">
             {pkg.isPerPerson && (
-              <Badge className="bg-black/50 backdrop-blur-md border border-white/20 text-white px-2 py-0.5 text-[9px] sm:text-[10px] tracking-widest uppercase shadow-sm font-medium">
+              <Badge className="bg-black/50 backdrop-blur-md border border-white/20 text-white px-2.5 py-0.5 text-[9px] sm:text-[10px] tracking-widest uppercase shadow-sm font-medium">
                 {t("per_person")}
               </Badge>
             )}
@@ -157,13 +157,13 @@ export function PackagesSection({
           {/* Seasonal Discount Badge (Top Right) */}
           <div className="absolute top-3 end-3 z-10 flex flex-col gap-2 items-end">
             {pkg.popular && (
-              <Badge className="bg-white/20 backdrop-blur-md border border-white/30 text-white px-3 py-1 text-[10px] sm:text-xs tracking-widest uppercase shadow-sm font-serif">
+              <Badge className="bg-white/20 backdrop-blur-md border border-white/30 text-white px-3 py-1 text-[10px] sm:text-xs tracking-widest uppercase shadow-sm font-medium">
                 {tui("most_popular")}
               </Badge>
             )}
             {pkg.pricing?.isDiscounted &&
               pkg.pricing.discountPercentage > 0 && (
-                <Badge className="bg-red-600 backdrop-blur-md border border-red-500 text-white px-2 py-0.5 text-[10px] shadow-sm">
+                <Badge className="bg-red-600/90 backdrop-blur-md border border-red-500 text-white px-2.5 py-0.5 text-[10px] sm:text-xs tracking-wide shadow-sm font-medium">
                   {pkg.pricing.discountName}
                 </Badge>
               )}
@@ -172,11 +172,11 @@ export function PackagesSection({
           {/* Footer Content Area Overlaid on Image */}
           <div className="absolute inset-0 z-10 flex flex-col justify-end p-4 sm:p-5">
             {asHeading ? (
-              <h3 className="text-xl sm:text-2xl font-serif font-medium text-white line-clamp-2 mb-2 leading-tight drop-shadow-md">
+              <h3 className="text-xl sm:text-2xl lg:text-[1.625rem] font-serif font-normal text-white line-clamp-2 mb-2 leading-tight drop-shadow-md tracking-tight">
                 {pkg.name}
               </h3>
             ) : (
-              <div className="text-xl sm:text-2xl font-serif font-medium text-white line-clamp-2 mb-2 leading-tight drop-shadow-md">
+              <div className="text-xl sm:text-2xl lg:text-[1.625rem] font-serif font-normal text-white line-clamp-2 mb-2 leading-tight drop-shadow-md tracking-tight">
                 {pkg.name}
               </div>
             )}
@@ -207,15 +207,15 @@ export function PackagesSection({
               {/* Right: Price */}
               <div className="flex flex-col items-end justify-end leading-none">
                 {pkg.pricing?.isDiscounted && (
-                  <span className="text-[10px] sm:text-[11px] text-white/70 line-through drop-shadow-sm mb-0.5">
+                  <span className="text-[10px] sm:text-xs text-white/70 line-through drop-shadow-sm mb-0.5">
                     {formatPrice(pkg.basePrice)}
                   </span>
                 )}
                 <div className="flex items-end gap-1.5">
-                  <span className="text-[11px] sm:text-[12px] text-white/90 lowercase tracking-wide drop-shadow-md pb-[2px]">
+                  <span className="text-[11px] sm:text-xs text-white/90 lowercase tracking-wide drop-shadow-md pb-[2px]">
                     {t("starting_from")} /
                   </span>
-                  <span className="text-lg sm:text-xl font-serif font-semibold text-white drop-shadow-md">
+                  <span className="text-lg sm:text-xl lg:text-2xl font-serif font-semibold text-white drop-shadow-md tracking-tight">
                     {formatPrice(
                       pkg.pricing?.isDiscounted
                         ? pkg.pricing.price

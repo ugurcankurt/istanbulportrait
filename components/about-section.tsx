@@ -179,10 +179,10 @@ export function AboutSection({
                   <div className="w-14 h-14 sm:w-16 sm:h-16 mx-auto mb-4 sm:mb-6 rounded-[1.5rem] bg-primary/5 border-[0.5px] border-primary/20 shadow-sm flex items-center justify-center transition-transform duration-500 group-hover:scale-110">
                     <stat.icon className="w-6 h-6 sm:w-7 sm:h-7 lg:w-8 lg:h-8 text-primary" />
                   </div>
-                  <div className="text-2xl sm:text-3xl font-bold text-primary mb-2">
+                  <div className="text-3xl sm:text-4xl lg:text-5xl font-serif font-semibold text-primary mb-2 tracking-tight">
                     {stat.number}
                   </div>
-                  <p className="text-muted-foreground font-medium text-xs sm:text-sm">
+                  <p className="text-muted-foreground font-medium text-xs sm:text-sm uppercase tracking-wider">
                     {stat.label}
                   </p>
                 </CardContent>
@@ -195,7 +195,7 @@ export function AboutSection({
         <div className="mx-auto">
           {highlightsHeader}
 
-          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
             {highlights.map((highlight, i) => (
               <div key={`highlight-${highlight.title}-${i}`} className="group">
                 <Card className="text-center p-6 sm:p-8 rounded-[2rem] border border-white/20 dark:border-white/10 shadow-lg transition-all duration-500 hover:shadow-xl hover:border-primary/30 bg-background/40 backdrop-blur-2xl h-full flex flex-col justify-center">
@@ -203,10 +203,10 @@ export function AboutSection({
                     <div className="w-12 h-12 sm:w-14 sm:h-14 mx-auto mb-4 sm:mb-6 rounded-2xl bg-primary/5 border-[0.5px] border-primary/20 shadow-sm flex items-center justify-center transition-transform duration-500 group-hover:scale-110">
                       <highlight.icon className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
                     </div>
-                    <h3 className="text-lg sm:text-xl font-semibold mb-2 sm:mb-3">
+                    <h3 className="text-lg sm:text-xl font-serif font-normal tracking-tight mb-2 sm:mb-3">
                       {highlight.title}
                     </h3>
-                    <p className="text-muted-foreground text-xs sm:text-sm leading-relaxed">
+                    <p className="text-muted-foreground font-light text-xs sm:text-sm leading-relaxed">
                       {highlight.description}
                     </p>
                   </CardContent>

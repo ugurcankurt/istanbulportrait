@@ -27,10 +27,10 @@ export function ErrorContent({ error, reset }: ErrorContentProps) {
           <div className="mx-auto w-16 h-16 bg-destructive/10 rounded-full flex items-center justify-center mb-2">
             <AlertTriangle className="w-8 h-8 text-destructive" />
           </div>
-          <CardTitle className="text-2xl font-bold">
+          <CardTitle className="text-2xl sm:text-3xl font-serif font-normal text-foreground tracking-tight">
             Oops! Something went wrong.
           </CardTitle>
-          <p className="text-muted-foreground text-sm">
+          <p className="text-muted-foreground font-light text-sm sm:text-base leading-relaxed">
             We are incredibly sorry, but an unexpected error occurred while
             loading this page. Please try refreshing.
           </p>

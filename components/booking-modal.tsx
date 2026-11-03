@@ -739,10 +739,10 @@ export function BookingModal({
         showCloseButton={true}
       >
         <DialogHeader className="px-6 py-8 border-b bg-background text-center flex flex-col items-center justify-center">
-          <span className="text-xs font-bold text-muted-foreground uppercase tracking-widest">
+          <span className="text-[11px] sm:text-xs font-semibold text-muted-foreground uppercase tracking-[0.16em]">
             {t("booking_details")}
           </span>
-          <DialogTitle className="text-3xl font-serif leading-tight text-foreground mt-2 px-8">
+          <DialogTitle className="text-2xl sm:text-3xl font-serif font-normal leading-tight text-foreground tracking-tight mt-2 px-8">
             {packageDisplayName}
           </DialogTitle>
         </DialogHeader>
@@ -754,7 +754,7 @@ export function BookingModal({
         <DialogFooter className="p-6 border-t bg-background shadow-[0_-4px_10px_rgba(0,0,0,0.03)] flex flex-row items-center justify-center gap-4">
           <Button
             type="submit"
-            className="h-12 px-8 text-md font-bold w-full max-w-md"
+            className="h-12 sm:h-14 px-8 text-sm sm:text-base font-semibold tracking-wide w-full max-w-md"
             onClick={handleSubmit}
             disabled={isNavigating || form.formState.isSubmitting}
           >

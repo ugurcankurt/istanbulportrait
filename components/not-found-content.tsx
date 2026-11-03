@@ -70,7 +70,7 @@ export function NotFoundContent({
                     priority
                   />
                 ) : (
-                  <span className="text-3xl md:text-5xl font-bold text-white drop-shadow-lg tracking-wider">
+                  <span className="text-3xl md:text-5xl font-serif font-normal text-white drop-shadow-lg tracking-tight">
                     {settings?.site_name || "Istanbul Portrait"}
                   </span>
                 )}
@@ -80,7 +80,7 @@ export function NotFoundContent({
 
           {/* 404 Number */}
           <div className="mb-4 sm:mb-6 md:mb-8">
-            <h1 className="text-6xl sm:text-7xl md:text-8xl lg:text-9xl xl:text-[10rem] font-bold text-white/20 leading-none tracking-tighter">
+            <h1 className="text-6xl sm:text-7xl md:text-8xl lg:text-9xl xl:text-[10rem] font-serif font-normal text-white/20 leading-none tracking-tighter">
               404
             </h1>
           </div>
@@ -93,12 +93,12 @@ export function NotFoundContent({
           </div>
 
           {/* Title */}
-          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-3 sm:mb-4 md:mb-6 leading-tight">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-serif font-normal text-white mb-3 sm:mb-4 md:mb-6 leading-tight tracking-tight">
             {title}
           </h2>
 
           {/* Subtitle */}
-          <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-white/90 mb-2 sm:mb-3 md:mb-4 font-medium">
+          <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-white/90 mb-2 sm:mb-3 md:mb-4 font-light">
             {subtitle}
           </p>
 

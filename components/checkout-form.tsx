@@ -147,7 +147,7 @@ function Step1Summary({
         <div className="rounded-2xl border-[0.5px] border-primary/20 bg-primary/5 p-4">
           <div className="flex items-start justify-between gap-2">
             <div className="min-w-0">
-              <p className="font-bold text-sm text-foreground truncate">
+              <p className="font-serif font-normal text-base sm:text-lg text-foreground truncate">
                 {packageInfo?.name}
               </p>
               <div className="flex flex-wrap gap-x-3 gap-y-0.5 mt-1">
@@ -853,7 +853,7 @@ export function CheckoutForm({
           </span>
         </Link>
 
-        <div className="text-sm font-bold text-foreground absolute left-1/2 -translate-x-1/2">
+        <div className="text-sm sm:text-base font-serif font-normal text-foreground absolute left-1/2 -translate-x-1/2">
           {t("title")}
         </div>
 

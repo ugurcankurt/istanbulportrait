@@ -71,16 +71,16 @@ export function HeroClientWrapper({
     <div
       className={cn(
         "flex flex-col items-start w-full",
-        hasVisited && "lg:grid lg:grid-cols-2 lg:gap-12 lg:items-center",
+        hasVisited && "lg:grid lg:grid-cols-12 lg:gap-8 xl:gap-12 lg:items-center",
       )}
     >
-      <div className={cn("max-w-2xl w-full", !hasVisited && "lg:max-w-3xl")}>
+      <div className={cn("w-full", hasVisited ? "lg:col-span-7" : "max-w-3xl")}>
         {children}
 
         {/* CTA Buttons - Client side tracking and layout adjustment */}
         <div
           data-nosnippet
-          className="flex flex-row flex-wrap justify-start items-center gap-4 w-full mb-8"
+          className="flex flex-row flex-wrap justify-start items-center gap-3 sm:gap-4 w-full"
         >
           <Button
             nativeButton={false}
@@ -95,7 +95,7 @@ export function HeroClientWrapper({
               </Link>
             }
             size="lg"
-            className="w-auto min-w-[160px] h-14 px-8 rounded-full font-bold text-base shadow-lg transition-transform active:scale-[0.98] hover:scale-105 bg-white text-slate-900 border-none hover:bg-slate-100"
+            className="w-auto min-w-[140px] sm:min-w-[160px] h-11 sm:h-13 px-6 sm:px-8 rounded-full font-semibold text-sm sm:text-base tracking-wide shadow-lg transition-transform active:scale-[0.98] hover:scale-105 bg-white text-slate-900 border-none hover:bg-slate-100"
             onClick={() => trackEvent("cta_click", "Hero", "View Packages")}
           />
 
@@ -108,14 +108,14 @@ export function HeroClientWrapper({
             }
             variant="outline"
             size="lg"
-            className="w-auto min-w-[160px] h-14 px-8 rounded-full border-[0.5px] border-white/40 bg-white/5 backdrop-blur-sm hover:bg-white/10 text-white font-semibold transition-all active:scale-[0.98] hover:scale-105"
+            className="w-auto min-w-[140px] sm:min-w-[160px] h-11 sm:h-13 px-6 sm:px-8 rounded-full border-[0.5px] border-white/40 bg-white/5 backdrop-blur-sm hover:bg-white/10 text-white font-semibold text-sm sm:text-base tracking-wide transition-all active:scale-[0.98] hover:scale-105"
             onClick={() => trackEvent("cta_click", "Hero", "Check Locations")}
           />
         </div>
       </div>
 
       {hasVisited && (
-        <div className="w-full mt-4 lg:mt-0">
+        <div className="w-full lg:col-span-5 mt-6 lg:mt-0">
           <ResumeViewingCard
             visitedPackages={visitedPackages}
             showTitle={true}

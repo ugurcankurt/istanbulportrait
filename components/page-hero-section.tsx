@@ -6,13 +6,13 @@ export function PageHeroSection({
   subtitle: string;
 }) {
   return (
-    <section className="py-4 sm:py-6 lg:py-8 bg-primary/5 dark:bg-primary/10">
+    <section className="py-8 sm:py-12 lg:py-16 bg-gradient-to-b from-primary/[0.04] via-muted/20 to-background border-b border-border/40">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-start mb-6 sm:mb-8 lg:mb-10">
-          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4 sm:mb-6">
+        <div className="text-start max-w-4xl">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-[3.25rem] font-serif font-normal leading-[1.14] tracking-tight mb-3 sm:mb-4 text-balance">
             {title}
           </h1>
-          <p className="text-base sm:text-lg lg:text-xl max-w-3xl text-muted-foreground">
+          <p className="text-sm sm:text-base md:text-lg text-muted-foreground font-light leading-relaxed max-w-2xl">
             {subtitle}
           </p>
         </div>

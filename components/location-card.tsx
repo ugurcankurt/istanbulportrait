@@ -87,7 +87,7 @@ export function LocationCard({
 
             {/* Location Name on Image - Bottom Left */}
             <div className="absolute bottom-2 sm:bottom-3 left-2 sm:left-3 right-2 sm:right-3">
-              <h3 className="text-white text-base sm:text-lg font-bold drop-shadow-lg">
+              <h3 className="text-white text-base sm:text-lg lg:text-xl font-serif font-normal drop-shadow-lg tracking-tight">
                 {dynamicTitle}
               </h3>
             </div>
@@ -96,7 +96,7 @@ export function LocationCard({
           {/* Content */}
           <CardContent className="p-3 sm:p-4">
             {/* Description */}
-            <p className="text-xs sm:text-sm text-muted-foreground line-clamp-2 mb-3 min-h-[2.5rem] sm:min-h-[2.75rem]">
+            <p className="text-xs sm:text-sm text-muted-foreground/90 font-light leading-relaxed line-clamp-2 mb-3 min-h-[2.5rem] sm:min-h-[2.75rem]">
               {dynamicDesc}
             </p>
 

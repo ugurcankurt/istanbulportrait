@@ -333,12 +333,12 @@ export default async function HomePage({
             header={
               <div
                 key="packages-header"
-                className="text-left mb-4 sm:mb-4 lg:mb-4"
+                className="text-left mb-6 sm:mb-8"
               >
-                <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-4xl font-bold mb-2 sm:mb-2">
+                <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif font-normal tracking-tight leading-tight mb-2 sm:mb-3">
                   {getDynamicTitle("home-packages", tPackages("title"))}
                 </h2>
-                <p className="text-base sm:text-lg lg:text-xl text-muted-foreground max-w-6xl">
+                <p className="text-base sm:text-lg lg:text-xl text-muted-foreground font-light leading-relaxed max-w-4xl">
                   {getDynamicSubtitle("home-packages", tPackages("subtitle"))}
                 </p>
               </div>
@@ -353,12 +353,12 @@ export default async function HomePage({
             header={
               <div
                 key="gallery-header"
-                className="text-left mb-4 sm:mb-4 lg:mb-4"
+                className="text-left mb-6 sm:mb-8"
               >
-                <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-4xl font-bold mb-2 sm:mb-2">
+                <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif font-normal tracking-tight leading-tight mb-2 sm:mb-3">
                   {getDynamicTitle("home-portfolio", tGallery("title"))}
                 </h2>
-                <p className="text-base sm:text-lg lg:text-xl text-muted-foreground max-w-5xl">
+                <p className="text-base sm:text-lg lg:text-xl text-muted-foreground font-light leading-relaxed max-w-4xl">
                   {getDynamicSubtitle("home-portfolio", tGallery("subtitle"))}
                 </p>
               </div>
@@ -372,9 +372,9 @@ export default async function HomePage({
             header={
               <div
                 key="instagram-header"
-                className="text-left mb-4 sm:mb-4 lg:mb-4"
+                className="text-left mb-6 sm:mb-8"
               >
-                <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-4xl font-bold mb-2 sm:mb-2">
+                <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif font-normal tracking-tight leading-tight mb-2 sm:mb-3">
                   {getDynamicTitle(
                     "home-instagram",
                     tUi("instagram_feed.title"),
@@ -384,7 +384,7 @@ export default async function HomePage({
                   href={`https://instagram.com/${(settings.instagram_url?.split("/").pop() || "").trim()}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-base sm:text-lg lg:text-xl text-muted-foreground max-w-5xl"
+                  className="text-base sm:text-lg lg:text-xl text-muted-foreground font-light hover:text-primary transition-colors max-w-4xl"
                 >
                   {getDynamicSubtitle(
                     "home-instagram",
@@ -402,11 +402,11 @@ export default async function HomePage({
           <FAQSection
             dynamicFaqs={getDynamicFaqs()}
             header={
-              <div key="faq-header" className="text-left mb-4 sm:mb-4 lg:mb-4">
-                <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-4xl font-bold mb-2 sm:mb-2">
+              <div key="faq-header" className="text-left mb-6 sm:mb-8">
+                <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif font-normal tracking-tight leading-tight mb-2 sm:mb-3">
                   {getDynamicTitle("home-faq", tFaq("title"))}
                 </h2>
-                <p className="text-base sm:text-lg lg:text-xl text-muted-foreground max-w-5xl">
+                <p className="text-base sm:text-lg lg:text-xl text-muted-foreground font-light leading-relaxed max-w-4xl">
                   {getDynamicSubtitle("home-faq", tFaq("subtitle"))}
                 </p>
               </div>
@@ -420,12 +420,12 @@ export default async function HomePage({
             header={
               <div
                 key="reviews-header"
-                className="text-left mb-4 sm:mb-4 lg:mb-4"
+                className="text-left mb-6 sm:mb-8"
               >
-                <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-4xl font-bold mb-2 sm:mb-2">
+                <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif font-normal tracking-tight leading-tight mb-2 sm:mb-3">
                   {getDynamicTitle("home-reviews", tReviews("title"))}
                 </h2>
-                <p className="text-base sm:text-lg lg:text-xl text-muted-foreground max-w-5xl">
+                <p className="text-base sm:text-lg lg:text-xl text-muted-foreground font-light leading-relaxed max-w-4xl">
                   {getDynamicSubtitle("home-reviews", tReviews("subtitle"))}
                 </p>
               </div>

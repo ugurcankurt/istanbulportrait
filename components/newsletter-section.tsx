@@ -95,14 +95,14 @@ export function NewsletterSection() {
 
           <CardContent className="p-8 sm:p-12 md:p-16 relative z-10">
             <div className="text-center mb-10 space-y-4">
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-semibold uppercase tracking-wider">
+              <span className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-primary/10 text-primary text-xs font-semibold uppercase tracking-[0.16em]">
                 <Mail className="w-3.5 h-3.5" />
                 {getTrans("newsletter_badge", "Special Offer")}
               </span>
-              <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-foreground">
+              <h2 className="text-3xl md:text-4xl lg:text-5xl font-serif font-normal tracking-tight text-foreground leading-tight text-balance">
                 {getTrans("newsletter_title", "Get Your Exclusive Promo Code")}
               </h2>
-              <p className="text-muted-foreground text-base md:text-lg max-w-2xl mx-auto">
+              <p className="text-muted-foreground font-light text-base md:text-lg max-w-2xl mx-auto leading-relaxed">
                 {getTrans(
                   "newsletter_subtitle",
                   "Subscribe to our newsletter to receive an instant discount code for your next photoshoot, plus seasonal updates and early access to new packages.",

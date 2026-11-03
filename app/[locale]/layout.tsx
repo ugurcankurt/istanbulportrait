@@ -1,9 +1,9 @@
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import {
+  Cormorant_Garamond,
   Geist_Mono,
-  Instrument_Sans,
-  Playfair_Display,
+  Plus_Jakarta_Sans,
 } from "next/font/google";
 import Script from "next/script";
 import { NextIntlClientProvider } from "next-intl";
@@ -55,19 +55,25 @@ const DeferredCookieConsent = dynamic(() =>
   ),
 );
 
-const fontHeading = Playfair_Display({
-  variable: "--font-heading",
+const fontHeading = Cormorant_Garamond({
+  variable: "--font-cormorant",
   subsets: ["latin", "latin-ext", "cyrillic"],
+  display: "swap",
+  style: ["normal", "italic"],
+  weight: ["300", "400", "500", "600", "700"],
 });
 
-const fontSans = Instrument_Sans({
-  variable: "--font-sans",
+const fontSans = Plus_Jakarta_Sans({
+  variable: "--font-jakarta",
   subsets: ["latin", "latin-ext"],
+  display: "swap",
+  weight: ["300", "400", "500", "600", "700", "800"],
 });
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin", "latin-ext"],
+  display: "swap",
 });
 
 export const viewport = {
@@ -212,17 +218,27 @@ export default async function LocaleLayout({
       lang={locale === "zh" ? "zh-CN" : locale}
       dir={locale === "ar" ? "rtl" : "ltr"}
       data-scroll-behavior="smooth"
-      className={`${fontSans.variable} ${fontHeading.variable} ${geistMono.variable} theme-${settings.theme_color || "violet"}`}
+      className={`${fontSans.variable} ${fontHeading.variable} ${geistMono.variable} theme-${settings.theme_color || "bronze"}`}
       suppressHydrationWarning
     >
       <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link
+          rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossOrigin="anonymous"
+        />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,600&display=swap"
+          rel="stylesheet"
+        />
         <link
           rel="ai-catalog"
           href="/.well-known/ai-catalog.json"
           type="application/ai-catalog+json"
         />
       </head>
-      <body className="antialiased" suppressHydrationWarning>
+      <body className="antialiased font-sans" suppressHydrationWarning>
         {settings.custom_head_scripts && (
           <div
             id="custom-head-scripts"

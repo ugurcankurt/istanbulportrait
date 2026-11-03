@@ -55,10 +55,10 @@ export default function CustomerLoginPage() {
 
       <Card className="w-full max-w-md relative z-10 border-border/50 bg-card/60 backdrop-blur-xl">
         <CardHeader className="space-y-3 text-center pb-6">
-          <CardTitle className="text-3xl font-bold tracking-tight">
+          <CardTitle className="text-2xl sm:text-3xl md:text-4xl font-serif font-normal text-foreground tracking-tight">
             {t("title")}
           </CardTitle>
-          <CardDescription className="text-base">
+          <CardDescription className="text-sm sm:text-base font-light leading-relaxed">
             {t("description")}
           </CardDescription>
         </CardHeader>
