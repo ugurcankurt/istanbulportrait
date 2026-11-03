@@ -188,25 +188,29 @@ export const pagesContentService = {
    */
   async getDynamicCoreNavData(
     locale: string,
-  ): Promise<Record<string, { path: string; title: string | null }>> {
+  ): Promise<Record<string, { path: string; title: string | null; navTitle?: string | null }>> {
     const pages = await this.getAllPages();
     const { generateNativeSlug } = await import("@/lib/slug-generator");
 
-    const navMap: Record<string, { path: string; title: string | null }> = {};
+    const navMap: Record<string, { path: string; title: string | null; navTitle?: string | null }> = {};
 
     for (const page of pages) {
       if (!page.is_active) continue;
 
       const locTitle = page.title?.[locale];
+      const customNavTitle = page.content?.nav_title?.[locale] || null;
+
       if (locTitle) {
         navMap[page.slug] = {
           path: generateNativeSlug(locTitle),
           title: locTitle,
+          navTitle: customNavTitle,
         };
       } else {
         navMap[page.slug] = {
           path: page.slug,
           title: page.title?.en || null,
+          navTitle: customNavTitle,
         };
       }
     }

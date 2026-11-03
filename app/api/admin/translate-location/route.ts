@@ -39,10 +39,10 @@ export async function POST(req: Request) {
 
     const { settingsService } = await import("@/lib/settings-service");
     const settings = await settingsService.getSettings();
-    const apiKey = settings.gemini_api_key;
+    const apiKey = settings.gemini_api_key || process.env.GEMINI_API_KEY;
     if (!apiKey) {
       return NextResponse.json(
-        { error: "Groq API Key is not configured in Site Settings." },
+        { error: "Gemini API Key is not configured in Site Settings or environment." },
         { status: 500 },
       );
     }

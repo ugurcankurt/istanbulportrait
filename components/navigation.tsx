@@ -49,7 +49,10 @@ const locales = [
 ];
 
 interface NavigationProps {
-  dynamicNavData?: Record<string, { path: string; title: string | null }>;
+  dynamicNavData?: Record<
+    string,
+    { path: string; title: string | null; navTitle?: string | null }
+  >;
   settings?: any;
 }
 
@@ -86,23 +89,23 @@ export function Navigation({ dynamicNavData = {}, settings }: NavigationProps) {
     { href: `/${locale}`, label: t("home") },
     {
       href: `/${locale}/${dynamicNavData.packages?.path || "packages"}`,
-      label: dynamicNavData.packages?.title || t("packages"),
+      label: dynamicNavData.packages?.navTitle || t("packages"),
     },
     {
       href: `/${locale}/${dynamicNavData.locations?.path || "locations"}`,
-      label: dynamicNavData.locations?.title || t("locations"),
+      label: dynamicNavData.locations?.navTitle || t("locations"),
     },
     {
       href: `/${locale}/${dynamicNavData.blog?.path || "blog"}`,
-      label: dynamicNavData.blog?.title || t("blog"),
+      label: dynamicNavData.blog?.navTitle || t("blog"),
     },
     {
       href: `/${locale}/${dynamicNavData.about?.path || "about"}`,
-      label: dynamicNavData.about?.title || t("about"),
+      label: dynamicNavData.about?.navTitle || t("about"),
     },
     {
       href: `/${locale}/${dynamicNavData.contact?.path || "contact"}`,
-      label: dynamicNavData.contact?.title || t("contact"),
+      label: dynamicNavData.contact?.navTitle || t("contact"),
     },
   ];
 

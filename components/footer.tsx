@@ -22,7 +22,10 @@ import { type PackageDB, packagesService } from "@/lib/packages-service";
 import { generateNativeSlug } from "@/lib/slug-generator";
 
 interface FooterProps {
-  dynamicNavData?: Record<string, { path: string; title: string | null }>;
+  dynamicNavData?: Record<
+    string,
+    { path: string; title: string | null; navTitle?: string | null }
+  >;
   settings?: any;
 }
 
@@ -85,15 +88,15 @@ export function Footer({ dynamicNavData = {}, settings }: FooterProps) {
     { href: "/" as const, label: nav("home") },
     {
       href: `/${dynamicNavData.packages?.path || "packages"}` as any,
-      label: dynamicNavData.packages?.title || nav("packages"),
+      label: dynamicNavData.packages?.navTitle || nav("packages"),
     },
     {
       href: `/${dynamicNavData.about?.path || "about"}` as any,
-      label: dynamicNavData.about?.title || nav("about"),
+      label: dynamicNavData.about?.navTitle || nav("about"),
     },
     {
       href: `/${dynamicNavData.contact?.path || "contact"}` as any,
-      label: dynamicNavData.contact?.title || nav("contact"),
+      label: dynamicNavData.contact?.navTitle || nav("contact"),
     },
   ];
 
