@@ -73,6 +73,8 @@ export function YandexMetrica({ id, enabled = true }: YandexMetricaProps) {
             src={`https://mc.yandex.ru/watch/${id}`}
             style={{ position: "absolute", left: "-9999px" }}
             alt=""
+            aria-hidden="true"
+            role="presentation"
           />
         </div>
       </noscript>

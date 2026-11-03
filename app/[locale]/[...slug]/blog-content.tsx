@@ -1,3 +1,4 @@
+import { notFound } from "next/navigation";
 import NextLink from "next/link";
 import { getTranslations } from "next-intl/server";
 import { BlogCard } from "@/components/blog-card";
@@ -14,9 +15,6 @@ import {
 import { generateNativeSlug } from "@/lib/slug-generator";
 import type { Locale } from "@/types/blog";
 
-// Force dynamic rendering for blog list page (uses searchParams)
-export const dynamic = "force-dynamic";
-
 export async function BlogPageContent({
   params,
   searchParams,
@@ -27,7 +25,7 @@ export async function BlogPageContent({
   const { locale } = await params;
   const { page: pageParam } = await searchParams;
   const t = await getTranslations({ locale, namespace: "blog" });
-  const page = Number.parseInt(pageParam || "1", 10);
+  const page = Math.max(1, Number.parseInt(pageParam || "1", 10) || 1);
 
   const dbPage = await pagesContentService.getPageBySlug("blog");
   const dynamicTitle = dbPage?.title?.[locale] || dbPage?.title?.en || "blog";
@@ -44,6 +42,10 @@ export async function BlogPageContent({
     sort_by: "published_at",
     sort_order: "desc",
   });
+
+  if (page > 1 && pagination.totalPages > 0 && page > pagination.totalPages) {
+    notFound();
+  }
 
   const collectionSchema = buildCollectionPageSchema({
     name: dynamicTitle,

@@ -143,21 +143,35 @@ export function BreadcrumbNav(props: BreadcrumbNavProps) {
       isLast?: boolean;
     }> = [];
 
-    // Always start with home
+    // Always start with localized home URL to avoid root 307 redirect
     items.push({
       label: t("home"),
-      href: "/",
+      href: `/${locale}`,
       isHome: true,
     });
 
     // Handle different routes
     if (pathWithoutLocale !== "/") {
-      const segments = pathWithoutLocale.split("/").filter(Boolean);
+      // Filter out empty segments and intermediate non-page taxonomy prefixes ("category", "tag")
+      // so breadcrumbs reflect the clean hierarchy (e.g. Home > Blog > Travel)
+      // and avoid producing 404 links to /blog/category and /blog/tag
+      const rawSegments = pathWithoutLocale.split("/").filter(Boolean);
+      const nonPageSegments = new Set(["category", "tag"]);
 
-      segments.forEach((segment, index) => {
+      const segments: Array<{ segment: string; fullPath: string }> = [];
+      let accumulatedPath = "";
+
+      for (const seg of rawSegments) {
+        accumulatedPath += `/${seg}`;
+        if (!nonPageSegments.has(seg.toLowerCase())) {
+          segments.push({ segment: seg, fullPath: accumulatedPath });
+        }
+      }
+
+      segments.forEach(({ segment, fullPath }, index) => {
         const isLast = index === segments.length - 1;
         let label = "";
-        const href = `/${segments.slice(0, index + 1).join("/")}`;
+        const href = fullPath;
 
         // First try to find translation key from path mapping
         const translationKey = pathToKeyMapping[segment];
@@ -201,9 +215,7 @@ export function BreadcrumbNav(props: BreadcrumbNavProps) {
     name: b.label,
     url: b.isLast
       ? decodedPathname
-      : b.href === "/"
-        ? `/${locale}`
-        : b.href || decodedPathname,
+      : b.href || `/${locale}`,
   }));
 
   return (

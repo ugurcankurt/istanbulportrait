@@ -1,7 +1,16 @@
+import type { Metadata } from "next";
 import { Suspense } from "react";
 import { getConsentCookie } from "@/app/actions/consent";
 import { BookingSuccess } from "@/components/booking-success";
 import { SuccessTracker } from "@/components/success-tracker";
+
+export const metadata: Metadata = {
+  title: "Booking Confirmed",
+  robots: {
+    index: false,
+    follow: false,
+  },
+};
 
 export default async function CheckoutPage({
   searchParams,

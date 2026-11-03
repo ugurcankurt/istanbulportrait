@@ -21,8 +21,6 @@ import {
 import { generateNativeSlug } from "@/lib/slug-generator";
 import type { Locale } from "@/types/blog";
 
-export const dynamic = "force-dynamic";
-
 export async function BlogCategoryContent({
   params,
   searchParams,
@@ -37,7 +35,7 @@ export async function BlogCategoryContent({
   const { locale } = await params;
   const { page: pageParam } = await searchParams;
   const t = await getTranslations({ locale, namespace: "blog" });
-  const page = Number.parseInt(pageParam || "1", 10);
+  const page = Math.max(1, Number.parseInt(pageParam || "1", 10) || 1);
 
   const dbPage = await pagesContentService.getPageBySlug("blog");
   const parentSegment = dbPage?.title?.[locale]
@@ -77,6 +75,10 @@ export async function BlogCategoryContent({
     sort_by: "published_at",
     sort_order: "desc",
   });
+
+  if (page > 1 && pagination.totalPages > 0 && page > pagination.totalPages) {
+    notFound();
+  }
 
   const collectionSchema = buildCollectionPageSchema({
     name: dynamicTitle,

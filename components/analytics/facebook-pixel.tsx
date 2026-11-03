@@ -184,6 +184,8 @@ export function FacebookPixel({ pixelId }: { pixelId?: string | null }) {
           style={{ display: "none" }}
           src={`https://www.facebook.com/tr?id=${pixelId}&ev=PageView&noscript=1`}
           alt=""
+          aria-hidden="true"
+          role="presentation"
         />
       </noscript>
 

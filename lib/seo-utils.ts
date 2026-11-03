@@ -14,31 +14,192 @@ export function getBaseUrl() {
 // ----------------------------------------------------
 
 /**
- * Strips HTML tags from rich text and truncates for SEO meta description.
+ * Formats a clean, high-CTR page title strictly within 50-65 characters.
+ * Prevents double-branding when the title already includes the brand name,
+ * and avoids SERP truncation on mobile and desktop.
+ */
+export function formatPageTitle(
+  title: string | null | undefined,
+  siteName: string = "Istanbul Portrait",
+): string {
+  const cleanTitle = (title || "").trim();
+  if (!cleanTitle) return siteName;
+
+  const normalizedTitle = cleanTitle.replace(/\s+/g, "").toLowerCase();
+  const normalizedSite = siteName.replace(/\s+/g, "").toLowerCase();
+
+  // If title already contains the brand name (e.g. "Istanbul Portrait" or "IstanbulPortrait")
+  if (
+    normalizedTitle.includes(normalizedSite) ||
+    normalizedTitle.includes("istanbulportrait")
+  ) {
+    return cleanTitle;
+  }
+
+  // If appending the site name fits within 65 characters, append it with standard separator
+  const separator = " | ";
+  if (cleanTitle.length + separator.length + siteName.length <= 65) {
+    return `${cleanTitle}${separator}${siteName}`;
+  }
+
+  // Otherwise return the clean title as is to prevent Google from truncating it mid-word
+  return cleanTitle;
+}
+
+/**
+ * Strips HTML tags and markdown formatting, and truncates cleanly for SEO meta description.
+ * Respects natural sentence boundaries (. ! ? 。 ！ ？ ؟) so descriptions don't end mid-sentence with '...'.
+ * Safely handles CJK (Chinese) without whitespace requirements (max 80 chars for CJK, 155 for others).
  */
 export function generateSeoDescription(
   content: string | null | undefined,
-  maxLength = 160,
+  maxLength = 155,
+  locale?: string,
 ): string | null {
   if (!content) return null;
 
   // 1. Remove HTML tags
   let cleanText = content.replace(/<[^>]*>?/gm, " ");
-  // 2. Remove markdown/formatting chars if any
+  // 2. Remove markdown formatting markers (links, headings, bold, italics)
+  cleanText = cleanText.replace(/\[([^\]]+)\]\([^)]+\)/g, "$1");
   cleanText = cleanText.replace(/[#*_~`>[\]()]/g, " ");
   // 3. Normalize whitespaces
   cleanText = cleanText.replace(/\s+/g, " ").trim();
 
   if (!cleanText) return null;
 
-  if (cleanText.length <= maxLength) return cleanText;
+  const isCJK = locale === "zh" || /[\u4e00-\u9fa5]/.test(cleanText);
+  const effectiveMax = isCJK ? Math.min(maxLength, 80) : maxLength;
 
-  // Truncate cleanly at word boundary
-  const truncated = cleanText.substring(0, maxLength);
-  return `${truncated.substring(
-    0,
-    Math.min(truncated.length, truncated.lastIndexOf(" ")),
-  )}...`;
+  if (cleanText.length <= effectiveMax) return cleanText;
+
+  const truncated = cleanText.substring(0, effectiveMax);
+
+  // Look for natural sentence boundary in the latter half of the allowable length
+  const minSentencePos = Math.floor(effectiveMax * 0.55);
+  const sentenceTerminators = isCJK ? /[。！？]/g : /[.!?؟]/g;
+  let lastSentenceEnd = -1;
+  let match: RegExpExecArray | null;
+
+  while ((match = sentenceTerminators.exec(truncated)) !== null) {
+    if (match.index >= minSentencePos) {
+      lastSentenceEnd = match.index + 1;
+    }
+  }
+
+  if (lastSentenceEnd > 0) {
+    return truncated.substring(0, lastSentenceEnd).trim();
+  }
+
+  // If no sentence end found, for CJK cut cleanly at effectiveMax
+  if (isCJK) {
+    return `${truncated.trim()}...`;
+  }
+
+  // For Latin and other space-delimited scripts, cut cleanly at last word boundary
+  const lastSpace = truncated.lastIndexOf(" ");
+  if (lastSpace > minSentencePos) {
+    return `${truncated.substring(0, lastSpace).trim()}...`;
+  }
+
+  return `${truncated.trim()}...`;
+}
+
+/**
+ * Fallback curated meta descriptions for core CMS pages when the subtitle is too short (<70 chars).
+ * Ensures search engines receive a rich 130-155 character description instead of a brief tagline.
+ */
+export function enrichSeoDescription(
+  rawDesc: string | null | undefined,
+  slug: string,
+  locale: string = "en",
+  _siteName: string = "Istanbul Portrait",
+): string {
+  const cleaned = generateSeoDescription(rawDesc, 160, locale);
+  const isCJK = locale === "zh";
+  const minLength = isCJK ? 35 : 75;
+
+  if (cleaned && cleaned.length >= minLength) {
+    return cleaned;
+  }
+
+  // Curated descriptions by page slug and locale
+  const defaults: Record<string, Record<string, string>> = {
+    packages: {
+      en: "Explore our Istanbul photoshoot packages and transparent EUR pricing. Rooftop sessions, flying dress, couples, families, and solo traveler shoots with same-day delivery.",
+      tr: "İstanbul profesyonel fotoğraf çekimi paketleri ve güncel fiyatları. Çatı terası, uçan elbise, çift, aile ve evlilik teklifi çekimlerinde aynı gün teslim.",
+      ar: "استكشف باقات جلسات التصوير الاحترافية في إسطنبول بأسعار شفافة. جلسات أسطح المنازل، الفستان الطائر، والأزواج مع تسليم سريع للصور.",
+      ru: "Пакеты профессиональных фотосессий в Стамбуле: фотосессии на крыше, в летящем платье, для пар и семей. Прозрачные цены и быстрая передача фото.",
+      es: "Descubre nuestros paquetes de sesiones de fotos en Estambul con precios transparentes. Sesiones en terrazas, vestido volador, parejas y familias.",
+      zh: "探索伊斯坦布尔专业摄影套餐与透明价格。天台写真、飞天裙拍摄、情侣与家庭写真，支持当天交付底片。",
+      fr: "Découvrez nos forfaits de séances photo à Istanbul. Séances sur les toits, robe volante, couples et familles avec livraison rapide des photos.",
+      de: "Entdecken Sie professionelle Fotoshooting-Pakete in Istanbul mit transparenten Preisen. Rooftop-Shootings, Flying Dress, Paare und Familien.",
+      ro: "Descoperiți pachetele noastre de ședințe foto în Istanbul cu prețuri transparente. Ședințe pe acoperiș, flying dress, cupluri și familii.",
+    },
+    locations: {
+      en: "Discover the best photo shoot locations in Istanbul. From Galata Tower and Ortaköy Mosque to Balat and rooftop views, find optimal times and photo tips.",
+      tr: "İstanbul'un en güzel fotoğraf çekim yerleri ve tarihi mekanları. Galata Kulesi, Ortaköy, Balat ve çatı teraslarında en iyi çekim saatleri ve rehberler.",
+      ar: "اكتشف أفضل أماكن جلسات التصوير في إسطنبول من برج غلطة وأورتاكوي إلى بالات والأسطح البانورامية مع نصائح التصوير وأوقات الإضاءة المثالية.",
+      ru: "Лучшие локации для фотосессий в Стамбуле: Галатская башня, Ортакёй, Балат и крыши с видом на Босфор. Советы фотографа и идеальное время для съёмки.",
+      es: "Las mejores ubicaciones para sesiones de fotos en Estambul: Torre de Gálata, mezquita de Ortaköy, Balat y terrazas con vistas al Bósforo.",
+      zh: "探索伊斯坦布尔绝佳摄影取景地：加拉塔石塔、奥塔科伊清真寺、巴拉特老街与博斯普鲁斯全景天台。",
+      fr: "Les meilleurs lieux pour une séance photo à Istanbul: Tour de Galata, mosquée d'Ortaköy, Balat et toits avec vue sur le Bosphore.",
+      de: "Die besten Foto-Spots in Istanbul: Galataturm, Ortaköy, Balat und Panoramadächer mit Blick auf den Bosporus. Tipps für das beste Licht.",
+      ro: "Cele mai bune locații pentru ședințe foto în Istanbul: Turnul Galata, Moscheea Ortaköy, Balat și terase panoramice cu vedere la Bosfor.",
+    },
+    blog: {
+      en: "Istanbul photography blog: insider tips on what to wear, best sunrise and sunset light spots, and travel inspiration from local portrait photographers.",
+      tr: "İstanbul fotoğrafçılık ve gezi rehberi: çekim için kıyafet önerileri, en iyi gün doğumu ve gün batımı ışık noktaları ve yerel fotoğrafçı tavsiyeleri.",
+      ar: "مدونة التصوير في إسطنبول: نصائح لاختيار الملابس، أفضل أوقات الإضاءة لشروق وغروب الشمس، وأفكار لجلسات تصوير مميزة من مصور محلي.",
+      ru: "Блог о фотосессиях в Стамбуле: советы по выбору одежды, лучшие точки для съемки на рассвете и закате от местного профессионального фотографа.",
+      es: "Blog de fotografía en Estambul: consejos de vestuario, mejores horas de luz al amanecer y atardecer, e inspiración para tus fotos de viaje.",
+      zh: "伊斯坦布尔摄影指南与旅行博客：穿搭建议、日出与日落最佳光线取景机位、本地摄影师独家实拍攻略。",
+      fr: "Blog photo à Istanbul: conseils vestimentaires, meilleurs moments de lumière au lever et coucher du soleil, et astuces de photographes locaux.",
+      de: "Istanbul Fotografie-Blog: Styling-Tipps, beste Zeiten für Sonnenaufgang und Sonnenuntergang sowie Fotoguides von lokalen Fotografen.",
+      ro: "Blog de fotografie în Istanbul: sfaturi pentru ținute, cele mai bune momente de lumină la răsărit și apus, și ghiduri locale de călătorie.",
+    },
+    contact: {
+      en: "Contact Istanbul Portrait to reserve your photoshoot date in Istanbul. Fast response on WhatsApp, transparent EUR pricing, and tailored photography sessions.",
+      tr: "İstanbul'da fotoğraf çekimi randevunuzu ayırtmak için iletişime geçin. WhatsApp üzerinden anında yanıt, şeffaf fiyatlar ve size özel çekim planı.",
+      ar: "تواصل مع إسطنبول بورتريت لحجز موعد جلسة التصوير الخاصة بك في إسطنبول. استجابة سريعة عبر واتساب وباقات مصممة خصيصاً لك.",
+      ru: "Свяжитесь с Istanbul Portrait для бронирования фотосессии в Стамбуле. Быстрый ответ в WhatsApp, прозрачные цены и индивидуальный подход.",
+      es: "Contacta con Istanbul Portrait para reservar tu sesión de fotos en Estambul. Respuesta rápida por WhatsApp y paquetes personalizados.",
+      zh: "联系伊斯坦布尔专业摄影工作室预约拍摄档期。支持微信与WhatsApp快速咨询，价格透明，按需定制专属行程。",
+      fr: "Contactez Istanbul Portrait pour réserver votre séance photo à Istanbul. Réponse rapide sur WhatsApp et forfaits sur mesure.",
+      de: "Kontaktieren Sie Istanbul Portrait für Ihr Fotoshooting in Istanbul. Schnelle Antwort via WhatsApp und maßgeschneiderte Shootings.",
+      ro: "Contactați Istanbul Portrait pentru a rezerva data ședinței foto în Istanbul. Răspuns rapid pe WhatsApp și pachete personalizate.",
+    },
+    about: {
+      en: "Meet your local Istanbul portrait photographer. Over 10 years of experience capturing couples, proposals, families, and solo travelers in Istanbul.",
+      tr: "İstanbul'daki yerel profesyonel fotoğrafçınız ile tanışın. 10 yılı aşkın deneyimle çift, evlilik teklifi, aile ve solo seyahat fotoğraf çekimleri.",
+      ar: "تعرف على مصورك المحلي المحترف في إسطنبول. أكثر من 10 سنوات من الخبرة في توثيق لحظات الأزواج والعائلات والمسافرين المنفردين.",
+      ru: "Познакомьтесь с вашим фотографом в Стамбуле. Более 10 лет опыта съемок для пар, предложений руки и сердца, семей и путешественников.",
+      es: "Conoce a tu fotógrafo local en Estambul. Más de 10 años de experiencia capturando parejas, pedidas de mano, familias y viajeros solos.",
+      zh: "认识您在伊斯坦布尔的本地专属摄影师。拥有超过10年肖像摄影经验，专注情侣写真、浪漫求婚、家庭及个人旅拍记录。",
+      fr: "Rencontrez votre photographe local à Istanbul. Plus de 10 ans d'expérience au service des couples, demandes en mariage et familles.",
+      de: "Lernen Sie Ihren lokalen Fotografen in Istanbul kennen. Über 10 Jahre Erfahrung mit Porträts, Heiratsanträgen, Paaren und Familien.",
+      ro: "Faceți cunoștință cu fotograful dvs. local din Istanbul. Peste 10 ani de experiență în capturarea cuplurilor, cererilor în căsătorie și familiilor.",
+    },
+    privacy: {
+      en: "Istanbul Portrait Privacy Policy. Learn how we securely collect, use, and protect your personal information and booking details in full privacy compliance.",
+      tr: "Istanbul Portrait Gizlilik Politikası. Kişisel verilerinizin ve rezervasyon bilgilerinizin nasıl güvenle korunduğunu ve işlendiğini öğrenin.",
+      ar: "سياسة الخصوصية لموقع إسطنبول بورتريت. تعرف على كيفية حماية بياناتك الشخصية وتفاصيل حجزك وفقاً لأعلى معايير الأمان.",
+      ru: "Политика конфиденциальности Istanbul Portrait. Узнайте, как мы защищаем и обрабатываем ваши персональные данные и информацию о бронировании.",
+      es: "Política de Privacidad de Istanbul Portrait. Descubre cómo recopilamos y protegemos tus datos personales y detalles de reserva.",
+      zh: "伊斯坦布尔人像摄影网站隐私政策。了解我们如何妥善保护与合规处理您的个人隐私信息及预约订单数据。",
+      fr: "Politique de confidentialité d'Istanbul Portrait. Découvrez comment nous protégeons vos données personnelles et informations de réservation.",
+      de: "Datenschutzerklärung von Istanbul Portrait. Erfahren Sie, wie wir Ihre persönlichen Daten und Buchungsdetails sicher schützen.",
+      ro: "Politica de confidențialitate Istanbul Portrait. Aflați cum colectăm și protejăm în siguranță datele dvs. personale și detaliile rezervării.",
+    },
+  };
+
+  const pageGroup = defaults[slug];
+  if (pageGroup) {
+    const text = pageGroup[locale] || pageGroup.en;
+    if (text) return text;
+  }
+
+  return cleaned || "";
 }
 
 /**
@@ -46,11 +207,11 @@ export function generateSeoDescription(
  */
 export function generateSeoTitle(
   title: string | null | undefined,
-  _locale: string,
-  fallbackTitle: string = "",
+  _locale: string = "en",
+  fallbackTitle: string = "Istanbul Portrait",
 ): string {
-  if (!title) return fallbackTitle;
-  return title;
+  if (!title || !title.trim()) return fallbackTitle;
+  return title.trim();
 }
 
 /**
@@ -194,26 +355,30 @@ export function buildLocalBusinessSchema(
     settings.city ||
     "Istanbul, Turkey";
 
+  const baseUrl = getBaseUrl();
+  const orgName = settings.organization_name || settings.site_name || "Istanbul Portrait";
+  const orgId = `${baseUrl}/#organization`;
+
   const schema: any = {
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
-    name: settings.organization_name || settings.site_name,
+    name: orgName,
     inLanguage: locale || "en",
     image: imageUrl
       ? {
           "@type": "ImageObject",
           url: imageUrl,
           contentUrl: imageUrl,
-          width: 1200,
-          height: 630,
-          copyrightNotice: "IstanbulPortrait 2026",
-          creator: { "@type": "Organization", name: "Istanbul Portrait" },
-          creditText: "Istanbul Portrait",
-          acquireLicensePage: `${getBaseUrl()}/en/contact`,
+          caption: orgName,
         }
       : undefined,
-    "@id": `${getBaseUrl()}/#localbusiness`,
-    url: `${getBaseUrl()}${locale ? `/${locale}` : ""}`,
+    "@id": `${baseUrl}/#localbusiness`,
+    parentOrganization: {
+      "@type": "Organization",
+      "@id": orgId,
+      name: orgName,
+    },
+    url: `${baseUrl}${locale ? `/${locale}` : ""}`,
     telephone: settings.contact_phone || settings.whatsapp_number,
     priceRange: priceRange || undefined,
     address: {
@@ -221,7 +386,7 @@ export function buildLocalBusinessSchema(
       addressLocality: settings.city || "Istanbul",
       addressCountry: settings.country_code || "TR",
       streetAddress: localizedStreet,
-      postalCode: "34116", // Default fallback if not defined elsewhere
+      postalCode: "34116",
     },
     geo: {
       "@type": "GeoCoordinates",
@@ -294,12 +459,15 @@ export function buildLocalBusinessSchema(
     const parentSeg = packagesParentSlug || "packages";
     schema.hasOfferCatalog = {
       "@type": "OfferCatalog",
-      name: `${settings.organization_name || settings.site_name} Photoshoot Packages`,
+      name: `${orgName} Photoshoot Packages`,
       itemListElement: packages.map((pkg: any) => {
         const pkgTitle =
           pkg.title?.[locale || "en"] || pkg.title?.en || pkg.slug;
         const pkgDesc =
           pkg.description?.[locale || "en"] || pkg.description?.en || "";
+        const cleanPkgDesc = pkgDesc
+          ? pkgDesc.replace(/<[^>]*>?/gm, " ").replace(/\s+/g, " ").trim().substring(0, 200)
+          : "";
         const pkgCover = pkg.cover_image || pkg.gallery_images?.[0];
         const pkgImageUrl = resolveSchemaImage(pkgCover);
         const localPkgTitle = pkg.title?.[locale || "en"];
@@ -307,7 +475,7 @@ export function buildLocalBusinessSchema(
           ? generateNativeSlug(localPkgTitle) || pkg.slug
           : pkg.slug;
         const pkgUrl = encodeURI(
-          `${getBaseUrl()}/${locale || "en"}/${parentSeg}/${pkgSeg}`,
+          `${baseUrl}/${locale || "en"}/${parentSeg}/${pkgSeg}`,
         );
 
         return {
@@ -321,8 +489,13 @@ export function buildLocalBusinessSchema(
           itemOffered: {
             "@type": "Service",
             name: pkgTitle,
-            description: generateSeoDescription(pkgDesc, 200),
+            description: cleanPkgDesc || undefined,
             url: pkgUrl,
+            provider: {
+              "@type": "Organization",
+              "@id": orgId,
+              name: orgName,
+            },
             ...(pkgImageUrl
               ? {
                   image: {
@@ -346,59 +519,33 @@ export function buildOrganizationSchema(settings: SiteSettings) {
   const imageUrl = resolveSchemaImage(
     settings.logo_url || settings.default_og_image_url,
   );
+  const baseUrl = getBaseUrl();
+  const orgName = settings.organization_name || settings.site_name || "Istanbul Portrait";
+  const orgId = `${baseUrl}/#organization`;
 
   return {
     "@context": "https://schema.org",
     "@type": "Organization",
-    name: settings.organization_name || settings.site_name,
-    "@id": `${getBaseUrl()}/#organization`,
-    url: getBaseUrl(),
+    name: orgName,
+    "@id": orgId,
+    url: baseUrl,
     logo: imageUrl
       ? {
           "@type": "ImageObject",
+          "@id": `${baseUrl}/#logo`,
           url: imageUrl,
           contentUrl: imageUrl,
-          width: 1200,
-          height: 630,
-          copyrightNotice: "IstanbulPortrait 2026",
-          creator: { "@type": "Organization", name: "Istanbul Portrait" },
-          creditText: "Istanbul Portrait",
-          acquireLicensePage: `${getBaseUrl()}/en/contact`,
+          caption: orgName,
         }
       : undefined,
-    image: imageUrl
-      ? {
-          "@type": "ImageObject",
-          url: imageUrl,
-          contentUrl: imageUrl,
-          width: 1200,
-          height: 630,
-          copyrightNotice: "IstanbulPortrait 2026",
-          creator: { "@type": "Organization", name: "Istanbul Portrait" },
-          creditText: "Istanbul Portrait",
-          acquireLicensePage: `${getBaseUrl()}/en/contact`,
-        }
-      : undefined,
+    image: imageUrl || undefined,
     founder: settings.founder_name
       ? {
           "@type": "Person",
           name: settings.founder_name,
           ...(settings.founder_image_url
             ? {
-                image: {
-                  "@type": "ImageObject",
-                  url: resolveSchemaImage(settings.founder_image_url),
-                  contentUrl: resolveSchemaImage(settings.founder_image_url),
-                  width: 1200,
-                  height: 630,
-                  copyrightNotice: "IstanbulPortrait 2026",
-                  creator: {
-                    "@type": "Organization",
-                    name: "Istanbul Portrait",
-                  },
-                  creditText: "Istanbul Portrait",
-                  acquireLicensePage: `${getBaseUrl()}/en/contact`,
-                },
+                image: resolveSchemaImage(settings.founder_image_url),
               }
             : {}),
         }
@@ -460,6 +607,9 @@ export function buildServiceSchema({
 
   const schemaImageUrl = resolveSchemaImage(image);
   const canonicalUrl = url ? normalizeSchemaUrl(url) : undefined;
+  const baseUrl = getBaseUrl();
+  const orgName = providerName || "Istanbul Portrait";
+  const orgId = `${baseUrl}/#organization`;
 
   const schema: any = {
     "@context": "https://schema.org/",
@@ -472,29 +622,15 @@ export function buildServiceSchema({
       : undefined,
     url: canonicalUrl,
     name,
-    image: schemaImageUrl
-      ? {
-          "@type": "ImageObject",
-          url: schemaImageUrl,
-          contentUrl: schemaImageUrl,
-          width: 1200,
-          height: 630,
-          copyrightNotice: "IstanbulPortrait 2026",
-          creator: { "@type": "Organization", name: "Istanbul Portrait" },
-          creditText: "Istanbul Portrait",
-          acquireLicensePage: `${getBaseUrl()}/en/contact`,
-        }
-      : undefined,
+    image: schemaImageUrl || undefined,
     description: description || undefined,
-    brand: providerName
-      ? {
-          "@type": "Brand",
-          name: providerName,
-        }
-      : undefined,
+    brand: {
+      "@type": "Brand",
+      name: orgName,
+    },
     offers: {
       "@type": "Offer",
-      url: canonicalUrl || providerUrl || getBaseUrl(),
+      url: canonicalUrl || providerUrl || baseUrl,
       priceCurrency: currency,
       price: finalPrice,
       priceValidUntil: discount?.end_date
@@ -534,19 +670,16 @@ export function buildServiceSchema({
           },
         },
       },
-      seller: providerName
-        ? {
-            "@type": "Organization",
-            name: providerName,
-          }
-        : undefined,
+      seller: {
+        "@type": "Organization",
+        "@id": orgId,
+        name: orgName,
+      },
     },
   };
 
   if (discount && discount.discount_percentage > 0) {
     const specs: any[] = [];
-
-    // Add original price as StrikethroughPrice
     specs.push({
       "@type": "UnitPriceSpecification",
       priceType: "https://schema.org/StrikethroughPrice",
@@ -555,7 +688,7 @@ export function buildServiceSchema({
     });
 
     if (discount.end_date) {
-      schema.offers.priceValidUntil = discount.end_date.split("T")[0]; // YYYY-MM-DD
+      schema.offers.priceValidUntil = discount.end_date.split("T")[0];
     }
 
     schema.offers.priceSpecification = specs;
@@ -629,6 +762,10 @@ export function buildArticleSchema({
   url?: string;
 }) {
   const canonicalUrl = url ? normalizeSchemaUrl(url) : undefined;
+  const baseUrl = getBaseUrl();
+  const orgName = publisherName || "Istanbul Portrait";
+  const orgId = `${baseUrl}/#organization`;
+
   return {
     "@context": "https://schema.org",
     "@type": "Article",
@@ -641,21 +778,7 @@ export function buildArticleSchema({
     url: canonicalUrl,
     headline: title,
     inLanguage: inLanguage,
-    image: image
-      ? [
-          {
-            "@type": "ImageObject",
-            url: resolveSchemaImage(image),
-            contentUrl: resolveSchemaImage(image),
-            width: 1200,
-            height: 630,
-            copyrightNotice: "IstanbulPortrait 2026",
-            creator: { "@type": "Organization", name: "Istanbul Portrait" },
-            creditText: "Istanbul Portrait",
-            acquireLicensePage: `${getBaseUrl()}/en/contact`,
-          },
-        ]
-      : [],
+    image: image ? [resolveSchemaImage(image)] : [],
     datePublished,
     dateModified,
     author: [
@@ -667,30 +790,20 @@ export function buildArticleSchema({
         ...(authorUrls && authorUrls.length > 0 ? { sameAs: authorUrls } : {}),
       },
     ],
-    publisher: publisherName
-      ? {
-          "@type": "Organization",
-          name: publisherName,
-          ...(publisherLogo
-            ? {
-                logo: {
-                  "@type": "ImageObject",
-                  url: resolveSchemaImage(publisherLogo),
-                  contentUrl: resolveSchemaImage(publisherLogo),
-                  width: 1200,
-                  height: 630,
-                  copyrightNotice: "IstanbulPortrait 2026",
-                  creator: {
-                    "@type": "Organization",
-                    name: "Istanbul Portrait",
-                  },
-                  creditText: "Istanbul Portrait",
-                  acquireLicensePage: `${getBaseUrl()}/en/contact`,
-                },
-              }
-            : {}),
-        }
-      : undefined,
+    publisher: {
+      "@type": "Organization",
+      "@id": orgId,
+      name: orgName,
+      ...(publisherLogo
+        ? {
+            logo: {
+              "@type": "ImageObject",
+              url: resolveSchemaImage(publisherLogo),
+              contentUrl: resolveSchemaImage(publisherLogo),
+            },
+          }
+        : {}),
+    },
     description: description || undefined,
     ...(keywords && keywords.length > 0
       ? { keywords: keywords.join(", ") }
@@ -762,21 +875,9 @@ export function buildTouristAttractionSchema({
         }
       : undefined,
     name,
-    description,
+    description: description || undefined,
     url: canonicalUrl || getBaseUrl(),
-    image: schemaImageUrl
-      ? {
-          "@type": "ImageObject",
-          url: schemaImageUrl,
-          contentUrl: schemaImageUrl,
-          width: 1200,
-          height: 630,
-          copyrightNotice: "IstanbulPortrait 2026",
-          creator: { "@type": "Organization", name: "Istanbul Portrait" },
-          creditText: "Istanbul Portrait",
-          acquireLicensePage: `${getBaseUrl()}/en/contact`,
-        }
-      : undefined,
+    image: schemaImageUrl || undefined,
     geo:
       lat && lng
         ? {
@@ -800,6 +901,8 @@ export function buildAboutPageSchema({
   organizationSchema?: any;
 }) {
   const canonicalUrl = url ? normalizeSchemaUrl(url) : undefined;
+  const baseUrl = getBaseUrl();
+
   return {
     "@context": "https://schema.org",
     "@type": "AboutPage",
@@ -811,8 +914,11 @@ export function buildAboutPageSchema({
       : undefined,
     name,
     description: description || undefined,
-    url: canonicalUrl || getBaseUrl(),
-    ...(organizationSchema ? { mainEntity: organizationSchema } : {}),
+    url: canonicalUrl || baseUrl,
+    mainEntity: organizationSchema || {
+      "@type": "Organization",
+      "@id": `${baseUrl}/#organization`,
+    },
   };
 }
 
@@ -880,24 +986,7 @@ export function buildCollectionPageSchema({
           url: normalizeSchemaUrl(item.url),
           name: item.name,
           ...(item.description ? { description: item.description } : {}),
-          ...(itemImageUrl
-            ? {
-                image: {
-                  "@type": "ImageObject",
-                  url: itemImageUrl,
-                  contentUrl: itemImageUrl,
-                  width: 1200,
-                  height: 630,
-                  copyrightNotice: "IstanbulPortrait 2026",
-                  creator: {
-                    "@type": "Organization",
-                    name: "Istanbul Portrait",
-                  },
-                  creditText: "Istanbul Portrait",
-                  acquireLicensePage: `${getBaseUrl()}/en/contact`,
-                },
-              }
-            : {}),
+          ...(itemImageUrl ? { image: itemImageUrl } : {}),
         };
       }),
     },
@@ -933,10 +1022,6 @@ export function buildImageGallerySchema({
         contentUrl: cleanUrl,
         url: cleanUrl,
         caption: img.caption || name,
-        copyrightNotice: "IstanbulPortrait 2026",
-        creator: { "@type": "Organization", name: "Istanbul Portrait" },
-        creditText: "Istanbul Portrait",
-        acquireLicensePage: `${getBaseUrl()}/en/contact`,
       };
     }),
   };

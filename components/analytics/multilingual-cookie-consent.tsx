@@ -7,12 +7,32 @@ import { GoogleAnalyticsConsentUpdate } from "@/components/analytics/google-anal
 import { useConsent } from "@/contexts/consent-context";
 import { Link } from "@/i18n/routing";
 
-export function MultilingualCookieConsent() {
+interface MultilingualCookieConsentProps {
+  privacyPath?: string;
+}
+
+const PRIVACY_FALLBACKS: Record<string, string> = {
+  en: "privacy-policy",
+  tr: "gizlilik-politikası",
+  ro: "politica-de-confidențialitate",
+  de: "datenschutzerklärung",
+  fr: "politique-de-confidentialité",
+  es: "política-de-privacidad",
+  ru: "политика-конфиденциальности",
+  ar: "سياسة-الخصوصية",
+  zh: "隐私政策",
+};
+
+export function MultilingualCookieConsent({
+  privacyPath,
+}: MultilingualCookieConsentProps = {}) {
   const locale = useLocale();
   const t = useTranslations("cookies");
   const tFooter = useTranslations("footer");
   const { consent, setConsent, isLoading } = useConsent();
   const bannerRef = useRef<HTMLDivElement>(null);
+  const effectivePrivacyPath =
+    privacyPath || PRIVACY_FALLBACKS[locale] || "privacy-policy";
 
   useEffect(() => {
     if (isLoading) return; // Don't adjust height while loading
@@ -84,7 +104,7 @@ export function MultilingualCookieConsent() {
             <p className="text-xs">
               {t("banner.description")}
               <Link
-                href={"/privacy" as any}
+                href={`/${effectivePrivacyPath}` as any}
                 className="underline hover:text-foreground ml-1 rtl:mr-1 rtl:ml-0"
                 aria-label={`${t("banner.privacy_link")} - ${tFooter("privacy_policy")}`}
               >

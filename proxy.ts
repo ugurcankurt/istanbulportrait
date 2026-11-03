@@ -77,6 +77,26 @@ export default async function proxy(request: NextRequest) {
     return response;
   }
 
+  // Google SEO Best Practice: 308 Permanent Redirect from root / to default canonical locale /en
+  if (pathname === "/") {
+    const url = request.nextUrl.clone();
+    url.pathname = "/en";
+    return NextResponse.redirect(url, 308);
+  }
+
+  // Canonicalize uppercase locale prefixes (e.g. /EN, /TR/about -> /en, /tr/about) to 308
+  const upperMatch = pathname.match(/^\/([A-Za-z]{2})(\/.*)?$/);
+  if (upperMatch) {
+    const loc = upperMatch[1];
+    const lowerLoc = loc.toLowerCase();
+    const validLocales = ["en", "tr", "ar", "ru", "es", "zh", "fr", "de", "ro"];
+    if (loc !== lowerLoc && validLocales.includes(lowerLoc)) {
+      const url = request.nextUrl.clone();
+      url.pathname = `/${lowerLoc}${upperMatch[2] || ""}`;
+      return NextResponse.redirect(url, 308);
+    }
+  }
+
   const response = intlMiddleware(request);
 
   // Capture Google Ads & Facebook attribution parameters as 1st-party HTTP cookies (90 days, Safari ITP safe)

@@ -339,7 +339,9 @@ export default async function LocaleLayout({
                     />
                   </div>
                   <Toaster />
-                  <DeferredCookieConsent />
+                  <DeferredCookieConsent
+                    privacyPath={dynamicNavData.privacy?.path}
+                  />
                   <WhatsAppButton phoneNumber={settings.whatsapp_number} />
                 </TooltipProvider>
               </CurrencyProvider>

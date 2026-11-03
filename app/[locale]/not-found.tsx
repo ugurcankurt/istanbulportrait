@@ -1,7 +1,16 @@
+import type { Metadata } from "next";
 import { getLocale, getTranslations } from "next-intl/server";
 import { NotFoundContent } from "@/components/not-found-content";
 import { pagesContentService } from "@/lib/pages-content-service";
 import { settingsService } from "@/lib/settings-service";
+
+export const metadata: Metadata = {
+  title: "Page Not Found",
+  robots: {
+    index: false,
+    follow: false,
+  },
+};
 
 export default async function LocaleNotFound() {
   const locale = await getLocale().catch(() => "en");

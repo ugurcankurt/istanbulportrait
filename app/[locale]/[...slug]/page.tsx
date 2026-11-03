@@ -12,8 +12,9 @@ import { locationsService } from "@/lib/locations-service";
 import { packagesService } from "@/lib/packages-service";
 import {
   constructOpenGraph,
+  enrichSeoDescription,
+  formatPageTitle,
   generateSeoDescription,
-  generateSeoTitle,
   optimizeSeoImage,
 } from "@/lib/seo-utils";
 import { AboutPageContent } from "./about-content";
@@ -86,13 +87,17 @@ export async function generateMetadata(props: {
 
   // Level 1: Root Pages (e.g. /about, /locations, /packages)
   if (slugArray.length === 1) {
-    const title = generateSeoTitle(
-      dbPage.title?.[params.locale] || dbPage.title?.en,
+    const rawTitle = dbPage.title?.[params.locale] || dbPage.title?.en;
+    const baseTitle = formatPageTitle(rawTitle, fallbackTitle);
+    const isPaginatedBlog = dbPage.slug === "blog" && pageNum > 1;
+    const paginatedTitle = isPaginatedBlog
+      ? `${baseTitle} - ${pageNum}`
+      : baseTitle;
+    const desc = enrichSeoDescription(
+      dbPage.subtitle?.[params.locale] || dbPage.subtitle?.en,
+      dbPage.slug,
       params.locale,
       fallbackTitle,
-    );
-    const desc = generateSeoDescription(
-      dbPage.subtitle?.[params.locale] || dbPage.subtitle?.en,
     );
     let ogImage = dbPage.cover_image || settings.default_og_image_url || "";
 
@@ -110,13 +115,18 @@ export async function generateMetadata(props: {
     const currentSeg = dbPage.title?.[params.locale]
       ? generateNativeSlug(dbPage.title[params.locale] || "")
       : dbPage.slug;
-    const isPaginatedBlog = dbPage.slug === "blog" && pageNum > 1;
     const canonicalUrl = `${encodeURI(`${baseUrl}/${params.locale}/${currentSeg}`)}${isPaginatedBlog ? pageQuerySuffix : ""}`;
-    const paginatedTitle = isPaginatedBlog ? `${title} - ${pageNum}` : title;
 
     return {
-      title: paginatedTitle,
+      title: { absolute: paginatedTitle },
       description: desc,
+      robots: {
+        index: true,
+        follow: true,
+        "max-video-preview": -1,
+        "max-image-preview": "large",
+        "max-snippet": -1,
+      },
       alternates: {
         canonical: canonicalUrl,
         ...getAlternates((loc) => {
@@ -151,6 +161,7 @@ export async function generateMetadata(props: {
 
     let dynamicTitle = "";
     let dynamicDesc = "";
+    let isNoIndex = false;
 
     if (type === "category") {
       const category = await getBlogCategoryBySlug(
@@ -163,7 +174,14 @@ export async function generateMetadata(props: {
         return {};
       }
       dynamicTitle = category.translation?.name || category.slug;
-      dynamicDesc = category.translation?.description || "";
+      dynamicDesc =
+        category.translation?.description ||
+        enrichSeoDescription(
+          dynamicTitle,
+          `category-${childSlug}`,
+          params.locale,
+          fallbackTitle,
+        );
     } else if (type === "tag") {
       // biome-ignore lint/suspicious/noExplicitAny: Dynamic data
       const tag = await getBlogTagBySlug(childSlug, params.locale as any);
@@ -172,18 +190,22 @@ export async function generateMetadata(props: {
         return {};
       }
       dynamicTitle = tag.translation?.name || tag.slug;
+      dynamicDesc = enrichSeoDescription(
+        dynamicTitle,
+        `tag-${childSlug}`,
+        params.locale,
+        fallbackTitle,
+      );
+      // Tags are thin taxonomies: instruct search engines not to index, but follow links
+      isNoIndex = true;
     } else {
       notFound();
       return {};
     }
 
-    const baseTitle = generateSeoTitle(
-      dynamicTitle,
-      params.locale,
-      fallbackTitle,
-    );
+    const baseTitle = formatPageTitle(dynamicTitle, fallbackTitle);
     const title = pageNum > 1 ? `${baseTitle} - ${pageNum}` : baseTitle;
-    const desc = generateSeoDescription(dynamicDesc);
+    const desc = generateSeoDescription(dynamicDesc, 155, params.locale);
     const blogLocTitle = dbPage.title?.[params.locale];
     const blogSeg = blogLocTitle
       ? generateNativeSlug(blogLocTitle)
@@ -193,8 +215,20 @@ export async function generateMetadata(props: {
     )}${pageQuerySuffix}`;
 
     return {
-      title,
+      title: { absolute: title },
       description: desc,
+      robots: isNoIndex
+        ? {
+            index: false,
+            follow: true,
+          }
+        : {
+            index: true,
+            follow: true,
+            "max-video-preview": -1,
+            "max-image-preview": "large",
+            "max-snippet": -1,
+          },
       alternates: {
         canonical: categoryCanonical,
         ...getAlternates((loc) => {
@@ -335,8 +369,8 @@ export async function generateMetadata(props: {
       }
     }
 
-    const title = generateSeoTitle(dynamicTitle, params.locale, fallbackTitle);
-    const desc = generateSeoDescription(dynamicDesc);
+    const formattedTitle = formatPageTitle(dynamicTitle, fallbackTitle);
+    const desc = generateSeoDescription(dynamicDesc, 155, params.locale);
 
     const _currentSeg = dbPage.title?.[params.locale]
       ? generateNativeSlug(dbPage.title[params.locale] || "")
@@ -347,9 +381,16 @@ export async function generateMetadata(props: {
       : encodeURI(`${baseUrl}/${params.locale}/${rootSlug}/${childSlug}`);
 
     return {
-      title,
+      title: { absolute: formattedTitle },
       description: desc,
       keywords: keywords.length > 0 ? keywords : undefined,
+      robots: {
+        index: true,
+        follow: true,
+        "max-video-preview": -1,
+        "max-image-preview": "large",
+        "max-snippet": -1,
+      },
       alternates: {
         ...(getAlternatesFn(params.locale)
           ? {
@@ -361,7 +402,7 @@ export async function generateMetadata(props: {
         ...getAlternates(getAlternatesFn),
       },
       openGraph: constructOpenGraph(
-        title,
+        formattedTitle,
         desc,
         ogImage,
         fallbackTitle,
@@ -379,14 +420,14 @@ export async function generateMetadata(props: {
       ),
       twitter: {
         card: "summary_large_image",
-        title,
+        title: formattedTitle,
         description: desc,
         images: ogImage ? [optimizeSeoImage(ogImage, 1200)] : [],
       },
     };
   }
 
-  return { title: fallbackTitle || "Website" };
+  return { title: { absolute: fallbackTitle || "Website" } };
 }
 
 export default async function GenericCorePage(props: {

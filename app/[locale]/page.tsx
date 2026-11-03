@@ -30,14 +30,15 @@ import { SchemaInjector } from "@/components/schema-injector";
 import { discountService } from "@/lib/discount-service";
 import { packagesService } from "@/lib/packages-service";
 import { pagesContentService } from "@/lib/pages-content-service";
+import { calculateDiscountedPrice } from "@/lib/pricing";
 import { reviewsService } from "@/lib/reviews-service";
 import {
   buildFAQSchema,
   buildImageGallerySchema,
   buildLocalBusinessSchema,
   constructOpenGraph,
+  formatPageTitle,
   generateSeoDescription,
-  generateSeoTitle,
   getBaseUrl,
   optimizeSeoImage,
 } from "@/lib/seo-utils";
@@ -71,17 +72,15 @@ export async function generateMetadata({
   const seoSource =
     homePage?.title?.[locale] || homePage?.title?.en ? homePage : heroPage;
 
-  const title = generateSeoTitle(
-    seoSource?.title?.[locale] || seoSource?.title?.en,
-    locale,
-    settings.site_name || "",
-  );
+  const siteName = settings.site_name || "Istanbul Portrait";
+  const rawTitle = seoSource?.title?.[locale] || seoSource?.title?.en;
+  const title = formatPageTitle(rawTitle, siteName);
   const rawDesc =
     seoSource?.subtitle?.[locale] ||
     seoSource?.subtitle?.en ||
     settingsService.resolveTranslatable(settings.site_description, locale) ||
     "";
-  const desc = generateSeoDescription(rawDesc);
+  const desc = generateSeoDescription(rawDesc, 155, locale);
   const ogImage =
     seoSource?.cover_image ||
     heroPage?.cover_image ||
@@ -98,7 +97,7 @@ export async function generateMetadata({
   languages["x-default"] = `${baseUrl}/en`;
 
   return {
-    title: /istanbul\s*portrait/i.test(title) ? { absolute: title } : title,
+    title: { absolute: title },
     description: desc,
     robots: {
       index: true,
@@ -115,7 +114,7 @@ export async function generateMetadata({
       title,
       desc,
       ogImage,
-      settings.site_name || title,
+      siteName,
       locale,
       { url: `${baseUrl}/${locale}` },
     ),
@@ -234,11 +233,14 @@ export default async function HomePage({
 
   const dynamicFaqs = getDynamicFaqs();
 
-  // Dynamic Price Range Calculation for LocalBusiness Schema (Google April 2026 guidelines)
+  // Dynamic Price Range Calculation for LocalBusiness Schema (Google guidelines)
   let priceRangeStr: string | undefined;
   if (activePackages && activePackages.length > 0) {
     const prices = activePackages
-      .map((p) => p.price)
+      .map((p) => {
+        const discounted = calculateDiscountedPrice(p.price, activeDiscounts);
+        return discounted?.price || p.price;
+      })
       .filter((p) => !Number.isNaN(p) && p > 0);
     if (prices.length > 0) {
       const minPrice = Math.min(...prices);

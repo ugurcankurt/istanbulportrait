@@ -126,13 +126,28 @@ export const getPublishedBlogPosts = cache(
     query = query.order(sort_by, { ascending: sort_order === "asc" });
 
     // Pagination
-    const from = (page - 1) * limit;
-    const to = from + limit - 1;
+    const validPage = Math.max(1, Number.isFinite(page) ? Math.floor(page) : 1);
+    const validLimit = Math.max(1, Number.isFinite(limit) ? Math.floor(limit) : 12);
+    const from = (validPage - 1) * validLimit;
+    const to = from + validLimit - 1;
     query = query.range(from, to);
 
     const { data, error, count } = await query;
 
     if (error) {
+      // If error is PGRST103 (Requested range not satisfiable, e.g. page past last post),
+      // gracefully return empty list with total count instead of crashing with 500
+      if (error.code === "PGRST103") {
+        return {
+          posts: [],
+          pagination: {
+            page: validPage,
+            limit: validLimit,
+            total: count || 0,
+            totalPages: Math.ceil((count || 0) / validLimit),
+          },
+        };
+      }
       console.error("Error fetching blog posts:", error);
       throw new Error("Failed to fetch blog posts");
     }
@@ -1191,11 +1206,22 @@ export async function getBlogCategoryBySlug(
     return null;
   }
 
-  if (!data && locale !== "en") {
-    return getBlogCategoryBySlug(slug, "en");
+  if (!data) {
+    if (locale !== "en") {
+      return getBlogCategoryBySlug(slug, "en");
+    }
+    return null;
   }
 
-  return data as unknown as BlogCategoryWithTranslation;
+  // Transform array response to object matching getBlogTagBySlug & getBlogCategories
+  const category = {
+    ...data,
+    translation: Array.isArray(data.translation)
+      ? data.translation[0]
+      : data.translation,
+  };
+
+  return category as unknown as BlogCategoryWithTranslation;
 }
 
 /**

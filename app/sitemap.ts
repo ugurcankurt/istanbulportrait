@@ -6,7 +6,7 @@ import { pagesContentService } from "@/lib/pages-content-service";
 import { generateSeoDescription, getBaseUrl } from "@/lib/seo-utils";
 import { generateNativeSlug } from "@/lib/slug-generator";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 3600;
 
 export async function generateSitemaps() {
   return [
@@ -83,12 +83,12 @@ export default async function sitemap({
     const homePage = corePages.find((p) => p.slug === "home");
     const homeHero = corePages.find((p) => p.slug === "home-hero");
 
-    // Fix: Select the latest updated timestamp between home and home-hero
-    const homeUpdatedTime = Math.max(
-      homePage?.updated_at ? new Date(homePage.updated_at).getTime() : 0,
-      homeHero?.updated_at ? new Date(homeHero.updated_at).getTime() : 0,
-      Date.now() - 86400000,
-    );
+    // Select the latest updated timestamp between home and home-hero
+    const homeUpdatedTime =
+      Math.max(
+        homePage?.updated_at ? new Date(homePage.updated_at).getTime() : 0,
+        homeHero?.updated_at ? new Date(homeHero.updated_at).getTime() : 0,
+      ) || new Date("2025-01-01").getTime();
     const homeLastMod = new Date(homeUpdatedTime);
 
     const homeCover = homePage?.cover_image || homeHero?.cover_image;
@@ -403,47 +403,8 @@ export default async function sitemap({
         }
       }
 
-      // Blog Tags
-      const { data: blogTags } = await supabaseAdmin
-        .from("blog_tags")
-        .select(
-          "id, slug, updated_at, created_at, translations:blog_tag_translations(locale, name)",
-        );
-      if (blogTags && blogTags.length > 0) {
-        for (const bt of blogTags) {
-          const tagTranslations = bt.translations || [];
-          if (tagTranslations.length === 0) continue;
-
-          const translatedLocales = tagTranslations.map((t: any) => t.locale);
-
-          translatedLocales.forEach((locale: string) => {
-            const pTitle = blogParent?.title?.[locale];
-            const pSeg = pTitle ? generateNativeSlug(pTitle) : "blog";
-
-            const tagAlternates: Record<string, string> = {};
-            translatedLocales.forEach((loc: string) => {
-              const bTitle = blogParent?.title?.[loc];
-              const bSeg = bTitle ? generateNativeSlug(bTitle) : "blog";
-              tagAlternates[loc] = encodeURI(
-                `${baseUrl}/${loc}/${bSeg}/tag/${bt.slug}`,
-              );
-            });
-            if (tagAlternates.en) tagAlternates["x-default"] = tagAlternates.en;
-            else if (translatedLocales.length > 0)
-              tagAlternates["x-default"] = tagAlternates[translatedLocales[0]];
-
-            sitemapData.push({
-              url: encodeURI(`${baseUrl}/${locale}/${pSeg}/tag/${bt.slug}`),
-              lastModified: new Date(
-                bt.updated_at || bt.created_at || new Date(),
-              ),
-              changeFrequency: "weekly",
-              priority: 0.4,
-              alternates: { languages: tagAlternates },
-            });
-          });
-        }
-      }
+      // Note: Blog tags are marked noindex (thin taxonomy) and are excluded from the sitemap
+      // to comply with Google Search Central guidelines against submitting noindex URLs.
     }
   }
 

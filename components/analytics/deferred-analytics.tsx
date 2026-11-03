@@ -32,6 +32,10 @@ export function DeferredAnalytics({
   return <>{clarityId && <MicrosoftClarity clarityId={clarityId} />}</>;
 }
 
-export function DeferredCookieConsent() {
-  return <MultilingualCookieConsent />;
+export function DeferredCookieConsent({
+  privacyPath,
+}: {
+  privacyPath?: string;
+} = {}) {
+  return <MultilingualCookieConsent privacyPath={privacyPath} />;
 }
