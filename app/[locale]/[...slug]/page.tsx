@@ -112,10 +112,9 @@ export async function generateMetadata(props: {
         ogImage = activePackages[0].cover_image;
       }
     }
+    const titleInLocale = dbPage.title?.[params.locale];
     const currentSeg =
-      (dbPage.title?.[params.locale] &&
-        generateNativeSlug(dbPage.title[params.locale])) ||
-      dbPage.slug;
+      (titleInLocale && generateNativeSlug(titleInLocale)) || dbPage.slug;
     const canonicalUrl = `${encodeURI(`${baseUrl}/${params.locale}/${currentSeg}`)}${isPaginatedBlog ? pageQuerySuffix : ""}`;
 
     return {

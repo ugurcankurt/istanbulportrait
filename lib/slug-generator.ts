@@ -2,7 +2,7 @@
  * Generates a URL-friendly slug from a title while strictly preserving native Unicode characters.
  * Perfect for local use in Russian (Cyrillic), Arabic, Chinese, and other alphabets.
  */
-export function generateNativeSlug(title: string): string {
+export function generateNativeSlug(title?: string | null): string {
   if (!title) return "";
 
   return (
@@ -28,7 +28,7 @@ export function generateNativeSlug(title: string): string {
  * Temporary alias to support older refs.
  * @deprecated Use generateNativeSlug going forward.
  */
-export function generateSlugFromTitle(title: string): string {
+export function generateSlugFromTitle(title?: string | null): string {
   return generateNativeSlug(title);
 }
 
@@ -37,7 +37,7 @@ export function generateSlugFromTitle(title: string): string {
  * @deprecated Use generateNativeSlug going forward.
  */
 export async function generateSlugFromTitleAsync(
-  title: string,
+  title?: string | null,
 ): Promise<string> {
   return generateNativeSlug(title);
 }
