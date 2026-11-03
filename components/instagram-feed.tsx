@@ -1,6 +1,7 @@
 "use client";
 
-import { AlertCircle, Instagram } from "lucide-react";
+import { AlertCircle } from "lucide-react";
+import { RiInstagramLine as Instagram } from "@remixicon/react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";

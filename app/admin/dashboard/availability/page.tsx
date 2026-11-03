@@ -424,7 +424,6 @@ export default function AvailabilityPage() {
                             mode="single"
                             selected={newBlockDate}
                             onSelect={setNewBlockDate}
-                            initialFocus
                             disabled={(date) =>
                               date < new Date(new Date().setHours(0, 0, 0, 0))
                             }

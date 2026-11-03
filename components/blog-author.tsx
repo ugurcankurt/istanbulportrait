@@ -1,6 +1,11 @@
 "use client";
 
-import { Globe, Instagram, Linkedin, Twitter } from "lucide-react";
+import { Globe } from "lucide-react";
+import {
+  RiInstagramLine as Instagram,
+  RiLinkedinBoxLine as Linkedin,
+  RiTwitterXLine as Twitter,
+} from "@remixicon/react";
 import Image from "next/image";
 import { useParams } from "next/navigation";
 import { useTranslations } from "next-intl";

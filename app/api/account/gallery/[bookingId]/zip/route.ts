@@ -1,5 +1,5 @@
 import { PassThrough } from "node:stream";
-import archiver from "archiver";
+import { ZipArchive } from "archiver";
 import { type NextRequest, NextResponse } from "next/server";
 import { getServerUser } from "@/lib/auth-server";
 import { getFileStream } from "@/lib/google-drive";
@@ -64,7 +64,7 @@ export async function POST(
 
     // Level 0 compression because images are already compressed (JPEG/PNG/RAW)
     // and we want maximum streaming speed
-    const archive = archiver("zip", { zlib: { level: 0 } });
+    const archive = new ZipArchive({ zlib: { level: 0 } });
     const passThrough = new PassThrough();
     archive.pipe(passThrough);
 

@@ -494,7 +494,6 @@ export function BookingCard({
                     discount:
                       "bg-primary/10 text-primary font-black border border-primary/20 rounded-md relative after:absolute after:top-1 after:right-1 after:content-['%'] after:text-[10px] after:font-black after:text-primary",
                   }}
-                  initialFocus
                   locale={dateFnsLocale}
                 />
               </PopoverContent>

@@ -1,16 +1,18 @@
 "use client";
 
 import {
-  Facebook,
-  Instagram,
-  Linkedin,
   Mail,
   MapPin,
   MessageCircle,
   Phone,
   Video,
-  Youtube,
 } from "lucide-react";
+import {
+  RiFacebookCircleLine as Facebook,
+  RiInstagramLine as Instagram,
+  RiLinkedinBoxLine as Linkedin,
+  RiYoutubeLine as Youtube,
+} from "@remixicon/react";
 import Image from "next/image";
 import { useLocale, useTranslations } from "next-intl";
 import { useTheme } from "next-themes";

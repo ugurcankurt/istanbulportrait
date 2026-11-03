@@ -1,13 +1,15 @@
 "use client";
 
 import {
-  Facebook,
   Globe,
-  Instagram,
   Menu,
   MessageCircle,
   User,
 } from "lucide-react";
+import {
+  RiFacebookCircleLine as Facebook,
+  RiInstagramLine as Instagram,
+} from "@remixicon/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams } from "next/navigation";
