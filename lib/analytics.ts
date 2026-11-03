@@ -390,18 +390,35 @@ export function sanitizeMetaPixelPayload(
   if (!data || typeof data !== "object") return data;
   const clean = { ...data };
 
+  // Parse string values like "120" or "120.50" to numbers
+  if (typeof clean.value === "string" && !Number.isNaN(Number(clean.value))) {
+    clean.value = Number(clean.value);
+  }
+
   const hasValidValue =
     typeof clean.value === "number" &&
     !Number.isNaN(clean.value) &&
     clean.value > 0;
 
   if (hasValidValue) {
+    clean.value = Number(clean.value.toFixed(2));
     const rawCurrency = clean.currency;
-    clean.currency =
-      typeof rawCurrency === "string" &&
-      /^[a-zA-Z]{3}$/.test(rawCurrency.trim())
-        ? rawCurrency.trim().toUpperCase()
-        : "EUR";
+    let normalizedCurrency = "EUR";
+    if (typeof rawCurrency === "string") {
+      const trimmed = rawCurrency.trim().toUpperCase();
+      if (/^[A-Z]{3}$/.test(trimmed)) {
+        normalizedCurrency = trimmed;
+      } else if (trimmed === "€") {
+        normalizedCurrency = "EUR";
+      } else if (trimmed === "$" || trimmed === "USD") {
+        normalizedCurrency = "USD";
+      } else if (trimmed === "₺" || trimmed === "TL" || trimmed === "TRY") {
+        normalizedCurrency = "TRY";
+      } else if (trimmed === "£" || trimmed === "GBP") {
+        normalizedCurrency = "GBP";
+      }
+    }
+    clean.currency = normalizedCurrency;
   } else {
     delete clean.currency;
     delete clean.value;
@@ -798,19 +815,16 @@ export function trackSchedule(
   }
 
   // Facebook Pixel — Schedule
-  if (typeof window !== "undefined" && window.fbq) {
-    window.fbq(
-      "track",
-      "Schedule",
-      {
-        content_ids: [packageId],
-        content_name: stdPackageName,
-        content_category: "Photography Session",
-        content_type: "product",
-      },
-      resolvedEventId ? { eventID: resolvedEventId } : undefined,
-    );
-  }
+  trackFacebookEvent(
+    "Schedule",
+    {
+      content_ids: [packageId],
+      content_name: stdPackageName,
+      content_category: "Photography Session",
+      content_type: "product",
+    },
+    resolvedEventId,
+  );
 
   // Facebook CAPI — Schedule
   if (typeof window !== "undefined") {
@@ -854,17 +868,14 @@ export function trackContact(method: string) {
   const eventId = generateEventId();
 
   // Facebook Pixel — Contact
-  if (typeof window !== "undefined" && window.fbq) {
-    window.fbq(
-      "track",
-      "Contact",
-      {
-        content_name: method,
-        content_category: "Photography Inquiry",
-      },
-      eventId ? { eventID: eventId } : undefined,
-    );
-  }
+  trackFacebookEvent(
+    "Contact",
+    {
+      content_name: method,
+      content_category: "Photography Inquiry",
+    },
+    eventId,
+  );
 
   // Google Analytics & Google Ads
   if (typeof window !== "undefined" && window.gtag) {
@@ -1264,21 +1275,18 @@ export function trackSearch(
   }
 
   // Facebook Pixel — Search (with shared eventID for CAPI deduplication)
-  if (typeof window !== "undefined" && window.fbq) {
-    window.fbq(
-      "track",
-      "Search",
-      {
-        ...(packageId
-          ? { content_ids: [packageId], content_type: "product" }
-          : {}),
-        search_string: searchTerm,
-        destination_airport: destination,
-        checkin_date: checkinDate,
-      },
-      resolvedEventId ? { eventID: resolvedEventId } : undefined,
-    );
-  }
+  trackFacebookEvent(
+    "Search",
+    {
+      ...(packageId
+        ? { content_ids: [packageId], content_type: "product" }
+        : {}),
+      search_string: searchTerm,
+      destination_airport: destination,
+      checkin_date: checkinDate,
+    },
+    resolvedEventId,
+  );
 
   // CAPI Search
   if (typeof window !== "undefined") {

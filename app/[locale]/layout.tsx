@@ -283,6 +283,7 @@ export default async function LocaleLayout({
               'https://connect.facebook.net/en_US/fbevents.js');
               window.fbq('consent', '${isGranted === "granted" ? "grant" : "revoke"}');
               window.fbq('dataProcessingOptions', ['LDU'], 0, 0);
+              window.fbq('set', 'autoConfig', false, ${JSON.stringify(settings.facebook_pixel_id)});
               window.fbq('init', ${JSON.stringify(settings.facebook_pixel_id)});
               window._fbqInitialized = true;
               `

@@ -183,6 +183,7 @@ export const fbPixel = {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const fb = (window as any).fbq;
     if (fb) {
+      fb("set", "autoConfig", false, pixelId);
       if (userData) {
         fb("init", pixelId, userData);
       } else {
@@ -205,16 +206,41 @@ export const fbPixel = {
     if (fb) {
       const cleanParams = parameters ? { ...parameters } : undefined;
       if (cleanParams) {
+        // Parse string values like "120" or "120.50" to numbers
+        if (
+          typeof cleanParams.value === "string" &&
+          !Number.isNaN(Number(cleanParams.value))
+        ) {
+          cleanParams.value = Number(cleanParams.value);
+        }
+
         const hasValidValue =
           typeof cleanParams.value === "number" &&
           !Number.isNaN(cleanParams.value) &&
           cleanParams.value > 0;
         if (hasValidValue) {
+          cleanParams.value = Number((cleanParams.value as number).toFixed(2));
           const rawCurr = cleanParams.currency;
-          cleanParams.currency =
-            typeof rawCurr === "string" && /^[a-zA-Z]{3}$/.test(rawCurr.trim())
-              ? rawCurr.trim().toUpperCase()
-              : "EUR";
+          let normalizedCurrency = "EUR";
+          if (typeof rawCurr === "string") {
+            const trimmed = rawCurr.trim().toUpperCase();
+            if (/^[A-Z]{3}$/.test(trimmed)) {
+              normalizedCurrency = trimmed;
+            } else if (trimmed === "€") {
+              normalizedCurrency = "EUR";
+            } else if (trimmed === "$" || trimmed === "USD") {
+              normalizedCurrency = "USD";
+            } else if (
+              trimmed === "₺" ||
+              trimmed === "TL" ||
+              trimmed === "TRY"
+            ) {
+              normalizedCurrency = "TRY";
+            } else if (trimmed === "£" || trimmed === "GBP") {
+              normalizedCurrency = "GBP";
+            }
+          }
+          cleanParams.currency = normalizedCurrency;
         } else {
           delete cleanParams.currency;
           delete cleanParams.value;

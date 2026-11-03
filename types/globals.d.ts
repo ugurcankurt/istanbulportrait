@@ -44,12 +44,28 @@ declare global {
       config?: GA4EventParams,
     ) => void;
 
-    fbq: (
-      command: "track" | "trackCustom" | "init" | "consent",
-      eventName: string,
-      parameters?: Record<string, unknown>,
-      options?: { eventID?: string },
-    ) => void;
+    fbq: {
+      (
+        command: "track" | "trackCustom",
+        eventName: string,
+        parameters?: Record<string, unknown>,
+        options?: { eventID?: string },
+      ): void;
+      (
+        command: "init",
+        pixelId: string,
+        userData?: Record<string, unknown>,
+      ): void;
+      (command: "consent", action: "grant" | "revoke"): void;
+      (command: "set", feature: string, value: unknown, pixelId?: string): void;
+      (
+        command: "dataProcessingOptions",
+        options: string[],
+        country?: number,
+        state?: number,
+      ): void;
+      (...args: unknown[]): void;
+    };
 
     _fbq: typeof window.fbq;
 

@@ -106,6 +106,7 @@ export function FacebookPixel({ pixelId }: { pixelId?: string | null }) {
           hashed.ge = await hashCustomerData(updatedUserData.gender);
 
         if (Object.keys(hashed).length > 0) {
+          window.fbq("set", "autoConfig", false, pixelId);
           window.fbq("init", pixelId, hashed);
           advancedMatchingSentRef.current = true;
           hasInitialized.current = true;
@@ -116,6 +117,7 @@ export function FacebookPixel({ pixelId }: { pixelId?: string | null }) {
 
       // Initialize normally if advanced matching wasn't applied
       if (!hasInitialized.current && !window._fbqInitialized) {
+        window.fbq("set", "autoConfig", false, pixelId);
         window.fbq("init", pixelId);
         hasInitialized.current = true;
         window._fbqInitialized = true;
@@ -185,7 +187,6 @@ export function FacebookPixel({ pixelId }: { pixelId?: string | null }) {
           src={`https://www.facebook.com/tr?id=${pixelId}&ev=PageView&noscript=1`}
           alt=""
           aria-hidden="true"
-          role="presentation"
         />
       </noscript>
 
