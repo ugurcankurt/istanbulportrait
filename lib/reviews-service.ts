@@ -1,4 +1,5 @@
 import { unstable_cache } from "next/cache";
+import { fetchWithRetry } from "@/lib/supabase-fetch";
 import type {
   AggregateRating,
   GoogleReview,
@@ -139,7 +140,10 @@ async function loadPersistedTranslations(): Promise<
 
     if (!supabaseUrl || !supabaseKey) return inMemoryReviewTranslations;
 
-    const supabase = createClient(supabaseUrl, supabaseKey);
+    const supabase = createClient(supabaseUrl, supabaseKey, {
+      auth: { persistSession: false },
+      global: { fetch: fetchWithRetry },
+    });
     const { data } = await supabase
       .from("pages")
       .select("content")
@@ -182,7 +186,10 @@ async function persistTranslationsToDb(
 
     if (!supabaseUrl || !supabaseKey) return;
 
-    const supabase = createClient(supabaseUrl, supabaseKey);
+    const supabase = createClient(supabaseUrl, supabaseKey, {
+      auth: { persistSession: false },
+      global: { fetch: fetchWithRetry },
+    });
     const { data: pageData } = await supabase
       .from("pages")
       .select("id, content")

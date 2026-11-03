@@ -1,5 +1,6 @@
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
+import { fetchWithRetry } from "@/lib/supabase-fetch";
 
 export async function createServerSupabaseClient() {
   const cookieStore = await cookies();
@@ -31,6 +32,9 @@ export async function createServerSupabaseClient() {
           }
         },
       },
+      global: {
+        fetch: fetchWithRetry,
+      },
     },
   );
 }
@@ -52,6 +56,9 @@ export async function createServerSupabaseAdminClient() {
         persistSession: false,
         detectSessionInUrl: false,
         autoRefreshToken: false,
+      },
+      global: {
+        fetch: fetchWithRetry,
       },
     },
   );

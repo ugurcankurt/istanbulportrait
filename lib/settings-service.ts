@@ -150,7 +150,7 @@ export const settingsService = {
           .single();
 
         if (error) {
-          console.error("Error fetching site settings:", error);
+          console.warn("Notice fetching site settings:", error.message || error);
           return defaultSettings;
         }
 

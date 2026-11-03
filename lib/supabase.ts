@@ -1,4 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
+import { fetchWithRetry } from "./supabase-fetch";
 import { createClientSupabaseClient } from "./supabase/client";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
@@ -24,12 +25,18 @@ export const supabase: any =
   globalForSupabase.supabase ??
   (typeof window !== "undefined"
     ? createClientSupabaseClient()
-    : createClient<any>(supabaseUrl, supabaseAnonKey));
+    : createClient<any>(supabaseUrl, supabaseAnonKey, {
+        auth: { persistSession: false },
+        global: { fetch: fetchWithRetry },
+      }));
 
 export const supabaseAdmin: any =
   globalForSupabase.supabaseAdmin ??
   (typeof window === "undefined" && supabaseServiceKey
-    ? createClient<any>(supabaseUrl, supabaseServiceKey)
+    ? createClient<any>(supabaseUrl, supabaseServiceKey, {
+        auth: { persistSession: false },
+        global: { fetch: fetchWithRetry },
+      })
     : supabase);
 
 if (process.env.NODE_ENV !== "production") {

@@ -1,5 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
 import { unstable_cache } from "next/cache";
+import { fetchWithRetry } from "@/lib/supabase-fetch";
 
 export interface PageTranslations {
   en: string;
@@ -27,6 +28,8 @@ export interface PageDB {
   updated_at?: string;
 }
 
+let serverSupabaseClient: any = null;
+
 const getSupabaseClient = () => {
   if (typeof window !== "undefined") {
     // In Browser: use the initialized auth client which holds the Admin Session
@@ -35,11 +38,18 @@ const getSupabaseClient = () => {
   }
 
   // On Server: use Service Role for unrestricted DB fetch or fallback to ANON
-  return createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_KEY ||
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-  );
+  if (!serverSupabaseClient) {
+    serverSupabaseClient = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_KEY ||
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      {
+        auth: { persistSession: false },
+        global: { fetch: fetchWithRetry },
+      },
+    );
+  }
+  return serverSupabaseClient;
 };
 
 export const pagesContentService = {
@@ -91,7 +101,7 @@ export const pagesContentService = {
         .order("created_at", { ascending: false });
 
       if (error) {
-        console.error("Error fetching all pages:", error);
+        console.warn("Notice fetching all pages:", error.message || error);
         return [];
       }
 

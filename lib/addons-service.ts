@@ -1,5 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
 import { cache } from "react";
+import { fetchWithRetry } from "@/lib/supabase-fetch";
 
 export interface AddonDB {
   id: string;
@@ -13,6 +14,8 @@ export interface AddonDB {
   updated_at: string;
 }
 
+let serverSupabaseClient: any = null;
+
 // Ensure the client uses the right keys (either server or client boundary depending on usage)
 const getSupabaseClient = () => {
   if (typeof window !== "undefined") {
@@ -22,11 +25,18 @@ const getSupabaseClient = () => {
   }
 
   // On Server: use Service Role for unrestricted DB fetch or fallback to ANON
-  return createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_KEY ||
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-  );
+  if (!serverSupabaseClient) {
+    serverSupabaseClient = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_KEY ||
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      {
+        auth: { persistSession: false },
+        global: { fetch: fetchWithRetry },
+      },
+    );
+  }
+  return serverSupabaseClient;
 };
 
 export const addonsService = {
