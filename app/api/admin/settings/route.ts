@@ -1,4 +1,4 @@
-import { revalidateTag } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { NextResponse } from "next/server";
 import { createServerSupabaseAdminClient } from "@/lib/supabase/server";
 
@@ -62,7 +62,8 @@ export async function PATCH(request: Request) {
       );
     }
 
-    revalidateTag("site-settings");
+    revalidateTag("site-settings", "max");
+    revalidatePath("/", "layout");
     return NextResponse.json(result.data);
   } catch (error: any) {
     console.error("PATCH site_settings Unknown Error:", error);
