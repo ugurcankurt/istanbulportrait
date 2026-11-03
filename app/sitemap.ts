@@ -43,14 +43,6 @@ export default async function sitemap({
     return { languages };
   };
 
-  // Locales that have a real translation (title); falls back to English only.
-  const translatedLocales = (
-    title?: Record<string, string | undefined> | null,
-  ): string[] => {
-    const found = locales.filter((l) => !!title?.[l]);
-    return found.length > 0 ? found : ["en"];
-  };
-
   const cleanImage = (url?: string | null): string => {
     if (!url) return "";
     const replaced = url.replace(
@@ -64,16 +56,6 @@ export default async function sitemap({
       return `${baseUrl}${replaced}`;
     }
     return `${baseUrl}/${replaced}`;
-  };
-
-  const escapeXml = (unsafe: string) => {
-    if (!unsafe) return "";
-    return unsafe
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;")
-      .replace(/'/g, "&apos;");
   };
 
   const sitemapData: MetadataRoute.Sitemap = [];
@@ -134,7 +116,7 @@ export default async function sitemap({
     for (const page of activeCorePages) {
       if (page.slug === "home") continue;
 
-      translatedLocales(page.title).forEach((locale) => {
+      locales.forEach((locale) => {
         const titleLoc = page.title?.[locale];
         const pageSeg = titleLoc
           ? `/${generateNativeSlug(titleLoc)}`
@@ -150,7 +132,7 @@ export default async function sitemap({
           alternates: getAlternates((loc) => {
             const tLoc = page.title?.[loc];
             return tLoc ? `/${generateNativeSlug(tLoc)}` : `/${page.slug}`;
-          }, translatedLocales(page.title)),
+          }),
           ...(page.cover_image
             ? { images: [cleanImage(page.cover_image)] }
             : {}),
@@ -165,7 +147,7 @@ export default async function sitemap({
     const packagesParent = corePages.find((p) => p.slug === "packages");
 
     for (const pkg of activePackages) {
-      translatedLocales(pkg.title).forEach((locale) => {
+      locales.forEach((locale) => {
         const pTitle = packagesParent?.title?.[locale];
         const pSeg = pTitle ? generateNativeSlug(pTitle) : "packages";
         const pkgTitleLoc = pkg.title?.[locale];
@@ -196,16 +178,13 @@ export default async function sitemap({
             }
 
             videos.push({
-              title: escapeXml(
-                pkg.title?.[locale] || pkg.title?.en || pkg.slug,
-              ),
+              title: pkg.title?.[locale] || pkg.title?.en || pkg.slug,
               thumbnail_loc: cleanThumb,
-              description: escapeXml(
+              description:
                 generateSeoDescription(
                   pkg.description?.[locale] || pkg.description?.en,
                   300,
                 ) || "Package Video",
-              ),
               ...(playerLoc ? { player_loc: playerLoc } : {}),
               ...(contentLoc ? { content_loc: contentLoc } : {}),
             });
@@ -236,7 +215,7 @@ export default async function sitemap({
               ? generateNativeSlug(tPkgTitle) || pkg.slug
               : pkg.slug;
             return `/${tSeg}/${tPkgSeg}`;
-          }, translatedLocales(pkg.title)),
+          }),
           ...(uniqueImages.length > 0 ? { images: uniqueImages } : {}),
           ...(videos.length > 0 ? { videos } : {}),
         });
@@ -250,7 +229,7 @@ export default async function sitemap({
     const locationsParent = corePages.find((p) => p.slug === "locations");
 
     for (const locItem of activeLocations) {
-      translatedLocales(locItem.title).forEach((locale) => {
+      locales.forEach((locale) => {
         const pTitle = locationsParent?.title?.[locale];
         const pSeg = pTitle ? generateNativeSlug(pTitle) : "locations";
         const locTitleLoc = locItem.title?.[locale];
@@ -273,7 +252,7 @@ export default async function sitemap({
               ? generateNativeSlug(tLocTitle) || locItem.slug
               : locItem.slug;
             return `/${tSeg}/${tLocSeg}`;
-          }, translatedLocales(locItem.title)),
+          }),
           ...(locItem.cover_image
             ? { images: [cleanImage(locItem.cover_image)] }
             : {}),

@@ -19,7 +19,9 @@ export function SchemaInjector({ schema, id }: SchemaInjectorProps) {
       id={id}
       type="application/ld+json"
       // biome-ignore lint/security/noDangerouslySetInnerHtml: JSON-LD structured data requires raw JSON script
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+      dangerouslySetInnerHTML={{
+        __html: JSON.stringify(schema).replace(/</g, "\\u003c"),
+      }}
     />
   );
 }

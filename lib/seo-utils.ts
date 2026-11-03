@@ -350,6 +350,7 @@ export function buildLocalBusinessSchema(
   );
 
   const localizedStreet =
+    (typeof settings.address === "string" ? settings.address : null) ||
     (locale && settings.address?.[locale]) ||
     settings.address?.en ||
     settings.city ||
@@ -622,6 +623,12 @@ export function buildServiceSchema({
       : undefined,
     url: canonicalUrl,
     name,
+    sku: name
+      .toLowerCase()
+      .trim()
+      .replace(/[^\p{L}\p{N}]/gu, "-")
+      .replace(/-+/g, "-")
+      .replace(/^-+|-+$/g, ""),
     image: schemaImageUrl || undefined,
     description: description || undefined,
     brand: {

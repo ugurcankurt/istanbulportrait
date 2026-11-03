@@ -19,6 +19,8 @@ export function generateNativeSlug(title: string): string {
       .replace(/\s+/g, "-")
       // Replace multiple consecutive hyphens with a single hyphen
       .replace(/-+/g, "-")
+      // Strip leading and trailing hyphens to ensure clean canonical URLs
+      .replace(/^-+|-+$/g, "")
   );
 }
 

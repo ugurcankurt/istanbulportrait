@@ -112,9 +112,10 @@ export async function generateMetadata(props: {
         ogImage = activePackages[0].cover_image;
       }
     }
-    const currentSeg = dbPage.title?.[params.locale]
-      ? generateNativeSlug(dbPage.title[params.locale] || "")
-      : dbPage.slug;
+    const currentSeg =
+      (dbPage.title?.[params.locale] &&
+        generateNativeSlug(dbPage.title[params.locale])) ||
+      dbPage.slug;
     const canonicalUrl = `${encodeURI(`${baseUrl}/${params.locale}/${currentSeg}`)}${isPaginatedBlog ? pageQuerySuffix : ""}`;
 
     return {
@@ -392,13 +393,7 @@ export async function generateMetadata(props: {
         "max-snippet": -1,
       },
       alternates: {
-        ...(getAlternatesFn(params.locale)
-          ? {
-              canonical: encodeURI(
-                `${baseUrl}/${params.locale}${getAlternatesFn(params.locale)}`,
-              ),
-            }
-          : {}),
+        canonical: detailCanonical,
         ...getAlternates(getAlternatesFn),
       },
       openGraph: constructOpenGraph(
