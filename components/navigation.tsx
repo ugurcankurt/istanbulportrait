@@ -1,11 +1,6 @@
 "use client";
 
-import {
-  Globe,
-  Menu,
-  MessageCircle,
-  User,
-} from "lucide-react";
+import { Globe, Menu, MessageCircle, User } from "lucide-react";
 import {
   RiFacebookCircleLine as Facebook,
   RiInstagramLine as Instagram,
@@ -139,7 +134,7 @@ export function Navigation({ dynamicNavData = {}, settings }: NavigationProps) {
   return (
     <header
       data-nosnippet
-      className="sticky top-0 z-50 w-full border-b border-white/10 dark:border-white/5 bg-background/40 backdrop-blur-2xl shadow-sm supports-[backdrop-filter]:bg-background/40"
+      className="sticky top-0 z-50 w-full border-b border-white/10 dark:border-white/5 bg-background/60 backdrop-blur-md shadow-sm supports-[backdrop-filter]:bg-background/40"
     >
       <div className="container mx-auto flex h-14 sm:h-16 items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Logo */}
@@ -158,7 +153,7 @@ export function Navigation({ dynamicNavData = {}, settings }: NavigationProps) {
                 "object-contain object-left",
                 settings.logo_dark_url && "dark:hidden",
               )}
-              priority
+              loading="eager"
             />
           ) : (
             <span className="text-xl sm:text-2xl font-serif font-normal text-foreground dark:hidden tracking-tight">
@@ -172,7 +167,6 @@ export function Navigation({ dynamicNavData = {}, settings }: NavigationProps) {
               fill
               sizes="(max-width: 640px) 144px, 192px"
               className="object-contain object-left hidden dark:block"
-              priority
             />
           ) : (
             !settings?.logo_url && (

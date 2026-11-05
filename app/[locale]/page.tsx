@@ -110,14 +110,9 @@ export async function generateMetadata({
       canonical: `${baseUrl}/${locale}`,
       languages,
     },
-    openGraph: constructOpenGraph(
-      title,
-      desc,
-      ogImage,
-      siteName,
-      locale,
-      { url: `${baseUrl}/${locale}` },
-    ),
+    openGraph: constructOpenGraph(title, desc, ogImage, siteName, locale, {
+      url: `${baseUrl}/${locale}`,
+    }),
     twitter: {
       card: "summary_large_image",
       title,
@@ -324,17 +319,14 @@ export default async function HomePage({
           locationsHref={`/${locationsParentSlug}`}
         />
 
-        <div className="section-contain-auto">
+        <div>
           <PackagesSection
             aggregateRating={aggregateRating}
             dbPackages={activePackages}
             activeDiscounts={activeDiscounts}
             parentSlug={packagesParentSlug}
             header={
-              <div
-                key="packages-header"
-                className="text-left mb-6 sm:mb-8"
-              >
+              <div key="packages-header" className="text-left mb-6 sm:mb-8">
                 <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif font-normal tracking-tight leading-tight mb-2 sm:mb-3">
                   {getDynamicTitle("home-packages", tPackages("title"))}
                 </h2>
@@ -351,10 +343,7 @@ export default async function HomePage({
             locale={locale}
             packages={activePackages}
             header={
-              <div
-                key="gallery-header"
-                className="text-left mb-6 sm:mb-8"
-              >
+              <div key="gallery-header" className="text-left mb-6 sm:mb-8">
                 <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif font-normal tracking-tight leading-tight mb-2 sm:mb-3">
                   {getDynamicTitle("home-portfolio", tGallery("title"))}
                 </h2>
@@ -370,10 +359,7 @@ export default async function HomePage({
           <InstagramFeed
             instagramUrl={settings.instagram_url}
             header={
-              <div
-                key="instagram-header"
-                className="text-left mb-6 sm:mb-8"
-              >
+              <div key="instagram-header" className="text-left mb-6 sm:mb-8">
                 <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif font-normal tracking-tight leading-tight mb-2 sm:mb-3">
                   {getDynamicTitle(
                     "home-instagram",
@@ -418,10 +404,7 @@ export default async function HomePage({
           <ReviewsSection
             locale={locale}
             header={
-              <div
-                key="reviews-header"
-                className="text-left mb-6 sm:mb-8"
-              >
+              <div key="reviews-header" className="text-left mb-6 sm:mb-8">
                 <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif font-normal tracking-tight leading-tight mb-2 sm:mb-3">
                   {getDynamicTitle("home-reviews", tReviews("title"))}
                 </h2>

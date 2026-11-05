@@ -1,17 +1,22 @@
 "use client";
 
 import { ArrowRight } from "lucide-react";
+import dynamic from "next/dynamic";
 import { useLocale } from "next-intl";
 import { useEffect, useState } from "react";
-import {
-  type LastVisited,
-  ResumeViewingCard,
-} from "@/components/resume-viewing-card";
+import type { LastVisited } from "@/components/resume-viewing-card";
 import { Button } from "@/components/ui/button";
 import { Link } from "@/i18n/routing";
-import { trackEvent } from "@/lib/analytics";
 import type { DiscountDB } from "@/lib/discount-service";
 import { cn } from "@/lib/utils";
+
+const ResumeViewingCard = dynamic(
+  () =>
+    import("@/components/resume-viewing-card").then(
+      (mod) => mod.ResumeViewingCard,
+    ),
+  { ssr: false },
+);
 
 interface HeroClientWrapperProps {
   packagesButtonText: string;
@@ -71,7 +76,8 @@ export function HeroClientWrapper({
     <div
       className={cn(
         "flex flex-col items-start w-full",
-        hasVisited && "lg:grid lg:grid-cols-12 lg:gap-8 xl:gap-12 lg:items-center",
+        hasVisited &&
+          "lg:grid lg:grid-cols-12 lg:gap-8 xl:gap-12 lg:items-center",
       )}
     >
       <div className={cn("w-full", hasVisited ? "lg:col-span-7" : "max-w-3xl")}>
@@ -96,7 +102,11 @@ export function HeroClientWrapper({
             }
             size="lg"
             className="w-auto min-w-[140px] sm:min-w-[160px] h-11 sm:h-13 px-6 sm:px-8 rounded-full font-semibold text-sm sm:text-base tracking-wide shadow-lg transition-transform active:scale-[0.98] hover:scale-105 bg-white text-slate-900 border-none hover:bg-slate-100"
-            onClick={() => trackEvent("cta_click", "Hero", "View Packages")}
+            onClick={() => {
+              import("@/lib/analytics").then(({ trackEvent }) =>
+                trackEvent("cta_click", "Hero", "View Packages"),
+              );
+            }}
           />
 
           <Button
@@ -109,7 +119,11 @@ export function HeroClientWrapper({
             variant="outline"
             size="lg"
             className="w-auto min-w-[140px] sm:min-w-[160px] h-11 sm:h-13 px-6 sm:px-8 rounded-full border-[0.5px] border-white/40 bg-white/5 backdrop-blur-sm hover:bg-white/10 text-white font-semibold text-sm sm:text-base tracking-wide transition-all active:scale-[0.98] hover:scale-105"
-            onClick={() => trackEvent("cta_click", "Hero", "Check Locations")}
+            onClick={() => {
+              import("@/lib/analytics").then(({ trackEvent }) =>
+                trackEvent("cta_click", "Hero", "Check Locations"),
+              );
+            }}
           />
         </div>
       </div>

@@ -13,7 +13,6 @@ import {
   CarouselItem,
 } from "@/components/ui/carousel";
 import { useCurrency } from "@/contexts/currency-context";
-import { trackSelectItem, trackViewItemList } from "@/lib/analytics";
 import type { DiscountDB } from "@/lib/discount-service";
 import { extractPhotosCount } from "@/lib/features-parser";
 import type { PackageDB } from "@/lib/packages-service";
@@ -86,20 +85,24 @@ export function PackagesSection({
   useEffect(() => {
     if (sortedPackages.length === 0) return;
     // GA4 Enhanced Ecommerce — view_item_list (use canonical dbSlug for cross-locale funnel consistency)
-    trackViewItemList(
-      sortedPackages.map((pkg) => ({
-        id: pkg.dbSlug || pkg.id,
-        name: pkg.name,
-        price: pkg.pricing.price,
-      })),
-    );
+    import("@/lib/analytics").then(({ trackViewItemList }) => {
+      trackViewItemList(
+        sortedPackages.map((pkg) => ({
+          id: pkg.dbSlug || pkg.id,
+          name: pkg.name,
+          price: pkg.pricing.price,
+        })),
+      );
+    });
   }, [sortedPackages]);
 
   const handlePackageClick = (pkg: any) => {
-    trackSelectItem({
-      id: pkg.dbSlug || pkg.id,
-      name: pkg.name,
-      price: pkg.pricing.price,
+    import("@/lib/analytics").then(({ trackSelectItem }) => {
+      trackSelectItem({
+        id: pkg.dbSlug || pkg.id,
+        name: pkg.name,
+        price: pkg.pricing.price,
+      });
     });
   };
 
@@ -133,7 +136,7 @@ export function PackagesSection({
               style={{ viewTransitionName: `package-cover-${pkg.dbSlug}` }}
               sizes="(max-width: 639px) 80vw, (max-width: 1023px) 45vw, 22vw"
               quality={60}
-              priority={index <= 1}
+              loading={index === 0 ? "eager" : "lazy"}
             />
           ) : (
             <div className="w-full h-full bg-muted flex flex-col items-center justify-center text-muted-foreground/30">
