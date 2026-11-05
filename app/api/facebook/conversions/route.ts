@@ -7,7 +7,6 @@ import {
 } from "@/lib/errors";
 import {
   type FacebookConversionEvent,
-  generateLeadId,
   hashCustomerData,
   hashPhoneNumber,
   sendToFacebookConversionsAPI,
@@ -224,9 +223,9 @@ export async function POST(request: NextRequest) {
       if (h) user_data.ge = [h];
     }
 
-    // Generate or use provided lead ID for Lead events
-    if (event_name === "Lead") {
-      user_data.lead_id = lead_id || generateLeadId();
+    // Only attach lead_id if an actual Meta Lead Ads (Instant Forms) ID was provided
+    if (event_name === "Lead" && lead_id) {
+      user_data.lead_id = lead_id;
     }
 
     const customDataPayload: Record<string, any> = {

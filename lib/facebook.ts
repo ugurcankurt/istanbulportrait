@@ -389,6 +389,8 @@ export const trackFacebookLead = async (
     : undefined;
 
   // Prepare event for Conversions API
+  // Note: user_data.lead_id is strictly reserved for real Meta Lead Ads (Instant Forms) IDs.
+  // Sending a synthetic 15-digit number causes Meta's TAO graph lookup to fail with (#2) Service temporarily unavailable.
   const event: FacebookConversionEvent = {
     event_name: "Lead",
     event_time: Math.floor(Date.now() / 1000),
@@ -406,7 +408,7 @@ export const trackFacebookLead = async (
       country: hashedCountry,
       db: hashedDob,
       ge: hashedGender,
-      lead_id: generatedLeadId,
+      ...(leadId ? { lead_id: leadId } : {}),
       fbc: options?.fbc,
       fbp: options?.fbp,
       client_ip_address: options?.clientIpAddress,
@@ -414,8 +416,6 @@ export const trackFacebookLead = async (
       external_id: hashedExternalId,
     },
     custom_data: {
-      event_source: "crm",
-      lead_event_source: "Istanbul Portrait CRM",
       content_ids: [packageId],
       content_type: "product",
       value: amount,
@@ -632,16 +632,6 @@ export const trackMetaCRMLeadEvent = async (
   options?: FacebookEventOptions,
 ): Promise<void> => {
   try {
-    // Derive a stable 15-digit lead_id from bookingId
-    const leadId =
-      (Math.abs(
-        bookingId
-          .split("")
-          .reduce((acc, ch) => acc + ch.charCodeAt(0), 100000000000000),
-      ) %
-        900000000000000) +
-      100000000000000;
-
     const cleanId = bookingId.replace(/[^a-zA-Z0-9_-]/g, "_");
 
     // Prepare hashed data
@@ -675,15 +665,14 @@ export const trackMetaCRMLeadEvent = async (
     const hashedGender = options?.gender
       ? [await hashCustomerData(options.gender)]
       : undefined;
-    const hashedExternalId = options?.externalId
-      ? [await hashCustomerData(options.externalId)]
-      : undefined;
+    const hashedExternalId = [
+      await hashCustomerData(options?.externalId || bookingId),
+    ];
 
     const event: FacebookConversionEvent = {
       event_name: "Lead",
       event_time: Math.floor(Date.now() / 1000),
       event_id: eventId || `crm_auto_${cleanId}_${Date.now()}`,
-      event_source_url: options?.eventSourceUrl,
       action_source: "system_generated",
       user_data: {
         em: hashedEmail,
@@ -696,7 +685,6 @@ export const trackMetaCRMLeadEvent = async (
         country: hashedCountry,
         db: hashedDob,
         ge: hashedGender,
-        lead_id: leadId,
         fbc: options?.fbc,
         fbp: options?.fbp,
         client_ip_address: options?.clientIpAddress,
@@ -726,16 +714,6 @@ export const trackMetaCRMStatusEvent = async (
   newStatus: "confirmed" | "completed",
 ): Promise<void> => {
   try {
-    // Derive a stable 15-digit lead_id from bookingId
-    const leadId =
-      (Math.abs(
-        bookingId
-          .split("")
-          .reduce((acc, ch) => acc + ch.charCodeAt(0), 100000000000000),
-      ) %
-        900000000000000) +
-      100000000000000;
-
     const cleanId = bookingId.replace(/[^a-zA-Z0-9_-]/g, "_");
 
     // Prepare hashed data
@@ -745,6 +723,7 @@ export const trackMetaCRMStatusEvent = async (
     const hashedPhone = customerPhone
       ? [await hashPhoneNumber(customerPhone)]
       : [];
+    const hashedExternalId = [await hashCustomerData(bookingId)];
 
     const eventName = newStatus === "confirmed" ? "Qualified" : "Converted";
 
@@ -756,7 +735,7 @@ export const trackMetaCRMStatusEvent = async (
       user_data: {
         em: hashedEmail,
         ph: hashedPhone,
-        lead_id: leadId,
+        external_id: hashedExternalId,
       },
       custom_data: {
         event_source: "crm",

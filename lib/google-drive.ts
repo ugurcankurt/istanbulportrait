@@ -17,11 +17,9 @@ export const getGoogleAuth = () => {
     .replace(/^["']|["']$/g, "")
     .replace(/\\n/g, "\n");
 
-  return new google.auth.GoogleAuth({
-    credentials: {
-      private_key: privateKey,
-      client_email: clientEmail,
-    },
+  return new google.auth.JWT({
+    email: clientEmail,
+    key: privateKey,
     scopes: ["https://www.googleapis.com/auth/drive"],
   });
 };

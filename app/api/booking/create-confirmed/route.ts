@@ -346,6 +346,7 @@ export async function POST(request: NextRequest) {
           selected_addons: selectedAddonIds,
           selected_addon_details: addonDetails,
           country_code: countryCode,
+          updated_at: new Date().toISOString(),
         };
         if (ip) updatePayload.ip_address = ip;
         if (gclid) updatePayload.gclid = gclid;
