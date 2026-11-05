@@ -1,5 +1,53 @@
 import { unstable_cache } from "next/cache";
-import { supabase } from "./supabase";
+import { supabase, supabaseAdmin } from "./supabase";
+
+const PUBLIC_SETTINGS_COLUMNS = [
+  "contact_email",
+  "contact_phone",
+  "whatsapp_number",
+  "instagram_url",
+  "facebook_url",
+  "youtube_url",
+  "tiktok_url",
+  "logo_url",
+  "logo_dark_url",
+  "favicon_url",
+  "address",
+  "working_hours",
+  "google_analytics_id",
+  "yandex_metrica_id",
+  "site_name",
+  "site_description",
+  "default_og_image_url",
+  "organization_name",
+  "organization_founding_date",
+  "founder_name",
+  "founder_image_url",
+  "ai_search_config",
+  "theme_color",
+  "color_mode",
+  "city",
+  "country_code",
+  "latitude",
+  "longitude",
+  "opening_time",
+  "closing_time",
+  "working_days",
+  "facebook_pixel_id",
+  "facebook_dataset_id",
+  "instagram_account_id",
+  "app_base_url",
+  "clarity_project_id",
+  "yandex_webmaster_key",
+  "bing_webmaster_key",
+  "behold_url",
+  "featurable_widget_id",
+  "google_ads_id",
+  "google_ads_purchase_label",
+  "google_ads_lead_label",
+  "google_ads_begin_checkout_label",
+  "google_ads_customer_id",
+].join(", ");
 
 export interface SiteSettings {
   contact_email: string;
@@ -143,9 +191,13 @@ export const settingsService = {
   getSettings: unstable_cache(
     async (): Promise<SiteSettings> => {
       try {
-        const { data, error } = await supabase
+        const isServer = typeof window === "undefined";
+        const client = isServer ? supabaseAdmin : supabase;
+        const columns = isServer ? "*" : PUBLIC_SETTINGS_COLUMNS;
+
+        const { data, error } = await client
           .from("site_settings")
-          .select("*")
+          .select(columns)
           .eq("id", 1)
           .single();
 
@@ -284,6 +336,28 @@ export const settingsService = {
     ["site-settings"],
     { tags: ["site-settings"], revalidate: 60 },
   ),
+
+  /**
+   * Strip server-side API keys, tokens, and raw script payloads before passing
+   * SiteSettings from Server Components to Client Components via RSC props.
+   */
+  toPublicSettings(settings: SiteSettings): SiteSettings {
+    return {
+      ...settings,
+      resend_api_key: null,
+      resend_audience_id: null,
+      custom_head_scripts: null,
+      custom_body_scripts: null,
+      gemini_api_key: null,
+      facebook_access_token: null,
+      facebook_verify_token: null,
+      instagram_access_token: null,
+      ga4_measurement_protocol_secret: null,
+      admin_email: null,
+      indexnow_api_key: null,
+      google_ads_webhook_key: null,
+    };
+  },
 
   /**
    * Helper to resolve translatable fields explicitly.

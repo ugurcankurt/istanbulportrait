@@ -1,11 +1,10 @@
 import { NextResponse } from "next/server";
-import { getServerUser } from "@/lib/auth-server";
+import { isServerAdmin } from "@/lib/auth-server";
 import { getAllAuthors } from "@/lib/blog/blog-service";
 
 export async function GET() {
   try {
-    const user = await getServerUser();
-    if (user?.role !== "admin") {
+    if (!(await isServerAdmin())) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
     const authors = await getAllAuthors();

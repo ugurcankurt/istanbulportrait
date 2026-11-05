@@ -109,7 +109,7 @@ export function InstagramFeed({ header, instagramUrl }: InstagramFeedProps) {
                 {post.mediaType === "VIDEO" ? (
                   <video
                     src={post.mediaUrl}
-                    poster={post.thumbnailUrl}
+                    poster={post.sizes?.large?.mediaUrl || post.thumbnailUrl}
                     autoPlay
                     muted
                     loop
@@ -118,7 +118,11 @@ export function InstagramFeed({ header, instagramUrl }: InstagramFeedProps) {
                   />
                 ) : (
                   <Image
-                    src={post.sizes?.large?.mediaUrl || post.mediaUrl}
+                    src={
+                      post.sizes?.large?.mediaUrl ||
+                      post.sizes?.medium?.mediaUrl ||
+                      post.mediaUrl
+                    }
                     alt={
                       post.caption?.slice(0, 100) ||
                       `Instagram post from @${username}`
@@ -126,7 +130,7 @@ export function InstagramFeed({ header, instagramUrl }: InstagramFeedProps) {
                     fill
                     className="object-cover transition-transform duration-500 group-hover:scale-110"
                     sizes="(max-width: 639px) 48vw, (max-width: 1023px) 31vw, 16vw"
-                    quality={50}
+                    quality={70}
                     priority={i < 2}
                     loading={i < 2 ? "eager" : "lazy"}
                   />

@@ -1,6 +1,7 @@
 import { revalidatePath } from "next/cache";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
+import { isServerAdmin } from "@/lib/auth-server";
 import {
   deleteBlogPost,
   getBlogPostByIdWithAllTranslations,
@@ -31,6 +32,10 @@ export async function GET(
   const startTime = Date.now();
 
   try {
+    if (!(await isServerAdmin())) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     const ip = getClientIP(request);
 
     // Rate limiting
@@ -80,6 +85,10 @@ export async function PATCH(
   const startTime = Date.now();
 
   try {
+    if (!(await isServerAdmin())) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     const ip = getClientIP(request);
 
     // Rate limiting
@@ -211,6 +220,10 @@ export async function DELETE(
   const startTime = Date.now();
 
   try {
+    if (!(await isServerAdmin())) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     const ip = getClientIP(request);
 
     // Rate limiting

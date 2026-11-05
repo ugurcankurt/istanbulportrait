@@ -2,6 +2,7 @@ import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { addonsService } from "@/lib/addons-service";
 import { hasMarketingConsent } from "@/lib/consent-server";
+import { discountService } from "@/lib/discount-service";
 import {
   DatabaseConnectionError,
   handleSupabaseError,
@@ -10,6 +11,7 @@ import {
   ValidationError,
 } from "@/lib/errors";
 import { getPackagePricing, matchActiveSurcharge } from "@/lib/pricing";
+import { promoService } from "@/lib/promo-service";
 import {
   checkRateLimit,
   createRateLimitError,
@@ -108,11 +110,32 @@ export async function POST(request: NextRequest) {
       peopleCount,
     } = validationResult.data;
 
-    // Fetch time surcharges for accurate calculation
-    const { data: timeSurcharges } = await supabaseAdmin
-      .from("time_surcharges")
-      .select("*")
-      .order("time", { ascending: true });
+    // Fetch authoritative package details, time surcharges, active discounts, and promo code on the server
+    const [
+      { data: packageData },
+      { data: timeSurcharges },
+      activeDiscounts,
+      validatedPromo,
+    ] = await Promise.all([
+      supabaseAdmin
+        .from("packages")
+        .select("price, is_per_person, title")
+        .eq("slug", packageId)
+        .single(),
+      supabaseAdmin
+        .from("time_surcharges")
+        .select("*")
+        .order("time", { ascending: true }),
+      discountService.getActiveDiscounts(),
+      promoService.validate(promoCode || body.appliedPromo?.code || ""),
+    ]);
+
+    const serverBasePrice = packageData
+      ? Number(packageData.price)
+      : Number(body.basePrice) || totalAmount || 0;
+    const serverIsPerPerson = packageData
+      ? Boolean(packageData.is_per_person)
+      : Boolean(body.isPerPerson);
 
     const activeSurcharge = matchActiveSurcharge(
       bookingTime,
@@ -153,22 +176,26 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Validate that the totalAmount matches the expected price
-    // We check against the booking date and promo code for correct discounts
+    // Validate that the totalAmount matches the authoritative server-calculated price
     const packagePricing = getPackagePricing(
       packageId as PackageId,
-      body.basePrice || totalAmount || 0,
-      body.activeDiscount || null,
-      body.appliedPromo,
+      serverBasePrice,
+      activeDiscounts || body.activeDiscount || null,
+      validatedPromo
+        ? {
+            code: validatedPromo.code,
+            percentage: validatedPromo.discount_percentage,
+          }
+        : null,
       bookingDate,
       peopleCount,
       undefined,
       undefined,
       surchargePercentage,
-      body.yieldMultiplier || 1.0,
+      1.0,
       allAddons,
       selectedAddonIds,
-      Boolean(body.isPerPerson),
+      serverIsPerPerson,
       addonQuantities,
     );
 
@@ -295,15 +322,21 @@ export async function POST(request: NextRequest) {
         // Fallback
       }
 
+      const resolvedPromoCode =
+        validatedPromo?.code || body.appliedPromo?.code || promoCode || null;
+
       if (bookingId) {
         // Update existing draft booking while preserving existing gclid/gbraid/wbraid/ip_address if not present in current request
         const updatePayload: Record<string, any> = {
+          package_id: packageId,
           status: "confirmed",
           total_amount: totalAmount,
           notes: notes || null,
-          applied_promo_code: body.appliedPromo?.code || promoCode || null,
+          locale: locale || "en",
+          applied_promo_code: resolvedPromoCode,
           // Update other fields in case they changed during checkout
           user_name: customerName,
+          user_email: customerEmail,
           user_phone: customerPhone,
           booking_date: bookingDate,
           booking_time: bookingTime,
@@ -324,15 +357,17 @@ export async function POST(request: NextRequest) {
             .from("bookings")
             .update(updatePayload)
             .eq("id", bookingId)
+            .eq("status", "draft")
             .select()
-            .single();
+            .maybeSingle();
 
         if (updateError) {
           throw updateError;
-        } else {
-          booking = existingBooking;
         }
-      } else {
+        booking = existingBooking;
+      }
+
+      if (!booking) {
         // Create confirmed booking in Supabase (fallback)
         const bookingInsertData: Record<string, any> = {
           package_id: packageId,
@@ -344,7 +379,8 @@ export async function POST(request: NextRequest) {
           status: "confirmed",
           total_amount: totalAmount,
           notes: notes || null,
-          applied_promo_code: body.appliedPromo?.code || promoCode || null,
+          locale: locale || "en",
+          applied_promo_code: resolvedPromoCode,
           people_count: peopleCount || null,
           user_id: authUserId || null,
           drive_folder_id: driveFolderId || null,
@@ -368,6 +404,10 @@ export async function POST(request: NextRequest) {
           throw insertError;
         }
         booking = newBooking;
+      }
+
+      if (validatedPromo?.code) {
+        await promoService.incrementUsage(validatedPromo.code);
       }
 
       // Record payment in database (linking to booking)
@@ -547,14 +587,7 @@ export async function POST(request: NextRequest) {
       try {
         const { trackGA4ServerPurchase } = await import("@/lib/ga4-server");
 
-        // Fetch package name for accurate GA4 tracking
-        const { data: packageData } = await supabaseAdmin
-          .from("packages")
-          .select("title")
-          .eq("slug", packageId)
-          .single();
-
-        const localeKey = booking.locale || "en";
+        const localeKey = booking.locale || locale || "en";
         const packageName =
           packageData?.title?.[localeKey] ||
           packageData?.title?.en ||

@@ -77,11 +77,42 @@ export default async function proxy(request: NextRequest) {
     return response;
   }
 
+  // Capture Google Ads & Facebook attribution parameters as 1st-party HTTP cookies (90 days, Safari ITP safe)
+  const applyAttributionCookies = (res: NextResponse) => {
+    const searchParams = request.nextUrl.searchParams;
+    const fbclid = searchParams.get("fbclid");
+    const gclid = searchParams.get("gclid");
+    const gbraid = searchParams.get("gbraid");
+    const wbraid = searchParams.get("wbraid");
+
+    const ninetyDays = 90 * 24 * 60 * 60; // 90 days in seconds
+    const cookieOpts = {
+      maxAge: ninetyDays,
+      path: "/",
+      sameSite: "lax" as const,
+      httpOnly: false,
+    };
+
+    if (fbclid && /^[a-zA-Z0-9_=-]+$/.test(fbclid)) {
+      res.cookies.set("_fbc", `fb.1.${Date.now()}.${fbclid}`, cookieOpts);
+    }
+    if (gclid && /^[a-zA-Z0-9_=-]+$/.test(gclid)) {
+      res.cookies.set("gclid", gclid, cookieOpts);
+    }
+    if (gbraid && /^[a-zA-Z0-9_=-]+$/.test(gbraid)) {
+      res.cookies.set("gbraid", gbraid, cookieOpts);
+    }
+    if (wbraid && /^[a-zA-Z0-9_=-]+$/.test(wbraid)) {
+      res.cookies.set("wbraid", wbraid, cookieOpts);
+    }
+    return res;
+  };
+
   // Google SEO Best Practice: 308 Permanent Redirect from root / to default canonical locale /en
   if (pathname === "/") {
     const url = request.nextUrl.clone();
     url.pathname = "/en";
-    return NextResponse.redirect(url, 308);
+    return applyAttributionCookies(NextResponse.redirect(url, 308));
   }
 
   // Canonicalize uppercase locale prefixes (e.g. /EN, /TR/about -> /en, /tr/about) to 308
@@ -93,41 +124,12 @@ export default async function proxy(request: NextRequest) {
     if (loc !== lowerLoc && validLocales.includes(lowerLoc)) {
       const url = request.nextUrl.clone();
       url.pathname = `/${lowerLoc}${upperMatch[2] || ""}`;
-      return NextResponse.redirect(url, 308);
+      return applyAttributionCookies(NextResponse.redirect(url, 308));
     }
   }
 
   const response = intlMiddleware(request);
-
-  // Capture Google Ads & Facebook attribution parameters as 1st-party HTTP cookies (90 days, Safari ITP safe)
-  const searchParams = request.nextUrl.searchParams;
-  const fbclid = searchParams.get("fbclid");
-  const gclid = searchParams.get("gclid");
-  const gbraid = searchParams.get("gbraid");
-  const wbraid = searchParams.get("wbraid");
-
-  const ninetyDays = 90 * 24 * 60 * 60; // 90 days in seconds
-  const cookieOpts = {
-    maxAge: ninetyDays,
-    path: "/",
-    sameSite: "lax" as const,
-    httpOnly: false,
-  };
-
-  if (fbclid && /^[a-zA-Z0-9_=-]+$/.test(fbclid)) {
-    response.cookies.set("_fbc", `fb.1.${Date.now()}.${fbclid}`, cookieOpts);
-  }
-  if (gclid && /^[a-zA-Z0-9_=-]+$/.test(gclid)) {
-    response.cookies.set("gclid", gclid, cookieOpts);
-  }
-  if (gbraid && /^[a-zA-Z0-9_=-]+$/.test(gbraid)) {
-    response.cookies.set("gbraid", gbraid, cookieOpts);
-  }
-  if (wbraid && /^[a-zA-Z0-9_=-]+$/.test(wbraid)) {
-    response.cookies.set("wbraid", wbraid, cookieOpts);
-  }
-
-  return response;
+  return applyAttributionCookies(response);
 }
 
 export const config = {

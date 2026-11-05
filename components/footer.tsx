@@ -29,9 +29,14 @@ interface FooterProps {
     { path: string; title: string | null; navTitle?: string | null }
   >;
   settings?: any;
+  packages?: PackageDB[];
 }
 
-export function Footer({ dynamicNavData = {}, settings }: FooterProps) {
+export function Footer({
+  dynamicNavData = {},
+  settings,
+  packages,
+}: FooterProps) {
   const t = useTranslations("footer");
   const nav = useTranslations("nav");
   const tui = useTranslations("ui");
@@ -39,18 +44,22 @@ export function Footer({ dynamicNavData = {}, settings }: FooterProps) {
   const locale = useLocale();
   const pathname = usePathname();
   const [mounted, setMounted] = useState(false);
-  const [activePackages, setActivePackages] = useState<PackageDB[]>([]);
+  const [activePackages, setActivePackages] = useState<PackageDB[]>(
+    packages || [],
+  );
   const { resolvedTheme } = useTheme();
   const { setConsent } = useConsent();
 
-  // Prevent hydration mismatch by waiting for client-side mount and fetching packages
+  // Prevent hydration mismatch for theme logo and fetch packages only if not provided via SSR props
   useEffect(() => {
     setMounted(true);
-    packagesService
-      .getActivePackages()
-      .then(setActivePackages)
-      .catch(console.error);
-  }, []);
+    if (!packages || packages.length === 0) {
+      packagesService
+        .getActivePackages()
+        .then(setActivePackages)
+        .catch(console.error);
+    }
+  }, [packages]);
 
   const socialLinks = [
     {
@@ -179,31 +188,29 @@ export function Footer({ dynamicNavData = {}, settings }: FooterProps) {
           <div className="space-y-4">
             <p className="text-sm font-serif font-semibold text-foreground tracking-wide">{t("services")}</p>
             <ul className="space-y-2 text-sm text-muted-foreground font-light">
-              {mounted ? (
-                activePackages.length > 0 ? (
-                  activePackages.map((pkg) => {
-                    const pkgTitle = pkg.title?.[locale];
-                    const pkgSeg = pkgTitle
-                      ? generateNativeSlug(pkgTitle) || pkg.slug
-                      : pkg.slug;
-                    return (
-                      <li key={pkg.id}>
-                        <Link
-                          href={
-                            `/${dynamicNavData.packages?.path || "packages"}/${pkgSeg}` as any
-                          }
-                          className="hover:text-foreground transition-colors line-clamp-1"
-                        >
-                          {pkgTitle || pkg.title?.en || pkg.slug}
-                        </Link>
-                      </li>
-                    );
-                  })
-                ) : (
-                  <li className="text-xs italic text-muted-foreground select-none">
-                    ...
-                  </li>
-                )
+              {activePackages.length > 0 ? (
+                activePackages.map((pkg) => {
+                  const pkgTitle = pkg.title?.[locale];
+                  const pkgSeg = pkgTitle
+                    ? generateNativeSlug(pkgTitle) || pkg.slug
+                    : pkg.slug;
+                  return (
+                    <li key={pkg.id}>
+                      <Link
+                        href={
+                          `/${dynamicNavData.packages?.path || "packages"}/${pkgSeg}` as any
+                        }
+                        className="hover:text-foreground transition-colors line-clamp-1"
+                      >
+                        {pkgTitle || pkg.title?.en || pkg.slug}
+                      </Link>
+                    </li>
+                  );
+                })
+              ) : mounted ? (
+                <li className="text-xs italic text-muted-foreground select-none">
+                  ...
+                </li>
               ) : (
                 <li className="animate-pulse bg-muted/60 h-4 w-24 rounded"></li>
               )}

@@ -408,6 +408,7 @@ export const getBlogPostBySlug = cache(
       )
     `,
       )
+      .eq("status", "published")
       .eq("translation.slug", slug)
       .eq("translation.locale", locale)
       .maybeSingle();
@@ -469,6 +470,7 @@ export const getBlogPostBySlug = cache(
         `,
           )
           .eq("id", crossTrans.post_id)
+          .eq("status", "published")
           .eq("translation.locale", locale)
           .maybeSingle();
 
@@ -518,6 +520,7 @@ export const getBlogPostBySlug = cache(
           `,
             )
             .eq("id", crossTrans.post_id)
+            .eq("status", "published")
             .eq("translation.locale", "en")
             .maybeSingle();
 
@@ -575,11 +578,12 @@ export async function getSalvagedBlogSlug(
   alienSlug: string,
   targetLocale: string,
 ): Promise<string | null> {
-  // First, find the post_id this alien slug belongs to
+  // First, find the published post_id this alien slug belongs to
   const { data: alienTrans, error: alienError } = await supabaseAdmin
     .from("blog_post_translations")
-    .select("post_id")
+    .select("post_id, post:blog_posts!inner(status)")
     .eq("slug", alienSlug)
+    .eq("post.status", "published")
     .limit(1)
     .maybeSingle();
 
@@ -596,7 +600,11 @@ export async function getSalvagedBlogSlug(
     .limit(1)
     .maybeSingle();
 
-  if (targetError || !targetTrans?.slug) {
+  if (
+    targetError ||
+    !targetTrans?.slug ||
+    targetTrans.slug === alienSlug
+  ) {
     return null;
   }
 

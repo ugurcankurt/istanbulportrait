@@ -22,15 +22,22 @@ export async function GET(
   }
 
   // Construct relative storage path cleanly, decoding and re-encoding each segment safely
-  const storagePath = path
-    .map((seg) => encodeURIComponent(decodeURIComponent(seg)))
-    .join("/");
+  let storagePath: string;
+  try {
+    storagePath = path
+      .map((seg) => encodeURIComponent(decodeURIComponent(seg)))
+      .join("/");
+  } catch {
+    return new NextResponse("Bad Request", { status: 400 });
+  }
   const targetUrl = `${SUPABASE_STORAGE_BASE}/${storagePath}`;
 
   // Forward conditional request headers for cache validation
   const forwardHeaders: Record<string, string> = {};
   const ifNoneMatch = request.headers.get("if-none-match");
   if (ifNoneMatch) forwardHeaders["if-none-match"] = ifNoneMatch;
+  const ifModifiedSince = request.headers.get("if-modified-since");
+  if (ifModifiedSince) forwardHeaders["if-modified-since"] = ifModifiedSince;
   const range = request.headers.get("range");
   if (range) forwardHeaders.range = range;
 

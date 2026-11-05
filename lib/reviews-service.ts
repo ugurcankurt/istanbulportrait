@@ -50,7 +50,7 @@ export async function translateReviewWithAI(
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 6000);
       const geminiUrl =
-        "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent";
+        "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent";
 
       const res = await fetch(geminiUrl, {
         method: "POST",

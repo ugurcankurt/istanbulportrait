@@ -233,15 +233,18 @@ export function BookingModal({
     remainingAmount: number;
   } | null>(null);
 
+  const watchedBookingDate = form.watch("bookingDate");
+  const watchedBookingTime = form.watch("bookingTime");
+
   // Update pricing when package or date changes
   useEffect(() => {
     if (selectedPackage) {
       form.setValue("packageId", selectedPackage);
-      const dateValue = form.getValues("bookingDate");
+      const dateValue = watchedBookingDate;
 
       // Use people count for packages with per-person pricing, undefined for others
       const _count = isPerPerson ? peopleCount : undefined;
-      const tValue = form.getValues("bookingTime");
+      const tValue = watchedBookingTime;
       const activeSurcharge = matchActiveSurcharge(tValue, timeSurcharges);
       const surchargePercentage = activeSurcharge
         ? activeSurcharge.surcharge_percentage
@@ -282,6 +285,8 @@ export function BookingModal({
     }
   }, [
     selectedPackage,
+    watchedBookingDate,
+    watchedBookingTime,
     peopleCount,
     selectedAddons,
     addonQuantities,
@@ -458,11 +463,15 @@ export function BookingModal({
             "bookingData",
             JSON.stringify({
               ...data,
+              isPerPerson,
+              activeDiscounts,
               packageDisplayName,
               packageDuration,
               packagePhotos,
               packageLocations,
               packageFeatures: packageFeatures || [],
+              yieldMultiplier: localYieldMultiplier,
+              yieldReason: localYieldReason,
               totalAmount: pricing?.totalPrice || basePrice,
               selectedAddons,
               addonQuantities,

@@ -1,6 +1,5 @@
-import { createServerClient } from "@supabase/ssr";
-import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
+import { isServerAdmin } from "@/lib/auth-server";
 
 const _TARGET_LOCALES = ["ar", "ru", "es", "zh", "de", "fr", "ro", "tr"];
 
@@ -58,23 +57,7 @@ async function fetchWithRetry(
 
 export async function POST(req: Request) {
   try {
-    const cookieStore = await cookies();
-    const supabase = createServerClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-      {
-        cookies: {
-          get(name: string) {
-            return cookieStore.get(name)?.value;
-          },
-        },
-      },
-    );
-
-    const {
-      data: { session },
-    } = await supabase.auth.getSession();
-    if (!session) {
+    if (!(await isServerAdmin())) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
@@ -143,7 +126,7 @@ ${content}
 `;
 
     const url =
-      "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent";
+      "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent";
     const response = await fetchWithRetry(url, {
       method: "POST",
       headers: {

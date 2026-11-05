@@ -44,7 +44,7 @@ export async function BlogDetailPageContent({
   if (post?.status !== "published") {
     // Attempt to salvage the navigation by checking if the slug belongs to another language
     const salvagedSlug = await getSalvagedBlogSlug(decodedSlug, locale);
-    if (salvagedSlug) {
+    if (salvagedSlug && salvagedSlug !== decodedSlug) {
       permanentRedirect(
         `/${locale}/${parentSlug}/${encodeURIComponent(salvagedSlug)}`,
       );
@@ -86,16 +86,21 @@ export async function BlogDetailPageContent({
           authorBio:
             post.author?.bio?.[locale as keyof typeof post.author.bio] ||
             undefined,
-          authorUrls: post.author?.social_links
-            ? (Object.values(post.author.social_links).filter(
-                Boolean,
-              ) as string[])
-            : ([
-                settings.instagram_url,
-                settings.facebook_url,
-                settings.youtube_url,
-                settings.tiktok_url,
-              ].filter(Boolean) as string[]),
+          authorUrls: (() => {
+            const authorLinks = post.author?.social_links
+              ? (Object.values(post.author.social_links).filter(
+                  Boolean,
+                ) as string[])
+              : [];
+            return authorLinks.length > 0
+              ? authorLinks
+              : ([
+                  settings.instagram_url,
+                  settings.facebook_url,
+                  settings.youtube_url,
+                  settings.tiktok_url,
+                ].filter(Boolean) as string[]);
+          })(),
           publisherName:
             settings.organization_name || settings.site_name || undefined,
           publisherLogo:

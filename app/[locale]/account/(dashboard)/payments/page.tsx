@@ -4,20 +4,24 @@ import {
   Clock,
   Receipt,
 } from "lucide-react";
-import { redirect } from "next/navigation";
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
+import { redirect } from "@/i18n/routing";
 import { getServerUser } from "@/lib/auth-server";
 import { formatCurrency } from "@/lib/currency";
 import { createServerSupabaseAdminClient } from "@/lib/supabase/server";
 
 export default async function CustomerPaymentsPage() {
-  const user = await getServerUser();
-  const t = await getTranslations("account.payments");
-  const tSuccess = await getTranslations("success");
+  const [user, locale, t, tSuccess] = await Promise.all([
+    getServerUser(),
+    getLocale(),
+    getTranslations("account.payments"),
+    getTranslations("success"),
+  ]);
   if (!user) {
-    redirect("/account/login");
+    redirect({ href: "/account/login", locale });
+    return null;
   }
 
   const supabase = await createServerSupabaseAdminClient();

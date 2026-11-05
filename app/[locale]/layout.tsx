@@ -131,8 +131,20 @@ export async function generateMetadata({
       card: "summary_large_image",
       title,
       description: desc,
-      images: [optimizeSeoImage(ogImage, 1200)],
+      ...(ogImage ? { images: [optimizeSeoImage(ogImage, 1200)] } : {}),
     },
+    ...(settings.yandex_webmaster_key || settings.bing_webmaster_key
+      ? {
+          verification: {
+            ...(settings.yandex_webmaster_key
+              ? { yandex: settings.yandex_webmaster_key }
+              : {}),
+            ...(settings.bing_webmaster_key
+              ? { other: { "msvalidate.01": settings.bing_webmaster_key } }
+              : {}),
+          },
+        }
+      : {}),
     icons: {
       icon: settings.favicon_url || "/favicon.ico",
       shortcut: settings.favicon_url || "/favicon.ico",
@@ -165,6 +177,7 @@ export default async function LocaleLayout({
     { getServerUser, isServerAdmin },
     { getConsentCookie },
     { discountService },
+    { packagesService },
   ] = await Promise.all([
     import("@/lib/pages-content-service"),
     import("@/lib/settings-service"),
@@ -173,6 +186,7 @@ export default async function LocaleLayout({
     import("@/lib/auth-server"),
     import("@/app/actions/consent"),
     import("@/lib/discount-service"),
+    import("@/lib/packages-service"),
   ]);
 
   // Execute all asynchronous data fetching in parallel
@@ -185,6 +199,7 @@ export default async function LocaleLayout({
     user,
     consentData,
     activeDiscounts,
+    activePackages,
   ] = await Promise.all([
     getMessages(),
     pagesContentService.getDynamicCoreNavData(locale),
@@ -194,7 +209,10 @@ export default async function LocaleLayout({
     getServerUser(),
     getConsentCookie(),
     discountService.getActiveDiscounts(),
+    packagesService.getActivePackages(),
   ]);
+
+  const publicSettings = settingsService.toPublicSettings(settings);
 
   let selectedCurrency = cookieStore.get("NEXT_CURRENCY")?.value;
 
@@ -318,7 +336,7 @@ export default async function LocaleLayout({
                     <TopDiscountBanner discounts={activeDiscounts} />
                     <Navigation
                       dynamicNavData={dynamicNavData}
-                      settings={settings}
+                      settings={publicSettings}
                     />
                     <main className="flex-1">{children}</main>
 
@@ -344,7 +362,8 @@ export default async function LocaleLayout({
                     <CoreWebVitals />
                     <Footer
                       dynamicNavData={dynamicNavData}
-                      settings={settings}
+                      settings={publicSettings}
+                      packages={activePackages}
                     />
                   </div>
                   <Toaster />

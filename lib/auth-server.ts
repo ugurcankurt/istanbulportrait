@@ -69,10 +69,13 @@ export async function isServerAdmin(email?: string): Promise<boolean> {
   const settings = await settingsService.getSettings();
   const adminEmails = [
     settings.admin_email || "info@istanbulportrait.com",
+    "info@istanbulportrait.com",
     "ugurcankurt@gmail.com",
   ];
 
-  const isAdmin = adminEmails.includes(email.toLowerCase());
+  const isAdmin = adminEmails
+    .map((e) => e.toLowerCase())
+    .includes(email.toLowerCase());
 
   return isAdmin;
 }

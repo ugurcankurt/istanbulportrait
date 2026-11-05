@@ -1,30 +1,12 @@
-import { createServerClient } from "@supabase/ssr";
-import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
+import { isServerAdmin } from "@/lib/auth-server";
 
 // The supported languages (en is source)
 const TARGET_LOCALES = ["ar", "ru", "es", "zh", "de", "fr", "ro", "tr"];
 
 export async function POST(req: Request) {
   try {
-    const cookieStore = await cookies();
-    const supabase = createServerClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-      {
-        cookies: {
-          get(name: string) {
-            return cookieStore.get(name)?.value;
-          },
-        },
-      },
-    );
-
-    const {
-      data: { session },
-    } = await supabase.auth.getSession();
-
-    if (!session) {
+    if (!(await isServerAdmin())) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
@@ -69,7 +51,7 @@ Provide accurate, professional, context-aware translations suitable for a high-e
 
     // Connect to Google Gemini API
     const geminiUrl =
-      "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent";
+      "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent";
 
     const response = await fetch(geminiUrl, {
       method: "POST",

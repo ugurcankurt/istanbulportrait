@@ -5,6 +5,7 @@ import { generateSitemaps } from "../sitemap";
 export async function GET() {
   const baseUrl = getBaseUrl();
   const sitemaps = await generateSitemaps();
+  const lastMod = new Date().toISOString();
 
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
@@ -13,6 +14,7 @@ export async function GET() {
       (sitemap) => `
   <sitemap>
     <loc>${baseUrl}/sitemap/${sitemap.id}.xml</loc>
+    <lastmod>${lastMod}</lastmod>
   </sitemap>`,
     )
     .join("")}

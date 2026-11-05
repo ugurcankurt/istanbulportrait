@@ -1,4 +1,4 @@
-import { supabase } from "./supabase";
+import { supabase, supabaseAdmin } from "./supabase";
 
 export interface PromoCodeDB {
   id: string;
@@ -67,8 +67,8 @@ export const promoService = {
    */
   async incrementUsage(code: string): Promise<boolean> {
     try {
-      // 1. Fetch current counter
-      const { data, error } = await supabase
+      // 1. Fetch current counter using admin client (promo_codes write is restricted to service_role)
+      const { data, error } = await supabaseAdmin
         .from("promo_codes")
         .select("id, current_uses")
         .eq("code", code.trim().toUpperCase())
@@ -77,7 +77,7 @@ export const promoService = {
       if (error || !data) return false;
 
       // 2. Increment
-      const { error: updateError } = await supabase
+      const { error: updateError } = await supabaseAdmin
         .from("promo_codes")
         .update({ current_uses: data.current_uses + 1 })
         .eq("id", data.id);

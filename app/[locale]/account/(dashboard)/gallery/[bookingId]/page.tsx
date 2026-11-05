@@ -1,9 +1,8 @@
 import { ArrowLeft } from "lucide-react";
-import { redirect } from "next/navigation";
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import ClientGallery from "@/components/gallery/client-gallery";
 import { Button } from "@/components/ui/button";
-import { Link } from "@/i18n/routing";
+import { Link, redirect } from "@/i18n/routing";
 import { getServerUser } from "@/lib/auth-server";
 
 export default async function GalleryPage({
@@ -11,12 +10,16 @@ export default async function GalleryPage({
 }: {
   params: Promise<{ bookingId: string }>;
 }) {
-  const user = await getServerUser();
-  const resolvedParams = await params;
-  const t = await getTranslations("account.gallery");
+  const [user, locale, resolvedParams, t] = await Promise.all([
+    getServerUser(),
+    getLocale(),
+    params,
+    getTranslations("account.gallery"),
+  ]);
 
   if (!user) {
-    redirect("/account/login");
+    redirect({ href: "/account/login", locale });
+    return null;
   }
 
   return (

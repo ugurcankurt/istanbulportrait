@@ -71,15 +71,15 @@ export function CustomerDetailsForm({
 
   const handleSubmit = form.handleSubmit(onSubmit);
 
-  if (!selectedPackage) {
-    return null;
-  }
-
   const { packages, fetchPackages } = usePackagesStore();
 
   useEffect(() => {
     fetchPackages();
   }, [fetchPackages]);
+
+  if (!selectedPackage) {
+    return null;
+  }
 
   const packageDBInfo = packages.find((p) => p.slug === selectedPackage);
   const basePrice = packageDBInfo ? Number(packageDBInfo.price) : 150;

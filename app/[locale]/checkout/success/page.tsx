@@ -40,7 +40,7 @@ export default async function CheckoutPage({
   const supabase = await createServerSupabaseAdminClient();
   const { data: booking, error } = await supabase
     .from("bookings")
-    .select("*")
+    .select("*, payments(payment_id, provider, amount, status)")
     .eq("id", bookingId)
     .single();
 
@@ -71,6 +71,10 @@ export default async function CheckoutPage({
   const analyticsUserId =
     consentData?.consent === "accepted_all" ? booking.user_id || null : null;
 
+  const firstPayment = Array.isArray(booking.payments)
+    ? booking.payments[0]
+    : null;
+
   const confirmedBookingData = {
     id: booking.id,
     packageId: booking.package_id,
@@ -83,6 +87,11 @@ export default async function CheckoutPage({
     status: booking.status,
     peopleCount: booking.people_count,
     notes: booking.notes || null,
+    paymentId:
+      firstPayment?.payment_id ||
+      (firstPayment?.provider === "cash" ? `cash_${booking.id}` : undefined),
+    selected_addon_details: booking.selected_addon_details || [],
+    applied_promo_code: booking.applied_promo_code || null,
   };
 
   const isRecentBooking =

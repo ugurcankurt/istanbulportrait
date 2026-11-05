@@ -157,9 +157,11 @@ export async function isAdmin(email?: string): Promise<boolean> {
 
   const adminEmails = [
     process.env.NEXT_PUBLIC_ADMIN_EMAIL || "info@istanbulportrait.com",
+    "info@istanbulportrait.com",
+    "ugurcankurt@gmail.com",
   ];
 
-  return adminEmails.includes(email.toLowerCase());
+  return adminEmails.map((e) => e.toLowerCase()).includes(email.toLowerCase());
 }
 
 export async function requireAuth(): Promise<User> {

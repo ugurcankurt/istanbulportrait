@@ -1,7 +1,7 @@
 "use server";
 
 import { createHash } from "node:crypto";
-import { createServerAdminClient } from "@/lib/auth-server";
+import { createServerAdminClient, isServerAdmin } from "@/lib/auth-server";
 
 /**
  * Hashes a string using SHA-256 for privacy
@@ -63,6 +63,10 @@ export async function logConsentEvent(
  */
 export async function getConsentLogs(userIdentifier: string) {
   try {
+    if (!(await isServerAdmin())) {
+      return { success: false, error: "Unauthorized", data: null };
+    }
+
     const supabase = await createServerAdminClient();
 
     const { data, error } = await supabase

@@ -1,10 +1,15 @@
 import { NextResponse } from "next/server";
+import { isServerAdmin } from "@/lib/auth-server";
 import { supabaseAdmin } from "@/lib/supabase";
 
 export async function GET() {
-  const { data: payments, error: pErr } = await supabaseAdmin
+  if (!(await isServerAdmin())) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  const { error: pErr } = await supabaseAdmin
     .from("payments")
-    .select("*")
+    .select("id")
     .limit(1);
   const { data: bookings, error: bErr } = await supabaseAdmin
     .from("bookings")
@@ -13,9 +18,8 @@ export async function GET() {
 
   return NextResponse.json({
     payments: {
-      data: payments,
-      error: pErr,
       hasTable: pErr?.code !== "42P01",
+      error: pErr,
     },
     bookings: {
       columns: bookings && bookings.length > 0 ? Object.keys(bookings[0]) : [],

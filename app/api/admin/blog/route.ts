@@ -1,6 +1,7 @@
 import { revalidatePath } from "next/cache";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
+import { isServerAdmin } from "@/lib/auth-server";
 import { createBlogPost, getAllBlogPosts } from "@/lib/blog/blog-service";
 import {
   DatabaseConnectionError,
@@ -25,6 +26,10 @@ export async function GET(request: NextRequest) {
   const startTime = Date.now();
 
   try {
+    if (!(await isServerAdmin())) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     const ip = getClientIP(request);
 
     // Rate limiting
@@ -79,6 +84,10 @@ export async function POST(request: NextRequest) {
   const startTime = Date.now();
 
   try {
+    if (!(await isServerAdmin())) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     const ip = getClientIP(request);
 
     // Rate limiting

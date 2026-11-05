@@ -7,10 +7,10 @@ export const dynamic = "force-dynamic";
 
 export async function GET(request: Request) {
   try {
-    // Basic verification for Vercel Cron
+    // Basic verification for Vercel Cron (fail-closed)
     const authHeader = request.headers.get("authorization");
     if (
-      process.env.CRON_SECRET &&
+      !process.env.CRON_SECRET ||
       authHeader !== `Bearer ${process.env.CRON_SECRET}`
     ) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -27,8 +27,8 @@ export async function GET(request: Request) {
       });
     }
 
-    // Identify the time threshold (2 minutes ago)
-    const twoMinutesAgo = new Date(Date.now() - 2 * 60 * 1000).toISOString();
+    // Identify the time threshold (10 minutes ago, matching checkout hold timer)
+    const tenMinutesAgo = new Date(Date.now() - 10 * 60 * 1000).toISOString();
 
     // Fetch abandoned draft bookings
     const { data, error: fetchError } = await supabaseAdmin
@@ -38,8 +38,8 @@ export async function GET(request: Request) {
       .eq("status", "draft")
       // Not yet emailed
       .eq("abandoned_email_sent", false)
-      // Older than 2 minutes
-      .lt("created_at", twoMinutesAgo)
+      // Older than 10 minutes
+      .lt("created_at", tenMinutesAgo)
       // Limit to 50 per run to prevent timeout/rate limits
       .limit(50);
 

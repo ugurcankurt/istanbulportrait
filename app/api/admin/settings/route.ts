@@ -1,9 +1,14 @@
 import { revalidatePath, revalidateTag } from "next/cache";
 import { NextResponse } from "next/server";
+import { isServerAdmin } from "@/lib/auth-server";
 import { createServerSupabaseAdminClient } from "@/lib/supabase/server";
 
 export async function GET() {
   try {
+    if (!(await isServerAdmin())) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     const supabase = await createServerSupabaseAdminClient();
     const { data, error } = await supabase
       .from("site_settings")
@@ -28,6 +33,10 @@ export async function GET() {
 
 export async function PATCH(request: Request) {
   try {
+    if (!(await isServerAdmin())) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     const body = await request.json();
     const supabase = await createServerSupabaseAdminClient();
 

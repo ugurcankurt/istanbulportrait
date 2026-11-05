@@ -40,10 +40,10 @@ export async function PackageDetailPageContent({
   const aggregateRating = await reviewsService.getAggregateRating();
   const { reviews } = await reviewsService.fetchGoogleReviews(locale);
 
-  const title = pkg.title[locale] || pkg.title.en || pkg.slug;
-  const desc = pkg.description[locale] || pkg.description.en || "";
-  const _feat = pkg.features[locale] || pkg.features.en || [];
-  const _dur = pkg.duration[locale] || pkg.duration.en || "1 hour";
+  const title = pkg.title?.[locale] || pkg.title?.en || pkg.slug;
+  const desc = pkg.description?.[locale] || pkg.description?.en || "";
+  const _feat = pkg.features?.[locale] || pkg.features?.en || [];
+  const _dur = pkg.duration?.[locale] || pkg.duration?.en || "1 hour";
   const { settingsService } = await import("@/lib/settings-service");
   const settings = await settingsService.getSettings();
 
@@ -83,12 +83,17 @@ export async function PackageDetailPageContent({
 
   const serviceSchema = buildServiceSchema({
     name: title,
+    sku: pkg.slug,
     description: generateSeoDescription(desc),
-    image: pkg.gallery_images?.[0] || settings.default_og_image_url || "",
+    image:
+      pkg.gallery_images?.[0] ||
+      pkg.cover_image ||
+      settings.default_og_image_url ||
+      "",
     price: pkg.price,
     currency: "EUR",
     aggregateRating: aggregateRating.average,
-    reviewCount: aggregateRating.count || 1,
+    reviewCount: aggregateRating.count,
     providerName: settings.organization_name || settings.site_name,
     providerUrl: getBaseUrl(),
     discount: currentDiscount,
@@ -98,26 +103,38 @@ export async function PackageDetailPageContent({
     ),
   });
 
-  const videoSchema = pkg.video_url
-    ? {
-        "@context": "https://schema.org",
-        "@type": "VideoObject",
-        name: `${title} - Video`,
-        description: generateSeoDescription(desc),
-        thumbnailUrl: resolveSchemaImage(
-          pkg.gallery_images?.[0] ||
-            pkg.cover_image ||
-            settings.default_og_image_url ||
-            "",
-        ),
-        uploadDate:
-          pkg.created_at || pkg.updated_at || new Date().toISOString(),
-        duration: "PT59S",
-        width: 1080,
-        height: 1920,
-        contentUrl: pkg.video_url,
-      }
-    : null;
+  const videoSchema = (() => {
+    if (!pkg.video_url) return null;
+    const ytMatch = pkg.video_url.match(
+      /(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=|shorts\/))([\w-]{11})/,
+    );
+    const embedUrl = ytMatch?.[1]
+      ? `https://www.youtube.com/embed/${ytMatch[1]}`
+      : undefined;
+    const contentUrl = !embedUrl
+      ? resolveSchemaImage(pkg.video_url)
+      : undefined;
+
+    return {
+      "@context": "https://schema.org",
+      "@type": "VideoObject",
+      name: `${title} - Video`,
+      description: generateSeoDescription(desc) || title,
+      thumbnailUrl: resolveSchemaImage(
+        pkg.gallery_images?.[0] ||
+          pkg.cover_image ||
+          settings.default_og_image_url ||
+          "",
+      ),
+      uploadDate:
+        pkg.created_at || pkg.updated_at || new Date().toISOString(),
+      duration: "PT59S",
+      width: 1080,
+      height: 1920,
+      ...(embedUrl ? { embedUrl } : {}),
+      ...(contentUrl ? { contentUrl } : {}),
+    };
+  })();
 
   const allPackages = await packagesService.getActivePackages();
   const relatedPackages = allPackages.filter((p) => p.id !== pkg.id);

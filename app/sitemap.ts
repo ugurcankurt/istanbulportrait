@@ -58,6 +58,16 @@ export default async function sitemap({
     return `${baseUrl}/${replaced}`;
   };
 
+  const escapeXml = (str?: string | null): string => {
+    if (!str) return "";
+    return str
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&apos;");
+  };
+
   const sitemapData: MetadataRoute.Sitemap = [];
 
   if (resolvedId === "core") {
@@ -118,9 +128,8 @@ export default async function sitemap({
 
       locales.forEach((locale) => {
         const titleLoc = page.title?.[locale];
-        const pageSeg = titleLoc
-          ? `/${generateNativeSlug(titleLoc)}`
-          : `/${page.slug}`;
+        const nativeSlug = titleLoc ? generateNativeSlug(titleLoc) : "";
+        const pageSeg = `/${nativeSlug || page.slug}`;
 
         sitemapData.push({
           url: encodeURI(`${baseUrl}/${locale}${pageSeg}`),
@@ -131,7 +140,8 @@ export default async function sitemap({
           priority: 0.8,
           alternates: getAlternates((loc) => {
             const tLoc = page.title?.[loc];
-            return tLoc ? `/${generateNativeSlug(tLoc)}` : `/${page.slug}`;
+            const tSlug = tLoc ? generateNativeSlug(tLoc) : "";
+            return `/${tSlug || page.slug}`;
           }),
           ...(page.cover_image
             ? { images: [cleanImage(page.cover_image)] }
@@ -149,7 +159,7 @@ export default async function sitemap({
     for (const pkg of activePackages) {
       locales.forEach((locale) => {
         const pTitle = packagesParent?.title?.[locale];
-        const pSeg = pTitle ? generateNativeSlug(pTitle) : "packages";
+        const pSeg = (pTitle && generateNativeSlug(pTitle)) || "packages";
         const pkgTitleLoc = pkg.title?.[locale];
         const pkgSeg = pkgTitleLoc
           ? generateNativeSlug(pkgTitleLoc) || pkg.slug
@@ -174,19 +184,24 @@ export default async function sitemap({
             if (ytMatch && ytMatch[1]) {
               playerLoc = `https://www.youtube.com/embed/${ytMatch[1]}`;
             } else {
-              contentLoc = pkg.video_url;
+              contentLoc = cleanImage(pkg.video_url);
             }
 
+            const rawVideoTitle =
+              pkg.title?.[locale] || pkg.title?.en || pkg.slug;
+            const rawVideoDesc =
+              generateSeoDescription(
+                pkg.description?.[locale] || pkg.description?.en,
+                300,
+                locale,
+              ) || "Package Video";
+
             videos.push({
-              title: pkg.title?.[locale] || pkg.title?.en || pkg.slug,
-              thumbnail_loc: cleanThumb,
-              description:
-                generateSeoDescription(
-                  pkg.description?.[locale] || pkg.description?.en,
-                  300,
-                ) || "Package Video",
-              ...(playerLoc ? { player_loc: playerLoc } : {}),
-              ...(contentLoc ? { content_loc: contentLoc } : {}),
+              title: escapeXml(rawVideoTitle),
+              thumbnail_loc: escapeXml(cleanThumb),
+              description: escapeXml(rawVideoDesc),
+              ...(playerLoc ? { player_loc: escapeXml(playerLoc) } : {}),
+              ...(contentLoc ? { content_loc: escapeXml(contentLoc) } : {}),
             });
           }
         }
@@ -209,7 +224,7 @@ export default async function sitemap({
           priority: 0.9,
           alternates: getAlternates((loc) => {
             const tTitle = packagesParent?.title?.[loc];
-            const tSeg = tTitle ? generateNativeSlug(tTitle) : "packages";
+            const tSeg = (tTitle && generateNativeSlug(tTitle)) || "packages";
             const tPkgTitle = pkg.title?.[loc];
             const tPkgSeg = tPkgTitle
               ? generateNativeSlug(tPkgTitle) || pkg.slug
@@ -231,7 +246,7 @@ export default async function sitemap({
     for (const locItem of activeLocations) {
       locales.forEach((locale) => {
         const pTitle = locationsParent?.title?.[locale];
-        const pSeg = pTitle ? generateNativeSlug(pTitle) : "locations";
+        const pSeg = (pTitle && generateNativeSlug(pTitle)) || "locations";
         const locTitleLoc = locItem.title?.[locale];
         const locSeg = locTitleLoc
           ? generateNativeSlug(locTitleLoc) || locItem.slug
@@ -246,7 +261,7 @@ export default async function sitemap({
           priority: 0.7,
           alternates: getAlternates((loc) => {
             const tTitle = locationsParent?.title?.[loc];
-            const tSeg = tTitle ? generateNativeSlug(tTitle) : "locations";
+            const tSeg = (tTitle && generateNativeSlug(tTitle)) || "locations";
             const tLocTitle = locItem.title?.[loc];
             const tLocSeg = tLocTitle
               ? generateNativeSlug(tLocTitle) || locItem.slug
@@ -270,12 +285,16 @@ export default async function sitemap({
       const { data: blogPosts } = await supabaseAdmin
         .from("blog_posts")
         .select("id, updated_at, created_at, status, featured_image")
-        .eq("status", "published");
+        .eq("status", "published")
+        .not("published_at", "is", null);
 
       if (blogPosts && blogPosts.length > 0) {
+        const postIds = blogPosts.map((bp: any) => bp.id);
         const { data: translations } = await supabaseAdmin
           .from("blog_post_translations")
-          .select("post_id, locale, slug");
+          .select("post_id, locale, slug")
+          .in("post_id", postIds)
+          .limit(5000);
 
         for (const bp of blogPosts) {
           const postTranslations =
@@ -291,12 +310,12 @@ export default async function sitemap({
             if (!tSlug) return;
 
             const pTitle = blogParent?.title?.[locale];
-            const pSeg = pTitle ? generateNativeSlug(pTitle) : "blog";
+            const pSeg = (pTitle && generateNativeSlug(pTitle)) || "blog";
 
             const postAlternates: Record<string, string> = {};
             translatedLocales.forEach((loc: string) => {
               const bTitle = blogParent?.title?.[loc];
-              const bSeg = bTitle ? generateNativeSlug(bTitle) : "blog";
+              const bSeg = (bTitle && generateNativeSlug(bTitle)) || "blog";
               const bSlug = postTranslations.find(
                 (t: any) => t.locale === loc,
               )?.slug;
@@ -338,27 +357,34 @@ export default async function sitemap({
       const corePages = await pagesContentService.getAllPages();
       const blogParent = corePages.find((p) => p.slug === "blog");
 
-      // Blog Categories
+      // Blog Categories (only include categories with at least 1 published post to avoid soft-404s)
       const { data: blogCategories } = await supabaseAdmin
         .from("blog_categories")
         .select(
-          "id, slug, updated_at, created_at, translations:blog_category_translations(locale, name)",
+          "id, slug, updated_at, created_at, translations:blog_category_translations(locale, name), post_links:blog_post_categories(post:blog_posts(status, published_at))",
         );
       if (blogCategories && blogCategories.length > 0) {
         for (const bc of blogCategories) {
           const catTranslations = bc.translations || [];
           if (catTranslations.length === 0) continue;
 
+          const hasPublishedPost = (bc.post_links || []).some(
+            (link: any) =>
+              link?.post?.status === "published" &&
+              Boolean(link?.post?.published_at),
+          );
+          if (!hasPublishedPost) continue;
+
           const translatedLocales = catTranslations.map((t: any) => t.locale);
 
           translatedLocales.forEach((locale: string) => {
             const pTitle = blogParent?.title?.[locale];
-            const pSeg = pTitle ? generateNativeSlug(pTitle) : "blog";
+            const pSeg = (pTitle && generateNativeSlug(pTitle)) || "blog";
 
             const catAlternates: Record<string, string> = {};
             translatedLocales.forEach((loc: string) => {
               const bTitle = blogParent?.title?.[loc];
-              const bSeg = bTitle ? generateNativeSlug(bTitle) : "blog";
+              const bSeg = (bTitle && generateNativeSlug(bTitle)) || "blog";
               catAlternates[loc] = encodeURI(
                 `${baseUrl}/${loc}/${bSeg}/category/${bc.slug}`,
               );

@@ -2,10 +2,15 @@ import type { SiteSettings } from "./settings-service";
 import { generateNativeSlug } from "./slug-generator";
 
 export function getBaseUrl() {
-  if (process.env.NEXT_PUBLIC_APP_URL) return process.env.NEXT_PUBLIC_APP_URL;
+  if (process.env.NEXT_PUBLIC_APP_URL)
+    return process.env.NEXT_PUBLIC_APP_URL.replace(/\/+$/, "");
   if (process.env.VERCEL_PROJECT_PRODUCTION_URL)
-    return `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`;
-  if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`;
+    return `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`.replace(
+      /\/+$/,
+      "",
+    );
+  if (process.env.VERCEL_URL)
+    return `https://${process.env.VERCEL_URL}`.replace(/\/+$/, "");
   return "https://istanbulportrait.com";
 }
 
@@ -268,14 +273,18 @@ export function constructOpenGraph(
     description,
     url: getBaseUrl(), // Base URL handled by metadataBase in layout
     siteName: siteName || title,
-    images: [
-      {
-        url: optimizedUrl,
-        width: 1200,
-        height: 630,
-        alt: title,
-      },
-    ],
+    ...(optimizedUrl
+      ? {
+          images: [
+            {
+              url: optimizedUrl,
+              width: 1200,
+              height: 630,
+              alt: title,
+            },
+          ],
+        }
+      : {}),
     locale: ogLocale,
     type: "website",
     ...extraOverrides,
@@ -570,6 +579,7 @@ export function buildOrganizationSchema(settings: SiteSettings) {
 
 export function buildServiceSchema({
   name,
+  sku,
   description,
   image,
   price,
@@ -583,6 +593,7 @@ export function buildServiceSchema({
   url,
 }: {
   name: string;
+  sku?: string;
   description: string | null;
   image: string;
   price: number;
@@ -623,12 +634,14 @@ export function buildServiceSchema({
       : undefined,
     url: canonicalUrl,
     name,
-    sku: name
-      .toLowerCase()
-      .trim()
-      .replace(/[^\p{L}\p{N}]/gu, "-")
-      .replace(/-+/g, "-")
-      .replace(/^-+|-+$/g, ""),
+    sku:
+      sku ||
+      name
+        .toLowerCase()
+        .trim()
+        .replace(/[^\p{L}\p{N}]/gu, "-")
+        .replace(/-+/g, "-")
+        .replace(/^-+|-+$/g, ""),
     image: schemaImageUrl || undefined,
     description: description || undefined,
     brand: {
@@ -717,21 +730,24 @@ export function buildServiceSchema({
   }
 
   if (reviews && reviews.length > 0) {
-    schema.review = reviews.slice(0, 5).map((r: any) => ({
-      "@type": "Review",
-      author: {
-        "@type": "Person",
-        name: r.author?.name || "Customer",
-      },
-      datePublished: r.date ? r.date.split("T")[0] : undefined,
-      reviewBody: r.text,
-      reviewRating: {
-        "@type": "Rating",
-        bestRating: "5",
-        ratingValue: r.rating?.toString() || "5",
-        worstRating: "1",
-      },
-    }));
+    schema.review = reviews
+      .filter((r: any) => r.text && r.text.trim().length > 0)
+      .slice(0, 5)
+      .map((r: any) => ({
+        "@type": "Review",
+        author: {
+          "@type": "Person",
+          name: r.author?.name || "Customer",
+        },
+        datePublished: r.date ? r.date.split("T")[0] : undefined,
+        reviewBody: r.text,
+        reviewRating: {
+          "@type": "Rating",
+          bestRating: "5",
+          ratingValue: r.rating?.toString() || "5",
+          worstRating: "1",
+        },
+      }));
   }
 
   return schema;
@@ -785,7 +801,7 @@ export function buildArticleSchema({
     url: canonicalUrl,
     headline: title,
     inLanguage: inLanguage,
-    image: image ? [resolveSchemaImage(image)] : [],
+    image: image ? [resolveSchemaImage(image)] : undefined,
     datePublished,
     dateModified,
     author: [

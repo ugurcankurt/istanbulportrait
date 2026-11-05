@@ -1,8 +1,13 @@
 import { NextResponse } from "next/server";
+import { isServerAdmin } from "@/lib/auth-server";
 import { createServerSupabaseAdminClient } from "@/lib/supabase/server";
 
 export async function GET() {
   try {
+    if (!(await isServerAdmin())) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     const supabase = await createServerSupabaseAdminClient();
     const { data, error } = await supabase
       .from("promo_codes")
@@ -22,6 +27,10 @@ export async function GET() {
 
 export async function POST(request: Request) {
   try {
+    if (!(await isServerAdmin())) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     const supabase = await createServerSupabaseAdminClient();
     const body = await request.json();
 

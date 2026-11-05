@@ -48,6 +48,9 @@ export async function GET(_request: Request) {
       const defaultEnd = promo.end_date
         ? new Date(promo.end_date)
         : new Date(now.getTime() + 365 * 24 * 60 * 60 * 1000);
+      if (promo.end_date) {
+        defaultEnd.setUTCHours(23, 59, 59, 0);
+      }
 
       const start_date_time = `${defaultStart.toISOString().split(".")[0]}Z`;
       const end_date_time = `${defaultEnd.toISOString().split(".")[0]}Z`;

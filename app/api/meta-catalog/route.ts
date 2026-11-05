@@ -1,10 +1,12 @@
 import { NextResponse } from "next/server";
 import { discountService } from "@/lib/discount-service";
 import { packagesService } from "@/lib/packages-service";
+import { pagesContentService } from "@/lib/pages-content-service";
 import { calculateDiscountedPrice } from "@/lib/pricing";
 import { reviewsService } from "@/lib/reviews-service";
 import { generateSeoDescription, getBaseUrl } from "@/lib/seo-utils";
 import { settingsService } from "@/lib/settings-service";
+import { generateNativeSlug } from "@/lib/slug-generator";
 
 export const dynamic = "force-dynamic";
 
@@ -28,9 +30,14 @@ export async function GET(request: Request) {
   const location = locationTranslations[locale] || "Istanbul, Turkey";
 
   const baseUrl = getBaseUrl();
-  const packages = await packagesService.getAllPackages();
-  const settings = await settingsService.getSettings();
-  const activeDiscounts = await discountService.getActiveDiscounts();
+  const [packages, settings, activeDiscounts, packagesPage] = await Promise.all([
+    packagesService.getActivePackages(),
+    settingsService.getSettings(),
+    discountService.getActiveDiscounts(),
+    pagesContentService.getPageBySlug("packages"),
+  ]);
+  const parentTitle = packagesPage?.title?.[locale];
+  const parentSeg = (parentTitle && generateNativeSlug(parentTitle)) || "packages";
 
   // Fetch real Google Reviews aggregate data
   const { average, count } = await reviewsService.getAggregateRating();
@@ -44,10 +51,17 @@ export async function GET(request: Request) {
   // Helper to resolve images through our proxy if needed
   const cleanImage = (url?: string | null) => {
     if (!url) return "";
-    return url.replace(
+    const replaced = url.replace(
       "https://xfntnamwfnqjgqmyxwfz.supabase.co/storage/v1/object/public",
       `${baseUrl}/storage`,
     );
+    if (replaced.startsWith("http://") || replaced.startsWith("https://")) {
+      return replaced;
+    }
+    if (replaced.startsWith("/")) {
+      return `${baseUrl}${replaced}`;
+    }
+    return `${baseUrl}/${replaced}`;
   };
 
   const cropTo4x5 = (url: string) => {
@@ -98,7 +112,10 @@ export async function GET(request: Request) {
 
       const desc = pkg.description?.[locale] || pkg.description?.en || "";
       const cleanDesc = desc.replace(/<[^>]*>?/gm, "").trim();
-      const link = `${baseUrl}/${locale}/packages/${pkg.slug}`;
+      const pkgTitleLoc = pkg.title?.[locale];
+      const pkgSeg =
+        (pkgTitleLoc && generateNativeSlug(pkgTitleLoc)) || pkg.slug;
+      const link = encodeURI(`${baseUrl}/${locale}/${parentSeg}/${pkgSeg}`);
 
       const rawImageUrl = cleanImage(
         pkg.cover_image || pkg.gallery_images?.[0],
@@ -217,8 +234,11 @@ export async function GET(request: Request) {
 
     const videoUrl = cleanImage(pkg.video_url);
 
-    // Create language-specific URL
-    const itemUrl = `${baseUrl}/${locale}/packages/${pkg.slug}`;
+    // Create canonical language-specific URL
+    const pkgTitleLoc = pkg.title?.[locale];
+    const pkgSeg =
+      (pkgTitleLoc && generateNativeSlug(pkgTitleLoc)) || pkg.slug;
+    const itemUrl = encodeURI(`${baseUrl}/${locale}/${parentSeg}/${pkgSeg}`);
 
     let finalBasePrice = pkg.price;
     let finalSalePrice = null;

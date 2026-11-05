@@ -63,9 +63,9 @@ export async function GET() {
     if (posts) {
       blogEntries = posts
         .map((post: any) => {
-          const enTrans =
-            post.translations?.find((t: any) => t.locale === "en") ||
-            post.translations?.[0];
+          const enTrans = post.translations?.find(
+            (t: any) => t.locale === "en",
+          );
           if (!enTrans?.slug || !enTrans?.title) return null;
           return {
             title: stripMarkdownAndHtml(enTrans.title),
@@ -109,16 +109,14 @@ export async function GET() {
     `- [Istanbul Photography Blog & Travel Guide](${baseUrl}/en/${blogSeg}): Insider guides on what to wear, best times for light, and Istanbul travel tips.`,
   );
 
+  const standaloneCoreSlugs = new Set(["about", "contact", "privacy"]);
   for (const page of corePages) {
-    if (
-      ["home", "home-hero", "packages", "locations", "blog"].includes(page.slug)
-    ) {
+    if (!page.is_active || !standaloneCoreSlugs.has(page.slug)) {
       continue;
     }
     const pageTitle = page.title?.en || page.slug;
-    const pageSlug = page.title?.en
-      ? generateNativeSlug(page.title.en)
-      : page.slug;
+    const pageSlug =
+      (page.title?.en && generateNativeSlug(page.title.en)) || page.slug;
     const pageSubtitle = stripMarkdownAndHtml(
       page.subtitle?.en || page.content?.en?.slice(0, 140),
     );

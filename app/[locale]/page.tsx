@@ -381,7 +381,7 @@ export default async function HomePage({
                   )}
                 </h2>
                 <a
-                  href={`https://instagram.com/${(settings.instagram_url?.split("/").pop() || "").trim()}`}
+                  href={`https://instagram.com/${(settings.instagram_url?.replace(/\/$/, "").split("/").pop() || "").trim()}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-base sm:text-lg lg:text-xl text-muted-foreground font-light hover:text-primary transition-colors max-w-4xl"
@@ -389,7 +389,7 @@ export default async function HomePage({
                   {getDynamicSubtitle(
                     "home-instagram",
                     settings.instagram_url
-                      ? `@${settings.instagram_url.split("/").pop()}`
+                      ? `@${settings.instagram_url.replace(/\/$/, "").split("/").pop()}`
                       : "",
                   )}
                 </a>

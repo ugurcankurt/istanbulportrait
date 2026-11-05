@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Link } from "@/i18n/routing";
+import { DEPOSIT_PERCENTAGE } from "@/lib/pricing";
 import { type SiteSettings, settingsService } from "@/lib/settings-service";
 import { formatCurrency, localizeNumerals } from "@/lib/utils";
 import type { BookingFormData, PackageId } from "@/lib/validations";
@@ -72,7 +73,7 @@ export function BookingSuccess({
   const isCashPayment = confirmedBooking?.paymentId?.startsWith("cash_");
   const depositAmount = isCashPayment
     ? 0
-    : Math.round(paidTotal * 0.3 * 100) / 100;
+    : Math.round(paidTotal * DEPOSIT_PERCENTAGE * 100) / 100;
   const remainingAmount = isCashPayment
     ? paidTotal
     : Math.round((paidTotal - depositAmount) * 100) / 100;

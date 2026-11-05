@@ -1,6 +1,7 @@
 import { createClient } from "@supabase/supabase-js";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
+import { isServerAdmin } from "@/lib/auth-server";
 import { packagesService } from "@/lib/packages-service";
 
 export async function DELETE(
@@ -8,6 +9,10 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> },
 ) {
   try {
+    if (!(await isServerAdmin())) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     const { id } = await params;
 
     // First fetch the package to capture its storage objects

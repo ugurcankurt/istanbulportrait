@@ -23,6 +23,7 @@ export async function ContactPageContent({
 
   const { settingsService } = await import("@/lib/settings-service");
   const settings = await settingsService.getSettings();
+  const publicSettings = settingsService.toPublicSettings(settings);
 
   const contactSchema = buildContactPageSchema({
     name: dynamicTitle,
@@ -37,7 +38,7 @@ export async function ContactPageContent({
       <BreadcrumbNav customLastLabel={dynamicTitle || undefined} />
       <PageHeroSection title={dynamicTitle} subtitle={dynamicSubtitle} />
       <div className="section-contain-auto">
-        <ContactSection settings={settings} />
+        <ContactSection settings={publicSettings} />
       </div>
     </div>
   );

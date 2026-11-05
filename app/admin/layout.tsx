@@ -44,6 +44,7 @@ export default async function AdminLayout({
   children: React.ReactNode;
 }) {
   const settings = await settingsService.getSettings();
+  const publicSettings = settingsService.toPublicSettings(settings);
 
   return (
     <html
@@ -51,18 +52,6 @@ export default async function AdminLayout({
       className={`${fontSans.variable} ${fontHeading.variable} ${geistMono.variable} theme-${settings.theme_color || "bronze"}`}
       suppressHydrationWarning
     >
-      <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link
-          rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossOrigin="anonymous"
-        />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,600&display=swap"
-          rel="stylesheet"
-        />
-      </head>
       <body className="antialiased min-h-screen bg-background font-sans">
         <ThemeProvider
           attribute="class"
@@ -70,7 +59,9 @@ export default async function AdminLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <AdminLayoutClient settings={settings}>{children}</AdminLayoutClient>
+          <AdminLayoutClient settings={publicSettings}>
+            {children}
+          </AdminLayoutClient>
         </ThemeProvider>
       </body>
     </html>

@@ -1,5 +1,6 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
+import { isServerAdmin } from "@/lib/auth-server";
 import { createBlogTag, getBlogTags } from "@/lib/blog/blog-service";
 import { logError, sanitizeErrorForProduction } from "@/lib/errors";
 import {
@@ -12,6 +13,10 @@ import type { Locale } from "@/types/blog";
 
 export async function GET(request: NextRequest) {
   try {
+    if (!(await isServerAdmin())) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     const ip = getClientIP(request);
 
     const rateLimitResult = await checkRateLimit(ip, {
@@ -40,6 +45,10 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
+    if (!(await isServerAdmin())) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     const ip = getClientIP(request);
 
     const rateLimitResult = await checkRateLimit(ip, {

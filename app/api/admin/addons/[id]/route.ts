@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { isServerAdmin } from "@/lib/auth-server";
 import { supabaseAdmin } from "@/lib/supabase";
 
 export async function GET(
@@ -6,6 +7,10 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> },
 ) {
   try {
+    if (!(await isServerAdmin())) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     const { id } = await params;
     const { data: addon, error } = await supabaseAdmin
       .from("addons")
@@ -35,6 +40,10 @@ export async function PUT(
   { params }: { params: Promise<{ id: string }> },
 ) {
   try {
+    if (!(await isServerAdmin())) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     const { id } = await params;
     const body = await request.json();
     const { data, error } = await supabaseAdmin
@@ -63,6 +72,10 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> },
 ) {
   try {
+    if (!(await isServerAdmin())) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     const { id } = await params;
     const { error } = await supabaseAdmin.from("addons").delete().eq("id", id);
 

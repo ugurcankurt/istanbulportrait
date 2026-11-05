@@ -67,17 +67,20 @@ export const pagesContentService = {
     const { generateNativeSlug } = await import("@/lib/slug-generator");
 
     for (const page of pages) {
-      if (!page.is_active) continue;
+      if (!page.is_active) {
+        continue;
+      }
 
-      // Match core slug "about"
+      // Match exact internal slug (including "home-instagram", "home-reviews", "about", etc.)
       if (page.slug === decodedSlug) return page;
 
-      // Match localized active translated titles for actual standalone pages (skip sections like home-*)
-      if (
-        page.title &&
-        !page.slug.startsWith("home-") &&
-        page.slug !== "home"
-      ) {
+      // Skip "home" and "home-*" internal section rows when matching translated URL titles
+      if (page.slug === "home" || page.slug.startsWith("home-")) {
+        continue;
+      }
+
+      // Match localized active translated titles for actual standalone pages
+      if (page.title) {
         for (const val of Object.values(page.title)) {
           if (val && generateNativeSlug(val) === decodedSlug) {
             return page;
@@ -212,7 +215,7 @@ export const pagesContentService = {
 
       if (locTitle) {
         navMap[page.slug] = {
-          path: generateNativeSlug(locTitle),
+          path: generateNativeSlug(locTitle) || page.slug,
           title: locTitle,
           navTitle: customNavTitle,
         };

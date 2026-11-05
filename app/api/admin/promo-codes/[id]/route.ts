@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { isServerAdmin } from "@/lib/auth-server";
 import { createServerSupabaseAdminClient } from "@/lib/supabase/server";
 
 export async function PATCH(
@@ -6,6 +7,10 @@ export async function PATCH(
   { params }: { params: Promise<{ id: string }> }, // Await params correctly per Next 15+ constraints
 ) {
   try {
+    if (!(await isServerAdmin())) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     const resolvedParams = await params;
     const id = resolvedParams.id;
     const body = await request.json();
@@ -37,6 +42,10 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> },
 ) {
   try {
+    if (!(await isServerAdmin())) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     const resolvedParams = await params;
     const id = resolvedParams.id;
     const supabase = await createServerSupabaseAdminClient();

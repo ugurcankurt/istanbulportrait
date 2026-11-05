@@ -5,7 +5,11 @@ export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const token_hash = searchParams.get("token_hash");
   const type = searchParams.get("type") as string | null;
-  const next = searchParams.get("next") ?? "/en/account/dashboard";
+  const rawNext = searchParams.get("next") ?? "/en/account/dashboard";
+  const next =
+    rawNext.startsWith("/") && !rawNext.startsWith("//")
+      ? rawNext
+      : "/en/account/dashboard";
   const code = searchParams.get("code");
 
   // Modern PKCE Flow (Used for all links, including invites)

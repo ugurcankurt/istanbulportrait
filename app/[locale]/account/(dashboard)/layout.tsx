@@ -1,8 +1,7 @@
 import { LogOut } from "lucide-react";
 import Image from "next/image";
-import { redirect } from "next/navigation";
-import { getTranslations } from "next-intl/server";
-import { Link } from "@/i18n/routing";
+import { getLocale, getTranslations } from "next-intl/server";
+import { Link, redirect } from "@/i18n/routing";
 import { getServerUser } from "@/lib/auth-server";
 import { settingsService } from "@/lib/settings-service";
 import { cn } from "@/lib/utils";
@@ -14,13 +13,19 @@ export default async function AccountLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const user = await getServerUser();
-  const t = await getTranslations("account.sidebar");
-  const settings = await settingsService.getSettings();
+  const [user, locale, t, settings] = await Promise.all([
+    getServerUser(),
+    getLocale(),
+    getTranslations("account.sidebar"),
+    settingsService.getSettings(),
+  ]);
 
   if (!user) {
-    redirect("/account/login");
+    redirect({ href: "/account/login", locale });
+    return null;
   }
+
+  const publicSettings = settingsService.toPublicSettings(settings);
 
   return (
     <div className="min-h-screen bg-muted/30">
@@ -62,7 +67,7 @@ export default async function AccountLayout({
             )
           )}
         </Link>
-        <MobileNav userEmail={user.email || ""} settings={settings} />
+        <MobileNav userEmail={user.email || ""} settings={publicSettings} />
       </div>
 
       <div className="flex flex-col md:flex-row min-h-screen">

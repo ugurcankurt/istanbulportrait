@@ -29,12 +29,12 @@ export async function GET(request: Request) {
     .eq("id", "default")
     .single();
 
-  const startHour = settingsData?.start_time
-    ? parseInt(settingsData.start_time.split(":")[0], 10)
-    : 6;
-  const endHour = settingsData?.end_time
-    ? parseInt(settingsData.end_time.split(":")[0], 10)
-    : 20;
+  const startMinutes = settingsData?.start_time
+    ? timeToMinutes(settingsData.start_time)
+    : 6 * 60;
+  const endMinutes = settingsData?.end_time
+    ? timeToMinutes(settingsData.end_time)
+    : 20 * 60;
 
   // Fetch all packages to get exact durations dynamically
   const { data: allPackages } = await supabaseAdmin
@@ -46,13 +46,17 @@ export async function GET(request: Request) {
   if (allPackages) {
     for (const p of allPackages) {
       const durStr = (p.duration?.en || "").toLowerCase();
-      let mins = 60;
-      if (durStr.includes("hour")) {
-        const h = parseFloat(durStr);
-        if (!Number.isNaN(h)) mins = h * 60;
-      } else if (durStr.includes("min")) {
-        const m = parseInt(durStr, 10);
-        if (!Number.isNaN(m)) mins = m;
+      let mins = 0;
+      const hourMatch = durStr.match(/(\d+(?:\.\d+)?)\s*(?:hour|hr|h\b)/i);
+      const minMatch = durStr.match(/(\d+)\s*(?:min|m\b)/i);
+      if (hourMatch) {
+        mins += Math.round(parseFloat(hourMatch[1]) * 60);
+      }
+      if (minMatch) {
+        mins += parseInt(minMatch[1], 10);
+      }
+      if (mins <= 0) {
+        mins = PACKAGE_DURATIONS[p.slug] || 60;
       }
       dynamicDurations[p.slug] = mins;
     }
@@ -112,20 +116,24 @@ export async function GET(request: Request) {
   });
 
   const blockedSlots: string[] = [];
+  const manualBlockedMinutes = Array.from(manualBlockedSlots).map(timeToMinutes);
 
   for (const slot of allSlots) {
     const requestedStart = timeToMinutes(slot);
     const requestedEnd = requestedStart + requestedDuration;
 
-    // Block if outside working hours
-    const h = parseInt(slot.split(":")[0], 10);
-    if (h < startHour || h > endHour) {
+    // Block if outside working hours (minute-accurate)
+    if (requestedStart < startMinutes || requestedStart > endMinutes) {
       blockedSlots.push(slot);
       continue;
     }
 
-    // Block if manually blocked
-    if (manualBlockedSlots.has(slot)) {
+    // Block if any manually blocked 30-min slot overlaps the requested session window
+    const overlapsManualBlock = manualBlockedMinutes.some(
+      (blockedStart) =>
+        requestedStart < blockedStart + 30 && requestedEnd > blockedStart,
+    );
+    if (overlapsManualBlock) {
       blockedSlots.push(slot);
       continue;
     }
