@@ -2,6 +2,7 @@
  * Package display names (for GA4 item_name standardization)
  */
 import { parsePhoneNumber } from "libphonenumber-js/min";
+import { hashCustomerData, hashPhoneNumber } from "@/lib/facebook";
 
 function getGoogleAdsSendTo(
   type: "purchase" | "lead" | "begin_checkout",
@@ -275,6 +276,60 @@ export function normalizeAnalyticsUserData(
     lastName: userData.lastName ? userData.lastName.trim() : undefined,
     country: resolvedCountry,
   };
+}
+
+/**
+ * Re-initializes the Meta Pixel with hashed customer data (Advanced Matching)
+ * so subsequent client-side Pixel events (Lead, InitiateCheckout, AddPaymentInfo, Purchase)
+ * carry hashed em, ph, fn, ln, country, and external_id without firing an extra PageView.
+ */
+export async function syncFacebookAdvancedMatching(
+  providedUserData?: AnalyticsUserData,
+): Promise<void> {
+  if (typeof window === "undefined" || !window.fbq) return;
+
+  const pixelId =
+    (window as any).__FB_PIXEL_ID ||
+    process.env.NEXT_PUBLIC_FACEBOOK_PIXEL_ID ||
+    "";
+  if (!pixelId) return;
+
+  const userData = normalizeAnalyticsUserData(
+    providedUserData || getUserDataForAdvancedMatching(),
+  );
+  if (!userData) return;
+
+  const hashed: Record<string, string> = {};
+  if (userData.email) hashed.em = await hashCustomerData(userData.email);
+  if (userData.phone) hashed.ph = await hashPhoneNumber(userData.phone);
+  if (userData.firstName)
+    hashed.fn = await hashCustomerData(userData.firstName);
+  if (userData.lastName) hashed.ln = await hashCustomerData(userData.lastName);
+  if (userData.city) hashed.ct = await hashCustomerData(userData.city);
+  if (userData.state) hashed.st = await hashCustomerData(userData.state);
+  if (userData.zip) hashed.zp = await hashCustomerData(userData.zip);
+  if (userData.country)
+    hashed.country = await hashCustomerData(userData.country);
+  if (userData.dob) hashed.db = await hashCustomerData(userData.dob);
+  if (userData.gender) hashed.ge = await hashCustomerData(userData.gender);
+
+  const extId = getExternalId();
+  if (extId) {
+    hashed.external_id = await hashCustomerData(extId);
+  }
+
+  for (const key of Object.keys(hashed)) {
+    if (!hashed[key]) {
+      delete hashed[key];
+    }
+  }
+
+  if (Object.keys(hashed).length > 0) {
+    window.fbq("set", "autoConfig", false, pixelId);
+    window.fbq("init", pixelId, hashed);
+    (window as any)._fbqAdvancedMatchingSent = true;
+    (window as any)._fbqInitialized = true;
+  }
 }
 
 // Track purchase events (GA4 Enhanced Ecommerce)
@@ -618,6 +673,7 @@ export function trackAddPaymentInfo(
   paymentType: string = "credit_card",
   currency: string = "EUR",
   eventId?: string,
+  yieldCategory?: string,
 ) {
   const stdPackageName = packageName;
 
@@ -629,6 +685,7 @@ export function trackAddPaymentInfo(
       currency: currency,
       value: value,
       payment_type: paymentType,
+      yield_category: yieldCategory,
       items: [
         {
           item_id: packageId,
@@ -650,6 +707,7 @@ export function trackAddPaymentInfo(
       content_type: "product",
       value: value,
       currency: currency,
+      yield_category: yieldCategory,
     },
     resolvedEventId,
   );
@@ -676,6 +734,7 @@ export function trackAddPaymentInfo(
           content_name: stdPackageName,
           payment_type: paymentType,
           currency: currency,
+          yield_category: yieldCategory,
         },
         event_source_url: window.location.href,
         external_id: getExternalId(),

@@ -26,8 +26,11 @@ import type { AddonDB } from "@/lib/addons-service";
 import {
   generateEventId,
   getExternalId,
+  getValidFbc,
+  getValidFbp,
   saveUserDataForAdvancedMatching,
   setAnalyticsUserId,
+  syncFacebookAdvancedMatching,
   trackAddPaymentInfo,
   trackBeginCheckout,
   trackPaymentEvent,
@@ -35,9 +38,7 @@ import {
 } from "@/lib/analytics";
 import type { TimeSurcharge } from "@/lib/availability-service";
 import type { DiscountDB } from "@/lib/discount-service";
-import { fbPixel, hashCustomerData, hashPhoneNumber } from "@/lib/facebook";
 import { getPackagePricing, matchActiveSurcharge } from "@/lib/pricing";
-import { settingsService } from "@/lib/settings-service";
 import type { BookingFormData, PackageId } from "@/lib/validations";
 import { createBookingSchema } from "@/lib/validations";
 
@@ -610,27 +611,14 @@ export function CheckoutForm({
       if (!customerEmail && !customerPhone) return;
 
       const [firstName, ...lastNameParts] = (customerName || "").split(" ");
-      saveUserDataForAdvancedMatching({
+      const amUserData = {
         email: customerEmail,
         phone: customerPhone,
         firstName: firstName || undefined,
         lastName: lastNameParts.join(" ") || undefined,
-      });
-
-      const settings = await settingsService.getSettings();
-      const faceBookPixelId = settings.facebook_pixel_id;
-
-      if (faceBookPixelId && (customerEmail || customerPhone)) {
-        const hashed: Record<string, string> = {};
-        if (customerEmail) hashed.em = await hashCustomerData(customerEmail);
-        if (customerPhone) hashed.ph = await hashPhoneNumber(customerPhone);
-        if (firstName) hashed.fn = await hashCustomerData(firstName);
-
-        const lastName = lastNameParts.join(" ");
-        if (lastName) hashed.ln = await hashCustomerData(lastName);
-
-        fbPixel.init(faceBookPixelId, hashed);
-      }
+      };
+      saveUserDataForAdvancedMatching(amUserData);
+      await syncFacebookAdvancedMatching(amUserData);
     };
 
     initFBWithAdvancedMatching();
@@ -638,14 +626,6 @@ export function CheckoutForm({
 
   const handleCashPaymentSubmit = async () => {
     if (!selectedPackage || !packageInfo) return;
-
-    // Add missing GA4 Add Payment Info tracking step
-    trackAddPaymentInfo(
-      selectedPackage,
-      packageInfo.name,
-      packageInfo.price,
-      "cash",
-    );
 
     setIsLoading(true);
     const bookingData = bookingForm.getValues();
@@ -669,16 +649,23 @@ export function CheckoutForm({
       (preFilledBookingData as any)?.addonQuantities || {},
     );
 
+    // Track Add Payment Info with coupon-adjusted final price
+    trackAddPaymentInfo(
+      selectedPackage,
+      packageInfo.name,
+      pricingCalc.totalPrice,
+      "cash",
+      packageInfo.currency || "EUR",
+      undefined,
+      (preFilledBookingData as any)?.yieldReason || "standard",
+    );
+
     try {
-      const getCookie = (name: string) => {
-        if (typeof document === "undefined") return undefined;
-        const value = `; ${document.cookie}`;
-        const parts = value.split(`; ${name}=`);
-        if (parts.length === 2) return parts.pop()?.split(";").shift();
-        return undefined;
-      };
-      const fbc = getCookie("_fbc");
-      const fbp = getCookie("_fbp");
+      const fbc = getValidFbc();
+      const fbp = getValidFbp();
+      const gaClientActive =
+        typeof window !== "undefined" &&
+        Boolean((window as any).google_tag_manager);
 
       const bookingResponse = await fetch("/api/booking/create-confirmed", {
         method: "POST",
@@ -706,6 +693,7 @@ export function CheckoutForm({
           locale,
           fbc,
           fbp,
+          gaClientActive,
           yieldMultiplier:
             (preFilledBookingData as any)?.yieldMultiplier || 1.0,
           yieldReason: (preFilledBookingData as any)?.yieldReason || "standard",

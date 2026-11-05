@@ -148,6 +148,8 @@ export async function trackGA4ServerRefund(
   packageName: string,
   totalAmount: number,
   currency: string = "EUR",
+  clientId?: string | null,
+  userId?: string | null,
 ): Promise<void> {
   const settings = await settingsService.getSettings();
   const GA4_MEASUREMENT_ID = settings.google_analytics_id;
@@ -160,11 +162,14 @@ export async function trackGA4ServerRefund(
     return;
   }
 
-  // Use the same client_id logic as purchase to ensure matching
-  const resolvedClientId = `server.${bookingId.replace(/[^a-zA-Z0-9]/g, "")}`;
+  // Prefer the customer's original _ga client_id saved at booking time;
+  // fall back to the deterministic server.<bookingId> identifier.
+  const resolvedClientId =
+    clientId || `server.${bookingId.replace(/[^a-zA-Z0-9]/g, "")}`;
 
   const payload = {
     client_id: resolvedClientId,
+    ...(userId ? { user_id: userId } : {}),
     events: [
       {
         name: "refund",

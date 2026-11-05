@@ -1,3 +1,4 @@
+import { parsePhoneNumber } from "libphonenumber-js/min";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { addonsService } from "@/lib/addons-service";
@@ -22,7 +23,6 @@ import {
   sendBookingConfirmation,
 } from "@/lib/resend";
 import { settingsService } from "@/lib/settings-service";
-import { parsePhoneNumber } from "libphonenumber-js/min";
 import { supabaseAdmin } from "@/lib/supabase";
 import { bookingSchema, type PackageId } from "@/lib/validations";
 
@@ -411,6 +411,40 @@ export async function POST(request: NextRequest) {
         await promoService.incrementUsage(validatedPromo.code);
       }
 
+      // Extract tracking & EMQ parameters for Meta CAPI & GA4 attribution
+      const fbc = body.fbc || request.cookies.get("_fbc")?.value;
+      const fbp = body.fbp || request.cookies.get("_fbp")?.value;
+      const clientUserAgent = request.headers.get("user-agent") || undefined;
+      const clientIpAddress = ip; // Already extracted via getClientIP at the top
+
+      const { extractClientIdFromCookie } = await import("@/lib/ga4-server");
+      const rawGaCookie = request.cookies.get("_ga")?.value;
+      const gaClientId = extractClientIdFromCookie(rawGaCookie);
+
+      let gaSessionId: string | undefined;
+      const measurementIdCookie = request.cookies
+        .getAll()
+        .find((c) => c.name.startsWith("_ga_"))?.value;
+      if (measurementIdCookie) {
+        // GS1: GS1.1.<session_id>.<n>...   GS2: GS2.1.s<session_id>$o1$g1...
+        const raw = measurementIdCookie.split(".")[2] || "";
+        const match = raw.match(/^s?(\d+)/);
+        if (match) {
+          gaSessionId = match[1];
+        }
+      }
+
+      const trackingMetadata = {
+        ...(body.providerResponse && typeof body.providerResponse === "object"
+          ? body.providerResponse
+          : {}),
+        ...(gaClientId ? { ga_client_id: gaClientId } : {}),
+        ...(gaSessionId ? { ga_session_id: gaSessionId } : {}),
+        ...(fbc ? { fbc } : {}),
+        ...(fbp ? { fbp } : {}),
+        ...(body.externalId ? { external_id: body.externalId } : {}),
+      };
+
       // Record payment in database (linking to booking)
       const { error: paymentInsertError } = await supabaseAdmin
         .from("payments")
@@ -422,7 +456,7 @@ export async function POST(request: NextRequest) {
           amount: body.provider === "cash" ? 0 : depositAmount, // Record 0 for cash, otherwise DEPOSIT
           currency: "EUR",
           provider: body.provider || "iyzico",
-          provider_response: body.providerResponse || {}, // Save the raw response
+          provider_response: trackingMetadata, // Save the raw response + tracking attribution
           provider_order_id:
             body.provider === "turinvoice" ? paymentId : undefined,
         });
@@ -500,11 +534,6 @@ export async function POST(request: NextRequest) {
       // We do this here because we now have a guaranteed Booking ID (Transaction ID)
       // and we are running server-side.
       const marketingConsent = hasMarketingConsent(request);
-      // Extract EMQ parameters for Meta CAPI
-      const fbc = body.fbc || request.cookies.get("_fbc")?.value;
-      const fbp = body.fbp || request.cookies.get("_fbp")?.value;
-      const clientUserAgent = request.headers.get("user-agent") || undefined;
-      const clientIpAddress = ip; // Already extracted via getClientIP at the top
 
       const nameParts = customerName.split(" ");
       const firstName = nameParts[0];
@@ -566,48 +595,35 @@ export async function POST(request: NextRequest) {
         // Non-blocking error
       }
 
-      // ── GA4 & Google Ads Client Attribution ──
-      const { extractClientIdFromCookie } = await import("@/lib/ga4-server");
-      const rawGaCookie = request.cookies.get("_ga")?.value;
-      const gaClientId = extractClientIdFromCookie(rawGaCookie);
+      // ── GA4 Measurement Protocol (Server-Side Purchase Fallback) ──
+      // Only fire server-side purchase when the browser gtag.js client is blocked
+      // or has no _ga cookie, preventing double-counting in GA4.
+      const shouldSendServerGA4Purchase = !body.gaClientActive || !gaClientId;
+      if (shouldSendServerGA4Purchase) {
+        try {
+          const { trackGA4ServerPurchase } = await import("@/lib/ga4-server");
 
-      let gaSessionId;
-      const measurementIdCookie = request.cookies
-        .getAll()
-        .find((c) => c.name.startsWith("_ga_"))?.value;
-      if (measurementIdCookie) {
-        // GS1: GS1.1.<session_id>.<n>...   GS2: GS2.1.s<session_id>$o1$g1...
-        const raw = measurementIdCookie.split(".")[2] || "";
-        const match = raw.match(/^s?(\d+)/);
-        if (match) {
-          gaSessionId = match[1];
+          const localeKey = booking.locale || locale || "en";
+          const packageName =
+            packageData?.title?.[localeKey] ||
+            packageData?.title?.en ||
+            packageId;
+
+          await trackGA4ServerPurchase(
+            booking.id,
+            packageId,
+            packageName,
+            totalAmount,
+            "EUR",
+            gaClientId,
+            gaSessionId,
+            marketingConsent,
+            booking.user_id,
+          );
+        } catch (ga4Error) {
+          console.error("GA4 Measurement Protocol Error:", ga4Error);
+          // Non-blocking error
         }
-      }
-
-      // ── GA4 Measurement Protocol (Server-Side Purchase Tracking) ──
-      try {
-        const { trackGA4ServerPurchase } = await import("@/lib/ga4-server");
-
-        const localeKey = booking.locale || locale || "en";
-        const packageName =
-          packageData?.title?.[localeKey] ||
-          packageData?.title?.en ||
-          packageId;
-
-        await trackGA4ServerPurchase(
-          booking.id,
-          packageId,
-          packageName,
-          totalAmount,
-          "EUR",
-          gaClientId,
-          gaSessionId,
-          marketingConsent,
-          booking.user_id,
-        );
-      } catch (ga4Error) {
-        console.error("GA4 Measurement Protocol Error:", ga4Error);
-        // Non-blocking error
       }
 
       // Add to Resend Audience (Newsletter/Marketing)

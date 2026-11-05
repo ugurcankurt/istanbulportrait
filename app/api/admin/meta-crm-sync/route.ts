@@ -41,6 +41,8 @@ interface BookingRecord {
   total_amount: number;
   created_at: string;
   status: string;
+  country_code?: string | null;
+  ip_address?: string | null;
 }
 
 // GET = browser-friendly; POST = fetch-friendly. Both do the same thing.
@@ -65,7 +67,7 @@ async function handleSync(request: NextRequest) {
     let query = supabase
       .from("bookings")
       .select(
-        "id, user_email, user_phone, user_name, package_id, total_amount, created_at, status",
+        "id, user_email, user_phone, user_name, package_id, total_amount, created_at, status, country_code, ip_address",
       )
       .not("user_email", "is", null)
       .not("user_email", "eq", "")
@@ -131,6 +133,36 @@ async function handleSync(request: NextRequest) {
         if (booking.user_phone) {
           userData.ph = [await hashPhoneNumber(booking.user_phone)];
         }
+        if (booking.user_name) {
+          const nameParts = booking.user_name.trim().split(/\s+/);
+          const firstName = nameParts[0];
+          const lastName =
+            nameParts.length > 1 ? nameParts.slice(1).join(" ") : undefined;
+          if (firstName) {
+            const hashedFn = await hashCustomerData(firstName);
+            if (hashedFn) userData.fn = [hashedFn];
+          }
+          if (lastName) {
+            const hashedLn = await hashCustomerData(lastName);
+            if (hashedLn) userData.ln = [hashedLn];
+          }
+        }
+        if (booking.country_code) {
+          const hashedCountry = await hashCustomerData(booking.country_code);
+          if (hashedCountry) userData.country = [hashedCountry];
+        }
+        const hashedExternalId = await hashCustomerData(booking.id);
+        if (hashedExternalId) {
+          userData.external_id = [hashedExternalId];
+        }
+        if (booking.ip_address) {
+          userData.client_ip_address = booking.ip_address;
+        }
+
+        const hasValidAmount =
+          typeof booking.total_amount === "number" &&
+          !Number.isNaN(booking.total_amount) &&
+          booking.total_amount > 0;
 
         return {
           event_name: "Lead", // REQUIRED: must be "Lead" for CRM events
@@ -141,6 +173,15 @@ async function handleSync(request: NextRequest) {
           custom_data: {
             event_source: "crm", // REQUIRED
             lead_event_source: "Istanbul Portrait CRM", // REQUIRED: CRM name
+            ...(booking.package_id
+              ? { content_ids: [booking.package_id], content_type: "product" }
+              : {}),
+            ...(hasValidAmount
+              ? {
+                  value: Number(booking.total_amount.toFixed(2)),
+                  currency: "EUR",
+                }
+              : {}),
           },
         };
       }),

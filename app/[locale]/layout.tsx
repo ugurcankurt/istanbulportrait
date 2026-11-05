@@ -279,6 +279,7 @@ export default async function LocaleLayout({
               window.gtag('set', 'ads_data_redaction', ${isGranted === "granted" ? "false" : "true"});
               window.gtag('set', 'allow_enhanced_conversions', true);
               window.__GA_ID = ${JSON.stringify(settings.google_analytics_id || null)};
+              window.__FB_PIXEL_ID = ${JSON.stringify(settings.facebook_pixel_id || null)};
               window.__GOOGLE_ADS_CONFIG = ${JSON.stringify({
                 conversionId: settings.google_ads_id || null,
                 purchaseLabel: settings.google_ads_purchase_label || null,

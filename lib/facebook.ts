@@ -712,6 +712,10 @@ export const trackMetaCRMStatusEvent = async (
   customerPhone: string | undefined | null,
   bookingId: string,
   newStatus: "confirmed" | "completed",
+  options?: FacebookEventOptions & {
+    amount?: number;
+    packageId?: string;
+  },
 ): Promise<void> => {
   try {
     const cleanId = bookingId.replace(/[^a-zA-Z0-9_-]/g, "_");
@@ -723,9 +727,27 @@ export const trackMetaCRMStatusEvent = async (
     const hashedPhone = customerPhone
       ? [await hashPhoneNumber(customerPhone)]
       : [];
-    const hashedExternalId = [await hashCustomerData(bookingId)];
+    const hashedFirstName = options?.firstName
+      ? [await hashCustomerData(options.firstName)]
+      : undefined;
+    const hashedLastName = options?.lastName
+      ? [await hashCustomerData(options.lastName)]
+      : undefined;
+    const hashedCountry = options?.country
+      ? [await hashCustomerData(options.country)]
+      : undefined;
+    const hashedExternalId = [
+      await hashCustomerData(options?.externalId || bookingId),
+    ];
 
     const eventName = newStatus === "confirmed" ? "Qualified" : "Converted";
+
+    const validAmount =
+      typeof options?.amount === "number" &&
+      !Number.isNaN(options.amount) &&
+      options.amount > 0
+        ? Number(options.amount.toFixed(2))
+        : undefined;
 
     const event: FacebookConversionEvent = {
       event_name: eventName,
@@ -735,11 +757,28 @@ export const trackMetaCRMStatusEvent = async (
       user_data: {
         em: hashedEmail,
         ph: hashedPhone,
+        ...(hashedFirstName?.[0] ? { fn: hashedFirstName } : {}),
+        ...(hashedLastName?.[0] ? { ln: hashedLastName } : {}),
+        ...(hashedCountry?.[0] ? { country: hashedCountry } : {}),
         external_id: hashedExternalId,
+        ...(options?.fbc ? { fbc: options.fbc } : {}),
+        ...(options?.fbp ? { fbp: options.fbp } : {}),
+        ...(options?.clientIpAddress
+          ? { client_ip_address: options.clientIpAddress }
+          : {}),
+        ...(options?.clientUserAgent
+          ? { client_user_agent: options.clientUserAgent }
+          : {}),
       },
       custom_data: {
         event_source: "crm",
         lead_event_source: "Istanbul Portrait CRM",
+        ...(options?.packageId
+          ? { content_ids: [options.packageId], content_type: "product" }
+          : {}),
+        ...(validAmount !== undefined
+          ? { value: validAmount, currency: "EUR" }
+          : {}),
       },
     };
 

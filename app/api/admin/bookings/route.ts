@@ -154,7 +154,8 @@ export async function PATCH(request: NextRequest) {
           *,
           payments (
             id,
-            amount
+            amount,
+            provider_response
           )
         `)
         .eq("id", bookingId)
@@ -163,6 +164,17 @@ export async function PATCH(request: NextRequest) {
       if (fetchError) {
         throw fetchError;
       }
+
+      const paymentMeta =
+        Array.isArray(currentBooking.payments) &&
+        currentBooking.payments.length > 0 &&
+        currentBooking.payments[0]?.provider_response &&
+        typeof currentBooking.payments[0].provider_response === "object"
+          ? (currentBooking.payments[0].provider_response as Record<
+              string,
+              string | undefined
+            >)
+          : {};
 
       const updateData: Record<string, unknown> = {
         status,
@@ -241,6 +253,8 @@ export async function PATCH(request: NextRequest) {
               packageName,
               currentBooking.total_amount,
               "EUR",
+              paymentMeta.ga_client_id || null,
+              currentBooking.user_id || null,
             );
           } catch (ga4Error) {
             console.error("Failed to track GA4 refund event:", ga4Error);
@@ -309,11 +323,29 @@ export async function PATCH(request: NextRequest) {
       ) {
         try {
           const { trackMetaCRMStatusEvent } = await import("@/lib/facebook");
+          const nameParts = (currentBooking.user_name || "")
+            .trim()
+            .split(/\s+/);
+          const firstName = nameParts[0] || undefined;
+          const lastName =
+            nameParts.length > 1 ? nameParts.slice(1).join(" ") : undefined;
+
           await trackMetaCRMStatusEvent(
             currentBooking.user_email,
             currentBooking.user_phone,
             bookingId,
             status as "confirmed" | "completed",
+            {
+              firstName,
+              lastName,
+              country: currentBooking.country_code || undefined,
+              clientIpAddress: currentBooking.ip_address || undefined,
+              fbc: paymentMeta.fbc || undefined,
+              fbp: paymentMeta.fbp || undefined,
+              externalId: paymentMeta.external_id || bookingId,
+              amount: Number(currentBooking.total_amount) || undefined,
+              packageId: currentBooking.package_id || undefined,
+            },
           );
         } catch (crmError) {
           console.error("Failed to track Meta CRM status event:", crmError);

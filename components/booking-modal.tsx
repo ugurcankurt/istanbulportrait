@@ -41,6 +41,7 @@ import { useCurrency } from "@/contexts/currency-context";
 import type { AddonDB } from "@/lib/addons-service";
 import {
   saveUserDataForAdvancedMatching,
+  syncFacebookAdvancedMatching,
   trackLead,
   trackPackageAddToCart,
 } from "@/lib/analytics";
@@ -351,12 +352,14 @@ export function BookingModal({
       if (selectedPackage && packageInfo) {
         // Save user data for advanced matching (Lead/Purchase Enhanced Conversions)
         const nameParts = data.customerName.split(" ");
-        saveUserDataForAdvancedMatching({
+        const amUserData = {
           email: data.customerEmail,
           phone: data.customerPhone,
           firstName: nameParts[0],
           lastName: nameParts.length > 1 ? nameParts.slice(1).join(" ") : "",
-        });
+        };
+        saveUserDataForAdvancedMatching(amUserData);
+        await syncFacebookAdvancedMatching(amUserData);
 
         // GA4 Lead Event
         trackLead(
