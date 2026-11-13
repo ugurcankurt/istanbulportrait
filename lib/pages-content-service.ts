@@ -1,5 +1,7 @@
 import { createClient } from "@supabase/supabase-js";
 import { unstable_cache } from "next/cache";
+import { toStorageProxyPath } from "@/lib/seo-utils";
+import { generateNativeSlug } from "@/lib/slug-generator";
 import { fetchWithRetry } from "@/lib/supabase-fetch";
 
 export interface PageTranslations {
@@ -52,9 +54,150 @@ const getSupabaseClient = () => {
   return serverSupabaseClient;
 };
 
+export const CORE_PAGE_LOCALIZED_SLUGS: Record<
+  string,
+  Record<string, string>
+> = {
+  packages: {
+    en: "packages",
+    tr: "paketler",
+    ar: "baqat",
+    ru: "pakety",
+    es: "paquetes",
+    zh: "taocan",
+    fr: "forfaits",
+    de: "pakete",
+    ro: "pachete",
+  },
+  locations: {
+    en: "locations",
+    tr: "mekanlar",
+    ar: "amakin",
+    ru: "lokatsii",
+    es: "ubicaciones",
+    zh: "didian",
+    fr: "lieux",
+    de: "orte",
+    ro: "locatii",
+  },
+  blog: {
+    en: "blog",
+    tr: "blog",
+    ar: "blog",
+    ru: "blog",
+    es: "blog",
+    zh: "blog",
+    fr: "blog",
+    de: "blog",
+    ro: "blog",
+  },
+  about: {
+    en: "about",
+    tr: "hakkimizda",
+    ar: "man-nahnu",
+    ru: "o-nas",
+    es: "sobre-nosotros",
+    zh: "guanyu",
+    fr: "a-propos",
+    de: "ueber-uns",
+    ro: "despre-noi",
+  },
+  contact: {
+    en: "contact",
+    tr: "iletisim",
+    ar: "ittisal",
+    ru: "kontakty",
+    es: "contacto",
+    zh: "lianxi",
+    fr: "contact",
+    de: "kontakt",
+    ro: "contact",
+  },
+  privacy: {
+    en: "privacy",
+    tr: "gizlilik",
+    ar: "khususiya",
+    ru: "konfidentsialnost",
+    es: "privacidad",
+    zh: "yinsi",
+    fr: "confidentialite",
+    de: "datenschutz",
+    ro: "confidentialitate",
+  },
+};
+
+function normalizeCoreSlugVariant(value: string): string {
+  return value
+    .toLowerCase()
+    .trim()
+    .replace(/[ıİ]/g, "i")
+    .replace(/ğ/g, "g")
+    .replace(/ü/g, "u")
+    .replace(/ş/g, "s")
+    .replace(/ö/g, "o")
+    .replace(/ç/g, "c")
+    .replace(/ä/g, "a")
+    .replace(/ß/g, "ss")
+    .replace(/[ăâ]/g, "a")
+    .replace(/î/g, "i")
+    .replace(/[șş]/g, "s")
+    .replace(/[țţ]/g, "t")
+    .replace(/[àáâãå]/g, "a")
+    .replace(/[èéêë]/g, "e")
+    .replace(/[ìíîï]/g, "i")
+    .replace(/[òóôõ]/g, "o")
+    .replace(/[ùúû]/g, "u")
+    .replace(/ñ/g, "n")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
+}
+
+function matchesCoreSlugVariant(candidate: string, incoming: string): boolean {
+  const cleanCandidate = generateNativeSlug(candidate);
+  if (!cleanCandidate) return false;
+  if (cleanCandidate === incoming) return true;
+
+  const asciiCandidate = normalizeCoreSlugVariant(cleanCandidate);
+  const asciiIncoming = normalizeCoreSlugVariant(incoming);
+  if (asciiCandidate === asciiIncoming) return true;
+
+  // Handle German umlaut transliteration alternation (ue <-> u, oe <-> o, ae <-> a)
+  if (asciiCandidate === "ueber-uns" && asciiIncoming === "uber-uns") {
+    return true;
+  }
+
+  return false;
+}
+
+/**
+ * Resolves the canonical clean URL segment for a core page (`packages`, `locations`, `blog`, `about`, `contact`, `privacy`)
+ * using DB `content.localized_slug[locale]`, falling back to `CORE_PAGE_LOCALIZED_SLUGS`, and finally the internal slug.
+ */
+export function getCorePageSegment(
+  pageOrSlug: PageDB | string | null | undefined,
+  locale: string,
+): string {
+  if (!pageOrSlug) return "";
+
+  if (typeof pageOrSlug === "string") {
+    return CORE_PAGE_LOCALIZED_SLUGS[pageOrSlug]?.[locale] || pageOrSlug;
+  }
+
+  const dbLocalized = pageOrSlug.content?.localized_slug?.[locale];
+  if (typeof dbLocalized === "string" && dbLocalized.trim()) {
+    return normalizeCoreSlugVariant(generateNativeSlug(dbLocalized));
+  }
+
+  return (
+    CORE_PAGE_LOCALIZED_SLUGS[pageOrSlug.slug]?.[locale] || pageOrSlug.slug
+  );
+}
+
 export const pagesContentService = {
+  getCorePageSegment,
+
   /**
-   * Fetch a single page by its internal slug
+   * Fetch a single page by its internal slug, localized core slug, or legacy title slug
    */
   async getPageBySlug(slug: string): Promise<PageDB | null> {
     const pages = await this.getAllPages();
@@ -63,8 +206,6 @@ export const pagesContentService = {
     try {
       decodedSlug = decodeURIComponent(slug).trim().toLowerCase();
     } catch {}
-
-    const { generateNativeSlug } = await import("@/lib/slug-generator");
 
     for (const page of pages) {
       if (!page.is_active) {
@@ -79,10 +220,33 @@ export const pagesContentService = {
         continue;
       }
 
-      // Match localized active translated titles for actual standalone pages
+      // Match explicit DB localized_slug map
+      const localizedSlugMap = page.content?.localized_slug;
+      if (localizedSlugMap && typeof localizedSlugMap === "object") {
+        for (const val of Object.values(localizedSlugMap)) {
+          if (
+            typeof val === "string" &&
+            matchesCoreSlugVariant(val, decodedSlug)
+          ) {
+            return page;
+          }
+        }
+      }
+
+      // Match static CORE_PAGE_LOCALIZED_SLUGS map
+      const staticSlugs = CORE_PAGE_LOCALIZED_SLUGS[page.slug];
+      if (staticSlugs) {
+        for (const val of Object.values(staticSlugs)) {
+          if (matchesCoreSlugVariant(val, decodedSlug)) {
+            return page;
+          }
+        }
+      }
+
+      // Match legacy H1/title-derived slugs so old long URLs resolve and 308 redirect cleanly
       if (page.title) {
         for (const val of Object.values(page.title)) {
-          if (val && generateNativeSlug(val) === decodedSlug) {
+          if (val && matchesCoreSlugVariant(val, decodedSlug)) {
             return page;
           }
         }
@@ -108,7 +272,12 @@ export const pagesContentService = {
         return [];
       }
 
-      return data as PageDB[];
+      return (data as PageDB[]).map((page) => ({
+        ...page,
+        cover_image: page.cover_image
+          ? toStorageProxyPath(page.cover_image)
+          : page.cover_image,
+      }));
     },
     ["pages", "all-pages"],
     { tags: ["pages"], revalidate: 60 },
@@ -201,31 +370,31 @@ export const pagesContentService = {
    */
   async getDynamicCoreNavData(
     locale: string,
-  ): Promise<Record<string, { path: string; title: string | null; navTitle?: string | null }>> {
+  ): Promise<
+    Record<
+      string,
+      { path: string; title: string | null; navTitle?: string | null }
+    >
+  > {
     const pages = await this.getAllPages();
-    const { generateNativeSlug } = await import("@/lib/slug-generator");
 
-    const navMap: Record<string, { path: string; title: string | null; navTitle?: string | null }> = {};
+    const navMap: Record<
+      string,
+      { path: string; title: string | null; navTitle?: string | null }
+    > = {};
 
     for (const page of pages) {
       if (!page.is_active) continue;
 
       const locTitle = page.title?.[locale];
       const customNavTitle = page.content?.nav_title?.[locale] || null;
+      const cleanPath = getCorePageSegment(page, locale) || page.slug;
 
-      if (locTitle) {
-        navMap[page.slug] = {
-          path: generateNativeSlug(locTitle) || page.slug,
-          title: locTitle,
-          navTitle: customNavTitle,
-        };
-      } else {
-        navMap[page.slug] = {
-          path: page.slug,
-          title: page.title?.en || null,
-          navTitle: customNavTitle,
-        };
-      }
+      navMap[page.slug] = {
+        path: cleanPath,
+        title: locTitle || page.title?.en || null,
+        navTitle: customNavTitle,
+      };
     }
 
     return navMap;

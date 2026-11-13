@@ -9,6 +9,7 @@ import {
   buildOrganizationSchema,
   generateSeoDescription,
   getBaseUrl,
+  normalizeSchemaUrl,
 } from "@/lib/seo-utils";
 import { settingsService } from "@/lib/settings-service";
 
@@ -20,6 +21,8 @@ export async function AboutPageContent({
   const { locale, slug } = await params;
 
   const dbPage = await pagesContentService.getPageBySlug("about");
+  const canonicalSegment =
+    pagesContentService.getCorePageSegment(dbPage || "about", locale) || slug;
   const settings = await settingsService.getSettings();
 
   const dynamicTitle = dbPage?.title?.[locale] || dbPage?.title?.en || "";
@@ -41,7 +44,7 @@ export async function AboutPageContent({
   const aboutSchema = buildAboutPageSchema({
     name: dynamicTitle,
     description: generateSeoDescription(dynamicSubtitle),
-    url: `${getBaseUrl()}/${locale}/${slug}`,
+    url: normalizeSchemaUrl(`${getBaseUrl()}/${locale}/${canonicalSegment}`),
     organizationSchema: organizationSchema,
   });
 

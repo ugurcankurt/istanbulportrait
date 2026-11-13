@@ -21,7 +21,6 @@ import {
   createRateLimitError,
   getClientIP,
 } from "@/lib/rate-limit";
-import { generateNativeSlug } from "@/lib/slug-generator";
 
 import { blogUpdateSchema } from "@/lib/validations/blog-validations";
 
@@ -161,10 +160,11 @@ export async function PATCH(
             const urls: string[] = [];
             for (const [loc, trans] of Object.entries(translationsMap)) {
               if (trans?.slug) {
-                const parentTitle = blogPage?.title?.[loc];
-                const parentSeg = parentTitle
-                  ? generateNativeSlug(parentTitle)
-                  : "blog";
+                const parentSeg =
+                  pagesContentService.getCorePageSegment(
+                    blogPage || "blog",
+                    loc,
+                  ) || "blog";
                 urls.push(`/${loc}/${parentSeg}/${trans.slug}`);
               }
             }

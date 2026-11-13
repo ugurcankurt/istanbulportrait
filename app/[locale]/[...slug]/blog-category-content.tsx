@@ -17,8 +17,8 @@ import {
   buildCollectionPageSchema,
   generateSeoDescription,
   getBaseUrl,
+  normalizeSchemaUrl,
 } from "@/lib/seo-utils";
-import { generateNativeSlug } from "@/lib/slug-generator";
 import type { Locale } from "@/types/blog";
 
 export async function BlogCategoryContent({
@@ -38,9 +38,8 @@ export async function BlogCategoryContent({
   const page = Math.max(1, Number.parseInt(pageParam || "1", 10) || 1);
 
   const dbPage = await pagesContentService.getPageBySlug("blog");
-  const parentSegment = dbPage?.title?.[locale]
-    ? generateNativeSlug(dbPage.title[locale] || "")
-    : "blog";
+  const parentSegment =
+    pagesContentService.getCorePageSegment(dbPage || "blog", locale) || "blog";
 
   let decodedSlug = slug;
   try {
@@ -76,27 +75,34 @@ export async function BlogCategoryContent({
     sort_order: "desc",
   });
 
-  if (page > 1 && pagination.totalPages > 0 && page > pagination.totalPages) {
+  if (page > 1 && page > Math.max(1, pagination.totalPages)) {
     notFound();
   }
 
-  const collectionSchema = buildCollectionPageSchema({
-    name: dynamicTitle,
-    description: generateSeoDescription(dynamicSubtitle),
-    url: `${getBaseUrl()}/${locale}/${parentSegment}/${type}/${slug}`,
-    items: posts.map((post) => ({
-      name: post.translation.title,
-      description: post.translation.excerpt
-        ? generateSeoDescription(post.translation.excerpt)
-        : undefined,
-      url: `${getBaseUrl()}/${locale}/${parentSegment}/${post.translation.slug}`,
-      image: post.featured_image || undefined,
-    })),
-  });
+  const shouldInjectCollectionSchema = type === "category" && posts.length > 0;
+  const collectionSchema = shouldInjectCollectionSchema
+    ? buildCollectionPageSchema({
+        name: dynamicTitle,
+        description: generateSeoDescription(dynamicSubtitle),
+        url: normalizeSchemaUrl(
+          `${getBaseUrl()}/${locale}/${parentSegment}/${type}/${slug}`,
+        ),
+        items: posts.map((post) => ({
+          name: post.translation.title,
+          description: post.translation.excerpt
+            ? generateSeoDescription(post.translation.excerpt)
+            : undefined,
+          url: normalizeSchemaUrl(
+            `${getBaseUrl()}/${locale}/${parentSegment}/${post.translation.slug}`,
+          ),
+          image: post.featured_image || undefined,
+        })),
+      })
+    : null;
 
   return (
     <div>
-      <SchemaInjector schema={collectionSchema} />
+      {collectionSchema && <SchemaInjector schema={collectionSchema} />}
       <BreadcrumbNav customLastLabel={dynamicTitle} />
       <PageHeroSection title={dynamicTitle} subtitle={dynamicSubtitle} />
 

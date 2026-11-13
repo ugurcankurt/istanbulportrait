@@ -8,6 +8,7 @@ import {
   buildCollectionPageSchema,
   generateSeoDescription,
   getBaseUrl,
+  normalizeSchemaUrl,
 } from "@/lib/seo-utils";
 import { generateNativeSlug } from "@/lib/slug-generator";
 
@@ -20,6 +21,9 @@ export async function LocationsPageContent({
 }) {
   const { locale, slug: parentSlug } = await params;
   const dbPage = await pagesContentService.getPageBySlug("locations");
+  const parentSegment =
+    pagesContentService.getCorePageSegment(dbPage || "locations", locale) ||
+    parentSlug;
   const dynamicTitle = dbPage?.title?.[locale] || dbPage?.title?.en || "";
   const dynamicSubtitle =
     dbPage?.subtitle?.[locale] || dbPage?.subtitle?.en || "";
@@ -29,7 +33,7 @@ export async function LocationsPageContent({
   const collectionSchema = buildCollectionPageSchema({
     name: dynamicTitle,
     description: generateSeoDescription(dynamicSubtitle),
-    url: `${getBaseUrl()}/${locale}/${parentSlug}`,
+    url: normalizeSchemaUrl(`${getBaseUrl()}/${locale}/${parentSegment}`),
     items: dbLocations.map((location) => {
       const locTitleLoc = location.title?.[locale];
       const locSeg = locTitleLoc
@@ -45,7 +49,9 @@ export async function LocationsPageContent({
                   "",
               )
             : undefined,
-        url: `${getBaseUrl()}/${locale}/${parentSlug}/${locSeg}`,
+        url: normalizeSchemaUrl(
+          `${getBaseUrl()}/${locale}/${parentSegment}/${locSeg}`,
+        ),
         image: location.cover_image || undefined,
       };
     }),
@@ -65,7 +71,7 @@ export async function LocationsPageContent({
                 key={location.slug}
                 location={location}
                 index={index}
-                parentSlug={parentSlug}
+                parentSlug={parentSegment}
               />
             ))}
           </div>

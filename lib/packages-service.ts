@@ -1,6 +1,21 @@
 import { createClient } from "@supabase/supabase-js";
 import { cache } from "react";
+import { toStorageProxyPath } from "@/lib/seo-utils";
 import { fetchWithRetry } from "@/lib/supabase-fetch";
+
+function normalizeAsciiPackageSlug(slug: string): string {
+  return slug
+    .toLowerCase()
+    .trim()
+    .replace(/[ıİ]/g, "i")
+    .replace(/ğ/g, "g")
+    .replace(/ü/g, "u")
+    .replace(/ş/g, "s")
+    .replace(/ö/g, "o")
+    .replace(/ç/g, "c")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
+}
 
 // Types matching our Supabase schema
 export interface PackageTranslations {
@@ -89,7 +104,18 @@ export const packagesService = {
       return [];
     }
 
-    return data as PackageDB[];
+    return (data as PackageDB[]).map((pkg) => ({
+      ...pkg,
+      cover_image: pkg.cover_image
+        ? toStorageProxyPath(pkg.cover_image)
+        : pkg.cover_image,
+      gallery_images: Array.isArray(pkg.gallery_images)
+        ? pkg.gallery_images.map((img) => toStorageProxyPath(img))
+        : pkg.gallery_images,
+      video_url: pkg.video_url
+        ? toStorageProxyPath(pkg.video_url)
+        : pkg.video_url,
+    }));
   }),
 
   /**
@@ -107,7 +133,18 @@ export const packagesService = {
       return [];
     }
 
-    return data as PackageDB[];
+    return (data as PackageDB[]).map((pkg) => ({
+      ...pkg,
+      cover_image: pkg.cover_image
+        ? toStorageProxyPath(pkg.cover_image)
+        : pkg.cover_image,
+      gallery_images: Array.isArray(pkg.gallery_images)
+        ? pkg.gallery_images.map((img) => toStorageProxyPath(img))
+        : pkg.gallery_images,
+      video_url: pkg.video_url
+        ? toStorageProxyPath(pkg.video_url)
+        : pkg.video_url,
+    }));
   }),
 
   /**
@@ -123,15 +160,22 @@ export const packagesService = {
     } catch {}
 
     const { generateNativeSlug } = await import("@/lib/slug-generator");
+    const asciiIncomingSlug = normalizeAsciiPackageSlug(decodedIncomingSlug);
 
     for (const pkg of packages) {
       // Direct baseline hit
       if (pkg.slug === decodedIncomingSlug) return pkg;
+      if (normalizeAsciiPackageSlug(pkg.slug) === asciiIncomingSlug) return pkg;
 
       // Dynamic cross-locale hit
       if (pkg.title) {
         for (const val of Object.values(pkg.title)) {
-          if (val && generateNativeSlug(val) === decodedIncomingSlug) {
+          if (!val) continue;
+          const nativeSlug = generateNativeSlug(val);
+          if (
+            nativeSlug === decodedIncomingSlug ||
+            normalizeAsciiPackageSlug(nativeSlug) === asciiIncomingSlug
+          ) {
             return pkg;
           }
         }

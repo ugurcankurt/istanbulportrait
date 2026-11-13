@@ -21,13 +21,10 @@ export async function GET(request: Request) {
   const baseUrl = getBaseUrl().replace(/\/+$/, "");
   const packagesParent = corePages.find((p) => p.slug === "packages");
   const packagesSeg =
-    packagesParent?.title?.[locale] || packagesParent?.title?.en
-      ? generateNativeSlug(
-          packagesParent?.title?.[locale] ||
-            packagesParent?.title?.en ||
-            "packages",
-        )
-      : "packages";
+    pagesContentService.getCorePageSegment(
+      packagesParent || "packages",
+      locale,
+    ) || "packages";
 
   const items = packages
     .map((pkg) => {

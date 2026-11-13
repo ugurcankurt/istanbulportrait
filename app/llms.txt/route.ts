@@ -34,19 +34,23 @@ export async function GET() {
     "Professional vacation, couple, solo, family, and flying dress photography services in Istanbul, Turkey.";
 
   const packagesParent = corePages.find((p) => p.slug === "packages");
-  const packagesSeg = packagesParent?.title?.en
-    ? generateNativeSlug(packagesParent.title.en)
-    : "packages";
+  const packagesSeg =
+    pagesContentService.getCorePageSegment(
+      packagesParent || "packages",
+      "en",
+    ) || "packages";
 
   const locationsParent = corePages.find((p) => p.slug === "locations");
-  const locationsSeg = locationsParent?.title?.en
-    ? generateNativeSlug(locationsParent.title.en)
-    : "locations";
+  const locationsSeg =
+    pagesContentService.getCorePageSegment(
+      locationsParent || "locations",
+      "en",
+    ) || "locations";
 
   const blogParent = corePages.find((p) => p.slug === "blog");
-  const blogSeg = blogParent?.title?.en
-    ? generateNativeSlug(blogParent.title.en)
-    : "blog";
+  const blogSeg =
+    pagesContentService.getCorePageSegment(blogParent || "blog", "en") ||
+    "blog";
 
   // Fetch latest published blog posts in English
   let blogEntries: Array<{ title: string; slug: string; excerpt: string }> = [];
@@ -116,7 +120,7 @@ export async function GET() {
     }
     const pageTitle = page.title?.en || page.slug;
     const pageSlug =
-      (page.title?.en && generateNativeSlug(page.title.en)) || page.slug;
+      pagesContentService.getCorePageSegment(page, "en") || page.slug;
     const pageSubtitle = stripMarkdownAndHtml(
       page.subtitle?.en || page.content?.en?.slice(0, 140),
     );

@@ -13,10 +13,8 @@ import { locationsService } from "@/lib/locations-service";
 import {
   buildTouristAttractionSchema,
   generateSeoDescription,
+  normalizeSchemaUrl,
 } from "@/lib/seo-utils";
-
-// Force dynamic rendering to avoid Vercel build-time issues with next-intl
-export const dynamic = "force-dynamic";
 
 export async function LocationDetailPageContent({
   slug,
@@ -59,14 +57,16 @@ export async function LocationDetailPageContent({
     pagesContentService.getPageBySlug("locations"),
     pagesContentService.getPageBySlug("packages"),
   ]);
-  const parentTitle = locationsPage?.title?.[locale];
-  const parentSegment = parentTitle
-    ? generateNativeSlug(parentTitle) || parentSlug
-    : locationsPage?.slug || parentSlug;
-  const packagesTitle = packagesPage?.title?.[locale];
-  const packagesSegment = packagesTitle
-    ? generateNativeSlug(packagesTitle) || "packages"
-    : packagesPage?.slug || "packages";
+  const parentSegment =
+    pagesContentService.getCorePageSegment(
+      locationsPage || "locations",
+      locale,
+    ) || parentSlug;
+  const packagesSegment =
+    pagesContentService.getCorePageSegment(
+      packagesPage || "packages",
+      locale,
+    ) || "packages";
   const localTitle = location.title?.[locale];
   const canonicalLocationSegment = localTitle
     ? generateNativeSlug(localTitle) || location.slug
@@ -78,7 +78,7 @@ export async function LocationDetailPageContent({
     image: heroImage,
     lat: location.coordinates?.lat,
     lng: location.coordinates?.lng,
-    url: encodeURI(
+    url: normalizeSchemaUrl(
       `${baseUrl}/${locale}/${parentSegment}/${canonicalLocationSegment}`,
     ),
   });
@@ -230,7 +230,7 @@ export async function LocationDetailPageContent({
                             <LocationCard
                               location={nearbyLoc}
                               index={idx}
-                              parentSlug={parentSlug}
+                              parentSlug={parentSegment}
                             />
                           </div>
                         ))}

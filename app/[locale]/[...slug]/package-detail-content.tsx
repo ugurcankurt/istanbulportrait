@@ -50,10 +50,11 @@ export async function PackageDetailPageContent({
   const { pagesContentService } = await import("@/lib/pages-content-service");
   const { generateNativeSlug } = await import("@/lib/slug-generator");
   const packagesPage = await pagesContentService.getPageBySlug("packages");
-  const parentTitle = packagesPage?.title?.[locale];
-  const parentSegment = parentTitle
-    ? generateNativeSlug(parentTitle) || parentSlug
-    : packagesPage?.slug || parentSlug;
+  const parentSegment =
+    pagesContentService.getCorePageSegment(
+      packagesPage || "packages",
+      locale,
+    ) || parentSlug;
   const localPkgTitle = pkg.title?.[locale];
   const canonicalPackageSegment = localPkgTitle
     ? generateNativeSlug(localPkgTitle) || pkg.slug
@@ -92,12 +93,9 @@ export async function PackageDetailPageContent({
       "",
     price: pkg.price,
     currency: "EUR",
-    aggregateRating: aggregateRating.average,
-    reviewCount: aggregateRating.count,
     providerName: settings.organization_name || settings.site_name,
     providerUrl: getBaseUrl(),
     discount: currentDiscount,
-    reviews: reviews,
     url: encodeURI(
       `${getBaseUrl()}/${locale}/${parentSegment}/${canonicalPackageSegment}`,
     ),
@@ -126,9 +124,7 @@ export async function PackageDetailPageContent({
           settings.default_og_image_url ||
           "",
       ),
-      uploadDate:
-        pkg.created_at || pkg.updated_at || new Date().toISOString(),
-      duration: "PT59S",
+      uploadDate: pkg.created_at || pkg.updated_at || new Date().toISOString(),
       width: 1080,
       height: 1920,
       ...(embedUrl ? { embedUrl } : {}),
@@ -160,7 +156,7 @@ export async function PackageDetailPageContent({
             dbPackages={relatedPackages}
             activeDiscounts={activeDiscounts}
             aggregateRating={aggregateRating}
-            parentSlug={parentSlug}
+            parentSlug={parentSegment}
             header={
               <div
                 key="related-packages-header"

@@ -16,6 +16,7 @@ import {
   buildCollectionPageSchema,
   generateSeoDescription,
   getBaseUrl,
+  normalizeSchemaUrl,
 } from "@/lib/seo-utils";
 import { generateNativeSlug } from "@/lib/slug-generator";
 export async function PackagesPageContent({
@@ -26,6 +27,9 @@ export async function PackagesPageContent({
   const { locale, slug: parentSlug } = await params;
 
   const dbPage = await pagesContentService.getPageBySlug("packages");
+  const parentSegment =
+    pagesContentService.getCorePageSegment(dbPage || "packages", locale) ||
+    parentSlug;
   const dynamicTitle = dbPage?.title?.[locale] || dbPage?.title?.en || "";
   const dynamicSubtitle =
     dbPage?.subtitle?.[locale] || dbPage?.subtitle?.en || "";
@@ -42,7 +46,7 @@ export async function PackagesPageContent({
   const collectionSchema = buildCollectionPageSchema({
     name: dynamicTitle,
     description: generateSeoDescription(dynamicSubtitle),
-    url: `${getBaseUrl()}/${locale}/${parentSlug}`,
+    url: normalizeSchemaUrl(`${getBaseUrl()}/${locale}/${parentSegment}`),
     items: dbPackages.map((pkg) => {
       const pkgTitleLoc = pkg.title?.[locale];
       const pkgSeg = pkgTitleLoc
@@ -56,7 +60,9 @@ export async function PackagesPageContent({
                 pkg.description?.[locale] || pkg.description?.en || "",
               )
             : undefined,
-        url: `${getBaseUrl()}/${locale}/${parentSlug}/${pkgSeg}`,
+        url: normalizeSchemaUrl(
+          `${getBaseUrl()}/${locale}/${parentSegment}/${pkgSeg}`,
+        ),
         image: pkg.gallery_images?.[0],
       };
     }),
@@ -72,7 +78,7 @@ export async function PackagesPageContent({
         <PackagesSection
           aggregateRating={aggregateRating}
           dbPackages={dbPackages}
-          parentSlug={parentSlug}
+          parentSlug={parentSegment}
           activeDiscounts={activeDiscounts}
         />
       </div>

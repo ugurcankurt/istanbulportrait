@@ -91,8 +91,24 @@ export async function generateMetadata(props: {
 
   // Level 1: Root Pages (e.g. /about, /locations, /packages)
   if (slugArray.length === 1) {
-    const rawTitle = dbPage.title?.[params.locale] || dbPage.title?.en;
     const isPaginatedBlog = dbPage.slug === "blog" && pageNum > 1;
+    if (isPaginatedBlog) {
+      const { getPublishedBlogPosts } = await import("@/lib/blog/blog-service");
+      const { pagination } = await getPublishedBlogPosts({
+        page: pageNum,
+        limit: 12,
+        // biome-ignore lint/suspicious/noExplicitAny: Dynamic data
+        locale: params.locale as any,
+        sort_by: "published_at",
+        sort_order: "desc",
+      });
+      if (pageNum > Math.max(1, pagination.totalPages)) {
+        notFound();
+        return {};
+      }
+    }
+
+    const rawTitle = dbPage.title?.[params.locale] || dbPage.title?.en;
     const paginatedTitle = formatPageTitle(
       isPaginatedBlog && rawTitle ? `${rawTitle} - ${pageNum}` : rawTitle,
       fallbackTitle,
@@ -116,9 +132,9 @@ export async function generateMetadata(props: {
         ogImage = activePackages[0].cover_image;
       }
     }
-    const titleInLocale = dbPage.title?.[params.locale];
     const currentSeg =
-      (titleInLocale && generateNativeSlug(titleInLocale)) || dbPage.slug;
+      pagesContentService.getCorePageSegment(dbPage, params.locale) ||
+      dbPage.slug;
     const canonicalUrl = `${encodeURI(`${baseUrl}/${params.locale}/${currentSeg}`)}${isPaginatedBlog ? pageQuerySuffix : ""}`;
 
     return {
@@ -134,8 +150,9 @@ export async function generateMetadata(props: {
       alternates: {
         canonical: canonicalUrl,
         ...getAlternates((loc) => {
-          const tLoc = dbPage.title?.[loc];
-          return `/${tLoc ? generateNativeSlug(tLoc) : dbPage.slug}${isPaginatedBlog ? pageQuerySuffix : ""}`;
+          const seg =
+            pagesContentService.getCorePageSegment(dbPage, loc) || dbPage.slug;
+          return `/${seg}${isPaginatedBlog ? pageQuerySuffix : ""}`;
         }),
       },
       openGraph: constructOpenGraph(
@@ -166,6 +183,8 @@ export async function generateMetadata(props: {
     let dynamicTitle = "";
     let dynamicDesc = "";
     let isNoIndex = false;
+    let categoryId: string | undefined;
+    let tagId: string | undefined;
 
     if (type === "category") {
       const category = await getBlogCategoryBySlug(
@@ -177,6 +196,7 @@ export async function generateMetadata(props: {
         notFound();
         return {};
       }
+      categoryId = category.id;
       dynamicTitle = category.translation?.name || category.slug;
       dynamicDesc =
         category.translation?.description ||
@@ -193,6 +213,7 @@ export async function generateMetadata(props: {
         notFound();
         return {};
       }
+      tagId = tag.id;
       dynamicTitle = tag.translation?.name || tag.slug;
       dynamicDesc = enrichSeoDescription(
         dynamicTitle,
@@ -207,6 +228,28 @@ export async function generateMetadata(props: {
       return {};
     }
 
+    const { getPublishedBlogPosts } = await import("@/lib/blog/blog-service");
+    const { pagination } = await getPublishedBlogPosts({
+      page: pageNum,
+      limit: 12,
+      // biome-ignore lint/suspicious/noExplicitAny: Dynamic data
+      locale: params.locale as any,
+      category_id: categoryId,
+      tag_id: tagId,
+      sort_by: "published_at",
+      sort_order: "desc",
+    });
+
+    if (pageNum > 1 && pageNum > Math.max(1, pagination.totalPages)) {
+      notFound();
+      return {};
+    }
+
+    // Empty category pages have zero articles and must be excluded from indexing to avoid Soft-404s
+    if (type === "category" && pagination.total === 0) {
+      isNoIndex = true;
+    }
+
     const title = formatPageTitle(
       pageNum > 1 && dynamicTitle
         ? `${dynamicTitle} - ${pageNum}`
@@ -214,9 +257,9 @@ export async function generateMetadata(props: {
       fallbackTitle,
     );
     const desc = generateSeoDescription(dynamicDesc, 155, params.locale);
-    const blogLocTitle = dbPage.title?.[params.locale];
     const blogSeg =
-      (blogLocTitle && generateNativeSlug(blogLocTitle)) || dbPage.slug;
+      pagesContentService.getCorePageSegment(dbPage, params.locale) ||
+      dbPage.slug;
     const categoryCanonical = `${encodeURI(
       `${baseUrl}/${params.locale}/${blogSeg}/${type}/${childSlug}`,
     )}${pageQuerySuffix}`;
@@ -236,14 +279,19 @@ export async function generateMetadata(props: {
             "max-image-preview": "large",
             "max-snippet": -1,
           },
-      alternates: {
-        canonical: categoryCanonical,
-        ...getAlternates((loc) => {
-          const tLoc = dbPage.title?.[loc];
-          const bSeg = tLoc ? generateNativeSlug(tLoc) : dbPage.slug;
-          return `/${bSeg}/${type}/${childSlug}${pageQuerySuffix}`;
-        }),
-      },
+      alternates: isNoIndex
+        ? {
+            canonical: categoryCanonical,
+          }
+        : {
+            canonical: categoryCanonical,
+            ...getAlternates((loc) => {
+              const bSeg =
+                pagesContentService.getCorePageSegment(dbPage, loc) ||
+                dbPage.slug;
+              return `/${bSeg}/${type}/${childSlug}${pageQuerySuffix}`;
+            }),
+          },
       openGraph: constructOpenGraph(
         title,
         desc,
@@ -278,8 +326,9 @@ export async function generateMetadata(props: {
     let keywords: string[] = [];
 
     let getAlternatesFn = (loc: string): string | null => {
-      const tLoc = dbPage.title?.[loc];
-      return `/${tLoc ? generateNativeSlug(tLoc) : dbPage.slug}/${childSlug}`;
+      const pSeg =
+        pagesContentService.getCorePageSegment(dbPage, loc) || dbPage.slug;
+      return `/${pSeg}/${childSlug}`;
     };
 
     if (dbPage.slug === "packages") {
@@ -306,8 +355,8 @@ export async function generateMetadata(props: {
         (pkg as any).meta_keywords ||
         [];
       getAlternatesFn = (loc: string) => {
-        const pTitle = dbPage.title?.[loc];
-        const pSeg = (pTitle && generateNativeSlug(pTitle)) || "packages";
+        const pSeg =
+          pagesContentService.getCorePageSegment(dbPage, loc) || "packages";
         const pkgTitle = pkg.title?.[loc];
         const pkgSeg = pkgTitle
           ? generateNativeSlug(pkgTitle) || pkg.slug
@@ -331,8 +380,8 @@ export async function generateMetadata(props: {
       // biome-ignore lint/suspicious/noExplicitAny: Dynamic data
       keywords = (locItem as any).meta_keywords || [];
       getAlternatesFn = (loc: string) => {
-        const pTitle = dbPage.title?.[loc];
-        const pSeg = (pTitle && generateNativeSlug(pTitle)) || "locations";
+        const pSeg =
+          pagesContentService.getCorePageSegment(dbPage, loc) || "locations";
         const locTitle = locItem.title?.[loc];
         const locSeg = locTitle
           ? generateNativeSlug(locTitle) || locItem.slug
@@ -360,8 +409,8 @@ export async function generateMetadata(props: {
         const fullPost = await getBlogPostByIdWithAllTranslations(post.id);
         if (fullPost?.translations) {
           getAlternatesFn = (loc: string) => {
-            const pTitle = dbPage.title?.[loc];
-            const pSeg = (pTitle && generateNativeSlug(pTitle)) || "blog";
+            const pSeg =
+              pagesContentService.getCorePageSegment(dbPage, loc) || "blog";
             // biome-ignore lint/suspicious/noExplicitAny: Dynamic data
             const locTranslation = (fullPost.translations as any)[loc];
             if (!locTranslation) return null;
@@ -382,9 +431,6 @@ export async function generateMetadata(props: {
     const formattedTitle = formatPageTitle(dynamicTitle, fallbackTitle);
     const desc = generateSeoDescription(dynamicDesc, 155, params.locale);
 
-    const _currentSeg = dbPage.title?.[params.locale]
-      ? generateNativeSlug(dbPage.title[params.locale] || "")
-      : dbPage.slug;
     const currentPath = getAlternatesFn(params.locale);
     const fallbackEnPath =
       !currentPath && dbPage.slug === "blog" ? getAlternatesFn("en") : null;
@@ -448,7 +494,9 @@ export default async function GenericCorePage(props: {
   const rootSlug = slugArray[0];
   const rawDbPage = await pagesContentService.getPageBySlug(rootSlug);
   const dbPage =
-    rawDbPage && rawDbPage.slug !== "home" && !rawDbPage.slug.startsWith("home-")
+    rawDbPage &&
+    rawDbPage.slug !== "home" &&
+    !rawDbPage.slug.startsWith("home-")
       ? rawDbPage
       : null;
 
@@ -464,10 +512,9 @@ export default async function GenericCorePage(props: {
       }
     };
 
-    const localizedTitle = dbPage.title?.[params.locale];
-    const expectedRoot = localizedTitle
-      ? generateNativeSlug(localizedTitle) || dbPage.slug
-      : dbPage.slug;
+    const expectedRoot =
+      pagesContentService.getCorePageSegment(dbPage, params.locale) ||
+      dbPage.slug;
 
     const expectedSegments = [expectedRoot];
     let resolvable = true;

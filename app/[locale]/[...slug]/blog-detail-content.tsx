@@ -19,10 +19,12 @@ import {
   getSalvagedBlogSlug,
 } from "@/lib/blog/blog-service";
 import { formatBlogDate } from "@/lib/blog/blog-utils";
+import { pagesContentService } from "@/lib/pages-content-service";
 import {
   buildArticleSchema,
   generateSeoDescription,
   getBaseUrl,
+  normalizeSchemaUrl,
 } from "@/lib/seo-utils";
 import { settingsService } from "@/lib/settings-service";
 import type { Locale } from "@/types/blog";
@@ -37,8 +39,14 @@ export async function BlogDetailPageContent({
   parentSlug: string;
 }) {
   const decodedSlug = decodeURIComponent(slug);
-  const post = await getBlogPostBySlug(decodedSlug, locale as Locale);
-  const settings = await settingsService.getSettings();
+  const [post, settings, blogPage] = await Promise.all([
+    getBlogPostBySlug(decodedSlug, locale as Locale),
+    settingsService.getSettings(),
+    pagesContentService.getPageBySlug("blog"),
+  ]);
+  const canonicalParentSlug =
+    pagesContentService.getCorePageSegment(blogPage || "blog", locale) ||
+    parentSlug;
   const t = await getTranslations({ locale, namespace: "blog" });
 
   if (post?.status !== "published") {
@@ -46,7 +54,7 @@ export async function BlogDetailPageContent({
     const salvagedSlug = await getSalvagedBlogSlug(decodedSlug, locale);
     if (salvagedSlug && salvagedSlug !== decodedSlug) {
       permanentRedirect(
-        `/${locale}/${parentSlug}/${encodeURIComponent(salvagedSlug)}`,
+        `/${locale}/${canonicalParentSlug}/${encodeURIComponent(salvagedSlug)}`,
       );
     }
     notFound();
@@ -107,7 +115,9 @@ export async function BlogDetailPageContent({
             settings.logo_url || settings.default_og_image_url || undefined,
           inLanguage: locale,
           keywords: post.translation.meta_keywords || [],
-          url: `${getBaseUrl()}/${locale}/${parentSlug}/${post.translation.slug}`,
+          url: normalizeSchemaUrl(
+            `${getBaseUrl()}/${locale}/${canonicalParentSlug}/${post.translation.slug}`,
+          ),
         })}
       />
 
@@ -187,7 +197,7 @@ export async function BlogDetailPageContent({
                     {post.categories.map((cat) => (
                       <NextLink
                         key={cat.category.id}
-                        href={`/${locale}/${parentSlug}/category/${cat.category.slug}`}
+                        href={`/${locale}/${canonicalParentSlug}/category/${cat.category.slug}`}
                         className="px-3 py-1.5 rounded-xl text-[10px] font-bold uppercase tracking-widest border-[0.5px] border-border/30 shadow-sm hover:opacity-80 transition-opacity"
                         style={{
                           backgroundColor: `${cat.category.color}15`,
@@ -211,7 +221,7 @@ export async function BlogDetailPageContent({
                     {post.tags.map((tag) => (
                       <NextLink
                         key={tag.tag.id}
-                        href={`/${locale}/${parentSlug}/tag/${tag.tag.slug}`}
+                        href={`/${locale}/${canonicalParentSlug}/tag/${tag.tag.slug}`}
                         className="px-4 py-1.5 border-[0.5px] border-border/50 bg-muted/20 hover:bg-primary/5 rounded-xl text-[10px] font-bold uppercase tracking-widest transition-colors shadow-sm"
                       >
                         #{tag.tag.translation?.name || tag.tag.slug}
@@ -236,7 +246,7 @@ export async function BlogDetailPageContent({
                     // biome-ignore lint/suspicious/noExplicitAny: Type mismatch
                     post={relatedPost as any}
                     locale={locale}
-                    parentSegment={parentSlug}
+                    parentSegment={canonicalParentSlug}
                   />
                 ))}
               </div>

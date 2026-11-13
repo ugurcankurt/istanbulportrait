@@ -7,6 +7,7 @@ import {
   buildContactPageSchema,
   generateSeoDescription,
   getBaseUrl,
+  normalizeSchemaUrl,
 } from "@/lib/seo-utils";
 
 export async function ContactPageContent({
@@ -17,6 +18,8 @@ export async function ContactPageContent({
   const { locale, slug } = await params;
 
   const dbPage = await pagesContentService.getPageBySlug("contact");
+  const canonicalSegment =
+    pagesContentService.getCorePageSegment(dbPage || "contact", locale) || slug;
   const dynamicTitle = dbPage?.title?.[locale] || dbPage?.title?.en || "";
   const dynamicSubtitle =
     dbPage?.subtitle?.[locale] || dbPage?.subtitle?.en || "";
@@ -28,7 +31,7 @@ export async function ContactPageContent({
   const contactSchema = buildContactPageSchema({
     name: dynamicTitle,
     description: generateSeoDescription(dynamicSubtitle),
-    url: `${getBaseUrl()}/${locale}/${slug}`,
+    url: normalizeSchemaUrl(`${getBaseUrl()}/${locale}/${canonicalSegment}`),
   });
 
   return (

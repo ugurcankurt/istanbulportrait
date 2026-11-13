@@ -43,7 +43,6 @@ import {
   optimizeSeoImage,
 } from "@/lib/seo-utils";
 import { settingsService } from "@/lib/settings-service";
-import { generateNativeSlug } from "@/lib/slug-generator";
 
 export async function generateMetadata({
   params,
@@ -159,16 +158,18 @@ export default async function HomePage({
   const pageMap = new Map(allPages.map((p) => [p.slug, p]));
 
   const packagesParent = pageMap.get("packages");
-  const packagesParentTitle = packagesParent?.title?.[locale];
-  const packagesParentSlug = packagesParentTitle
-    ? generateNativeSlug(packagesParentTitle) || "packages"
-    : "packages";
+  const packagesParentSlug =
+    pagesContentService.getCorePageSegment(
+      packagesParent || "packages",
+      locale,
+    ) || "packages";
 
   const locationsParent = pageMap.get("locations");
-  const locationsParentTitle = locationsParent?.title?.[locale];
-  const locationsParentSlug = locationsParentTitle
-    ? generateNativeSlug(locationsParentTitle) || "locations"
-    : "locations";
+  const locationsParentSlug =
+    pagesContentService.getCorePageSegment(
+      locationsParent || "locations",
+      locale,
+    ) || "locations";
 
   const getDynamicTitle = (slug: string, fallback: string) => {
     const page = pageMap.get(slug);

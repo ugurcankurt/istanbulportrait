@@ -4,6 +4,7 @@
  */
 
 import { cache } from "react";
+import { toStorageProxyPath } from "@/lib/seo-utils";
 import { generateSlugFromTitle } from "@/lib/slug-generator";
 import { supabaseAdmin } from "@/lib/supabase";
 import type {
@@ -127,7 +128,10 @@ export const getPublishedBlogPosts = cache(
 
     // Pagination
     const validPage = Math.max(1, Number.isFinite(page) ? Math.floor(page) : 1);
-    const validLimit = Math.max(1, Number.isFinite(limit) ? Math.floor(limit) : 12);
+    const validLimit = Math.max(
+      1,
+      Number.isFinite(limit) ? Math.floor(limit) : 12,
+    );
     const from = (validPage - 1) * validLimit;
     const to = from + validLimit - 1;
     query = query.range(from, to);
@@ -155,6 +159,17 @@ export const getPublishedBlogPosts = cache(
     // Transform array translations to objects and filter by locale
     const transformedPosts = (data || []).map((post: any) => ({
       ...post,
+      featured_image: post.featured_image
+        ? toStorageProxyPath(post.featured_image)
+        : post.featured_image,
+      author: post.author
+        ? {
+            ...post.author,
+            avatar_url: post.author.avatar_url
+              ? toStorageProxyPath(post.author.avatar_url)
+              : post.author.avatar_url,
+          }
+        : post.author,
       translation: Array.isArray(post.translation)
         ? post.translation[0]
         : post.translation,
@@ -536,6 +551,17 @@ export const getBlogPostBySlug = cache(
     // Transform array translations to objects and filter by locale
     const transformedPost = {
       ...data,
+      featured_image: data.featured_image
+        ? toStorageProxyPath(data.featured_image)
+        : data.featured_image,
+      author: data.author
+        ? {
+            ...data.author,
+            avatar_url: data.author.avatar_url
+              ? toStorageProxyPath(data.author.avatar_url)
+              : data.author.avatar_url,
+          }
+        : data.author,
       translation: Array.isArray(data.translation)
         ? data.translation[0]
         : data.translation,
@@ -600,11 +626,7 @@ export async function getSalvagedBlogSlug(
     .limit(1)
     .maybeSingle();
 
-  if (
-    targetError ||
-    !targetTrans?.slug ||
-    targetTrans.slug === alienSlug
-  ) {
+  if (targetError || !targetTrans?.slug || targetTrans.slug === alienSlug) {
     return null;
   }
 

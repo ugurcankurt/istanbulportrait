@@ -3,7 +3,11 @@ import { routing } from "@/i18n/routing";
 import { locationsService } from "@/lib/locations-service";
 import { packagesService } from "@/lib/packages-service";
 import { pagesContentService } from "@/lib/pages-content-service";
-import { generateSeoDescription, getBaseUrl } from "@/lib/seo-utils";
+import {
+  generateSeoDescription,
+  getBaseUrl,
+  resolveSchemaImage,
+} from "@/lib/seo-utils";
 import { generateNativeSlug } from "@/lib/slug-generator";
 
 export const revalidate = 3600;
@@ -43,30 +47,7 @@ export default async function sitemap({
     return { languages };
   };
 
-  const cleanImage = (url?: string | null): string => {
-    if (!url) return "";
-    const replaced = url.replace(
-      "https://xfntnamwfnqjgqmyxwfz.supabase.co/storage/v1/object/public",
-      `${baseUrl}/storage`,
-    );
-    if (replaced.startsWith("http://") || replaced.startsWith("https://")) {
-      return replaced;
-    }
-    if (replaced.startsWith("/")) {
-      return `${baseUrl}${replaced}`;
-    }
-    return `${baseUrl}/${replaced}`;
-  };
-
-  const escapeXml = (str?: string | null): string => {
-    if (!str) return "";
-    return str
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;")
-      .replace(/'/g, "&apos;");
-  };
+  const cleanImage = (url?: string | null): string => resolveSchemaImage(url);
 
   const sitemapData: MetadataRoute.Sitemap = [];
 
@@ -127,9 +108,7 @@ export default async function sitemap({
       if (page.slug === "home") continue;
 
       locales.forEach((locale) => {
-        const titleLoc = page.title?.[locale];
-        const nativeSlug = titleLoc ? generateNativeSlug(titleLoc) : "";
-        const pageSeg = `/${nativeSlug || page.slug}`;
+        const pageSeg = `/${pagesContentService.getCorePageSegment(page, locale) || page.slug}`;
 
         sitemapData.push({
           url: encodeURI(`${baseUrl}/${locale}${pageSeg}`),
@@ -139,9 +118,7 @@ export default async function sitemap({
           changeFrequency: "weekly",
           priority: 0.8,
           alternates: getAlternates((loc) => {
-            const tLoc = page.title?.[loc];
-            const tSlug = tLoc ? generateNativeSlug(tLoc) : "";
-            return `/${tSlug || page.slug}`;
+            return `/${pagesContentService.getCorePageSegment(page, loc) || page.slug}`;
           }),
           ...(page.cover_image
             ? { images: [cleanImage(page.cover_image)] }
@@ -158,8 +135,11 @@ export default async function sitemap({
 
     for (const pkg of activePackages) {
       locales.forEach((locale) => {
-        const pTitle = packagesParent?.title?.[locale];
-        const pSeg = (pTitle && generateNativeSlug(pTitle)) || "packages";
+        const pSeg =
+          pagesContentService.getCorePageSegment(
+            packagesParent || "packages",
+            locale,
+          ) || "packages";
         const pkgTitleLoc = pkg.title?.[locale];
         const pkgSeg = pkgTitleLoc
           ? generateNativeSlug(pkgTitleLoc) || pkg.slug
@@ -197,11 +177,11 @@ export default async function sitemap({
               ) || "Package Video";
 
             videos.push({
-              title: escapeXml(rawVideoTitle),
-              thumbnail_loc: escapeXml(cleanThumb),
-              description: escapeXml(rawVideoDesc),
-              ...(playerLoc ? { player_loc: escapeXml(playerLoc) } : {}),
-              ...(contentLoc ? { content_loc: escapeXml(contentLoc) } : {}),
+              title: rawVideoTitle,
+              thumbnail_loc: cleanThumb,
+              description: rawVideoDesc,
+              ...(playerLoc ? { player_loc: playerLoc } : {}),
+              ...(contentLoc ? { content_loc: contentLoc } : {}),
             });
           }
         }
@@ -223,8 +203,11 @@ export default async function sitemap({
           changeFrequency: "weekly",
           priority: 0.9,
           alternates: getAlternates((loc) => {
-            const tTitle = packagesParent?.title?.[loc];
-            const tSeg = (tTitle && generateNativeSlug(tTitle)) || "packages";
+            const tSeg =
+              pagesContentService.getCorePageSegment(
+                packagesParent || "packages",
+                loc,
+              ) || "packages";
             const tPkgTitle = pkg.title?.[loc];
             const tPkgSeg = tPkgTitle
               ? generateNativeSlug(tPkgTitle) || pkg.slug
@@ -245,8 +228,11 @@ export default async function sitemap({
 
     for (const locItem of activeLocations) {
       locales.forEach((locale) => {
-        const pTitle = locationsParent?.title?.[locale];
-        const pSeg = (pTitle && generateNativeSlug(pTitle)) || "locations";
+        const pSeg =
+          pagesContentService.getCorePageSegment(
+            locationsParent || "locations",
+            locale,
+          ) || "locations";
         const locTitleLoc = locItem.title?.[locale];
         const locSeg = locTitleLoc
           ? generateNativeSlug(locTitleLoc) || locItem.slug
@@ -260,8 +246,11 @@ export default async function sitemap({
           changeFrequency: "weekly",
           priority: 0.7,
           alternates: getAlternates((loc) => {
-            const tTitle = locationsParent?.title?.[loc];
-            const tSeg = (tTitle && generateNativeSlug(tTitle)) || "locations";
+            const tSeg =
+              pagesContentService.getCorePageSegment(
+                locationsParent || "locations",
+                loc,
+              ) || "locations";
             const tLocTitle = locItem.title?.[loc];
             const tLocSeg = tLocTitle
               ? generateNativeSlug(tLocTitle) || locItem.slug
@@ -309,13 +298,19 @@ export default async function sitemap({
             )?.slug;
             if (!tSlug) return;
 
-            const pTitle = blogParent?.title?.[locale];
-            const pSeg = (pTitle && generateNativeSlug(pTitle)) || "blog";
+            const pSeg =
+              pagesContentService.getCorePageSegment(
+                blogParent || "blog",
+                locale,
+              ) || "blog";
 
             const postAlternates: Record<string, string> = {};
             translatedLocales.forEach((loc: string) => {
-              const bTitle = blogParent?.title?.[loc];
-              const bSeg = (bTitle && generateNativeSlug(bTitle)) || "blog";
+              const bSeg =
+                pagesContentService.getCorePageSegment(
+                  blogParent || "blog",
+                  loc,
+                ) || "blog";
               const bSlug = postTranslations.find(
                 (t: any) => t.locale === loc,
               )?.slug;
@@ -378,13 +373,19 @@ export default async function sitemap({
           const translatedLocales = catTranslations.map((t: any) => t.locale);
 
           translatedLocales.forEach((locale: string) => {
-            const pTitle = blogParent?.title?.[locale];
-            const pSeg = (pTitle && generateNativeSlug(pTitle)) || "blog";
+            const pSeg =
+              pagesContentService.getCorePageSegment(
+                blogParent || "blog",
+                locale,
+              ) || "blog";
 
             const catAlternates: Record<string, string> = {};
             translatedLocales.forEach((loc: string) => {
-              const bTitle = blogParent?.title?.[loc];
-              const bSeg = (bTitle && generateNativeSlug(bTitle)) || "blog";
+              const bSeg =
+                pagesContentService.getCorePageSegment(
+                  blogParent || "blog",
+                  loc,
+                ) || "blog";
               catAlternates[loc] = encodeURI(
                 `${baseUrl}/${loc}/${bSeg}/category/${bc.slug}`,
               );

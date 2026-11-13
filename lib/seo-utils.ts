@@ -1,6 +1,34 @@
 import type { SiteSettings } from "./settings-service";
 import { generateNativeSlug } from "./slug-generator";
 
+const SUPABASE_PUBLIC_STORAGE_PREFIX =
+  "https://xfntnamwfnqjgqmyxwfz.supabase.co/storage/v1/object/public";
+
+/**
+ * Normalizes a Supabase public storage URL into our first-party `/storage/...` proxy path.
+ * Leaves already-relative paths and unrelated external URLs untouched.
+ */
+export function toStorageProxyPath(url?: string | null): string {
+  if (!url) return "";
+
+  const supabaseOrigin = process.env.NEXT_PUBLIC_SUPABASE_URL?.replace(
+    /\/+$/,
+    "",
+  );
+  if (supabaseOrigin) {
+    const dynamicPrefix = `${supabaseOrigin}/storage/v1/object/public`;
+    if (url.startsWith(dynamicPrefix)) {
+      return `/storage${url.slice(dynamicPrefix.length)}`;
+    }
+  }
+
+  if (url.startsWith(SUPABASE_PUBLIC_STORAGE_PREFIX)) {
+    return `/storage${url.slice(SUPABASE_PUBLIC_STORAGE_PREFIX.length)}`;
+  }
+
+  return url;
+}
+
 export function getBaseUrl() {
   if (process.env.NEXT_PUBLIC_APP_URL)
     return process.env.NEXT_PUBLIC_APP_URL.replace(/\/+$/, "");
@@ -220,26 +248,13 @@ export function generateSeoTitle(
 }
 
 /**
- * Resolves an image URL for SEO (OpenGraph & Schema).
- * Uses Next.js /api/og dynamic image generation to guarantee a perfect 1200x630
- * aspect ratio for social media crawlers, avoiding cropped or improperly sized previews.
+ * Resolves a direct canonical image URL hosted on this domain for Open Graph and Schema metadata.
  */
 export function optimizeSeoImage(
   imageUrl: string | null | undefined,
-  width: 1200 | 1080 | 1920 = 1200,
+  _width: 1200 | 1080 | 1920 = 1200,
 ): string {
-  if (!imageUrl) return "";
-
-  // Get absolute URL
-  const absoluteUrl = imageUrl.startsWith("/")
-    ? `${getBaseUrl()}${imageUrl}`
-    : imageUrl;
-
-  // Social media bots (WhatsApp, Facebook, LinkedIn) strictly require a JPEG/PNG format and often fail
-  // to parse Next.js dynamic /_next/image endpoints emitting AVIF/WebP based on crawler headers.
-  // Using wsrv.nl securely globally caches the image, guarantees a fixed JPG output format,
-  // and optimally scales it for Open Graph requirements without cropping.
-  return `https://wsrv.nl/?url=${encodeURIComponent(absoluteUrl)}&w=${width}&h=630&fit=cover&output=jpg&q=85`;
+  return resolveSchemaImage(imageUrl);
 }
 
 /**
@@ -309,22 +324,19 @@ export function resolveSchemaImage(
   const baseUrl = getBaseUrl();
 
   // Rewrite direct Supabase storage URLs to our canonical domain storage route
-  const resolved = imageUrl.replace(
-    "https://xfntnamwfnqjgqmyxwfz.supabase.co/storage/v1/object/public",
-    `${baseUrl}/storage`,
-  );
+  const proxied = toStorageProxyPath(imageUrl);
 
   // If already full http(s) URL
-  if (resolved.startsWith("http://") || resolved.startsWith("https://")) {
-    return resolved;
+  if (proxied.startsWith("http://") || proxied.startsWith("https://")) {
+    return proxied;
   }
 
   // If relative path
-  if (resolved.startsWith("/")) {
-    return `${baseUrl}${resolved}`;
+  if (proxied.startsWith("/")) {
+    return `${baseUrl}${proxied}`;
   }
 
-  return `${baseUrl}/${resolved}`;
+  return `${baseUrl}/${proxied}`;
 }
 
 /**
@@ -366,7 +378,8 @@ export function buildLocalBusinessSchema(
     "Istanbul, Turkey";
 
   const baseUrl = getBaseUrl();
-  const orgName = settings.organization_name || settings.site_name || "Istanbul Portrait";
+  const orgName =
+    settings.organization_name || settings.site_name || "Istanbul Portrait";
   const orgId = `${baseUrl}/#organization`;
 
   const schema: any = {
@@ -476,7 +489,11 @@ export function buildLocalBusinessSchema(
         const pkgDesc =
           pkg.description?.[locale || "en"] || pkg.description?.en || "";
         const cleanPkgDesc = pkgDesc
-          ? pkgDesc.replace(/<[^>]*>?/gm, " ").replace(/\s+/g, " ").trim().substring(0, 200)
+          ? pkgDesc
+              .replace(/<[^>]*>?/gm, " ")
+              .replace(/\s+/g, " ")
+              .trim()
+              .substring(0, 200)
           : "";
         const pkgCover = pkg.cover_image || pkg.gallery_images?.[0];
         const pkgImageUrl = resolveSchemaImage(pkgCover);
@@ -530,7 +547,8 @@ export function buildOrganizationSchema(settings: SiteSettings) {
     settings.logo_url || settings.default_og_image_url,
   );
   const baseUrl = getBaseUrl();
-  const orgName = settings.organization_name || settings.site_name || "Istanbul Portrait";
+  const orgName =
+    settings.organization_name || settings.site_name || "Istanbul Portrait";
   const orgId = `${baseUrl}/#organization`;
 
   return {
@@ -584,12 +602,9 @@ export function buildServiceSchema({
   image,
   price,
   currency = "EUR",
-  aggregateRating,
-  reviewCount,
   providerName,
   providerUrl,
   discount,
-  reviews,
   url,
 }: {
   name: string;
@@ -658,38 +673,6 @@ export function buildServiceSchema({
         : `${new Date().getFullYear()}-12-31`,
       availability: "https://schema.org/InStock",
       validFrom: `${new Date().getFullYear()}-01-01`,
-      hasMerchantReturnPolicy: {
-        "@type": "MerchantReturnPolicy",
-        applicableCountry: "TR",
-        returnPolicyCategory: "https://schema.org/MerchantReturnNotPermitted",
-      },
-      shippingDetails: {
-        "@type": "OfferShippingDetails",
-        shippingRate: {
-          "@type": "MonetaryAmount",
-          value: "0",
-          currency: currency,
-        },
-        shippingDestination: {
-          "@type": "DefinedRegion",
-          addressCountry: "TR",
-        },
-        deliveryTime: {
-          "@type": "ShippingDeliveryTime",
-          handlingTime: {
-            "@type": "QuantitativeValue",
-            minValue: 0,
-            maxValue: 0,
-            unitCode: "d",
-          },
-          transitTime: {
-            "@type": "QuantitativeValue",
-            minValue: 0,
-            maxValue: 0,
-            unitCode: "d",
-          },
-        },
-      },
       seller: {
         "@type": "Organization",
         "@id": orgId,
@@ -712,42 +695,6 @@ export function buildServiceSchema({
     }
 
     schema.offers.priceSpecification = specs;
-  }
-
-  if (
-    aggregateRating &&
-    aggregateRating > 0 &&
-    reviewCount &&
-    reviewCount > 0
-  ) {
-    schema.aggregateRating = {
-      "@type": "AggregateRating",
-      ratingValue: aggregateRating.toString(),
-      reviewCount: reviewCount.toString(),
-      bestRating: "5",
-      worstRating: "1",
-    };
-  }
-
-  if (reviews && reviews.length > 0) {
-    schema.review = reviews
-      .filter((r: any) => r.text && r.text.trim().length > 0)
-      .slice(0, 5)
-      .map((r: any) => ({
-        "@type": "Review",
-        author: {
-          "@type": "Person",
-          name: r.author?.name || "Customer",
-        },
-        datePublished: r.date ? r.date.split("T")[0] : undefined,
-        reviewBody: r.text,
-        reviewRating: {
-          "@type": "Rating",
-          bestRating: "5",
-          ratingValue: r.rating?.toString() || "5",
-          worstRating: "1",
-        },
-      }));
   }
 
   return schema;

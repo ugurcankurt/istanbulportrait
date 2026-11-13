@@ -105,6 +105,10 @@ const nextConfig: NextConfig = {
         source: "/sitemap.xml",
         destination: "/sitemap-index.xml",
       },
+      {
+        source: "/:key([a-fA-F0-9-]{16,64}).txt",
+        destination: "/api/indexnow-key?key=:key",
+      },
     ];
   },
   // Production optimizations

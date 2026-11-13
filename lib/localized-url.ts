@@ -113,17 +113,16 @@ export async function getPackageLocalizedPaths(
       localeSlug = activePackage.slug;
     }
 
-    let parentSlug = packagesPage?.slug || "packages";
-    if (packagesPage?.title?.[l]) {
-      parentSlug = generateNativeSlug(packagesPage.title[l]);
-    }
+    const parentSlug =
+      pagesContentService.getCorePageSegment(packagesPage || "packages", l) ||
+      "packages";
 
     languages[l] = `${baseUrl}/${l}/${parentSlug}/${localeSlug}`;
   });
 
-  const defaultParent = packagesPage?.title?.en
-    ? generateNativeSlug(packagesPage.title.en)
-    : "packages";
+  const defaultParent =
+    pagesContentService.getCorePageSegment(packagesPage || "packages", "en") ||
+    "packages";
   languages["x-default"] =
     languages.en || `${baseUrl}/en/${defaultParent}/${slug}`;
 
@@ -136,10 +135,11 @@ export async function getPackageLocalizedPaths(
         localeSlug = activePackage.slug;
       }
 
-      let parentSlug = packagesPage?.slug || "packages";
-      if (packagesPage?.title?.[locale]) {
-        parentSlug = generateNativeSlug(packagesPage.title[locale]);
-      }
+      const parentSlug =
+        pagesContentService.getCorePageSegment(
+          packagesPage || "packages",
+          locale,
+        ) || "packages";
 
       return `${baseUrl}/${locale}/${parentSlug}/${localeSlug}`;
     },
@@ -173,18 +173,19 @@ export async function getLocationLocalizedPaths(
       localeSlug = activeLocation.slug;
     }
 
-    let parentSlug = locationsPage?.slug || "locations";
-    if (locationsPage?.title?.[l]) {
-      parentSlug = generateNativeSlug(locationsPage.title[l]);
-    }
+    const parentSlug =
+      pagesContentService.getCorePageSegment(locationsPage || "locations", l) ||
+      "locations";
 
     languages[l] = `${baseUrl}/${l}/${parentSlug}/${localeSlug}`;
   });
 
   // Add x-default pointing to English version
-  const defaultParent = locationsPage?.title?.en
-    ? generateNativeSlug(locationsPage.title.en)
-    : "locations";
+  const defaultParent =
+    pagesContentService.getCorePageSegment(
+      locationsPage || "locations",
+      "en",
+    ) || "locations";
   languages["x-default"] =
     languages.en || `${baseUrl}/en/${defaultParent}/${slug}`;
 
@@ -197,10 +198,11 @@ export async function getLocationLocalizedPaths(
         localeSlug = activeLocation.slug;
       }
 
-      let parentSlug = locationsPage?.slug || "locations";
-      if (locationsPage?.title?.[locale]) {
-        parentSlug = generateNativeSlug(locationsPage.title[locale]);
-      }
+      const parentSlug =
+        pagesContentService.getCorePageSegment(
+          locationsPage || "locations",
+          locale,
+        ) || "locations";
 
       return `${baseUrl}/${locale}/${parentSlug}/${localeSlug}`;
     },

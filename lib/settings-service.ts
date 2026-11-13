@@ -1,4 +1,5 @@
 import { unstable_cache } from "next/cache";
+import { toStorageProxyPath } from "./seo-utils";
 import { supabase, supabaseAdmin } from "./supabase";
 
 const PUBLIC_SETTINGS_COLUMNS = [
@@ -202,7 +203,10 @@ export const settingsService = {
           .single();
 
         if (error) {
-          console.warn("Notice fetching site settings:", error.message || error);
+          console.warn(
+            "Notice fetching site settings:",
+            error.message || error,
+          );
           return defaultSettings;
         }
 
@@ -220,9 +224,15 @@ export const settingsService = {
           facebook_url: rawData.facebook_url || defaultSettings.facebook_url,
           youtube_url: rawData.youtube_url || defaultSettings.youtube_url,
           tiktok_url: rawData.tiktok_url || defaultSettings.tiktok_url,
-          logo_url: rawData.logo_url || defaultSettings.logo_url,
-          logo_dark_url: rawData.logo_dark_url || defaultSettings.logo_dark_url,
-          favicon_url: rawData.favicon_url || defaultSettings.favicon_url,
+          logo_url: rawData.logo_url
+            ? toStorageProxyPath(rawData.logo_url)
+            : defaultSettings.logo_url,
+          logo_dark_url: rawData.logo_dark_url
+            ? toStorageProxyPath(rawData.logo_dark_url)
+            : defaultSettings.logo_dark_url,
+          favicon_url: rawData.favicon_url
+            ? toStorageProxyPath(rawData.favicon_url)
+            : defaultSettings.favicon_url,
           address:
             (rawData.address as Record<string, string>) ||
             defaultSettings.address,
@@ -248,17 +258,18 @@ export const settingsService = {
             (rawData.site_description as Record<string, string>) ||
             defaultSettings.site_description,
 
-          default_og_image_url:
-            rawData.default_og_image_url ||
-            defaultSettings.default_og_image_url,
+          default_og_image_url: rawData.default_og_image_url
+            ? toStorageProxyPath(rawData.default_og_image_url)
+            : defaultSettings.default_og_image_url,
           organization_name:
             rawData.organization_name || defaultSettings.organization_name,
           organization_founding_date:
             rawData.organization_founding_date ||
             defaultSettings.organization_founding_date,
           founder_name: rawData.founder_name || defaultSettings.founder_name,
-          founder_image_url:
-            rawData.founder_image_url || defaultSettings.founder_image_url,
+          founder_image_url: rawData.founder_image_url
+            ? toStorageProxyPath(rawData.founder_image_url)
+            : defaultSettings.founder_image_url,
           ai_search_config:
             (rawData.ai_search_config as Record<string, any>) ||
             defaultSettings.ai_search_config,

@@ -17,7 +17,6 @@ import {
   createRateLimitError,
   getClientIP,
 } from "@/lib/rate-limit";
-import { generateNativeSlug } from "@/lib/slug-generator";
 
 import { blogFormSchema } from "@/lib/validations/blog-validations";
 import type { BlogQueryParams } from "@/types/blog";
@@ -144,10 +143,11 @@ export async function POST(request: NextRequest) {
               validationResult.data.translations || {},
             )) {
               if (trans?.slug) {
-                const parentTitle = blogPage?.title?.[loc];
-                const parentSeg = parentTitle
-                  ? generateNativeSlug(parentTitle)
-                  : "blog";
+                const parentSeg =
+                  pagesContentService.getCorePageSegment(
+                    blogPage || "blog",
+                    loc,
+                  ) || "blog";
                 urls.push(`/${loc}/${parentSeg}/${trans.slug}`);
               }
             }

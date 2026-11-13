@@ -1,7 +1,22 @@
 import { createClient } from "@supabase/supabase-js";
 import { unstable_cache } from "next/cache";
 import { cache } from "react";
+import { toStorageProxyPath } from "@/lib/seo-utils";
 import { fetchWithRetry } from "@/lib/supabase-fetch";
+
+function normalizeAsciiLocationSlug(slug: string): string {
+  return slug
+    .toLowerCase()
+    .trim()
+    .replace(/[ıİ]/g, "i")
+    .replace(/ğ/g, "g")
+    .replace(/ü/g, "u")
+    .replace(/ş/g, "s")
+    .replace(/ö/g, "o")
+    .replace(/ç/g, "c")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
+}
 
 let serverSupabaseClient: any = null;
 
@@ -64,7 +79,15 @@ export class LocationsService {
       return [];
     }
 
-    return (data as LocationDB[]) || [];
+    return ((data as LocationDB[]) || []).map((loc) => ({
+      ...loc,
+      cover_image: loc.cover_image
+        ? toStorageProxyPath(loc.cover_image)
+        : loc.cover_image,
+      gallery_images: Array.isArray(loc.gallery_images)
+        ? loc.gallery_images.map((img) => toStorageProxyPath(img))
+        : loc.gallery_images,
+    }));
   });
 
   /**
@@ -82,7 +105,15 @@ export class LocationsService {
       return [];
     }
 
-    return (data as LocationDB[]) || [];
+    return ((data as LocationDB[]) || []).map((loc) => ({
+      ...loc,
+      cover_image: loc.cover_image
+        ? toStorageProxyPath(loc.cover_image)
+        : loc.cover_image,
+      gallery_images: Array.isArray(loc.gallery_images)
+        ? loc.gallery_images.map((img) => toStorageProxyPath(img))
+        : loc.gallery_images,
+    }));
   });
 
   /**
@@ -99,13 +130,21 @@ export class LocationsService {
       } catch {}
 
       const { generateNativeSlug } = await import("@/lib/slug-generator");
+      const asciiIncomingSlug = normalizeAsciiLocationSlug(decodedIncomingSlug);
 
       for (const loc of locations) {
         if (loc.slug === decodedIncomingSlug) return loc;
+        if (normalizeAsciiLocationSlug(loc.slug) === asciiIncomingSlug)
+          return loc;
 
         if (loc.title) {
           for (const val of Object.values(loc.title)) {
-            if (val && generateNativeSlug(val) === decodedIncomingSlug) {
+            if (!val) continue;
+            const nativeSlug = generateNativeSlug(val);
+            if (
+              nativeSlug === decodedIncomingSlug ||
+              normalizeAsciiLocationSlug(nativeSlug) === asciiIncomingSlug
+            ) {
               return loc;
             }
           }

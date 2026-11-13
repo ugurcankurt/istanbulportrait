@@ -1,5 +1,5 @@
-import { notFound } from "next/navigation";
 import NextLink from "next/link";
+import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { BlogCard } from "@/components/blog-card";
 import { BreadcrumbNav } from "@/components/breadcrumb-nav";
@@ -11,8 +11,8 @@ import {
   buildCollectionPageSchema,
   generateSeoDescription,
   getBaseUrl,
+  normalizeSchemaUrl,
 } from "@/lib/seo-utils";
-import { generateNativeSlug } from "@/lib/slug-generator";
 import type { Locale } from "@/types/blog";
 
 export async function BlogPageContent({
@@ -31,9 +31,8 @@ export async function BlogPageContent({
   const dynamicTitle = dbPage?.title?.[locale] || dbPage?.title?.en || "blog";
   const dynamicSubtitle =
     dbPage?.subtitle?.[locale] || dbPage?.subtitle?.en || "";
-  const parentSegment = dbPage?.title?.[locale]
-    ? generateNativeSlug(dbPage.title[locale] || "")
-    : "blog";
+  const parentSegment =
+    pagesContentService.getCorePageSegment(dbPage || "blog", locale) || "blog";
 
   const { posts, pagination } = await getPublishedBlogPosts({
     page,
@@ -43,20 +42,22 @@ export async function BlogPageContent({
     sort_order: "desc",
   });
 
-  if (page > 1 && pagination.totalPages > 0 && page > pagination.totalPages) {
+  if (page > 1 && page > Math.max(1, pagination.totalPages)) {
     notFound();
   }
 
   const collectionSchema = buildCollectionPageSchema({
     name: dynamicTitle,
     description: generateSeoDescription(dynamicSubtitle),
-    url: `${getBaseUrl()}/${locale}/${parentSegment}`,
+    url: normalizeSchemaUrl(`${getBaseUrl()}/${locale}/${parentSegment}`),
     items: posts.map((post) => ({
       name: post.translation.title,
       description: post.translation.excerpt
         ? generateSeoDescription(post.translation.excerpt)
         : undefined,
-      url: `${getBaseUrl()}/${locale}/${parentSegment}/${post.translation.slug}`,
+      url: normalizeSchemaUrl(
+        `${getBaseUrl()}/${locale}/${parentSegment}/${post.translation.slug}`,
+      ),
       image: post.featured_image || undefined,
     })),
   });

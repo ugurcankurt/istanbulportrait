@@ -30,14 +30,19 @@ export async function GET(request: Request) {
   const location = locationTranslations[locale] || "Istanbul, Turkey";
 
   const baseUrl = getBaseUrl();
-  const [packages, settings, activeDiscounts, packagesPage] = await Promise.all([
-    packagesService.getActivePackages(),
-    settingsService.getSettings(),
-    discountService.getActiveDiscounts(),
-    pagesContentService.getPageBySlug("packages"),
-  ]);
-  const parentTitle = packagesPage?.title?.[locale];
-  const parentSeg = (parentTitle && generateNativeSlug(parentTitle)) || "packages";
+  const [packages, settings, activeDiscounts, packagesPage] = await Promise.all(
+    [
+      packagesService.getActivePackages(),
+      settingsService.getSettings(),
+      discountService.getActiveDiscounts(),
+      pagesContentService.getPageBySlug("packages"),
+    ],
+  );
+  const parentSeg =
+    pagesContentService.getCorePageSegment(
+      packagesPage || "packages",
+      locale,
+    ) || "packages";
 
   // Fetch real Google Reviews aggregate data
   const { average, count } = await reviewsService.getAggregateRating();
@@ -236,8 +241,7 @@ export async function GET(request: Request) {
 
     // Create canonical language-specific URL
     const pkgTitleLoc = pkg.title?.[locale];
-    const pkgSeg =
-      (pkgTitleLoc && generateNativeSlug(pkgTitleLoc)) || pkg.slug;
+    const pkgSeg = (pkgTitleLoc && generateNativeSlug(pkgTitleLoc)) || pkg.slug;
     const itemUrl = encodeURI(`${baseUrl}/${locale}/${parentSeg}/${pkgSeg}`);
 
     let finalBasePrice = pkg.price;
