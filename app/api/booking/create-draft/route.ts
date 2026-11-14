@@ -1,16 +1,18 @@
+import { parsePhoneNumber } from "libphonenumber-js/min";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
 import { z } from "zod";
 import { addonsService } from "@/lib/addons-service";
 import { handleSupabaseError, logError } from "@/lib/errors";
+import { extractPhotosCount } from "@/lib/features-parser";
+import { packagesService } from "@/lib/packages-service";
 import {
   checkRateLimit,
   createRateLimitError,
   getClientIP,
 } from "@/lib/rate-limit";
 import { settingsService } from "@/lib/settings-service";
-import { parsePhoneNumber } from "libphonenumber-js/min";
 import { supabaseAdmin } from "@/lib/supabase";
 import { baseBookingSchema } from "@/lib/validations";
 
@@ -29,6 +31,129 @@ const draftSchema = baseBookingSchema
       path: ["peopleCount"],
     },
   );
+
+/**
+ * Retrieve a draft booking by ID for checkout hydration (cross-device / abandoned cart recovery)
+ */
+export async function GET(request: NextRequest) {
+  try {
+    const clientIP = getClientIP(request);
+    const rateLimit = await checkRateLimit(`booking-draft-get:${clientIP}`, {
+      windowMs: 60 * 1000,
+      maxRequests: 30,
+    });
+
+    if (!rateLimit.success) {
+      return createRateLimitError(rateLimit.resetTime);
+    }
+
+    const bookingId = request.nextUrl.searchParams.get("bookingId");
+    const localeParam = request.nextUrl.searchParams.get("locale");
+
+    const idValidation = z.string().uuid().safeParse(bookingId);
+    if (!idValidation.success) {
+      return NextResponse.json(
+        { error: "Invalid booking ID" },
+        { status: 400 },
+      );
+    }
+
+    const { data: booking, error } = await supabaseAdmin
+      .from("bookings")
+      .select(
+        "id, package_id, user_name, user_email, user_phone, booking_date, booking_time, status, total_amount, notes, locale, people_count, selected_addons, selected_addon_details, applied_promo_code, created_at",
+      )
+      .eq("id", idValidation.data)
+      .single();
+
+    if (error || !booking) {
+      return NextResponse.json(
+        { error: "Draft booking not found" },
+        { status: 404 },
+      );
+    }
+
+    if (booking.status !== "draft") {
+      return NextResponse.json(
+        {
+          error: "Booking is no longer a draft",
+          status: booking.status,
+        },
+        { status: 409 },
+      );
+    }
+
+    const effectiveLocale = localeParam || booking.locale || "en";
+    const pkg = await packagesService.getPackageBySlug(booking.package_id);
+
+    const titleMap = pkg?.title as Record<string, string> | undefined;
+    const packageDisplayName =
+      titleMap?.[effectiveLocale] || titleMap?.en || booking.package_id;
+
+    const durationMap = pkg?.duration as Record<string, string> | undefined;
+    const packageDuration =
+      durationMap?.[effectiveLocale] || durationMap?.en || "";
+
+    const featuresMap = pkg?.features as Record<string, string[]> | undefined;
+    const packageFeatures =
+      featuresMap?.[effectiveLocale] || featuresMap?.en || [];
+
+    const selectedAddons: string[] = Array.isArray(booking.selected_addons)
+      ? booking.selected_addons
+      : [];
+    const addonQuantities: Record<string, number> = {};
+
+    if (Array.isArray(booking.selected_addon_details)) {
+      for (const item of booking.selected_addon_details) {
+        if (item && typeof item === "object" && "id" in item) {
+          const id = String((item as { id: unknown }).id);
+          const qty = Number((item as { quantity?: unknown }).quantity ?? 1);
+          addonQuantities[id] = Number.isFinite(qty) && qty > 0 ? qty : 1;
+        }
+      }
+    }
+
+    for (const addonId of selectedAddons) {
+      if (!(addonId in addonQuantities)) {
+        addonQuantities[addonId] = 1;
+      }
+    }
+
+    return NextResponse.json({
+      success: true,
+      bookingData: {
+        bookingId: booking.id,
+        packageId: booking.package_id,
+        customerName: booking.user_name || "",
+        customerEmail: booking.user_email || "",
+        customerPhone: booking.user_phone || "",
+        bookingDate: booking.booking_date,
+        bookingTime: booking.booking_time,
+        notes: booking.notes || "",
+        totalAmount: Number(booking.total_amount) || 0,
+        basePrice: pkg?.price ?? (Number(booking.total_amount) || 0),
+        originalPrice: pkg?.original_price ?? undefined,
+        isPerPerson: Boolean(pkg?.is_per_person),
+        peopleCount: booking.people_count ?? 1,
+        selectedAddons,
+        addonQuantities,
+        appliedPromoCode: booking.applied_promo_code || undefined,
+        packageDisplayName,
+        packageDuration,
+        packagePhotos: extractPhotosCount(packageFeatures),
+        packageLocations: pkg?.locations ?? 1,
+        packageFeatures,
+        createdAt: booking.created_at,
+      },
+    });
+  } catch (error) {
+    logError(error, { action: "draft_get_unexpected" });
+    return NextResponse.json(
+      { error: "Failed to retrieve draft booking" },
+      { status: 500 },
+    );
+  }
+}
 
 export async function POST(request: NextRequest) {
   const _startTime = Date.now();

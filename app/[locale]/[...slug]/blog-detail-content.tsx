@@ -18,7 +18,12 @@ import {
   getPublishedBlogPosts,
   getSalvagedBlogSlug,
 } from "@/lib/blog/blog-service";
-import { formatBlogDate } from "@/lib/blog/blog-utils";
+import {
+  formatBlogDate,
+  getLocalizedCategorySlug,
+  getLocalizedTagSlug,
+} from "@/lib/blog/blog-utils";
+import { getBlogTaxonomySegment } from "@/lib/core-page-slugs";
 import { pagesContentService } from "@/lib/pages-content-service";
 import {
   buildArticleSchema,
@@ -197,7 +202,7 @@ export async function BlogDetailPageContent({
                     {post.categories.map((cat) => (
                       <NextLink
                         key={cat.category.id}
-                        href={`/${locale}/${canonicalParentSlug}/category/${cat.category.slug}`}
+                        href={`/${locale}/${canonicalParentSlug}/${getBlogTaxonomySegment("category", locale)}/${getLocalizedCategorySlug(cat.category)}`}
                         className="px-3 py-1.5 rounded-xl text-[10px] font-bold uppercase tracking-widest border-[0.5px] border-border/30 shadow-sm hover:opacity-80 transition-opacity"
                         style={{
                           backgroundColor: `${cat.category.color}15`,
@@ -221,7 +226,7 @@ export async function BlogDetailPageContent({
                     {post.tags.map((tag) => (
                       <NextLink
                         key={tag.tag.id}
-                        href={`/${locale}/${canonicalParentSlug}/tag/${tag.tag.slug}`}
+                        href={`/${locale}/${canonicalParentSlug}/${getBlogTaxonomySegment("tag", locale)}/${getLocalizedTagSlug(tag.tag)}`}
                         className="px-4 py-1.5 border-[0.5px] border-border/50 bg-muted/20 hover:bg-primary/5 rounded-xl text-[10px] font-bold uppercase tracking-widest transition-colors shadow-sm"
                       >
                         #{tag.tag.translation?.name || tag.tag.slug}

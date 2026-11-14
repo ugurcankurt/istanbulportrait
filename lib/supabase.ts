@@ -1,6 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
-import { fetchWithRetry } from "./supabase-fetch";
 import { createClientSupabaseClient } from "./supabase/client";
+import { fetchWithRetry } from "./supabase-fetch";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;

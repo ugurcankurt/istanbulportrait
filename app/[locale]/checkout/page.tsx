@@ -5,6 +5,7 @@ import { addonsService } from "@/lib/addons-service";
 import { availabilityService } from "@/lib/availability-service";
 import { discountService } from "@/lib/discount-service";
 import { getLocalizedPaths } from "@/lib/localized-url";
+import { packagesService } from "@/lib/packages-service";
 
 export async function generateMetadata({
   params,
@@ -67,11 +68,13 @@ function CheckoutSkeleton() {
 }
 
 export default async function CheckoutPage() {
-  const [timeSurcharges, allAddons, activeDiscounts] = await Promise.all([
-    availabilityService.getTimeSurcharges(),
-    addonsService.getAllAddonsAdmin(),
-    discountService.getActiveDiscounts(),
-  ]);
+  const [timeSurcharges, allAddons, activeDiscounts, activePackages] =
+    await Promise.all([
+      availabilityService.getTimeSurcharges(),
+      addonsService.getAllAddonsAdmin(),
+      discountService.getActiveDiscounts(),
+      packagesService.getActivePackages(),
+    ]);
 
   return (
     <Suspense fallback={<CheckoutSkeleton />}>
@@ -79,6 +82,7 @@ export default async function CheckoutPage() {
         timeSurcharges={timeSurcharges}
         availableAddons={allAddons}
         activeDiscounts={activeDiscounts}
+        packages={activePackages}
       />
     </Suspense>
   );

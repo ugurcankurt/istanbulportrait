@@ -37,7 +37,10 @@ import {
   trackPurchase,
 } from "@/lib/analytics";
 import type { TimeSurcharge } from "@/lib/availability-service";
+import { CORE_PAGE_LOCALIZED_SLUGS } from "@/lib/core-page-slugs";
 import type { DiscountDB } from "@/lib/discount-service";
+import { extractPhotosCount } from "@/lib/features-parser";
+import type { PackageDB } from "@/lib/packages-service";
 import { getPackagePricing, matchActiveSurcharge } from "@/lib/pricing";
 import type { BookingFormData, PackageId } from "@/lib/validations";
 import { createBookingSchema } from "@/lib/validations";
@@ -348,15 +351,18 @@ export function CheckoutForm({
   timeSurcharges = [],
   availableAddons = [],
   activeDiscounts = null,
+  packages = [],
 }: {
   timeSurcharges?: TimeSurcharge[];
   availableAddons?: AddonDB[];
   activeDiscounts?: DiscountDB[] | null;
+  packages?: PackageDB[];
 }) {
   const { formatPrice, currency } = useCurrency();
   const searchParams = useSearchParams();
   const router = useRouter();
   const locale = useLocale();
+  const packagesPath = `/${locale}/${CORE_PAGE_LOCALIZED_SLUGS.packages[locale] || "packages"}`;
   const t = useTranslations("checkout");
   const tui = useTranslations("ui");
   const tValidation = useTranslations("validation");
@@ -468,10 +474,37 @@ export function CheckoutForm({
   });
 
   useEffect(() => {
-    if (!eventId) setEventId(generateEventId());
+    setEventId((prev) => prev || generateEventId());
+  }, []);
 
-    const packageParam = searchParams.get("package") as PackageId;
-    let effectivePackageId = packageParam ? packageParam : null;
+  useEffect(() => {
+    let cancelled = false;
+
+    const bookingIdParam = searchParams.get("bookingId");
+    const packageParam = searchParams.get("package") as PackageId | null;
+
+    const applyBookingData = (
+      bookingData: BookingFormData & { bookingId?: string },
+    ) => {
+      if (bookingData.bookingId) {
+        setBookingId(String(bookingData.bookingId));
+      }
+      setPreFilledBookingData(bookingData);
+      for (const key of Object.keys(bookingData)) {
+        bookingForm.setValue(
+          key as keyof BookingFormData,
+          bookingData[key as keyof BookingFormData],
+        );
+      }
+      const nextPackageId = (packageParam || bookingData.packageId) as
+        | PackageId
+        | undefined;
+      if (nextPackageId) {
+        setSelectedPackage(nextPackageId);
+      } else {
+        router.replace(packagesPath);
+      }
+    };
 
     const storedBookingData =
       typeof window !== "undefined"
@@ -481,39 +514,89 @@ export function CheckoutForm({
     if (storedBookingData) {
       try {
         const storedData = JSON.parse(storedBookingData);
+        const matchesRequestedBooking =
+          !bookingIdParam ||
+          (storedData &&
+            typeof storedData === "object" &&
+            storedData.bookingId === bookingIdParam);
+
         if (
+          matchesRequestedBooking &&
           storedData &&
           typeof storedData === "object" &&
-          "bookingId" in storedData
+          (storedData.packageId || packageParam)
         ) {
-          setBookingId(storedData.bookingId as string);
-        }
-        const bookingData = storedData as BookingFormData;
-        setPreFilledBookingData(bookingData);
-        Object.keys(bookingData).forEach((key) => {
-          bookingForm.setValue(
-            key as keyof BookingFormData,
-            bookingData[key as keyof BookingFormData],
-          );
-        });
-        if (!effectivePackageId && bookingData.packageId) {
-          effectivePackageId = bookingData.packageId as PackageId;
+          applyBookingData(storedData);
+          return () => {
+            cancelled = true;
+          };
         }
       } catch (error) {
         console.error("Error loading booking data from sessionStorage:", error);
       }
     }
 
-    if (effectivePackageId) {
-      setSelectedPackage(effectivePackageId);
-    } else {
-      router.push(`/${locale}/packages`);
-    }
-  }, [searchParams, bookingForm, router, eventId, locale]);
+    if (bookingIdParam) {
+      const restoreDraft = async () => {
+        try {
+          const res = await fetch(
+            `/api/booking/create-draft?bookingId=${encodeURIComponent(bookingIdParam)}&locale=${encodeURIComponent(locale)}`,
+          );
+          if (cancelled) return;
 
-  // Auto-apply promo code from URL
+          if (!res.ok) {
+            const errBody = await res.json().catch(() => ({}));
+            toast.error(
+              errBody?.error ||
+                t("expired") ||
+                "Reservation expired. Please select a new time.",
+            );
+            router.replace(packagesPath);
+            return;
+          }
+
+          const data = await res.json();
+          if (cancelled) return;
+
+          if (data?.success && data?.bookingData) {
+            try {
+              sessionStorage.setItem(
+                "bookingData",
+                JSON.stringify(data.bookingData),
+              );
+            } catch {
+              // Ignore storage quota / private mode failures
+            }
+            applyBookingData(data.bookingData);
+          } else {
+            router.replace(packagesPath);
+          }
+        } catch (error) {
+          console.error("Error hydrating draft booking:", error);
+          if (!cancelled) {
+            router.replace(packagesPath);
+          }
+        }
+      };
+
+      void restoreDraft();
+      return () => {
+        cancelled = true;
+      };
+    }
+
+    router.replace(packagesPath);
+    return () => {
+      cancelled = true;
+    };
+  }, [searchParams, bookingForm, router, locale, t, packagesPath]);
+
+  // Auto-apply promo code from URL or recovered draft
   useEffect(() => {
-    const coupon = searchParams.get("coupon");
+    const coupon =
+      searchParams.get("coupon") ||
+      (preFilledBookingData as { appliedPromoCode?: string } | null)
+        ?.appliedPromoCode;
     if (
       coupon &&
       selectedPackage &&
@@ -522,7 +605,7 @@ export function CheckoutForm({
       !promoError &&
       !promoCodeInput
     ) {
-      const upperCoupon = coupon.toUpperCase();
+      const upperCoupon = String(coupon).toUpperCase();
       setPromoCodeInput(upperCoupon);
 
       const autoApply = async () => {
@@ -557,18 +640,46 @@ export function CheckoutForm({
     isLoadingPromo,
     promoError,
     promoCodeInput,
+    preFilledBookingData,
   ]);
+
+  const matchedPkg = selectedPackage
+    ? packages.find((p) => p.slug === selectedPackage)
+    : undefined;
+  const matchedTitle = matchedPkg
+    ? (matchedPkg.title as Record<string, string>)?.[locale] ||
+      (matchedPkg.title as Record<string, string>)?.en
+    : undefined;
+  const matchedDuration = matchedPkg
+    ? (matchedPkg.duration as Record<string, string>)?.[locale] ||
+      (matchedPkg.duration as Record<string, string>)?.en
+    : undefined;
+  const matchedFeatures = matchedPkg
+    ? (matchedPkg.features as Record<string, string[]>)?.[locale] ||
+      (matchedPkg.features as Record<string, string[]>)?.en
+    : undefined;
 
   const packageInfo = selectedPackage
     ? {
         name:
-          (preFilledBookingData as any)?.packageDisplayName || selectedPackage,
-        price: preFilledBookingData?.totalAmount || 0,
-        duration: (preFilledBookingData as any)?.packageDuration || "",
-        photos: (preFilledBookingData as any)?.packagePhotos || "",
-        locations: (preFilledBookingData as any)?.packageLocations || "",
-        features: ((preFilledBookingData as any)?.packageFeatures ||
-          []) as string[],
+          (preFilledBookingData as any)?.packageDisplayName ||
+          matchedTitle ||
+          selectedPackage,
+        price: preFilledBookingData?.totalAmount || matchedPkg?.price || 0,
+        duration:
+          (preFilledBookingData as any)?.packageDuration ||
+          matchedDuration ||
+          "",
+        photos:
+          (preFilledBookingData as any)?.packagePhotos ||
+          (matchedFeatures ? extractPhotosCount(matchedFeatures) : ""),
+        locations:
+          (preFilledBookingData as any)?.packageLocations ||
+          matchedPkg?.locations ||
+          "",
+        features: ((preFilledBookingData as any)?.packageFeatures?.length
+          ? (preFilledBookingData as any).packageFeatures
+          : matchedFeatures || []) as string[],
         currency: "EUR",
       }
     : null;
@@ -700,8 +811,29 @@ export function CheckoutForm({
         }),
       });
 
-      if (!bookingResponse.ok)
-        throw new Error(t("error.booking_failed") || "Booking failed");
+      if (!bookingResponse.ok) {
+        const errorData = await bookingResponse.json().catch(() => ({}));
+        if (bookingResponse.status === 409) {
+          toast.error(
+            errorData?.error ||
+              t("expired") ||
+              "Reservation expired. Please select a new time.",
+          );
+          sessionStorage.removeItem("bookingData");
+          if (selectedPackage) {
+            trackPaymentEvent(
+              selectedPackage,
+              pricingCalc.totalPrice || preFilledBookingData?.totalAmount || 0,
+              "failure",
+            );
+          }
+          router.replace(packagesPath);
+          return;
+        }
+        throw new Error(
+          errorData?.error || t("error.booking_failed") || "Booking failed",
+        );
+      }
 
       const bookingResult = await bookingResponse.json();
       setBookingId(bookingResult.booking.id);
@@ -824,7 +956,7 @@ export function CheckoutForm({
     toast.error(
       t("expired") || "Reservation expired. Please select a new time.",
     );
-    router.push(`/${locale}/packages`);
+    router.push(packagesPath);
   };
 
   return (
@@ -832,7 +964,7 @@ export function CheckoutForm({
       {/* ── Mini Header ── */}
       <header className="shrink-0 flex items-center justify-between px-4 py-3 border-b bg-background/95 backdrop-blur">
         <Link
-          href={`/${locale}/packages`}
+          href={packagesPath}
           className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
         >
           <ChevronLeft className="w-4 h-4" />

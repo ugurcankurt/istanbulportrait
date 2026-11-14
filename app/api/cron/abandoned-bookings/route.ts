@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { packagesService } from "@/lib/packages-service";
 import { sendAbandonedBookingEmail } from "@/lib/resend";
 import { settingsService } from "@/lib/settings-service";
 import { supabaseAdmin } from "@/lib/supabase";
@@ -59,28 +60,85 @@ export async function GET(request: Request) {
       });
     }
 
+    const todayStr = new Date().toLocaleDateString("en-CA", {
+      timeZone: "Europe/Istanbul",
+    });
+
+    const candidateEmails = Array.from(
+      new Set(
+        abandonedBookings
+          .map((b) => b.user_email)
+          .filter((email): email is string => Boolean(email)),
+      ),
+    );
+
+    const [packagesList, { data: confirmedMatches }] = await Promise.all([
+      packagesService.getActivePackages(),
+      candidateEmails.length > 0
+        ? supabaseAdmin
+            .from("bookings")
+            .select("user_email, booking_date")
+            .in("user_email", candidateEmails)
+            .in("status", ["confirmed", "completed"])
+            .gte("booking_date", todayStr)
+        : Promise.resolve({
+            data: [] as Array<{ user_email: string; booking_date: string }>,
+          }),
+    ]);
+
+    const packagesBySlug = new Map(packagesList.map((p) => [p.slug, p]));
+    const confirmedKeys = new Set(
+      (
+        (confirmedMatches as Array<{
+          user_email: string;
+          booking_date: string;
+        }> | null) || []
+      ).map((c) => `${String(c.user_email).toLowerCase()}::${c.booking_date}`),
+    );
+
     let successCount = 0;
+    let skippedCount = 0;
     const processedIds: string[] = [];
 
     for (const booking of abandonedBookings) {
       try {
+        const emailLower = booking.user_email
+          ? String(booking.user_email).toLowerCase()
+          : "";
+        const isExpiredDate =
+          Boolean(booking.booking_date) && booking.booking_date < todayStr;
+        const alreadyConfirmedSameDay =
+          Boolean(emailLower) &&
+          Boolean(booking.booking_date) &&
+          confirmedKeys.has(`${emailLower}::${booking.booking_date}`);
+
+        if (!emailLower || isExpiredDate || alreadyConfirmedSameDay) {
+          processedIds.push(booking.id);
+          skippedCount++;
+          continue;
+        }
+
         const locale = booking.locale || "en";
-        // Attempt to parse multilingual package name
-        const packageName = `${booking.package_id.charAt(0).toUpperCase() + booking.package_id.slice(1)} Package`;
+        const pkg = packagesBySlug.get(booking.package_id);
+        const titleMap = pkg?.title as Record<string, string> | undefined;
+        const fallbackName = booking.package_id
+          ? `${booking.package_id.charAt(0).toUpperCase() + booking.package_id.slice(1)} Package`
+          : "Photography Package";
+        const packageName = titleMap?.[locale] || titleMap?.en || fallbackName;
 
         // Send Email
         await sendAbandonedBookingEmail(
           {
             bookingId: booking.id,
             packageId: booking.package_id,
-            packageName: packageName,
+            packageName,
             customerName: booking.user_name,
             customerEmail: booking.user_email,
             customerPhone: booking.user_phone,
             bookingDate: booking.booking_date,
             bookingTime: booking.booking_time,
             totalAmount: booking.total_amount,
-            locale: locale,
+            locale,
           },
           settings,
         );
@@ -113,6 +171,7 @@ export async function GET(request: Request) {
     return NextResponse.json({
       success: true,
       processed: successCount,
+      skipped: skippedCount,
       totalFound: abandonedBookings.length,
     });
   } catch (error) {

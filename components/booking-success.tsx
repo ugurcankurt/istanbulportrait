@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Link } from "@/i18n/routing";
+import { CORE_PAGE_LOCALIZED_SLUGS } from "@/lib/core-page-slugs";
 import { DEPOSIT_PERCENTAGE } from "@/lib/pricing";
 import { type SiteSettings, settingsService } from "@/lib/settings-service";
 import { formatCurrency, localizeNumerals } from "@/lib/utils";
@@ -430,7 +431,13 @@ export function BookingSuccess({
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 rtl:gap-reverse pt-4">
               <Button
                 nativeButton={false}
-                render={<Link href={"/packages" as any} />}
+                render={
+                  <Link
+                    href={
+                      `/${CORE_PAGE_LOCALIZED_SLUGS.packages[locale] || "packages"}` as any
+                    }
+                  />
+                }
                 className="flex-1 h-11"
               >
                 {t("buttons.book_another")}

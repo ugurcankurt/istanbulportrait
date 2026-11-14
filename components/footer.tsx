@@ -1,18 +1,12 @@
 "use client";
 
 import {
-  Mail,
-  MapPin,
-  MessageCircle,
-  Phone,
-  Video,
-} from "lucide-react";
-import {
   RiFacebookCircleLine as Facebook,
   RiInstagramLine as Instagram,
   RiLinkedinBoxLine as Linkedin,
   RiYoutubeLine as Youtube,
 } from "@remixicon/react";
+import { Mail, MapPin, MessageCircle, Phone, Video } from "lucide-react";
 import Image from "next/image";
 import { useLocale, useTranslations } from "next-intl";
 import { useTheme } from "next-themes";
@@ -168,7 +162,9 @@ export function Footer({
 
           {/* Quick Links */}
           <div className="space-y-4">
-            <p className="text-sm font-serif font-semibold text-foreground tracking-wide">{t("quickLinks")}</p>
+            <p className="text-sm font-serif font-semibold text-foreground tracking-wide">
+              {t("quickLinks")}
+            </p>
             <ul className="space-y-2">
               {quickLinks.map((link) => (
                 <li key={link.href}>
@@ -186,7 +182,9 @@ export function Footer({
 
           {/* Services */}
           <div className="space-y-4">
-            <p className="text-sm font-serif font-semibold text-foreground tracking-wide">{t("services")}</p>
+            <p className="text-sm font-serif font-semibold text-foreground tracking-wide">
+              {t("services")}
+            </p>
             <ul className="space-y-2 text-sm text-muted-foreground font-light">
               {activePackages.length > 0 ? (
                 activePackages.map((pkg) => {
@@ -219,7 +217,9 @@ export function Footer({
 
           {/* Contact Info */}
           <div className="space-y-4">
-            <p className="text-sm font-serif font-semibold text-foreground tracking-wide">{tui("contact")}</p>
+            <p className="text-sm font-serif font-semibold text-foreground tracking-wide">
+              {tui("contact")}
+            </p>
             <div className="space-y-3 text-sm text-muted-foreground">
               <div className="flex items-start space-x-2 rtl:space-x-reverse">
                 <MapPin className="h-5 w-5 shrink-0" />

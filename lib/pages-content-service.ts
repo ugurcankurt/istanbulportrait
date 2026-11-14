@@ -1,8 +1,14 @@
 import { createClient } from "@supabase/supabase-js";
 import { unstable_cache } from "next/cache";
+import {
+  CORE_PAGE_LOCALIZED_SLUGS,
+  LEGACY_CORE_PAGE_SLUGS,
+} from "@/lib/core-page-slugs";
 import { toStorageProxyPath } from "@/lib/seo-utils";
 import { generateNativeSlug } from "@/lib/slug-generator";
 import { fetchWithRetry } from "@/lib/supabase-fetch";
+
+export { CORE_PAGE_LOCALIZED_SLUGS, LEGACY_CORE_PAGE_SLUGS };
 
 export interface PageTranslations {
   en: string;
@@ -54,77 +60,7 @@ const getSupabaseClient = () => {
   return serverSupabaseClient;
 };
 
-export const CORE_PAGE_LOCALIZED_SLUGS: Record<
-  string,
-  Record<string, string>
-> = {
-  packages: {
-    en: "packages",
-    tr: "paketler",
-    ar: "baqat",
-    ru: "pakety",
-    es: "paquetes",
-    zh: "taocan",
-    fr: "forfaits",
-    de: "pakete",
-    ro: "pachete",
-  },
-  locations: {
-    en: "locations",
-    tr: "mekanlar",
-    ar: "amakin",
-    ru: "lokatsii",
-    es: "ubicaciones",
-    zh: "didian",
-    fr: "lieux",
-    de: "orte",
-    ro: "locatii",
-  },
-  blog: {
-    en: "blog",
-    tr: "blog",
-    ar: "blog",
-    ru: "blog",
-    es: "blog",
-    zh: "blog",
-    fr: "blog",
-    de: "blog",
-    ro: "blog",
-  },
-  about: {
-    en: "about",
-    tr: "hakkimizda",
-    ar: "man-nahnu",
-    ru: "o-nas",
-    es: "sobre-nosotros",
-    zh: "guanyu",
-    fr: "a-propos",
-    de: "ueber-uns",
-    ro: "despre-noi",
-  },
-  contact: {
-    en: "contact",
-    tr: "iletisim",
-    ar: "ittisal",
-    ru: "kontakty",
-    es: "contacto",
-    zh: "lianxi",
-    fr: "contact",
-    de: "kontakt",
-    ro: "contact",
-  },
-  privacy: {
-    en: "privacy",
-    tr: "gizlilik",
-    ar: "khususiya",
-    ru: "konfidentsialnost",
-    es: "privacidad",
-    zh: "yinsi",
-    fr: "confidentialite",
-    de: "datenschutz",
-    ro: "confidentialitate",
-  },
-};
+const NON_LATIN_LOCALES = new Set(["ar", "ru", "zh"]);
 
 function normalizeCoreSlugVariant(value: string): string {
   return value
@@ -185,7 +121,13 @@ export function getCorePageSegment(
 
   const dbLocalized = pageOrSlug.content?.localized_slug?.[locale];
   if (typeof dbLocalized === "string" && dbLocalized.trim()) {
-    return normalizeCoreSlugVariant(generateNativeSlug(dbLocalized));
+    const trimmed = dbLocalized.trim();
+    if (NON_LATIN_LOCALES.has(locale) && /^[a-z0-9-]+$/i.test(trimmed)) {
+      return (
+        CORE_PAGE_LOCALIZED_SLUGS[pageOrSlug.slug]?.[locale] || pageOrSlug.slug
+      );
+    }
+    return generateNativeSlug(trimmed);
   }
 
   return (
@@ -237,6 +179,16 @@ export const pagesContentService = {
       const staticSlugs = CORE_PAGE_LOCALIZED_SLUGS[page.slug];
       if (staticSlugs) {
         for (const val of Object.values(staticSlugs)) {
+          if (matchesCoreSlugVariant(val, decodedSlug)) {
+            return page;
+          }
+        }
+      }
+
+      // Match legacy core page slugs (e.g., old Romanized Latin slugs) so they resolve and 308 redirect
+      const legacySlugs = LEGACY_CORE_PAGE_SLUGS[page.slug];
+      if (legacySlugs) {
+        for (const val of legacySlugs) {
           if (matchesCoreSlugVariant(val, decodedSlug)) {
             return page;
           }

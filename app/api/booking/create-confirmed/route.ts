@@ -221,6 +221,73 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Prevent slot double-booking against confirmed/completed bookings before creating Auth users or Drive folders
+    const [{ data: conflictingBookings }, { data: allPackagesForDuration }] =
+      await Promise.all([
+        supabaseAdmin
+          .from("bookings")
+          .select("id, package_id, booking_time, status")
+          .eq("booking_date", bookingDate)
+          .in("status", ["confirmed", "completed"]),
+        supabaseAdmin.from("packages").select("slug, duration"),
+      ]);
+
+    const timeToMinutes = (timeStr: string): number => {
+      const [h, m] = timeStr.split(":").map(Number);
+      return (h || 0) * 60 + (m || 0);
+    };
+    const fallbackDurations: Record<string, number> = {
+      essential: 30,
+      premium: 90,
+      luxury: 150,
+      rooftop: 60,
+    };
+    const resolveDuration = (slug: string): number => {
+      const pkgRow = (
+        allPackagesForDuration as Array<{
+          slug: string;
+          duration?: unknown;
+        }> | null
+      )?.find((p) => p.slug === slug);
+      const durStr = (
+        (pkgRow?.duration as Record<string, string> | undefined)?.en || ""
+      ).toLowerCase();
+      let mins = 0;
+      const hourMatch = durStr.match(/(\d+(?:\.\d+)?)\s*(?:hour|hr|h\b)/i);
+      const minMatch = durStr.match(/(\d+)\s*(?:min|m\b)/i);
+      if (hourMatch) mins += Math.round(parseFloat(hourMatch[1]) * 60);
+      if (minMatch) mins += parseInt(minMatch[1], 10);
+      return mins > 0 ? mins : fallbackDurations[slug] || 60;
+    };
+
+    const reqStart = timeToMinutes(bookingTime);
+    const reqEnd = reqStart + resolveDuration(packageId);
+    const hasSlotConflict = (
+      (conflictingBookings as Array<{
+        id: string;
+        package_id: string;
+        booking_time: string | null;
+      }> | null) || []
+    ).some((existing) => {
+      if (!existing.booking_time) return false;
+      if (body.bookingId && existing.id === body.bookingId) {
+        return true;
+      }
+      const existStart = timeToMinutes(existing.booking_time);
+      const existEnd = existStart + resolveDuration(existing.package_id);
+      return reqStart < existEnd && reqEnd > existStart;
+    });
+
+    if (hasSlotConflict) {
+      return NextResponse.json(
+        {
+          error:
+            "This time slot is no longer available. Please select a new time.",
+        },
+        { status: 409 },
+      );
+    }
+
     try {
       // 1. Create or retrieve Supabase Auth User
       let authUserId = null;
@@ -477,13 +544,20 @@ export async function POST(request: NextRequest) {
 
         const settings = await settingsService.getSettings();
         // addonDetails already resolved above — reuse for email
+        const titleMap = packageData?.title as
+          | Record<string, string>
+          | undefined;
+        const fallbackPackageName = `${packageId.charAt(0).toUpperCase() + packageId.slice(1)} Package`;
+        const packageName =
+          titleMap?.[locale || "en"] || titleMap?.en || fallbackPackageName;
+        const adminPackageName = titleMap?.en || packageName;
 
         await sendBookingConfirmation(
           {
             customerName,
             customerEmail,
             customerPhone,
-            packageName: `${packageId.charAt(0).toUpperCase() + packageId.slice(1)} Package`,
+            packageName,
             bookingDate,
             bookingTime,
             totalAmount,
@@ -507,7 +581,7 @@ export async function POST(request: NextRequest) {
             customerName,
             customerEmail,
             customerPhone,
-            packageName: `${packageId.charAt(0).toUpperCase() + packageId.slice(1)} Package`,
+            packageName: adminPackageName,
             bookingDate,
             bookingTime,
             totalAmount,
@@ -654,6 +728,10 @@ export async function POST(request: NextRequest) {
           status: booking.status,
           paymentId,
           peopleCount: booking.people_count,
+          selected_addon_details:
+            booking.selected_addon_details || addonDetails,
+          applied_promo_code:
+            booking.applied_promo_code || resolvedPromoCode || null,
           // GA4 User-ID for the client (only with analytics consent)
           analyticsUserId: marketingConsent ? booking.user_id || null : null,
         },

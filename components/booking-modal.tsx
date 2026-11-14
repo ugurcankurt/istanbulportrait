@@ -46,6 +46,7 @@ import {
   trackPackageAddToCart,
 } from "@/lib/analytics";
 import type { TimeSurcharge } from "@/lib/availability-service";
+import { getLocalizedCheckoutPath } from "@/lib/core-page-slugs";
 import type { DiscountDB } from "@/lib/discount-service";
 import { getPackagePricing, matchActiveSurcharge } from "@/lib/pricing";
 import { cn } from "@/lib/utils";
@@ -454,12 +455,21 @@ export function BookingModal({
 
           form.reset();
           onClose();
+          const checkoutParams = new URLSearchParams();
+          if (draftResult.bookingId) {
+            checkoutParams.set("bookingId", String(draftResult.bookingId));
+          }
+          if (data.packageId) {
+            checkoutParams.set("package", data.packageId);
+          }
           const coupon = searchParams.get("coupon");
           if (coupon) {
-            router.push(`/${locale}/checkout?coupon=${coupon}`);
-          } else {
-            router.push(`/${locale}/checkout`);
+            checkoutParams.set("coupon", coupon);
           }
+          const qs = checkoutParams.toString();
+          router.push(
+            `/${locale}${getLocalizedCheckoutPath(locale)}${qs ? `?${qs}` : ""}`,
+          );
         } catch (e) {
           console.error("Draft creation error:", e);
           sessionStorage.setItem(
@@ -484,12 +494,18 @@ export function BookingModal({
           );
           form.reset();
           onClose();
+          const checkoutParams = new URLSearchParams();
+          if (data.packageId) {
+            checkoutParams.set("package", data.packageId);
+          }
           const coupon = searchParams.get("coupon");
           if (coupon) {
-            router.push(`/${locale}/checkout?coupon=${coupon}`);
-          } else {
-            router.push(`/${locale}/checkout`);
+            checkoutParams.set("coupon", coupon);
           }
+          const qs = checkoutParams.toString();
+          router.push(
+            `/${locale}${getLocalizedCheckoutPath(locale)}${qs ? `?${qs}` : ""}`,
+          );
         } finally {
           setIsNavigating(false);
         }

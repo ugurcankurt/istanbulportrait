@@ -1219,6 +1219,11 @@ export async function getBlogCategoryBySlug(
   slug: string,
   locale: Locale = "en",
 ): Promise<BlogCategoryWithTranslation | null> {
+  let decodedSlug = slug;
+  try {
+    decodedSlug = decodeURIComponent(slug).trim();
+  } catch {}
+
   const { data, error } = await supabaseAdmin
     .from("blog_categories")
     .select(
@@ -1227,7 +1232,7 @@ export async function getBlogCategoryBySlug(
       translation:blog_category_translations!inner(name, description, locale)
     `,
     )
-    .eq("slug", slug)
+    .eq("slug", decodedSlug)
     .eq("translation.locale", locale)
     .maybeSingle();
 
@@ -1236,22 +1241,69 @@ export async function getBlogCategoryBySlug(
     return null;
   }
 
-  if (!data) {
-    if (locale !== "en") {
-      return getBlogCategoryBySlug(slug, "en");
+  if (data) {
+    // Transform array response to object matching getBlogTagBySlug & getBlogCategories
+    const category = {
+      ...data,
+      translation: Array.isArray(data.translation)
+        ? data.translation[0]
+        : data.translation,
+    };
+
+    return category as unknown as BlogCategoryWithTranslation;
+  }
+
+  const targetSlug = generateSlugFromTitle(decodedSlug);
+  const { data: allCategories, error: allError } = await supabaseAdmin
+    .from("blog_categories")
+    .select(
+      `
+      *,
+      translations:blog_category_translations(name, description, locale)
+    `,
+    );
+
+  if (allError || !allCategories) {
+    if (allError) {
+      console.error("Error fetching categories by localized slug:", allError);
     }
     return null;
   }
 
-  // Transform array response to object matching getBlogTagBySlug & getBlogCategories
-  const category = {
-    ...data,
-    translation: Array.isArray(data.translation)
-      ? data.translation[0]
-      : data.translation,
-  };
+  const matched = allCategories.find((cat: any) => {
+    if (cat.slug === decodedSlug) return true;
+    const translationsList = Array.isArray(cat.translations)
+      ? cat.translations
+      : [];
+    return translationsList.some(
+      (t: any) =>
+        t?.name &&
+        (generateSlugFromTitle(t.name) === targetSlug ||
+          t.name.toLowerCase().trim() === decodedSlug.toLowerCase()),
+    );
+  });
 
-  return category as unknown as BlogCategoryWithTranslation;
+  if (!matched) {
+    return null;
+  }
+
+  const translationsList = Array.isArray(matched.translations)
+    ? matched.translations
+    : [];
+  const selectedTranslation =
+    translationsList.find((t: any) => t.locale === locale) ||
+    translationsList.find((t: any) => t.locale === "en") ||
+    translationsList[0];
+
+  if (!selectedTranslation) {
+    return null;
+  }
+
+  const { translations: _translations, ...rest } = matched;
+  return {
+    ...rest,
+    translation: selectedTranslation,
+  } as unknown as BlogCategoryWithTranslation;
 }
 
 /**
@@ -1508,6 +1560,11 @@ export async function getBlogTagBySlug(
   slug: string,
   locale: Locale = "en",
 ): Promise<BlogTagWithTranslation | null> {
+  let decodedSlug = slug;
+  try {
+    decodedSlug = decodeURIComponent(slug).trim();
+  } catch {}
+
   const { data, error } = await supabaseAdmin
     .from("blog_tags")
     .select(
@@ -1516,7 +1573,7 @@ export async function getBlogTagBySlug(
       translation:blog_tag_translations!inner(name, locale)
     `,
     )
-    .eq("slug", slug)
+    .eq("slug", decodedSlug)
     .eq("translation.locale", locale)
     .maybeSingle();
 
@@ -1525,22 +1582,69 @@ export async function getBlogTagBySlug(
     return null;
   }
 
-  if (!data) {
-    if (locale !== "en") {
-      return getBlogTagBySlug(slug, "en");
+  if (data) {
+    // Transform array to object
+    const tag = {
+      ...data,
+      translation: Array.isArray(data.translation)
+        ? data.translation[0]
+        : data.translation,
+    };
+
+    return tag as BlogTagWithTranslation;
+  }
+
+  const targetSlug = generateSlugFromTitle(decodedSlug);
+  const { data: allTags, error: allError } = await supabaseAdmin
+    .from("blog_tags")
+    .select(
+      `
+      *,
+      translations:blog_tag_translations(name, locale)
+    `,
+    );
+
+  if (allError || !allTags) {
+    if (allError) {
+      console.error("Error fetching tags by localized slug:", allError);
     }
     return null;
   }
 
-  // Transform array to object
-  const tag = {
-    ...data,
-    translation: Array.isArray(data.translation)
-      ? data.translation[0]
-      : data.translation,
-  };
+  const matched = allTags.find((tagItem: any) => {
+    if (tagItem.slug === decodedSlug) return true;
+    const translationsList = Array.isArray(tagItem.translations)
+      ? tagItem.translations
+      : [];
+    return translationsList.some(
+      (t: any) =>
+        t?.name &&
+        (generateSlugFromTitle(t.name) === targetSlug ||
+          t.name.toLowerCase().trim() === decodedSlug.toLowerCase()),
+    );
+  });
 
-  return tag as BlogTagWithTranslation;
+  if (!matched) {
+    return null;
+  }
+
+  const translationsList = Array.isArray(matched.translations)
+    ? matched.translations
+    : [];
+  const selectedTranslation =
+    translationsList.find((t: any) => t.locale === locale) ||
+    translationsList.find((t: any) => t.locale === "en") ||
+    translationsList[0];
+
+  if (!selectedTranslation) {
+    return null;
+  }
+
+  const { translations: _translations, ...rest } = matched;
+  return {
+    ...rest,
+    translation: selectedTranslation,
+  } as BlogTagWithTranslation;
 }
 
 /**

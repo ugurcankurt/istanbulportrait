@@ -7,7 +7,16 @@ import type { Metadata } from "next";
 import {
   getBlogCategoryBySlug,
   getBlogTagBySlug,
+  getCategoryByIdWithAllTranslations,
 } from "@/lib/blog/blog-service";
+import {
+  getLocalizedCategorySlug,
+  getLocalizedTagSlug,
+} from "@/lib/blog/blog-utils";
+import {
+  getBlogTaxonomySegment,
+  resolveBlogTaxonomyType,
+} from "@/lib/core-page-slugs";
 import { locationsService } from "@/lib/locations-service";
 import { packagesService } from "@/lib/packages-service";
 import {
@@ -174,7 +183,7 @@ export async function generateMetadata(props: {
 
   // Level 3: Deep nested pages (e.g. /blog/category/fotografcilik)
   if (slugArray.length === 3 && dbPage?.slug === "blog") {
-    const type = slugArray[1]; // category or tag
+    const type = resolveBlogTaxonomyType(slugArray[1]); // category or tag
     let childSlug = slugArray[2];
     try {
       childSlug = decodeURIComponent(childSlug).trim();
@@ -185,6 +194,11 @@ export async function generateMetadata(props: {
     let isNoIndex = false;
     let categoryId: string | undefined;
     let tagId: string | undefined;
+    let canonicalChildSlug = childSlug;
+    let categoryBaseSlug = childSlug;
+    let fullCategory: Awaited<
+      ReturnType<typeof getCategoryByIdWithAllTranslations>
+    > = null;
 
     if (type === "category") {
       const category = await getBlogCategoryBySlug(
@@ -197,6 +211,9 @@ export async function generateMetadata(props: {
         return {};
       }
       categoryId = category.id;
+      categoryBaseSlug = category.slug;
+      canonicalChildSlug = getLocalizedCategorySlug(category);
+      fullCategory = await getCategoryByIdWithAllTranslations(category.id);
       dynamicTitle = category.translation?.name || category.slug;
       dynamicDesc =
         category.translation?.description ||
@@ -214,6 +231,7 @@ export async function generateMetadata(props: {
         return {};
       }
       tagId = tag.id;
+      canonicalChildSlug = getLocalizedTagSlug(tag);
       dynamicTitle = tag.translation?.name || tag.slug;
       dynamicDesc = enrichSeoDescription(
         dynamicTitle,
@@ -260,8 +278,9 @@ export async function generateMetadata(props: {
     const blogSeg =
       pagesContentService.getCorePageSegment(dbPage, params.locale) ||
       dbPage.slug;
+    const taxSeg = getBlogTaxonomySegment(type, params.locale);
     const categoryCanonical = `${encodeURI(
-      `${baseUrl}/${params.locale}/${blogSeg}/${type}/${childSlug}`,
+      `${baseUrl}/${params.locale}/${blogSeg}/${taxSeg}/${canonicalChildSlug}`,
     )}${pageQuerySuffix}`;
 
     return {
@@ -289,7 +308,12 @@ export async function generateMetadata(props: {
               const bSeg =
                 pagesContentService.getCorePageSegment(dbPage, loc) ||
                 dbPage.slug;
-              return `/${bSeg}/${type}/${childSlug}${pageQuerySuffix}`;
+              const locTaxSeg = getBlogTaxonomySegment(type, loc);
+              const locCatName = fullCategory?.translations?.[loc]?.name;
+              const locChildSlug =
+                (locCatName && generateNativeSlug(locCatName)) ||
+                categoryBaseSlug;
+              return `/${bSeg}/${locTaxSeg}/${locChildSlug}${pageQuerySuffix}`;
             }),
           },
       openGraph: constructOpenGraph(
@@ -554,14 +578,11 @@ export default async function GenericCorePage(props: {
       }
       expectedSegments.push(expectedChild);
     } else if (slugArray.length === 3) {
-      const subType = normalize(slugArray[1]);
+      const resolvedType = resolveBlogTaxonomyType(slugArray[1]);
       const taxSlug = normalize(slugArray[2]);
-      if (
-        dbPage.slug === "blog" &&
-        (subType === "category" || subType === "tag")
-      ) {
+      if (dbPage.slug === "blog" && resolvedType) {
         const exists =
-          subType === "category"
+          resolvedType === "category"
             ? await getBlogCategoryBySlug(
                 taxSlug,
                 // biome-ignore lint/suspicious/noExplicitAny: Dynamic data
@@ -573,7 +594,15 @@ export default async function GenericCorePage(props: {
                 params.locale as any,
               );
         if (exists) {
-          expectedSegments.push(subType, exists.slug || taxSlug);
+          const canonicalTaxSeg = getBlogTaxonomySegment(
+            resolvedType,
+            params.locale,
+          );
+          const canonicalChildSeg =
+            resolvedType === "category"
+              ? getLocalizedCategorySlug(exists as any)
+              : getLocalizedTagSlug(exists as any);
+          expectedSegments.push(canonicalTaxSeg, canonicalChildSeg);
         } else {
           resolvable = false;
         }
@@ -608,16 +637,15 @@ export default async function GenericCorePage(props: {
   // Level 3+ Deep nested pages
   if (slugArray.length > 2) {
     if (slugArray.length === 3 && dbPage?.slug === "blog") {
-      const type = slugArray[1];
-      if (type === "category" || type === "tag") {
+      const resolvedType = resolveBlogTaxonomyType(slugArray[1]);
+      if (resolvedType) {
         return (
           <BlogCategoryContent
             // biome-ignore lint/suspicious/noExplicitAny: Props mismatch
             params={props.params as any}
             // biome-ignore lint/suspicious/noExplicitAny: Props mismatch
             searchParams={props.searchParams as any}
-            // biome-ignore lint/suspicious/noExplicitAny: Props mismatch
-            type={type as any}
+            type={resolvedType}
             slug={slugArray[2]}
           />
         );

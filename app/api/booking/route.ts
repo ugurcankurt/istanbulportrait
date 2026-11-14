@@ -1,3 +1,4 @@
+import { parsePhoneNumber } from "libphonenumber-js/min";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import {
@@ -13,7 +14,6 @@ import {
   createRateLimitError,
   getClientIP,
 } from "@/lib/rate-limit";
-import { parsePhoneNumber } from "libphonenumber-js/min";
 import { supabaseAdmin } from "@/lib/supabase";
 import { bookingSchema } from "@/lib/validations";
 

@@ -3,6 +3,10 @@
  * Slug generation, reading time calculation, text processing
  */
 
+import {
+  CORE_PAGE_LOCALIZED_SLUGS,
+  getBlogTaxonomySegment,
+} from "@/lib/core-page-slugs";
 import { generateNativeSlug } from "@/lib/slug-generator";
 import type {
   Locale,
@@ -260,6 +264,32 @@ export function extractKeywords(
 // =============================================
 
 /**
+ * Resolve localized native slug for a blog category with fallback to base slug
+ */
+export function getLocalizedCategorySlug(category: {
+  slug: string;
+  translation?: { name?: string | null } | null;
+}): string {
+  const native = category.translation?.name
+    ? generateNativeSlug(category.translation.name)
+    : "";
+  return native || category.slug;
+}
+
+/**
+ * Resolve localized native slug for a blog tag with fallback to base slug
+ */
+export function getLocalizedTagSlug(tag: {
+  slug: string;
+  translation?: { name?: string | null } | null;
+}): string {
+  const native = tag.translation?.name
+    ? generateNativeSlug(tag.translation.name)
+    : "";
+  return native || tag.slug;
+}
+
+/**
  * Build blog post URL
  */
 export function buildBlogPostUrl(
@@ -267,7 +297,8 @@ export function buildBlogPostUrl(
   locale: Locale,
   baseUrl: string = "",
 ): string {
-  return `${baseUrl}/${locale}/blog/${slug}`;
+  const blogSeg = CORE_PAGE_LOCALIZED_SLUGS.blog[locale] || "blog";
+  return `${baseUrl}/${locale}/${blogSeg}/${slug}`;
 }
 
 /**
@@ -278,7 +309,9 @@ export function buildBlogCategoryUrl(
   locale: Locale,
   baseUrl: string = "",
 ): string {
-  return `${baseUrl}/${locale}/blog/category/${categorySlug}`;
+  const blogSeg = CORE_PAGE_LOCALIZED_SLUGS.blog[locale] || "blog";
+  const categorySeg = getBlogTaxonomySegment("category", locale);
+  return `${baseUrl}/${locale}/${blogSeg}/${categorySeg}/${categorySlug}`;
 }
 
 /**
@@ -289,7 +322,9 @@ export function buildBlogTagUrl(
   locale: Locale,
   baseUrl: string = "",
 ): string {
-  return `${baseUrl}/${locale}/blog/tag/${tagSlug}`;
+  const blogSeg = CORE_PAGE_LOCALIZED_SLUGS.blog[locale] || "blog";
+  const tagSeg = getBlogTaxonomySegment("tag", locale);
+  return `${baseUrl}/${locale}/${blogSeg}/${tagSeg}/${tagSlug}`;
 }
 
 // =============================================

@@ -8,6 +8,7 @@ import {
   RAW_PHOTOS_READY_TRANSLATIONS,
   RESCHEDULE_TRANSLATIONS,
 } from "./email-translations";
+import { getLocalizedPaths } from "./localized-url";
 import type { SiteSettings } from "./settings-service";
 
 export const getEmailColors = (settings: SiteSettings) => {
@@ -508,7 +509,24 @@ export const sendAbandonedBookingEmail = async (
       data.locale && ABANDONED_TRANSLATIONS[data.locale] ? data.locale : "en";
     const t = ABANDONED_TRANSLATIONS[locale];
 
-    const checkoutUrl = `${settings.app_base_url || process.env.NEXT_PUBLIC_APP_URL || "https://istanbulportrait.com"}/${locale}/checkout?package=${data.packageId}`;
+    const baseUrl = (
+      settings.app_base_url ||
+      process.env.NEXT_PUBLIC_APP_URL ||
+      "https://istanbulportrait.com"
+    ).replace(/\/$/, "");
+    const localizedCheckoutBase = getLocalizedPaths(
+      "/checkout",
+      baseUrl,
+    ).canonical(locale);
+    const checkoutParams = new URLSearchParams();
+    if (data.bookingId) {
+      checkoutParams.set("bookingId", data.bookingId);
+    }
+    if (data.packageId) {
+      checkoutParams.set("package", data.packageId);
+    }
+    const checkoutQs = checkoutParams.toString();
+    const checkoutUrl = `${localizedCheckoutBase}${checkoutQs ? `?${checkoutQs}` : ""}`;
 
     const content = `
       <h2 style="color: ${colors.text}; margin-top: 0; font-size: 24px;">${t.greeting.replace("{name}", data.customerName.split(" ")[0])}</h2>
@@ -896,6 +914,34 @@ export const sendAdminSelectionNotificationEmail = async (
   }
 };
 
+async function resolveBookingPackageName(
+  booking: {
+    package_name?: string;
+    package_id?: string;
+    packages?: { name?: string };
+  },
+  locale: string,
+): Promise<string> {
+  if (booking.package_name) return booking.package_name;
+  if (booking.packages?.name) return booking.packages.name;
+
+  const packageSlug = booking.package_id;
+  if (!packageSlug) return "Photography";
+
+  try {
+    const { packagesService } = await import("./packages-service");
+    const pkg = await packagesService.getPackageBySlug(packageSlug);
+    const titleMap = pkg?.title as Record<string, string> | undefined;
+    if (titleMap?.[locale]) return titleMap[locale];
+    if (titleMap?.en) return titleMap.en;
+  } catch {
+    // Fall through to formatted slug fallback
+  }
+
+  if (packageSlug === "Photography") return "Photography";
+  return `${packageSlug.charAt(0).toUpperCase() + packageSlug.slice(1)} Package`;
+}
+
 // ─── CANCELLATION NOTIFICATION ───────────────────────────────
 
 export const sendBookingCancellationEmail = async (
@@ -919,19 +965,7 @@ export const sendBookingCancellationEmail = async (
     const greetingText = t.greeting.replace("{name}", booking.user_name);
 
     // Formatting body parts
-    let formattedPackageId = booking.package_id || "Photography";
-    if (
-      typeof formattedPackageId === "string" &&
-      formattedPackageId !== "Photography"
-    ) {
-      formattedPackageId =
-        formattedPackageId.charAt(0).toUpperCase() +
-        formattedPackageId.slice(1) +
-        " Package";
-    }
-    const packageName =
-      booking.package_name ||
-      (booking.packages ? booking.packages.name : formattedPackageId);
+    const packageName = await resolveBookingPackageName(booking, locale);
     const body1Text = t.body1
       .replace("{package}", packageName)
       .replace("{date}", booking.booking_date)
@@ -1024,19 +1058,7 @@ export const sendBookingRescheduledEmail = async (
     const emailTitle = t.title;
     const greetingText = t.greeting.replace("{name}", booking.user_name);
 
-    let formattedPackageId = booking.package_id || "Photography";
-    if (
-      typeof formattedPackageId === "string" &&
-      formattedPackageId !== "Photography"
-    ) {
-      formattedPackageId =
-        formattedPackageId.charAt(0).toUpperCase() +
-        formattedPackageId.slice(1) +
-        " Package";
-    }
-    const packageName =
-      booking.package_name ||
-      (booking.packages ? booking.packages.name : formattedPackageId);
+    const packageName = await resolveBookingPackageName(booking, locale);
 
     const body1Text = t.body1
       .replace("{package}", packageName)

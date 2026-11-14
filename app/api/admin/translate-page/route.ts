@@ -24,7 +24,10 @@ export async function POST(req: Request) {
     const apiKey = settings.gemini_api_key || process.env.GEMINI_API_KEY;
     if (!apiKey) {
       return NextResponse.json(
-        { error: "Gemini API Key is not configured in Site Settings or environment." },
+        {
+          error:
+            "Gemini API Key is not configured in Site Settings or environment.",
+        },
         { status: 500 },
       );
     }

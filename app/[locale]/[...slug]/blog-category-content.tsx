@@ -11,7 +11,12 @@ import {
   getBlogTagBySlug,
   getPublishedBlogPosts,
 } from "@/lib/blog/blog-service";
-import { formatBlogDate } from "@/lib/blog/blog-utils";
+import {
+  formatBlogDate,
+  getLocalizedCategorySlug,
+  getLocalizedTagSlug,
+} from "@/lib/blog/blog-utils";
+import { getBlogTaxonomySegment } from "@/lib/core-page-slugs";
 import { pagesContentService } from "@/lib/pages-content-service";
 import {
   buildCollectionPageSchema,
@@ -50,6 +55,7 @@ export async function BlogCategoryContent({
   let dynamicSubtitle = "";
   let categoryId: string | undefined;
   let tagId: string | undefined;
+  let canonicalChildSlug = decodedSlug;
 
   if (type === "category") {
     const category = await getBlogCategoryBySlug(decodedSlug, locale);
@@ -57,13 +63,17 @@ export async function BlogCategoryContent({
     dynamicTitle = category.translation?.name || category.slug;
     dynamicSubtitle = category.translation?.description || "";
     categoryId = category.id;
+    canonicalChildSlug = getLocalizedCategorySlug(category);
   } else {
     const tag = await getBlogTagBySlug(decodedSlug, locale);
     if (!tag) notFound();
     dynamicTitle = `#${tag.translation?.name || tag.slug}`;
     dynamicSubtitle = "";
     tagId = tag.id;
+    canonicalChildSlug = getLocalizedTagSlug(tag);
   }
+
+  const canonicalTaxSegment = getBlogTaxonomySegment(type, locale);
 
   const { posts, pagination } = await getPublishedBlogPosts({
     page,
@@ -85,7 +95,7 @@ export async function BlogCategoryContent({
         name: dynamicTitle,
         description: generateSeoDescription(dynamicSubtitle),
         url: normalizeSchemaUrl(
-          `${getBaseUrl()}/${locale}/${parentSegment}/${type}/${slug}`,
+          `${getBaseUrl()}/${locale}/${parentSegment}/${canonicalTaxSegment}/${canonicalChildSlug}`,
         ),
         items: posts.map((post) => ({
           name: post.translation.title,

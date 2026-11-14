@@ -163,7 +163,9 @@ export function ThemeCustomizer({
               </p>
             </div>
             <div className="flex items-center gap-2 shrink-0">
-              <Badge className="bg-primary text-primary-foreground">Badge</Badge>
+              <Badge className="bg-primary text-primary-foreground">
+                Badge
+              </Badge>
               <Button size="sm" type="button" className="shadow-xs">
                 <Sparkles className="w-3.5 h-3.5 mr-1" />
                 Primary Button

@@ -18,7 +18,10 @@ export async function POST(req: Request) {
 
     if (!apiKey) {
       return NextResponse.json(
-        { error: "Gemini API Key is not configured in Site Settings or environment." },
+        {
+          error:
+            "Gemini API Key is not configured in Site Settings or environment.",
+        },
         { status: 500 },
       );
     }

@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { routing } from "@/i18n/routing";
+import { getBlogTaxonomySegment } from "@/lib/core-page-slugs";
 import { locationsService } from "@/lib/locations-service";
 import { packagesService } from "@/lib/packages-service";
 import { pagesContentService } from "@/lib/pages-content-service";
@@ -378,6 +379,11 @@ export default async function sitemap({
                 blogParent || "blog",
                 locale,
               ) || "blog";
+            const taxSeg = getBlogTaxonomySegment("category", locale);
+            const tName = catTranslations.find(
+              (t: any) => t.locale === locale,
+            )?.name;
+            const catSlug = (tName && generateNativeSlug(tName)) || bc.slug;
 
             const catAlternates: Record<string, string> = {};
             translatedLocales.forEach((loc: string) => {
@@ -386,8 +392,14 @@ export default async function sitemap({
                   blogParent || "blog",
                   loc,
                 ) || "blog";
+              const locTaxSeg = getBlogTaxonomySegment("category", loc);
+              const locName = catTranslations.find(
+                (t: any) => t.locale === loc,
+              )?.name;
+              const locCatSlug =
+                (locName && generateNativeSlug(locName)) || bc.slug;
               catAlternates[loc] = encodeURI(
-                `${baseUrl}/${loc}/${bSeg}/category/${bc.slug}`,
+                `${baseUrl}/${loc}/${bSeg}/${locTaxSeg}/${locCatSlug}`,
               );
             });
             if (catAlternates.en) catAlternates["x-default"] = catAlternates.en;
@@ -396,7 +408,7 @@ export default async function sitemap({
 
             sitemapData.push({
               url: encodeURI(
-                `${baseUrl}/${locale}/${pSeg}/category/${bc.slug}`,
+                `${baseUrl}/${locale}/${pSeg}/${taxSeg}/${catSlug}`,
               ),
               lastModified: new Date(
                 bc.updated_at || bc.created_at || new Date(),

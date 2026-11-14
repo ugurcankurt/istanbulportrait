@@ -444,7 +444,10 @@ export function PackageDetails({
                 </h3>
                 <ul className="grid grid-cols-1 sm:grid-cols-2 gap-y-4 sm:gap-y-5 gap-x-8 sm:gap-x-12">
                   {features.map((feature, index) => (
-                    <li key={index} className="flex items-start gap-3 sm:gap-4 group">
+                    <li
+                      key={index}
+                      className="flex items-start gap-3 sm:gap-4 group"
+                    >
                       <div className="mt-1 bg-primary/10 p-1.5 rounded-full group-hover:bg-primary/20 transition-colors shrink-0">
                         <Check className="h-3.5 w-3.5 text-primary stroke-[3]" />
                       </div>

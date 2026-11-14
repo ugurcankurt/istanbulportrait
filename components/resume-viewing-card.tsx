@@ -106,7 +106,9 @@ export function ResumeViewingCard({
       : visitedPackages;
 
   const content = (
-    <div className={cn("flex flex-col gap-3 sm:gap-4", !withContainer && "w-full")}>
+    <div
+      className={cn("flex flex-col gap-3 sm:gap-4", !withContainer && "w-full")}
+    >
       {showTitle &&
         (isMainTitle ? (
           <h2 className="font-serif text-lg sm:text-xl lg:text-2xl text-white/95 drop-shadow-md text-start tracking-tight leading-tight">

@@ -1,5 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
+import { hasMarketingConsent } from "@/lib/consent-server";
 import {
   logError,
   sanitizeErrorForProduction,
@@ -11,7 +12,6 @@ import {
   hashPhoneNumber,
   sendToFacebookConversionsAPI,
 } from "@/lib/facebook";
-import { hasMarketingConsent } from "@/lib/consent-server";
 import {
   checkRateLimit,
   createRateLimitError,

@@ -30,10 +30,10 @@ export const routing = defineRouting({
     "/account/payments": "/account/payments",
     "/checkout": {
       en: "/checkout",
-      ar: "/dafa",
-      ru: "/oplata",
+      ar: "/الدفع",
+      ru: "/оплата",
       es: "/pago",
-      zh: "/jiesuan",
+      zh: "/结算",
       fr: "/paiement",
       de: "/kasse",
       ro: "/finalizare",

@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { CORE_PAGE_LOCALIZED_SLUGS } from "@/lib/core-page-slugs";
 
 interface NotFoundContentProps {
   locale: string;
@@ -132,7 +133,7 @@ export function NotFoundContent({
                 <Link
                   href={
                     packagesHref ||
-                    (locale === "en" ? "/en/packages" : `/${locale}`)
+                    `/${locale}/${CORE_PAGE_LOCALIZED_SLUGS.packages[locale] || "packages"}`
                   }
                   className="flex items-center gap-2 sm:gap-3"
                 />

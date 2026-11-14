@@ -14,6 +14,7 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { routing } from "@/i18n/routing";
+import { getAllBlogTaxonomySegments } from "@/lib/core-page-slugs";
 import { buildBreadcrumbSchema } from "@/lib/seo-utils";
 
 interface BreadcrumbNavProps {
@@ -52,6 +53,7 @@ export function BreadcrumbNav(props: BreadcrumbNavProps) {
       taocan: "packages",
       пакеты: "packages",
       الباقات: "packages",
+      باقات: "packages",
       套餐: "packages",
       locations: "locations",
       mekanlar: "locations",
@@ -67,6 +69,8 @@ export function BreadcrumbNav(props: BreadcrumbNavProps) {
       didian: "locations",
       локации: "locations",
       المواقع: "locations",
+      مواقع: "locations",
+      أماكن: "locations",
       地点: "locations",
       blog: "blog",
       блог: "blog",
@@ -88,7 +92,9 @@ export function BreadcrumbNav(props: BreadcrumbNavProps) {
       guanyu: "about",
       "о-нас": "about",
       "من-نحن": "about",
+      حول: "about",
       关于我们: "about",
+      关于: "about",
       contact: "contact",
       iletişim: "contact",
       iletisim: "contact",
@@ -99,7 +105,9 @@ export function BreadcrumbNav(props: BreadcrumbNavProps) {
       lianxi: "contact",
       контакты: "contact",
       "اتصل-بنا": "contact",
+      اتصل: "contact",
       联系我们: "contact",
+      联系: "contact",
       privacy: "privacy",
       gizlilik: "privacy",
       "privacy-policy": "privacy",
@@ -119,9 +127,19 @@ export function BreadcrumbNav(props: BreadcrumbNavProps) {
       konfidentsialnost: "privacy",
       khususiya: "privacy",
       yinsi: "privacy",
+      конфиденциальность: "privacy",
       "политика-конфиденциальности": "privacy",
+      الخصوصية: "privacy",
       "سياسة-الخصوصية": "privacy",
       隐私政策: "privacy",
+      隐私: "privacy",
+      الدفع: "checkout",
+      دفع: "checkout",
+      оплата: "checkout",
+      结算: "checkout",
+      dafa: "checkout",
+      oplata: "checkout",
+      jiesuan: "checkout",
     };
     const pathnames = routing.pathnames as Record<string, any>;
 
@@ -178,7 +196,7 @@ export function BreadcrumbNav(props: BreadcrumbNavProps) {
       // so breadcrumbs reflect the clean hierarchy (e.g. Home > Blog > Travel)
       // and avoid producing 404 links to /blog/category and /blog/tag
       const rawSegments = pathWithoutLocale.split("/").filter(Boolean);
-      const nonPageSegments = new Set(["category", "tag"]);
+      const nonPageSegments = new Set(getAllBlogTaxonomySegments());
 
       const segments: Array<{ segment: string; fullPath: string }> = [];
       let accumulatedPath = "";

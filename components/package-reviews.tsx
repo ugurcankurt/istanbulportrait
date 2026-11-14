@@ -102,7 +102,9 @@ export function PackageReviews({
               <div className="text-5xl sm:text-6xl font-serif font-semibold text-primary leading-none tracking-tight">
                 {Number(aggregateRating.average || 0).toFixed(1)}
               </div>
-              <div className="text-lg sm:text-xl font-medium text-muted-foreground">/ 5</div>
+              <div className="text-lg sm:text-xl font-medium text-muted-foreground">
+                / 5
+              </div>
             </div>
             {renderStars(Math.round(aggregateRating.average || 5), "lg")}
             <p className="text-sm font-medium text-muted-foreground">

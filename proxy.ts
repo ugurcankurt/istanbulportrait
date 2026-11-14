@@ -128,6 +128,23 @@ export default async function proxy(request: NextRequest) {
     }
   }
 
+  // Canonicalize legacy Romanized checkout URLs to native-script checkout paths (308 Permanent Redirect)
+  const legacyCheckoutRedirects: Record<string, string> = {
+    "/ar/dafa": "/ar/الدفع",
+    "/ru/oplata": "/ru/оплата",
+    "/zh/jiesuan": "/zh/结算",
+  };
+  const normalizedPath =
+    pathname.length > 1 ? pathname.replace(/\/$/, "") : pathname;
+  const targetCheckoutPath = legacyCheckoutRedirects[normalizedPath];
+  if (targetCheckoutPath) {
+    const redirectUrl = new URL(
+      `${encodeURI(targetCheckoutPath)}${request.nextUrl.search}`,
+      request.url,
+    );
+    return applyAttributionCookies(NextResponse.redirect(redirectUrl, 308));
+  }
+
   const response = intlMiddleware(request);
   return applyAttributionCookies(response);
 }

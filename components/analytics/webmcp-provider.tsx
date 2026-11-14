@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { getLocalizedCheckoutPath } from "@/lib/core-page-slugs";
 
 /**
  * Registers client-side WebMCP (Web Model Context Protocol) tools on
@@ -286,10 +287,16 @@ export function WebMCPProvider() {
           );
 
           const checkoutParams = new URLSearchParams();
+          if (draftResult.bookingId) {
+            checkoutParams.set("bookingId", String(draftResult.bookingId));
+          }
+          if (packageId) {
+            checkoutParams.set("package", packageId);
+          }
           if (promoCode) checkoutParams.set("coupon", promoCode);
           if (autoConfirm) checkoutParams.set("autoconfirm", "1");
           const qs = checkoutParams.toString();
-          const checkoutUrl = `/${locale}/checkout${qs ? `?${qs}` : ""}`;
+          const checkoutUrl = `/${locale}${getLocalizedCheckoutPath(locale)}${qs ? `?${qs}` : ""}`;
           window.location.assign(checkoutUrl);
 
           return {

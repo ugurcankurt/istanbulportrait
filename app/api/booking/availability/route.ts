@@ -116,7 +116,8 @@ export async function GET(request: Request) {
   });
 
   const blockedSlots: string[] = [];
-  const manualBlockedMinutes = Array.from(manualBlockedSlots).map(timeToMinutes);
+  const manualBlockedMinutes =
+    Array.from(manualBlockedSlots).map(timeToMinutes);
 
   for (const slot of allSlots) {
     const requestedStart = timeToMinutes(slot);

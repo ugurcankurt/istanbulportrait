@@ -24,7 +24,7 @@ export function getLocalizedPaths(
       const localizedValue = (pathConfig as Record<string, string>)[l];
       localizedPath = localizedValue === "/" ? "" : localizedValue;
     }
-    languages[l] = `${baseUrl}/${l}${localizedPath}`;
+    languages[l] = encodeURI(`${baseUrl}/${l}${localizedPath}`);
   });
 
   // Add x-default pointing to English version
@@ -41,7 +41,7 @@ export function getLocalizedPaths(
         const localizedValue = (pathConfig as Record<string, string>)[locale];
         localizedPath = localizedValue === "/" ? "" : localizedValue;
       }
-      return `${baseUrl}/${locale}${localizedPath}`;
+      return encodeURI(`${baseUrl}/${locale}${localizedPath}`);
     },
     languages,
   };
