@@ -9,6 +9,7 @@ import {
   RESCHEDULE_TRANSLATIONS,
 } from "./email-translations";
 import { getLocalizedPaths } from "./localized-url";
+import { toStorageProxyPath } from "./seo-utils";
 import type { SiteSettings } from "./settings-service";
 
 export const getEmailColors = (settings: SiteSettings) => {
@@ -54,6 +55,39 @@ const resolveLocaleValue = (
   return dict[locale] || dict.en || Object.values(dict)[0] || fallback;
 };
 
+/**
+ * Returns the normalized canonical origin (without trailing slash) for email links and assets.
+ */
+export const getEmailBaseUrl = (settings: SiteSettings): string => {
+  const raw =
+    settings.app_base_url ||
+    process.env.NEXT_PUBLIC_APP_URL ||
+    "https://istanbulportrait.com";
+  const trimmed = raw.trim().replace(/\/+$/, "");
+  if (trimmed.startsWith("http://") || trimmed.startsWith("https://")) {
+    return trimmed;
+  }
+  return `https://${trimmed}`;
+};
+
+/**
+ * Resolves dynamic logo/asset URLs from SiteSettings into absolute first-party URLs
+ * hosted on the sending domain (e.g. `https://istanbulportrait.com/storage/...`)
+ * so email clients can load them and Resend domain alignment passes.
+ */
+export const resolveEmailAssetUrl = (
+  url: string | null | undefined,
+  baseUrl: string,
+): string => {
+  if (!url) return "";
+  const proxied = toStorageProxyPath(url.trim());
+  if (proxied.startsWith("http://") || proxied.startsWith("https://")) {
+    return proxied;
+  }
+  const normalizedPath = proxied.startsWith("/") ? proxied : `/${proxied}`;
+  return `${baseUrl}${normalizedPath}`;
+};
+
 export const renderEmailLayout = (
   content: string,
   title: string,
@@ -67,25 +101,22 @@ export const renderEmailLayout = (
   const address = resolveLocaleValue(settings.address, locale, "");
   const isDark = settings.color_mode === "dark";
 
-  // Clean the URLs to route through our own domain (to satisfy Resend Domain Verification)
-  const appBaseUrl =
-    settings.app_base_url ||
-    process.env.NEXT_PUBLIC_APP_URL ||
-    "https://istanbulportrait.com";
-  const supabasePrefix =
-    "https://xfntnamwfnqjgqmyxwfz.supabase.co/storage/v1/object/public";
+  // Resolve dynamic SiteSettings logos (whether raw Supabase URLs or `/storage/...` proxy paths)
+  // to absolute URLs on our own sending domain.
+  const appBaseUrl = getEmailBaseUrl(settings);
 
-  const cleanUrl = (url?: string | null) => {
-    if (!url) return "";
-    return url.replace(supabasePrefix, `${appBaseUrl}/storage`);
-  };
+  // Header banner sits on primary background: prefer dark-mode (light-ink) logo, fall back to logo_url
+  const headerLogo = resolveEmailAssetUrl(
+    settings.logo_dark_url || settings.logo_url,
+    appBaseUrl,
+  );
 
-  // Header Logo logic (users dark logo on primary bg)
-  const headerLogo = cleanUrl(settings.logo_dark_url);
-
-  // Footer logo logic
-  const footerLogo = cleanUrl(
-    isDark ? settings.logo_dark_url : settings.logo_url,
+  // Footer sits on email background: dark mode uses logo_dark_url, light mode uses logo_url
+  const footerLogo = resolveEmailAssetUrl(
+    (isDark ? settings.logo_dark_url : settings.logo_url) ||
+      settings.logo_url ||
+      settings.logo_dark_url,
+    appBaseUrl,
   );
 
   const socials = [];
@@ -126,7 +157,11 @@ export const renderEmailLayout = (
             <table width="600" border="0" cellspacing="0" cellpadding="0" style="background: ${colors.primary}; border-radius: 16px 16px 0 0; overflow: hidden; max-width: 100%;">
               <tr>
                 <td align="center" style="padding: 40px 20px; text-align: center;">
-                  <img src="${headerLogo}" alt="${siteName} Logo" width="180" style="display: block; margin: 0 auto; max-width: 100%;">
+                  ${
+                    headerLogo
+                      ? `<img src="${headerLogo}" alt="${siteName} Logo" width="180" style="display: block; margin: 0 auto; max-width: 100%;">`
+                      : `<span style="color: #ffffff; font-size: 24px; font-weight: bold; letter-spacing: -0.02em;">${siteName}</span>`
+                  }
                 </td>
               </tr>
             </table>
@@ -144,7 +179,11 @@ export const renderEmailLayout = (
             <table width="600" border="0" cellspacing="0" cellpadding="0" style="margin-top: 20px; max-width: 100%;">
               <tr>
                 <td align="center" style="padding: 30px; text-align: center; color: ${colors.textMuted}; font-size: 14px;">
-                  <img src="${footerLogo}" alt="${siteName} Footer" width="120" style="display: block; margin: 0 auto 15px; opacity: 0.8;">
+                  ${
+                    footerLogo
+                      ? `<img src="${footerLogo}" alt="${siteName} Footer" width="120" style="display: block; margin: 0 auto 15px; opacity: 0.8;">`
+                      : ""
+                  }
                   ${address ? `<p style="margin: 0 0 15px;">${address}</p>` : ""}
                   
                   ${
@@ -509,11 +548,7 @@ export const sendAbandonedBookingEmail = async (
       data.locale && ABANDONED_TRANSLATIONS[data.locale] ? data.locale : "en";
     const t = ABANDONED_TRANSLATIONS[locale];
 
-    const baseUrl = (
-      settings.app_base_url ||
-      process.env.NEXT_PUBLIC_APP_URL ||
-      "https://istanbulportrait.com"
-    ).replace(/\/$/, "");
+    const baseUrl = getEmailBaseUrl(settings);
     const localizedCheckoutBase = getLocalizedPaths(
       "/checkout",
       baseUrl,
@@ -607,7 +642,7 @@ export const sendNewsletterWelcomeEmail = async (
       </div>
 
       <div style="text-align: center; margin: 35px 0;">
-         <a href="${settings.app_base_url || "https://istanbulportrait.com"}/${locale}/packages" style="background-color: ${colors.primary}; color: #ffffff; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; display: inline-block;">${t.button}</a>
+         <a href="${getEmailBaseUrl(settings)}/${locale}/packages" style="background-color: ${colors.primary}; color: #ffffff; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; display: inline-block;">${t.button}</a>
       </div>
 
       <div style="text-align: center; margin-top: 40px;">
@@ -735,10 +770,7 @@ export const sendRawPhotosReadyEmail = async (
     const emailTitle = t.title.replace("{name}", booking.user_name);
     const greetingText = t.greeting.replace("{name}", booking.user_name);
 
-    const appBaseUrl =
-      settings.app_base_url ||
-      process.env.NEXT_PUBLIC_APP_URL ||
-      "https://istanbulportrait.com";
+    const appBaseUrl = getEmailBaseUrl(settings);
     const portalUrl = `${appBaseUrl}/${locale}/account`;
 
     const content = `
@@ -804,10 +836,7 @@ export const sendFinalEditsReadyEmail = async (
     const emailTitle = t.title.replace("{name}", booking.user_name);
     const greetingText = t.greeting.replace("{name}", booking.user_name);
 
-    const appBaseUrl =
-      settings.app_base_url ||
-      process.env.NEXT_PUBLIC_APP_URL ||
-      "https://istanbulportrait.com";
+    const appBaseUrl = getEmailBaseUrl(settings);
     const portalUrl = `${appBaseUrl}/${locale}/account`;
 
     const content = `
@@ -989,10 +1018,7 @@ export const sendBookingCancellationEmail = async (
       body2Text = t.body2_cash || t.body2.replace("{deposit}", "€0");
     }
 
-    const appBaseUrl =
-      settings.app_base_url ||
-      process.env.NEXT_PUBLIC_APP_URL ||
-      "https://istanbulportrait.com";
+    const appBaseUrl = getEmailBaseUrl(settings);
     const newBookingUrl = `${appBaseUrl}/${locale}/packages`;
 
     const content = `
@@ -1065,10 +1091,7 @@ export const sendBookingRescheduledEmail = async (
       .replace("{date}", booking.booking_date)
       .replace("{time}", booking.booking_time);
 
-    const appBaseUrl =
-      settings.app_base_url ||
-      process.env.NEXT_PUBLIC_APP_URL ||
-      "https://istanbulportrait.com";
+    const appBaseUrl = getEmailBaseUrl(settings);
     const newBookingUrl = `${appBaseUrl}/${locale}/packages`;
 
     const content = `
