@@ -31,6 +31,7 @@ export const getEmailColors = (settings: SiteSettings) => {
     blue: "#2563eb",
     yellow: "#eab308",
     violet: "#7c3aed",
+    christmas: isDark ? "#237a52" : "#8b152a",
   };
 
   const primaryHex = primaryColors[themeColor] || "#b45309";
@@ -100,6 +101,10 @@ export const renderEmailLayout = (
   const orgName = settings.organization_name || siteName;
   const address = resolveLocaleValue(settings.address, locale, "");
   const isDark = settings.color_mode === "dark";
+  const isChristmas = settings.theme_color === "christmas";
+  const headerBannerStyle = isChristmas
+    ? "background: linear-gradient(135deg, #641220 0%, #8b152a 58%, #133a2a 100%); border-bottom: 2px solid #d4af37; border-radius: 16px 16px 0 0; overflow: hidden; max-width: 100%;"
+    : `background: ${colors.primary}; border-radius: 16px 16px 0 0; overflow: hidden; max-width: 100%;`;
 
   // Resolve dynamic SiteSettings logos (whether raw Supabase URLs or `/storage/...` proxy paths)
   // to absolute URLs on our own sending domain.
@@ -154,7 +159,7 @@ export const renderEmailLayout = (
         <tr>
           <td align="center">
             <!-- Header Banner -->
-            <table width="600" border="0" cellspacing="0" cellpadding="0" style="background: ${colors.primary}; border-radius: 16px 16px 0 0; overflow: hidden; max-width: 100%;">
+            <table width="600" border="0" cellspacing="0" cellpadding="0" style="${headerBannerStyle}">
               <tr>
                 <td align="center" style="padding: 40px 20px; text-align: center;">
                   ${

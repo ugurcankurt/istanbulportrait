@@ -54,6 +54,9 @@ const DeferredCookieConsent = dynamic(() =>
     (mod) => mod.DeferredCookieConsent,
   ),
 );
+const FestiveParticles = dynamic(() =>
+  import("@/components/festive-particles").then((mod) => mod.FestiveParticles),
+);
 
 const fontHeading = Cormorant_Garamond({
   variable: "--font-cormorant",
@@ -334,6 +337,9 @@ export default async function LocaleLayout({
                     />
                     <FacebookPixel pixelId={settings.facebook_pixel_id} />
 
+                    {settings.theme_color === "christmas" && (
+                      <FestiveParticles />
+                    )}
                     <TopDiscountBanner discounts={activeDiscounts} />
                     <Navigation
                       dynamicNavData={dynamicNavData}

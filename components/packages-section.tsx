@@ -122,8 +122,10 @@ export function PackagesSection({
       >
         <Card
           className={cn(
-            "relative w-full aspect-[3/4] sm:aspect-[4/5] overflow-hidden bg-card border-none transition-all duration-700 hover:-translate-y-2 group-hover:shadow-luxury",
-            pkg.popular ? "shadow-luxury sm:scale-[1.02]" : "shadow-sm",
+            "relative w-full aspect-[3/4] sm:aspect-[4/5] overflow-hidden bg-card border-none transition-all duration-700 hover:-translate-y-2 group-hover:shadow-luxury christmas:ring-1 christmas:ring-[#d4af37]/20",
+            pkg.popular
+              ? "shadow-luxury sm:scale-[1.02] christmas:ring-[#d4af37]/45"
+              : "shadow-sm",
           )}
         >
           {/* Background Image */}
@@ -166,7 +168,7 @@ export function PackagesSection({
             )}
             {pkg.pricing?.isDiscounted &&
               pkg.pricing.discountPercentage > 0 && (
-                <Badge className="bg-red-600/90 backdrop-blur-md border border-red-500 text-white px-2.5 py-0.5 text-[10px] sm:text-xs tracking-wide shadow-sm font-medium">
+                <Badge className="bg-red-600/90 christmas:bg-gradient-to-r christmas:from-[#7f1d1d] christmas:to-[#991b1b] backdrop-blur-md border border-red-500 christmas:border-[#d4af37]/50 text-white px-2.5 py-0.5 text-[10px] sm:text-xs tracking-wide shadow-sm font-medium">
                   {pkg.pricing.discountName}
                 </Badge>
               )}

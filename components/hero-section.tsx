@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { getTranslations } from "next-intl/server";
+import { FestiveHeroBokeh } from "@/components/festive-hero-bokeh";
 import { HeroClientWrapper } from "@/components/hero-client-wrapper";
 import type { DiscountDB } from "@/lib/discount-service";
 
@@ -10,6 +11,7 @@ export async function HeroSection({
   activeDiscounts,
   packagesHref,
   locationsHref,
+  isChristmas = false,
 }: {
   title?: string;
   subtitle?: string;
@@ -17,6 +19,7 @@ export async function HeroSection({
   activeDiscounts?: DiscountDB[] | null;
   packagesHref?: string;
   locationsHref?: string;
+  isChristmas?: boolean;
 } = {}) {
   const tui = await getTranslations("ui");
 
@@ -41,6 +44,8 @@ export async function HeroSection({
         {/* Modern Gradient Overlay */}
         <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/30 to-black/70" />
       </div>
+
+      {isChristmas && <FestiveHeroBokeh />}
 
       {/* Content Wrapper */}
       <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 md:py-16 lg:py-20 flex lg:justify-start">

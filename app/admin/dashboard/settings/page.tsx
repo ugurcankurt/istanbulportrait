@@ -118,6 +118,27 @@ export default function SettingsPage() {
     }
   };
 
+  const handleQuickThemeSave = async (nextThemeColor: string) => {
+    setSettings((prev) => ({ ...prev, theme_color: nextThemeColor }));
+    try {
+      const response = await fetch("/api/admin/settings", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ theme_color: nextThemeColor }),
+      });
+
+      if (!response.ok) throw new Error("Failed to update theme");
+
+      toast.success(
+        nextThemeColor === "christmas"
+          ? "Christmas Season Mode activated and published!"
+          : `Christmas Mode disabled. Restored "${nextThemeColor}" theme.`,
+      );
+    } catch (_error) {
+      toast.error("Could not save seasonal theme setting.");
+    }
+  };
+
   const updateSetting = (key: keyof SiteSettings, value: any) => {
     setSettings((prev) => ({ ...prev, [key]: value }));
   };
@@ -240,6 +261,7 @@ export default function SettingsPage() {
             onThemeChange={(v) => updateSetting("theme_color", v)}
             colorMode={settings.color_mode}
             onColorModeChange={(v) => updateSetting("color_mode", v)}
+            onQuickThemeSave={handleQuickThemeSave}
           />
         </div>
 

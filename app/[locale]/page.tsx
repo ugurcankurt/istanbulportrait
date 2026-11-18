@@ -318,6 +318,7 @@ export default async function HomePage({
           activeDiscounts={activeDiscounts}
           packagesHref={`/${packagesParentSlug}`}
           locationsHref={`/${locationsParentSlug}`}
+          isChristmas={settings.theme_color === "christmas"}
         />
 
         <div>

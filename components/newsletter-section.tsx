@@ -88,10 +88,10 @@ export function NewsletterSection() {
   return (
     <section className="relative py-16 sm:py-24">
       <div className="container relative z-10 px-4 max-w-5xl mx-auto">
-        <Card className="relative overflow-hidden border border-white/20 dark:border-white/10 bg-background/40 backdrop-blur-3xl shadow-xl">
+        <Card className="relative overflow-hidden border border-white/20 dark:border-white/10 christmas:border-[#d4af37]/25 bg-background/40 backdrop-blur-3xl shadow-xl">
           {/* Subtle glowing accents */}
-          <div className="absolute top-0 right-0 -mr-24 -mt-24 w-72 h-72 bg-primary/5 blur-[120px] rounded-full pointer-events-none" />
-          <div className="absolute bottom-0 left-0 -ml-24 -mb-24 w-72 h-72 bg-primary/5 blur-[120px] rounded-full pointer-events-none" />
+          <div className="absolute top-0 right-0 -mr-24 -mt-24 w-72 h-72 bg-primary/5 christmas:bg-[#d4af37]/10 blur-[120px] rounded-full pointer-events-none" />
+          <div className="absolute bottom-0 left-0 -ml-24 -mb-24 w-72 h-72 bg-primary/5 christmas:bg-[#881337]/10 blur-[120px] rounded-full pointer-events-none" />
 
           <CardContent className="p-8 sm:p-12 md:p-16 relative z-10">
             <div className="text-center mb-10 space-y-4">

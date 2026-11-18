@@ -3,6 +3,7 @@
 @import "shadcn/tailwind.css";
 
 @custom-variant dark (&:is(.dark *));
+@custom-variant christmas (&:is(.theme-christmas *));
 
 @theme inline {
   --color-background: var(--background);
@@ -566,6 +567,54 @@
   --ring: oklch(0.74 0.18 290);
 }
 
+/* 14. Christmas (Winter Velvet Luxury: Velvet Ruby, Champagne Gold & Pine) */
+.theme-christmas {
+  --background: oklch(0.988 0.005 75);
+  --foreground: oklch(0.18 0.015 25);
+  --primary: oklch(0.44 0.185 18);
+  --primary-foreground: oklch(0.985 0.006 80);
+  --secondary: oklch(0.955 0.01 75);
+  --muted: oklch(0.955 0.01 75);
+  --accent: oklch(0.95 0.014 75);
+  --border: oklch(0.905 0.016 72);
+  --input: oklch(0.905 0.016 72);
+  --sidebar-primary: oklch(0.44 0.185 18);
+  --sidebar-primary-foreground: oklch(0.985 0.006 80);
+  --ring: oklch(0.72 0.12 78);
+  --sale: oklch(0.47 0.2 18);
+  --festive-gold: oklch(0.76 0.13 78);
+  --festive-pine: oklch(0.38 0.1 155);
+  --festive-ruby: oklch(0.44 0.185 18);
+}
+
+.dark .theme-christmas,
+.dark.theme-christmas {
+  --background: oklch(0.135 0.013 155);
+  --foreground: oklch(0.96 0.008 80);
+  --card: oklch(0.17 0.013 155);
+  --card-foreground: oklch(0.96 0.008 80);
+  --popover: oklch(0.17 0.013 155);
+  --popover-foreground: oklch(0.96 0.008 80);
+  --primary: oklch(0.56 0.145 153);
+  --primary-foreground: oklch(0.985 0.006 85);
+  --secondary: oklch(0.215 0.014 155);
+  --secondary-foreground: oklch(0.96 0.008 80);
+  --muted: oklch(0.215 0.014 155);
+  --muted-foreground: oklch(0.7 0.014 75);
+  --accent: oklch(0.22 0.016 155);
+  --accent-foreground: oklch(0.96 0.008 80);
+  --border: oklch(0.265 0.018 150);
+  --input: oklch(0.265 0.018 150);
+  --sidebar: oklch(0.15 0.013 155);
+  --sidebar-primary: oklch(0.56 0.145 153);
+  --sidebar-primary-foreground: oklch(0.985 0.006 85);
+  --ring: oklch(0.64 0.14 153);
+  --sale: oklch(0.55 0.21 20);
+  --festive-gold: oklch(0.82 0.14 78);
+  --festive-pine: oklch(0.56 0.145 153);
+  --festive-ruby: oklch(0.55 0.21 20);
+}
+
 /* Custom scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
@@ -759,4 +808,78 @@ textarea {
 .animate-marquee {
   animation: marquee 30s linear infinite;
   will-change: transform;
+}
+
+/* ========================================
+   Festive Christmas Snow & Champagne Bokeh
+   GPU-composited, zero main-thread loop
+   ======================================== */
+@keyframes festiveSnowfall {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, -8vh, 0) scale(0.85);
+  }
+  12% {
+    opacity: var(--flake-opacity, 0.55);
+  }
+  50% {
+    transform: translate3d(var(--drift-mid, 14px), 48vh, 0) scale(1);
+  }
+  88% {
+    opacity: var(--flake-opacity, 0.55);
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(var(--drift-end, -10px), 108vh, 0) scale(0.9);
+  }
+}
+
+@keyframes festiveBokehFloat {
+  0%,
+  100% {
+    opacity: var(--bokeh-min, 0.22);
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    opacity: var(--bokeh-max, 0.48);
+    transform: translate3d(var(--bokeh-x, 12px), var(--bokeh-y, -16px), 0) scale(1.08);
+  }
+}
+
+@keyframes festiveTwinkle {
+  0%,
+  100% {
+    opacity: 0.15;
+    transform: scale(0.75) rotate(0deg);
+  }
+  50% {
+    opacity: 0.75;
+    transform: scale(1.15) rotate(12deg);
+  }
+}
+
+.festive-snowflake {
+  animation: festiveSnowfall var(--fall-duration, 16s) linear infinite;
+  animation-delay: var(--fall-delay, 0s);
+  will-change: transform, opacity;
+}
+
+.festive-bokeh {
+  animation: festiveBokehFloat var(--bokeh-duration, 10s) ease-in-out infinite;
+  animation-delay: var(--bokeh-delay, 0s);
+  will-change: transform, opacity;
+}
+
+.festive-twinkle {
+  animation: festiveTwinkle var(--twinkle-duration, 5s) ease-in-out infinite;
+  animation-delay: var(--twinkle-delay, 0s);
+  will-change: transform, opacity;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .festive-snowflake,
+  .festive-bokeh,
+  .festive-twinkle {
+    animation: none !important;
+  }
 }

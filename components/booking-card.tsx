@@ -278,7 +278,7 @@ export function BookingCard({
         "overflow-hidden bg-card p-0 transition-all duration-700 relative",
         isFlat
           ? "border-none shadow-none"
-          : "shadow-[0_8px_40px_-12px_rgba(0,0,0,0.1)] rounded-3xl border border-white/20 dark:border-white/10 bg-background/40 backdrop-blur-3xl",
+          : "shadow-[0_8px_40px_-12px_rgba(0,0,0,0.1)] rounded-3xl border border-white/20 dark:border-white/10 christmas:border-[#d4af37]/25 bg-background/40 backdrop-blur-3xl",
       )}
     >
       <CardContent
@@ -317,7 +317,7 @@ export function BookingCard({
                   </span>
                   {pricing.discountPercentage &&
                     pricing.discountPercentage > 0 && (
-                      <Badge className="bg-red-600 backdrop-blur-md text-white border border-red-500 font-serif tracking-widest uppercase text-xs px-3 py-1 shadow-sm ml-2">
+                      <Badge className="bg-red-600 christmas:bg-gradient-to-r christmas:from-[#7f1d1d] christmas:to-[#991b1b] backdrop-blur-md text-white border border-red-500 christmas:border-[#d4af37]/50 font-serif tracking-widest uppercase text-xs px-3 py-1 shadow-sm ml-2">
                         {tui("save_percentage", {
                           percentage: Math.round(
                             pricing.discountPercentage * 100,

@@ -134,7 +134,7 @@ export function Navigation({ dynamicNavData = {}, settings }: NavigationProps) {
   return (
     <header
       data-nosnippet
-      className="sticky top-0 z-50 w-full border-b border-white/10 dark:border-white/5 bg-background/60 backdrop-blur-md shadow-sm supports-[backdrop-filter]:bg-background/40"
+      className="sticky top-0 z-50 w-full border-b border-white/10 dark:border-white/5 christmas:border-[#d4af37]/25 bg-background/60 backdrop-blur-md shadow-sm supports-[backdrop-filter]:bg-background/40"
     >
       <div className="container mx-auto flex h-14 sm:h-16 items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Logo */}
