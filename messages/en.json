@@ -31,7 +31,7 @@
     "sectionTitle": "Get In Touch",
     "sectionDescription": "Ready to book your Istanbul photoshoot? Let's discuss your photography needs and create something beautiful together",
     "cta_description": "Ready to capture your memories in Istanbul? Browse our packages and book your session directly online.",
-    "experience_description": "8+ years of experience capturing Istanbul's beauty",
+    "experience_description": "10+ years of experience capturing Istanbul's beauty",
     "premium_locations": "Premium Locations",
     "locations_description": "Rooftops, historic landmarks, and hidden gems",
     "professional_quality": "Professional Quality",
@@ -298,7 +298,7 @@
     "payment": "Payment",
     "response_time_desc": "We typically respond to inquiries within 24 hours.",
     "booking_process_desc": "After your inquiry, we'll schedule a consultation to discuss your vision and finalize details.",
-    "payment_desc": "Full payment required online at the time of booking to secure your date.",
+    "payment_desc": "No upfront deposit required — book online and pay in cash on the day of your photoshoot.",
     "professional_photographer": "Professional photographer",
     "professional_photographer_in_istanbul": "Professional photographer in Istanbul",
     "portrait_photography": "Portrait Photography",
@@ -416,7 +416,7 @@
     "pre_session_contact": "Pre-Session Contact",
     "contact_description": "We'll contact you 24 hours before your session to confirm details",
     "photo_delivery": "Photo Delivery",
-    "delivery_description": "Your edited photos will be delivered within 5-7 business days",
+    "delivery_description": "Your edited photos will be delivered within 48 hours",
     "have_questions": "Have Questions?",
     "bullet_professional": "• Professional photographer included",
     "bullet_photos": "• High-resolution edited photos",
@@ -552,7 +552,7 @@
     "author": {
       "about_title": "About the Author",
       "name": "Istanbul Photographer",
-      "bio": "Professional photographer specializing in portrait, couple, and lifestyle photography in Istanbul. With over 8 years of experience, capturing timeless memories against the city's most iconic backdrops.",
+      "bio": "Professional photographer specializing in portrait, couple, and lifestyle photography in Istanbul. With over 10 years of experience, capturing timeless memories against the city's most iconic backdrops.",
       "follow": "Follow on Instagram"
     },
     "summary": {

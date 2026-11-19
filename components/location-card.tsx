@@ -14,6 +14,7 @@ interface LocationCardProps {
   index: number;
   parentSlug?: string;
   priority?: boolean;
+  headingLevel?: "h2" | "h3";
 }
 
 export function LocationCard({
@@ -21,7 +22,9 @@ export function LocationCard({
   index,
   parentSlug,
   priority,
+  headingLevel = "h3",
 }: LocationCardProps) {
+  const HeadingTag = headingLevel;
   const locale = useLocale();
   const t = useTranslations("locations");
 
@@ -89,9 +92,9 @@ export function LocationCard({
 
             {/* Location Name on Image - Bottom Left */}
             <div className="absolute bottom-2 sm:bottom-3 left-2 sm:left-3 right-2 sm:right-3">
-              <h3 className="text-white text-base sm:text-lg lg:text-xl font-serif font-normal drop-shadow-lg tracking-tight">
+              <HeadingTag className="text-white text-base sm:text-lg lg:text-xl font-serif font-normal drop-shadow-lg tracking-tight">
                 {dynamicTitle}
-              </h3>
+              </HeadingTag>
             </div>
           </div>
 

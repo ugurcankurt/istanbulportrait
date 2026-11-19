@@ -24,7 +24,6 @@ const PUBLIC_SETTINGS_COLUMNS = [
   "organization_founding_date",
   "founder_name",
   "founder_image_url",
-  "ai_search_config",
   "theme_color",
   "color_mode",
   "city",
@@ -355,6 +354,7 @@ export const settingsService = {
   toPublicSettings(settings: SiteSettings): SiteSettings {
     return {
       ...settings,
+      ai_search_config: {},
       resend_api_key: null,
       resend_audience_id: null,
       custom_head_scripts: null,

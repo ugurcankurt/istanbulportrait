@@ -72,6 +72,7 @@ export async function LocationsPageContent({
                 location={location}
                 index={index}
                 parentSlug={parentSegment}
+                headingLevel="h2"
               />
             ))}
           </div>

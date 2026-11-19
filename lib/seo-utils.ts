@@ -159,7 +159,7 @@ export function enrichSeoDescription(
   // Curated descriptions by page slug and locale
   const defaults: Record<string, Record<string, string>> = {
     packages: {
-      en: "Explore our Istanbul photoshoot packages and transparent EUR pricing. Rooftop sessions, flying dress, couples, families, and solo traveler shoots with same-day delivery.",
+      en: "Explore our Istanbul photoshoot packages and transparent EUR pricing. Rooftop sessions, flying dress, couples, families, and solo traveler shoots with 48h delivery.",
       tr: "İstanbul profesyonel fotoğraf çekimi paketleri ve güncel fiyatları. Çatı terası, uçan elbise, çift, aile ve evlilik teklifi çekimlerinde aynı gün teslim.",
       ar: "استكشف باقات جلسات التصوير الاحترافية في إسطنبول بأسعار شفافة. جلسات أسطح المنازل، الفستان الطائر، والأزواج مع تسليم سريع للصور.",
       ru: "Пакеты профессиональных фотосессий в Стамбуле: фотосессии на крыше, в летящем платье, для пар и семей. Прозрачные цены и быстрая передача фото.",
@@ -355,6 +355,27 @@ export function normalizeSchemaUrl(url: string | null | undefined): string {
   }
 }
 
+/**
+ * Strips Google Translate wrapper markers ("(Translated by Google)", "(Original) ...")
+ * and cleanly truncates review body text at a natural sentence or word boundary.
+ */
+function cleanReviewText(
+  rawText: string | null | undefined,
+  maxLength = 350,
+  locale?: string,
+): string {
+  if (!rawText) return "";
+  let cleaned = rawText
+    .replace(/^\s*\(Translated by Google\)\s*/i, "")
+    .replace(/\s*\(Original\)[\s\S]*$/i, "")
+    .replace(/\s+/g, " ")
+    .trim();
+  if (!cleaned) {
+    cleaned = rawText.replace(/\s+/g, " ").trim();
+  }
+  return generateSeoDescription(cleaned, maxLength, locale) || cleaned;
+}
+
 export function buildLocalBusinessSchema(
   settings: SiteSettings,
   priceRange?: string,
@@ -365,6 +386,7 @@ export function buildLocalBusinessSchema(
   locale?: string,
   packages?: any[],
   packagesParentSlug?: string,
+  discountPercentage?: number,
 ) {
   const imageUrl = resolveSchemaImage(
     coverImage || settings.logo_url || settings.default_og_image_url,
@@ -469,8 +491,7 @@ export function buildLocalBusinessSchema(
           name: r.author?.name || "Customer",
         },
         datePublished: r.date ? r.date.split("T")[0] : undefined,
-        reviewBody:
-          r.text.length > 350 ? `${r.text.slice(0, 347).trim()}...` : r.text,
+        reviewBody: cleanReviewText(r.text, 350, locale),
         reviewRating: {
           "@type": "Rating",
           bestRating: "5",
@@ -492,11 +513,7 @@ export function buildLocalBusinessSchema(
         const pkgDesc =
           pkg.description?.[locale || "en"] || pkg.description?.en || "";
         const cleanPkgDesc = pkgDesc
-          ? pkgDesc
-              .replace(/<[^>]*>?/gm, " ")
-              .replace(/\s+/g, " ")
-              .trim()
-              .substring(0, 200)
+          ? generateSeoDescription(pkgDesc, 200, locale) || ""
           : "";
         const pkgCover = pkg.cover_image || pkg.gallery_images?.[0];
         const pkgImageUrl = resolveSchemaImage(pkgCover);
@@ -507,12 +524,22 @@ export function buildLocalBusinessSchema(
         const pkgUrl = encodeURI(
           `${baseUrl}/${locale || "en"}/${parentSeg}/${pkgSeg}`,
         );
+        const discountFraction =
+          discountPercentage && discountPercentage > 0
+            ? discountPercentage > 1
+              ? discountPercentage / 100
+              : discountPercentage
+            : 0;
+        const effectivePrice =
+          discountFraction > 0 && typeof pkg.price === "number"
+            ? Number((pkg.price * (1 - discountFraction)).toFixed(2))
+            : pkg.price;
 
         return {
           "@type": "Offer",
           name: pkgTitle,
           url: pkgUrl,
-          price: pkg.price,
+          price: effectivePrice,
           priceCurrency: "EUR",
           availability: "https://schema.org/InStock",
           ...(pkgImageUrl ? { image: pkgImageUrl } : {}),
@@ -778,8 +805,7 @@ export function buildServiceSchema({
           name: r.author?.name || "Customer",
         },
         datePublished: r.date ? r.date.split("T")[0] : undefined,
-        reviewBody:
-          r.text.length > 300 ? `${r.text.slice(0, 297).trim()}...` : r.text,
+        reviewBody: cleanReviewText(r.text, 300, locale),
         reviewRating: {
           "@type": "Rating",
           bestRating: "5",

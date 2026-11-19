@@ -196,7 +196,10 @@ export async function BlogDetailPageContent({
           </div>
 
           {/* Author Bio */}
-          <BlogAuthor author={post.author} siteSettings={settings} />
+          <BlogAuthor
+            author={post.author}
+            siteSettings={settingsService.toPublicSettings(settings)}
+          />
 
           {/* Categories & Tags */}
           <footer className="mt-12 pt-8 border-t section-contain-auto">

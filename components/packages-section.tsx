@@ -28,6 +28,7 @@ interface PackagesSectionProps {
   dbPackages?: PackageDB[];
   parentSlug?: string;
   activeDiscounts?: DiscountDB[] | null;
+  cardHeadingLevel?: "h2" | "h3";
 }
 
 export function PackagesSection({
@@ -37,7 +38,9 @@ export function PackagesSection({
   dbPackages = [],
   parentSlug,
   activeDiscounts = null,
+  cardHeadingLevel,
 }: PackagesSectionProps) {
+  const HeadingTag = cardHeadingLevel ?? (header ? "h3" : "h2");
   const t = useTranslations("packages");
   const tui = useTranslations("ui");
   const locale = useLocale();
@@ -177,9 +180,9 @@ export function PackagesSection({
           {/* Footer Content Area Overlaid on Image */}
           <div className="absolute inset-0 z-10 flex flex-col justify-end p-4 sm:p-5">
             {asHeading ? (
-              <h3 className="text-xl sm:text-2xl lg:text-[1.625rem] font-serif font-normal text-white line-clamp-2 mb-2 leading-tight drop-shadow-md tracking-tight">
+              <HeadingTag className="text-xl sm:text-2xl lg:text-[1.625rem] font-serif font-normal text-white line-clamp-2 mb-2 leading-tight drop-shadow-md tracking-tight">
                 {pkg.name}
-              </h3>
+              </HeadingTag>
             ) : (
               <div className="text-xl sm:text-2xl lg:text-[1.625rem] font-serif font-normal text-white line-clamp-2 mb-2 leading-tight drop-shadow-md tracking-tight">
                 {pkg.name}

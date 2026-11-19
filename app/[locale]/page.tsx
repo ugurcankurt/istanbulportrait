@@ -38,7 +38,6 @@ import { pagesContentService } from "@/lib/pages-content-service";
 import { calculateDiscountedPrice } from "@/lib/pricing";
 import { reviewsService } from "@/lib/reviews-service";
 import {
-  buildFAQSchema,
   buildImageGallerySchema,
   buildLocalBusinessSchema,
   constructOpenGraph,
@@ -255,14 +254,19 @@ export default async function HomePage({
 
   const dynamicFaqs = getDynamicFaqs();
 
-  // Dynamic Price Range Calculation for LocalBusiness Schema (Google guidelines)
+  // Compute active discount percentage once for consistent LocalBusiness priceRange & OfferCatalog pricing
+  let activeDiscountPct = 0;
   let priceRangeStr: string | undefined;
   if (activePackages && activePackages.length > 0) {
-    const prices = activePackages
-      .map((p) => {
-        const discounted = calculateDiscountedPrice(p.price, activeDiscounts);
-        return discounted?.price || p.price;
-      })
+    const discountedResults = activePackages.map((p) =>
+      calculateDiscountedPrice(p.price, activeDiscounts),
+    );
+    activeDiscountPct = discountedResults.reduce(
+      (max, r) => Math.max(max, r?.discountPercentage || 0),
+      0,
+    );
+    const prices = discountedResults
+      .map((r, idx) => r?.price || activePackages[idx].price)
       .filter((p) => !Number.isNaN(p) && p > 0);
     if (prices.length > 0) {
       const minPrice = Math.min(...prices);
@@ -339,13 +343,17 @@ export default async function HomePage({
           locale,
           activePackages,
           packagesParentSlug,
+          activeDiscountPct,
         )}
       />
       {activePackages && activePackages.length > 0 && (
         <SchemaInjector
           schema={buildImageGallerySchema({
-            name: `${settings.site_name || "Istanbul Portrait"} Photoshoot Portfolio`,
-            description: `${settings.site_name || "Istanbul Portrait"} professional photography portfolio in Istanbul`,
+            name: `${settings.site_name || "Istanbul Portrait"} — ${getDynamicTitle("home-portfolio", tGallery("title"))}`,
+            description: getDynamicSubtitle(
+              "home-portfolio",
+              tGallery("subtitle"),
+            ),
             url: `${getBaseUrl()}/${locale}`,
             images: activePackages
               .flatMap((pkg) => {
@@ -354,14 +362,14 @@ export default async function HomePage({
                 if (pkg.cover_image) {
                   list.push({
                     url: pkg.cover_image,
-                    caption: `${pkgTitle} in Istanbul`,
+                    caption: pkgTitle,
                   });
                 }
                 if (pkg.gallery_images && Array.isArray(pkg.gallery_images)) {
                   pkg.gallery_images.slice(0, 2).forEach((src) => {
                     list.push({
                       url: src,
-                      caption: `${pkgTitle} Photography Portfolio`,
+                      caption: pkgTitle,
                     });
                   });
                 }
@@ -370,9 +378,6 @@ export default async function HomePage({
               .slice(0, 12),
           })}
         />
-      )}
-      {dynamicFaqs && dynamicFaqs.length > 0 && (
-        <SchemaInjector schema={buildFAQSchema(dynamicFaqs)} />
       )}
 
       <div className="overflow-hidden">
@@ -502,7 +507,7 @@ export default async function HomePage({
 
         <div className="section-contain-auto">
           <FAQSection
-            dynamicFaqs={getDynamicFaqs()}
+            dynamicFaqs={dynamicFaqs}
             header={
               <div key="faq-header" className="text-left mb-6 sm:mb-8">
                 <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif font-normal tracking-tight leading-tight mb-2 sm:mb-3">

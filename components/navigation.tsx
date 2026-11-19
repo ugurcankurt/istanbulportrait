@@ -228,7 +228,7 @@ export function Navigation({ dynamicNavData = {}, settings }: NavigationProps) {
                 buttonVariants({ variant: "ghost", size: "sm" }),
                 "h-9 px-3 hover:bg-muted/50 hover:scale-105 active:scale-95 transition-all duration-200 gap-2 border border-transparent hover:border-border/50",
               )}
-              aria-label="Change language or currency"
+              aria-label={`${locale.toUpperCase()} / ${currency} — ${t("selectLanguage")}`}
             >
               <div className="flex items-center gap-1.5">
                 <span className="text-lg leading-none">

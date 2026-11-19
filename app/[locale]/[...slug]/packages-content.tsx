@@ -6,7 +6,6 @@ const PackagesSection = dynamic(() =>
   import("@/components/packages-section").then((mod) => mod.PackagesSection),
 );
 
-import { GygActivitiesSection } from "@/components/gyg-activities-section";
 import { SchemaInjector } from "@/components/schema-injector";
 import { discountService } from "@/lib/discount-service";
 import { packagesService } from "@/lib/packages-service";
@@ -80,9 +79,9 @@ export async function PackagesPageContent({
           dbPackages={dbPackages}
           parentSlug={parentSegment}
           activeDiscounts={activeDiscounts}
+          cardHeadingLevel="h2"
         />
       </div>
-      <GygActivitiesSection />
     </div>
   );
 }

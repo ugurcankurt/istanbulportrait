@@ -13,7 +13,7 @@ export function ContactSection({ settings }: { settings?: any } = {}) {
 
   const addressString =
     settings?.address?.[locale] || settings?.address?.en || t("info.location");
-  const mapUrl = `https://maps.google.com/maps?q=${encodeURIComponent(addressString)}&t=&z=14&ie=UTF8&iwloc=&output=embed`;
+  const mapUrl = `https://maps.google.com/maps?q=${encodeURIComponent(addressString)}&hl=${encodeURIComponent(locale)}&t=&z=14&ie=UTF8&iwloc=&output=embed`;
 
   return (
     <section className="py-8 sm:py-12 bg-gradient-to-b from-background to-muted/20">
@@ -24,7 +24,7 @@ export function ContactSection({ settings }: { settings?: any } = {}) {
             <Card className="h-full flex flex-col rounded-[2rem] border border-white/20 dark:border-white/10 bg-background/40 backdrop-blur-3xl transition-all duration-500 shadow-xl hover:shadow-2xl">
               <CardHeader className="px-8 lg:px-12 pt-8 lg:pt-12 pb-6">
                 <CardTitle className="text-3xl sm:text-4xl font-serif font-normal text-center lg:text-left text-primary leading-tight tracking-tight">
-                  {tui("contact_information")}
+                  <h2>{tui("contact_information")}</h2>
                 </CardTitle>
               </CardHeader>
               <CardContent className="flex-1 px-8 lg:px-12 pb-8 lg:pb-12 pt-0">

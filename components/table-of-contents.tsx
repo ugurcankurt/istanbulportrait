@@ -80,9 +80,9 @@ export function TableOfContents({
 
   return (
     <div className="bg-muted/30 border-[0.5px] border-border/50 rounded-[2rem] p-6 mb-10 max-w-sm">
-      <h3 className="text-sm font-bold uppercase tracking-widest text-primary mb-4">
+      <h2 className="text-sm font-bold uppercase tracking-widest text-primary mb-4">
         {title}
-      </h3>
+      </h2>
       <ul className="space-y-3">
         {items.map((item, index) => (
           <li

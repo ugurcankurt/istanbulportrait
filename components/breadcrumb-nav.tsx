@@ -259,7 +259,7 @@ export function BreadcrumbNav(props: BreadcrumbNavProps) {
   return (
     <>
       <SchemaInjector schema={buildBreadcrumbSchema(schemaItems)} />
-      <div className={`bg-muted/30 border-b ${className}`}>
+      <div className={`bg-muted/30 border-b ${className ?? ""}`.trim()}>
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <Breadcrumb className="py-3 sm:py-4 overflow-hidden">
             <BreadcrumbList className="flex-nowrap overflow-x-auto whitespace-nowrap scrollbar-hide pb-1 -mb-1">
