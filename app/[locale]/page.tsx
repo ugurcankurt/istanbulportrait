@@ -196,6 +196,11 @@ export default async function HomePage({
     pagesContentService.getCorePageSegment(blogParent || "blog", locale) ||
     "blog";
 
+  const aboutParent = pageMap.get("about");
+  const aboutParentSlug =
+    pagesContentService.getCorePageSegment(aboutParent || "about", locale) ||
+    "about";
+
   const getDynamicTitle = (slug: string, fallback: string) => {
     const page = pageMap.get(slug);
     if (!page?.is_active) return fallback;
@@ -415,6 +420,65 @@ export default async function HomePage({
             }
           />
         </div>
+
+        {/* High-E-E-A-T Editorial Process & Query Fan-Out Section (SSR Visible) */}
+        <section
+          id="how-istanbul-photoshoot-works"
+          className="py-10 sm:py-14 border-y border-border/40 bg-muted/15"
+        >
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
+              <div className="text-left max-w-4xl">
+                <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif font-normal tracking-tight leading-tight mb-2 sm:mb-3">
+                  {tHomeSeo("editorial_title")}
+                </h2>
+                <p className="text-base sm:text-lg text-muted-foreground font-light leading-relaxed">
+                  {tHomeSeo("editorial_subtitle")}
+                </p>
+              </div>
+              <NextLink
+                href={`/${locale}/${aboutParentSlug}`}
+                className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:underline underline-offset-4 shrink-0"
+              >
+                <span>{tHomeSeo("editorial_about_cta")}</span>
+                <ArrowRight className="w-4 h-4" />
+              </NextLink>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 lg:gap-6">
+              {[
+                {
+                  title: tHomeSeo("step1_title"),
+                  desc: tHomeSeo("step1_desc"),
+                },
+                {
+                  title: tHomeSeo("step2_title"),
+                  desc: tHomeSeo("step2_desc"),
+                },
+                {
+                  title: tHomeSeo("step3_title"),
+                  desc: tHomeSeo("step3_desc"),
+                },
+                {
+                  title: tHomeSeo("step4_title"),
+                  desc: tHomeSeo("step4_desc"),
+                },
+              ].map((step) => (
+                <div
+                  key={step.title}
+                  className="rounded-2xl border border-border/50 bg-background/70 p-6 shadow-sm"
+                >
+                  <h3 className="text-lg sm:text-xl font-serif font-normal text-foreground tracking-tight mb-2">
+                    {step.title}
+                  </h3>
+                  <p className="text-sm text-muted-foreground font-light leading-relaxed">
+                    {step.desc}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
 
         {slimLocations.length > 0 && (
           <section

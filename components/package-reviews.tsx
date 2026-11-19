@@ -95,9 +95,9 @@ export function PackageReviews({
         {/* LEFT SIDEBAR - Overall Rating & Summary */}
         <div className="lg:col-span-1 space-y-10 lg:sticky lg:top-28 h-fit">
           <div className="space-y-6">
-            <h3 className="text-2xl sm:text-3xl font-serif font-normal text-foreground tracking-tight">
+            <h2 className="text-2xl sm:text-3xl font-serif font-normal text-foreground tracking-tight">
               {t("overall_rating")}
-            </h3>
+            </h2>
             <div className="flex items-center gap-4">
               <div className="text-5xl sm:text-6xl font-serif font-semibold text-primary leading-none tracking-tight">
                 {Number(aggregateRating.average || 0).toFixed(1)}
@@ -114,9 +114,9 @@ export function PackageReviews({
 
           <div className="space-y-6 pt-6 border-t border-border">
             <div className="flex items-center justify-between">
-              <h4 className="text-sm font-bold text-foreground uppercase tracking-tight">
+              <h3 className="text-sm font-bold text-foreground uppercase tracking-tight">
                 {t("summary")}
-              </h4>
+              </h3>
               {filterRating && (
                 <Button
                   variant="link"

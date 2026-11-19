@@ -438,10 +438,10 @@ export function PackageDetails({
               </div>
 
               <div className="space-y-6 border-t pt-8">
-                <h3 className="text-2xl sm:text-3xl font-serif font-normal text-foreground tracking-tight flex items-center gap-3">
+                <h2 className="text-2xl sm:text-3xl font-serif font-normal text-foreground tracking-tight flex items-center gap-3">
                   <Telescope className="h-6 w-6 text-primary" />
                   {tui("what_to_expect")}
-                </h3>
+                </h2>
                 <ul className="grid grid-cols-1 sm:grid-cols-2 gap-y-4 sm:gap-y-5 gap-x-8 sm:gap-x-12">
                   {features.map((feature, index) => (
                     <li

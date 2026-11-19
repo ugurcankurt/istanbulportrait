@@ -504,9 +504,21 @@ export function buildLocalBusinessSchema(
   // Include dynamic packages in OfferCatalog for rich snippet discovery and Google Image Pack indexing
   if (packages && packages.length > 0) {
     const parentSeg = packagesParentSlug || "packages";
+    const catalogNameByLocale: Record<string, string> = {
+      en: `${orgName} Photoshoot Packages`,
+      tr: `${orgName} Fotoğraf Çekimi Paketleri`,
+      ar: `باقات جلسات التصوير — ${orgName}`,
+      ru: `Пакеты фотосессий — ${orgName}`,
+      es: `Paquetes de Sesiones de Fotos — ${orgName}`,
+      zh: `${orgName} 摄影套餐`,
+      fr: `Forfaits Shooting Photo — ${orgName}`,
+      de: `${orgName} Fotoshooting-Pakete`,
+      ro: `Pachete Ședințe Foto — ${orgName}`,
+    };
     schema.hasOfferCatalog = {
       "@type": "OfferCatalog",
-      name: `${orgName} Photoshoot Packages`,
+      name:
+        catalogNameByLocale[locale || "en"] || `${orgName} Photoshoot Packages`,
       itemListElement: packages.map((pkg: any) => {
         const pkgTitle =
           pkg.title?.[locale || "en"] || pkg.title?.en || pkg.slug;
