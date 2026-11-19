@@ -470,7 +470,9 @@
     "bookPhotoshoot": "Burada Çekim Ayırtın",
     "bookPhotoshootDescription": "Profesyonel bir asistan desteğiyle, bu efsanevi mekanda hayalinizdeki karelerin baş rolünde olun.",
     "viewPackages": "Paketleri İncele",
-    "explore": "Keşfet"
+    "explore": "Keşfet",
+    "packagesAtLocation": "{location} Fotoğraf Çekimi Paketleri",
+    "packagesAtLocationSubtitle": "{location} için yerel İstanbul fotoğrafçısıyla çekiminizi planlayın — şeffaf EUR fiyatlar ve 48 saatte teslim."
   },
   "cookies": {
     "banner": {

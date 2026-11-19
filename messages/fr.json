@@ -470,7 +470,9 @@
     "bookPhotoshoot": "Réservez une séance photo",
     "bookPhotoshootDescription": "Capturez vos meilleurs moments à cet endroit avec un photographe professionnel.",
     "viewPackages": "Voir les forfaits",
-    "explore": "Explorer"
+    "explore": "Explorer",
+    "packagesAtLocation": "Forfaits Shooting Photo à {location}",
+    "packagesAtLocationSubtitle": "Réservez un photographe local à Istanbul pour votre séance à {location} — tarifs clairs en EUR, sans acompte, livraison 48h."
   },
   "cookies": {
     "banner": {

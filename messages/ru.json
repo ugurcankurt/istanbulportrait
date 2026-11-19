@@ -470,7 +470,9 @@
     "bookPhotoshoot": "Забронировать фотосессию",
     "bookPhotoshootDescription": "Запечатлейте свои лучшие моменты в этом месте с профессиональным фотографом.",
     "viewPackages": "Посмотреть пакеты",
-    "explore": "Исследуйте"
+    "explore": "Исследуйте",
+    "packagesAtLocation": "Пакеты фотосессий: {location}",
+    "packagesAtLocationSubtitle": "Забронируйте локального фотографа в Стамбуле для съёмки в локации {location} — цены в EUR без предоплаты и фото за 48ч."
   },
   "cookies": {
     "banner": {

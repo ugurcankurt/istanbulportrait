@@ -470,7 +470,9 @@
     "bookPhotoshoot": "Rezervă o ședință foto",
     "bookPhotoshootDescription": "Surprindeți-vă cele mai bune momente în această locație cu un fotograf profesionist.",
     "viewPackages": "Vezi pachete",
-    "explore": "Explorează"
+    "explore": "Explorează",
+    "packagesAtLocation": "Pachete Ședință Foto la {location}",
+    "packagesAtLocationSubtitle": "Rezervă un fotograf local din Istanbul pentru ședința ta foto la {location} — prețuri clare EUR, fără avans, livrare în 48h."
   },
   "cookies": {
     "banner": {

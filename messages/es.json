@@ -470,7 +470,9 @@
     "bookPhotoshoot": "Reserva una sesión de fotos",
     "bookPhotoshootDescription": "Capture sus mejores momentos en este lugar con un fotógrafo profesional.",
     "viewPackages": "Ver paquetes",
-    "explore": "Explorar"
+    "explore": "Explorar",
+    "packagesAtLocation": "Paquetes de Fotos en {location}",
+    "packagesAtLocationSubtitle": "Reserva un fotógrafo local en Estambul para tu sesión en {location}: precios en EUR sin depósito y entrega en 48h."
   },
   "cookies": {
     "banner": {

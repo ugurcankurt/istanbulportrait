@@ -4,12 +4,16 @@ import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { BreadcrumbNav } from "@/components/breadcrumb-nav";
 import { LocationCard } from "@/components/location-card";
+import { PackagesSection } from "@/components/packages-section";
 import { SchemaInjector } from "@/components/schema-injector";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Link } from "@/i18n/routing";
+import { discountService } from "@/lib/discount-service";
 import { locationsService } from "@/lib/locations-service";
+import { packagesService } from "@/lib/packages-service";
+import { reviewsService } from "@/lib/reviews-service";
 import {
   buildTouristAttractionSchema,
   generateSeoDescription,
@@ -53,9 +57,18 @@ export async function LocationDetailPageContent({
 
   const { pagesContentService } = await import("@/lib/pages-content-service");
   const { generateNativeSlug } = await import("@/lib/slug-generator");
-  const [locationsPage, packagesPage] = await Promise.all([
+  const [
+    locationsPage,
+    packagesPage,
+    activePackages,
+    activeDiscounts,
+    aggregateRating,
+  ] = await Promise.all([
     pagesContentService.getPageBySlug("locations"),
     pagesContentService.getPageBySlug("packages"),
+    packagesService.getActivePackages(),
+    discountService.getActiveDiscounts(),
+    reviewsService.getAggregateRating(),
   ]);
   const parentSegment =
     pagesContentService.getCorePageSegment(
@@ -72,9 +85,68 @@ export async function LocationDetailPageContent({
     ? generateNativeSlug(localTitle) || location.slug
     : location.slug;
 
+  // Smart GetYourGuide-style Location -> Package relevance matching (Istanbul packages only)
+  const locSignals = [
+    location.slug,
+    ...(location.tags || []),
+    location.title?.en || "",
+  ]
+    .join(" ")
+    .toLowerCase();
+
+  const istanbulPackages = (activePackages || []).filter(
+    (pkg) => !pkg.slug.toLowerCase().includes("cappadocia"),
+  );
+
+  const scoredPackages = istanbulPackages
+    .map((pkg) => {
+      const hay = `${pkg.slug} ${pkg.title?.en || ""} ${pkg.description?.en || ""}`.toLowerCase();
+      let score = pkg.is_popular ? 1 : 0;
+
+      if (locSignals.includes("rooftop") || locSignals.includes("suleymaniye")) {
+        if (hay.includes("rooftop") || hay.includes("flying-dress") || hay.includes("flying dress")) score += 10;
+      }
+      if (locSignals.includes("ortakoy") || locSignals.includes("bosphorus") || locSignals.includes("arnavutkoy")) {
+        if (hay.includes("ortakoy") || hay.includes("bosphorus") || hay.includes("couple") || hay.includes("family")) score += 8;
+      }
+      if (locSignals.includes("hagia") || locSignals.includes("blue-mosque") || locSignals.includes("sultanahmet") || locSignals.includes("grand-bazaar") || locSignals.includes("basilica")) {
+        if (hay.includes("hagia") || hay.includes("sultanahmet") || hay.includes("old-town") || hay.includes("solo")) score += 8;
+      }
+      if (locSignals.includes("karakoy") || locSignals.includes("istiklal") || locSignals.includes("galata") || locSignals.includes("balat")) {
+        if (hay.includes("fashion") || hay.includes("street") || hay.includes("couple") || hay.includes("solo")) score += 8;
+      }
+      if (locSignals.includes("family") || locSignals.includes("kuzguncuk")) {
+        if (hay.includes("family")) score += 10;
+      }
+      if (locSignals.includes("proposal") || locSignals.includes("engagement") || locSignals.includes("dolmabahce")) {
+        if (hay.includes("proposal") || hay.includes("couple")) score += 8;
+      }
+
+      return { pkg, score };
+    })
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 6)
+    .map(({ pkg }) => ({
+      ...pkg,
+      title: {
+        en: pkg.title?.en || pkg.slug,
+        ...(pkg.title?.[locale] ? { [locale]: pkg.title[locale] } : {}),
+      },
+      description: { en: "" },
+      duration: {
+        en: pkg.duration?.en || "",
+        ...(pkg.duration?.[locale] ? { [locale]: pkg.duration[locale] } : {}),
+      },
+      features: {
+        en: pkg.features?.en || [],
+        ...(pkg.features?.[locale] ? { [locale]: pkg.features[locale] } : {}),
+      },
+      gallery_images: [] as string[],
+    }));
+
   const touristAttractionSchema = buildTouristAttractionSchema({
     name: dynamicTitle,
-    description: generateSeoDescription(dynamicDesc),
+    description: generateSeoDescription(dynamicDesc, 155, locale),
     image: heroImage,
     lat: location.coordinates?.lat,
     lng: location.coordinates?.lng,
@@ -231,6 +303,7 @@ export async function LocationDetailPageContent({
                               location={nearbyLoc}
                               index={idx}
                               parentSlug={parentSegment}
+                              priority={false}
                             />
                           </div>
                         ))}
@@ -313,6 +386,28 @@ export async function LocationDetailPageContent({
           </div>
         </div>
       </section>
+
+      {/* Recommended Packages at This Location (GetYourGuide-style Horizontal Cross-Linking) */}
+      {scoredPackages.length > 0 && (
+        <div className="border-t border-border/30 bg-muted/10 section-contain-auto">
+          <PackagesSection
+            dbPackages={scoredPackages}
+            activeDiscounts={activeDiscounts}
+            aggregateRating={aggregateRating}
+            parentSlug={packagesSegment}
+            header={
+              <div className="text-left mb-6 sm:mb-8">
+                <h2 className="text-2xl sm:text-3xl md:text-4xl font-serif font-normal tracking-tight leading-tight mb-2">
+                  {t("packagesAtLocation", { location: dynamicTitle })}
+                </h2>
+                <p className="text-sm sm:text-base lg:text-lg text-muted-foreground font-light leading-relaxed max-w-3xl">
+                  {t("packagesAtLocationSubtitle", { location: dynamicTitle })}
+                </p>
+              </div>
+            }
+          />
+        </div>
+      )}
     </div>
   );
 }

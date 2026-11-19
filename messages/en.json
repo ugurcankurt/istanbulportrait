@@ -470,7 +470,9 @@
     "bookPhotoshoot": "Book a Photoshoot",
     "bookPhotoshootDescription": "Capture your best moments at this location with a professional photographer.",
     "viewPackages": "View Packages",
-    "explore": "Explore"
+    "explore": "Explore",
+    "packagesAtLocation": "Photoshoot Packages at {location}",
+    "packagesAtLocationSubtitle": "Book a local Istanbul photographer at {location} — transparent EUR pricing, guided posing & 48h delivery."
   },
   "cookies": {
     "banner": {

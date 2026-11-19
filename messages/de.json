@@ -470,7 +470,9 @@
     "bookPhotoshoot": "Buchen Sie ein Fotoshooting",
     "bookPhotoshootDescription": "Halten Sie Ihre schönsten Momente an diesem Ort mit einem professionellen Fotografen fest.",
     "viewPackages": "Pakete anzeigen",
-    "explore": "Entdecken"
+    "explore": "Entdecken",
+    "packagesAtLocation": "Fotoshooting-Pakete für {location}",
+    "packagesAtLocationSubtitle": "Buchen Sie Ihren lokalen Istanbul-Fotografen für {location} — transparente EUR-Preise ohne Anzahlung & 48h-Lieferung."
   },
   "cookies": {
     "banner": {

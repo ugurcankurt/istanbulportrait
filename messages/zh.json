@@ -470,7 +470,9 @@
     "bookPhotoshoot": "预约拍摄",
     "bookPhotoshootDescription": "与专业摄影师一起在这个地点捕捉您最美好的时刻。",
     "viewPackages": "查看套餐",
-    "explore": "探索"
+    "explore": "探索",
+    "packagesAtLocation": "{location} 旅拍套餐推荐",
+    "packagesAtLocationSubtitle": "预约伊斯坦布尔本地摄影师在 {location} 拍摄 — 欧元透明报价，免定金，48小时交付精修图。"
   },
   "cookies": {
     "banner": {
