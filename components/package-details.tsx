@@ -229,90 +229,198 @@ export function PackageDetails({
 
   return (
     <div className="flex flex-col min-h-[100dvh] bg-background">
-      {/* --- DESKTOP HEADER (md:block) --- */}
-      <div className="hidden md:block pt-6 pb-2">
-        <div className="container mx-auto px-4 lg:px-8">
-          <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
-            <div className="space-y-2">
-              <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-serif font-normal text-foreground leading-[1.12] tracking-tight text-balance">
-                {packageName}
-              </h1>
-              <div className="flex flex-wrap items-center gap-x-2 gap-y-2 text-sm">
-                {pricing.isDiscounted && (
-                  <Badge
-                    variant="default"
-                    className="bg-red-600/90 backdrop-blur-md text-white border border-red-500 tracking-wider uppercase text-xs px-3 py-1 shadow-sm font-medium"
-                  >
-                    {tui("save_percentage", {
-                      percentage: Math.round(pricing.discountPercentage * 100),
-                    })}
-                  </Badge>
-                )}
-                {packageData.is_per_person && (
-                  <Badge className="bg-primary/10 text-primary border-[0.5px] border-primary/20 tracking-wider uppercase text-[10px] px-3 py-1 shadow-sm font-medium">
-                    👤 {t("per_person")}
-                  </Badge>
-                )}
-                <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-md">
-                  <div className="flex items-center">
-                    {[...Array(5)].map((_, i) => (
-                      <Star
-                        key={i}
-                        className={cn(
-                          "h-5 w-5",
-                          i < Math.floor(aggregateRating.average)
-                            ? "fill-primary text-primary"
-                            : "text-muted-foreground/30",
-                        )}
-                      />
-                    ))}
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-y-6 md:gap-y-8 lg:gap-x-10 items-start">
+          {/* --- UNIFIED RESPONSIVE HEADER (Single visible <h1> on both Mobile & Desktop) --- */}
+          <div className="order-2 md:order-1 lg:col-span-12">
+            {/* Mobile-only top badges */}
+            <div className="flex md:hidden flex-wrap items-center gap-x-2 gap-y-2 text-sm mb-3">
+              <Badge
+                variant="secondary"
+                className="bg-primary/5 text-primary border-[0.5px] border-primary/20 tracking-wider uppercase text-[10px] px-3 py-1 shadow-sm font-medium"
+              >
+                {tui("professional_photographer")}
+              </Badge>
+              {packageData.is_popular && (
+                <Badge className="bg-black/80 backdrop-blur-md text-white border border-white/20 tracking-wider uppercase text-[10px] px-3 py-1 shadow-luxury font-medium">
+                  {tui("most_popular")}
+                </Badge>
+              )}
+              {packageData.is_per_person && (
+                <Badge className="bg-primary/10 text-primary border-[0.5px] border-primary/20 tracking-wider uppercase text-[10px] px-3 py-1 shadow-sm font-medium">
+                  👤 {t("per_person")}
+                </Badge>
+              )}
+            </div>
+
+            <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
+              <div className="space-y-3 md:space-y-2">
+                <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-serif font-normal text-foreground leading-[1.12] tracking-tight text-balance">
+                  {packageName}
+                </h1>
+
+                {/* Desktop meta row */}
+                <div className="hidden md:flex flex-wrap items-center gap-x-2 gap-y-2 text-sm">
+                  {pricing.isDiscounted && (
+                    <Badge
+                      variant="default"
+                      className="bg-red-600/90 backdrop-blur-md text-white border border-red-500 tracking-wider uppercase text-xs px-3 py-1 shadow-sm font-medium"
+                    >
+                      {tui("save_percentage", {
+                        percentage: Math.round(
+                          pricing.discountPercentage * 100,
+                        ),
+                      })}
+                    </Badge>
+                  )}
+                  {packageData.is_per_person && (
+                    <Badge className="bg-primary/10 text-primary border-[0.5px] border-primary/20 tracking-wider uppercase text-[10px] px-3 py-1 shadow-sm font-medium">
+                      👤 {t("per_person")}
+                    </Badge>
+                  )}
+                  <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-md">
+                    <div className="flex items-center">
+                      {[...Array(5)].map((_, i) => (
+                        <Star
+                          key={i}
+                          className={cn(
+                            "h-5 w-5",
+                            i < Math.floor(aggregateRating.average)
+                              ? "fill-primary text-primary"
+                              : "text-muted-foreground/30",
+                          )}
+                        />
+                      ))}
+                    </div>
+                    <span className="font-bold text-foreground">
+                      {aggregateRating.average}
+                    </span>
                   </div>
-                  <span className="font-bold text-foreground">
-                    {aggregateRating.average}
+                  <button
+                    type="button"
+                    onClick={() =>
+                      document
+                        .getElementById("reviews")
+                        ?.scrollIntoView({ behavior: "smooth" })
+                    }
+                    className="text-primary hover:underline font-bold decoration-2 underline-offset-4"
+                  >
+                    {aggregateRating.count} {tReviews("total_reviews")}
+                  </button>
+                  <div className="h-1 w-1 rounded-full bg-border hidden sm:block" />
+                  <span className="text-muted-foreground font-medium">
+                    {tui("professional_photographer")}
                   </span>
                 </div>
-                <button
-                  onClick={() =>
-                    document
-                      .getElementById("reviews")
-                      ?.scrollIntoView({ behavior: "smooth" })
-                  }
-                  className="text-primary hover:underline font-bold decoration-2 underline-offset-4"
-                >
-                  {aggregateRating.count} {tReviews("total_reviews")}
-                </button>
-                <div className="h-1 w-1 rounded-full bg-border hidden sm:block" />
-                <span className="text-muted-foreground font-medium">
-                  {tui("professional_photographer")}
-                </span>
+
+                {/* Mobile rating, price & quick stats */}
+                <div className="md:hidden space-y-4 pt-1">
+                  <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-0.5">
+                      {[...Array(5)].map((_, i) => (
+                        <Star
+                          key={i}
+                          className={cn(
+                            "h-4 w-4",
+                            i < Math.floor(aggregateRating.average)
+                              ? "fill-primary text-primary"
+                              : "text-muted-foreground/30",
+                          )}
+                        />
+                      ))}
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() =>
+                        document
+                          .getElementById("reviews")
+                          ?.scrollIntoView({ behavior: "smooth" })
+                      }
+                      className="text-sm font-bold text-primary hover:underline underline-offset-4"
+                    >
+                      {aggregateRating.average} ({aggregateRating.count}{" "}
+                      {tReviews("total_reviews")})
+                    </button>
+                  </div>
+
+                  <div className="flex items-center gap-3">
+                    <div className="flex items-baseline gap-2">
+                      <span className="text-xs sm:text-sm text-muted-foreground font-medium lowercase">
+                        {t("starting_from")} /
+                      </span>
+                      <div className="text-3xl sm:text-4xl font-serif font-semibold text-primary tracking-tight">
+                        {formatPrice(pricing.price)}
+                      </div>
+                      {pricing.isDiscounted && (
+                        <div className="flex items-center gap-2 ml-2">
+                          <span className="text-lg sm:text-xl text-muted-foreground line-through font-medium">
+                            {formatPrice(pricing.originalPrice)}
+                          </span>
+                          <Badge className="bg-red-600/90 backdrop-blur-md text-white border border-red-500 tracking-wider uppercase text-xs px-2.5 py-0.5 shadow-sm font-medium">
+                            {tui("save_percentage", {
+                              percentage: Math.round(
+                                pricing.discountPercentage * 100,
+                              ),
+                            })}
+                          </Badge>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Quick Stats Grid (Mobile) */}
+                  <div className="grid grid-cols-3 gap-3 pt-1">
+                    {[
+                      { icon: Clock, label: tui("duration"), val: packageDur },
+                      {
+                        icon: ImageIcon,
+                        label: tui("photos"),
+                        val: extractPhotosCount(features),
+                      },
+                      {
+                        icon: MapPin,
+                        label: tui("locations"),
+                        val: packageData.locations || 1,
+                      },
+                    ].map((stat) => (
+                      <div
+                        key={stat.label}
+                        className="bg-muted/40 rounded-2xl p-3 flex flex-col items-center justify-center text-center border border-border/50"
+                      >
+                        <stat.icon className="h-5 w-5 text-primary mb-2" />
+                        <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-1">
+                          {stat.label}
+                        </span>
+                        <span className="text-sm font-bold">{stat.val}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Desktop Share & Save */}
+              <div className="hidden md:flex items-center gap-3">
+                <Button variant="outline" size="sm" onClick={handleShare}>
+                  <Share2 className="h-4 w-4" />
+                  <span>{tui("share")}</span>
+                </Button>
+                <Button variant="outline" size="sm" onClick={toggleSave}>
+                  <Heart
+                    className={cn(
+                      "h-4 w-4",
+                      isSaved
+                        ? "fill-primary text-primary"
+                        : "text-muted-foreground",
+                    )}
+                  />
+                  <span>{isSaved ? tui("saved") : tui("save")}</span>
+                </Button>
               </div>
             </div>
-            <div className="flex items-center gap-3">
-              <Button variant="outline" size="sm" onClick={handleShare}>
-                <Share2 className="h-4 w-4" />
-                <span>{tui("share")}</span>
-              </Button>
-              <Button variant="outline" size="sm" onClick={toggleSave}>
-                <Heart
-                  className={cn(
-                    "h-4 w-4",
-                    isSaved
-                      ? "fill-primary text-primary"
-                      : "text-muted-foreground",
-                  )}
-                />
-                <span>{isSaved ? tui("saved") : tui("save")}</span>
-              </Button>
-            </div>
           </div>
-        </div>
-      </div>
 
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-10">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
-          {/* --- LEFT COLUMN: GALLERY & CONTENT --- */}
-          <div className="lg:col-span-8 space-y-8">
-            {/* Gallery (Responsive: Mobile carousel, Desktop 1+4 grid) */}
+          {/* --- GALLERY (Mobile: top / Desktop: left 8 cols below header) --- */}
+          <div className="order-1 md:order-2 lg:col-span-8">
             <PackageGallery
               packageSlug={packageData.slug}
               images={gallery}
@@ -323,192 +431,83 @@ export function PackageDetails({
               isFavorite={isSaved}
               videoUrl={packageData.video_url}
             />
-
-            {/* Content Mobile Header (Only visible on mobile) */}
-            <div className="md:hidden space-y-6">
-              <div className="space-y-4">
-                <div className="flex flex-wrap items-center gap-x-2 gap-y-2 text-sm">
-                  <Badge
-                    variant="secondary"
-                    className="bg-primary/5 text-primary border-[0.5px] border-primary/20 tracking-wider uppercase text-[10px] px-3 py-1 shadow-sm font-medium"
-                  >
-                    {tui("professional_photographer")}
-                  </Badge>
-                  {packageData.is_popular && (
-                    <Badge className="bg-black/80 backdrop-blur-md text-white border border-white/20 tracking-wider uppercase text-[10px] px-3 py-1 shadow-luxury font-medium">
-                      {tui("most_popular")}
-                    </Badge>
-                  )}
-                  {packageData.is_per_person && (
-                    <Badge className="bg-primary/10 text-primary border-[0.5px] border-primary/20 tracking-wider uppercase text-[10px] px-3 py-1 shadow-sm font-medium">
-                      👤 {t("per_person")}
-                    </Badge>
-                  )}
-                </div>
-                <div className="text-3xl sm:text-4xl font-serif font-normal text-foreground leading-[1.14] tracking-tight text-balance">
-                  {packageName}
-                </div>
-                <div className="flex items-center gap-3">
-                  <div className="flex items-center gap-0.5">
-                    {[...Array(5)].map((_, i) => (
-                      <Star
-                        key={i}
-                        className={cn(
-                          "h-4 w-4",
-                          i < Math.floor(aggregateRating.average)
-                            ? "fill-primary text-primary"
-                            : "text-muted-foreground/30",
-                        )}
-                      />
-                    ))}
-                  </div>
-                  <button
-                    onClick={() =>
-                      document
-                        .getElementById("reviews")
-                        ?.scrollIntoView({ behavior: "smooth" })
-                    }
-                    className="text-sm font-bold text-primary hover:underline underline-offset-4"
-                  >
-                    {aggregateRating.average} ({aggregateRating.count}{" "}
-                    {tReviews("total_reviews")})
-                  </button>
-                </div>
-                <div className="flex items-center gap-3">
-                  <div className="flex items-baseline gap-2">
-                    <span className="text-xs sm:text-sm text-muted-foreground font-medium lowercase">
-                      {t("starting_from")} /
-                    </span>
-                    <div className="text-3xl sm:text-4xl font-serif font-semibold text-primary tracking-tight">
-                      {formatPrice(pricing.price)}
-                    </div>
-                    {pricing.isDiscounted && (
-                      <div className="flex items-center gap-2 ml-2">
-                        <span className="text-lg sm:text-xl text-muted-foreground line-through font-medium">
-                          {formatPrice(pricing.originalPrice)}
-                        </span>
-                        <Badge className="bg-red-600/90 backdrop-blur-md text-white border border-red-500 tracking-wider uppercase text-xs px-2.5 py-0.5 shadow-sm font-medium">
-                          {tui("save_percentage", {
-                            percentage: Math.round(
-                              pricing.discountPercentage * 100,
-                            ),
-                          })}
-                        </Badge>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </div>
-
-              {/* Quick Stats Grid (Mobile) */}
-              <div className="grid grid-cols-3 gap-3">
-                {[
-                  { icon: Clock, label: "Duration", val: packageDur },
-                  {
-                    icon: ImageIcon,
-                    label: tui("photos"),
-                    val: extractPhotosCount(features),
-                  },
-                  {
-                    icon: MapPin,
-                    label: tui("locations"),
-                    val: packageData.locations || 1,
-                  },
-                ].map((stat, i) => (
-                  <div
-                    key={i}
-                    className="bg-muted/40 rounded-2xl p-3 flex flex-col items-center justify-center text-center border border-border/50"
-                  >
-                    <stat.icon className="h-5 w-5 text-primary mb-2" />
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-1">
-                      {stat.label}
-                    </span>
-                    <span className="text-sm font-bold">{stat.val}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Shared Description */}
-            <div className="space-y-8">
-              <div className="prose prose-slate dark:prose-invert max-w-none">
-                <p className="text-lg sm:text-xl text-muted-foreground leading-relaxed italic border-s-4 border-primary/30 ps-5 sm:ps-6 py-2">
-                  {packageDesc}
-                </p>
-              </div>
-
-              <div className="space-y-6 border-t pt-8">
-                <h2 className="text-2xl sm:text-3xl font-serif font-normal text-foreground tracking-tight flex items-center gap-3">
-                  <Telescope className="h-6 w-6 text-primary" />
-                  {tui("what_to_expect")}
-                </h2>
-                <ul className="grid grid-cols-1 sm:grid-cols-2 gap-y-4 sm:gap-y-5 gap-x-8 sm:gap-x-12">
-                  {features.map((feature, index) => (
-                    <li
-                      key={index}
-                      className="flex items-start gap-3 sm:gap-4 group"
-                    >
-                      <div className="mt-1 bg-primary/10 p-1.5 rounded-full group-hover:bg-primary/20 transition-colors shrink-0">
-                        <Check className="h-3.5 w-3.5 text-primary stroke-[3]" />
-                      </div>
-                      <span className="text-base sm:text-lg font-normal text-foreground/90 leading-snug">
-                        {feature}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
           </div>
 
-          <div className="lg:col-span-4">
-            {/* Booking Card (Inline only on Desktop) */}
-            <div className="hidden lg:block lg:sticky lg:top-28">
-              <BookingCard
-                packageId={packageData.slug as any}
-                packageDisplayName={packageName}
-                basePrice={basePrice}
-                pricing={{
-                  price: pricing.price,
-                  isDiscounted: pricing.isDiscounted,
-                  discountPercentage: pricing.discountPercentage,
-                  depositAmount: fullPricing.depositAmount,
-                  remainingAmount: fullPricing.remainingAmount,
-                  originalPrice: pricing.originalPrice,
-                }}
-                displayPrice={displayPrice}
-                selectedDate={selectedDate}
-                setSelectedDate={setSelectedDate}
-                selectedTime={selectedTime}
-                setSelectedTime={setSelectedTime}
-                peopleCount={peopleCount}
-                setPeopleCount={setPeopleCount}
-                dateFnsLocale={dateFnsLocale}
-                tCheckout={tCheckout}
-                t={t}
-                packageDuration={packageDur}
-                isPerPerson={packageData.is_per_person}
-                onCheckAvailability={() => {
-                  // add_to_cart fires once from BookingModal on open
-                  setIsModalOpen(true);
-                }}
-                activeDiscounts={activeDiscounts}
-                timeSurcharges={timeSurcharges}
-                availableAddons={availableAddons}
-                whatsappNumber={whatsappNumber}
-                selectedAddons={selectedAddons}
-                setSelectedAddons={setSelectedAddons}
-                addonQuantities={addonQuantities}
-                setAddonQuantities={setAddonQuantities}
-                onYieldChange={(multiplier, reason) => {
-                  setYieldMultiplier(multiplier);
-                  setYieldReason(reason);
-                }}
-                yieldReason={yieldReason}
-              />
+          {/* --- DESKTOP STICKY BOOKING CARD (Right 4 cols spanning Gallery + Description) --- */}
+          <div className="hidden lg:block lg:order-2 lg:col-span-4 lg:row-span-2 lg:sticky lg:top-28">
+            <BookingCard
+              packageId={packageData.slug as any}
+              packageDisplayName={packageName}
+              basePrice={basePrice}
+              pricing={{
+                price: pricing.price,
+                isDiscounted: pricing.isDiscounted,
+                discountPercentage: pricing.discountPercentage,
+                depositAmount: fullPricing.depositAmount,
+                remainingAmount: fullPricing.remainingAmount,
+                originalPrice: pricing.originalPrice,
+              }}
+              displayPrice={displayPrice}
+              selectedDate={selectedDate}
+              setSelectedDate={setSelectedDate}
+              selectedTime={selectedTime}
+              setSelectedTime={setSelectedTime}
+              peopleCount={peopleCount}
+              setPeopleCount={setPeopleCount}
+              dateFnsLocale={dateFnsLocale}
+              tCheckout={tCheckout}
+              t={t}
+              packageDuration={packageDur}
+              isPerPerson={packageData.is_per_person}
+              onCheckAvailability={() => {
+                // add_to_cart fires once from BookingModal on open
+                setIsModalOpen(true);
+              }}
+              activeDiscounts={activeDiscounts}
+              timeSurcharges={timeSurcharges}
+              availableAddons={availableAddons}
+              whatsappNumber={whatsappNumber}
+              selectedAddons={selectedAddons}
+              setSelectedAddons={setSelectedAddons}
+              addonQuantities={addonQuantities}
+              setAddonQuantities={setAddonQuantities}
+              onYieldChange={(multiplier, reason) => {
+                setYieldMultiplier(multiplier);
+                setYieldReason(reason);
+              }}
+              yieldReason={yieldReason}
+            />
+          </div>
+
+          {/* --- SHARED DESCRIPTION & WHAT TO EXPECT (Left 8 cols) --- */}
+          <div className="order-3 lg:col-span-8 space-y-8">
+            <div className="prose prose-slate dark:prose-invert max-w-none">
+              <p className="text-lg sm:text-xl text-muted-foreground leading-relaxed italic border-s-4 border-primary/30 ps-5 sm:ps-6 py-2">
+                {packageDesc}
+              </p>
             </div>
 
-            {/* Mobile Booking Bar removed as BookingCard is now inline */}
+            <div className="space-y-6 border-t pt-8">
+              <h2 className="text-2xl sm:text-3xl font-serif font-normal text-foreground tracking-tight flex items-center gap-3">
+                <Telescope className="h-6 w-6 text-primary" />
+                {tui("what_to_expect")}
+              </h2>
+              <ul className="grid grid-cols-1 sm:grid-cols-2 gap-y-4 sm:gap-y-5 gap-x-8 sm:gap-x-12">
+                {features.map((feature, index) => (
+                  <li
+                    key={index}
+                    className="flex items-start gap-3 sm:gap-4 group"
+                  >
+                    <div className="mt-1 bg-primary/10 p-1.5 rounded-full group-hover:bg-primary/20 transition-colors shrink-0">
+                      <Check className="h-3.5 w-3.5 text-primary stroke-[3]" />
+                    </div>
+                    <span className="text-base sm:text-lg font-normal text-foreground/90 leading-snug">
+                      {feature}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
         </div>
       </div>
