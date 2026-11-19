@@ -9,10 +9,17 @@ interface BlogCardProps {
   post: BlogPostWithRelations;
   locale: string;
   parentSegment: string;
+  headingLevel?: "h2" | "h3";
 }
 
-export async function BlogCard({ post, locale, parentSegment }: BlogCardProps) {
+export async function BlogCard({
+  post,
+  locale,
+  parentSegment,
+  headingLevel = "h2",
+}: BlogCardProps) {
   const t = await getTranslations({ locale, namespace: "blog" });
+  const HeadingTag = headingLevel;
 
   return (
     <NextLink
@@ -59,9 +66,9 @@ export async function BlogCard({ post, locale, parentSegment }: BlogCardProps) {
               ))}
             </div>
           )}
-          <h2 className="text-xl sm:text-2xl font-serif font-normal leading-snug tracking-tight mb-2.5 group-hover:text-primary transition-colors line-clamp-2">
+          <HeadingTag className="text-xl sm:text-2xl font-serif font-normal leading-snug tracking-tight mb-2.5 group-hover:text-primary transition-colors line-clamp-2">
             {post.translation.title}
-          </h2>
+          </HeadingTag>
           <p className="text-[11px] sm:text-xs uppercase tracking-[0.16em] font-medium text-muted-foreground mb-3 flex flex-wrap items-center gap-2">
             <span>
               {formatBlogDate(

@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
+import { Suspense } from "react";
 import { BreadcrumbNav } from "@/components/breadcrumb-nav";
 import { PackageDetails } from "@/components/package-details";
 import { PackagesSection } from "@/components/packages-section";
@@ -85,7 +86,7 @@ export async function PackageDetailPageContent({
   const serviceSchema = buildServiceSchema({
     name: title,
     sku: pkg.slug,
-    description: generateSeoDescription(desc),
+    description: generateSeoDescription(desc, 155, locale),
     image:
       pkg.gallery_images?.[0] ||
       pkg.cover_image ||
@@ -93,6 +94,10 @@ export async function PackageDetailPageContent({
       "",
     price: pkg.price,
     currency: "EUR",
+    aggregateRating: aggregateRating?.average,
+    reviewCount: aggregateRating?.count,
+    reviews,
+    locale,
     providerName: settings.organization_name || settings.site_name,
     providerUrl: getBaseUrl(),
     discount: currentDiscount,
@@ -117,7 +122,7 @@ export async function PackageDetailPageContent({
       "@context": "https://schema.org",
       "@type": "VideoObject",
       name: `${title} - Video`,
-      description: generateSeoDescription(desc) || title,
+      description: generateSeoDescription(desc, 155, locale) || title,
       thumbnailUrl: resolveSchemaImage(
         pkg.gallery_images?.[0] ||
           pkg.cover_image ||
@@ -141,15 +146,17 @@ export async function PackageDetailPageContent({
       <SchemaInjector schema={serviceSchema} />
       {videoSchema && <SchemaInjector schema={videoSchema} />}
       <BreadcrumbNav customLastLabel={title} />
-      <PackageDetails
-        packageData={pkg}
-        aggregateRating={aggregateRating}
-        reviews={reviews}
-        activeDiscounts={activeDiscounts}
-        timeSurcharges={timeSurcharges}
-        availableAddons={availableAddons}
-        whatsappNumber={settings.whatsapp_number}
-      />
+      <Suspense fallback={null}>
+        <PackageDetails
+          packageData={pkg}
+          aggregateRating={aggregateRating}
+          reviews={reviews}
+          activeDiscounts={activeDiscounts}
+          timeSurcharges={timeSurcharges}
+          availableAddons={availableAddons}
+          whatsappNumber={settings.whatsapp_number}
+        />
+      </Suspense>
       {relatedPackages.length > 0 && (
         <div className="mt-0 sm:mt-8 border-t border-border/30 bg-muted/10">
           <PackagesSection

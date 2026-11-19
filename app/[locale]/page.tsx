@@ -1,10 +1,13 @@
-import { Star } from "lucide-react";
-import { getTranslations } from "next-intl/server";
+import { ArrowRight, Star } from "lucide-react";
+import NextLink from "next/link";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 export const revalidate = 60;
 
 import dynamic from "next/dynamic";
+import { BlogCard } from "@/components/blog-card";
 import { HeroSection } from "@/components/hero-section";
 import { HomeGalleryWrapper } from "@/components/home-gallery-wrapper";
+import { LocationCard } from "@/components/location-card";
 
 // Below-the-fold components loaded dynamically to improve performance
 const PackagesSection = dynamic(() =>
@@ -27,7 +30,9 @@ const NewsletterSection = dynamic(() =>
 
 import type { Metadata } from "next";
 import { SchemaInjector } from "@/components/schema-injector";
+import { getPublishedBlogPosts } from "@/lib/blog/blog-service";
 import { discountService } from "@/lib/discount-service";
+import { locationsService } from "@/lib/locations-service";
 import { packagesService } from "@/lib/packages-service";
 import { pagesContentService } from "@/lib/pages-content-service";
 import { calculateDiscountedPrice } from "@/lib/pricing";
@@ -43,6 +48,7 @@ import {
   optimizeSeoImage,
 } from "@/lib/seo-utils";
 import { settingsService } from "@/lib/settings-service";
+import type { Locale } from "@/types/blog";
 
 export async function generateMetadata({
   params,
@@ -127,6 +133,7 @@ export default async function HomePage({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
+  setRequestLocale(locale);
 
   // Fetch data in parallel to avoid Request Waterfall and reduce TTFB
   const [
@@ -135,9 +142,12 @@ export default async function HomePage({
     tGallery,
     tPackages,
     tFaq,
+    tHomeSeo,
     aggregateRating,
     reviews,
     activePackages,
+    activeLocations,
+    recentBlogResult,
     settings,
     activeDiscounts,
     allPages,
@@ -147,13 +157,24 @@ export default async function HomePage({
     getTranslations({ locale, namespace: "gallery" }),
     getTranslations({ locale, namespace: "packages" }),
     getTranslations({ locale, namespace: "faq" }),
+    getTranslations({ locale, namespace: "home_seo" }),
     reviewsService.getAggregateRating(),
     reviewsService.fetchGoogleReviews(locale),
     packagesService.getActivePackages(),
+    locationsService.getLocations(),
+    getPublishedBlogPosts({
+      page: 1,
+      limit: 3,
+      locale: locale as Locale,
+      sort_by: "published_at",
+      sort_order: "desc",
+    }).catch(() => ({ posts: [] })),
     settingsService.getSettings(),
     discountService.getActiveDiscounts(),
     pagesContentService.getAllPages(),
   ]);
+
+  const recentBlogPosts = recentBlogResult?.posts || [];
 
   const pageMap = new Map(allPages.map((p) => [p.slug, p]));
 
@@ -170,6 +191,11 @@ export default async function HomePage({
       locationsParent || "locations",
       locale,
     ) || "locations";
+
+  const blogParent = pageMap.get("blog");
+  const blogParentSlug =
+    pagesContentService.getCorePageSegment(blogParent || "blog", locale) ||
+    "blog";
 
   const getDynamicTitle = (slug: string, fallback: string) => {
     const page = pageMap.get(slug);
@@ -244,6 +270,51 @@ export default async function HomePage({
       priceRangeStr = `€${minPrice} - €${maxPrice}`;
     }
   }
+
+  // Keep homepage packages 100% semantically focused on Istanbul (non-Istanbul destinations like Cappadocia remain on /packages)
+  const istanbulPackages = (activePackages || []).filter(
+    (pkg) => !pkg.slug.toLowerCase().includes("cappadocia"),
+  );
+
+  // Slim package props passed to Client Component (keep only current locale + en fallback, drop heavy gallery_images/description)
+  const slimPackages = istanbulPackages.map((pkg) => ({
+    ...pkg,
+    title: {
+      en: pkg.title?.en || pkg.slug,
+      ...(pkg.title?.[locale] ? { [locale]: pkg.title[locale] } : {}),
+    },
+    description: { en: "" },
+    duration: {
+      en: pkg.duration?.en || "",
+      ...(pkg.duration?.[locale] ? { [locale]: pkg.duration[locale] } : {}),
+    },
+    features: {
+      en: pkg.features?.en || [],
+      ...(pkg.features?.[locale] ? { [locale]: pkg.features[locale] } : {}),
+    },
+    gallery_images: [] as string[],
+  }));
+
+  // Slim location props passed to Client LocationCard (keep only current locale + en fallback)
+  const slimLocations = (activeLocations || []).slice(0, 8).map((loc) => ({
+    ...loc,
+    title: {
+      en: loc.title?.en || loc.slug,
+      ...(loc.title?.[locale] ? { [locale]: loc.title[locale] } : {}),
+    },
+    description: {
+      en: loc.description?.en || "",
+      ...(loc.description?.[locale]
+        ? { [locale]: loc.description[locale] }
+        : {}),
+    },
+    best_time: {
+      en: loc.best_time?.en || "",
+      ...(loc.best_time?.[locale] ? { [locale]: loc.best_time[locale] } : {}),
+    },
+    gallery_images: [] as string[],
+    photography_tips: {},
+  }));
 
   return (
     <>
@@ -324,7 +395,7 @@ export default async function HomePage({
         <div>
           <PackagesSection
             aggregateRating={aggregateRating}
-            dbPackages={activePackages}
+            dbPackages={slimPackages}
             activeDiscounts={activeDiscounts}
             parentSlug={packagesParentSlug}
             header={
@@ -339,6 +410,49 @@ export default async function HomePage({
             }
           />
         </div>
+
+        {slimLocations.length > 0 && (
+          <section
+            id="istanbul-locations"
+            className="py-8 sm:py-10 section-contain-auto"
+          >
+            <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+              <div className="text-left mb-6 sm:mb-8">
+                <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif font-normal tracking-tight leading-tight mb-2 sm:mb-3">
+                  {tHomeSeo("locations_title")}
+                </h2>
+                <p className="text-base sm:text-lg lg:text-xl text-muted-foreground font-light leading-relaxed max-w-4xl">
+                  {tHomeSeo("locations_subtitle")}
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-5 lg:gap-6">
+                {slimLocations.map((location, index) => (
+                  <LocationCard
+                    key={location.slug}
+                    location={location}
+                    index={index}
+                    parentSlug={locationsParentSlug}
+                    priority={false}
+                  />
+                ))}
+              </div>
+
+              <div className="mt-6 sm:mt-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-t border-border/40 pt-6">
+                <p className="text-sm sm:text-base text-muted-foreground font-light leading-relaxed max-w-3xl">
+                  {tHomeSeo("locations_editorial")}
+                </p>
+                <NextLink
+                  href={`/${locale}/${locationsParentSlug}`}
+                  className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:underline underline-offset-4 shrink-0"
+                >
+                  <span>{tHomeSeo("locations_cta")}</span>
+                  <ArrowRight className="w-4 h-4" />
+                </NextLink>
+              </div>
+            </div>
+          </section>
+        )}
 
         <div className="section-contain-auto">
           <HomeGalleryWrapper
@@ -417,6 +531,45 @@ export default async function HomePage({
             }
           />
         </div>
+
+        {recentBlogPosts.length > 0 && (
+          <section
+            id="istanbul-guides"
+            className="py-8 sm:py-10 section-contain-auto"
+          >
+            <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+              <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-6 sm:mb-8">
+                <div className="text-left">
+                  <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif font-normal tracking-tight leading-tight mb-2 sm:mb-3">
+                    {tHomeSeo("blog_title")}
+                  </h2>
+                  <p className="text-base sm:text-lg lg:text-xl text-muted-foreground font-light leading-relaxed max-w-4xl">
+                    {tHomeSeo("blog_subtitle")}
+                  </p>
+                </div>
+                <NextLink
+                  href={`/${locale}/${blogParentSlug}`}
+                  className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:underline underline-offset-4 shrink-0"
+                >
+                  <span>{tHomeSeo("blog_cta")}</span>
+                  <ArrowRight className="w-4 h-4" />
+                </NextLink>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {recentBlogPosts.map((post) => (
+                  <BlogCard
+                    key={post.id}
+                    post={post}
+                    locale={locale}
+                    parentSegment={blogParentSlug}
+                    headingLevel="h3"
+                  />
+                ))}
+              </div>
+            </div>
+          </section>
+        )}
 
         <NewsletterSection />
       </div>

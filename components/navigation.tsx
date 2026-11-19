@@ -62,7 +62,7 @@ export function Navigation({ dynamicNavData = {}, settings }: NavigationProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [_mounted, setMounted] = useState(false);
   const { resolvedTheme } = useTheme();
-  const { currency } = useCurrency();
+  const { currency, setCurrency } = useCurrency();
 
   // Prevent hydration mismatch by waiting for client-side mount
   useEffect(() => {
@@ -327,8 +327,7 @@ export function Navigation({ dynamicNavData = {}, settings }: NavigationProps) {
                               : "hover:bg-muted/50 hover:scale-[1.02] active:scale-[0.98]",
                           )}
                           onClick={() => {
-                            document.cookie = `NEXT_CURRENCY=${curr.code}; path=/; max-age=31536000`;
-                            window.location.reload();
+                            setCurrency(curr.code);
                           }}
                         >
                           <span className="font-medium">{curr.code}</span>

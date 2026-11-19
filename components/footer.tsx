@@ -17,13 +17,15 @@ import { Link, usePathname } from "@/i18n/routing";
 import { type PackageDB, packagesService } from "@/lib/packages-service";
 import { generateNativeSlug } from "@/lib/slug-generator";
 
+type FooterPackageItem = Pick<PackageDB, "id" | "slug" | "title">;
+
 interface FooterProps {
   dynamicNavData?: Record<
     string,
     { path: string; title: string | null; navTitle?: string | null }
   >;
   settings?: any;
-  packages?: PackageDB[];
+  packages?: FooterPackageItem[];
 }
 
 export function Footer({
@@ -38,7 +40,7 @@ export function Footer({
   const locale = useLocale();
   const pathname = usePathname();
   const [mounted, setMounted] = useState(false);
-  const [activePackages, setActivePackages] = useState<PackageDB[]>(
+  const [activePackages, setActivePackages] = useState<FooterPackageItem[]>(
     packages || [],
   );
   const { resolvedTheme } = useTheme();
@@ -94,6 +96,14 @@ export function Footer({
     {
       href: `/${dynamicNavData.packages?.path || "packages"}` as any,
       label: dynamicNavData.packages?.navTitle || nav("packages"),
+    },
+    {
+      href: `/${dynamicNavData.locations?.path || "locations"}` as any,
+      label: dynamicNavData.locations?.navTitle || nav("locations"),
+    },
+    {
+      href: `/${dynamicNavData.blog?.path || "blog"}` as any,
+      label: dynamicNavData.blog?.navTitle || nav("blog"),
     },
     {
       href: `/${dynamicNavData.about?.path || "about"}` as any,

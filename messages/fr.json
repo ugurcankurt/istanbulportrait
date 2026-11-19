@@ -715,5 +715,14 @@
       "payments": "Paiements",
       "logout": "Se déconnecter"
     }
+  },
+  "home_seo": {
+    "locations_title": "Lieux Iconiques de Shooting Photo à Istanbul",
+    "locations_subtitle": "Découvrez les décors les plus photogéniques avec un photographe local à Istanbul : Sultanahmet, Sainte-Sophie, Mosquée Bleue, Tour de Galata, Ortaköy, Balat, toits de Süleymaniye et Bosphore.",
+    "locations_editorial": "Chaque séance photo à Istanbul est organisée selon la lumière naturelle et l’affluence. Lever de soleil à Sultanahmet, shooting en robe volante sur un rooftop face au Bosphore, portraits de couple à Galata ou demande en mariage surprise à Ortaköy : votre photographe local vous guide à chaque étape.",
+    "locations_cta": "Explorer Tous les Lieux d’Istanbul",
+    "blog_title": "Guides & Conseils Photo à Istanbul",
+    "blog_subtitle": "Les conseils de nos photographes à Istanbul sur les meilleurs horaires, tenues et spots secrets.",
+    "blog_cta": "Lire Tous les Guides"
   }
 }

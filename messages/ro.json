@@ -715,5 +715,14 @@
       "payments": "Plăți",
       "logout": "Deconectare"
     }
+  },
+  "home_seo": {
+    "locations_title": "Locații Iconice pentru Ședințe Foto în Istanbul",
+    "locations_subtitle": "Descoperă cele mai fotogenice decoruri cu un fotograf local din Istanbul — de la Sultanahmet, Hagia Sofia și Moscheea Albastră la Turnul Galata, Ortaköy, Balat, terasele Süleymaniye și Bosfor.",
+    "locations_editorial": "Fiecare ședință foto în Istanbul este planificată în funcție de lumina naturală și orele liniștite. Fie că visezi la un răsărit în Sultanahmet, o ședință Flying Dress pe acoperiș cu vedere la Bosfor, portrete de cuplu în Galata sau o cerere în căsătorie surpriză la Ortaköy, fotograful tău local te ghidează pas cu pas.",
+    "locations_cta": "Explorează Toate Locațiile din Istanbul",
+    "blog_title": "Ghiduri și Sfaturi Foto pentru Istanbul",
+    "blog_subtitle": "Recomandări de la fotografii noștri din Istanbul despre cele mai bune ore, ținute și locuri ascunse.",
+    "blog_cta": "Citește Toate Ghidurile"
   }
 }

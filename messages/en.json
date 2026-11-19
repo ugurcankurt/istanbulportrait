@@ -715,5 +715,14 @@
       "mobileZipTitle": "Download ZIP on Mobile",
       "mobileZipDesc": "Downloading a ZIP file on mobile devices might require a file manager to open. Do you want to proceed?"
     }
+  },
+  "home_seo": {
+    "locations_title": "Iconic Istanbul Photoshoot Locations",
+    "locations_subtitle": "Discover the most photogenic backdrops with a local Istanbul photographer — from Sultanahmet, Hagia Sophia, and the Blue Mosque to Galata Tower, Ortaköy, Balat, Süleymaniye rooftops, and the Bosphorus.",
+    "locations_editorial": "Every Istanbul photoshoot is planned around natural light and crowd timing. Whether you dream of a sunrise session in historic Sultanahmet, a flying dress rooftop shoot overlooking Süleymaniye and the Bosphorus, candid couple portraits along Galata and Karaköy streets, or a surprise proposal by Ortaköy Mosque, your local Istanbul photographer guides every pose, route, and hidden angle.",
+    "locations_cta": "Explore All Istanbul Locations",
+    "blog_title": "Istanbul Photoshoot Guides & Local Tips",
+    "blog_subtitle": "Expert advice from our Istanbul photographers on best shooting hours, outfits, rooftop permits, and secret photo spots.",
+    "blog_cta": "Read All Photography Guides"
   }
 }

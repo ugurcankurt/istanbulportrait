@@ -1,4 +1,5 @@
 import { notFound, permanentRedirect } from "next/navigation";
+import { setRequestLocale } from "next-intl/server";
 import { pagesContentService } from "@/lib/pages-content-service";
 
 export const revalidate = 60;
@@ -42,12 +43,6 @@ export async function generateMetadata(props: {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }): Promise<Metadata> {
   const params = await props.params;
-  const searchParams = await props.searchParams;
-  const rawPage = Array.isArray(searchParams?.page)
-    ? searchParams.page[0]
-    : searchParams?.page;
-  const pageNum = Math.max(1, Number.parseInt(rawPage || "1", 10) || 1);
-  const pageQuerySuffix = pageNum > 1 ? `?page=${pageNum}` : "";
   const { routing } = await import("@/i18n/routing");
 
   // biome-ignore lint/suspicious/noExplicitAny: Routing locale matching
@@ -73,6 +68,21 @@ export async function generateMetadata(props: {
   ) {
     notFound();
     return {};
+  }
+
+  // Only read searchParams for paginated blog listings so all other routes remain ISR-cacheable
+  let pageNum = 1;
+  let pageQuerySuffix = "";
+  if (
+    dbPage.slug === "blog" &&
+    (slugArray.length === 1 || slugArray.length === 3)
+  ) {
+    const searchParams = await props.searchParams;
+    const rawPage = Array.isArray(searchParams?.page)
+      ? searchParams.page[0]
+      : searchParams?.page;
+    pageNum = Math.max(1, Number.parseInt(rawPage || "1", 10) || 1);
+    pageQuerySuffix = pageNum > 1 ? `?page=${pageNum}` : "";
   }
 
   const { getBaseUrl } = await import("@/lib/seo-utils");
@@ -513,6 +523,7 @@ export default async function GenericCorePage(props: {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
   const params = await props.params;
+  setRequestLocale(params.locale);
   const slugArray = params.slug || [];
 
   const rootSlug = slugArray[0];

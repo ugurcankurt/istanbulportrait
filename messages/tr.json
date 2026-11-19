@@ -715,5 +715,14 @@
       "mobileZipTitle": "Mobilde ZIP İndir",
       "mobileZipDesc": "Mobil cihazlarda ZIP dosyası indirmek, açmak için bir dosya yöneticisi gerektirebilir. Devam etmek istiyor musunuz?"
     }
+  },
+  "home_seo": {
+    "locations_title": "İkonik İstanbul Fotoğraf Çekim Mekanları",
+    "locations_subtitle": "Yerel bir İstanbul fotoğrafçısı eşliğinde Sultanahmet, Ayasofya, Sultanahmet Camii, Galata Kulesi, Ortaköy, Balat, Süleymaniye terasları ve Boğaz manzaralı en fotojenik çekim noktalarını keşfedin.",
+    "locations_editorial": "Her İstanbul fotoğraf çekimi doğal ışık ve kalabalık saatlerine göre özenle planlanır. Tarihi Sultanahmet’te gün doğumu çekimi, Süleymaniye ve Boğaz manzaralı uçan elbise teras çekimi, Galata ve Karaköy sokaklarında doğal çift portreleri veya Ortaköy Camii kıyısında sürpriz evlilik teklifi için deneyimli yerel fotoğrafçınız her rotayı ve pozu sizin için yönlendirir.",
+    "locations_cta": "Tüm İstanbul Mekanlarını Keşfet",
+    "blog_title": "İstanbul Fotoğraf Çekimi Rehberleri",
+    "blog_subtitle": "İstanbul fotoğrafçılarımızdan en iyi çekim saatleri, kıyafet önerileri, teras kuralları ve gizli çekim noktaları hakkında rehberler.",
+    "blog_cta": "Tüm Fotoğrafçılık Rehberlerini Oku"
   }
 }

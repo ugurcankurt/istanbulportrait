@@ -86,7 +86,14 @@ export async function BlogDetailPageContent({
             post.translation.meta_description ||
               post.translation.excerpt ||
               post.translation.content,
+            155,
+            locale,
           ),
+          wordCount: post.translation.content
+            ? post.translation.content.trim().split(/\s+/).length
+            : undefined,
+          articleSection:
+            post.categories?.[0]?.category?.translation?.name || undefined,
           image: post.featured_image || settings.default_og_image_url || "",
           datePublished: post.published_at || post.created_at,
           dateModified: post.updated_at || post.published_at || post.created_at,

@@ -2,13 +2,20 @@
 
 import { useLocale } from "next-intl";
 import type React from "react";
-import { createContext, useContext } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 
 interface CurrencyContextType {
   rate: number;
   formatPrice: (amountEUR: number, forceEur?: boolean) => string;
   currency: string;
   convertPrice: (amountEUR: number) => number;
+  setCurrency: (code: string) => void;
 }
 
 const CurrencyContext = createContext<CurrencyContextType>({
@@ -16,18 +23,43 @@ const CurrencyContext = createContext<CurrencyContextType>({
   formatPrice: (amountEUR: number) => `€${amountEUR}`,
   currency: "EUR",
   convertPrice: (amountEUR: number) => amountEUR,
+  setCurrency: () => {},
 });
 
 export function CurrencyProvider({
   children,
-  rate,
-  currency = "EUR",
+  rate: initialRate,
+  rates,
+  currency: initialCurrency = "EUR",
 }: {
   children: React.ReactNode;
-  rate: number;
+  rate?: number;
+  rates?: Record<string, number>;
   currency?: string;
 }) {
   const locale = useLocale();
+  const [currency, setCurrencyState] = useState<string>(initialCurrency);
+
+  // Hydrate user-selected currency from client cookie on mount so SSR stays ISR-cacheable
+  useEffect(() => {
+    const match = document.cookie.match(/(?:^|; )NEXT_CURRENCY=([A-Z]{3})/);
+    if (match?.[1] && match[1] !== initialCurrency) {
+      setCurrencyState(match[1]);
+    }
+  }, [initialCurrency]);
+
+  const setCurrency = useCallback((code: string) => {
+    document.cookie = `NEXT_CURRENCY=${code}; path=/; max-age=31536000; SameSite=Lax`;
+    setCurrencyState(code);
+  }, []);
+
+  const rate =
+    currency === "EUR"
+      ? 1
+      : (rates?.[currency] ??
+        (currency === initialCurrency ? initialRate : 1) ??
+        1);
+
   const intlLocaleMap: Record<string, string> = {
     en: "en-US",
     ar: "ar-SA",
@@ -71,7 +103,7 @@ export function CurrencyProvider({
 
   return (
     <CurrencyContext.Provider
-      value={{ rate, formatPrice, currency, convertPrice }}
+      value={{ rate, formatPrice, currency, convertPrice, setCurrency }}
     >
       {children}
     </CurrencyContext.Provider>

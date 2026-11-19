@@ -2,7 +2,7 @@
 
 import { usePathname, useSearchParams } from "next/navigation";
 import Script from "next/script";
-import { useEffect, useRef } from "react";
+import { Suspense, useEffect, useRef } from "react";
 import { useConsent } from "@/contexts/consent-context";
 import { getUserDataForAdvancedMatching } from "@/lib/analytics";
 import { hashCustomerData, hashPhoneNumber } from "@/lib/facebook";
@@ -15,7 +15,7 @@ declare global {
   }
 }
 
-export function FacebookPixel({ pixelId }: { pixelId?: string | null }) {
+function FacebookPixelInner({ pixelId }: { pixelId?: string | null }) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const { consent } = useConsent();
@@ -192,6 +192,18 @@ export function FacebookPixel({ pixelId }: { pixelId?: string | null }) {
 
       {/* Meta Conversions API Parameter Builder (Client JS) removed to prevent fbc suffix corruption */}
     </>
+  );
+}
+
+export function FacebookPixel({ pixelId }: { pixelId?: string | null }) {
+  if (!pixelId) {
+    return null;
+  }
+
+  return (
+    <Suspense fallback={null}>
+      <FacebookPixelInner pixelId={pixelId} />
+    </Suspense>
   );
 }
 

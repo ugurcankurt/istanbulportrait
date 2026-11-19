@@ -7,7 +7,7 @@ import {
 } from "next/font/google";
 import Script from "next/script";
 import { NextIntlClientProvider } from "next-intl";
-import { getMessages } from "next-intl/server";
+import { getMessages, setRequestLocale } from "next-intl/server";
 import { CoreWebVitals } from "@/components/analytics/core-web-vitals";
 import { FacebookPixel } from "@/components/analytics/facebook-pixel";
 import { GclidTracker } from "@/components/analytics/gclid-tracker";
@@ -17,6 +17,7 @@ import { WebMCPProvider } from "@/components/analytics/webmcp-provider";
 import { YandexMetrica } from "@/components/analytics/yandex-metrica";
 import { ConsentGate } from "@/components/consent-gate";
 import { ConsentProvider } from "@/contexts/consent-context";
+import { routing } from "@/i18n/routing";
 import "../globals.css";
 import type { Metadata } from "next";
 import dynamic from "next/dynamic";
@@ -62,22 +63,29 @@ const fontHeading = Cormorant_Garamond({
   variable: "--font-cormorant",
   subsets: ["latin", "latin-ext", "cyrillic"],
   display: "swap",
-  style: ["normal", "italic"],
-  weight: ["300", "400", "500", "600", "700"],
+  style: ["normal"],
+  weight: ["400", "500", "600"],
 });
 
 const fontSans = Plus_Jakarta_Sans({
   variable: "--font-jakarta",
   subsets: ["latin", "latin-ext"],
   display: "swap",
-  weight: ["300", "400", "500", "600", "700", "800"],
+  weight: ["300", "400", "500", "600", "700"],
 });
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
-  subsets: ["latin", "latin-ext"],
+  subsets: ["latin"],
   display: "swap",
+  preload: false,
 });
+
+export const revalidate = 60;
+
+export function generateStaticParams() {
+  return routing.locales.map((locale) => ({ locale }));
+}
 
 export const viewport = {
   themeColor: [
@@ -172,69 +180,52 @@ export default async function LocaleLayout({
     notFound();
   }
 
+  // Enable static/ISR rendering for all public pages under app/[locale]
+  setRequestLocale(locale);
+
   const [
     { pagesContentService },
     { settingsService },
     { getRatesForBase },
-    { cookies },
-    { getServerUser, isServerAdmin },
-    { getConsentCookie },
     { discountService },
     { packagesService },
   ] = await Promise.all([
     import("@/lib/pages-content-service"),
     import("@/lib/settings-service"),
     import("@/lib/currency"),
-    import("next/headers"),
-    import("@/lib/auth-server"),
-    import("@/app/actions/consent"),
     import("@/lib/discount-service"),
     import("@/lib/packages-service"),
   ]);
 
-  // Execute all asynchronous data fetching in parallel
+  // Execute all asynchronous data fetching in parallel (cookie-free for Vercel Edge ISR caching)
   const [
     messages,
     dynamicNavData,
     settings,
     rates,
-    cookieStore,
-    user,
-    consentData,
     activeDiscounts,
     activePackages,
   ] = await Promise.all([
-    getMessages(),
+    getMessages({ locale }),
     pagesContentService.getDynamicCoreNavData(locale),
     settingsService.getSettings(),
     getRatesForBase("EUR"),
-    cookies(),
-    getServerUser(),
-    getConsentCookie(),
     discountService.getActiveDiscounts(),
     packagesService.getActivePackages(),
   ]);
 
   const publicSettings = settingsService.toPublicSettings(settings);
+  const defaultCurrency = locale === "tr" ? "TRY" : "EUR";
 
-  let selectedCurrency = cookieStore.get("NEXT_CURRENCY")?.value;
-
-  if (!selectedCurrency) {
-    selectedCurrency = locale === "tr" ? "TRY" : "EUR";
-  }
-
-  const currentRate =
-    selectedCurrency === "EUR" ? 1 : rates[selectedCurrency] || 1;
-
-  const isGranted =
-    consentData?.consent === "accepted_all" ? "granted" : "denied";
-
-  // GA4 User-ID: Supabase auth UUID (non-PII). Only sent with analytics consent,
-  // and never for admins so internal traffic doesn't pollute customer data.
-  const analyticsUserId =
-    user && isGranted === "granted" && !(await isServerAdmin(user.email))
-      ? user.id
-      : null;
+  // Slim footer packages to only current locale + English fallback to shrink RSC payload on every page
+  const footerPackages = (activePackages || []).map((pkg) => ({
+    id: pkg.id,
+    slug: pkg.slug,
+    title: {
+      en: pkg.title?.en || pkg.slug,
+      ...(pkg.title?.[locale] ? { [locale]: pkg.title[locale] } : {}),
+    },
+  }));
 
   return (
     <html
@@ -270,16 +261,16 @@ export default async function LocaleLayout({
               window.dataLayer = window.dataLayer || [];
               window.gtag = window.gtag || function(){ (window.dataLayer = window.dataLayer || []).push(arguments); };
               window.gtag('consent', 'default', {
-                'analytics_storage': '${isGranted}',
-                'ad_storage': '${isGranted}',
-                'ad_user_data': '${isGranted}',
-                'ad_personalization': '${isGranted}',
+                'analytics_storage': 'denied',
+                'ad_storage': 'denied',
+                'ad_user_data': 'denied',
+                'ad_personalization': 'denied',
                 'functionality_storage': 'granted',
                 'security_storage': 'granted',
                 'wait_for_update': 500
               });
               window.gtag('set', 'url_passthrough', true);
-              window.gtag('set', 'ads_data_redaction', ${isGranted === "granted" ? "false" : "true"});
+              window.gtag('set', 'ads_data_redaction', true);
               window.gtag('set', 'allow_enhanced_conversions', true);
               window.__GA_ID = ${JSON.stringify(settings.google_analytics_id || null)};
               window.__FB_PIXEL_ID = ${JSON.stringify(settings.facebook_pixel_id || null)};
@@ -290,7 +281,6 @@ export default async function LocaleLayout({
                 beginCheckoutLabel:
                   settings.google_ads_begin_checkout_label || null,
               })};
-              ${analyticsUserId ? `window.gtag('set', 'user_id', ${JSON.stringify(analyticsUserId)});` : ""}
               window.gtag('js', new Date());
               ${settings.google_analytics_id ? `window.gtag('config', ${JSON.stringify(settings.google_analytics_id)});` : ""}
               ${settings.google_ads_id && settings.google_ads_id !== settings.google_analytics_id ? `window.gtag('config', ${JSON.stringify(settings.google_ads_id)});` : ""}
@@ -303,7 +293,7 @@ export default async function LocaleLayout({
               if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
               n.queue=[]}(window, document,'script',
               'https://connect.facebook.net/en_US/fbevents.js');
-              window.fbq('consent', '${isGranted === "granted" ? "grant" : "revoke"}');
+              window.fbq('consent', 'revoke');
               window.fbq('dataProcessingOptions', ['LDU'], 0, 0);
               window.fbq('set', 'autoConfig', false, ${JSON.stringify(settings.facebook_pixel_id)});
               window.fbq('init', ${JSON.stringify(settings.facebook_pixel_id)});
@@ -322,9 +312,13 @@ export default async function LocaleLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <ConsentProvider initialConsent={consentData?.consent ?? null}>
-            <NextIntlClientProvider messages={messages} now={new Date()}>
-              <CurrencyProvider rate={currentRate} currency={selectedCurrency}>
+          <ConsentProvider>
+            <NextIntlClientProvider
+              locale={locale}
+              messages={messages}
+              now={new Date()}
+            >
+              <CurrencyProvider rates={rates} currency={defaultCurrency}>
                 <TooltipProvider>
                   <div className="flex min-h-[100dvh] flex-col">
                     {/* Critical Analytics — mounted before <main> so their useEffect hooks (cookies, PageView) execute before child page effects (ViewContent, Purchase) */}
@@ -333,7 +327,6 @@ export default async function LocaleLayout({
                     <GoogleAnalytics
                       gaId={settings.google_analytics_id}
                       googleAdsId={settings.google_ads_id}
-                      userId={analyticsUserId}
                     />
                     <FacebookPixel pixelId={settings.facebook_pixel_id} />
 
@@ -370,7 +363,7 @@ export default async function LocaleLayout({
                     <Footer
                       dynamicNavData={dynamicNavData}
                       settings={publicSettings}
-                      packages={activePackages}
+                      packages={footerPackages}
                     />
                   </div>
                   <Toaster />

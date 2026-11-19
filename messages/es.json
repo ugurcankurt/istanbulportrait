@@ -715,5 +715,14 @@
       "payments": "Pagos",
       "logout": "Cerrar sesión"
     }
+  },
+  "home_seo": {
+    "locations_title": "Lugares Icónicos para Sesiones de Fotos en Estambul",
+    "locations_subtitle": "Descubre los escenarios más fotogénicos con un fotógrafo local en Estambul: desde Sultanahmet, Santa Sofía y la Mezquita Azul hasta la Torre de Gálata, Ortaköy, Balat, azoteas de Süleymaniye y el Bósforo.",
+    "locations_editorial": "Cada sesión de fotos en Estambul se planifica según la luz natural y las horas con menos turistas. Ya sea al amanecer en Sultanahmet, con vestido volador en una azotea frente al Bósforo, retratos de pareja en Gálata o una pedida sorpresa en Ortaköy, tu fotógrafo local guía cada ángulo y pose.",
+    "locations_cta": "Explorar Todos los Lugares de Estambul",
+    "blog_title": "Guías y Consejos de Fotografía en Estambul",
+    "blog_subtitle": "Consejos de nuestros fotógrafos en Estambul sobre los mejores horarios, vestuario y rincones secretos.",
+    "blog_cta": "Leer Todas las Guías"
   }
 }

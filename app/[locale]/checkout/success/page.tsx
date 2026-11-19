@@ -4,6 +4,8 @@ import { getConsentCookie } from "@/app/actions/consent";
 import { BookingSuccess } from "@/components/booking-success";
 import { SuccessTracker } from "@/components/success-tracker";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Booking Confirmed",
   robots: {

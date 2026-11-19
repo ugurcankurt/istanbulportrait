@@ -109,7 +109,7 @@ export function generateSeoDescription(
   const truncated = cleanText.substring(0, effectiveMax);
 
   // Look for natural sentence boundary in the latter half of the allowable length
-  const minSentencePos = Math.floor(effectiveMax * 0.55);
+  const minSentencePos = Math.floor(effectiveMax * 0.45);
   const sentenceTerminators = isCJK ? /[。！？]/g : /[.!?؟]/g;
   let lastSentenceEnd = -1;
   let match: RegExpExecArray | null;
@@ -384,7 +384,8 @@ export function buildLocalBusinessSchema(
 
   const schema: any = {
     "@context": "https://schema.org",
-    "@type": "LocalBusiness",
+    "@type": ["LocalBusiness", "ProfessionalService"],
+    additionalType: "https://en.wikipedia.org/wiki/Photographer",
     name: orgName,
     inLanguage: locale || "en",
     image: imageUrl
@@ -467,7 +468,8 @@ export function buildLocalBusinessSchema(
           name: r.author?.name || "Customer",
         },
         datePublished: r.date ? r.date.split("T")[0] : undefined,
-        reviewBody: r.text,
+        reviewBody:
+          r.text.length > 350 ? `${r.text.slice(0, 347).trim()}...` : r.text,
         reviewRating: {
           "@type": "Rating",
           bestRating: "5",
@@ -602,9 +604,13 @@ export function buildServiceSchema({
   image,
   price,
   currency = "EUR",
+  aggregateRating,
+  reviewCount,
   providerName,
   providerUrl,
   discount,
+  reviews,
+  locale,
   url,
 }: {
   name: string;
@@ -619,6 +625,7 @@ export function buildServiceSchema({
   providerUrl?: string;
   discount?: { discount_percentage: number; end_date?: string } | null;
   reviews?: any[];
+  locale?: string;
   url?: string;
 }) {
   const rawDiscountPct =
@@ -697,6 +704,44 @@ export function buildServiceSchema({
     schema.offers.priceSpecification = specs;
   }
 
+  if (
+    aggregateRating &&
+    aggregateRating > 0 &&
+    reviewCount &&
+    reviewCount > 0
+  ) {
+    schema.aggregateRating = {
+      "@type": "AggregateRating",
+      ratingValue: aggregateRating.toString(),
+      reviewCount: reviewCount.toString(),
+      bestRating: "5",
+      worstRating: "1",
+    };
+  }
+
+  if (reviews && reviews.length > 0) {
+    schema.review = reviews
+      .filter((r: any) => r.text && r.text.trim().length > 0)
+      .slice(0, 5)
+      .map((r: any) => ({
+        "@type": "Review",
+        inLanguage: locale || "en",
+        author: {
+          "@type": "Person",
+          name: r.author?.name || "Customer",
+        },
+        datePublished: r.date ? r.date.split("T")[0] : undefined,
+        reviewBody:
+          r.text.length > 300 ? `${r.text.slice(0, 297).trim()}...` : r.text,
+        reviewRating: {
+          "@type": "Rating",
+          bestRating: "5",
+          ratingValue: r.rating?.toString() || "5",
+          worstRating: "1",
+        },
+      }));
+  }
+
   return schema;
 }
 
@@ -714,6 +759,8 @@ export function buildArticleSchema({
   publisherLogo,
   inLanguage,
   keywords,
+  wordCount,
+  articleSection,
   url,
 }: {
   title: string;
@@ -729,6 +776,8 @@ export function buildArticleSchema({
   publisherLogo?: string;
   inLanguage?: string;
   keywords?: string[];
+  wordCount?: number;
+  articleSection?: string;
   url?: string;
 }) {
   const canonicalUrl = url ? normalizeSchemaUrl(url) : undefined;
@@ -738,7 +787,7 @@ export function buildArticleSchema({
 
   return {
     "@context": "https://schema.org",
-    "@type": "Article",
+    "@type": "BlogPosting",
     mainEntityOfPage: canonicalUrl
       ? {
           "@type": "WebPage",
@@ -748,6 +797,8 @@ export function buildArticleSchema({
     url: canonicalUrl,
     headline: title,
     inLanguage: inLanguage,
+    ...(wordCount && wordCount > 0 ? { wordCount } : {}),
+    ...(articleSection ? { articleSection } : {}),
     image: image ? [resolveSchemaImage(image)] : undefined,
     datePublished,
     dateModified,

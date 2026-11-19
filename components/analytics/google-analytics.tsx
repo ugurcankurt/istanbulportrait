@@ -16,24 +16,63 @@ export function GoogleAnalytics({
   const { consent, isLoading } = useConsent();
   const lastSetUserId = useRef<string | null>(null);
 
-  // Keep GA4 user_id in sync on the client (login/logout via router.refresh,
-  // consent changes). The initial value is already set server-side in the
-  // layout bootstrap script, before gtag.js config, so page_view carries it.
+  // Keep GA4 user_id in sync on the client (login/logout, consent changes)
+  // without calling cookies() in the root layout (preserves Vercel Edge ISR caching).
   useEffect(() => {
     if (isLoading || typeof window === "undefined" || !window.gtag) return;
 
-    const effectiveId = consent === "accepted_all" && userId ? userId : null;
+    let cancelled = false;
 
-    if (effectiveId) {
-      if (lastSetUserId.current !== effectiveId) {
-        window.gtag("set", { user_id: effectiveId } as any);
-        lastSetUserId.current = effectiveId;
+    async function syncUserId() {
+      if (consent !== "accepted_all") {
+        if (lastSetUserId.current) {
+          window.gtag?.("set", { user_id: null } as any);
+          lastSetUserId.current = null;
+        }
+        return;
       }
-    } else if (lastSetUserId.current) {
-      // Logged out or consent withdrawn: stop attaching the identifier
-      window.gtag("set", { user_id: null } as any);
-      lastSetUserId.current = null;
+
+      let effectiveId = userId || null;
+
+      // Only inspect Supabase session if a Supabase auth cookie exists (zero overhead for anonymous visitors)
+      if (!effectiveId && /(?:^|; )sb-[^=]+-auth-token/.test(document.cookie)) {
+        try {
+          const { createClientSupabaseClient } = await import(
+            "@/lib/supabase/client"
+          );
+          const supabase = createClientSupabaseClient();
+          const {
+            data: { session },
+          } = await supabase.auth.getSession();
+          const email = session?.user?.email?.toLowerCase();
+          const isAdmin =
+            email === "info@istanbulportrait.com" ||
+            email === "ugurcankurt@gmail.com";
+          if (session?.user?.id && !isAdmin) {
+            effectiveId = session.user.id;
+          }
+        } catch {
+          // Ignore client session lookup errors
+        }
+      }
+
+      if (cancelled || !window.gtag) return;
+
+      if (effectiveId) {
+        if (lastSetUserId.current !== effectiveId) {
+          window.gtag("set", { user_id: effectiveId } as any);
+          lastSetUserId.current = effectiveId;
+        }
+      } else if (lastSetUserId.current) {
+        window.gtag("set", { user_id: null } as any);
+        lastSetUserId.current = null;
+      }
     }
+
+    syncUserId();
+    return () => {
+      cancelled = true;
+    };
   }, [userId, consent, isLoading]);
 
   const primaryTagId = gaId || googleAdsId;

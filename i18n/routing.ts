@@ -5,6 +5,8 @@ export const routing = defineRouting({
   locales: ["en", "ar", "ru", "es", "zh", "fr", "de", "ro", "tr"],
   defaultLocale: "en",
   localeDetection: false,
+  // Disable NEXT_LOCALE Set-Cookie header so Vercel Edge CDN can cache ISR responses
+  localeCookie: false,
   // Disable automatic hreflang headers - we manage them in page metadata
   // This prevents conflict between header and HTML hreflang tags
   alternateLinks: false,

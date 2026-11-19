@@ -715,5 +715,14 @@
       "payments": "Zahlungen",
       "logout": "Abmelden"
     }
+  },
+  "home_seo": {
+    "locations_title": "Ikonische Fotoshooting-Locations in Istanbul",
+    "locations_subtitle": "Entdecken Sie mit einem lokalen Istanbul-Fotografen die schönsten Kulissen — von Sultanahmet, Hagia Sophia und Blauer Moschee bis zum Galataturm, Ortaköy, Balat, Süleymaniye-Dachterrassen und Bosporus.",
+    "locations_editorial": "Jedes Fotoshooting in Istanbul wird nach natürlichem Licht und ruhigen Tageszeiten geplant. Ob Sonnenaufgang in Sultanahmet, Flying-Dress-Shooting auf einer Dachterrasse über dem Bosporus, Paarporträts in Galata oder Heiratsantrag in Ortaköy — Ihr lokaler Fotograf begleitet jede Pose und Route.",
+    "locations_cta": "Alle Istanbul-Locations entdecken",
+    "blog_title": "Istanbul Fotoshooting-Guides & Tipps",
+    "blog_subtitle": "Praxistipps unserer Istanbul-Fotografen zu besten Uhrzeiten, Outfits und geheimen Fotospots.",
+    "blog_cta": "Alle Foto-Guides lesen"
   }
 }

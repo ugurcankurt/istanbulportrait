@@ -43,6 +43,24 @@ export function ConsentProvider({
 
         if (consentData) {
           setConsentState(consentData.consent);
+
+          // Sync Google Consent Mode v2 & Meta Pixel consent immediately on mount
+          if (typeof window !== "undefined") {
+            const granted = consentData.consent === "accepted_all";
+            if (window.gtag) {
+              window.gtag("consent", "update", {
+                analytics_storage: granted ? "granted" : "denied",
+                ad_storage: granted ? "granted" : "denied",
+                ad_user_data: granted ? "granted" : "denied",
+                ad_personalization: granted ? "granted" : "denied",
+              });
+              // biome-ignore lint/suspicious/noExplicitAny: gtag ads_data_redaction boolean parameter
+              window.gtag("set", "ads_data_redaction", !granted as any);
+            }
+            if (window.fbq) {
+              window.fbq("consent", granted ? "grant" : "revoke");
+            }
+          }
         }
       } catch (error) {
         console.error("Error loading consent:", error);
