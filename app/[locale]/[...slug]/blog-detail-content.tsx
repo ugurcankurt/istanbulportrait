@@ -210,14 +210,15 @@ export async function BlogDetailPageContent({
                       <NextLink
                         key={cat.category.id}
                         href={`/${locale}/${canonicalParentSlug}/${getBlogTaxonomySegment("category", locale)}/${getLocalizedCategorySlug(cat.category)}`}
-                        className="px-3 py-1.5 rounded-xl text-[10px] font-bold uppercase tracking-widest border-[0.5px] border-border/30 shadow-sm hover:opacity-80 transition-opacity"
-                        style={{
-                          backgroundColor: `${cat.category.color}15`,
-                          color: cat.category.color,
-                        }}
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[10px] font-bold uppercase tracking-widest bg-secondary text-foreground border border-border/60 shadow-sm hover:opacity-80 transition-opacity"
                       >
+                        <span
+                          className="h-1.5 w-1.5 rounded-full shrink-0"
+                          style={{ backgroundColor: cat.category.color }}
+                          aria-hidden="true"
+                        />
                         {cat.category.icon && (
-                          <span className="mr-1">{cat.category.icon}</span>
+                          <span className="mr-0.5">{cat.category.icon}</span>
                         )}
                         {cat.category.translation?.name || cat.category.slug}
                       </NextLink>

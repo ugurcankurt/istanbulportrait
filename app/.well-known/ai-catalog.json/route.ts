@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { packagesService } from "@/lib/packages-service";
-import { getBaseUrl } from "@/lib/seo-utils";
+import { getBaseUrl, resolveSchemaImage } from "@/lib/seo-utils";
 import { settingsService } from "@/lib/settings-service";
 
 export const revalidate = 3600;
@@ -23,6 +23,8 @@ export async function GET() {
   const formattedUpdatedAt = new Date(rawLatestUpdate).toISOString();
   const packageSlugs = activePackages.map((p) => p.slug).join(", ");
 
+  const absoluteLogoUrl = resolveSchemaImage(settings.logo_url);
+
   // Conforms strictly to https://raw.githubusercontent.com/ards-project/ard-spec/main/spec/schemas/ai-catalog.schema.json
   const catalog = {
     specVersion: "1.0",
@@ -30,7 +32,7 @@ export async function GET() {
       displayName: siteName,
       identifier: `did:web:${domain}`,
       documentationUrl: `${baseUrl}/llms.txt`,
-      ...(settings.logo_url ? { logoUrl: settings.logo_url } : {}),
+      ...(absoluteLogoUrl ? { logoUrl: absoluteLogoUrl } : {}),
     },
     entries: [
       {

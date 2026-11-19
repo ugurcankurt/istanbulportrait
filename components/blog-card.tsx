@@ -55,12 +55,13 @@ export async function BlogCard({
               {post.categories.slice(0, 2).map((cat) => (
                 <span
                   key={cat.category.id}
-                  className="text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-full"
-                  style={{
-                    backgroundColor: `${cat.category.color}15`,
-                    color: cat.category.color,
-                  }}
+                  className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-full bg-secondary text-foreground border border-border/60"
                 >
+                  <span
+                    className="h-1.5 w-1.5 rounded-full shrink-0"
+                    style={{ backgroundColor: cat.category.color }}
+                    aria-hidden="true"
+                  />
                   {cat.category.translation?.name || cat.category.slug}
                 </span>
               ))}
