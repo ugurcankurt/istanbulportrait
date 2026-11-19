@@ -408,6 +408,7 @@ export function buildLocalBusinessSchema(
     address: {
       "@type": "PostalAddress",
       addressLocality: settings.city || "Istanbul",
+      addressRegion: settings.city || "Istanbul",
       addressCountry: settings.country_code || "TR",
       streetAddress: localizedStreet,
       postalCode: "34116",
@@ -572,7 +573,9 @@ export function buildOrganizationSchema(settings: SiteSettings) {
     founder: settings.founder_name
       ? {
           "@type": "Person",
+          "@id": `${baseUrl}/#founder`,
           name: settings.founder_name,
+          url: `${baseUrl}/en/about`,
           ...(settings.founder_image_url
             ? {
                 image: resolveSchemaImage(settings.founder_image_url),
@@ -581,6 +584,26 @@ export function buildOrganizationSchema(settings: SiteSettings) {
         }
       : undefined,
     foundingDate: settings.organization_founding_date || undefined,
+    hasMerchantReturnPolicy: {
+      "@type": "MerchantReturnPolicy",
+      applicableCountry: [
+        "TR",
+        "US",
+        "GB",
+        "DE",
+        "FR",
+        "RO",
+        "RU",
+        "ES",
+        "AE",
+        "SA",
+      ],
+      returnPolicyCategory:
+        "https://schema.org/MerchantReturnFiniteReturnWindow",
+      merchantReturnDays: 1,
+      returnMethod: "https://schema.org/ReturnInStore",
+      returnFees: "https://schema.org/FreeReturn",
+    },
     contactPoint: {
       "@type": "ContactPoint",
       telephone: settings.contact_phone || settings.whatsapp_number,
@@ -616,7 +639,7 @@ export function buildServiceSchema({
   name: string;
   sku?: string;
   description: string | null;
-  image: string;
+  image: string | string[];
   price: number;
   currency?: string;
   aggregateRating?: number;
@@ -639,7 +662,10 @@ export function buildServiceSchema({
       ? Number((price * (1 - discountFraction)).toFixed(2))
       : price;
 
-  const schemaImageUrl = resolveSchemaImage(image);
+  const rawImages = Array.isArray(image) ? image : [image];
+  const schemaImages = Array.from(
+    new Set(rawImages.map((img) => resolveSchemaImage(img)).filter(Boolean)),
+  );
   const canonicalUrl = url ? normalizeSchemaUrl(url) : undefined;
   const baseUrl = getBaseUrl();
   const orgName = providerName || "Istanbul Portrait";
@@ -664,7 +690,8 @@ export function buildServiceSchema({
         .replace(/[^\p{L}\p{N}]/gu, "-")
         .replace(/-+/g, "-")
         .replace(/^-+|-+$/g, ""),
-    image: schemaImageUrl || undefined,
+    image:
+      schemaImages.length > 1 ? schemaImages : schemaImages[0] || undefined,
     description: description || undefined,
     brand: {
       "@type": "Brand",
@@ -680,6 +707,26 @@ export function buildServiceSchema({
         : `${new Date().getFullYear()}-12-31`,
       availability: "https://schema.org/InStock",
       validFrom: `${new Date().getFullYear()}-01-01`,
+      hasMerchantReturnPolicy: {
+        "@type": "MerchantReturnPolicy",
+        applicableCountry: [
+          "TR",
+          "US",
+          "GB",
+          "DE",
+          "FR",
+          "RO",
+          "RU",
+          "ES",
+          "AE",
+          "SA",
+        ],
+        returnPolicyCategory:
+          "https://schema.org/MerchantReturnFiniteReturnWindow",
+        merchantReturnDays: 1,
+        returnMethod: "https://schema.org/ReturnInStore",
+        returnFees: "https://schema.org/FreeReturn",
+      },
       seller: {
         "@type": "Organization",
         "@id": orgId,
@@ -752,6 +799,7 @@ export function buildArticleSchema({
   datePublished,
   dateModified,
   authorName,
+  authorUrl,
   authorUrls,
   authorImage,
   authorBio,
@@ -769,6 +817,7 @@ export function buildArticleSchema({
   datePublished: string;
   dateModified: string;
   authorName: string;
+  authorUrl?: string;
   authorUrls?: string[];
   authorImage?: string;
   authorBio?: string;
@@ -805,7 +854,11 @@ export function buildArticleSchema({
     author: [
       {
         "@type": "Person",
+        "@id": `${baseUrl}/#founder`,
         name: authorName,
+        url: authorUrl
+          ? normalizeSchemaUrl(authorUrl)
+          : `${baseUrl}/${inLanguage || "en"}/about`,
         ...(authorImage ? { image: resolveSchemaImage(authorImage) } : {}),
         ...(authorBio ? { description: authorBio } : {}),
         ...(authorUrls && authorUrls.length > 0 ? { sameAs: authorUrls } : {}),

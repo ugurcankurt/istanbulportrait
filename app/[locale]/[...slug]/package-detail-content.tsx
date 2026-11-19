@@ -83,15 +83,23 @@ export async function PackageDetailPageContent({
     );
   const currentDiscount = validDiscounts.length > 0 ? validDiscounts[0] : null;
 
+  const packageSchemaImages = Array.from(
+    new Set(
+      [
+        pkg.cover_image,
+        ...(Array.isArray(pkg.gallery_images) ? pkg.gallery_images : []),
+      ].filter((img): img is string => Boolean(img)),
+    ),
+  ).slice(0, 5);
+
   const serviceSchema = buildServiceSchema({
     name: title,
     sku: pkg.slug,
     description: generateSeoDescription(desc, 155, locale),
     image:
-      pkg.gallery_images?.[0] ||
-      pkg.cover_image ||
-      settings.default_og_image_url ||
-      "",
+      packageSchemaImages.length > 0
+        ? packageSchemaImages
+        : settings.default_og_image_url || "",
     price: pkg.price,
     currency: "EUR",
     aggregateRating: aggregateRating?.average,
@@ -129,7 +137,9 @@ export async function PackageDetailPageContent({
           settings.default_og_image_url ||
           "",
       ),
-      uploadDate: pkg.created_at || pkg.updated_at || new Date().toISOString(),
+      uploadDate: new Date(
+        pkg.created_at || pkg.updated_at || Date.now(),
+      ).toISOString(),
       width: 1080,
       height: 1920,
       ...(embedUrl ? { embedUrl } : {}),

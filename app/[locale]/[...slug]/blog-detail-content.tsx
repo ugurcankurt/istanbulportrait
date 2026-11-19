@@ -102,6 +102,7 @@ export async function BlogDetailPageContent({
             settings.founder_name ||
             settings.site_name ||
             "Author",
+          authorUrl: `${getBaseUrl()}/${locale}/${pagesContentService.getCorePageSegment("about", locale) || "about"}`,
           authorImage: post.author?.avatar_url || undefined,
           authorBio:
             post.author?.bio?.[locale as keyof typeof post.author.bio] ||
