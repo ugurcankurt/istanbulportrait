@@ -557,7 +557,10 @@
       "title": "Conclusiones clave",
       "ai_overview": "Descripción general de la IA"
     },
-    "table_of_contents": "Table of Contents"
+    "table_of_contents": "Table of Contents",
+    "previous": "Anterior",
+    "next": "Siguiente",
+    "page": "Página {current} de {total}"
   },
   "privacy": {
     "cookies": {

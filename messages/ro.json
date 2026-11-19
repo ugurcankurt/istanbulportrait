@@ -557,7 +557,10 @@
       "title": "Recomandări cheie",
       "ai_overview": "Prezentare generală a AI"
     },
-    "table_of_contents": "Table of Contents"
+    "table_of_contents": "Table of Contents",
+    "previous": "Anterior",
+    "next": "Următor",
+    "page": "Pagina {current} din {total}"
   },
   "privacy": {
     "cookies": {

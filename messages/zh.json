@@ -557,7 +557,10 @@
       "title": "要点",
       "ai_overview": "人工智能概述"
     },
-    "table_of_contents": "Table of Contents"
+    "table_of_contents": "Table of Contents",
+    "previous": "上一页",
+    "next": "下一页",
+    "page": "第 {current} / {total} 页"
   },
   "privacy": {
     "cookies": {

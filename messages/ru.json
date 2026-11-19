@@ -557,7 +557,10 @@
       "title": "Ключевые выводы",
       "ai_overview": "Обзор ИИ"
     },
-    "table_of_contents": "Table of Contents"
+    "table_of_contents": "Table of Contents",
+    "previous": "Назад",
+    "next": "Далее",
+    "page": "Страница {current} из {total}"
   },
   "privacy": {
     "cookies": {

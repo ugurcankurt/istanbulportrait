@@ -557,7 +557,10 @@
       "title": "Points clés à retenir",
       "ai_overview": "Présentation de l'IA"
     },
-    "table_of_contents": "Table of Contents"
+    "table_of_contents": "Table of Contents",
+    "previous": "Précédent",
+    "next": "Suivant",
+    "page": "Page {current} sur {total}"
   },
   "privacy": {
     "cookies": {

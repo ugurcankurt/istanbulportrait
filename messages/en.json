@@ -557,7 +557,10 @@
       "title": "Key Takeaways",
       "ai_overview": "AI Overview"
     },
-    "table_of_contents": "Table of Contents"
+    "table_of_contents": "Table of Contents",
+    "previous": "Previous",
+    "next": "Next",
+    "page": "Page {current} of {total}"
   },
   "privacy": {
     "cookies": {

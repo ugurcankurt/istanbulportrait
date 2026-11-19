@@ -557,7 +557,10 @@
       "title": "الوجبات السريعة الرئيسية",
       "ai_overview": "ملخص الذكاء الاصطناعي"
     },
-    "table_of_contents": "Table of Contents"
+    "table_of_contents": "Table of Contents",
+    "previous": "السابق",
+    "next": "التالي",
+    "page": "صفحة {current} من {total}"
   },
   "privacy": {
     "cookies": {

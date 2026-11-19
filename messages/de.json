@@ -557,7 +557,10 @@
       "title": "Wichtige Erkenntnisse",
       "ai_overview": "KI-Übersicht"
     },
-    "table_of_contents": "Table of Contents"
+    "table_of_contents": "Table of Contents",
+    "previous": "Zurück",
+    "next": "Weiter",
+    "page": "Seite {current} von {total}"
   },
   "privacy": {
     "cookies": {

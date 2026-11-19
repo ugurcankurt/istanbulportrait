@@ -557,7 +557,10 @@
       "title": "Önemli Çıkarımlar",
       "ai_overview": "Yapay Zeka Özeti"
     },
-    "table_of_contents": "İçindekiler"
+    "table_of_contents": "İçindekiler",
+    "previous": "Önceki",
+    "next": "Sonraki",
+    "page": "Sayfa {current} / {total}"
   },
   "privacy": {
     "cookies": {
