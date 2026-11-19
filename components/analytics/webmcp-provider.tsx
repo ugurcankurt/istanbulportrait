@@ -321,10 +321,18 @@ export function WebMCPProvider() {
 
     for (const tool of tools) {
       try {
-        modelContext.registerTool(tool, { signal: controller.signal });
+        const res = modelContext.registerTool(tool, {
+          signal: controller.signal,
+        });
+        Promise.resolve(res).catch(() => {
+          // Ignore AbortError on unmount / React Strict Mode cleanup or duplicate registrations
+        });
       } catch {
         try {
-          modelContext.registerTool(tool);
+          const fallbackRes = modelContext.registerTool(tool);
+          Promise.resolve(fallbackRes).catch(() => {
+            // Ignore duplicate registration errors across hot reloads
+          });
         } catch {
           // Ignore duplicate registration errors across hot reloads
         }
@@ -336,7 +344,11 @@ export function WebMCPProvider() {
       if (typeof modelContext.unregisterTool === "function") {
         for (const tool of tools) {
           try {
-            modelContext.unregisterTool(tool.name);
+            Promise.resolve(modelContext.unregisterTool(tool.name)).catch(
+              () => {
+                // Ignore cleanup errors
+              },
+            );
           } catch {
             // Ignore cleanup errors
           }

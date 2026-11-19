@@ -39,7 +39,20 @@ const VideoPlayer = ({
   const embed = React.useMemo(() => {
     if (!url) return null;
     try {
-      const parsed = new URL(url);
+      // Support both relative first-party proxy paths (/storage/...) and absolute URLs
+      const parsed = new URL(url, "https://istanbulportrait.com");
+      const lowerPath = parsed.pathname.toLowerCase();
+
+      if (
+        lowerPath.endsWith(".mp4") ||
+        lowerPath.endsWith(".webm") ||
+        lowerPath.endsWith(".mov") ||
+        lowerPath.endsWith(".m4v") ||
+        url.startsWith("/storage/") ||
+        url.includes("supabase.co")
+      ) {
+        return { type: "mp4", src: url };
+      }
       if (
         parsed.hostname.includes("youtube.com") ||
         parsed.hostname.includes("youtu.be")
@@ -69,13 +82,6 @@ const VideoPlayer = ({
           src: `https://www.instagram.com${pathname}embed/`,
         };
       }
-      if (
-        url.endsWith(".mp4") ||
-        url.endsWith(".webm") ||
-        url.includes("supabase.co")
-      ) {
-        return { type: "mp4", src: url };
-      }
     } catch (_e) {
       return null;
     }
@@ -92,6 +98,7 @@ const VideoPlayer = ({
         loop
         muted
         playsInline
+        preload="metadata"
         className={cn(
           "w-full h-full",
           fit === "cover" ? "object-cover" : "object-contain",
