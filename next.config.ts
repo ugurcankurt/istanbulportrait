@@ -59,8 +59,8 @@ const nextConfig: NextConfig = {
     minimumCacheTTL: 31536000, // 1 year caching for Vercel Image Optimization
     dangerouslyAllowSVG: true,
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
-    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
-    imageSizes: [16, 32, 48, 64, 96, 128, 256, 320, 384, 448, 512],
+    deviceSizes: [640, 828, 1080, 1200, 1920],
+    imageSizes: [32, 64, 128, 256, 384],
     qualities: [50, 60, 70, 75, 80, 90, 100],
   },
   experimental: {

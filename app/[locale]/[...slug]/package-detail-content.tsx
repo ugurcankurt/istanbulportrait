@@ -33,24 +33,40 @@ export async function PackageDetailPageContent({
     notFound();
   }
 
-  const activeDiscounts = await discountService.getActiveDiscounts();
-  const timeSurcharges = await availabilityService.getTimeSurcharges();
-  const availableAddons = await addonsService.getActiveAddonsForPackage(pkg.id);
+  const [
+    activeDiscounts,
+    timeSurcharges,
+    availableAddons,
+    aggregateRating,
+    reviewsResult,
+    { settingsService },
+    { pagesContentService },
+    { generateNativeSlug },
+    allPackages,
+    t,
+  ] = await Promise.all([
+    discountService.getActiveDiscounts(),
+    availabilityService.getTimeSurcharges(),
+    addonsService.getActiveAddonsForPackage(pkg.id),
+    reviewsService.getAggregateRating(),
+    reviewsService.fetchGoogleReviews(locale),
+    import("@/lib/settings-service"),
+    import("@/lib/pages-content-service"),
+    import("@/lib/slug-generator"),
+    packagesService.getActivePackages(),
+    getTranslations({ locale, namespace: "packages" }),
+  ]);
 
-  // Fetch real reviews data
-  const aggregateRating = await reviewsService.getAggregateRating();
-  const { reviews } = await reviewsService.fetchGoogleReviews(locale);
+  const { reviews } = reviewsResult;
+  const [settings, packagesPage] = await Promise.all([
+    settingsService.getSettings(),
+    pagesContentService.getPageBySlug("packages"),
+  ]);
 
   const title = pkg.title?.[locale] || pkg.title?.en || pkg.slug;
   const desc = pkg.description?.[locale] || pkg.description?.en || "";
   const _feat = pkg.features?.[locale] || pkg.features?.en || [];
   const _dur = pkg.duration?.[locale] || pkg.duration?.en || "1 hour";
-  const { settingsService } = await import("@/lib/settings-service");
-  const settings = await settingsService.getSettings();
-
-  const { pagesContentService } = await import("@/lib/pages-content-service");
-  const { generateNativeSlug } = await import("@/lib/slug-generator");
-  const packagesPage = await pagesContentService.getPageBySlug("packages");
   const parentSegment =
     pagesContentService.getCorePageSegment(
       packagesPage || "packages",
@@ -147,9 +163,7 @@ export async function PackageDetailPageContent({
     };
   })();
 
-  const allPackages = await packagesService.getActivePackages();
   const relatedPackages = allPackages.filter((p) => p.id !== pkg.id);
-  const t = await getTranslations({ locale, namespace: "packages" });
 
   return (
     <div>

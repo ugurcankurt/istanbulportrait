@@ -100,25 +100,71 @@ export async function LocationDetailPageContent({
 
   const scoredPackages = istanbulPackages
     .map((pkg) => {
-      const hay = `${pkg.slug} ${pkg.title?.en || ""} ${pkg.description?.en || ""}`.toLowerCase();
+      const hay =
+        `${pkg.slug} ${pkg.title?.en || ""} ${pkg.description?.en || ""}`.toLowerCase();
       let score = pkg.is_popular ? 1 : 0;
 
-      if (locSignals.includes("rooftop") || locSignals.includes("suleymaniye")) {
-        if (hay.includes("rooftop") || hay.includes("flying-dress") || hay.includes("flying dress")) score += 10;
+      if (
+        locSignals.includes("rooftop") ||
+        locSignals.includes("suleymaniye")
+      ) {
+        if (
+          hay.includes("rooftop") ||
+          hay.includes("flying-dress") ||
+          hay.includes("flying dress")
+        )
+          score += 10;
       }
-      if (locSignals.includes("ortakoy") || locSignals.includes("bosphorus") || locSignals.includes("arnavutkoy")) {
-        if (hay.includes("ortakoy") || hay.includes("bosphorus") || hay.includes("couple") || hay.includes("family")) score += 8;
+      if (
+        locSignals.includes("ortakoy") ||
+        locSignals.includes("bosphorus") ||
+        locSignals.includes("arnavutkoy")
+      ) {
+        if (
+          hay.includes("ortakoy") ||
+          hay.includes("bosphorus") ||
+          hay.includes("couple") ||
+          hay.includes("family")
+        )
+          score += 8;
       }
-      if (locSignals.includes("hagia") || locSignals.includes("blue-mosque") || locSignals.includes("sultanahmet") || locSignals.includes("grand-bazaar") || locSignals.includes("basilica")) {
-        if (hay.includes("hagia") || hay.includes("sultanahmet") || hay.includes("old-town") || hay.includes("solo")) score += 8;
+      if (
+        locSignals.includes("hagia") ||
+        locSignals.includes("blue-mosque") ||
+        locSignals.includes("sultanahmet") ||
+        locSignals.includes("grand-bazaar") ||
+        locSignals.includes("basilica")
+      ) {
+        if (
+          hay.includes("hagia") ||
+          hay.includes("sultanahmet") ||
+          hay.includes("old-town") ||
+          hay.includes("solo")
+        )
+          score += 8;
       }
-      if (locSignals.includes("karakoy") || locSignals.includes("istiklal") || locSignals.includes("galata") || locSignals.includes("balat")) {
-        if (hay.includes("fashion") || hay.includes("street") || hay.includes("couple") || hay.includes("solo")) score += 8;
+      if (
+        locSignals.includes("karakoy") ||
+        locSignals.includes("istiklal") ||
+        locSignals.includes("galata") ||
+        locSignals.includes("balat")
+      ) {
+        if (
+          hay.includes("fashion") ||
+          hay.includes("street") ||
+          hay.includes("couple") ||
+          hay.includes("solo")
+        )
+          score += 8;
       }
       if (locSignals.includes("family") || locSignals.includes("kuzguncuk")) {
         if (hay.includes("family")) score += 10;
       }
-      if (locSignals.includes("proposal") || locSignals.includes("engagement") || locSignals.includes("dolmabahce")) {
+      if (
+        locSignals.includes("proposal") ||
+        locSignals.includes("engagement") ||
+        locSignals.includes("dolmabahce")
+      ) {
         if (hay.includes("proposal") || hay.includes("couple")) score += 8;
       }
 
@@ -266,7 +312,7 @@ export async function LocationDetailPageContent({
                       >
                         <Image
                           src={img}
-                          alt={`${dynamicTitle} photo ${index + 1}`}
+                          alt={`${dynamicTitle} Istanbul photoshoot portfolio — photo ${index + 1}`}
                           fill
                           className="object-cover group-hover:scale-110 transition-transform duration-700"
                           sizes="(max-width: 768px) 50vw, 33vw"

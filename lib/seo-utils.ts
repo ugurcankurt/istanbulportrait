@@ -409,6 +409,10 @@ export function buildLocalBusinessSchema(
     "@type": ["LocalBusiness", "ProfessionalService"],
     additionalType: "https://en.wikipedia.org/wiki/Photographer",
     name: orgName,
+    description:
+      (locale && settings.site_description?.[locale]) ||
+      settings.site_description?.en ||
+      "Professional local portrait photographer in Istanbul for rooftop, flying dress, couple, proposal, family, and solo traveler photoshoots.",
     inLanguage: locale || "en",
     image: imageUrl
       ? {
@@ -427,6 +431,29 @@ export function buildLocalBusinessSchema(
     url: `${baseUrl}${locale ? `/${locale}` : ""}`,
     telephone: settings.contact_phone || settings.whatsapp_number,
     priceRange: priceRange || undefined,
+    paymentAccepted: "Cash",
+    currenciesAccepted: "EUR, USD, TRY",
+    knowsLanguage: [
+      "English",
+      "Turkish",
+      "Arabic",
+      "Russian",
+      "Spanish",
+      "Chinese",
+      "French",
+      "German",
+      "Romanian",
+    ],
+    areaServed: [
+      { "@type": "City", name: "Istanbul" },
+      { "@type": "Place", name: "Sultanahmet, Istanbul" },
+      { "@type": "Place", name: "Galata, Istanbul" },
+      { "@type": "Place", name: "Ortaköy, Istanbul" },
+      { "@type": "Place", name: "Balat, Istanbul" },
+      { "@type": "Place", name: "Süleymaniye, Istanbul" },
+      { "@type": "Place", name: "Karaköy, Istanbul" },
+      { "@type": "Place", name: "Bosphorus, Istanbul" },
+    ],
     address: {
       "@type": "PostalAddress",
       addressLocality: settings.city || "Istanbul",
@@ -460,46 +487,15 @@ export function buildLocalBusinessSchema(
       settings.youtube_url,
       settings.tiktok_url,
       "https://www.linkedin.com/company/istanbulportrait",
+      "https://www.trustpilot.com/review/istanbulportrait.com",
     ].filter(Boolean),
   };
 
-  if (
-    aggregateRatingValue &&
-    aggregateRatingValue > 0 &&
-    reviewCount &&
-    reviewCount > 0
-  ) {
-    schema.aggregateRating = {
-      "@type": "AggregateRating",
-      ratingValue: aggregateRatingValue.toString(),
-      reviewCount: reviewCount.toString(),
-      bestRating: "5",
-      worstRating: "1",
-    };
-  }
-
-  // Include individual reviews with language tagging
-  if (reviews && reviews.length > 0) {
-    schema.review = reviews
-      .filter((r: any) => r.text && r.text.trim().length > 0)
-      .slice(0, 5)
-      .map((r: any) => ({
-        "@type": "Review",
-        inLanguage: locale || "en",
-        author: {
-          "@type": "Person",
-          name: r.author?.name || "Customer",
-        },
-        datePublished: r.date ? r.date.split("T")[0] : undefined,
-        reviewBody: cleanReviewText(r.text, 350, locale),
-        reviewRating: {
-          "@type": "Rating",
-          bestRating: "5",
-          ratingValue: r.rating?.toString() || "5",
-          worstRating: "1",
-        },
-      }));
-  }
+  // Note: Per Google Search Central's self-serving review snippet policy,
+  // aggregateRating and Review markup are intentionally omitted on first-party LocalBusiness schema.
+  void reviews;
+  void aggregateRatingValue;
+  void reviewCount;
 
   // Include dynamic packages in OfferCatalog for rich snippet discovery and Google Image Pack indexing
   if (packages && packages.length > 0) {
@@ -623,31 +619,22 @@ export function buildOrganizationSchema(settings: SiteSettings) {
         }
       : undefined,
     foundingDate: settings.organization_founding_date || undefined,
-    hasMerchantReturnPolicy: {
-      "@type": "MerchantReturnPolicy",
-      applicableCountry: [
-        "TR",
-        "US",
-        "GB",
-        "DE",
-        "FR",
-        "RO",
-        "RU",
-        "ES",
-        "AE",
-        "SA",
-      ],
-      returnPolicyCategory:
-        "https://schema.org/MerchantReturnFiniteReturnWindow",
-      merchantReturnDays: 1,
-      returnMethod: "https://schema.org/ReturnInStore",
-      returnFees: "https://schema.org/FreeReturn",
-    },
     contactPoint: {
       "@type": "ContactPoint",
       telephone: settings.contact_phone || settings.whatsapp_number,
       contactType: "customer service",
       email: settings.contact_email,
+      availableLanguage: [
+        "English",
+        "Turkish",
+        "Arabic",
+        "Russian",
+        "Spanish",
+        "Chinese",
+        "French",
+        "German",
+        "Romanian",
+      ],
     },
     sameAs: [
       settings.instagram_url,
@@ -655,6 +642,7 @@ export function buildOrganizationSchema(settings: SiteSettings) {
       settings.youtube_url,
       settings.tiktok_url,
       "https://www.linkedin.com/company/istanbulportrait",
+      "https://www.trustpilot.com/review/istanbulportrait.com",
     ].filter(Boolean),
   };
 }
@@ -711,8 +699,10 @@ export function buildServiceSchema({
   const orgId = `${baseUrl}/#organization`;
 
   const schema: any = {
-    "@context": "https://schema.org/",
-    "@type": "Product",
+    "@context": "https://schema.org",
+    "@type": "Service",
+    serviceType: "Portrait Photography",
+    inLanguage: locale || "en",
     mainEntityOfPage: canonicalUrl
       ? {
           "@type": "WebPage",
@@ -721,20 +711,18 @@ export function buildServiceSchema({
       : undefined,
     url: canonicalUrl,
     name,
-    sku:
-      sku ||
-      name
-        .toLowerCase()
-        .trim()
-        .replace(/[^\p{L}\p{N}]/gu, "-")
-        .replace(/-+/g, "-")
-        .replace(/^-+|-+$/g, ""),
     image:
       schemaImages.length > 1 ? schemaImages : schemaImages[0] || undefined,
     description: description || undefined,
-    brand: {
-      "@type": "Brand",
+    areaServed: {
+      "@type": "City",
+      name: "Istanbul",
+    },
+    provider: {
+      "@type": "LocalBusiness",
+      "@id": `${baseUrl}/#localbusiness`,
       name: orgName,
+      url: providerUrl || baseUrl,
     },
     offers: {
       "@type": "Offer",
@@ -746,26 +734,6 @@ export function buildServiceSchema({
         : `${new Date().getFullYear()}-12-31`,
       availability: "https://schema.org/InStock",
       validFrom: `${new Date().getFullYear()}-01-01`,
-      hasMerchantReturnPolicy: {
-        "@type": "MerchantReturnPolicy",
-        applicableCountry: [
-          "TR",
-          "US",
-          "GB",
-          "DE",
-          "FR",
-          "RO",
-          "RU",
-          "ES",
-          "AE",
-          "SA",
-        ],
-        returnPolicyCategory:
-          "https://schema.org/MerchantReturnFiniteReturnWindow",
-        merchantReturnDays: 1,
-        returnMethod: "https://schema.org/ReturnInStore",
-        returnFees: "https://schema.org/FreeReturn",
-      },
       seller: {
         "@type": "Organization",
         "@id": orgId,
@@ -790,42 +758,12 @@ export function buildServiceSchema({
     schema.offers.priceSpecification = specs;
   }
 
-  if (
-    aggregateRating &&
-    aggregateRating > 0 &&
-    reviewCount &&
-    reviewCount > 0
-  ) {
-    schema.aggregateRating = {
-      "@type": "AggregateRating",
-      ratingValue: aggregateRating.toString(),
-      reviewCount: reviewCount.toString(),
-      bestRating: "5",
-      worstRating: "1",
-    };
-  }
-
-  if (reviews && reviews.length > 0) {
-    schema.review = reviews
-      .filter((r: any) => r.text && r.text.trim().length > 0)
-      .slice(0, 5)
-      .map((r: any) => ({
-        "@type": "Review",
-        inLanguage: locale || "en",
-        author: {
-          "@type": "Person",
-          name: r.author?.name || "Customer",
-        },
-        datePublished: r.date ? r.date.split("T")[0] : undefined,
-        reviewBody: cleanReviewText(r.text, 300, locale),
-        reviewRating: {
-          "@type": "Rating",
-          bestRating: "5",
-          ratingValue: r.rating?.toString() || "5",
-          worstRating: "1",
-        },
-      }));
-  }
+  // Note: Site-wide Google reviews are intentionally omitted from per-package Service schema
+  // to comply with Google's review snippet guidelines (avoiding duplicated site-wide reviews per offer).
+  void sku;
+  void aggregateRating;
+  void reviewCount;
+  void reviews;
 
   return schema;
 }
@@ -1006,11 +944,18 @@ export function buildAboutPageSchema({
   description,
   url,
   organizationSchema,
+  founderPerson,
 }: {
   name: string;
   description: string | null;
   url?: string;
   organizationSchema?: any;
+  founderPerson?: {
+    name: string;
+    image?: string;
+    jobTitle?: string;
+    sameAs?: string[];
+  };
 }) {
   const canonicalUrl = url ? normalizeSchemaUrl(url) : undefined;
   const baseUrl = getBaseUrl();
@@ -1027,10 +972,34 @@ export function buildAboutPageSchema({
     name,
     description: description || undefined,
     url: canonicalUrl || baseUrl,
-    mainEntity: organizationSchema || {
-      "@type": "Organization",
-      "@id": `${baseUrl}/#organization`,
-    },
+    mainEntity: founderPerson
+      ? {
+          "@type": "Person",
+          "@id": `${baseUrl}/#founder`,
+          name: founderPerson.name,
+          jobTitle: founderPerson.jobTitle || "Portrait Photographer",
+          url: canonicalUrl || `${baseUrl}/en/about`,
+          ...(founderPerson.image
+            ? { image: resolveSchemaImage(founderPerson.image) }
+            : {}),
+          worksFor: {
+            "@type": "Organization",
+            "@id": `${baseUrl}/#organization`,
+          },
+          knowsAbout: [
+            "Istanbul Portrait Photography",
+            "Rooftop Photoshoots in Istanbul",
+            "Flying Dress Photography",
+            "Couple & Proposal Photography",
+          ],
+          ...(founderPerson.sameAs && founderPerson.sameAs.length > 0
+            ? { sameAs: founderPerson.sameAs }
+            : {}),
+        }
+      : organizationSchema || {
+          "@type": "Organization",
+          "@id": `${baseUrl}/#organization`,
+        },
   };
 }
 
@@ -1110,6 +1079,7 @@ export function buildImageGallerySchema({
   description,
   url,
   images,
+  creatorName,
 }: {
   name: string;
   description?: string;
@@ -1118,15 +1088,19 @@ export function buildImageGallerySchema({
     url: string;
     caption?: string;
   }>;
+  creatorName?: string;
 }) {
   if (!images || images.length === 0) return null;
+
+  const baseUrl = getBaseUrl();
+  const credit = creatorName || "Istanbul Portrait";
 
   return {
     "@context": "https://schema.org",
     "@type": "ImageGallery",
     name,
     description: description || undefined,
-    url: url ? normalizeSchemaUrl(url) : getBaseUrl(),
+    url: url ? normalizeSchemaUrl(url) : baseUrl,
     image: images.map((img) => {
       const cleanUrl = resolveSchemaImage(img.url);
       return {
@@ -1134,6 +1108,13 @@ export function buildImageGallerySchema({
         contentUrl: cleanUrl,
         url: cleanUrl,
         caption: img.caption || name,
+        creditText: credit,
+        copyrightNotice: `© ${new Date().getFullYear()} ${credit}`,
+        creator: {
+          "@type": "Person",
+          "@id": `${baseUrl}/#founder`,
+          name: creatorName || "Uğur Cankurt",
+        },
       };
     }),
   };

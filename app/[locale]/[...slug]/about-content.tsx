@@ -6,7 +6,6 @@ import { SchemaInjector } from "@/components/schema-injector";
 import { pagesContentService } from "@/lib/pages-content-service";
 import {
   buildAboutPageSchema,
-  buildOrganizationSchema,
   generateSeoDescription,
   getBaseUrl,
   normalizeSchemaUrl,
@@ -20,32 +19,40 @@ export async function AboutPageContent({
 }) {
   const { locale, slug } = await params;
 
-  const dbPage = await pagesContentService.getPageBySlug("about");
+  const [dbPage, settings, tAboutHighlights, tAboutCta, dynamicNavData] =
+    await Promise.all([
+      pagesContentService.getPageBySlug("about"),
+      settingsService.getSettings(),
+      getTranslations({ locale, namespace: "about_highlights" }),
+      getTranslations({ locale, namespace: "about_cta" }),
+      pagesContentService.getDynamicCoreNavData(locale),
+    ]);
+
   const canonicalSegment =
     pagesContentService.getCorePageSegment(dbPage || "about", locale) || slug;
-  const settings = await settingsService.getSettings();
 
   const dynamicTitle = dbPage?.title?.[locale] || dbPage?.title?.en || "";
   const dynamicSubtitle =
     dbPage?.subtitle?.[locale] || dbPage?.subtitle?.en || "";
 
-  const tAboutHighlights = await getTranslations({
-    locale,
-    namespace: "about_highlights",
-  });
-  const tAboutCta = await getTranslations({
-    locale,
-    namespace: "about_cta",
-  });
-
-  const organizationSchema = buildOrganizationSchema(settings);
-  const dynamicNavData =
-    await pagesContentService.getDynamicCoreNavData(locale);
   const aboutSchema = buildAboutPageSchema({
     name: dynamicTitle,
     description: generateSeoDescription(dynamicSubtitle),
     url: normalizeSchemaUrl(`${getBaseUrl()}/${locale}/${canonicalSegment}`),
-    organizationSchema: organizationSchema,
+    founderPerson: settings.founder_name
+      ? {
+          name: settings.founder_name,
+          image: settings.founder_image_url || undefined,
+          jobTitle: "Portrait Photographer in Istanbul",
+          sameAs: [
+            settings.instagram_url,
+            settings.facebook_url,
+            settings.youtube_url,
+            settings.tiktok_url,
+            "https://www.linkedin.com/company/istanbulportrait",
+          ].filter(Boolean) as string[],
+        }
+      : undefined,
   });
 
   return (

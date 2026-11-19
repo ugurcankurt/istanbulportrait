@@ -64,7 +64,7 @@ export function getBlogPostLocalizedPaths(
         : "/blog";
     const localeSlug = slugs[l] || slugs.en || ""; // Fallback to EN if missing
     if (localeSlug) {
-      languages[l] = `${baseUrl}/${l}${bp}/${localeSlug}`;
+      languages[l] = encodeURI(`${baseUrl}/${l}${bp}/${localeSlug}`);
     }
   });
 
@@ -80,7 +80,9 @@ export function getBlogPostLocalizedPaths(
           ? blogPathConfig[locale as keyof typeof blogPathConfig]
           : "/blog";
       const localeSlug = slugs[locale] || slugs.en || "";
-      return localeSlug ? `${baseUrl}/${locale}${bp}/${localeSlug}` : "";
+      return localeSlug
+        ? encodeURI(`${baseUrl}/${locale}${bp}/${localeSlug}`)
+        : "";
     },
     languages,
   };
@@ -117,14 +119,14 @@ export async function getPackageLocalizedPaths(
       pagesContentService.getCorePageSegment(packagesPage || "packages", l) ||
       "packages";
 
-    languages[l] = `${baseUrl}/${l}/${parentSlug}/${localeSlug}`;
+    languages[l] = encodeURI(`${baseUrl}/${l}/${parentSlug}/${localeSlug}`);
   });
 
   const defaultParent =
     pagesContentService.getCorePageSegment(packagesPage || "packages", "en") ||
     "packages";
   languages["x-default"] =
-    languages.en || `${baseUrl}/en/${defaultParent}/${slug}`;
+    languages.en || encodeURI(`${baseUrl}/en/${defaultParent}/${slug}`);
 
   return {
     canonical: (locale: string) => {
@@ -141,7 +143,7 @@ export async function getPackageLocalizedPaths(
           locale,
         ) || "packages";
 
-      return `${baseUrl}/${locale}/${parentSlug}/${localeSlug}`;
+      return encodeURI(`${baseUrl}/${locale}/${parentSlug}/${localeSlug}`);
     },
     languages,
   };
@@ -177,7 +179,7 @@ export async function getLocationLocalizedPaths(
       pagesContentService.getCorePageSegment(locationsPage || "locations", l) ||
       "locations";
 
-    languages[l] = `${baseUrl}/${l}/${parentSlug}/${localeSlug}`;
+    languages[l] = encodeURI(`${baseUrl}/${l}/${parentSlug}/${localeSlug}`);
   });
 
   // Add x-default pointing to English version
@@ -187,7 +189,7 @@ export async function getLocationLocalizedPaths(
       "en",
     ) || "locations";
   languages["x-default"] =
-    languages.en || `${baseUrl}/en/${defaultParent}/${slug}`;
+    languages.en || encodeURI(`${baseUrl}/en/${defaultParent}/${slug}`);
 
   return {
     canonical: (locale: string) => {
@@ -204,7 +206,7 @@ export async function getLocationLocalizedPaths(
           locale,
         ) || "locations";
 
-      return `${baseUrl}/${locale}/${parentSlug}/${localeSlug}`;
+      return encodeURI(`${baseUrl}/${locale}/${parentSlug}/${localeSlug}`);
     },
     languages,
   };
@@ -249,11 +251,12 @@ export function getDynamicCoreLocalizedPaths(
     if (titleObj?.[l]) {
       localeSlug = generateNativeSlug(titleObj[l] as string);
     }
-    languages[l] = `${baseUrl}/${l}/${localeSlug}`;
+    languages[l] = encodeURI(`${baseUrl}/${l}/${localeSlug}`);
   });
 
   // Add x-default pointing to English version
-  languages["x-default"] = languages.en || `${baseUrl}/en/${internalSlug}`;
+  languages["x-default"] =
+    languages.en || encodeURI(`${baseUrl}/en/${internalSlug}`);
 
   return {
     canonical: (locale: string) => {
@@ -261,7 +264,7 @@ export function getDynamicCoreLocalizedPaths(
       if (titleObj?.[locale]) {
         localeSlug = generateNativeSlug(titleObj[locale] as string);
       }
-      return `${baseUrl}/${locale}/${localeSlug}`;
+      return encodeURI(`${baseUrl}/${locale}/${localeSlug}`);
     },
     languages,
   };

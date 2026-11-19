@@ -38,6 +38,7 @@ import { pagesContentService } from "@/lib/pages-content-service";
 import { calculateDiscountedPrice } from "@/lib/pricing";
 import { reviewsService } from "@/lib/reviews-service";
 import {
+  buildFAQSchema,
   buildImageGallerySchema,
   buildLocalBusinessSchema,
   constructOpenGraph,
@@ -331,9 +332,14 @@ export default async function HomePage({
         schema={{
           "@context": "https://schema.org",
           "@type": "WebSite",
-          name: settings.site_name || "Website",
+          "@id": `${getBaseUrl()}/#website`,
+          name: settings.site_name || "Istanbul Portrait",
           url: `${getBaseUrl()}/${locale}`,
           inLanguage: locale,
+          publisher: {
+            "@type": "Organization",
+            "@id": `${getBaseUrl()}/#organization`,
+          },
         }}
       />
       <SchemaInjector
@@ -351,6 +357,9 @@ export default async function HomePage({
           activeDiscountPct,
         )}
       />
+      {dynamicFaqs && dynamicFaqs.length > 0 && (
+        <SchemaInjector schema={buildFAQSchema(dynamicFaqs)} />
+      )}
       {activePackages && activePackages.length > 0 && (
         <SchemaInjector
           schema={buildImageGallerySchema({
@@ -360,6 +369,7 @@ export default async function HomePage({
               tGallery("subtitle"),
             ),
             url: `${getBaseUrl()}/${locale}`,
+            creatorName: settings.founder_name || "Uğur Cankurt",
             images: activePackages
               .flatMap((pkg) => {
                 const pkgTitle = pkg.title[locale] || pkg.title.en || pkg.slug;
@@ -438,7 +448,7 @@ export default async function HomePage({
               </div>
               <NextLink
                 href={`/${locale}/${aboutParentSlug}`}
-                className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:underline underline-offset-4 shrink-0"
+                className="inline-flex items-center gap-2 text-sm font-semibold text-foreground hover:text-primary hover:underline underline-offset-4 shrink-0"
               >
                 <span>{tHomeSeo("editorial_about_cta")}</span>
                 <ArrowRight className="w-4 h-4" />

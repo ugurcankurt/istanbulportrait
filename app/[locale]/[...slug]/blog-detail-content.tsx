@@ -10,6 +10,7 @@ import { BlogAuthor } from "@/components/blog-author";
 import { BlogCard } from "@/components/blog-card";
 import { BlogSummary } from "@/components/blog-summary";
 import { BreadcrumbNav } from "@/components/breadcrumb-nav";
+import { PackagesSection } from "@/components/packages-section";
 import { SchemaInjector } from "@/components/schema-injector";
 import { TableOfContents } from "@/components/table-of-contents";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
@@ -24,7 +25,10 @@ import {
   getLocalizedTagSlug,
 } from "@/lib/blog/blog-utils";
 import { getBlogTaxonomySegment } from "@/lib/core-page-slugs";
+import { discountService } from "@/lib/discount-service";
+import { packagesService } from "@/lib/packages-service";
 import { pagesContentService } from "@/lib/pages-content-service";
+import { reviewsService } from "@/lib/reviews-service";
 import {
   buildArticleSchema,
   generateSeoDescription,
@@ -65,17 +69,56 @@ export async function BlogDetailPageContent({
     notFound();
   }
 
-  // Fetch related posts (latest 3 excluding the current one)
-  const { posts: allRecentPosts } = await getPublishedBlogPosts({
-    page: 1,
-    limit: 4,
-    locale: locale as Locale,
-    sort_by: "published_at",
-    sort_order: "desc",
-  });
+  // Fetch related posts & Istanbul packages in parallel for contextual internal linking
+  const [
+    { posts: allRecentPosts },
+    packagesPage,
+    activePackages,
+    activeDiscounts,
+    aggregateRating,
+    tPackages,
+  ] = await Promise.all([
+    getPublishedBlogPosts({
+      page: 1,
+      limit: 4,
+      locale: locale as Locale,
+      sort_by: "published_at",
+      sort_order: "desc",
+    }),
+    pagesContentService.getPageBySlug("packages"),
+    packagesService.getActivePackages(),
+    discountService.getActiveDiscounts(),
+    reviewsService.getAggregateRating(),
+    getTranslations({ locale, namespace: "packages" }),
+  ]);
   const relatedPosts = allRecentPosts
     .filter((p) => p.id !== post.id)
     .slice(0, 3);
+  const packagesParentSegment =
+    pagesContentService.getCorePageSegment(
+      packagesPage || "packages",
+      locale,
+    ) || "packages";
+  const recommendedPackages = (activePackages || [])
+    .filter((p) => !p.slug.toLowerCase().includes("cappadocia"))
+    .slice(0, 4)
+    .map((pkg) => ({
+      ...pkg,
+      title: {
+        en: pkg.title?.en || pkg.slug,
+        ...(pkg.title?.[locale] ? { [locale]: pkg.title[locale] } : {}),
+      },
+      description: { en: "" },
+      duration: {
+        en: pkg.duration?.en || "",
+        ...(pkg.duration?.[locale] ? { [locale]: pkg.duration[locale] } : {}),
+      },
+      features: {
+        en: pkg.features?.en || [],
+        ...(pkg.features?.[locale] ? { [locale]: pkg.features[locale] } : {}),
+      },
+      gallery_images: [] as string[],
+    }));
 
   return (
     <div>
@@ -249,6 +292,28 @@ export async function BlogDetailPageContent({
               )}
             </div>
           </footer>
+
+          {/* Contextual Internal Linking: Recommended Istanbul Photoshoot Packages */}
+          {recommendedPackages.length > 0 && (
+            <div className="mt-12 pt-8 border-t border-border/50 section-contain-auto">
+              <PackagesSection
+                dbPackages={recommendedPackages}
+                activeDiscounts={activeDiscounts}
+                aggregateRating={aggregateRating}
+                parentSlug={packagesParentSegment}
+                header={
+                  <div className="text-center max-w-2xl mx-auto mb-6 sm:mb-8">
+                    <h2 className="text-2xl sm:text-3xl md:text-4xl font-serif font-normal tracking-tight text-foreground mb-2">
+                      {tPackages("title")}
+                    </h2>
+                    <p className="text-sm sm:text-base text-muted-foreground font-light">
+                      {tPackages("subtitle")}
+                    </p>
+                  </div>
+                }
+              />
+            </div>
+          )}
 
           {/* Related Posts */}
           {relatedPosts.length > 0 && (

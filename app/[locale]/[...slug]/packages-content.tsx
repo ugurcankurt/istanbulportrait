@@ -25,22 +25,19 @@ export async function PackagesPageContent({
 }) {
   const { locale, slug: parentSlug } = await params;
 
-  const dbPage = await pagesContentService.getPageBySlug("packages");
+  const [dbPage, aggregateRating, dbPackages, activeDiscounts] =
+    await Promise.all([
+      pagesContentService.getPageBySlug("packages"),
+      reviewsService.getAggregateRating(),
+      packagesService.getActivePackages(),
+      discountService.getActiveDiscounts(),
+    ]);
   const parentSegment =
     pagesContentService.getCorePageSegment(dbPage || "packages", locale) ||
     parentSlug;
   const dynamicTitle = dbPage?.title?.[locale] || dbPage?.title?.en || "";
   const dynamicSubtitle =
     dbPage?.subtitle?.[locale] || dbPage?.subtitle?.en || "";
-
-  // Fetch real reviews aggregate rating
-  const aggregateRating = await reviewsService.getAggregateRating();
-
-  // Fetch fully dynamic packages from DB
-  const dbPackages = await packagesService.getActivePackages();
-
-  // Fetch active discount
-  const activeDiscounts = await discountService.getActiveDiscounts();
 
   const collectionSchema = buildCollectionPageSchema({
     name: dynamicTitle,

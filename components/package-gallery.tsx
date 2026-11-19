@@ -368,12 +368,12 @@ export function PackageGallery({
               >
                 <Image
                   src={src}
-                  alt={`${alt} ${index + 2}`}
+                  alt={`${alt} - Istanbul photoshoot photo ${index + 2}`}
                   fill
                   className="object-cover hover:brightness-90 transition-all duration-700 hover:scale-105"
                   quality={75}
                   sizes="(max-width: 1024px) 25vw, (max-width: 1536px) 25vw, 400px"
-                  priority
+                  loading="lazy"
                 />
               </div>
             ))}

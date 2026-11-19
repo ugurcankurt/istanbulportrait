@@ -3,6 +3,27 @@ import { setRequestLocale } from "next-intl/server";
 import { pagesContentService } from "@/lib/pages-content-service";
 
 export const revalidate = 60;
+export const dynamicParams = true;
+
+export async function generateStaticParams() {
+  const { CORE_PAGE_LOCALIZED_SLUGS } = await import("@/lib/core-page-slugs");
+  const prebuildLocales = ["en", "tr"] as const;
+  const coreKeys = [
+    "packages",
+    "locations",
+    "blog",
+    "about",
+    "contact",
+    "privacy",
+  ] as const;
+
+  return prebuildLocales.flatMap((locale) =>
+    coreKeys.map((key) => ({
+      locale,
+      slug: [CORE_PAGE_LOCALIZED_SLUGS[key]?.[locale] || key],
+    })),
+  );
+}
 
 import type { Metadata } from "next";
 import {
@@ -403,7 +424,31 @@ export async function generateMetadata(props: {
         notFound();
         return {};
       }
-      dynamicTitle = locItem.title?.[params.locale] || locItem.title?.en || "";
+      const rawLocTitle =
+        locItem.title?.[params.locale] || locItem.title?.en || "";
+      const locTitleLower = rawLocTitle.toLowerCase();
+      const hasPhotoIntent =
+        locTitleLower.includes("photoshoot") ||
+        locTitleLower.includes("photo") ||
+        locTitleLower.includes("fotoğraf") ||
+        locTitleLower.includes("фото") ||
+        locTitleLower.includes("تصوير") ||
+        locTitleLower.includes("摄影");
+      const locSeoSuffixByLocale: Record<string, string> = {
+        en: "Photoshoot & Istanbul Photographer",
+        tr: "Fotoğraf Çekimi & İstanbul Fotoğrafçısı",
+        de: "Fotoshooting & Fotograf in Istanbul",
+        fr: "Séance Photo & Photographe à Istanbul",
+        es: "Sesión de Fotos & Fotógrafo en Estambul",
+        ru: "Фотосессия и фотограф в Стамбуле",
+        ar: "جلسة تصوير ومصور في إسطنبول",
+        zh: "伊斯坦布尔旅拍摄影",
+        ro: "Ședință Foto & Fotograf în Istanbul",
+      };
+      dynamicTitle =
+        rawLocTitle && !hasPhotoIntent
+          ? `${rawLocTitle} ${locSeoSuffixByLocale[params.locale] || locSeoSuffixByLocale.en}`
+          : rawLocTitle;
       dynamicDesc =
         locItem.description?.[params.locale] || locItem.description?.en || "";
       ogImage =
