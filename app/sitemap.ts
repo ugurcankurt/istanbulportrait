@@ -50,6 +50,16 @@ export default async function sitemap({
 
   const cleanImage = (url?: string | null): string => resolveSchemaImage(url);
 
+  // Next.js MetadataRoute.Sitemap does not XML-escape video:title / video:description,
+  // so raw '&', '<', '>' characters break XML parsing in Google Search Console.
+  const escapeXml = (str: string): string =>
+    str
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&apos;");
+
   const sitemapData: MetadataRoute.Sitemap = [];
 
   if (resolvedId === "core") {
@@ -178,11 +188,11 @@ export default async function sitemap({
               ) || "Package Video";
 
             videos.push({
-              title: rawVideoTitle,
-              thumbnail_loc: cleanThumb,
-              description: rawVideoDesc,
-              ...(playerLoc ? { player_loc: playerLoc } : {}),
-              ...(contentLoc ? { content_loc: contentLoc } : {}),
+              title: escapeXml(rawVideoTitle),
+              thumbnail_loc: escapeXml(cleanThumb),
+              description: escapeXml(rawVideoDesc),
+              ...(playerLoc ? { player_loc: escapeXml(playerLoc) } : {}),
+              ...(contentLoc ? { content_loc: escapeXml(contentLoc) } : {}),
             });
           }
         }
