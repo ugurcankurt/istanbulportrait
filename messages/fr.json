@@ -369,7 +369,7 @@
   },
   "about": {
     "experience": "Années d'expérience",
-    "sessions": "Séances terminées",
+    "sessions": "Séances réalisées",
     "clients": "Clients satisfaits",
     "satisfaction": "Satisfaction des clients",
     "description": "Photographe portraitiste local à Istanbul avec plus de 10 ans d'expérience auprès des couples, voyageurs solo, familles et demandes en mariage en lumière naturelle."
@@ -775,10 +775,10 @@
       "title": "Expertise Terrain & Exigence Éditoriale",
       "subtitle": "Collaborer directement avec un photographe portraitiste basé à Istanbul vous assure un accompagnement attentif et un rendu cinématographique homogène.",
       "item1_title": "Optiques Plein Format & Lumière Naturelle",
-      "item1_desc": "Chaque séance photo à Istanbul est réalisée sur boîtiers Sony plein format et focales fixes lumineuses adaptés au lever du jour.",
+      "item1_desc": "Chaque séance photo à Istanbul est réalisée sur boîtiers Nikon plein format et focales fixes lumineuses adaptés au lever du jour.",
       "item2_title": "Guidage Naturel & Sans Contrainte",
       "item2_desc": "Aucune expérience devant l'objectif n'est requise : nous guidons mouvements, postures et émotions spontanées avec simplicité.",
-      "item3_title": "Plus de 500 Séances & Avis 5 Étoiles",
+      "item3_title": "{count} Séances Réalisées & Avis 5 Étoiles",
       "item3_desc": "Plébiscité par des voyageurs de plus de 50 pays sur Google, avec échanges fluides sur WhatsApp et galerie livrée en 48 heures.",
       "link_packages": "Découvrir les Forfaits",
       "link_locations": "Voir les Lieux Photo",

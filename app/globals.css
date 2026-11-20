@@ -9,8 +9,8 @@
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-jakarta), "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  --font-serif: var(--font-cormorant), var(--font-cormorant-cyrillic), "Cormorant Garamond", Garamond, Georgia, Cambria, "Times New Roman", Times, serif;
-  --font-heading: var(--font-cormorant), var(--font-cormorant-cyrillic), "Cormorant Garamond", Garamond, Georgia, Cambria, "Times New Roman", Times, serif;
+  --font-serif: var(--font-fraunces), var(--font-lora-cyrillic), "Fraunces", "Lora", Georgia, Cambria, "Times New Roman", Times, serif;
+  --font-heading: var(--font-fraunces), var(--font-lora-cyrillic), "Fraunces", "Lora", Georgia, Cambria, "Times New Roman", Times, serif;
   --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
@@ -172,8 +172,9 @@
   h5,
   h6 {
     color: var(--primary);
-    font-family: var(--font-cormorant), var(--font-cormorant-cyrillic), "Cormorant Garamond", Garamond, Georgia, serif;
-    font-feature-settings: "cv02", "cv03", "cv04", "cv11", "liga", "clig";
+    font-family: var(--font-fraunces), var(--font-lora-cyrillic), "Fraunces", "Lora", Georgia, serif;
+    font-optical-sizing: auto;
+    font-feature-settings: "kern", "liga", "clig";
     letter-spacing: -0.02em;
     text-wrap: balance;
   }
@@ -187,7 +188,8 @@
 @layer utilities {
   .font-serif,
   .font-heading {
-    font-family: var(--font-cormorant), var(--font-cormorant-cyrillic), "Cormorant Garamond", Garamond, Georgia, serif;
+    font-family: var(--font-fraunces), var(--font-lora-cyrillic), "Fraunces", "Lora", Georgia, serif;
+    font-optical-sizing: auto;
   }
 
   .font-sans {

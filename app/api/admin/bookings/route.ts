@@ -12,6 +12,7 @@ import {
   sanitizeErrorForProduction,
   ValidationError,
 } from "@/lib/errors";
+import { revalidatePublicBookingsStatsCache } from "@/lib/public-cache";
 import {
   sendBookingCancellationEmail,
   sendBookingRescheduledEmail,
@@ -348,6 +349,10 @@ export async function PATCH(request: NextRequest) {
         } catch (crmError) {
           console.error("Failed to track Meta CRM status event:", crmError);
         }
+      }
+
+      if (status === "completed" || currentBooking.status === "completed") {
+        revalidatePublicBookingsStatsCache();
       }
 
       return NextResponse.json({

@@ -1,8 +1,9 @@
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import {
-  Cormorant_Garamond,
+  Fraunces,
   Geist_Mono,
+  Lora,
   Plus_Jakarta_Sans,
 } from "next/font/google";
 import Script from "next/script";
@@ -63,20 +64,19 @@ const FestiveParticles = dynamic(() =>
   import("@/components/festive-particles").then((mod) => mod.FestiveParticles),
 );
 
-const fontHeading = Cormorant_Garamond({
-  variable: "--font-cormorant",
+const fontHeading = Fraunces({
+  variable: "--font-fraunces",
   subsets: ["latin", "latin-ext"],
   display: "swap",
   style: ["normal"],
-  weight: ["400", "500", "600"],
+  axes: ["opsz"],
 });
 
-const fontHeadingCyrillic = Cormorant_Garamond({
-  variable: "--font-cormorant-cyrillic",
+const fontHeadingCyrillic = Lora({
+  variable: "--font-lora-cyrillic",
   subsets: ["cyrillic"],
   display: "swap",
   style: ["normal"],
-  weight: ["400", "500", "600"],
   preload: false,
 });
 

@@ -461,22 +461,13 @@ export default async function HomePage({
           className="py-10 sm:py-14 border-y border-border/40 bg-muted/15"
         >
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
-              <div className="text-left max-w-4xl">
-                <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif font-normal tracking-tight leading-tight mb-2 sm:mb-3">
-                  {tHomeSeo("editorial_title")}
-                </h2>
-                <p className="text-base sm:text-lg text-muted-foreground font-light leading-relaxed">
-                  {tHomeSeo("editorial_subtitle")}
-                </p>
-              </div>
-              <NextLink
-                href={`/${locale}/${aboutParentSlug}`}
-                className="inline-flex items-center gap-2 text-sm font-semibold text-foreground hover:text-primary hover:underline underline-offset-4 shrink-0"
-              >
-                <span>{tHomeSeo("editorial_about_cta")}</span>
-                <ArrowRight className="w-4 h-4" />
-              </NextLink>
+            <div className="text-left max-w-4xl mb-6 sm:mb-8">
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif font-normal tracking-tight leading-tight mb-2 sm:mb-3">
+                {tHomeSeo("editorial_title")}
+              </h2>
+              <p className="text-base sm:text-lg text-muted-foreground font-light leading-relaxed">
+                {tHomeSeo("editorial_subtitle")}
+              </p>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 lg:gap-6">
@@ -510,6 +501,16 @@ export default async function HomePage({
                   </p>
                 </div>
               ))}
+            </div>
+
+            <div className="mt-6 sm:mt-8 pt-6 border-t border-border/40 flex justify-end">
+              <NextLink
+                href={`/${locale}/${aboutParentSlug}`}
+                className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:underline underline-offset-4 shrink-0"
+              >
+                <span>{tHomeSeo("editorial_about_cta")}</span>
+                <ArrowRight className="w-4 h-4 rtl:rotate-180" />
+              </NextLink>
             </div>
           </div>
         </section>
@@ -659,22 +660,13 @@ export default async function HomePage({
             className="py-8 sm:py-10 section-contain-auto"
           >
             <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-              <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-6 sm:mb-8">
-                <div className="text-left">
-                  <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif font-normal tracking-tight leading-tight mb-2 sm:mb-3">
-                    {tHomeSeo("blog_title")}
-                  </h2>
-                  <p className="text-base sm:text-lg lg:text-xl text-muted-foreground font-light leading-relaxed max-w-4xl">
-                    {tHomeSeo("blog_subtitle")}
-                  </p>
-                </div>
-                <NextLink
-                  href={`/${locale}/${blogParentSlug}`}
-                  className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:underline underline-offset-4 shrink-0"
-                >
-                  <span>{tHomeSeo("blog_cta")}</span>
-                  <ArrowRight className="w-4 h-4" />
-                </NextLink>
+              <div className="text-left max-w-4xl mb-6 sm:mb-8">
+                <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif font-normal tracking-tight leading-tight mb-2 sm:mb-3">
+                  {tHomeSeo("blog_title")}
+                </h2>
+                <p className="text-base sm:text-lg lg:text-xl text-muted-foreground font-light leading-relaxed">
+                  {tHomeSeo("blog_subtitle")}
+                </p>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -687,6 +679,16 @@ export default async function HomePage({
                     headingLevel="h3"
                   />
                 ))}
+              </div>
+
+              <div className="mt-6 sm:mt-8 pt-6 border-t border-border/40 flex justify-end">
+                <NextLink
+                  href={`/${locale}/${blogParentSlug}`}
+                  className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:underline underline-offset-4 shrink-0"
+                >
+                  <span>{tHomeSeo("blog_cta")}</span>
+                  <ArrowRight className="w-4 h-4 rtl:rotate-180" />
+                </NextLink>
               </div>
             </div>
           </section>

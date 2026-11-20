@@ -5,6 +5,7 @@ import { PageHeroSection } from "@/components/page-hero-section";
 import { SchemaInjector } from "@/components/schema-injector";
 import { SeoEditorialSection } from "@/components/seo-editorial-section";
 import { pagesContentService } from "@/lib/pages-content-service";
+import { getCachedCompletedBookingsCount } from "@/lib/public-cache";
 import {
   buildAboutPageSchema,
   enrichSeoDescription,
@@ -20,15 +21,23 @@ export async function AboutPageContent({
 }) {
   const { locale, slug } = await params;
 
-  const [dbPage, settings, tAboutHighlights, tAboutCta, tHub, dynamicNavData] =
-    await Promise.all([
-      pagesContentService.getPageBySlug("about"),
-      settingsService.getSettings(),
-      getTranslations({ locale, namespace: "about_highlights" }),
-      getTranslations({ locale, namespace: "about_cta" }),
-      getTranslations({ locale, namespace: "seo_hub" }),
-      pagesContentService.getDynamicCoreNavData(locale),
-    ]);
+  const [
+    dbPage,
+    settings,
+    tAboutHighlights,
+    tAboutCta,
+    tHub,
+    dynamicNavData,
+    completedSessionsCount,
+  ] = await Promise.all([
+    pagesContentService.getPageBySlug("about"),
+    settingsService.getSettings(),
+    getTranslations({ locale, namespace: "about_highlights" }),
+    getTranslations({ locale, namespace: "about_cta" }),
+    getTranslations({ locale, namespace: "seo_hub" }),
+    pagesContentService.getDynamicCoreNavData(locale),
+    getCachedCompletedBookingsCount(),
+  ]);
 
   const canonicalSegment =
     pagesContentService.getCorePageSegment(dbPage || "about", locale) || slug;
@@ -75,6 +84,7 @@ export async function AboutPageContent({
           founderImageUrl={settings.founder_image_url}
           packagesHref={`/${dynamicNavData.packages?.path || "packages"}`}
           locationsHref={`/${dynamicNavData.locations?.path || "locations"}`}
+          completedSessionsCount={completedSessionsCount}
           highlightsHeader={
             <h2
               key="highlights-header"
@@ -109,7 +119,7 @@ export async function AboutPageContent({
             description: tHub("about.item2_desc"),
           },
           {
-            title: tHub("about.item3_title"),
+            title: tHub("about.item3_title", { count: completedSessionsCount }),
             description: tHub("about.item3_desc"),
           },
         ]}

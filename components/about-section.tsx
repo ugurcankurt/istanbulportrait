@@ -17,6 +17,7 @@ interface AboutSectionProps {
   founderImageUrl?: string | null;
   packagesHref?: string;
   locationsHref?: string;
+  completedSessionsCount?: number;
 }
 
 export function AboutSection({
@@ -27,6 +28,7 @@ export function AboutSection({
   founderImageUrl,
   packagesHref,
   locationsHref,
+  completedSessionsCount,
 }: AboutSectionProps) {
   const [imgError, setImgError] = useState(false);
 
@@ -49,6 +51,28 @@ export function AboutSection({
 
   const dynAbout = dbPage?.content?.about;
 
+  const rawSessionsLabel =
+    dynAbout?.stats?.[1]?.label?.[locale] || tabout("sessions");
+  const cleanSessionsLabel =
+    typeof completedSessionsCount === "number"
+      ? rawSessionsLabel
+          .replace(
+            /^(?:más\s+de\s+|plus\s+de\s+|peste\s+(?:de\s+)?|أكثر\s+من\s+)?\d+\+?\s*(?:de\s+)?/iu,
+            "",
+          )
+          .replace(/^完成\s*\d+\+?\s*场拍摄/u, "已完成拍摄场次")
+          .trim() || tabout("sessions")
+      : rawSessionsLabel;
+  const sessionsLabel =
+    typeof completedSessionsCount === "number" && cleanSessionsLabel
+      ? cleanSessionsLabel.charAt(0).toUpperCase() + cleanSessionsLabel.slice(1)
+      : cleanSessionsLabel;
+
+  const sessionsNumber =
+    typeof completedSessionsCount === "number" && completedSessionsCount > 0
+      ? String(completedSessionsCount)
+      : dynAbout?.stats?.[1]?.number || "100+";
+
   const stats = [
     {
       icon: Camera,
@@ -57,8 +81,8 @@ export function AboutSection({
     },
     {
       icon: Users,
-      number: dynAbout?.stats?.[1]?.number || "500+",
-      label: dynAbout?.stats?.[1]?.label?.[locale] || tabout("clients"),
+      number: sessionsNumber,
+      label: sessionsLabel,
     },
     {
       icon: Heart,
