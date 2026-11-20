@@ -34,6 +34,7 @@ import {
   generateSeoDescription,
   getBaseUrl,
   normalizeSchemaUrl,
+  toStorageProxyPath,
 } from "@/lib/seo-utils";
 import { settingsService } from "@/lib/settings-service";
 import type { Locale } from "@/types/blog";
@@ -57,8 +58,9 @@ export async function BlogDetailPageContent({
     pagesContentService.getCorePageSegment(blogPage || "blog", locale) ||
     parentSlug;
   const t = await getTranslations({ locale, namespace: "blog" });
+  const baseUrl = getBaseUrl(settings.app_base_url);
 
-  if (post?.status !== "published") {
+  if (post?.status !== "published" || post.translation.locale !== locale) {
     // Attempt to salvage the navigation by checking if the slug belongs to another language
     const salvagedSlug = await getSalvagedBlogSlug(decodedSlug, locale);
     if (salvagedSlug && salvagedSlug !== decodedSlug) {
@@ -145,7 +147,8 @@ export async function BlogDetailPageContent({
             settings.founder_name ||
             settings.site_name ||
             "Author",
-          authorUrl: `${getBaseUrl()}/${locale}/${pagesContentService.getCorePageSegment("about", locale) || "about"}`,
+          founderName: settings.founder_name || undefined,
+          authorUrl: `${baseUrl}/${locale}/${pagesContentService.getCorePageSegment("about", locale) || "about"}`,
           authorImage: post.author?.avatar_url || undefined,
           authorBio:
             post.author?.bio?.[locale as keyof typeof post.author.bio] ||
@@ -172,12 +175,22 @@ export async function BlogDetailPageContent({
           inLanguage: locale,
           keywords: post.translation.meta_keywords || [],
           url: normalizeSchemaUrl(
-            `${getBaseUrl()}/${locale}/${canonicalParentSlug}/${post.translation.slug}`,
+            `${baseUrl}/${locale}/${canonicalParentSlug}/${post.translation.slug}`,
           ),
         })}
       />
 
-      <BreadcrumbNav customLastLabel={post.translation.title} />
+      <BreadcrumbNav
+        customLastLabel={post.translation.title}
+        customParentLabel={
+          blogPage?.content?.nav_title?.[locale] ||
+          blogPage?.title?.[locale] ||
+          blogPage?.title?.en ||
+          undefined
+        }
+        customParentHref={`/${locale}/${canonicalParentSlug}`}
+        baseUrl={baseUrl}
+      />
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
         <article className="mx-auto">
@@ -211,9 +224,10 @@ export async function BlogDetailPageContent({
                   src={post.featured_image}
                   alt={post.translation.title}
                   fill
-                  priority
+                  preload
+                  fetchPriority="high"
                   className="object-cover"
-                  sizes="100vw"
+                  sizes="(max-width: 1024px) 100vw, 1024px"
                 />
               </AspectRatio>
             )}
@@ -233,6 +247,20 @@ export async function BlogDetailPageContent({
             <ReactMarkdown
               remarkPlugins={[remarkGfm]}
               rehypePlugins={[rehypeRaw, rehypeSlug]}
+              components={{
+                img: ({ src, alt, ...imgProps }) => (
+                  // biome-ignore lint/performance/noImgElement: Markdown body renders arbitrary remote/inline editorial images
+                  <img
+                    {...imgProps}
+                    src={
+                      typeof src === "string" ? toStorageProxyPath(src) : src
+                    }
+                    alt={alt || ""}
+                    loading="lazy"
+                    decoding="async"
+                  />
+                ),
+              }}
             >
               {post.translation.content}
             </ReactMarkdown>
@@ -241,7 +269,8 @@ export async function BlogDetailPageContent({
           {/* Author Bio */}
           <BlogAuthor
             author={post.author}
-            siteSettings={settingsService.toPublicSettings(settings)}
+            siteSettings={settingsService.toPublicSettings(settings, locale)}
+            aboutUrl={`/${locale}/${pagesContentService.getCorePageSegment("about", locale) || "about"}`}
           />
 
           {/* Categories & Tags */}

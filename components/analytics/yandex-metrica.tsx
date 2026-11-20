@@ -2,7 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import Script from "next/script";
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 
 // Dynamic pricing replaces static packagePrices
 
@@ -27,15 +27,20 @@ export function YandexMetrica({ id, enabled = true }: YandexMetricaProps) {
   useEffect(() => {
     if (!id || !enabled || typeof window === "undefined") return;
 
+    window.__YANDEX_ID = id; // Store ID for client-side hooks dynamically
     // Track page view
     if (window.ym) {
-      window.__YANDEX_ID = id; // Store ID for client-side hooks dynamically
       window.ym(parseInt(id, 10), "hit", window.location.href);
     }
   }, [pathname, id, enabled]);
 
   // Don't render if no ID or disabled
   if (!id || !enabled) {
+    return null;
+  }
+
+  const numericId = Number.parseInt(id, 10);
+  if (!Number.isFinite(numericId)) {
     return null;
   }
 
@@ -47,14 +52,15 @@ export function YandexMetrica({ id, enabled = true }: YandexMetricaProps) {
         // biome-ignore lint/security/noDangerouslySetInnerHtml: Yandex Metrica requires inline script
         dangerouslySetInnerHTML={{
           __html: `
+            window.__YANDEX_ID = ${JSON.stringify(String(numericId))};
             (function(m,e,t,r,i,k,a){
               m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
               m[i].l=1*new Date();
                 for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
                 k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
-            })(window, document, "script", "https://mc.yandex.ru/metrika/tag.js?id=" + ${id}, "ym");
+            })(window, document, "script", "https://mc.yandex.ru/metrika/tag.js?id=${numericId}", "ym");
 
-            ym(${id}, "init", {
+            ym(${numericId}, "init", {
                 ssr: true,
                 webvisor: true,
                 clickmap: true,
@@ -70,11 +76,10 @@ export function YandexMetrica({ id, enabled = true }: YandexMetricaProps) {
       <noscript>
         <div>
           <img
-            src={`https://mc.yandex.ru/watch/${id}`}
+            src={`https://mc.yandex.ru/watch/${numericId}`}
             style={{ position: "absolute", left: "-9999px" }}
             alt=""
             aria-hidden="true"
-            role="presentation"
           />
         </div>
       </noscript>
@@ -84,78 +89,59 @@ export function YandexMetrica({ id, enabled = true }: YandexMetricaProps) {
 
 // Hook for tracking custom events
 export function useYandexMetrica() {
-  const trackEvent = (eventName: string, params?: Record<string, unknown>) => {
-    const id = typeof window !== "undefined" ? window.__YANDEX_ID : undefined;
+  const trackEvent = useCallback(
+    (eventName: string, params?: Record<string, unknown>) => {
+      const id = typeof window !== "undefined" ? window.__YANDEX_ID : undefined;
 
-    if (!id || typeof window === "undefined" || !window.ym) return;
+      if (!id || typeof window === "undefined" || !window.ym) return;
 
-    window.ym(parseInt(id, 10), "reachGoal", eventName, params);
-  };
+      window.ym(parseInt(id, 10), "reachGoal", eventName, params);
+    },
+    [],
+  );
 
-  const trackPurchase = (
-    bookingId: string,
-    packageId: string,
-    amount: number,
-    currency: string = "EUR",
-  ) => {
-    const id = typeof window !== "undefined" ? window.__YANDEX_ID : undefined;
+  const trackPurchase = useCallback(
+    (
+      bookingId: string,
+      packageId: string,
+      amount: number,
+      currency: string = "EUR",
+    ) => {
+      const id = typeof window !== "undefined" ? window.__YANDEX_ID : undefined;
 
-    if (!id || typeof window === "undefined" || !window.ym) return;
+      if (!id || typeof window === "undefined" || !window.ym) return;
 
-    // 1. Legacy reachGoal tracking (keeping for continuity)
-    window.ym(parseInt(id, 10), "reachGoal", "purchase", {
-      order_id: bookingId,
-      order_price: amount,
-      currency: currency,
-      items: [
-        {
-          id: packageId,
-          name: `Photography Package - ${packageId}`,
-          category: "Photography Services",
-          price: amount,
-          quantity: 1,
-        },
-      ],
-    });
-
-    // 2. Standard E-commerce tracking for Yandex
-    window.ymDataLayer = window.ymDataLayer || [];
-    window.ymDataLayer.push({
-      ecommerce: {
-        purchase: {
-          actionField: {
-            id: bookingId,
-            revenue: amount,
-            currency: currency,
+      // 1. Legacy reachGoal tracking (keeping for continuity)
+      window.ym(parseInt(id, 10), "reachGoal", "purchase", {
+        order_id: bookingId,
+        order_price: amount,
+        currency: currency,
+        items: [
+          {
+            id: packageId,
+            name: `Photography Package - ${packageId}`,
+            category: "Photography Services",
+            price: amount,
+            quantity: 1,
           },
-          products: [
-            {
-              id: packageId,
-              name: `Photography Package - ${packageId}`,
-              price: amount,
-              category: "Photography Services",
-              quantity: 1,
-            },
-          ],
-        },
-      },
-    });
-  };
+        ],
+      });
 
-  const trackBookingStart = (packageId: string, price: number = 0) => {
-    trackEvent("booking_start", { package_id: packageId });
-
-    // Track as "Add to Cart" for E-commerce funnel
-    if (typeof window !== "undefined") {
+      // 2. Standard E-commerce tracking for Yandex
       window.ymDataLayer = window.ymDataLayer || [];
       window.ymDataLayer.push({
         ecommerce: {
-          add: {
+          purchase: {
+            actionField: {
+              id: bookingId,
+              revenue: amount,
+              currency: currency,
+            },
             products: [
               {
                 id: packageId,
                 name: `Photography Package - ${packageId}`,
-                price: price,
+                price: amount,
                 category: "Photography Services",
                 quantity: 1,
               },
@@ -163,35 +149,69 @@ export function useYandexMetrica() {
           },
         },
       });
-    }
-  };
+    },
+    [],
+  );
 
-  const trackPackageView = (packageId: string, price: number = 0) => {
-    trackEvent("package_view", { package_id: packageId });
+  const trackBookingStart = useCallback(
+    (packageId: string, price: number = 0) => {
+      trackEvent("booking_start", { package_id: packageId });
 
-    // Track as "Detail" view for E-commerce
-    if (typeof window !== "undefined") {
-      window.ymDataLayer = window.ymDataLayer || [];
-      window.ymDataLayer.push({
-        ecommerce: {
-          detail: {
-            products: [
-              {
-                id: packageId,
-                name: `Photography Package - ${packageId}`,
-                price: price,
-                category: "Photography Services",
-              },
-            ],
+      // Track as "Add to Cart" for E-commerce funnel
+      if (typeof window !== "undefined") {
+        window.ymDataLayer = window.ymDataLayer || [];
+        window.ymDataLayer.push({
+          ecommerce: {
+            add: {
+              products: [
+                {
+                  id: packageId,
+                  name: `Photography Package - ${packageId}`,
+                  price: price,
+                  category: "Photography Services",
+                  quantity: 1,
+                },
+              ],
+            },
           },
-        },
-      });
-    }
-  };
+        });
+      }
+    },
+    [trackEvent],
+  );
 
-  const trackContactForm = (source: string) => {
-    trackEvent("contact_form", { source });
-  };
+  const trackPackageView = useCallback(
+    (packageId: string, price: number = 0) => {
+      trackEvent("package_view", { package_id: packageId });
+
+      // Track as "Detail" view for E-commerce
+      if (typeof window !== "undefined") {
+        window.ymDataLayer = window.ymDataLayer || [];
+        window.ymDataLayer.push({
+          ecommerce: {
+            detail: {
+              products: [
+                {
+                  id: packageId,
+                  name: `Photography Package - ${packageId}`,
+                  price: price,
+                  category: "Photography Services",
+                },
+              ],
+            },
+          },
+        });
+      }
+    },
+    [trackEvent],
+  );
+
+  const trackContactForm = useCallback(
+    (source: string) => {
+      trackEvent("contact_form", { source });
+    },
+    [trackEvent],
+  );
 
   return {
     trackEvent,

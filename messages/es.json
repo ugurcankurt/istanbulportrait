@@ -298,7 +298,7 @@
     "payment": "Pago",
     "response_time_desc": "Normalmente respondemos a las consultas dentro de las 24 horas.",
     "booking_process_desc": "Después de su consulta, programaremos una consulta para analizar su visión y finalizar los detalles.",
-    "payment_desc": "Se requiere el pago completo en línea al momento de la reserva para asegurar su fecha.",
+    "payment_desc": "Sin depósito por adelantado: reserva online y paga en efectivo el mismo día de la sesión de fotos.",
     "professional_photographer": "fotógrafo profesional",
     "professional_photographer_in_istanbul": "Fotógrafo profesional en Estambul",
     "portrait_photography": "Fotografía de retrato",
@@ -372,7 +372,7 @@
     "sessions": "Sesiones completadas",
     "clients": "Clientes felices",
     "satisfaction": "Satisfacción del cliente",
-    "description": "¡Bienvenidos a mi portafolio! Me especializo en capturar momentos hermosos con luz natural."
+    "description": "Soy fotógrafo local de retratos en Estambul con más de 10 años de experiencia fotografiando parejas, viajeros solos, familias y pedidas de mano con luz natural."
   },
   "api_errors": {
     "rate_limit": "Demasiadas solicitudes. Inténtelo de nuevo más tarde.",
@@ -553,7 +553,8 @@
       "about_title": "Sobre el autor",
       "name": "Fotógrafo de Estambul",
       "bio": "Fotógrafo profesional especializado en fotografía de retratos, parejas y estilo de vida en Estambul. Con más de 8 años de experiencia, capturando recuerdos eternos con los fondos más emblemáticos de la ciudad.",
-      "follow": "Seguir en Instagram"
+      "follow": "Seguir en Instagram",
+      "profile_link": "Conocer al fotógrafo"
     },
     "summary": {
       "title": "Conclusiones clave",
@@ -739,6 +740,62 @@
     "step3_desc": "¿Primera vez en una sesión? Tu fotógrafo local te guía en cada movimiento y ángulo para obtener retratos espontáneos y elegantes.",
     "step4_title": "4. Precios claros en EUR y entrega en 48h",
     "step4_desc": "Reserva online sin depósito previo, paga en efectivo el día de la sesión y recibe tu galería editada en alta resolución en 48 horas.",
-    "editorial_about_cta": "Conoce a tu fotógrafo"
+    "editorial_about_cta": "Conoce a tu fotógrafo",
+    "packages_note": "Todos los paquetes de sesión de fotos en Estambul incluyen dirección de poses, planificación de rutas según la luz y entrega en galería digital en 48 horas.",
+    "packages_cta": "Comparar Todos los Paquetes de Sesión de Fotos"
+  },
+  "seo_hub": {
+    "packages": {
+      "title": "Cómo elegir tu paquete de sesión de fotos en Estambul",
+      "subtitle": "Desde terrazas privadas con vestido volador frente a Süleymaniye hasta amaneceres en Sultanahmet o retratos junto al Bósforo.",
+      "item1_title": "Terrazas Privadas y Vestido Volador",
+      "item1_desc": "Azoteas panorámicas reservadas con vistas a la mezquita de Süleymaniye y al Cuerno de Oro para lograr siluetas limpias y privadas.",
+      "item2_title": "Monumentos Históricos y Rutas a Pie",
+      "item2_desc": "Combina Santa Sofía, la Torre de Gálata, Ortaköy o Balat con un fotógrafo en Estambul que conoce los horarios más tranquilos.",
+      "item3_title": "Sin Pago Anticipado y Entrega en 48h",
+      "item3_desc": "Reserva tu fecha con tarifas transparentes en EUR, paga en efectivo el día de la sesión y recibe tus fotos editadas en 48 horas.",
+      "link_locations": "Explorar Ubicaciones en Estambul",
+      "link_about": "Conocer a tu Fotógrafo",
+      "link_blog": "Leer Guías de Ropa y Horarios"
+    },
+    "locations": {
+      "title": "Planifica Sesiones en Múltiples Ubicaciones de Estambul",
+      "subtitle": "Combina barrios icónicos del lado europeo, miradores del Bósforo o el encantador Kuzguncuk según la luz y duración.",
+      "item1_title": "Rutas en Hora Dorada",
+      "item1_desc": "Las sesiones de 1 hora rinden mejor en una sola zona como Gálata o Sultanahmet; las de 2 o 3 horas conectan varios puntos o terrazas.",
+      "item2_title": "Horarios Tempranos Sin Multitudes",
+      "item2_desc": "Salir al amanecer con un fotógrafo local garantiza calles despejadas en Santa Sofía, la Mezquita Azul y Ortaköy.",
+      "item3_title": "Acceso Ágil a Azoteas Panorámicas",
+      "item3_desc": "Coordinamos los accesos a terrazas privadas para aprovechar cada minuto fotografiando sin esperas innecesarias.",
+      "link_packages": "Ver Paquetes y Precios",
+      "link_blog": "Explorar Guías de Fotografía",
+      "link_contact": "Consultar Rutas Personalizadas"
+    },
+    "about": {
+      "title": "Experiencia Fotográfica y Criterio Editorial",
+      "subtitle": "Trabajar directamente con un especialista en Estambul asegura dirección natural de poses, edición coherente y luz óptima en cada parada.",
+      "item1_title": "Equipo Full-Frame y Luz Natural",
+      "item1_desc": "Cada sesión de fotos en Estambul se realiza con cuerpos Sony Full-Frame y ópticas luminosas pensadas para amaneceres e interiores históricos.",
+      "item2_title": "Dirección Natural Sin Poses Rígidas",
+      "item2_desc": "No necesitas experiencia previa; guiamos cada paso, postura e interacción espontánea para parejas, familias y viajeros solos.",
+      "item3_title": "Más de 500 Sesiones Internacionales",
+      "item3_desc": "Respaldado por reseñas verificadas de 5 estrellas en Google, atención rápida por WhatsApp y entrega puntual en 48 horas.",
+      "link_packages": "Explorar Paquetes",
+      "link_locations": "Ver Ubicaciones",
+      "link_blog": "Leer el Blog de Fotografía"
+    },
+    "contact": {
+      "title": "Organiza tu Sesión de Fotos a Medida",
+      "subtitle": "Escríbenos por WhatsApp o correo con tus fechas y estilo favorito para recomendarte el mejor horario de luz y recorrido.",
+      "item1_title": "Indica Fechas y Número de Personas",
+      "item1_desc": "Cuéntanos cuándo visitas Estambul, cuántas personas participan y si buscas vestido volador en terraza, pareja, familia o pedida.",
+      "item2_title": "Pedidas de Mano y Eventos Privados",
+      "item2_desc": "¿Planeas una sorpresa frente al Bósforo o en una terraza privada? Coordinamos ángulos discretos y señales previas.",
+      "item3_title": "Reserva Online Directa",
+      "item3_desc": "Si ya elegiste tu paquete, consulta horarios disponibles directamente online y asegura tu fecha sin depósito previo.",
+      "link_packages": "Ver Paquetes de Fotos",
+      "link_locations": "Descubrir Ubicaciones",
+      "link_about": "Sobre Istanbul Portrait"
+    }
   }
 }

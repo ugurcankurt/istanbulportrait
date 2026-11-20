@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { PackageForm } from "@/components/admin/packages/package-form";
 import { addonsService } from "@/lib/addons-service";
+import { requireAdminPage } from "@/lib/auth-server";
 import { packagesService } from "@/lib/packages-service";
 
 interface EditPackagePageProps {
@@ -12,6 +13,7 @@ interface EditPackagePageProps {
 export default async function EditPackagePage({
   params,
 }: EditPackagePageProps) {
+  await requireAdminPage();
   const { id } = await params;
 
   const [pkg, availableAddons] = await Promise.all([

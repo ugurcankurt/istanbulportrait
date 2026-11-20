@@ -31,13 +31,14 @@ export default function UpdatePasswordPage() {
   const supabase = createClientSupabaseClient();
 
   useEffect(() => {
-    // Check if user is actually authenticated (session is securely set via cookies by our /api/auth/confirm route)
+    // Verify current authenticated session directly with Supabase Auth server
     const checkSession = async () => {
       const {
-        data: { session },
-      } = await supabase.auth.getSession();
+        data: { user },
+        error: userError,
+      } = await supabase.auth.getUser();
 
-      if (!session) {
+      if (userError || !user) {
         setSessionStatus("missing");
       } else {
         setSessionStatus("authenticated");
@@ -49,6 +50,10 @@ export default function UpdatePasswordPage() {
 
   const handleUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (sessionStatus !== "authenticated") {
+      setError("Authentication session is required.");
+      return;
+    }
     if (password !== confirmPassword) {
       setError(t("passwordMismatch"));
       return;
@@ -152,7 +157,7 @@ export default function UpdatePasswordPage() {
                 loading ||
                 !password ||
                 !confirmPassword ||
-                sessionStatus === "missing"
+                sessionStatus !== "authenticated"
               }
             >
               {loading ? (

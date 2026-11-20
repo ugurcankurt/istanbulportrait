@@ -8,12 +8,20 @@ export async function GET() {
     const { reviews, totalCount } = await reviewsService.fetchGoogleReviews();
     const aggregateRating = await reviewsService.getAggregateRating();
 
-    return NextResponse.json({
-      reviews,
-      aggregateRating,
-      totalReviews: totalCount,
-      averageRating: aggregateRating.average,
-    });
+    return NextResponse.json(
+      {
+        reviews,
+        aggregateRating,
+        totalReviews: totalCount,
+        averageRating: aggregateRating.average,
+      },
+      {
+        headers: {
+          "Cache-Control":
+            "public, s-maxage=3600, stale-while-revalidate=86400",
+        },
+      },
+    );
   } catch (error) {
     console.error("Error in reviews API:", error);
     return NextResponse.json(

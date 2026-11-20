@@ -1,6 +1,7 @@
 import { revalidatePath, revalidateTag } from "next/cache";
 import { NextResponse } from "next/server";
 import { isServerAdmin } from "@/lib/auth-server";
+import { sanitizeErrorForProduction } from "@/lib/errors";
 import { createServerSupabaseAdminClient } from "@/lib/supabase/server";
 
 export async function GET() {
@@ -18,7 +19,10 @@ export async function GET() {
 
     if (error && error.code !== "PGRST116") {
       console.error("GET site_settings Error:", error);
-      return NextResponse.json({ error: error.message }, { status: 500 });
+      return NextResponse.json(
+        { error: sanitizeErrorForProduction(error) },
+        { status: 500 },
+      );
     }
 
     return NextResponse.json(data || {});
@@ -66,7 +70,7 @@ export async function PATCH(request: Request) {
     if (result.error) {
       console.error("PATCH site_settings Error:", result.error);
       return NextResponse.json(
-        { error: result.error.message },
+        { error: sanitizeErrorForProduction(result.error) },
         { status: 500 },
       );
     }

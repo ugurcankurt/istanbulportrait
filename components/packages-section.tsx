@@ -7,11 +7,6 @@ import { useLocale, useTranslations } from "next-intl";
 import { useEffect, useMemo } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-} from "@/components/ui/carousel";
 import { useCurrency } from "@/contexts/currency-context";
 import type { DiscountDB } from "@/lib/discount-service";
 import { extractPhotosCount } from "@/lib/features-parser";
@@ -109,11 +104,7 @@ export function PackagesSection({
     });
   };
 
-  const renderPackageCard = (
-    pkg: any,
-    asHeading: boolean = true,
-    index: number = 0,
-  ) => (
+  const renderPackageCard = (pkg: any, asHeading: boolean = true) => (
     <div
       className="relative cursor-pointer h-full"
       onClick={() => handlePackageClick(pkg)}
@@ -141,7 +132,7 @@ export function PackagesSection({
               style={{ viewTransitionName: `package-cover-${pkg.dbSlug}` }}
               sizes="(max-width: 639px) 80vw, (max-width: 1023px) 45vw, 22vw"
               quality={60}
-              loading={index === 0 ? "eager" : "lazy"}
+              loading="lazy"
             />
           ) : (
             <div className="w-full h-full bg-muted flex flex-col items-center justify-center text-muted-foreground/30">
@@ -244,32 +235,15 @@ export function PackagesSection({
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         {header}
 
-        {/* Mobile Carousel View (Visible only on small screens) */}
-        <div className="sm:hidden -mx-4">
-          <Carousel
-            opts={{
-              align: "center", // Center the cards for a balanced look
-              // dragFree: false is default, which enables snapping
-            }}
-            className="w-full"
-          >
-            {/* Added py-4 to prevent ring/shadow clipping */}
-            <CarouselContent className="-ms-4 px-4 py-4">
-              {sortedPackages.map((pkg, idx) => (
-                <CarouselItem key={pkg.id} className="ps-4 basis-[78%]">
-                  <div className="h-full px-0.5">
-                    {renderPackageCard(pkg, false, idx)}
-                  </div>
-                </CarouselItem>
-              ))}
-            </CarouselContent>
-          </Carousel>
-        </div>
-
-        {/* Desktop & Tablet Grid View (Hidden on mobile) */}
-        <div className="hidden sm:grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8 mx-auto">
-          {sortedPackages.map((pkg, idx) => (
-            <div key={pkg.id}>{renderPackageCard(pkg, true, idx)}</div>
+        {/* Single unified responsive DOM list: horizontal snap strip on mobile, multi-col grid on sm+ */}
+        <div className="flex overflow-x-auto snap-x snap-mandatory gap-4 px-4 -mx-4 py-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:grid sm:grid-cols-2 lg:grid-cols-4 sm:gap-6 lg:gap-8 sm:overflow-visible sm:px-0 sm:mx-0 sm:py-0">
+          {sortedPackages.map((pkg) => (
+            <div
+              key={pkg.id}
+              className="shrink-0 w-[78%] snap-center sm:w-auto sm:shrink"
+            >
+              {renderPackageCard(pkg, true)}
+            </div>
           ))}
         </div>
       </div>

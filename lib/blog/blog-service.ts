@@ -491,57 +491,6 @@ export const getBlogPostBySlug = cache(
 
         if (postInLocale) {
           data = postInLocale;
-        } else if (locale !== "en") {
-          // Fallback to English translation
-          const { data: postInEn } = await supabaseAdmin
-            .from("blog_posts")
-            .select(
-              `
-            *,
-            translation:blog_post_translations!inner(
-              id,
-              title,
-              slug,
-              excerpt,
-              content,
-              meta_description,
-              meta_keywords,
-              locale
-            ),
-            categories:blog_post_categories(
-              category:blog_categories(
-                id,
-                slug,
-                icon,
-                color,
-                translations:blog_category_translations(name, description, locale)
-              )
-            ),
-            tags:blog_post_tags(
-              tag:blog_tags(
-                id,
-                slug,
-                translations:blog_tag_translations(name, locale)
-              )
-            ),
-            author:blog_authors(
-              id,
-              name,
-              bio,
-              avatar_url,
-              role,
-              social_links
-            )
-          `,
-            )
-            .eq("id", crossTrans.post_id)
-            .eq("status", "published")
-            .eq("translation.locale", "en")
-            .maybeSingle();
-
-          if (postInEn) {
-            data = postInEn;
-          }
         }
       }
     }
@@ -632,6 +581,51 @@ export async function getSalvagedBlogSlug(
 
   return targetTrans.slug;
 }
+
+/**
+ * Counts published blog posts per locale (optionally filtered by categoryId)
+ * so pagination and hreflang never emit links to 404 or empty/noindex locale pages.
+ */
+export const getPublishedBlogPostCountsByLocale = cache(
+  async (categoryId?: string): Promise<Record<string, number>> => {
+    const counts: Record<string, number> = {};
+    if (!supabaseAdmin) return counts;
+
+    let postIdFilter: string[] | null = null;
+    if (categoryId) {
+      const { data: catPosts } = await supabaseAdmin
+        .from("blog_post_categories")
+        .select("post_id")
+        .eq("category_id", categoryId);
+      const ids = (catPosts || []).map(
+        (row: { post_id: string }) => row.post_id,
+      );
+      if (ids.length === 0) return counts;
+      postIdFilter = ids;
+    }
+
+    let query = supabaseAdmin
+      .from("blog_post_translations")
+      .select("locale, post:blog_posts!inner(status, published_at)")
+      .eq("post.status", "published")
+      .not("post.published_at", "is", null)
+      .limit(5000);
+
+    if (postIdFilter) {
+      query = query.in("post_id", postIdFilter);
+    }
+
+    const { data, error } = await query;
+    if (error || !data) return counts;
+
+    for (const row of data as Array<{ locale?: string }>) {
+      if (row.locale) {
+        counts[row.locale] = (counts[row.locale] || 0) + 1;
+      }
+    }
+    return counts;
+  },
+);
 
 /**
  * Get blog post by ID

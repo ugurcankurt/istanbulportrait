@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { isServerAdmin } from "@/lib/auth-server";
+import { sanitizeErrorForProduction } from "@/lib/errors";
 import { supabaseAdmin } from "@/lib/supabase";
 
 export async function GET(
@@ -22,7 +23,10 @@ export async function GET(
       if (error.code === "PGRST116") {
         return NextResponse.json({ error: "Addon not found" }, { status: 404 });
       }
-      return NextResponse.json({ error: error.message }, { status: 500 });
+      return NextResponse.json(
+        { error: sanitizeErrorForProduction(error) },
+        { status: 500 },
+      );
     }
 
     return NextResponse.json(addon);
@@ -54,7 +58,10 @@ export async function PUT(
       .single();
 
     if (error) {
-      return NextResponse.json({ error: error.message }, { status: 500 });
+      return NextResponse.json(
+        { error: sanitizeErrorForProduction(error) },
+        { status: 500 },
+      );
     }
 
     return NextResponse.json(data);
@@ -81,8 +88,11 @@ export async function DELETE(
 
     if (error) throw error;
     return NextResponse.json({ success: true });
-  } catch (error: any) {
+  } catch (error) {
     console.error("Error deleting addon:", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json(
+      { error: sanitizeErrorForProduction(error) },
+      { status: 500 },
+    );
   }
 }

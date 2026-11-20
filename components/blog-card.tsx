@@ -38,7 +38,7 @@ export async function BlogCard({
               fill
               className="object-cover group-hover:scale-105 transition-transform duration-700"
               quality={60}
-              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              sizes="(max-width: 767px) 100vw, (max-width: 1279px) 50vw, 33vw"
             />
             {post.is_featured && (
               <div className="absolute top-4 left-4">

@@ -3,10 +3,11 @@ import { AboutSection } from "@/components/about-section";
 import { BreadcrumbNav } from "@/components/breadcrumb-nav";
 import { PageHeroSection } from "@/components/page-hero-section";
 import { SchemaInjector } from "@/components/schema-injector";
+import { SeoEditorialSection } from "@/components/seo-editorial-section";
 import { pagesContentService } from "@/lib/pages-content-service";
 import {
   buildAboutPageSchema,
-  generateSeoDescription,
+  enrichSeoDescription,
   getBaseUrl,
   normalizeSchemaUrl,
 } from "@/lib/seo-utils";
@@ -19,12 +20,13 @@ export async function AboutPageContent({
 }) {
   const { locale, slug } = await params;
 
-  const [dbPage, settings, tAboutHighlights, tAboutCta, dynamicNavData] =
+  const [dbPage, settings, tAboutHighlights, tAboutCta, tHub, dynamicNavData] =
     await Promise.all([
       pagesContentService.getPageBySlug("about"),
       settingsService.getSettings(),
       getTranslations({ locale, namespace: "about_highlights" }),
       getTranslations({ locale, namespace: "about_cta" }),
+      getTranslations({ locale, namespace: "seo_hub" }),
       pagesContentService.getDynamicCoreNavData(locale),
     ]);
 
@@ -35,10 +37,11 @@ export async function AboutPageContent({
   const dynamicSubtitle =
     dbPage?.subtitle?.[locale] || dbPage?.subtitle?.en || "";
 
+  const baseUrl = getBaseUrl(settings.app_base_url);
   const aboutSchema = buildAboutPageSchema({
     name: dynamicTitle,
-    description: generateSeoDescription(dynamicSubtitle),
-    url: normalizeSchemaUrl(`${getBaseUrl()}/${locale}/${canonicalSegment}`),
+    description: enrichSeoDescription(dynamicSubtitle, "about", locale),
+    url: normalizeSchemaUrl(`${baseUrl}/${locale}/${canonicalSegment}`),
     founderPerson: settings.founder_name
       ? {
           name: settings.founder_name,
@@ -92,6 +95,39 @@ export async function AboutPageContent({
           }
         />
       </div>
+      <SeoEditorialSection
+        id="photographer-credentials"
+        title={tHub("about.title")}
+        subtitle={tHub("about.subtitle")}
+        items={[
+          {
+            title: tHub("about.item1_title"),
+            description: tHub("about.item1_desc"),
+          },
+          {
+            title: tHub("about.item2_title"),
+            description: tHub("about.item2_desc"),
+          },
+          {
+            title: tHub("about.item3_title"),
+            description: tHub("about.item3_desc"),
+          },
+        ]}
+        links={[
+          {
+            href: `/${locale}/${dynamicNavData.packages?.path || "packages"}`,
+            label: tHub("about.link_packages"),
+          },
+          {
+            href: `/${locale}/${dynamicNavData.locations?.path || "locations"}`,
+            label: tHub("about.link_locations"),
+          },
+          {
+            href: `/${locale}/${dynamicNavData.blog?.path || "blog"}`,
+            label: tHub("about.link_blog"),
+          },
+        ]}
+      />
     </div>
   );
 }

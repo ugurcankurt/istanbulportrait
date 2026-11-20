@@ -9,8 +9,49 @@ const PACKAGE_DURATIONS: Record<string, number> = {
 };
 
 function timeToMinutes(timeStr: string): number {
+  if (!timeStr || !/^\d{1,2}:\d{2}$/.test(timeStr)) return Number.NaN;
   const [h, m] = timeStr.split(":").map(Number);
+  if (
+    !Number.isFinite(h) ||
+    !Number.isFinite(m) ||
+    h < 0 ||
+    h > 23 ||
+    m < 0 ||
+    m > 59
+  ) {
+    return Number.NaN;
+  }
   return h * 60 + m;
+}
+
+function isValidIsoDate(dateStr: string): boolean {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) return false;
+  const [y, m, d] = dateStr.split("-").map(Number);
+  const dt = new Date(Date.UTC(y, m - 1, d));
+  return (
+    dt.getUTCFullYear() === y &&
+    dt.getUTCMonth() === m - 1 &&
+    dt.getUTCDate() === d
+  );
+}
+
+function getIstanbulNow(): { date: string; minutes: number } {
+  const parts = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "Europe/Istanbul",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+  }).formatToParts(new Date());
+
+  const get = (type: string) =>
+    parts.find((p) => p.type === type)?.value || "00";
+  const date = `${get("year")}-${get("month")}-${get("day")}`;
+  const hour = Number.parseInt(get("hour"), 10) % 24;
+  const minute = Number.parseInt(get("minute"), 10);
+  return { date, minutes: hour * 60 + minute };
 }
 
 export async function GET(request: Request) {
@@ -19,7 +60,17 @@ export async function GET(request: Request) {
   const packageId = searchParams.get("packageId");
 
   if (!date || !packageId) {
-    return NextResponse.json({ blockedSlots: [] });
+    return NextResponse.json(
+      { error: "date and packageId are required", blockedSlots: [] },
+      { status: 400 },
+    );
+  }
+
+  if (!isValidIsoDate(date)) {
+    return NextResponse.json(
+      { error: "Invalid date format", blockedSlots: [] },
+      { status: 400 },
+    );
   }
 
   // Fetch settings bounds (start_time, end_time)
@@ -29,22 +80,35 @@ export async function GET(request: Request) {
     .eq("id", "default")
     .single();
 
-  const startMinutes = settingsData?.start_time
+  const parsedStart = settingsData?.start_time
     ? timeToMinutes(settingsData.start_time)
     : 6 * 60;
-  const endMinutes = settingsData?.end_time
+  const parsedEnd = settingsData?.end_time
     ? timeToMinutes(settingsData.end_time)
     : 20 * 60;
+  const startMinutes = Number.isFinite(parsedStart) ? parsedStart : 6 * 60;
+  const endMinutes = Number.isFinite(parsedEnd) ? parsedEnd : 20 * 60;
 
-  // Fetch all packages to get exact durations dynamically
-  const { data: allPackages } = await supabaseAdmin
+  // Fetch active packages to get exact durations dynamically
+  const { data: allPackages, error: packagesError } = await supabaseAdmin
     .from("packages")
-    .select("slug, duration");
+    .select("slug, duration, is_active");
+
+  if (packagesError) {
+    return NextResponse.json(
+      { error: "Failed to load packages" },
+      { status: 500 },
+    );
+  }
 
   const dynamicDurations: Record<string, number> = { ...PACKAGE_DURATIONS };
+  const validSlugs = new Set<string>(Object.keys(PACKAGE_DURATIONS));
 
-  if (allPackages) {
+  if (allPackages && allPackages.length > 0) {
+    validSlugs.clear();
     for (const p of allPackages) {
+      if (p.is_active === false) continue;
+      validSlugs.add(p.slug);
       const durStr = (p.duration?.en || "").toLowerCase();
       let mins = 0;
       const hourMatch = durStr.match(/(\d+(?:\.\d+)?)\s*(?:hour|hr|h\b)/i);
@@ -62,6 +126,13 @@ export async function GET(request: Request) {
     }
   }
 
+  if (!validSlugs.has(packageId)) {
+    return NextResponse.json(
+      { error: "Unknown or inactive package", blockedSlots: [] },
+      { status: 400 },
+    );
+  }
+
   // Find duration of the requested package
   const requestedDuration = dynamicDurations[packageId] || 60;
 
@@ -76,11 +147,25 @@ export async function GET(request: Request) {
     .neq("status", "cancelled")
     .neq("status", "failed");
 
+  if (error) {
+    return NextResponse.json(
+      { error: "Failed to load availability" },
+      { status: 500 },
+    );
+  }
+
   // Fetch manually blocked slots
-  const { data: blockedData } = await supabaseAdmin
+  const { data: blockedData, error: blockedError } = await supabaseAdmin
     .from("blocked_slots")
     .select("time")
     .eq("date", date);
+
+  if (blockedError) {
+    return NextResponse.json(
+      { error: "Failed to load blocked slots" },
+      { status: 500 },
+    );
+  }
 
   let isDayFullyBlocked = false;
   const manualBlockedSlots = new Set<string>();
@@ -95,16 +180,21 @@ export async function GET(request: Request) {
     }
   }
 
-  // Generate all possible 30-min slots
+  // Generate 30-min slots covering configured bounds and UI grid (06:00 - 20:30)
+  const minHour = Math.min(6, Math.floor(startMinutes / 60));
+  const maxHour = Math.max(20, Math.floor(endMinutes / 60));
   const allSlots: string[] = [];
-  for (let h = 6; h <= 20; h++) {
-    // For UI consistency we always return the static grid range, but block out of bounds
+  for (let h = minHour; h <= maxHour; h++) {
     allSlots.push(`${h.toString().padStart(2, "0")}:00`);
     allSlots.push(`${h.toString().padStart(2, "0")}:30`);
   }
 
-  if (isDayFullyBlocked) {
-    return NextResponse.json({ blockedSlots: allSlots });
+  const istanbulNow = getIstanbulNow();
+  if (isDayFullyBlocked || date < istanbulNow.date) {
+    return NextResponse.json(
+      { blockedSlots: allSlots },
+      { headers: { "Cache-Control": "no-store" } },
+    );
   }
 
   // Filter valid bookings that actually block time
@@ -116,15 +206,22 @@ export async function GET(request: Request) {
   });
 
   const blockedSlots: string[] = [];
-  const manualBlockedMinutes =
-    Array.from(manualBlockedSlots).map(timeToMinutes);
+  const manualBlockedMinutes = Array.from(manualBlockedSlots)
+    .map(timeToMinutes)
+    .filter((m) => Number.isFinite(m));
 
   for (const slot of allSlots) {
     const requestedStart = timeToMinutes(slot);
     const requestedEnd = requestedStart + requestedDuration;
 
-    // Block if outside working hours (minute-accurate)
-    if (requestedStart < startMinutes || requestedStart > endMinutes) {
+    // Block past slots on the current Istanbul date
+    if (date === istanbulNow.date && requestedStart <= istanbulNow.minutes) {
+      blockedSlots.push(slot);
+      continue;
+    }
+
+    // Block if session falls outside configured working hours
+    if (requestedStart < startMinutes || requestedEnd > endMinutes) {
       blockedSlots.push(slot);
       continue;
     }
@@ -145,6 +242,7 @@ export async function GET(request: Request) {
       if (!b.booking_time) continue;
 
       const existingStart = timeToMinutes(b.booking_time);
+      if (!Number.isFinite(existingStart)) continue;
       const existingDuration = dynamicDurations[b.package_id as string] || 60;
       const existingEnd = existingStart + existingDuration;
 
@@ -164,5 +262,8 @@ export async function GET(request: Request) {
   const dynamicMultiplier = 1.0;
   const yieldReason = "standard";
 
-  return NextResponse.json({ blockedSlots, dynamicMultiplier, yieldReason });
+  return NextResponse.json(
+    { blockedSlots, dynamicMultiplier, yieldReason },
+    { headers: { "Cache-Control": "no-store" } },
+  );
 }

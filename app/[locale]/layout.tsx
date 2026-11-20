@@ -29,6 +29,10 @@ import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { CurrencyProvider } from "@/contexts/currency-context";
 import {
+  getCachedActiveDiscounts,
+  getCachedActivePackages,
+} from "@/lib/public-cache";
+import {
   buildOrganizationSchema,
   constructOpenGraph,
   getBaseUrl,
@@ -61,11 +65,35 @@ const FestiveParticles = dynamic(() =>
 
 const fontHeading = Cormorant_Garamond({
   variable: "--font-cormorant",
-  subsets: ["latin", "latin-ext", "cyrillic"],
+  subsets: ["latin", "latin-ext"],
   display: "swap",
   style: ["normal"],
   weight: ["400", "500", "600"],
 });
+
+const fontHeadingCyrillic = Cormorant_Garamond({
+  variable: "--font-cormorant-cyrillic",
+  subsets: ["cyrillic"],
+  display: "swap",
+  style: ["normal"],
+  weight: ["400", "500", "600"],
+  preload: false,
+});
+
+const OMITTED_ROOT_CLIENT_NAMESPACES = new Set([
+  "home_seo",
+  "seo_hub",
+  "faq",
+  "gallery",
+  "package_selection",
+  "api_errors",
+  "notfound",
+  "payment_banner",
+  "account",
+  "privacy",
+  "success",
+  "success_messages",
+]);
 
 const fontSans = Plus_Jakarta_Sans({
   variable: "--font-jakarta",
@@ -183,19 +211,12 @@ export default async function LocaleLayout({
   // Enable static/ISR rendering for all public pages under app/[locale]
   setRequestLocale(locale);
 
-  const [
-    { pagesContentService },
-    { settingsService },
-    { getRatesForBase },
-    { discountService },
-    { packagesService },
-  ] = await Promise.all([
-    import("@/lib/pages-content-service"),
-    import("@/lib/settings-service"),
-    import("@/lib/currency"),
-    import("@/lib/discount-service"),
-    import("@/lib/packages-service"),
-  ]);
+  const [{ pagesContentService }, { settingsService }, { getRatesForBase }] =
+    await Promise.all([
+      import("@/lib/pages-content-service"),
+      import("@/lib/settings-service"),
+      import("@/lib/currency"),
+    ]);
 
   // Execute all asynchronous data fetching in parallel (cookie-free for Vercel Edge ISR caching)
   const [
@@ -210,11 +231,11 @@ export default async function LocaleLayout({
     pagesContentService.getDynamicCoreNavData(locale),
     settingsService.getSettings(),
     getRatesForBase("EUR"),
-    discountService.getActiveDiscounts(),
-    packagesService.getActivePackages(),
+    getCachedActiveDiscounts(),
+    getCachedActivePackages(),
   ]);
 
-  const publicSettings = settingsService.toPublicSettings(settings);
+  const publicSettings = settingsService.toPublicSettings(settings, locale);
   const defaultCurrency = locale === "tr" ? "TRY" : "EUR";
 
   // Slim footer packages to only current locale + English fallback to shrink RSC payload on every page
@@ -227,12 +248,19 @@ export default async function LocaleLayout({
     },
   }));
 
+  // Strip server-only and route-isolated namespaces from root RSC payload
+  const clientMessages = Object.fromEntries(
+    Object.entries(messages).filter(
+      ([ns]) => !OMITTED_ROOT_CLIENT_NAMESPACES.has(ns),
+    ),
+  );
+
   return (
     <html
       lang={locale === "zh" ? "zh-CN" : locale}
       dir={locale === "ar" ? "rtl" : "ltr"}
       data-scroll-behavior="smooth"
-      className={`${fontSans.variable} ${fontHeading.variable} ${geistMono.variable} theme-${settings.theme_color || "bronze"}`}
+      className={`${fontSans.variable} ${fontHeading.variable} ${fontHeadingCyrillic.variable} ${geistMono.variable} theme-${settings.theme_color || "bronze"}`}
       suppressHydrationWarning
     >
       <head>
@@ -287,12 +315,11 @@ export default async function LocaleLayout({
               ${
                 settings.facebook_pixel_id
                   ? `
-              !function(f,b,e,v,n,t,s)
-              {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-              n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-              if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-              n.queue=[]}(window, document,'script',
-              'https://connect.facebook.net/en_US/fbevents.js');
+              if(!window.fbq){
+                var n=window.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+                if(!window._fbq)window._fbq=n;
+                n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];
+              }
               window.fbq('consent', 'revoke');
               window.fbq('dataProcessingOptions', ['LDU'], 0, 0);
               window.fbq('set', 'autoConfig', false, ${JSON.stringify(settings.facebook_pixel_id)});
@@ -315,7 +342,7 @@ export default async function LocaleLayout({
           <ConsentProvider>
             <NextIntlClientProvider
               locale={locale}
-              messages={messages}
+              messages={clientMessages}
               now={new Date()}
             >
               <CurrencyProvider rates={rates} currency={defaultCurrency}>
@@ -340,12 +367,11 @@ export default async function LocaleLayout({
                     />
                     <main className="flex-1">{children}</main>
 
-                    <DeferredAnalytics
-                      clarityId={settings.clarity_project_id}
-                    />
-
                     {/* Non-critical Analytics — deferred until first interaction to minimize main-thread work */}
                     <InteractionLoader>
+                      <DeferredAnalytics
+                        clarityId={settings.clarity_project_id}
+                      />
                       <ConsentGate consent="accepted_all">
                         <YandexMetrica
                           id={settings.yandex_metrica_id || undefined}

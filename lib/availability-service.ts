@@ -1,8 +1,11 @@
+import { supabase } from "./supabase";
 import { supabaseAuth } from "./supabase/client";
 
-type SupabaseClient = typeof supabaseAuth;
+function getReadClient() {
+  return typeof window === "undefined" ? supabase : supabaseAuth;
+}
 
-function getSupabaseClient() {
+function getWriteClient() {
   return supabaseAuth;
 }
 
@@ -29,8 +32,8 @@ export interface TimeSurcharge {
 
 export const availabilityService = {
   async getSettings(): Promise<AvailabilitySettings> {
-    const supabase = getSupabaseClient();
-    const { data, error } = await supabase
+    const client = getReadClient();
+    const { data, error } = await client
       .from("availability_settings")
       .select("*")
       .eq("id", "default")
@@ -47,8 +50,8 @@ export const availabilityService = {
   },
 
   async updateSettings(startTime: string, endTime: string): Promise<void> {
-    const supabase = getSupabaseClient();
-    const { error } = await supabase
+    const client = getWriteClient();
+    const { error } = await client
       .from("availability_settings")
       .upsert({ id: "default", start_time: startTime, end_time: endTime });
 
@@ -56,8 +59,8 @@ export const availabilityService = {
   },
 
   async getBlockedSlots(): Promise<BlockedSlot[]> {
-    const supabase = getSupabaseClient();
-    const { data, error } = await supabase
+    const client = getReadClient();
+    const { data, error } = await client
       .from("blocked_slots")
       .select("*")
       .order("date", { ascending: true })
@@ -72,8 +75,8 @@ export const availabilityService = {
     time: string | null,
     reason: string | null,
   ): Promise<void> {
-    const supabase = getSupabaseClient();
-    const { error } = await supabase
+    const client = getWriteClient();
+    const { error } = await client
       .from("blocked_slots")
       .insert({ date, time, reason });
 
@@ -81,29 +84,32 @@ export const availabilityService = {
   },
 
   async deleteBlockedSlot(id: string): Promise<void> {
-    const supabase = getSupabaseClient();
-    const { error } = await supabase
-      .from("blocked_slots")
-      .delete()
-      .eq("id", id);
+    const client = getWriteClient();
+    const { error } = await client.from("blocked_slots").delete().eq("id", id);
 
     if (error) throw error;
   },
 
   async getTimeSurcharges(): Promise<TimeSurcharge[]> {
-    const supabase = getSupabaseClient();
-    const { data, error } = await supabase
+    const client = getReadClient();
+    const { data, error } = await client
       .from("time_surcharges")
       .select("*")
       .order("time", { ascending: true });
 
-    if (error) throw error;
+    if (error) {
+      if (typeof window === "undefined") {
+        console.error("Failed fetching time_surcharges on server:", error);
+        return [];
+      }
+      throw error;
+    }
     return data || [];
   },
 
   async addTimeSurcharge(time: string, percentage: number): Promise<void> {
-    const supabase = getSupabaseClient();
-    const { error } = await supabase
+    const client = getWriteClient();
+    const { error } = await client
       .from("time_surcharges")
       .insert({ time, surcharge_percentage: percentage });
 
@@ -111,8 +117,8 @@ export const availabilityService = {
   },
 
   async deleteTimeSurcharge(id: string): Promise<void> {
-    const supabase = getSupabaseClient();
-    const { error } = await supabase
+    const client = getWriteClient();
+    const { error } = await client
       .from("time_surcharges")
       .delete()
       .eq("id", id);

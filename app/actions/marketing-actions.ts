@@ -1,10 +1,16 @@
 "use server";
 import { cookies } from "next/headers";
-import { hashCustomerData, trackFacebookPurchase } from "@/lib/facebook";
+import { getServerUser, isServerAdmin } from "@/lib/auth-server";
+import { trackFacebookPurchase } from "@/lib/facebook";
 import { supabaseAdmin } from "@/lib/supabase";
 
 export async function reportPurchaseToFacebook(bookingId: string) {
   try {
+    const user = await getServerUser();
+    if (!user || !(await isServerAdmin(user.email))) {
+      return { success: false, error: "Unauthorized" };
+    }
+
     // 1. Get booking details from Supabase
     const { data: booking, error } = await supabaseAdmin
       .from("bookings")
@@ -26,20 +32,25 @@ export async function reportPurchaseToFacebook(bookingId: string) {
     const payment = booking.payments?.[0]; // Assuming first payment is the one
     const amount = payment?.amount || booking.total_amount;
     const transactionId = payment?.payment_id || booking.id;
-    const hashedEmail = await hashCustomerData(booking.user_email);
+    const nameParts = (booking.user_name || "").trim().split(/\s+/);
+    const firstName = nameParts[0] || undefined;
+    const lastName =
+      nameParts.length > 1 ? nameParts.slice(1).join(" ") : undefined;
 
-    // 4. Send to Facebook CAPI
+    // 4. Send to Facebook CAPI (trackFacebookPurchase hashes externalId & PII once)
     await trackFacebookPurchase(
       booking.user_email,
       booking.user_phone,
       booking.package_id,
       amount,
       transactionId,
-      undefined, // eventId
+      booking.id,
       {
         fbc,
         fbp,
-        externalId: hashedEmail,
+        firstName,
+        lastName,
+        externalId: booking.user_email,
       },
     );
 

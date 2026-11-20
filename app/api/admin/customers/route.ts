@@ -1,6 +1,10 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
-import { createServerAdminClient, requireServerAdmin } from "@/lib/auth-server";
+import {
+  createServerAdminClient,
+  getAdminErrorStatus,
+  requireServerAdmin,
+} from "@/lib/auth-server";
 import {
   DatabaseConnectionError,
   handleSupabaseError,
@@ -272,13 +276,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(
       { error: sanitizeErrorForProduction(error) },
-      {
-        status:
-          error instanceof Error &&
-          error.message.includes("Admin access required")
-            ? 403
-            : 500,
-      },
+      { status: getAdminErrorStatus(error) },
     );
   }
 }

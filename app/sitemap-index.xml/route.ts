@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { getBaseUrl } from "@/lib/seo-utils";
+import { settingsService } from "@/lib/settings-service";
 import { supabaseAdmin } from "@/lib/supabase";
 import { generateSitemaps } from "../sitemap";
 
@@ -32,9 +33,9 @@ async function getLatestTimestamp(
 }
 
 export async function GET() {
-  const baseUrl = getBaseUrl();
-  const [sitemaps, coreMod, pkgMod, locMod, postMod, catMod] =
+  const [settings, sitemaps, coreMod, pkgMod, locMod, postMod, catMod] =
     await Promise.all([
+      settingsService.getSettings(),
       generateSitemaps(),
       getLatestTimestamp("pages", { column: "is_active", value: true }),
       getLatestTimestamp("packages", { column: "is_active", value: true }),
@@ -45,6 +46,7 @@ export async function GET() {
       }),
       getLatestTimestamp("blog_categories"),
     ]);
+  const baseUrl = getBaseUrl(settings.app_base_url);
 
   const lastModById: Record<string, string> = {
     core: coreMod,

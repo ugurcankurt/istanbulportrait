@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
-import { packagesService } from "@/lib/packages-service";
 import { pagesContentService } from "@/lib/pages-content-service";
+import { getCachedActivePackages } from "@/lib/public-cache";
 import { getBaseUrl } from "@/lib/seo-utils";
+import { settingsService } from "@/lib/settings-service";
 import { generateNativeSlug } from "@/lib/slug-generator";
 
 export const revalidate = 1800;
@@ -13,12 +14,13 @@ export async function GET(request: Request) {
   const maxPriceParam = searchParams.get("maxPrice");
   const maxPrice = maxPriceParam ? Number(maxPriceParam) : null;
 
-  const [packages, corePages] = await Promise.all([
-    packagesService.getActivePackages(),
+  const [packages, corePages, settings] = await Promise.all([
+    getCachedActivePackages(),
     pagesContentService.getAllPages(),
+    settingsService.getSettings(),
   ]);
 
-  const baseUrl = getBaseUrl().replace(/\/+$/, "");
+  const baseUrl = getBaseUrl(settings.app_base_url);
   const packagesParent = corePages.find((p) => p.slug === "packages");
   const packagesSeg =
     pagesContentService.getCorePageSegment(
@@ -37,12 +39,10 @@ export async function GET(request: Request) {
         "";
       const duration = pkg.duration?.[locale] || pkg.duration?.en || "1 Hour";
       const features = pkg.features?.[locale] || pkg.features?.en || [];
-      const localizedSlug =
-        pkg.title?.[locale] || pkg.title?.en
-          ? generateNativeSlug(
-              pkg.title?.[locale] || pkg.title?.en || pkg.slug,
-            ) || pkg.slug
-          : pkg.slug;
+      const localizedTitle = pkg.title?.[locale];
+      const localizedSlug = localizedTitle
+        ? generateNativeSlug(localizedTitle) || pkg.slug
+        : pkg.slug;
 
       return {
         id: pkg.id,

@@ -2,7 +2,7 @@
 
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -27,17 +27,9 @@ interface GallerySectionProps {
 export function GallerySection({ header, images = [] }: GallerySectionProps) {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [mounted, setMounted] = useState(false);
-  const [randomImages, setRandomImages] = useState<GalleryImage[]>([]);
 
-  useEffect(() => {
-    // Shuffle images and select first 8 to show continuously changing images on every load
-    const shuffled = [...images].sort(() => 0.5 - Math.random());
-    setRandomImages(shuffled.slice(0, 8));
-    setMounted(true);
-  }, [images]);
-
-  const displayImages = mounted ? randomImages : images.slice(0, 8);
+  // Deterministic slice ensures SSR HTML matches hydrated DOM (zero CLS, zero duplicate image fetches)
+  const displayImages = images.slice(0, 8);
 
   const openLightbox = (imageId: string) => {
     setSelectedImage(imageId);

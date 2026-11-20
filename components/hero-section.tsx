@@ -33,7 +33,7 @@ export async function HeroSection({
             alt={title || "Professional Istanbul photographer"}
             fill
             className="object-cover"
-            priority
+            preload
             fetchPriority="high"
             quality={60}
             sizes="100vw"

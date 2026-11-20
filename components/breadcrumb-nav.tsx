@@ -20,6 +20,9 @@ import { buildBreadcrumbSchema } from "@/lib/seo-utils";
 interface BreadcrumbNavProps {
   className?: string;
   customLastLabel?: string;
+  customParentLabel?: string;
+  customParentHref?: string;
+  baseUrl?: string;
 }
 
 export function BreadcrumbNav(props: BreadcrumbNavProps) {
@@ -210,8 +213,9 @@ export function BreadcrumbNav(props: BreadcrumbNavProps) {
 
       segments.forEach(({ segment, fullPath }, index) => {
         const isLast = index === segments.length - 1;
+        const isParent = index === 0 && segments.length > 1;
         let label = "";
-        const href = fullPath;
+        let itemHref = `/${locale}${fullPath}`;
 
         // First try to find translation key from path mapping
         const translationKey = pathToKeyMapping[segment];
@@ -228,6 +232,13 @@ export function BreadcrumbNav(props: BreadcrumbNavProps) {
           label = formatSegment(segment);
         }
 
+        if (isParent && props.customParentLabel) {
+          label = props.customParentLabel;
+        }
+        if (isParent && props.customParentHref) {
+          itemHref = props.customParentHref;
+        }
+
         // If this is the last segment and a custom label is provided, overwrite it
         if (isLast && props.customLastLabel) {
           label = props.customLastLabel;
@@ -235,7 +246,7 @@ export function BreadcrumbNav(props: BreadcrumbNavProps) {
 
         items.push({
           label,
-          href: isLast ? undefined : `/${locale}${href}`,
+          href: isLast ? undefined : itemHref,
           isLast,
         });
       });
@@ -251,10 +262,18 @@ export function BreadcrumbNav(props: BreadcrumbNavProps) {
     return null;
   }
 
-  const schemaItems = breadcrumbs.map((b) => ({
-    name: b.label,
-    url: b.isLast ? decodedPathname : b.href || `/${locale}`,
-  }));
+  const normalizedBaseUrl = props.baseUrl?.trim().replace(/\/+$/, "");
+  const schemaItems = breadcrumbs.map((b) => {
+    const rawUrl = b.isLast ? decodedPathname : b.href || `/${locale}`;
+    const fullUrl =
+      normalizedBaseUrl && !rawUrl.startsWith("http")
+        ? `${normalizedBaseUrl}${rawUrl.startsWith("/") ? "" : "/"}${rawUrl}`
+        : rawUrl;
+    return {
+      name: b.label,
+      url: fullUrl,
+    };
+  });
 
   return (
     <>

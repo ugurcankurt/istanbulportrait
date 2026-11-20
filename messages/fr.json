@@ -298,7 +298,7 @@
     "payment": "Paiement",
     "response_time_desc": "Nous répondons généralement aux demandes dans les 24 heures.",
     "booking_process_desc": "Après votre demande, nous planifierons une consultation pour discuter de votre vision et finaliser les détails.",
-    "payment_desc": "Paiement intégral requis en ligne au moment de la réservation pour garantir votre date.",
+    "payment_desc": "Aucun acompte requis — réservez en ligne et réglez en espèces le jour de votre séance photo.",
     "professional_photographer": "Photographe professionnel",
     "professional_photographer_in_istanbul": "Photographe professionnel à Istanbul",
     "portrait_photography": "Photographie de portraits",
@@ -372,7 +372,7 @@
     "sessions": "Séances terminées",
     "clients": "Clients satisfaits",
     "satisfaction": "Satisfaction des clients",
-    "description": "Bienvenue sur mon portfolio ! Je me spécialise dans la capture de beaux moments à la lumière naturelle."
+    "description": "Photographe portraitiste local à Istanbul avec plus de 10 ans d'expérience auprès des couples, voyageurs solo, familles et demandes en mariage en lumière naturelle."
   },
   "api_errors": {
     "rate_limit": "Trop de demandes. Veuillez réessayer plus tard.",
@@ -553,7 +553,8 @@
       "about_title": "À propos de l'auteur",
       "name": "Photographe à Istanbul",
       "bio": "Photographe professionnel spécialisé dans la photographie de portraits, de couples et de style de vie à Istanbul. Avec plus de 8 ans d'expérience, capturant des souvenirs intemporels dans les décors les plus emblématiques de la ville.",
-      "follow": "Suivre sur Instagram"
+      "follow": "Suivre sur Instagram",
+      "profile_link": "Découvrir le photographe"
     },
     "summary": {
       "title": "Points clés à retenir",
@@ -739,6 +740,62 @@
     "step3_desc": "Même pour un premier shooting, votre photographe local vous guide avec bienveillance pour des portraits naturels et spontanés.",
     "step4_title": "4. Tarifs clairs en EUR et livraison en 48h",
     "step4_desc": "Réservez en ligne sans acompte, réglez en espèces le jour J et recevez votre galerie retouchée haute résolution sous 48 heures.",
-    "editorial_about_cta": "Rencontrer votre photographe"
+    "editorial_about_cta": "Rencontrer votre photographe",
+    "packages_note": "Chaque forfait de séance photo à Istanbul inclut le guidage des poses par un photographe local, l'optimisation de la lumière et la livraison sous 48h.",
+    "packages_cta": "Comparer Tous les Forfaits Photo à Istanbul"
+  },
+  "seo_hub": {
+    "packages": {
+      "title": "Comment choisir votre séance photo à Istanbul",
+      "subtitle": "Terrasses privées en robe volante face à Süleymaniye, lever du soleil à Sultanahmet ou portraits romantiques sur le Bosphore.",
+      "item1_title": "Toits Panoramiques & Robe Volante",
+      "item1_desc": "Des terrasses privées avec vue imprenable sur la mosquée Süleymaniye et la Corne d'Or offrent calme, intimité et silhouettes spectaculaires.",
+      "item2_title": "Monuments & Balades Historiques",
+      "item2_desc": "Associez Sainte-Sophie, la Tour de Galata, Ortaköy ou Balat avec un photographe à Istanbul qui maîtrise les horaires sans foule.",
+      "item3_title": "Sans Acompte & Livraison sous 48h",
+      "item3_desc": "Réservez votre créneau en ligne avec des tarifs clairs en EUR, payez en espèces sur place et recevez vos photos retouchées sous 48 heures.",
+      "link_locations": "Explorer les Lieux à Istanbul",
+      "link_about": "Rencontrer le Photographe",
+      "link_blog": "Conseils Tenues & Lumière"
+    },
+    "locations": {
+      "title": "Planifier un Shooting Multi-Sites à Istanbul",
+      "subtitle": "Combinez les quartiers européens emblématiques, les rives du Bosphore ou la rive asiatique selon l'heure et la durée.",
+      "item1_title": "Itinéraires à l'Heure Dorée",
+      "item1_desc": "Une séance d'1 heure s'adapte parfaitement à un quartier (Galata ou Sultanahmet) ; 2 à 3 heures permettent de relier toits et rives du Bosphore.",
+      "item2_title": "Créneaux Matinaux Sans Foule",
+      "item2_desc": "Partir tôt le matin avec un photographe local garantit des perspectives dégagées devant Sainte-Sophie, la Mosquée Bleue et Ortaköy.",
+      "item3_title": "Accès Privilégié aux Toits Privés",
+      "item3_desc": "Nos créneaux réservés sur les toits évitent les attentes afin de consacrer tout votre temps à créer de belles images.",
+      "link_packages": "Voir les Forfaits & Tarifs",
+      "link_blog": "Guides Photo à Istanbul",
+      "link_contact": "Demander un Parcours Sur Mesure"
+    },
+    "about": {
+      "title": "Expertise Terrain & Exigence Éditoriale",
+      "subtitle": "Collaborer directement avec un photographe portraitiste basé à Istanbul vous assure un accompagnement attentif et un rendu cinématographique homogène.",
+      "item1_title": "Optiques Plein Format & Lumière Naturelle",
+      "item1_desc": "Chaque séance photo à Istanbul est réalisée sur boîtiers Sony plein format et focales fixes lumineuses adaptés au lever du jour.",
+      "item2_title": "Guidage Naturel & Sans Contrainte",
+      "item2_desc": "Aucune expérience devant l'objectif n'est requise : nous guidons mouvements, postures et émotions spontanées avec simplicité.",
+      "item3_title": "Plus de 500 Séances & Avis 5 Étoiles",
+      "item3_desc": "Plébiscité par des voyageurs de plus de 50 pays sur Google, avec échanges fluides sur WhatsApp et galerie livrée en 48 heures.",
+      "link_packages": "Découvrir les Forfaits",
+      "link_locations": "Voir les Lieux Photo",
+      "link_blog": "Lire le Blog Photo"
+    },
+    "contact": {
+      "title": "Préparer Votre Séance Photo à Istanbul",
+      "subtitle": "Écrivez-nous sur WhatsApp ou par e-mail avec vos dates de séjour : votre photographe vous proposera l'horaire et l'itinéraire parfaits.",
+      "item1_title": "Dates & Format Souhaité",
+      "item1_desc": "Précisez vos jours de visite, le nombre de participants et le style envisagé : robe volante sur toit, couple, famille ou demande en mariage.",
+      "item2_title": "Demandes en Mariage & Événements",
+      "item2_desc": "Une surprise prévue au bord du Bosphore à Ortaköy ou sur une terrasse ? Nous organisons les angles discrets et le signal exact.",
+      "item3_title": "Réservation Directe en Ligne",
+      "item3_desc": "Votre choix est déjà fait ? Consultez les disponibilités directement sur la page de chaque forfait et bloquez votre créneau sans acompte.",
+      "link_packages": "Voir Nos Forfaits",
+      "link_locations": "Explorer les Lieux",
+      "link_about": "À propos d'Istanbul Portrait"
+    }
   }
 }

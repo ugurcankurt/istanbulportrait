@@ -10,9 +10,11 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Link } from "@/i18n/routing";
-import { discountService } from "@/lib/discount-service";
 import { locationsService } from "@/lib/locations-service";
-import { packagesService } from "@/lib/packages-service";
+import {
+  getCachedActiveDiscounts,
+  getCachedActivePackages,
+} from "@/lib/public-cache";
 import { reviewsService } from "@/lib/reviews-service";
 import {
   buildTouristAttractionSchema,
@@ -66,8 +68,8 @@ export async function LocationDetailPageContent({
   ] = await Promise.all([
     pagesContentService.getPageBySlug("locations"),
     pagesContentService.getPageBySlug("packages"),
-    packagesService.getActivePackages(),
-    discountService.getActiveDiscounts(),
+    getCachedActivePackages(),
+    getCachedActiveDiscounts(),
     reviewsService.getAggregateRating(),
   ]);
   const parentSegment =
@@ -196,6 +198,7 @@ export async function LocationDetailPageContent({
     image: heroImage,
     lat: location.coordinates?.lat,
     lng: location.coordinates?.lng,
+    inLanguage: locale,
     url: normalizeSchemaUrl(
       `${baseUrl}/${locale}/${parentSegment}/${canonicalLocationSegment}`,
     ),
@@ -205,7 +208,17 @@ export async function LocationDetailPageContent({
     <div className="min-h-screen">
       <SchemaInjector schema={touristAttractionSchema} />
 
-      <BreadcrumbNav customLastLabel={dynamicTitle} />
+      <BreadcrumbNav
+        customLastLabel={dynamicTitle}
+        customParentLabel={
+          locationsPage?.content?.nav_title?.[locale] ||
+          locationsPage?.title?.[locale] ||
+          locationsPage?.title?.en ||
+          undefined
+        }
+        customParentHref={`/${locale}/${parentSegment}`}
+        baseUrl={baseUrl}
+      />
 
       {/* Hero Section - Enhanced */}
       <section className="relative">
@@ -214,7 +227,8 @@ export async function LocationDetailPageContent({
             src={heroImage}
             alt={dynamicTitle}
             fill
-            priority
+            preload
+            fetchPriority="high"
             className="object-cover object-center"
             sizes="100vw"
           />

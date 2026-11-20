@@ -5,22 +5,28 @@ import {
   RiLinkedinBoxLine as Linkedin,
   RiTwitterXLine as Twitter,
 } from "@remixicon/react";
-import { Globe } from "lucide-react";
+import { ArrowRight, Globe } from "lucide-react";
 import Image from "next/image";
+import NextLink from "next/link";
 import { useParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import type { SiteSettings } from "@/lib/settings-service";
+import type { PublicSiteSettings, SiteSettings } from "@/lib/settings-service";
 import type { BlogAuthor as BlogAuthorType, Locale } from "@/types/blog";
 
 interface BlogAuthorProps {
   author?: BlogAuthorType;
-  siteSettings?: SiteSettings;
+  siteSettings?: PublicSiteSettings | SiteSettings;
+  aboutUrl?: string;
 }
 
-export function BlogAuthor({ author, siteSettings }: BlogAuthorProps) {
+export function BlogAuthor({
+  author,
+  siteSettings,
+  aboutUrl,
+}: BlogAuthorProps) {
   const t = useTranslations("blog.author");
   const { locale } = useParams() as { locale: Locale };
   const { resolvedTheme } = useTheme();
@@ -183,6 +189,18 @@ export function BlogAuthor({ author, siteSettings }: BlogAuthorProps) {
               >
                 <Globe className="w-4 h-4" />
                 Website
+              </Button>
+            )}
+            {aboutUrl && (
+              <Button
+                nativeButton={false}
+                render={<NextLink href={aboutUrl} rel="author" />}
+                variant="outline"
+                size="sm"
+                className="gap-2"
+              >
+                {t("profile_link")}
+                <ArrowRight className="w-4 h-4 rtl:rotate-180" />
               </Button>
             )}
           </div>

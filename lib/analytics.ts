@@ -2,7 +2,7 @@
  * Package display names (for GA4 item_name standardization)
  */
 import { parsePhoneNumber } from "libphonenumber-js/min";
-import { hashCustomerData, hashPhoneNumber } from "@/lib/facebook";
+import { hashCustomerData, hashPhoneNumber } from "@/lib/hash-utils";
 
 function getGoogleAdsSendTo(
   type: "purchase" | "lead" | "begin_checkout",

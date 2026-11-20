@@ -114,7 +114,7 @@ export function AboutSection({
                   }
                   fill
                   className="object-cover"
-                  priority={true}
+                  preload
                   quality={75}
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 600px"
                   onError={() => setImgError(true)}

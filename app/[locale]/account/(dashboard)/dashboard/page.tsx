@@ -13,22 +13,29 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Link } from "@/i18n/routing";
 import { getServerUser } from "@/lib/auth-server";
 import { formatCurrency } from "@/lib/currency";
-import { createServerSupabaseClient } from "@/lib/supabase/server";
+import { createServerSupabaseAdminClient } from "@/lib/supabase/server";
+
+function escapePostgrestValue(val: string): string {
+  return val.replace(/\\/g, "\\\\").replace(/"/g, '\\"');
+}
 
 export default async function CustomerDashboardPage() {
   const user = await getServerUser();
   const t = await getTranslations("account.dashboard");
   if (!user) return null;
 
-  const supabase = await createServerSupabaseClient();
+  const supabase = await createServerSupabaseAdminClient();
+
+  const orFilters = [`user_id.eq."${escapePostgrestValue(user.id)}"`];
+  if (user.email) {
+    orFilters.push(`user_email.eq."${escapePostgrestValue(user.email)}"`);
+  }
 
   // Fetch bookings belonging to this user
   const { data: bookings } = await supabase
     .from("bookings")
     .select("*")
-    .or(
-      `user_id.eq."${user.id}"${user.email ? `,user_email.eq."${user.email}"` : ""}`,
-    )
+    .or(orFilters.join(","))
     .order("booking_date", { ascending: false });
 
   return (

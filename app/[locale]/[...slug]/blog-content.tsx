@@ -9,10 +9,12 @@ import { getPublishedBlogPosts } from "@/lib/blog/blog-service";
 import { pagesContentService } from "@/lib/pages-content-service";
 import {
   buildCollectionPageSchema,
+  enrichSeoDescription,
   generateSeoDescription,
   getBaseUrl,
   normalizeSchemaUrl,
 } from "@/lib/seo-utils";
+import { settingsService } from "@/lib/settings-service";
 import type { Locale } from "@/types/blog";
 
 export async function BlogPageContent({
@@ -27,12 +29,17 @@ export async function BlogPageContent({
   const t = await getTranslations({ locale, namespace: "blog" });
   const page = Math.max(1, Number.parseInt(pageParam || "1", 10) || 1);
 
-  const dbPage = await pagesContentService.getPageBySlug("blog");
+  const [dbPage, settings] = await Promise.all([
+    pagesContentService.getPageBySlug("blog"),
+    settingsService.getSettings(),
+  ]);
   const dynamicTitle = dbPage?.title?.[locale] || dbPage?.title?.en || "blog";
   const dynamicSubtitle =
     dbPage?.subtitle?.[locale] || dbPage?.subtitle?.en || "";
   const parentSegment =
     pagesContentService.getCorePageSegment(dbPage || "blog", locale) || "blog";
+  const baseUrl = getBaseUrl(settings.app_base_url);
+  const canonicalPath = `/${locale}/${parentSegment}`;
 
   const { posts, pagination } = await getPublishedBlogPosts({
     page,
@@ -46,17 +53,20 @@ export async function BlogPageContent({
     notFound();
   }
 
+  const pageUrl = `${normalizeSchemaUrl(`${baseUrl}${canonicalPath}`)}${page > 1 ? `?page=${page}` : ""}`;
+
   const collectionSchema = buildCollectionPageSchema({
-    name: dynamicTitle,
-    description: generateSeoDescription(dynamicSubtitle),
-    url: normalizeSchemaUrl(`${getBaseUrl()}/${locale}/${parentSegment}`),
+    name: page > 1 ? `${dynamicTitle} - ${page}` : dynamicTitle,
+    description: enrichSeoDescription(dynamicSubtitle, "blog", locale),
+    url: pageUrl,
+    inLanguage: locale,
     items: posts.map((post) => ({
       name: post.translation.title,
       description: post.translation.excerpt
-        ? generateSeoDescription(post.translation.excerpt)
+        ? generateSeoDescription(post.translation.excerpt, 155, locale)
         : undefined,
       url: normalizeSchemaUrl(
-        `${getBaseUrl()}/${locale}/${parentSegment}/${post.translation.slug}`,
+        `${baseUrl}/${locale}/${parentSegment}/${post.translation.slug}`,
       ),
       image: post.featured_image || undefined,
     })),
@@ -93,7 +103,11 @@ export async function BlogPageContent({
             <div className="flex justify-center gap-4 items-center mt-8">
               {page > 1 && (
                 <NextLink
-                  href={`?page=${page - 1}`}
+                  href={
+                    page - 1 <= 1
+                      ? canonicalPath
+                      : `${canonicalPath}?page=${page - 1}`
+                  }
                   className="px-6 py-2.5 border-[0.5px] border-border/50 rounded-[1.5rem] hover:bg-muted/50 transition-all font-semibold shadow-sm text-sm"
                 >
                   {t("previous")}
@@ -104,7 +118,7 @@ export async function BlogPageContent({
               </span>
               {page < pagination.totalPages && (
                 <NextLink
-                  href={`?page=${page + 1}`}
+                  href={`${canonicalPath}?page=${page + 1}`}
                   className="px-6 py-2.5 border-[0.5px] border-border/50 rounded-[1.5rem] hover:bg-muted/50 transition-all font-semibold shadow-sm text-sm"
                 >
                   {t("next")}

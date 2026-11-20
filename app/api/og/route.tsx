@@ -5,16 +5,50 @@ import type { NextRequest } from "next/server";
 
 export const runtime = "nodejs";
 
+const SUPABASE_STORAGE_BASE = process.env.NEXT_PUBLIC_SUPABASE_URL
+  ? `${process.env.NEXT_PUBLIC_SUPABASE_URL.replace(/\/$/, "")}/storage/v1/object/public`
+  : "https://xfntnamwfnqjgqmyxwfz.supabase.co/storage/v1/object/public";
+
+const ALLOWED_IMAGE_HOSTS = new Set<string>([
+  "istanbulportrait.com",
+  "www.istanbulportrait.com",
+  "xfntnamwfnqjgqmyxwfz.supabase.co",
+  ...(process.env.NEXT_PUBLIC_SUPABASE_URL
+    ? [new URL(process.env.NEXT_PUBLIC_SUPABASE_URL).hostname]
+    : []),
+]);
+
+function resolveAllowedOgImageUrl(raw: string): string | null {
+  if (raw.startsWith("/storage/")) {
+    const rel = raw.slice("/storage/".length);
+    if (!rel || rel.includes("..") || rel.includes("\\")) return null;
+    return `${SUPABASE_STORAGE_BASE}/${rel}`;
+  }
+  try {
+    const parsed = new URL(raw);
+    if (parsed.protocol !== "https:") return null;
+    if (!ALLOWED_IMAGE_HOSTS.has(parsed.hostname)) return null;
+    return parsed.toString();
+  } catch {
+    return null;
+  }
+}
+
 export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
-    const imageUrl = searchParams.get("image");
+    const rawImageUrl = searchParams.get("image");
 
-    if (!imageUrl) {
+    if (!rawImageUrl) {
       return new Response("Missing image URL", { status: 400 });
     }
 
-    let imageSrc: any = imageUrl;
+    const imageUrl = resolveAllowedOgImageUrl(rawImageUrl);
+    if (!imageUrl) {
+      return new Response("Invalid or disallowed image URL", { status: 400 });
+    }
+
+    let imageSrc: ArrayBuffer;
     let targetUrl = imageUrl;
 
     // Satori (ImageResponse) .webp formatını desteklemediği için, sadece .webp uzantılı
@@ -23,16 +57,12 @@ export async function GET(req: NextRequest) {
       targetUrl = `https://wsrv.nl/?url=${encodeURIComponent(imageUrl)}&output=jpg&w=1200`;
     }
 
-    if (targetUrl.startsWith("http")) {
-      const imgFetch = await fetch(targetUrl);
-      if (imgFetch.ok) {
-        imageSrc = await imgFetch.arrayBuffer();
-      } else {
-        console.error(
-          `OG Image Fetch Hatası: ${targetUrl} (${imgFetch.status})`,
-        );
-      }
+    const imgFetch = await fetch(targetUrl);
+    if (!imgFetch.ok) {
+      console.error(`OG Image Fetch Hatası: ${targetUrl} (${imgFetch.status})`);
+      return new Response("Failed to load OG image source", { status: 404 });
     }
+    imageSrc = await imgFetch.arrayBuffer();
 
     // Load custom font to avoid Satori's default font rendering bugs
     const fontPath = join(
@@ -67,7 +97,7 @@ export async function GET(req: NextRequest) {
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          src={imageSrc}
+          src={imageSrc as unknown as string}
           alt="OG Image"
           style={{
             width: "100%",

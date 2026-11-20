@@ -1,5 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { getServerUser } from "@/lib/auth-server";
+import { signDriveToken } from "@/lib/booking-token";
 import { extractPhotosCount } from "@/lib/features-parser";
 import { getGalleryFilesGrouped } from "@/lib/google-drive";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
@@ -74,13 +75,17 @@ export async function GET(
     // 3. Format the response to use our proxy route for secure viewing
     const formatFiles = (filesArray: any[]) =>
       filesArray.map((file) => {
-        let previewUrl = `/api/drive/image/${file.id}`;
-        let thumbnailUrl = `/api/drive/image/${file.id}`;
+        const fileToken = signDriveToken(user.id, bookingId, file.id);
+        const signedImageUrl = `/api/drive/image/${file.id}?bookingId=${encodeURIComponent(bookingId)}&token=${encodeURIComponent(fileToken)}`;
+        let previewUrl = signedImageUrl;
+        let thumbnailUrl = signedImageUrl;
 
         if (file.thumbnailLink) {
           const baseLink = file.thumbnailLink.split("=")[0];
-          previewUrl = `/api/drive/proxy?url=${encodeURIComponent(`${baseLink}=w1200`)}`;
-          thumbnailUrl = `/api/drive/proxy?url=${encodeURIComponent(`${baseLink}=s200`)}`;
+          const previewTarget = `${baseLink}=w1200`;
+          const thumbnailTarget = `${baseLink}=s200`;
+          previewUrl = `/api/drive/proxy?bookingId=${encodeURIComponent(bookingId)}&token=${encodeURIComponent(signDriveToken(user.id, bookingId, previewTarget))}&url=${encodeURIComponent(previewTarget)}`;
+          thumbnailUrl = `/api/drive/proxy?bookingId=${encodeURIComponent(bookingId)}&token=${encodeURIComponent(signDriveToken(user.id, bookingId, thumbnailTarget))}&url=${encodeURIComponent(thumbnailTarget)}`;
         }
 
         return {
@@ -89,7 +94,7 @@ export async function GET(
           mimeType: file.mimeType,
           thumbnail: thumbnailUrl,
           url: previewUrl,
-          downloadUrl: `/api/drive/image/${file.id}`,
+          downloadUrl: signedImageUrl,
           metadata: file.imageMediaMetadata,
         };
       });

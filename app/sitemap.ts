@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { routing } from "@/i18n/routing";
+import { getPublishedBlogPostCountsByLocale } from "@/lib/blog/blog-service";
 import { getBlogTaxonomySegment } from "@/lib/core-page-slugs";
 import { locationsService } from "@/lib/locations-service";
 import { packagesService } from "@/lib/packages-service";
@@ -9,9 +10,11 @@ import {
   getBaseUrl,
   resolveSchemaImage,
 } from "@/lib/seo-utils";
+import { settingsService } from "@/lib/settings-service";
 import { generateNativeSlug } from "@/lib/slug-generator";
 
 export const revalidate = 3600;
+const FALLBACK_LASTMOD = new Date("2026-01-01T00:00:00.000Z");
 
 export async function generateSitemaps() {
   return [
@@ -28,8 +31,11 @@ export default async function sitemap({
 }: {
   id: Promise<string> | string;
 }): Promise<MetadataRoute.Sitemap> {
-  const resolvedId = await id;
-  const baseUrl = getBaseUrl();
+  const [resolvedId, settings] = await Promise.all([
+    id,
+    settingsService.getSettings(),
+  ]);
+  const baseUrl = getBaseUrl(settings.app_base_url);
   const locales = routing.locales;
 
   const getAlternates = (
@@ -115,22 +121,31 @@ export default async function sitemap({
       (p) => p.is_active && supportedCoreSlugs.has(p.slug),
     );
 
+    const blogCountsByLocale = await getPublishedBlogPostCountsByLocale();
+
     for (const page of activeCorePages) {
       if (page.slug === "home") continue;
 
-      locales.forEach((locale) => {
+      const targetLocales =
+        page.slug === "blog"
+          ? locales.filter((loc) => (blogCountsByLocale[loc] || 0) > 0)
+          : locales;
+
+      targetLocales.forEach((locale) => {
         const pageSeg = `/${pagesContentService.getCorePageSegment(page, locale) || page.slug}`;
 
         sitemapData.push({
           url: encodeURI(`${baseUrl}/${locale}${pageSeg}`),
           lastModified: new Date(
-            page.updated_at || page.created_at || new Date(),
+            page.updated_at || page.created_at || FALLBACK_LASTMOD,
           ),
           changeFrequency: "weekly",
           priority: 0.8,
-          alternates: getAlternates((loc) => {
-            return `/${pagesContentService.getCorePageSegment(page, loc) || page.slug}`;
-          }),
+          alternates: getAlternates(
+            (loc) =>
+              `/${pagesContentService.getCorePageSegment(page, loc) || page.slug}`,
+            targetLocales,
+          ),
           ...(page.cover_image
             ? { images: [cleanImage(page.cover_image)] }
             : {}),
@@ -210,7 +225,9 @@ export default async function sitemap({
 
         sitemapData.push({
           url: encodeURI(`${baseUrl}/${locale}/${pSeg}/${pkgSeg}`),
-          lastModified: new Date(pkg.updated_at || Date.now()).toISOString(),
+          lastModified: new Date(
+            pkg.updated_at || FALLBACK_LASTMOD,
+          ).toISOString(),
           changeFrequency: "weekly",
           priority: 0.9,
           alternates: getAlternates((loc) => {
@@ -252,7 +269,7 @@ export default async function sitemap({
         sitemapData.push({
           url: encodeURI(`${baseUrl}/${locale}/${pSeg}/${locSeg}`),
           lastModified: new Date(
-            locItem.updated_at || locItem.created_at || new Date(),
+            locItem.updated_at || locItem.created_at || FALLBACK_LASTMOD,
           ),
           changeFrequency: "weekly",
           priority: 0.7,
@@ -342,7 +359,7 @@ export default async function sitemap({
             sitemapData.push({
               url: encodeURI(`${baseUrl}/${locale}/${pSeg}/${tSlug}`),
               lastModified: new Date(
-                bp.updated_at || bp.created_at || new Date(),
+                bp.updated_at || bp.created_at || FALLBACK_LASTMOD,
               ),
               changeFrequency: "monthly",
               priority: 0.6,
@@ -363,27 +380,37 @@ export default async function sitemap({
       const corePages = await pagesContentService.getAllPages();
       const blogParent = corePages.find((p) => p.slug === "blog");
 
-      // Blog Categories (only include categories with at least 1 published post to avoid soft-404s)
+      // Blog Categories (only emit locales with at least 1 published post to avoid noindex URLs in sitemap)
       const { data: blogCategories } = await supabaseAdmin
         .from("blog_categories")
         .select(
-          "id, slug, updated_at, created_at, translations:blog_category_translations(locale, name), post_links:blog_post_categories(post:blog_posts(status, published_at))",
+          "id, slug, updated_at, created_at, translations:blog_category_translations(locale, name), post_links:blog_post_categories(post:blog_posts(status, published_at, translations:blog_post_translations(locale)))",
         );
       if (blogCategories && blogCategories.length > 0) {
         for (const bc of blogCategories) {
           const catTranslations = bc.translations || [];
           if (catTranslations.length === 0) continue;
 
-          const hasPublishedPost = (bc.post_links || []).some(
-            (link: any) =>
-              link?.post?.status === "published" &&
-              Boolean(link?.post?.published_at),
-          );
-          if (!hasPublishedPost) continue;
+          const publishedPostLocales = new Set<string>();
+          for (const link of bc.post_links || []) {
+            const linkedPost = (link as any)?.post;
+            if (
+              linkedPost?.status === "published" &&
+              linkedPost?.published_at
+            ) {
+              for (const tr of linkedPost.translations || []) {
+                if (tr?.locale) publishedPostLocales.add(tr.locale);
+              }
+            }
+          }
 
-          const translatedLocales = catTranslations.map((t: any) => t.locale);
+          const indexableLocales = catTranslations
+            .map((t: any) => t.locale as string)
+            .filter((loc: string) => publishedPostLocales.has(loc));
 
-          translatedLocales.forEach((locale: string) => {
+          if (indexableLocales.length === 0) continue;
+
+          indexableLocales.forEach((locale: string) => {
             const pSeg =
               pagesContentService.getCorePageSegment(
                 blogParent || "blog",
@@ -396,7 +423,7 @@ export default async function sitemap({
             const catSlug = (tName && generateNativeSlug(tName)) || bc.slug;
 
             const catAlternates: Record<string, string> = {};
-            translatedLocales.forEach((loc: string) => {
+            indexableLocales.forEach((loc: string) => {
               const bSeg =
                 pagesContentService.getCorePageSegment(
                   blogParent || "blog",
@@ -413,15 +440,15 @@ export default async function sitemap({
               );
             });
             if (catAlternates.en) catAlternates["x-default"] = catAlternates.en;
-            else if (translatedLocales.length > 0)
-              catAlternates["x-default"] = catAlternates[translatedLocales[0]];
+            else if (indexableLocales.length > 0)
+              catAlternates["x-default"] = catAlternates[indexableLocales[0]];
 
             sitemapData.push({
               url: encodeURI(
                 `${baseUrl}/${locale}/${pSeg}/${taxSeg}/${catSlug}`,
               ),
               lastModified: new Date(
-                bc.updated_at || bc.created_at || new Date(),
+                bc.updated_at || bc.created_at || FALLBACK_LASTMOD,
               ),
               changeFrequency: "weekly",
               priority: 0.5,

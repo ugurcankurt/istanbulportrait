@@ -20,9 +20,9 @@ export async function ReviewsSection({
       return null; // Don't render empty reviews section
     }
 
-    // Limit homepage carousel to 12 most recent reviews to cut ~180 inline SVG stars & ~140 KB DOM bloat
+    // Limit homepage carousel to 8 most recent reviews to trim DOM & inline SVG weight
     // (aggregateRating still reflects the full review count)
-    const displayReviews = reviews.slice(0, 12);
+    const displayReviews = reviews.slice(0, 8);
 
     // Pass data to client component for UI rendering
     return (

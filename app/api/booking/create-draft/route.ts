@@ -4,6 +4,8 @@ import { NextResponse } from "next/server";
 import { Resend } from "resend";
 import { z } from "zod";
 import { addonsService } from "@/lib/addons-service";
+import { getServerUser, isServerAdmin } from "@/lib/auth-server";
+import { signBookingToken, verifyBookingToken } from "@/lib/booking-token";
 import { handleSupabaseError, logError } from "@/lib/errors";
 import { extractPhotosCount } from "@/lib/features-parser";
 import { packagesService } from "@/lib/packages-service";
@@ -48,6 +50,7 @@ export async function GET(request: NextRequest) {
     }
 
     const bookingId = request.nextUrl.searchParams.get("bookingId");
+    const tokenParam = request.nextUrl.searchParams.get("token");
     const localeParam = request.nextUrl.searchParams.get("locale");
 
     const idValidation = z.string().uuid().safeParse(bookingId);
@@ -58,10 +61,25 @@ export async function GET(request: NextRequest) {
       );
     }
 
+    const cookieToken = request.cookies.get(
+      `booking_draft_${idValidation.data}`,
+    )?.value;
+    const hasValidToken =
+      verifyBookingToken(idValidation.data, "draft", tokenParam) ||
+      verifyBookingToken(idValidation.data, "draft", cookieToken);
+
+    const serverUser = hasValidToken ? null : await getServerUser();
+    if (!hasValidToken && !serverUser) {
+      return NextResponse.json(
+        { error: "Unauthorized access to draft booking" },
+        { status: 401 },
+      );
+    }
+
     const { data: booking, error } = await supabaseAdmin
       .from("bookings")
       .select(
-        "id, package_id, user_name, user_email, user_phone, booking_date, booking_time, status, total_amount, notes, locale, people_count, selected_addons, selected_addon_details, applied_promo_code, created_at",
+        "id, package_id, user_id, user_name, user_email, user_phone, booking_date, booking_time, status, total_amount, notes, locale, people_count, selected_addons, selected_addon_details, applied_promo_code, created_at",
       )
       .eq("id", idValidation.data)
       .single();
@@ -71,6 +89,19 @@ export async function GET(request: NextRequest) {
         { error: "Draft booking not found" },
         { status: 404 },
       );
+    }
+
+    if (!hasValidToken && serverUser) {
+      const ownsBooking =
+        booking.user_id === serverUser.id ||
+        (serverUser.email &&
+          booking.user_email?.toLowerCase() === serverUser.email.toLowerCase());
+      const adminUser = ownsBooking
+        ? false
+        : await isServerAdmin(serverUser.email);
+      if (!ownsBooking && !adminUser) {
+        return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+      }
     }
 
     if (booking.status !== "draft") {
@@ -345,10 +376,21 @@ export async function POST(request: NextRequest) {
         );
       }
 
-      return NextResponse.json({
+      const draftBookingId = (booking as any).id as string;
+      const draftToken = signBookingToken(draftBookingId, "draft");
+      const res = NextResponse.json({
         success: true,
-        bookingId: (booking as any).id,
+        bookingId: draftBookingId,
+        token: draftToken,
       });
+      res.cookies.set(`booking_draft_${draftBookingId}`, draftToken, {
+        httpOnly: true,
+        sameSite: "lax",
+        secure: process.env.NODE_ENV === "production",
+        maxAge: 7 * 24 * 60 * 60,
+        path: "/",
+      });
+      return res;
     } catch (dbError) {
       logError(handleSupabaseError(dbError), { action: "create_draft" });
       return NextResponse.json(

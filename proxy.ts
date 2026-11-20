@@ -68,10 +68,16 @@ export default async function proxy(request: NextRequest) {
       data: { user },
     } = await supabase.auth.getUser();
 
-    // Optional: redirect to login if no user and not already on login page
+    // Always prevent search engine indexing of admin endpoints/pages
+    response.headers.set("X-Robots-Tag", "noindex, nofollow");
+
+    // Redirect unauthenticated requests on /admin/** (except /admin/login)
     if (!user && pathname !== "/admin/login") {
-      // Uncomment this if you want to enforce auth in middleware
-      // return NextResponse.redirect(new URL("/admin/login", request.url));
+      const redirectResponse = NextResponse.redirect(
+        new URL("/admin/login", request.url),
+      );
+      redirectResponse.headers.set("X-Robots-Tag", "noindex, nofollow");
+      return redirectResponse;
     }
 
     return response;

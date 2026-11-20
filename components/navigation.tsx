@@ -146,14 +146,13 @@ export function Navigation({ dynamicNavData = {}, settings }: NavigationProps) {
           {settings?.logo_url ? (
             <Image
               src={settings.logo_url}
-              alt={settings?.site_name || "Istanbul Photographer"}
+              alt={`${settings?.site_name || "Istanbul Portrait"} — Istanbul Photographer`}
               fill
               sizes="(max-width: 640px) 144px, 192px"
               className={cn(
                 "object-contain object-left",
                 settings.logo_dark_url && "dark:hidden",
               )}
-              loading="eager"
             />
           ) : (
             <span className="text-xl sm:text-2xl font-serif font-normal text-foreground dark:hidden tracking-tight">
@@ -163,7 +162,7 @@ export function Navigation({ dynamicNavData = {}, settings }: NavigationProps) {
           {settings?.logo_dark_url ? (
             <Image
               src={settings.logo_dark_url}
-              alt={settings?.site_name || "Istanbul Photographer"}
+              alt={`${settings?.site_name || "Istanbul Portrait"} — Istanbul Photographer`}
               fill
               sizes="(max-width: 640px) 144px, 192px"
               className="object-contain object-left hidden dark:block"
@@ -270,9 +269,9 @@ export function Navigation({ dynamicNavData = {}, settings }: NavigationProps) {
 
               <div className="space-y-6 pt-4">
                 <div>
-                  <h4 className="text-sm font-semibold mb-3 text-muted-foreground uppercase tracking-wider">
+                  <p className="text-sm font-semibold mb-3 text-muted-foreground uppercase tracking-wider">
                     {t("selectLanguage")}
-                  </h4>
+                  </p>
                   <div className="grid grid-cols-2 gap-2">
                     {locales.map((loc) => (
                       <Button
@@ -297,9 +296,9 @@ export function Navigation({ dynamicNavData = {}, settings }: NavigationProps) {
                 </div>
 
                 <div className="border-t pt-4">
-                  <h4 className="text-sm font-semibold mb-3 text-muted-foreground uppercase tracking-wider">
+                  <p className="text-sm font-semibold mb-3 text-muted-foreground uppercase tracking-wider">
                     Currency
-                  </h4>
+                  </p>
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                     {[
                       { code: "EUR", symbol: "€" },

@@ -290,6 +290,9 @@ export function WebMCPProvider() {
           if (draftResult.bookingId) {
             checkoutParams.set("bookingId", String(draftResult.bookingId));
           }
+          if (draftResult.token) {
+            checkoutParams.set("token", String(draftResult.token));
+          }
           if (packageId) {
             checkoutParams.set("package", packageId);
           }

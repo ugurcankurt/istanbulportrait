@@ -12,6 +12,10 @@ import { getServerUser } from "@/lib/auth-server";
 import { formatCurrency } from "@/lib/currency";
 import { createServerSupabaseAdminClient } from "@/lib/supabase/server";
 
+function escapePostgrestValue(val: string): string {
+  return val.replace(/\\/g, "\\\\").replace(/"/g, '\\"');
+}
+
 export default async function CustomerPaymentsPage() {
   const [user, locale, t, tSuccess] = await Promise.all([
     getServerUser(),
@@ -25,6 +29,10 @@ export default async function CustomerPaymentsPage() {
   }
 
   const supabase = await createServerSupabaseAdminClient();
+  const orFilters = [`user_id.eq."${escapePostgrestValue(user.id)}"`];
+  if (user.email) {
+    orFilters.push(`user_email.eq."${escapePostgrestValue(user.email)}"`);
+  }
 
   // Fetch bookings to get the associated payments
   const { data: bookings } = await supabase
@@ -34,6 +42,7 @@ export default async function CustomerPaymentsPage() {
       package_id,
       total_amount,
       status,
+      selected_addon_details,
       payments (
         id,
         amount,
@@ -43,9 +52,7 @@ export default async function CustomerPaymentsPage() {
         created_at
       )
     `)
-    .or(
-      `user_id.eq."${user.id}"${user.email ? `,user_email.eq."${user.email}"` : ""}`,
-    )
+    .or(orFilters.join(","))
     .order("created_at", { ascending: false });
 
   return (
@@ -209,7 +216,10 @@ export default async function CustomerPaymentsPage() {
                           </div>
                           <div className="text-right">
                             <p className="text-lg font-bold">
-                              {formatCurrency(payment.amount, payment.currency)}
+                              {formatCurrency(
+                                payment.amount,
+                                payment.currency || "EUR",
+                              )}
                             </p>
                             <Badge
                               variant={

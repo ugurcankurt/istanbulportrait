@@ -31,19 +31,21 @@ const NewsletterSection = dynamic(() =>
 import type { Metadata } from "next";
 import { SchemaInjector } from "@/components/schema-injector";
 import { getPublishedBlogPosts } from "@/lib/blog/blog-service";
-import { discountService } from "@/lib/discount-service";
 import { locationsService } from "@/lib/locations-service";
-import { packagesService } from "@/lib/packages-service";
 import { pagesContentService } from "@/lib/pages-content-service";
 import { calculateDiscountedPrice } from "@/lib/pricing";
+import {
+  getCachedActiveDiscounts,
+  getCachedActivePackages,
+} from "@/lib/public-cache";
 import { reviewsService } from "@/lib/reviews-service";
 import {
   buildFAQSchema,
   buildImageGallerySchema,
   buildLocalBusinessSchema,
   constructOpenGraph,
+  enrichSeoDescription,
   formatPageTitle,
-  generateSeoDescription,
   getBaseUrl,
   optimizeSeoImage,
 } from "@/lib/seo-utils";
@@ -85,7 +87,7 @@ export async function generateMetadata({
     seoSource?.subtitle?.en ||
     settingsService.resolveTranslatable(settings.site_description, locale) ||
     "";
-  const desc = generateSeoDescription(rawDesc, 155, locale);
+  const desc = enrichSeoDescription(rawDesc, "home", locale, siteName);
   const ogImage =
     seoSource?.cover_image ||
     heroPage?.cover_image ||
@@ -93,8 +95,7 @@ export async function generateMetadata({
     settings.default_og_image_url ||
     "";
 
-  const { getBaseUrl } = await import("@/lib/seo-utils");
-  const baseUrl = getBaseUrl();
+  const baseUrl = getBaseUrl(settings.app_base_url);
   const languages: Record<string, string> = {};
   routing.locales.forEach((loc) => {
     languages[loc] = `${baseUrl}/${loc}`;
@@ -160,7 +161,7 @@ export default async function HomePage({
     getTranslations({ locale, namespace: "home_seo" }),
     reviewsService.getAggregateRating(),
     reviewsService.fetchGoogleReviews(locale),
-    packagesService.getActivePackages(),
+    getCachedActivePackages(),
     locationsService.getLocations(),
     getPublishedBlogPosts({
       page: 1,
@@ -170,7 +171,7 @@ export default async function HomePage({
       sort_order: "desc",
     }).catch(() => ({ posts: [] })),
     settingsService.getSettings(),
-    discountService.getActiveDiscounts(),
+    getCachedActiveDiscounts(),
     pagesContentService.getAllPages(),
   ]);
 
@@ -286,7 +287,7 @@ export default async function HomePage({
     (pkg) => !pkg.slug.toLowerCase().includes("cappadocia"),
   );
 
-  // Slim package props passed to Client Component (keep only current locale + en fallback, drop heavy gallery_images/description)
+  // Slim package props passed to Client Component (keep only current locale + en fallback, drop heavy gallery_images/description/metadata)
   const slimPackages = istanbulPackages.map((pkg) => ({
     ...pkg,
     title: {
@@ -294,6 +295,7 @@ export default async function HomePage({
       ...(pkg.title?.[locale] ? { [locale]: pkg.title[locale] } : {}),
     },
     description: { en: "" },
+    meta_description: { en: "" },
     duration: {
       en: pkg.duration?.en || "",
       ...(pkg.duration?.[locale] ? { [locale]: pkg.duration[locale] } : {}),
@@ -302,7 +304,12 @@ export default async function HomePage({
       en: pkg.features?.en || [],
       ...(pkg.features?.[locale] ? { [locale]: pkg.features[locale] } : {}),
     },
+    meta_keywords: { en: [] as string[] },
     gallery_images: [] as string[],
+    video_url: null,
+    addon_ids: undefined,
+    created_at: undefined,
+    updated_at: undefined,
   }));
 
   // Slim location props passed to Client LocationCard (keep only current locale + en fallback)
@@ -324,7 +331,10 @@ export default async function HomePage({
     },
     gallery_images: [] as string[],
     photography_tips: {},
+    nearby_locations: [] as string[],
   }));
+
+  const baseUrl = getBaseUrl(settings.app_base_url);
 
   return (
     <>
@@ -332,13 +342,13 @@ export default async function HomePage({
         schema={{
           "@context": "https://schema.org",
           "@type": "WebSite",
-          "@id": `${getBaseUrl()}/#website`,
+          "@id": `${baseUrl}/${locale}/#website`,
           name: settings.site_name || "Istanbul Portrait",
-          url: `${getBaseUrl()}/${locale}`,
+          url: `${baseUrl}/${locale}`,
           inLanguage: locale,
           publisher: {
             "@type": "Organization",
-            "@id": `${getBaseUrl()}/#organization`,
+            "@id": `${baseUrl}/#organization`,
           },
         }}
       />
@@ -352,7 +362,7 @@ export default async function HomePage({
           getDynamicImage("home-hero", undefined) ||
             getDynamicImage("home", undefined),
           locale,
-          activePackages,
+          istanbulPackages,
           packagesParentSlug,
           activeDiscountPct,
         )}
@@ -360,7 +370,7 @@ export default async function HomePage({
       {dynamicFaqs && dynamicFaqs.length > 0 && (
         <SchemaInjector schema={buildFAQSchema(dynamicFaqs)} />
       )}
-      {activePackages && activePackages.length > 0 && (
+      {istanbulPackages && istanbulPackages.length > 0 && (
         <SchemaInjector
           schema={buildImageGallerySchema({
             name: `${settings.site_name || "Istanbul Portrait"} — ${getDynamicTitle("home-portfolio", tGallery("title"))}`,
@@ -368,9 +378,9 @@ export default async function HomePage({
               "home-portfolio",
               tGallery("subtitle"),
             ),
-            url: `${getBaseUrl()}/${locale}`,
+            url: `${baseUrl}/${locale}`,
             creatorName: settings.founder_name || "Uğur Cankurt",
-            images: activePackages
+            images: istanbulPackages
               .flatMap((pkg) => {
                 const pkgTitle = pkg.title[locale] || pkg.title.en || pkg.slug;
                 const list = [];
@@ -429,6 +439,20 @@ export default async function HomePage({
               </div>
             }
           />
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8 pb-8 sm:pb-10">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-t border-border/40 pt-6">
+              <p className="text-sm sm:text-base text-muted-foreground font-light leading-relaxed max-w-3xl">
+                {tHomeSeo("packages_note")}
+              </p>
+              <NextLink
+                href={`/${locale}/${packagesParentSlug}`}
+                className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:underline underline-offset-4 shrink-0"
+              >
+                <span>{tHomeSeo("packages_cta")}</span>
+                <ArrowRight className="w-4 h-4 rtl:rotate-180" />
+              </NextLink>
+            </div>
+          </div>
         </div>
 
         {/* High-E-E-A-T Editorial Process & Query Fan-Out Section (SSR Visible) */}
@@ -561,19 +585,37 @@ export default async function HomePage({
                     tUi("instagram_feed.title"),
                   )}
                 </h2>
-                <a
-                  href={`https://instagram.com/${(settings.instagram_url?.replace(/\/$/, "").split("/").pop() || "").trim()}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-base sm:text-lg lg:text-xl text-muted-foreground font-light hover:text-primary transition-colors max-w-4xl"
-                >
-                  {getDynamicSubtitle(
+                {(() => {
+                  const igHandle = settings.instagram_url
+                    ?.trim()
+                    .split("?")[0]
+                    .replace(/\/+$/, "")
+                    .split("/")
+                    .pop()
+                    ?.replace(/^@/, "")
+                    .trim();
+                  const igText = getDynamicSubtitle(
                     "home-instagram",
-                    settings.instagram_url
-                      ? `@${settings.instagram_url.replace(/\/$/, "").split("/").pop()}`
-                      : "",
-                  )}
-                </a>
+                    igHandle ? `@${igHandle}` : "",
+                  );
+                  if (!igHandle) {
+                    return igText ? (
+                      <p className="text-base sm:text-lg lg:text-xl text-muted-foreground font-light max-w-4xl">
+                        {igText}
+                      </p>
+                    ) : null;
+                  }
+                  return (
+                    <a
+                      href={`https://instagram.com/${encodeURIComponent(igHandle)}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-base sm:text-lg lg:text-xl text-muted-foreground font-light hover:text-primary transition-colors max-w-4xl"
+                    >
+                      {igText}
+                    </a>
+                  );
+                })()}
               </div>
             }
           />

@@ -1,6 +1,7 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { routing } from "@/i18n/routing";
 import { getServerUser, isServerAdmin } from "@/lib/auth-server";
+import { sanitizeErrorForProduction } from "@/lib/errors";
 import { submitToIndexNow } from "@/lib/indexnow";
 
 export async function POST(request: NextRequest) {
@@ -20,9 +21,9 @@ export async function POST(request: NextRequest) {
 
     const result = await submitToIndexNow(urls);
     return NextResponse.json(result);
-  } catch (error: any) {
+  } catch (error) {
     return NextResponse.json(
-      { error: error?.message || "Internal server error" },
+      { error: sanitizeErrorForProduction(error) },
       { status: 500 },
     );
   }

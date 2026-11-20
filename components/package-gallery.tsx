@@ -31,9 +31,11 @@ interface PackageGalleryProps {
 
 const VideoPlayer = ({
   url,
+  title = "Photoshoot Showcase Video",
   fit = "cover",
 }: {
   url: string;
+  title?: string;
   fit?: "cover" | "contain";
 }) => {
   const embed = React.useMemo(() => {
@@ -113,6 +115,8 @@ const VideoPlayer = ({
         <div className="absolute inset-0 overflow-hidden pointer-events-none flex items-center justify-center">
           <iframe
             src={embed.src}
+            title={title}
+            loading="lazy"
             className="w-[300%] h-[300%] max-w-none"
             frameBorder="0"
             allow="autoplay; encrypted-media"
@@ -125,6 +129,8 @@ const VideoPlayer = ({
     return (
       <iframe
         src={embed.src}
+        title={title}
+        loading="lazy"
         className="w-full h-full object-contain pointer-events-none"
         frameBorder="0"
         allow="autoplay; encrypted-media"
@@ -137,6 +143,8 @@ const VideoPlayer = ({
   return (
     <iframe
       src={embed.src}
+      title={title}
+      loading="lazy"
       className={cn(
         "w-full h-full",
         embed.type === "instagram"
@@ -211,7 +219,7 @@ export function PackageGallery({
           <div className="flex items-stretch">
             {videoUrl && (
               <div className="flex-[0_0_100%] min-w-0 relative aspect-[4/5] bg-black">
-                <VideoPlayer url={videoUrl} />
+                <VideoPlayer url={videoUrl} title={alt} />
               </div>
             )}
             {images.map((src, index) => (
@@ -235,7 +243,7 @@ export function PackageGallery({
                         : undefined,
                   }}
                   sizes="100vw"
-                  priority={!videoUrl && index === 0}
+                  preload={!videoUrl && index === 0}
                 />
               </div>
             ))}
@@ -251,6 +259,7 @@ export function PackageGallery({
               <Button
                 size="icon"
                 variant="secondary"
+                aria-label="Go back"
                 className="rounded-full shadow-lg bg-white/90 dark:bg-slate-900/90 hover:bg-white dark:hover:bg-slate-900 text-slate-900 dark:text-slate-100 hover:text-slate-900 dark:hover:text-slate-100 h-9 w-9"
                 onClick={(e) => {
                   e.stopPropagation();
@@ -267,6 +276,7 @@ export function PackageGallery({
                 <Button
                   size="icon"
                   variant="secondary"
+                  aria-label="Share package"
                   className="rounded-full shadow-lg bg-white/90 dark:bg-slate-900/90 hover:bg-white dark:hover:bg-slate-900 text-slate-900 dark:text-slate-100 hover:text-slate-900 dark:hover:text-slate-100 h-9 w-9"
                   onClick={(e) => {
                     e.stopPropagation();
@@ -280,6 +290,9 @@ export function PackageGallery({
                 <Button
                   size="icon"
                   variant="secondary"
+                  aria-label={
+                    isFavorite ? "Remove from favorites" : "Save to favorites"
+                  }
                   className="rounded-full shadow-lg bg-white/90 dark:bg-slate-900/90 hover:bg-white dark:hover:bg-slate-900 text-slate-900 dark:text-slate-100 hover:text-slate-900 dark:hover:text-slate-100 h-9 w-9"
                   onClick={(e) => {
                     e.stopPropagation();
@@ -336,7 +349,7 @@ export function PackageGallery({
             }}
           >
             {videoUrl ? (
-              <VideoPlayer url={videoUrl} />
+              <VideoPlayer url={videoUrl} title={alt} />
             ) : (
               <Image
                 src={images[0]}
@@ -349,7 +362,7 @@ export function PackageGallery({
                     : undefined,
                 }}
                 sizes="(max-width: 1024px) 50vw, (max-width: 1536px) 50vw, 800px"
-                priority
+                preload
               />
             )}
           </div>
@@ -407,6 +420,7 @@ export function PackageGallery({
                 </span>
               </div>
               <DialogClose
+                aria-label="Close gallery"
                 className={cn(
                   buttonVariants({ variant: "outline", size: "icon" }),
                   "h-10 w-10 sm:h-12 sm:w-12 rounded-full bg-white dark:bg-slate-900 shadow-lg border-slate-100 dark:border-slate-800 text-slate-900 dark:text-slate-100 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all hover:scale-110",
@@ -422,7 +436,7 @@ export function PackageGallery({
                   {videoUrl && (
                     <div className="flex-[0_0_100%] min-w-0 h-full relative flex items-center justify-center bg-black">
                       <div className="w-full h-full max-w-4xl relative">
-                        <VideoPlayer url={videoUrl} fit="contain" />
+                        <VideoPlayer url={videoUrl} title={alt} fit="contain" />
                       </div>
                     </div>
                   )}
@@ -438,10 +452,12 @@ export function PackageGallery({
                           fill
                           className="object-contain"
                           sizes="100vw"
-                          priority={Boolean(
+                          loading={
                             (!videoUrl && index === selectedIndex) ||
-                              (videoUrl && index + 1 === selectedIndex),
-                          )}
+                            (videoUrl && index + 1 === selectedIndex)
+                              ? "eager"
+                              : "lazy"
+                          }
                         />
                       </div>
                     </div>
@@ -453,6 +469,7 @@ export function PackageGallery({
                 <Button
                   variant="outline"
                   size="icon"
+                  aria-label="Previous photo"
                   className="h-10 w-10 sm:h-12 sm:w-12 rounded-full bg-white dark:bg-slate-900 shadow-lg border-slate-100 dark:border-slate-800 text-slate-900 dark:text-slate-100 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all hover:scale-110"
                   onClick={() => lightboxApi?.scrollPrev()}
                 >
@@ -463,6 +480,7 @@ export function PackageGallery({
                 <Button
                   variant="outline"
                   size="icon"
+                  aria-label="Next photo"
                   className="h-10 w-10 sm:h-12 sm:w-12 rounded-full bg-white dark:bg-slate-900 shadow-lg border-slate-100 dark:border-slate-800 text-slate-900 dark:text-slate-100 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all hover:scale-110"
                   onClick={() => lightboxApi?.scrollNext()}
                 >

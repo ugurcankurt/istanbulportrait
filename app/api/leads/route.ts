@@ -1,18 +1,52 @@
-import { createClient } from "@supabase/supabase-js";
 import { NextResponse } from "next/server";
 import { z } from "zod";
+import {
+  checkRateLimit,
+  createRateLimitError,
+  getClientIP,
+} from "@/lib/rate-limit";
+import { supabaseAdmin } from "@/lib/supabase";
 
-const leadSchema = z.object({
-  firstName: z.string().optional().default(""),
-  lastName: z.string().optional().default(""),
-  email: z.string().email("Invalid email format").optional().or(z.literal("")),
-  phone: z.string().optional().default(""),
-  leadSource: z.string().default("website_contact"),
-  rawData: z.any().optional(),
-});
+const leadSchema = z
+  .object({
+    firstName: z.string().trim().max(100).optional().default(""),
+    lastName: z.string().trim().max(100).optional().default(""),
+    email: z
+      .string()
+      .trim()
+      .email("Invalid email format")
+      .max(254)
+      .optional()
+      .or(z.literal("")),
+    phone: z.string().trim().max(40).optional().default(""),
+    leadSource: z.string().trim().max(64).default("website_contact"),
+    rawData: z
+      .record(
+        z.string().max(64),
+        z.union([z.string().max(1000), z.number(), z.boolean(), z.null()]),
+      )
+      .optional(),
+  })
+  .refine(
+    (data) => Boolean(data.email || data.phone),
+    "Email or phone number is required",
+  );
 
 export async function POST(req: Request) {
   try {
+    const ip = getClientIP(req);
+    const { success: isAllowed, resetTime } = await checkRateLimit(
+      `leads_${ip}`,
+      {
+        maxRequests: 10,
+        windowMs: 15 * 60 * 1000,
+      },
+    );
+
+    if (!isAllowed) {
+      return createRateLimitError(resetTime);
+    }
+
     const body = await req.json();
     const result = leadSchema.safeParse(body);
 
@@ -26,25 +60,11 @@ export async function POST(req: Request) {
     const { firstName, lastName, email, phone, leadSource, rawData } =
       result.data;
 
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-    const supabaseKey =
-      process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_SERVICE_KEY;
-
-    if (!supabaseUrl || !supabaseKey) {
-      console.error("Missing Supabase config for leads API");
-      return NextResponse.json(
-        { error: "Server Configuration Error" },
-        { status: 500 },
-      );
-    }
-
-    const supabase = createClient(supabaseUrl, supabaseKey);
-
-    const { error: dbError } = await supabase.from("leads").insert([
+    const { error: dbError } = await supabaseAdmin.from("leads").insert([
       {
         first_name: firstName,
         last_name: lastName,
-        email: email,
+        email: email || "",
         phone: phone,
         lead_source: leadSource,
         raw_data: rawData || {},
@@ -63,7 +83,7 @@ export async function POST(req: Request) {
       success: true,
       message: "Lead saved successfully",
     });
-  } catch (error: any) {
+  } catch (error) {
     console.error("API Leads Error:", error);
     return NextResponse.json(
       { error: "Internal Server Error" },

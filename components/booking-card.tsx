@@ -74,6 +74,7 @@ interface BookingCardProps {
   setSelectedAddons?: (addons: string[]) => void;
   addonQuantities?: Record<string, number>;
   setAddonQuantities?: (quantities: Record<string, number>) => void;
+  idPrefix?: string;
 }
 
 export function BookingCard({
@@ -106,6 +107,7 @@ export function BookingCard({
   setSelectedAddons,
   addonQuantities = {},
   setAddonQuantities,
+  idPrefix = "",
 }: BookingCardProps) {
   const isMobile = useIsMobile();
   const { formatPrice, currency } = useCurrency();
@@ -688,11 +690,11 @@ export function BookingCard({
                             });
                           }
                         }}
-                        id={`addon-${addon.id}`}
+                        id={`${idPrefix}addon-${addon.id}`}
                       />
                       <div className="flex-1 space-y-1 leading-none">
                         <label
-                          htmlFor={`addon-${addon.id}`}
+                          htmlFor={`${idPrefix}addon-${addon.id}`}
                           className="text-sm font-bold leading-none cursor-pointer"
                         >
                           {addon.title?.[

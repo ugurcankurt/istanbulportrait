@@ -7,7 +7,6 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { saveUserDataForAdvancedMatching, trackLead } from "@/lib/analytics";
 
 export function NewsletterSection() {
   const t = useTranslations("ui");
@@ -47,21 +46,23 @@ export function NewsletterSection() {
         throw new Error(data.error || "Failed to subscribe");
       }
 
-      // Persist user data for Google Ads Enhanced Conversions & Meta Advanced Matching
-      saveUserDataForAdvancedMatching({
-        email,
-        firstName,
-        lastName,
-      });
-
-      // Track lead for newsletter subscription
-      trackLead(
-        "newsletter",
-        "Newsletter Subscription",
-        0,
-        "EUR",
-        undefined,
-        "newsletter",
+      // Persist user data & track lead asynchronously without inflating initial JS bundle
+      import("@/lib/analytics").then(
+        ({ saveUserDataForAdvancedMatching, trackLead }) => {
+          saveUserDataForAdvancedMatching({
+            email,
+            firstName,
+            lastName,
+          });
+          trackLead(
+            "newsletter",
+            "Newsletter Subscription",
+            0,
+            "EUR",
+            undefined,
+            "newsletter",
+          );
+        },
       );
 
       setIsSuccess(true);

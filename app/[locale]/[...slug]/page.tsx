@@ -30,6 +30,7 @@ import {
   getBlogCategoryBySlug,
   getBlogTagBySlug,
   getCategoryByIdWithAllTranslations,
+  getPublishedBlogPostCountsByLocale,
 } from "@/lib/blog/blog-service";
 import {
   getLocalizedCategorySlug,
@@ -108,7 +109,7 @@ export async function generateMetadata(props: {
 
   const { getBaseUrl } = await import("@/lib/seo-utils");
   const { generateNativeSlug } = await import("@/lib/slug-generator");
-  const baseUrl = getBaseUrl();
+  const baseUrl = getBaseUrl(settings.app_base_url);
   const getAlternates = (resolver: (loc: string) => string | null) => {
     const langs: Record<string, string> = {};
     routing.locales.forEach((loc) => {
@@ -132,19 +133,21 @@ export async function generateMetadata(props: {
   // Level 1: Root Pages (e.g. /about, /locations, /packages)
   if (slugArray.length === 1) {
     const isPaginatedBlog = dbPage.slug === "blog" && pageNum > 1;
-    if (isPaginatedBlog) {
-      const { getPublishedBlogPosts } = await import("@/lib/blog/blog-service");
-      const { pagination } = await getPublishedBlogPosts({
-        page: pageNum,
-        limit: 12,
-        // biome-ignore lint/suspicious/noExplicitAny: Dynamic data
-        locale: params.locale as any,
-        sort_by: "published_at",
-        sort_order: "desc",
-      });
-      if (pageNum > Math.max(1, pagination.totalPages)) {
+    let blogCountsByLocale: Record<string, number> | null = null;
+    let isBlogNoIndex = false;
+    if (dbPage.slug === "blog") {
+      blogCountsByLocale = await getPublishedBlogPostCountsByLocale();
+      const currentLocaleTotal = blogCountsByLocale[params.locale] || 0;
+      const totalPagesForLocale = Math.max(
+        1,
+        Math.ceil(currentLocaleTotal / 12),
+      );
+      if (isPaginatedBlog && pageNum > totalPagesForLocale) {
         notFound();
         return {};
+      }
+      if (currentLocaleTotal === 0) {
+        isBlogNoIndex = true;
       }
     }
 
@@ -180,21 +183,37 @@ export async function generateMetadata(props: {
     return {
       title: { absolute: paginatedTitle },
       description: desc,
-      robots: {
-        index: true,
-        follow: true,
-        "max-video-preview": -1,
-        "max-image-preview": "large",
-        "max-snippet": -1,
-      },
-      alternates: {
-        canonical: canonicalUrl,
-        ...getAlternates((loc) => {
-          const seg =
-            pagesContentService.getCorePageSegment(dbPage, loc) || dbPage.slug;
-          return `/${seg}${isPaginatedBlog ? pageQuerySuffix : ""}`;
-        }),
-      },
+      robots: isBlogNoIndex
+        ? {
+            index: false,
+            follow: true,
+          }
+        : {
+            index: true,
+            follow: true,
+            "max-video-preview": -1,
+            "max-image-preview": "large",
+            "max-snippet": -1,
+          },
+      alternates: isBlogNoIndex
+        ? {
+            canonical: canonicalUrl,
+          }
+        : {
+            canonical: canonicalUrl,
+            ...getAlternates((loc) => {
+              if (blogCountsByLocale) {
+                const locCount = blogCountsByLocale[loc] || 0;
+                if (locCount === 0 || Math.ceil(locCount / 12) < pageNum) {
+                  return null;
+                }
+              }
+              const seg =
+                pagesContentService.getCorePageSegment(dbPage, loc) ||
+                dbPage.slug;
+              return `/${seg}${isPaginatedBlog ? pageQuerySuffix : ""}`;
+            }),
+          },
       openGraph: constructOpenGraph(
         paginatedTitle,
         desc,
@@ -299,6 +318,11 @@ export async function generateMetadata(props: {
       isNoIndex = true;
     }
 
+    const categoryCountsByLocale =
+      type === "category" && categoryId && !isNoIndex
+        ? await getPublishedBlogPostCountsByLocale(categoryId)
+        : null;
+
     const title = formatPageTitle(
       pageNum > 1 && dynamicTitle
         ? `${dynamicTitle} - ${pageNum}`
@@ -336,6 +360,12 @@ export async function generateMetadata(props: {
         : {
             canonical: categoryCanonical,
             ...getAlternates((loc) => {
+              if (categoryCountsByLocale) {
+                const locCount = categoryCountsByLocale[loc] || 0;
+                if (locCount === 0 || Math.ceil(locCount / 12) < pageNum) {
+                  return null;
+                }
+              }
               const bSeg =
                 pagesContentService.getCorePageSegment(dbPage, loc) ||
                 dbPage.slug;
@@ -472,7 +502,7 @@ export async function generateMetadata(props: {
         await import("@/lib/blog/blog-service");
       // biome-ignore lint/suspicious/noExplicitAny: Dynamic data
       const post = await getBlogPostBySlug(childSlug, params.locale as any);
-      if (post) {
+      if (post && post.translation?.locale === params.locale) {
         dynamicTitle = post.translation.title;
         dynamicDesc =
           post.translation.meta_description ||

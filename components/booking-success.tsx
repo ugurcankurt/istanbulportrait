@@ -2,7 +2,7 @@
 
 import { Calendar, CheckCircle, Clock, Mail, Phone } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -10,7 +10,6 @@ import { Separator } from "@/components/ui/separator";
 import { Link } from "@/i18n/routing";
 import { CORE_PAGE_LOCALIZED_SLUGS } from "@/lib/core-page-slugs";
 import { DEPOSIT_PERCENTAGE } from "@/lib/pricing";
-import { type SiteSettings, settingsService } from "@/lib/settings-service";
 import { formatCurrency, localizeNumerals } from "@/lib/utils";
 import type { BookingFormData, PackageId } from "@/lib/validations";
 import { usePackagesStore } from "@/stores/packages-store";
@@ -21,6 +20,8 @@ interface BookingSuccessProps {
   customerData?: BookingFormData;
   confirmedBooking?: any;
   promoCode?: string;
+  contactEmail?: string | null;
+  contactPhone?: string | null;
 }
 
 export function BookingSuccess({
@@ -29,6 +30,8 @@ export function BookingSuccess({
   customerData,
   confirmedBooking,
   promoCode,
+  contactEmail,
+  contactPhone,
 }: BookingSuccessProps) {
   const locale = useLocale();
   const t = useTranslations("checkout");
@@ -38,11 +41,9 @@ export function BookingSuccess({
   const tcontact = useTranslations("contact");
 
   const { packages, fetchPackages } = usePackagesStore();
-  const [settings, setSettings] = useState<SiteSettings | null>(null);
 
   useEffect(() => {
     fetchPackages();
-    settingsService.getSettings().then(setSettings);
   }, [fetchPackages]);
 
   const packageDBInfo = packages.find((p) => p.slug === packageId);
@@ -413,7 +414,7 @@ export function BookingSuccess({
                     <Mail className="w-4 h-4" />
                   </div>
                   <span className="text-sm font-medium">
-                    {settings?.contact_email || "info@istanbulportrait.com"}
+                    {contactEmail || "info@istanbulportrait.com"}
                   </span>
                 </div>
                 <div className="flex items-center gap-3 rtl:gap-reverse">
@@ -421,7 +422,7 @@ export function BookingSuccess({
                     <Phone className="w-4 h-4" />
                   </div>
                   <span className="text-sm font-medium phone-number">
-                    {settings?.contact_phone || tcontact("info.phone")}
+                    {contactPhone || tcontact("info.phone")}
                   </span>
                 </div>
               </div>

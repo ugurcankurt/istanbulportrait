@@ -1,7 +1,10 @@
 import type { MetadataRoute } from "next";
 import { getBaseUrl } from "@/lib/seo-utils";
+import { settingsService } from "@/lib/settings-service";
 
-export default function robots(): MetadataRoute.Robots {
+export default async function robots(): Promise<MetadataRoute.Robots> {
+  const settings = await settingsService.getSettings().catch(() => null);
+  const baseUrl = getBaseUrl(settings?.app_base_url);
   const sharedAllow = [
     "/",
     "/storage/",
@@ -42,6 +45,6 @@ export default function robots(): MetadataRoute.Robots {
         disallow: sharedDisallow,
       },
     ],
-    sitemap: [`${getBaseUrl()}/sitemap.xml`],
+    sitemap: [`${baseUrl}/sitemap.xml`],
   };
 }

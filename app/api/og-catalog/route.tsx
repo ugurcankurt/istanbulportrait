@@ -5,37 +5,67 @@ import type { NextRequest } from "next/server";
 
 export const runtime = "nodejs";
 
+const SUPABASE_STORAGE_BASE = process.env.NEXT_PUBLIC_SUPABASE_URL
+  ? `${process.env.NEXT_PUBLIC_SUPABASE_URL.replace(/\/$/, "")}/storage/v1/object/public`
+  : "https://xfntnamwfnqjgqmyxwfz.supabase.co/storage/v1/object/public";
+
+const ALLOWED_IMAGE_HOSTS = new Set<string>([
+  "istanbulportrait.com",
+  "www.istanbulportrait.com",
+  "xfntnamwfnqjgqmyxwfz.supabase.co",
+  ...(process.env.NEXT_PUBLIC_SUPABASE_URL
+    ? [new URL(process.env.NEXT_PUBLIC_SUPABASE_URL).hostname]
+    : []),
+]);
+
+function resolveAllowedCatalogImageUrl(raw: string): string | null {
+  if (raw.startsWith("/storage/")) {
+    const rel = raw.slice("/storage/".length);
+    if (!rel || rel.includes("..") || rel.includes("\\")) return null;
+    return `${SUPABASE_STORAGE_BASE}/${rel}`;
+  }
+  try {
+    const parsed = new URL(raw);
+    if (parsed.protocol !== "https:") return null;
+    if (!ALLOWED_IMAGE_HOSTS.has(parsed.hostname)) return null;
+    return parsed.toString();
+  } catch {
+    return null;
+  }
+}
+
 export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
     const title = searchParams.get("title") || "Photography Package";
-    const image = searchParams.get("image");
+    const rawImage = searchParams.get("image");
     const rating = searchParams.get("rating") || "4.9";
     const reviews = searchParams.get("reviews") || "124";
     const location = searchParams.get("location") || "Istanbul, Türkiye";
     const discount = searchParams.get("discount");
 
-    if (!image) {
+    if (!rawImage) {
       return new Response("Missing image URL", { status: 400 });
     }
 
-    let targetUrl = image;
-    // Format to JPG via wsrv.nl and resize to 1080x1080 (1:1 ratio for Advantage+ Catalog) with 100% quality
-    targetUrl = `https://wsrv.nl/?url=${encodeURIComponent(image)}&output=jpg&q=100&w=1080&h=1080&fit=cover`;
-
-    let imageSrc: any = targetUrl;
-
-    // Fetch image as arrayBuffer for Satori
-    if (targetUrl.startsWith("http")) {
-      const imgFetch = await fetch(targetUrl);
-      if (imgFetch.ok) {
-        imageSrc = await imgFetch.arrayBuffer();
-      } else {
-        console.error(
-          `OG Catalog Image Fetch Hatası: ${targetUrl} (${imgFetch.status})`,
-        );
-      }
+    const resolvedImage = resolveAllowedCatalogImageUrl(rawImage);
+    if (!resolvedImage) {
+      return new Response("Invalid or disallowed image URL", { status: 400 });
     }
+
+    // Format to JPG via wsrv.nl and resize to 1080x1080 (1:1 ratio for Advantage+ Catalog) with 100% quality
+    const targetUrl = `https://wsrv.nl/?url=${encodeURIComponent(resolvedImage)}&output=jpg&q=100&w=1080&h=1080&fit=cover`;
+
+    const imgFetch = await fetch(targetUrl);
+    if (!imgFetch.ok) {
+      console.error(
+        `OG Catalog Image Fetch Hatası: ${targetUrl} (${imgFetch.status})`,
+      );
+      return new Response("Failed to load catalog image source", {
+        status: 404,
+      });
+    }
+    const imageSrc = await imgFetch.arrayBuffer();
 
     // Load custom font to avoid Satori's default font rendering bugs with some characters (lookupType 5 error)
     const fontPath = join(
@@ -81,7 +111,7 @@ export async function GET(req: NextRequest) {
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src={imageSrc}
+            src={imageSrc as unknown as string}
             alt="Package Image"
             style={{
               width: "100%",

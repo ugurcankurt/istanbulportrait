@@ -14,17 +14,11 @@ import { useAuthStore } from "@/stores/auth-store";
 export default function AdminLoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
 
-  const {
-    user,
-    isAuthenticated,
-    isAdminUser,
-    loading,
-    error,
-    signIn,
-    clearError,
-  } = useAuthStore();
+  const { user, isAuthenticated, isAdminUser, error, signIn, clearError } =
+    useAuthStore();
 
   useEffect(() => {
     // If user is already authenticated and admin, redirect to dashboard
@@ -36,6 +30,7 @@ export default function AdminLoginPage() {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     clearError();
+    setIsSubmitting(true);
 
     try {
       await signIn(email, password);
@@ -45,6 +40,8 @@ export default function AdminLoginPage() {
     } catch (err) {
       console.error("Login Page: Sign in failed:", err);
       // Error is already set in the store by signIn action
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -79,7 +76,7 @@ export default function AdminLoginPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                disabled={loading}
+                disabled={isSubmitting}
                 className="w-full"
               />
             </div>
@@ -93,7 +90,7 @@ export default function AdminLoginPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                disabled={loading}
+                disabled={isSubmitting}
                 className="w-full"
               />
             </div>
@@ -101,9 +98,9 @@ export default function AdminLoginPage() {
             <Button
               type="submit"
               className="w-full"
-              disabled={loading || !email || !password}
+              disabled={isSubmitting || !email || !password}
             >
-              {loading ? (
+              {isSubmitting ? (
                 <>
                   <Spinner className="w-4 h-4 mr-2 animate-spin" />
                   Signing in...

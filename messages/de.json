@@ -298,7 +298,7 @@
     "payment": "Zahlung",
     "response_time_desc": "Wir beantworten Anfragen in der Regel innerhalb von 24 Stunden.",
     "booking_process_desc": "Nach Ihrer Anfrage vereinbaren wir einen Beratungstermin, um Ihre Vision zu besprechen und die Details festzulegen.",
-    "payment_desc": "Um Ihren Termin zu sichern, ist die vollständige Zahlung online zum Zeitpunkt der Buchung erforderlich.",
+    "payment_desc": "Keine Anzahlung nötig — online buchen und am Tag Ihres Fotoshootings bequem in bar bezahlen.",
     "professional_photographer": "Professioneller Fotograf",
     "professional_photographer_in_istanbul": "Professioneller Fotograf in Istanbul",
     "portrait_photography": "Porträtfotografie",
@@ -372,7 +372,7 @@
     "sessions": "Sitzungen abgeschlossen",
     "clients": "Zufriedene Kunden",
     "satisfaction": "Kundenzufriedenheit",
-    "description": "Willkommen in meinem Portfolio! Ich bin darauf spezialisiert, schöne Momente bei natürlichem Licht festzuhalten."
+    "description": "Als lokaler Porträtfotograf in Istanbul mit über 10 Jahren Erfahrung begleite ich Paare, Alleinreisende, Familien und geheime Heiratsanträge im natürlichen Licht."
   },
   "api_errors": {
     "rate_limit": "Zu viele Anfragen. Bitte versuchen Sie es später noch einmal.",
@@ -553,7 +553,8 @@
       "about_title": "Über den Autor",
       "name": "Istanbuler Fotograf",
       "bio": "Professioneller Fotograf, spezialisiert auf Porträt-, Paar- und Lifestyle-Fotografie in Istanbul. Mit über 8 Jahren Erfahrung erfassen wir zeitlose Erinnerungen vor den berühmtesten Kulissen der Stadt.",
-      "follow": "Folgen Sie auf Instagram"
+      "follow": "Folgen Sie auf Instagram",
+      "profile_link": "Zum Fotografenprofil"
     },
     "summary": {
       "title": "Wichtige Erkenntnisse",
@@ -739,6 +740,62 @@
     "step3_desc": "Noch nie vor der Kamera gestanden? Ihr lokaler Fotograf führt Sie entspannt durch jede Pose für authentische, natürliche Porträts.",
     "step4_title": "4. Transparente EUR-Preise & 48h-Lieferung",
     "step4_desc": "Online buchen ohne Anzahlung, bar am Shooting-Tag bezahlen und Ihre bearbeitete Online-Galerie in 48 Stunden erhalten.",
-    "editorial_about_cta": "Ihren Fotografen kennenlernen"
+    "editorial_about_cta": "Ihren Fotografen kennenlernen",
+    "packages_note": "Jedes Fotoshooting-Paket in Istanbul umfasst lockeres Posing-Coaching durch einen lokalen Fotografen, optimale Routenplanung und Bildlieferung in 48 Stunden.",
+    "packages_cta": "Alle Istanbul Fotoshooting-Pakete Vergleichen"
+  },
+  "seo_hub": {
+    "packages": {
+      "title": "So wählen Sie Ihr Istanbul Fotoshooting-Paket",
+      "subtitle": "Ob privates Rooftop mit Flying Dress über Süleymaniye, Sonnenaufgang in Sultanahmet oder Paarfotos am Bosporus — jedes Shooting folgt dem besten Licht.",
+      "item1_title": "Private Rooftops & Flying Dress",
+      "item1_desc": "Reservierte Panoramaterrassen mit Blick auf die Süleymaniye-Moschee und das Goldene Horn bieten Privatsphäre und eindrucksvolle Silhouetten.",
+      "item2_title": "Wahrzeichen & Altstadt-Routen",
+      "item2_desc": "Kombinieren Sie Hagia Sophia, Galataturm, Ortaköy oder Balat mit einem erfahrenen Fotografen in Istanbul abseits der Hauptbesuchszeiten.",
+      "item3_title": "Ohne Vorkasse & Lieferung in 48h",
+      "item3_desc": "Sichern Sie Ihren Wunschtermin zu transparenten EUR-Preisen mit Barzahlung vor Ort und erhalten Sie Ihre bearbeitete Online-Galerie binnen 48 Stunden.",
+      "link_locations": "Schönste Foto-Locations in Istanbul",
+      "link_about": "Ihren Fotografen Kennenlernen",
+      "link_blog": "Outfit- & Licht-Guides Lesen"
+    },
+    "locations": {
+      "title": "Multi-Location-Fotoshootings in Istanbul Planen",
+      "subtitle": "Kombinieren Sie historische Viertel auf der europäischen Seite mit Bosporus-Ufern oder dem ruhigen Kuzguncuk je nach Lichteinfall.",
+      "item1_title": "Golden-Hour-Routen nach Maß",
+      "item1_desc": "Einstündige Shootings entfalten sich optimal in einem Viertel wie Galata oder Sultanahmet; bei 2–3 Stunden lassen sich mehrere Spots samt Rooftop verbinden.",
+      "item2_title": "Ruhige Morgenstunden ohne Massen",
+      "item2_desc": "Ein früher Start mit Ihrem lokalen Fotografen sichert freie Hintergründe an der Hagia Sophia, Blauen Moschee und in Ortaköy.",
+      "item3_title": "Reibungsloser Zugang zu Dachterrassen",
+      "item3_desc": "Durch abgestimmte Zeitslots auf Partner-Rooftops nutzen Sie jede Minute des Shootings ohne Wartezeiten.",
+      "link_packages": "Fotoshooting-Pakete & Preise Ansehen",
+      "link_blog": "Istanbul Fotografie-Guides Entdecken",
+      "link_contact": "Individuelle Route Anfragen"
+    },
+    "about": {
+      "title": "Erfahrung, Technik & Bildsprache",
+      "subtitle": "Die direkte Zusammenarbeit mit einem Fotografen vor Ort bedeutet verlässliche Zeitplanung, natürliche Farblooks und entspanntes Coaching.",
+      "item1_title": "Vollformat-Kameras & Natürliches Licht",
+      "item1_desc": "Jedes Fotoshooting in Istanbul entsteht mit lichtstarken Sony Vollformat-Systemen — abgestimmt auf warmes Morgenlicht und historische Architektur.",
+      "item2_title": "Natürliches Posing Schritt für Schritt",
+      "item2_desc": "Vorkenntnisse vor der Kamera sind unnötig: Wir geben ruhige Anleitungen für authentische Posen bei Paaren, Familien und Einzelporträts.",
+      "item3_title": "500+ Internationale Shootings & 5-Sterne-Reviews",
+      "item3_desc": "Gäste aus über 50 Ländern schätzen unsere verlässlichen 5-Sterne-Google-Bewertungen, schnelle WhatsApp-Absprachen und 48h-Galerielieferung.",
+      "link_packages": "Shooting-Pakete Entdecken",
+      "link_locations": "Istanbul Foto-Spots Ansehen",
+      "link_blog": "Zum Fotografie-Blog"
+    },
+    "contact": {
+      "title": "Ihr Individuelles Istanbul Fotoshooting Planen",
+      "subtitle": "Senden Sie uns Ihre Reisedaten per WhatsApp oder E-Mail — wir schlagen sofort passende Sonnenaufgangs- oder Sonnenuntergangszeiten vor.",
+      "item1_title": "Reisedaten & Gruppengröße Mitteilen",
+      "item1_desc": "Nennen Sie Ihren Aufenthaltszeitraum, Personenzahl und ob Sie Rooftop Flying Dress, Paar-, Familien- oder Antragsfotos wünschen.",
+      "item2_title": "Geheime Heiratsanträge & Events",
+      "item2_desc": "Ein überraschender Antrag am Bosporus bei Ortaköy oder auf einer privaten Terrasse? Wir koordinieren diskrete Perspektiven vorab.",
+      "item3_title": "Direkt Online Verfügbarkeit Prüfen",
+      "item3_desc": "Sie wissen schon, welches Paket passt? Wählen Sie Datum und Uhrzeit direkt auf der Paketseite — ganz ohne Anzahlung.",
+      "link_packages": "Zu den Fotoshooting-Paketen",
+      "link_locations": "Foto-Locations Entdecken",
+      "link_about": "Über Istanbul Portrait"
+    }
   }
 }

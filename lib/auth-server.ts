@@ -1,4 +1,5 @@
 import type { User } from "@supabase/supabase-js";
+import { redirect } from "next/navigation";
 import { settingsService } from "./settings-service";
 import {
   createServerSupabaseAdminClient,
@@ -97,6 +98,25 @@ export async function requireServerAdmin(): Promise<User> {
   }
 
   return user;
+}
+
+/**
+ * Server-Component page/layout guard for /admin/dashboard/** so unauthenticated or
+ * non-admin requests never stream admin database records via RSC.
+ */
+export async function requireAdminPage(): Promise<User> {
+  const user = await getServerUser();
+  if (!user || !(await isServerAdmin(user.email))) {
+    redirect("/admin/login");
+  }
+  return user;
+}
+
+export function getAdminErrorStatus(error: unknown): number {
+  if (!(error instanceof Error)) return 500;
+  if (error.message.includes("Authentication required")) return 401;
+  if (error.message.includes("Admin access required")) return 403;
+  return 500;
 }
 
 export async function createServerAdminClient() {

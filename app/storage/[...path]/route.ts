@@ -2,8 +2,33 @@ import { type NextRequest, NextResponse } from "next/server";
 
 export const runtime = "nodejs";
 
-const SUPABASE_STORAGE_BASE =
-  "https://xfntnamwfnqjgqmyxwfz.supabase.co/storage/v1/object/public";
+const SUPABASE_STORAGE_BASE = process.env.NEXT_PUBLIC_SUPABASE_URL
+  ? `${process.env.NEXT_PUBLIC_SUPABASE_URL.replace(/\/$/, "")}/storage/v1/object/public`
+  : "https://xfntnamwfnqjgqmyxwfz.supabase.co/storage/v1/object/public";
+
+function buildSafeStoragePath(segments: string[]): string | null {
+  const safeSegments: string[] = [];
+  for (const seg of segments) {
+    let decoded: string;
+    try {
+      decoded = decodeURIComponent(seg);
+    } catch {
+      return null;
+    }
+    if (
+      !decoded ||
+      decoded === "." ||
+      decoded === ".." ||
+      decoded.includes("/") ||
+      decoded.includes("\\") ||
+      decoded.includes("\0")
+    ) {
+      return null;
+    }
+    safeSegments.push(encodeURIComponent(decoded));
+  }
+  return safeSegments.join("/");
+}
 
 /**
  * Storage Edge Proxy
@@ -12,24 +37,20 @@ const SUPABASE_STORAGE_BASE =
  * where Supabase default-injects "x-robots-tag: none" which blocks Googlebot-Image
  * from indexing all images and showing them in SERP thumbnails and rich snippets.
  */
-export async function GET(
+async function proxyStorageRequest(
   request: NextRequest,
-  { params }: { params: Promise<{ path: string[] }> },
+  path: string[] | undefined,
+  method: "GET" | "HEAD",
 ) {
-  const { path } = await params;
   if (!path || path.length === 0) {
     return new NextResponse("Not Found", { status: 404 });
   }
 
-  // Construct relative storage path cleanly, decoding and re-encoding each segment safely
-  let storagePath: string;
-  try {
-    storagePath = path
-      .map((seg) => encodeURIComponent(decodeURIComponent(seg)))
-      .join("/");
-  } catch {
+  const storagePath = buildSafeStoragePath(path);
+  if (!storagePath) {
     return new NextResponse("Bad Request", { status: 400 });
   }
+
   const targetUrl = `${SUPABASE_STORAGE_BASE}/${storagePath}`;
 
   // Forward conditional request headers for cache validation
@@ -43,6 +64,7 @@ export async function GET(
 
   try {
     const upstreamRes = await fetch(targetUrl, {
+      method,
       headers: forwardHeaders,
     });
 
@@ -52,6 +74,7 @@ export async function GET(
         headers: {
           "Cache-Control": "public, max-age=31536000, immutable",
           "X-Robots-Tag": "all, max-image-preview:large",
+          "X-Content-Type-Options": "nosniff",
         },
       });
     }
@@ -85,8 +108,10 @@ export async function GET(
     headers.set("X-Robots-Tag", "all, max-image-preview:large");
     headers.set("Cache-Control", "public, max-age=31536000, immutable");
     headers.set("Access-Control-Allow-Origin", "*");
+    headers.set("X-Content-Type-Options", "nosniff");
+    headers.set("Content-Security-Policy", "default-src 'none'; sandbox");
 
-    return new Response(upstreamRes.body, {
+    return new Response(method === "HEAD" ? null : upstreamRes.body, {
       status: upstreamRes.status,
       headers,
     });
@@ -96,13 +121,18 @@ export async function GET(
   }
 }
 
+export async function GET(
+  request: NextRequest,
+  { params }: { params: Promise<{ path: string[] }> },
+) {
+  const { path } = await params;
+  return proxyStorageRequest(request, path, "GET");
+}
+
 export async function HEAD(
   request: NextRequest,
-  context: { params: Promise<{ path: string[] }> },
+  { params }: { params: Promise<{ path: string[] }> },
 ) {
-  const getRes = await GET(request, context);
-  return new Response(null, {
-    status: getRes.status,
-    headers: getRes.headers,
-  });
+  const { path } = await params;
+  return proxyStorageRequest(request, path, "HEAD");
 }

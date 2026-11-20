@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import { AddonForm } from "@/components/admin/addons/addon-form";
+import { requireAdminPage } from "@/lib/auth-server";
 import { supabaseAdmin } from "@/lib/supabase";
 
 export default async function EditAddonPage({
@@ -7,6 +8,7 @@ export default async function EditAddonPage({
 }: {
   params: Promise<{ id: string }>;
 }) {
+  await requireAdminPage();
   const { id } = await params;
 
   const { data: addon, error } = await supabaseAdmin

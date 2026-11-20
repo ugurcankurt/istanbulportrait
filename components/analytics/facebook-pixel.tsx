@@ -2,10 +2,9 @@
 
 import { usePathname, useSearchParams } from "next/navigation";
 import Script from "next/script";
-import { Suspense, useEffect, useRef } from "react";
+import { Suspense, useCallback, useEffect, useRef } from "react";
 import { useConsent } from "@/contexts/consent-context";
-import { getUserDataForAdvancedMatching } from "@/lib/analytics";
-import { hashCustomerData, hashPhoneNumber } from "@/lib/facebook";
+import { hashCustomerData, hashPhoneNumber } from "@/lib/hash-utils";
 
 // Extend Window interface locally for global flags
 declare global {
@@ -15,6 +14,37 @@ declare global {
   }
 }
 
+interface FbqQueueFunction {
+  (...args: unknown[]): void;
+  callMethod?: (...args: unknown[]) => void;
+  push: FbqQueueFunction;
+  loaded: boolean;
+  version: string;
+  queue: unknown[];
+}
+
+function ensureFbqStub(): boolean {
+  if (typeof window === "undefined") return false;
+  if (typeof window.fbq === "function") return true;
+  const queueShim: FbqQueueFunction = ((...args: unknown[]) => {
+    if (queueShim.callMethod) {
+      queueShim.callMethod(...args);
+    } else {
+      queueShim.queue.push(args);
+    }
+  }) as FbqQueueFunction;
+  queueShim.queue = [];
+  queueShim.push = queueShim;
+  queueShim.loaded = true;
+  queueShim.version = "2.0";
+  window.fbq = queueShim as unknown as typeof window.fbq;
+  const win = window as unknown as { _fbq?: typeof window.fbq };
+  if (!win._fbq) {
+    win._fbq = window.fbq;
+  }
+  return true;
+}
+
 function FacebookPixelInner({ pixelId }: { pixelId?: string | null }) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -22,11 +52,8 @@ function FacebookPixelInner({ pixelId }: { pixelId?: string | null }) {
   const hasInitialized = useRef(false);
   const advancedMatchingSentRef = useRef(false);
 
-  // Sync Meta Consent Mode whenever user makes a choice
-  // Must run AFTER fbq is initialized (afterInteractive Script has loaded)
-  useEffect(() => {
-    if (typeof window === "undefined" || !window.fbq) return;
-
+  const syncConsent = useCallback(() => {
+    if (!ensureFbqStub()) return;
     if (consent === "accepted_all") {
       // Full consent — allow personalized ads & tracking
       window.fbq("consent", "grant");
@@ -36,12 +63,21 @@ function FacebookPixelInner({ pixelId }: { pixelId?: string | null }) {
     }
   }, [consent]);
 
+  // Sync Meta Consent Mode whenever user makes a choice
+  useEffect(() => {
+    syncConsent();
+  }, [syncConsent]);
+
   // Track PageView on every route change
   // biome-ignore lint/correctness/useExhaustiveDependencies: Track page views on route change
   useEffect(() => {
     const handlePixel = async () => {
-      if (!pixelId || typeof window === "undefined" || !window.fbq) return;
+      if (!pixelId || !ensureFbqStub()) return;
 
+      const {
+        getUserDataForAdvancedMatching,
+        saveUserDataForAdvancedMatching,
+      } = await import("@/lib/analytics");
       const userData = getUserDataForAdvancedMatching();
       const hashed: Record<string, string> = {};
 
@@ -72,11 +108,7 @@ function FacebookPixelInner({ pixelId }: { pixelId?: string | null }) {
       }
 
       if (hasUrlUserData) {
-        import("@/lib/analytics").then(
-          ({ saveUserDataForAdvancedMatching }) => {
-            saveUserDataForAdvancedMatching(updatedUserData);
-          },
-        );
+        saveUserDataForAdvancedMatching(updatedUserData);
       }
 
       if (
@@ -175,6 +207,15 @@ function FacebookPixelInner({ pixelId }: { pixelId?: string | null }) {
         id="facebook-pixel"
         src="https://connect.facebook.net/en_US/fbevents.js"
         strategy="afterInteractive"
+        onReady={() => {
+          syncConsent();
+          if (pixelId && ensureFbqStub() && !window._fbqInitialized) {
+            window.fbq("set", "autoConfig", false, pixelId);
+            window.fbq("init", pixelId);
+            hasInitialized.current = true;
+            window._fbqInitialized = true;
+          }
+        }}
       />
 
       {/* Facebook Pixel NoScript Fallback */}

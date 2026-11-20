@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import { LocationForm } from "@/components/admin/locations/location-form";
+import { requireAdminPage } from "@/lib/auth-server";
 import { locationsService } from "@/lib/locations-service";
 
 export default async function EditLocationPage({
@@ -7,6 +8,7 @@ export default async function EditLocationPage({
 }: {
   params: Promise<{ id: string }>;
 }) {
+  await requireAdminPage();
   const { id } = await params;
   const location = await locationsService.getLocationById(id);
 

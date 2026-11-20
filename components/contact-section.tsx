@@ -4,8 +4,6 @@ import { Clock, Mail, MapPin, Phone } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
-import { trackContact } from "@/lib/analytics";
-
 export function ContactSection({ settings }: { settings?: any } = {}) {
   const t = useTranslations("contact");
   const tui = useTranslations("ui");
@@ -56,7 +54,11 @@ export function ContactSection({ settings }: { settings?: any } = {}) {
                       <a
                         href={`mailto:${settings?.contact_email || t("info.email")}`}
                         className="text-foreground/90 hover:text-primary transition-colors text-sm sm:text-base md:text-lg break-all font-medium block"
-                        onClick={() => trackContact("Email")}
+                        onClick={() =>
+                          import("@/lib/analytics").then(({ trackContact }) =>
+                            trackContact("Email"),
+                          )
+                        }
                       >
                         {settings?.contact_email || t("info.email")}
                       </a>
@@ -74,7 +76,11 @@ export function ContactSection({ settings }: { settings?: any } = {}) {
                       <a
                         href={`tel:${settings?.contact_phone || t("info.phone")}`}
                         className="text-foreground/90 hover:text-primary transition-colors text-sm sm:text-base md:text-lg phone-number font-medium block"
-                        onClick={() => trackContact("Phone")}
+                        onClick={() =>
+                          import("@/lib/analytics").then(({ trackContact }) =>
+                            trackContact("Phone"),
+                          )
+                        }
                       >
                         {settings?.contact_phone || t("info.phone")}
                       </a>
@@ -106,6 +112,9 @@ export function ContactSection({ settings }: { settings?: any } = {}) {
             <Card className="h-full w-full rounded-[2rem] border border-white/20 dark:border-white/10 bg-background/40 backdrop-blur-3xl shadow-xl overflow-hidden flex p-0 hover:shadow-2xl transition-all duration-500">
               <iframe
                 src={mapUrl}
+                title={
+                  tui("location") || "Istanbul Portrait studio location map"
+                }
                 width="100%"
                 height="100%"
                 className="w-full h-full border-0 min-h-[350px] lg:min-h-full object-cover"

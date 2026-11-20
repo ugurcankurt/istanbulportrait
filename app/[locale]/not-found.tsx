@@ -33,7 +33,9 @@ export default async function LocaleNotFound() {
       homeButton={t("homeButton")}
       packagesButton={t("packagesButton")}
       goBack={t("goBack")}
-      settings={settings ? settingsService.toPublicSettings(settings) : null}
+      settings={
+        settings ? settingsService.toPublicSettings(settings, locale) : null
+      }
       packagesHref={`/${locale}/${packagesPath}`}
     />
   );

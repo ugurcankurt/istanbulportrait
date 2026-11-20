@@ -1,8 +1,31 @@
 import { routing } from "@/i18n/routing";
-
+import { CORE_PAGE_LOCALIZED_SLUGS } from "@/lib/core-page-slugs";
 import { generateNativeSlug } from "@/lib/slug-generator";
 
 type LocalePath = keyof typeof routing.pathnames;
+
+function resolveStaticLocalizedSegment(
+  pathname: LocalePath,
+  locale: string,
+): string {
+  if (pathname === "/") return "";
+  const coreKey = pathname.replace(/^\//, "");
+  const coreSlug = CORE_PAGE_LOCALIZED_SLUGS[coreKey]?.[locale];
+  if (coreSlug) {
+    return `/${coreSlug}`;
+  }
+  const pathConfig = routing.pathnames[pathname];
+  if (
+    typeof pathConfig === "object" &&
+    pathConfig !== null &&
+    locale in pathConfig
+  ) {
+    const localizedValue = (pathConfig as Record<string, string>)[locale];
+    return localizedValue === "/" ? "" : localizedValue;
+  }
+  return pathname;
+}
+
 export function getLocalizedPaths(
   pathname: LocalePath,
   baseUrl = "https://istanbulportrait.com",
@@ -10,20 +33,10 @@ export function getLocalizedPaths(
   canonical: (locale: string) => string;
   languages: Record<string, string>;
 } {
-  const pathConfig = routing.pathnames[pathname];
-
   // Build language alternates with x-default
   const languages: Record<string, string> = {};
   routing.locales.forEach((l: string) => {
-    let localizedPath: string = pathname === "/" ? "" : pathname;
-    if (
-      typeof pathConfig === "object" &&
-      pathConfig !== null &&
-      l in pathConfig
-    ) {
-      const localizedValue = (pathConfig as Record<string, string>)[l];
-      localizedPath = localizedValue === "/" ? "" : localizedValue;
-    }
+    const localizedPath = resolveStaticLocalizedSegment(pathname, l);
     languages[l] = encodeURI(`${baseUrl}/${l}${localizedPath}`);
   });
 
@@ -32,15 +45,7 @@ export function getLocalizedPaths(
 
   return {
     canonical: (locale: string) => {
-      let localizedPath: string = pathname === "/" ? "" : pathname;
-      if (
-        typeof pathConfig === "object" &&
-        pathConfig !== null &&
-        locale in pathConfig
-      ) {
-        const localizedValue = (pathConfig as Record<string, string>)[locale];
-        localizedPath = localizedValue === "/" ? "" : localizedValue;
-      }
+      const localizedPath = resolveStaticLocalizedSegment(pathname, locale);
       return encodeURI(`${baseUrl}/${locale}${localizedPath}`);
     },
     languages,

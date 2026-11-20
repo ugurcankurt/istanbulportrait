@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
-import { requireServerAdmin } from "@/lib/auth-server";
+import { getAdminErrorStatus, requireServerAdmin } from "@/lib/auth-server";
+import { sanitizeErrorForProduction } from "@/lib/errors";
+import { revalidatePublicDiscountsCache } from "@/lib/public-cache";
 import { supabaseAdmin } from "@/lib/supabase";
 
 export async function GET() {
@@ -13,8 +15,11 @@ export async function GET() {
 
     if (error) throw error;
     return NextResponse.json(data);
-  } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+  } catch (error) {
+    return NextResponse.json(
+      { error: sanitizeErrorForProduction(error) },
+      { status: getAdminErrorStatus(error) },
+    );
   }
 }
 
@@ -32,8 +37,12 @@ export async function POST(req: Request) {
       .single();
 
     if (error) throw error;
+    revalidatePublicDiscountsCache();
     return NextResponse.json(data);
-  } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+  } catch (error) {
+    return NextResponse.json(
+      { error: sanitizeErrorForProduction(error) },
+      { status: getAdminErrorStatus(error) },
+    );
   }
 }

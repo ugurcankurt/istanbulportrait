@@ -2,24 +2,31 @@ import { NextResponse } from "next/server";
 import { Resend } from "resend";
 import { z } from "zod";
 import { promoService } from "@/lib/promo-service";
-import { checkRateLimit, createRateLimitError } from "@/lib/rate-limit";
+import {
+  checkRateLimit,
+  createRateLimitError,
+  getClientIP,
+} from "@/lib/rate-limit";
 import { sendNewsletterWelcomeEmail } from "@/lib/resend";
 import { settingsService } from "@/lib/settings-service";
+import { supabaseAdmin } from "@/lib/supabase";
 
 const subscribeSchema = z.object({
-  firstName: z.string().min(2, "First name is too short."),
-  lastName: z.string().min(2, "Last name is too short."),
-  email: z.string().email("Please provide a valid email address."),
-  locale: z.string().default("en"),
+  firstName: z.string().trim().min(2, "First name is too short.").max(100),
+  lastName: z.string().trim().min(2, "Last name is too short.").max(100),
+  email: z
+    .string()
+    .trim()
+    .toLowerCase()
+    .email("Please provide a valid email address.")
+    .max(254),
+  locale: z.string().max(10).default("en"),
 });
 
 export async function POST(req: Request) {
   try {
     // 1. Rate limiting
-    const ip =
-      req.headers.get("x-forwarded-for") ||
-      req.headers.get("remote-addr") ||
-      "unknown-ip";
+    const ip = getClientIP(req);
     const { success: isAllowed, resetTime } = await checkRateLimit(
       `subscribe_${ip}`,
       {
@@ -76,14 +83,9 @@ export async function POST(req: Request) {
 
     // Insert into Leads table
     try {
-      const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-      const supabaseKey =
-        process.env.SUPABASE_SERVICE_ROLE_KEY ||
-        process.env.SUPABASE_SERVICE_KEY;
-      if (supabaseUrl && supabaseKey) {
-        const { createClient } = require("@supabase/supabase-js");
-        const supabase = createClient(supabaseUrl, supabaseKey);
-        await supabase.from("leads").insert([
+      const { error: leadInsertError } = await supabaseAdmin
+        .from("leads")
+        .insert([
           {
             first_name: firstName,
             last_name: lastName,
@@ -91,6 +93,11 @@ export async function POST(req: Request) {
             lead_source: "newsletter",
           },
         ]);
+      if (leadInsertError) {
+        console.error(
+          "Failed to save newsletter subscriber to leads table:",
+          leadInsertError,
+        );
       }
     } catch (e) {
       console.error("Failed to save newsletter subscriber to leads table:", e);

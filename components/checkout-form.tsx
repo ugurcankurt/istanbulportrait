@@ -352,11 +352,15 @@ export function CheckoutForm({
   availableAddons = [],
   activeDiscounts = null,
   packages = [],
+  contactEmail,
+  contactPhone,
 }: {
   timeSurcharges?: TimeSurcharge[];
   availableAddons?: AddonDB[];
   activeDiscounts?: DiscountDB[] | null;
   packages?: PackageDB[];
+  contactEmail?: string | null;
+  contactPhone?: string | null;
 }) {
   const { formatPrice, currency } = useCurrency();
   const searchParams = useSearchParams();
@@ -537,10 +541,14 @@ export function CheckoutForm({
     }
 
     if (bookingIdParam) {
+      const tokenParam = searchParams.get("token");
       const restoreDraft = async () => {
         try {
+          const tokenQuery = tokenParam
+            ? `&token=${encodeURIComponent(tokenParam)}`
+            : "";
           const res = await fetch(
-            `/api/booking/create-draft?bookingId=${encodeURIComponent(bookingIdParam)}&locale=${encodeURIComponent(locale)}`,
+            `/api/booking/create-draft?bookingId=${encodeURIComponent(bookingIdParam)}&locale=${encodeURIComponent(locale)}${tokenQuery}`,
           );
           if (cancelled) return;
 
@@ -936,6 +944,8 @@ export function CheckoutForm({
           packageId={selectedPackage}
           customerData={preFilledBookingData || undefined}
           confirmedBooking={confirmedBooking}
+          contactEmail={contactEmail}
+          contactPhone={contactPhone}
         />
       </div>
     );

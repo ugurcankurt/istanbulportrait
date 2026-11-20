@@ -120,6 +120,43 @@ export interface SiteSettings {
   google_ads_webhook_key: string | null;
 }
 
+export interface PublicSiteSettings {
+  contact_email: string;
+  contact_phone: string;
+  whatsapp_number: string;
+  instagram_url: string;
+  facebook_url: string;
+  youtube_url: string;
+  tiktok_url: string;
+  logo_url: string | null;
+  logo_dark_url: string | null;
+  favicon_url: string | null;
+  address: Record<string, string>;
+  working_hours: Record<string, string>;
+  site_name: string | null;
+  site_description: Record<string, string>;
+  default_og_image_url: string | null;
+  organization_name: string | null;
+  organization_founding_date: string | null;
+  founder_name: string | null;
+  founder_image_url: string | null;
+  theme_color: string;
+  color_mode: "light" | "dark" | "system" | string;
+  app_base_url: string | null;
+}
+
+function pickLocalizedMap(
+  map: Record<string, string> | undefined,
+  locale?: string,
+): Record<string, string> {
+  if (!map) return {};
+  if (!locale) return map;
+  const out: Record<string, string> = {};
+  if (map.en) out.en = map.en;
+  if (map[locale]) out[locale] = map[locale];
+  return out;
+}
+
 export const defaultSettings: SiteSettings = {
   contact_email: "",
   contact_phone: "",
@@ -348,25 +385,37 @@ export const settingsService = {
   ),
 
   /**
-   * Strip server-side API keys, tokens, and raw script payloads before passing
-   * SiteSettings from Server Components to Client Components via RSC props.
+   * Strict allowlist for SiteSettings before serializing from Server Components
+   * to Client Components via RSC props. Never exposes server secret keys,
+   * tokens, admin fields, or unneeded translations.
    */
-  toPublicSettings(settings: SiteSettings): SiteSettings {
+  toPublicSettings(
+    settings: SiteSettings,
+    locale?: string,
+  ): PublicSiteSettings {
     return {
-      ...settings,
-      ai_search_config: {},
-      resend_api_key: null,
-      resend_audience_id: null,
-      custom_head_scripts: null,
-      custom_body_scripts: null,
-      gemini_api_key: null,
-      facebook_access_token: null,
-      facebook_verify_token: null,
-      instagram_access_token: null,
-      ga4_measurement_protocol_secret: null,
-      admin_email: null,
-      indexnow_api_key: null,
-      google_ads_webhook_key: null,
+      contact_email: settings.contact_email,
+      contact_phone: settings.contact_phone,
+      whatsapp_number: settings.whatsapp_number,
+      instagram_url: settings.instagram_url,
+      facebook_url: settings.facebook_url,
+      youtube_url: settings.youtube_url,
+      tiktok_url: settings.tiktok_url,
+      logo_url: settings.logo_url,
+      logo_dark_url: settings.logo_dark_url,
+      favicon_url: settings.favicon_url,
+      address: pickLocalizedMap(settings.address, locale),
+      working_hours: pickLocalizedMap(settings.working_hours, locale),
+      site_name: settings.site_name,
+      site_description: pickLocalizedMap(settings.site_description, locale),
+      default_og_image_url: settings.default_og_image_url,
+      organization_name: settings.organization_name,
+      organization_founding_date: settings.organization_founding_date,
+      founder_name: settings.founder_name,
+      founder_image_url: settings.founder_image_url,
+      theme_color: settings.theme_color,
+      color_mode: settings.color_mode,
+      app_base_url: settings.app_base_url,
     };
   },
 

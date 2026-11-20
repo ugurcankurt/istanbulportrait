@@ -2,6 +2,7 @@ import { parsePhoneNumber } from "libphonenumber-js/min";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { addonsService } from "@/lib/addons-service";
+import { signBookingToken } from "@/lib/booking-token";
 import { hasMarketingConsent } from "@/lib/consent-server";
 import { discountService } from "@/lib/discount-service";
 import {
@@ -714,7 +715,9 @@ export async function POST(request: NextRequest) {
         console.error("Audience sync error:", audienceError);
       }
 
-      return NextResponse.json({
+      const successToken = signBookingToken(booking.id, "success");
+
+      const res = NextResponse.json({
         success: true,
         booking: {
           id: booking.id,
@@ -734,8 +737,17 @@ export async function POST(request: NextRequest) {
             booking.applied_promo_code || resolvedPromoCode || null,
           // GA4 User-ID for the client (only with analytics consent)
           analyticsUserId: marketingConsent ? booking.user_id || null : null,
+          successToken,
         },
       });
+      res.cookies.set(`booking_success_${booking.id}`, successToken, {
+        httpOnly: true,
+        sameSite: "lax",
+        secure: process.env.NODE_ENV === "production",
+        maxAge: 24 * 60 * 60,
+        path: "/",
+      });
+      return res;
     } catch (supabaseError: unknown) {
       const dbError = new DatabaseConnectionError();
       logError(handleSupabaseError(supabaseError), {

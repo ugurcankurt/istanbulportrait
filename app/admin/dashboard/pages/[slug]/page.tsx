@@ -1,4 +1,5 @@
 import { PageForm } from "@/components/admin/pages/page-form";
+import { requireAdminPage } from "@/lib/auth-server";
 import { pagesContentService } from "@/lib/pages-content-service";
 
 interface EditPageAdminProps {
@@ -8,6 +9,7 @@ interface EditPageAdminProps {
 }
 
 export default async function EditPageAdmin({ params }: EditPageAdminProps) {
+  await requireAdminPage();
   const { slug } = await params;
 
   const allPages = await pagesContentService.getAllPages();

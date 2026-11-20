@@ -1,8 +1,18 @@
+import { NextIntlClientProvider } from "next-intl";
+import { getMessages } from "next-intl/server";
 import { BreadcrumbNav } from "@/components/breadcrumb-nav";
 import { CookieTable } from "@/components/cookie-table";
 import { PageHeroSection } from "@/components/page-hero-section";
+import { SchemaInjector } from "@/components/schema-injector";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { pagesContentService } from "@/lib/pages-content-service";
+import {
+  buildWebPageSchema,
+  enrichSeoDescription,
+  getBaseUrl,
+  normalizeSchemaUrl,
+} from "@/lib/seo-utils";
+import { settingsService } from "@/lib/settings-service";
 
 export async function PrivacyPageContent({
   params,
@@ -11,16 +21,32 @@ export async function PrivacyPageContent({
 }) {
   const { locale } = await params;
 
-  const dbPage = await pagesContentService.getPageBySlug("privacy");
+  const [dbPage, settings, messages] = await Promise.all([
+    pagesContentService.getPageBySlug("privacy"),
+    settingsService.getSettings(),
+    getMessages({ locale }),
+  ]);
+  const canonicalSegment =
+    pagesContentService.getCorePageSegment(dbPage || "privacy", locale) ||
+    "privacy";
   const dynamicTitle =
     dbPage?.title?.[locale] || dbPage?.title?.en || "Privacy Policy";
   const dynamicSubtitle =
     dbPage?.subtitle?.[locale] || dbPage?.subtitle?.en || "";
+  const baseUrl = getBaseUrl(settings.app_base_url);
+
+  const webPageSchema = buildWebPageSchema({
+    name: dynamicTitle,
+    description: enrichSeoDescription(dynamicSubtitle, "privacy", locale),
+    url: normalizeSchemaUrl(`${baseUrl}/${locale}/${canonicalSegment}`),
+    inLanguage: locale,
+  });
 
   const sections = dbPage?.content?.sections || [];
 
   return (
     <div>
+      <SchemaInjector schema={webPageSchema} />
       <BreadcrumbNav customLastLabel={dynamicTitle || undefined} />
       <div className="section-contain-auto">
         <PageHeroSection title={dynamicTitle} subtitle={dynamicSubtitle} />
@@ -85,7 +111,12 @@ export async function PrivacyPageContent({
 
                   {isCookie && (
                     <div className="pt-4 space-y-4">
-                      <CookieTable />
+                      <NextIntlClientProvider
+                        locale={locale}
+                        messages={{ privacy: messages.privacy }}
+                      >
+                        <CookieTable />
+                      </NextIntlClientProvider>
                     </div>
                   )}
                 </CardContent>

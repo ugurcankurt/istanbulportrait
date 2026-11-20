@@ -71,7 +71,7 @@ export async function POST(request: NextRequest) {
     } = validationResult.data;
 
     try {
-      // Check if package exists
+      // Check if package exists and is active
       const packageData = await packagesService.getPackageBySlug(
         packageId as string,
       );
@@ -82,11 +82,17 @@ export async function POST(request: NextRequest) {
           endpoint: "booking",
           action: "package_validation",
         });
-        // Continue with demo mode if package table doesn't exist
-      } else if (
-        packageData &&
-        Math.abs(packageData.price - totalAmount) > 0.01
-      ) {
+        return NextResponse.json(
+          {
+            error: sanitizeErrorForProduction(
+              new ValidationError("Invalid package"),
+            ),
+          },
+          { status: 404 },
+        );
+      }
+
+      if (Math.abs(packageData.price - totalAmount) > 0.01) {
         const priceError = new ValidationError("Invalid package price");
         logError(priceError, {
           ip,

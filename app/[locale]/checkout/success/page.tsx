@@ -1,8 +1,12 @@
 import type { Metadata } from "next";
+import { cookies } from "next/headers";
 import { Suspense } from "react";
 import { getConsentCookie } from "@/app/actions/consent";
 import { BookingSuccess } from "@/components/booking-success";
 import { SuccessTracker } from "@/components/success-tracker";
+import { getServerUser, isServerAdmin } from "@/lib/auth-server";
+import { verifyBookingToken } from "@/lib/booking-token";
+import { settingsService } from "@/lib/settings-service";
 
 export const dynamic = "force-dynamic";
 
@@ -24,6 +28,10 @@ export default async function CheckoutPage({
     typeof resolvedSearchParams.bookingId === "string"
       ? resolvedSearchParams.bookingId
       : undefined;
+  const tokenParam =
+    typeof resolvedSearchParams.token === "string"
+      ? resolvedSearchParams.token
+      : undefined;
 
   if (!bookingId) {
     return (
@@ -35,6 +43,12 @@ export default async function CheckoutPage({
       </div>
     );
   }
+
+  const cookieStore = await cookies();
+  const cookieToken = cookieStore.get(`booking_success_${bookingId}`)?.value;
+  const hasValidToken =
+    verifyBookingToken(bookingId, "success", tokenParam) ||
+    verifyBookingToken(bookingId, "success", cookieToken);
 
   const { createServerSupabaseAdminClient } = await import(
     "@/lib/supabase/server"
@@ -56,12 +70,37 @@ export default async function CheckoutPage({
     );
   }
 
-  // Fetch package name for accurate GA4 tracking
-  const { data: packageData } = await supabase
-    .from("packages")
-    .select("title")
-    .eq("slug", booking.package_id)
-    .single();
+  if (!hasValidToken) {
+    const user = await getServerUser();
+    const isOwner =
+      user !== null &&
+      ((booking.user_id && booking.user_id === user.id) ||
+        (user.email &&
+          booking.user_email &&
+          user.email.toLowerCase() === booking.user_email.toLowerCase()));
+    const isAdmin = user?.email ? await isServerAdmin(user.email) : false;
+
+    if (!isOwner && !isAdmin) {
+      return (
+        <div className="flex flex-col h-dvh bg-background items-center justify-center px-4">
+          <p className="text-muted-foreground text-lg text-center max-w-md">
+            This booking confirmation link has expired or requires signing in to
+            view your reservation details.
+          </p>
+        </div>
+      );
+    }
+  }
+
+  // Fetch package name and public contact settings
+  const [{ data: packageData }, settings] = await Promise.all([
+    supabase
+      .from("packages")
+      .select("title")
+      .eq("slug", booking.package_id)
+      .single(),
+    settingsService.getSettings(),
+  ]);
 
   const localeKey = booking.locale || "en";
   const packageName =
@@ -129,6 +168,8 @@ export default async function CheckoutPage({
           // biome-ignore lint/suspicious/noExplicitAny: Type mismatch
           packageId={booking.package_id as any}
           confirmedBooking={confirmedBookingData}
+          contactEmail={settings.contact_email}
+          contactPhone={settings.contact_phone}
         />
       </Suspense>
     </>

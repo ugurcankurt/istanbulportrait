@@ -1,5 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
+import { getAdminErrorStatus, requireServerAdmin } from "@/lib/auth-server";
 import { hasMarketingConsent } from "@/lib/consent-server";
 import {
   logError,
@@ -322,24 +323,25 @@ export async function POST(request: NextRequest) {
   }
 }
 
-// Health check endpoint for Facebook Conversions API
+// Health check endpoint for Facebook Conversions API (Admin only)
 export async function GET() {
   try {
+    await requireServerAdmin();
+
     const { settingsService } = await import("@/lib/settings-service");
     const settings = await settingsService.getSettings();
 
-    const missingVars = [];
-    if (!settings.facebook_access_token)
-      missingVars.push("facebook_access_token");
-    if (!settings.facebook_dataset_id) missingVars.push("facebook_dataset_id");
-    if (!settings.facebook_pixel_id) missingVars.push("facebook_pixel_id");
+    const configured = Boolean(
+      settings.facebook_access_token &&
+        settings.facebook_dataset_id &&
+        settings.facebook_pixel_id,
+    );
 
-    if (missingVars.length > 0) {
+    if (!configured) {
       return NextResponse.json(
         {
           status: "error",
           message: "Facebook Conversions API not properly configured",
-          missing_settings: missingVars,
         },
         { status: 500 },
       );
@@ -348,18 +350,22 @@ export async function GET() {
     return NextResponse.json({
       status: "healthy",
       message: "Facebook Conversions API endpoint is ready",
-      pixel_id: settings.facebook_pixel_id,
-      dataset_configured: !!settings.facebook_dataset_id,
-      access_token_configured: !!settings.facebook_access_token,
+      dataset_configured: Boolean(settings.facebook_dataset_id),
+      access_token_configured: Boolean(settings.facebook_access_token),
     });
   } catch (error) {
+    const status = getAdminErrorStatus(error);
     return NextResponse.json(
       {
         status: "error",
-        message: "Health check failed",
-        error: error instanceof Error ? error.message : "Unknown error",
+        message:
+          status === 401
+            ? "Authentication required"
+            : status === 403
+              ? "Admin access required"
+              : "Health check failed",
       },
-      { status: 500 },
+      { status },
     );
   }
 }

@@ -2,10 +2,13 @@ import { Suspense } from "react";
 import { CheckoutForm } from "@/components/checkout-form";
 import { Skeleton } from "@/components/ui/skeleton";
 import { addonsService } from "@/lib/addons-service";
-import { availabilityService } from "@/lib/availability-service";
-import { discountService } from "@/lib/discount-service";
 import { getLocalizedPaths } from "@/lib/localized-url";
-import { packagesService } from "@/lib/packages-service";
+import {
+  getCachedActiveDiscounts,
+  getCachedActivePackages,
+  getCachedTimeSurcharges,
+} from "@/lib/public-cache";
+import { settingsService } from "@/lib/settings-service";
 
 export async function generateMetadata({
   params,
@@ -68,21 +71,26 @@ function CheckoutSkeleton() {
 }
 
 export default async function CheckoutPage() {
-  const [timeSurcharges, allAddons, activeDiscounts, activePackages] =
+  const [timeSurcharges, allAddons, activeDiscounts, activePackages, settings] =
     await Promise.all([
-      availabilityService.getTimeSurcharges(),
+      getCachedTimeSurcharges(),
       addonsService.getAllAddonsAdmin(),
-      discountService.getActiveDiscounts(),
-      packagesService.getActivePackages(),
+      getCachedActiveDiscounts(),
+      getCachedActivePackages(),
+      settingsService.getSettings(),
     ]);
+
+  const activeAddons = (allAddons || []).filter((addon) => addon.is_active);
 
   return (
     <Suspense fallback={<CheckoutSkeleton />}>
       <CheckoutForm
         timeSurcharges={timeSurcharges}
-        availableAddons={allAddons}
+        availableAddons={activeAddons}
         activeDiscounts={activeDiscounts}
         packages={activePackages}
+        contactEmail={settings.contact_email}
+        contactPhone={settings.contact_phone}
       />
     </Suspense>
   );

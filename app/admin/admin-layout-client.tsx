@@ -199,14 +199,20 @@ export function AdminLayoutClient({
                 href="/admin/dashboard"
                 className="flex items-center space-x-2 p-2 relative h-12 w-full max-w-[180px]"
               >
-                <Image
-                  src={settings?.logo_url}
-                  alt={settings?.site_name || "Istanbul Photographer"}
-                  fill
-                  sizes="180px"
-                  className="object-contain object-left"
-                  priority
-                />
+                {settings?.logo_url ? (
+                  <Image
+                    src={settings.logo_url}
+                    alt={settings?.site_name || "Istanbul Photographer"}
+                    fill
+                    sizes="180px"
+                    className="object-contain object-left"
+                    priority
+                  />
+                ) : (
+                  <span className="font-semibold text-base tracking-tight">
+                    {settings?.site_name || "Istanbul Portrait"}
+                  </span>
+                )}
               </Link>
             </SidebarHeader>
 
@@ -267,7 +273,7 @@ export function AdminLayoutClient({
             <div className="flex h-16 items-center justify-between border-b bg-background px-4 md:px-6">
               <div className="flex items-center gap-2">
                 <SidebarTrigger className="md:hidden" />
-                <h1 className="text-lg font-semibold">Admin Panel</h1>
+                <span className="text-lg font-semibold">Admin Panel</span>
               </div>
             </div>
 

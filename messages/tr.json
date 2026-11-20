@@ -298,7 +298,7 @@
     "payment": "Ödeme",
     "response_time_desc": "Taleplere genellikle 24 saat içinde yanıt veriyoruz.",
     "booking_process_desc": "Talebinizin ardından vizyonunuzu tartışmak ve detayları netleştirmek için bir görüşme planlayacağız.",
-    "payment_desc": "Gününü ayırmak için rezervasyon sırasında tam veya ön ödeme (kapora) online olarak gereklidir.",
+    "payment_desc": "Ön ödeme veya kapora gerekmez — online rezervasyon yapın, ödemeyi çekim günü nakit olarak gerçekleştirin.",
     "professional_photographer": "Profesyonel Fotoğrafçı",
     "professional_photographer_in_istanbul": "İstanbul'da profesyonel fotoğrafçı",
     "portrait_photography": "Portre Fotoğrafçılığı",
@@ -372,7 +372,7 @@
     "sessions": "Tamamlanan Çekim",
     "clients": "Mutlu Müşteri",
     "satisfaction": "Müşteri Memnuniyeti",
-    "description": "Portföyüme hoş geldiniz! Doğal ışıkta güzel anları yakalama konusunda uzmanım."
+    "description": "10 yılı aşkın deneyime sahip yerel bir İstanbul fotoğrafçısı olarak doğal ışıkta çift, solo gezgin, aile ve sürpriz evlilik teklifi çekimleri gerçekleştiriyorum."
   },
   "api_errors": {
     "rate_limit": "Çok fazla istek gönderildi. Lütfen daha sonra tekrar deneyin.",
@@ -553,7 +553,8 @@
       "about_title": "Yazar Hakkında",
       "name": "İstanbul Fotoğrafçısı",
       "bio": "İstanbul'da portre, çift ve yaşam tarzı fotoğrafçılığı konusunda uzmanlaşmış profesyonel fotoğrafçı. 8 yılı aşkın deneyimiyle, şehrin en ikonik manzaralarında zamanın ötesinde anıları yakalıyor.",
-      "follow": "Instagram'da Takip Et"
+      "follow": "Instagram'da Takip Et",
+      "profile_link": "Fotoğrafçı Profilini İncele"
     },
     "summary": {
       "title": "Önemli Çıkarımlar",
@@ -739,6 +740,62 @@
     "step3_desc": "Daha önce profesyonel çekim yaptırmadıysanız endişelenmeyin; ilk kareden itibaren doğal poz ve açı yönlendirmesiyle rahat bir deneyim sunuyoruz.",
     "step4_title": "4. Şeffaf EUR Fiyatlar ve 48 Saatte Teslim",
     "step4_desc": "Ön ödeme yapmadan online rezervasyon oluşturun, ödemeyi çekim günü nakit yapın. Düzenlenmiş yüksek çözünürlüklü galerinizi 48 saat içinde teslim alın.",
-    "editorial_about_cta": "Fotoğrafçınızla Tanışın"
+    "editorial_about_cta": "Fotoğrafçınızla Tanışın",
+    "packages_note": "Tüm İstanbul fotoğraf çekimi paketleri; yerel fotoğrafçı eşliğinde doğal poz yönlendirmesi, en iyi ışık saati planlaması ve 48 saatte online galeri teslimatını içerir.",
+    "packages_cta": "Tüm İstanbul Fotoğraf Çekimi Paketlerini Karşılaştır"
+  },
+  "seo_hub": {
+    "packages": {
+      "title": "İstanbul Fotoğraf Çekimi Paketi Nasıl Seçilir?",
+      "subtitle": "Süleymaniye manzaralı uçan elbise terası, Sultanahmet'te gün doğumu çekimi ya da Boğaz kıyısında çift portreleri arasından size en uygun paketi seçin.",
+      "item1_title": "Özel Teraslar ve Uçan Elbise",
+      "item1_desc": "Süleymaniye ve Haliç manzaralı rezerve panoramik teraslarda kalabalıktan uzak, uçan elbise ve siluet fotoğraf çekimleri.",
+      "item2_title": "Tarihi Mekanlar ve Sokak Rotaları",
+      "item2_desc": "Ayasofya, Sultanahmet, Galata Kulesi, Ortaköy Camii veya Balat sokaklarını yerel İstanbul fotoğrafçısı eşliğinde en sakin saatlerde gezin.",
+      "item3_title": "Ön Ödemesiz Rezervasyon & 48 Saatte Teslim",
+      "item3_desc": "Şeffaf EUR fiyatlarla ön ödeme yapmadan tarihinizi ayırtın, ödemeyi çekim günü nakit yapın ve düzenlenmiş yüksek çözünürlüklü galerinizi 48 saatte teslim alın.",
+      "link_locations": "En Güzel İstanbul Çekim Mekanları",
+      "link_about": "Fotoğrafçınızla Tanışın",
+      "link_blog": "Kıyafet ve Çekim İpuçlarını Oku"
+    },
+    "locations": {
+      "title": "İstanbul'da Çoklu Mekan Çekim Planlaması",
+      "subtitle": "Işık yönüne ve çekim süresine göre Sultanahmet, Galata, Balat, Ortaköy veya Kuzguncuk rotalarını aynı oturumda birleştirin.",
+      "item1_title": "Altın Saat Rota Kombinasyonları",
+      "item1_desc": "1 saatlik çekimler tek bir bölgede (ör. Galata veya Sultanahmet) ideal sonuç verirken, 2-3 saatlik çekimlerde tarihi yarımada ile Boğaz ya da teraslar birleştirilir.",
+      "item2_title": "Kalabalıksız Sabah Planlaması",
+      "item2_desc": "Deneyimli bir İstanbul fotoğrafçısıyla gün doğumu saatinde çekim yapmak Ayasofya, Galata ve Ortaköy karelerinde temiz ve ferah arka planlar sağlar.",
+      "item3_title": "Özel Teras Girişleri ve İzinler",
+      "item3_desc": "Anlaşmalı panoramik teraslarımız sayesinde sıra beklemeden doğrudan çekime başlar, sürenizin tamamını kare üretmeye ayırırsınız.",
+      "link_packages": "Çekim Paketlerini ve Fiyatları İncele",
+      "link_blog": "İstanbul Fotoğrafçılık Rehberleri",
+      "link_contact": "Özel Rota İçin Danışın"
+    },
+    "about": {
+      "title": "Fotoğrafçı Deneyimi ve Çekim Standartlarımız",
+      "subtitle": "İstanbul'da yaşayan bir portre uzmanıyla doğrudan çalışmak; tutarlı renk düzeni, doğal poz rehberliği ve mevsime göre doğru ışık saatleri anlamına gelir.",
+      "item1_title": "Full-Frame Ekipman ve Doğal Işık",
+      "item1_desc": "Her İstanbul fotoğraf çekimi; gün doğumu ışığı, tarihi kemerler ve gün batımı siluetleri için seçilmiş Sony full-frame gövdeler ve sabit lenslerle gerçekleştirilir.",
+      "item2_title": "Rahat Poz Yönlendirmesi",
+      "item2_desc": "Modellik deneyimi gerekmez — çiftlerin, solo gezginlerin ve ailelerin ilk kareden itibaren kameraya doğal şekilde alışması için adım adım rehberlik ediyoruz.",
+      "item3_title": "500+ Uluslararası Çekim ve Gerçek Yorumlar",
+      "item3_desc": "50'den fazla ülkeden konukların 5 yıldızlı Google yorumları, hızlı WhatsApp iletişimi ve güvenilir 48 saatlik dijital galeri teslimatı.",
+      "link_packages": "Fotoğraf Çekimi Paketlerini İncele",
+      "link_locations": "İstanbul Çekim Mekanlarını Gör",
+      "link_blog": "Fotoğrafçılık Blogunu Oku"
+    },
+    "contact": {
+      "title": "Özel İstanbul Fotoğraf Çekiminizi Planlayın",
+      "subtitle": "Tercih ettiğiniz tarihleri ve çekim tarzını WhatsApp veya e-posta üzerinden paylaşın; size en uygun gün ışığı saatini ve rotayı hemen önerelim.",
+      "item1_title": "Tarih ve Kişi Sayısını Paylaşın",
+      "item1_desc": "İstanbul'daki konaklama tarihlerinizi, kişi sayısını ve teras/uçan elbise, çift, aile veya sürpriz evlilik teklifi tercihinizi belirtin.",
+      "item2_title": "Sürpriz Evlilik Teklifi ve Özel Etkinlikler",
+      "item2_desc": "Ortaköy kıyısında, özel teknede ya da Sultanahmet terasında gizli çekim mi planlıyorsunuz? Gizli açı ve işaret planını birlikte hazırlıyoruz.",
+      "item3_title": "Online Hızlı Rezervasyon",
+      "item3_desc": "Hangi paketin uygun olduğunu biliyorsanız doğrudan paket sayfasından ön ödemesiz müsaitlik kontrolü yapıp gününüzü kilitleyebilirsiniz.",
+      "link_packages": "Tüm Paketlere Göz Atın",
+      "link_locations": "Çekim Mekanlarını Keşfedin",
+      "link_about": "Istanbul Portrait Hakkında"
+    }
   }
 }

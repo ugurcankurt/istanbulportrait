@@ -84,14 +84,13 @@ export function PackageDetails({
   const [isScrolled, setIsScrolled] = useState(false);
   const [yieldMultiplier, setYieldMultiplier] = useState<number>(1.0);
   const [yieldReason, setYieldReason] = useState<string>("standard");
+  const hasTrackedView = useRef(false);
 
   useEffect(() => {
     if (searchParams.get("book") === "true") {
       setIsModalOpen(true);
     }
   }, [searchParams]);
-
-  if (!packageData) return null;
 
   // Calculate surcharge if specific time is selected
   const activeSurcharge = matchActiveSurcharge(selectedTime, timeSurcharges);
@@ -100,74 +99,81 @@ export function PackageDetails({
     : 0;
 
   // Calculate generic unit pricing for display
-  const basePrice = Number(packageData.price);
-
-  // Calculate package unit price before discount
-  const _packageUnitPrice =
-    basePrice * (1 + surchargePercentage / 100) * yieldMultiplier;
+  const basePrice = packageData ? Number(packageData.price) : 0;
 
   // Calculate full dynamic pricing including people count for the correct deposit logic
-  const fullPricing = getPackagePricing(
-    packageData.slug as any,
-    basePrice,
-    activeDiscounts,
-    null,
-    selectedDate,
-    peopleCount,
-    undefined,
-    undefined,
-    surchargePercentage,
-    yieldMultiplier,
-    availableAddons,
-    selectedAddons,
-    packageData.is_per_person,
-    addonQuantities,
-  );
+  const fullPricing = packageData
+    ? getPackagePricing(
+        packageData.slug as any,
+        basePrice,
+        activeDiscounts,
+        null,
+        selectedDate,
+        peopleCount,
+        undefined,
+        undefined,
+        surchargePercentage,
+        yieldMultiplier,
+        availableAddons,
+        selectedAddons,
+        packageData.is_per_person,
+        addonQuantities,
+      )
+    : null;
 
   const displayPrice =
-    packageData.is_per_person && peopleCount > 0
-      ? fullPricing.totalPrice / peopleCount
-      : fullPricing.totalPrice;
+    packageData && fullPricing
+      ? packageData.is_per_person && peopleCount > 0
+        ? fullPricing.totalPrice / peopleCount
+        : fullPricing.totalPrice
+      : 0;
 
   const originalDisplayPrice =
-    packageData.is_per_person && peopleCount > 0
-      ? fullPricing.originalPrice / peopleCount
-      : fullPricing.originalPrice;
+    packageData && fullPricing
+      ? packageData.is_per_person && peopleCount > 0
+        ? fullPricing.originalPrice / peopleCount
+        : fullPricing.originalPrice
+      : 0;
 
   const pricing = {
     price: displayPrice,
     originalPrice: originalDisplayPrice,
-    isDiscounted: fullPricing.isDiscounted,
-    discountPercentage: fullPricing.appliedDiscountPercentage,
-    depositAmount: fullPricing.depositAmount,
-    remainingAmount: fullPricing.remainingAmount,
+    isDiscounted: fullPricing?.isDiscounted ?? false,
+    discountPercentage: fullPricing?.appliedDiscountPercentage ?? 0,
+    depositAmount: fullPricing?.depositAmount ?? 0,
+    remainingAmount: fullPricing?.remainingAmount ?? 0,
   };
 
-  const features =
-    packageData.features[locale] || packageData.features.en || [];
-  const packageName =
-    packageData.title[locale] || packageData.title.en || packageData.slug;
-  const packageDesc =
-    packageData.description[locale] || packageData.description.en || "";
-  const packageDur =
-    packageData.duration[locale] || packageData.duration.en || "1 Hour";
-  const gallery =
-    packageData.gallery_images && packageData.gallery_images.length > 0
+  const features = packageData
+    ? packageData.features[locale] || packageData.features.en || []
+    : [];
+  const packageName = packageData
+    ? packageData.title[locale] || packageData.title.en || packageData.slug
+    : "";
+  const packageDesc = packageData
+    ? packageData.description[locale] || packageData.description.en || ""
+    : "";
+  const packageDur = packageData
+    ? packageData.duration[locale] || packageData.duration.en || "1 Hour"
+    : "1 Hour";
+  const gallery = packageData
+    ? packageData.gallery_images && packageData.gallery_images.length > 0
       ? packageData.gallery_images
       : packageData.cover_image
         ? [packageData.cover_image]
-        : [];
-
-  const hasTrackedView = useRef(false);
+        : []
+    : [];
 
   useEffect(() => {
+    if (!packageData) return;
     if (!hasTrackedView.current) {
       hasTrackedView.current = true;
       trackViewItem(packageData.slug, packageName, pricing.price, "EUR");
     }
-  }, [packageData.slug, packageName, pricing.price]);
+  }, [packageData, packageName, pricing.price]);
 
   useEffect(() => {
+    if (!packageData) return;
     const savedPackages = JSON.parse(
       localStorage.getItem("saved_packages") || "[]",
     );
@@ -182,7 +188,7 @@ export function PackageDetails({
       ...visited.filter((p: any) => p.id !== packageData.slug),
     ].slice(0, 4);
     localStorage.setItem("visited_packages", JSON.stringify(updated));
-  }, [packageData.slug]);
+  }, [packageData]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -191,6 +197,8 @@ export function PackageDetails({
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  if (!packageData || !fullPricing) return null;
 
   const toggleSave = () => {
     const savedPackages = JSON.parse(
@@ -436,6 +444,7 @@ export function PackageDetails({
           {/* --- DESKTOP STICKY BOOKING CARD (Right 4 cols spanning Gallery + Description) --- */}
           <div className="hidden lg:block lg:order-2 lg:col-span-4 lg:row-span-2 lg:sticky lg:top-28">
             <BookingCard
+              idPrefix="desktop-"
               packageId={packageData.slug as any}
               packageDisplayName={packageName}
               basePrice={basePrice}
@@ -526,8 +535,11 @@ export function PackageDetails({
         packageDuration={packageDur}
         packageLocations={packageData.locations || 1}
         packageFeatures={features}
-        // photo count wasn't easily mapped earlier, dropping or mapping directly:
-        packagePhotos={packageData.gallery_images?.length || 15}
+        packagePhotos={
+          extractPhotosCount(features) ||
+          packageData.gallery_images?.length ||
+          15
+        }
         isPerPerson={packageData.is_per_person}
         activeDiscounts={activeDiscounts}
         timeSurcharges={timeSurcharges}

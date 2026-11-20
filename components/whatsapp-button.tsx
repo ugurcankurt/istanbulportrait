@@ -6,7 +6,6 @@ import { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { usePathname } from "@/i18n/routing";
-import { trackContact } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
 
 interface WhatsAppButtonProps {
@@ -208,7 +207,9 @@ export function WhatsAppButton({
         aria-label={t("tooltip")}
         onClick={() => {
           dismissNotification();
-          trackContact("WhatsApp");
+          import("@/lib/analytics").then(({ trackContact }) =>
+            trackContact("WhatsApp"),
+          );
         }}
       >
         <div

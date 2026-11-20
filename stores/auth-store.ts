@@ -33,7 +33,7 @@ export const useAuthStore = create<AuthState>()(
         user: null,
         isAuthenticated: false,
         isAdminUser: false,
-        loading: true,
+        loading: false,
         error: null,
 
         // Sign in action
@@ -209,12 +209,8 @@ export const useAuthStore = create<AuthState>()(
       }),
       {
         name: "admin-auth",
-        partialize: (state) => ({
-          // Only persist user data, not loading/error states
-          user: state.user,
-          isAuthenticated: state.isAuthenticated,
-          isAdminUser: state.isAdminUser,
-        }),
+        // Never persist client-side auth/admin flags; verify live Supabase session instead
+        partialize: () => ({}),
       },
     ),
     {

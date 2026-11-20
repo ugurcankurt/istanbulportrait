@@ -1,56 +1,7 @@
+import { hashCustomerData, hashPhoneNumber } from "./hash-utils";
 import { settingsService } from "./settings-service";
 
-// SHA256 hashing for customer data (required by Meta/Facebook)
-// Uses native Web Crypto API (crypto.subtle) which is built-in and saves bundle size.
-export async function hashCustomerData(value: string): Promise<string> {
-  if (!value) return "";
-
-  // Normalize the data before hashing
-  const normalized = value.toLowerCase().trim();
-
-  if (
-    !normalized ||
-    normalized === "undefined" ||
-    normalized === "null" ||
-    normalized === "none"
-  )
-    return "";
-
-  // For both Browser and Node.js 19+ environment
-  const msgUint8 = new TextEncoder().encode(normalized);
-  const hashBuffer = await crypto.subtle.digest("SHA-256", msgUint8);
-  const hashArray = Array.from(new Uint8Array(hashBuffer));
-  const hashHex = hashArray
-    .map((b) => b.toString(16).padStart(2, "0"))
-    .join("");
-
-  return hashHex;
-}
-
-// Phone number normalization and hashing
-export async function hashPhoneNumber(phone: string): Promise<string> {
-  if (!phone) return "";
-
-  const trimmed = phone.trim();
-  // Remove all non-digit characters
-  let digitsOnly = trimmed.replace(/\D/g, "");
-
-  if (!digitsOnly || digitsOnly.length < 7) return "";
-
-  if (trimmed.startsWith("+")) {
-    // E.164 — country code already present
-  } else if (digitsOnly.startsWith("00")) {
-    digitsOnly = digitsOnly.slice(2);
-  } else if (digitsOnly.startsWith("0")) {
-    // Local Turkish format (05xx...) — drop trunk prefix, add country code
-    digitsOnly = `90${digitsOnly.slice(1)}`;
-  } else if (digitsOnly.length === 10) {
-    // National number without country code (Turkey)
-    digitsOnly = `90${digitsOnly}`;
-  }
-
-  return await hashCustomerData(digitsOnly);
-}
+export { hashCustomerData, hashPhoneNumber };
 
 // Generate Lead ID (15-17 digits as per Meta requirement)
 export function generateLeadId(): number {

@@ -29,7 +29,10 @@ export function toStorageProxyPath(url?: string | null): string {
   return url;
 }
 
-export function getBaseUrl() {
+export function getBaseUrl(overrideUrl?: string | null) {
+  if (overrideUrl?.trim()) {
+    return overrideUrl.trim().replace(/\/+$/, "");
+  }
   if (process.env.NEXT_PUBLIC_APP_URL)
     return process.env.NEXT_PUBLIC_APP_URL.replace(/\/+$/, "");
   if (process.env.VERCEL_PROJECT_PRODUCTION_URL)
@@ -158,6 +161,17 @@ export function enrichSeoDescription(
 
   // Curated descriptions by page slug and locale
   const defaults: Record<string, Record<string, string>> = {
+    home: {
+      en: "Book a local Istanbul photographer for your Istanbul photoshoot. Private rooftops, flying dress, couples, proposals & family sessions with 48h delivery.",
+      tr: "İstanbul fotoğrafçısı ile profesyonel İstanbul fotoğraf çekimi rezerve edin. Özel teraslar, uçan elbise, çift ve aile çekimlerinde 48 saatte teslim.",
+      ar: "احجز مصور إسطنبول المحترف لجلسة تصوير مميزة في إسطنبول. أسطح خاصة، الفستان الطائر، للأزواج والعائلات مع تسليم سريع للصور خلال 48 ساعة.",
+      ru: "Забронируйте фотосессию в Стамбуле с местным фотографом: крыши с видом на Босфор, летящее платье, пары и семьи. Готовые фото за 48 часов.",
+      es: "Reserva tu fotógrafo en Estambul para una sesión de fotos única. Terrazas privadas, vestido volador, parejas y familias con entrega en 48 horas.",
+      zh: "预订伊斯坦布尔本地摄影师，开启伊斯坦布尔写真拍摄。私密天台、飞天裙、情侣、求婚及家庭摄影，48小时内交付精修大片。",
+      fr: "Réservez votre photographe à Istanbul pour une séance photo sur mesure. Toits privés, robe volante, couples et familles avec livraison sous 48h.",
+      de: "Buchen Sie Ihren Fotografen in Istanbul für unvergessliche Fotoshootings. Private Rooftops, Flying Dress, Paare & Familien – Lieferung in 48h.",
+      ro: "Rezervă un fotograf local în Istanbul pentru ședința ta foto. Terase private, flying dress, cupluri și familii cu livrare rapidă în 48h.",
+    },
     packages: {
       en: "Explore our Istanbul photoshoot packages and transparent EUR pricing. Rooftop sessions, flying dress, couples, families, and solo traveler shoots with 48h delivery.",
       tr: "İstanbul profesyonel fotoğraf çekimi paketleri ve güncel fiyatları. Çatı terası, uçan elbise, çift, aile ve evlilik teklifi çekimlerinde aynı gün teslim.",
@@ -399,10 +413,11 @@ export function buildLocalBusinessSchema(
     settings.city ||
     "Istanbul, Turkey";
 
-  const baseUrl = getBaseUrl();
+  const baseUrl = getBaseUrl(settings.app_base_url);
   const orgName =
     settings.organization_name || settings.site_name || "Istanbul Portrait";
   const orgId = `${baseUrl}/#organization`;
+  const priceValidUntil = `${new Date().getFullYear()}-12-31`;
 
   const schema: any = {
     "@context": "https://schema.org",
@@ -429,6 +444,7 @@ export function buildLocalBusinessSchema(
       name: orgName,
     },
     url: `${baseUrl}${locale ? `/${locale}` : ""}`,
+    email: settings.contact_email || undefined,
     telephone: settings.contact_phone || settings.whatsapp_number,
     priceRange: priceRange || undefined,
     paymentAccepted: "Cash",
@@ -481,14 +497,18 @@ export function buildLocalBusinessSchema(
       opens: settings.opening_time || "06:00",
       closes: settings.closing_time || "22:00",
     },
-    sameAs: [
-      settings.instagram_url,
-      settings.facebook_url,
-      settings.youtube_url,
-      settings.tiktok_url,
-      "https://www.linkedin.com/company/istanbulportrait",
-      "https://www.trustpilot.com/review/istanbulportrait.com",
-    ].filter(Boolean),
+    sameAs: Array.from(
+      new Set(
+        [
+          settings.instagram_url,
+          settings.facebook_url,
+          settings.youtube_url,
+          settings.tiktok_url,
+          "https://www.linkedin.com/company/istanbulportrait",
+          "https://www.trustpilot.com/review/istanbulportrait.com",
+        ].filter(Boolean),
+      ),
+    ),
   };
 
   // Note: Per Google Search Central's self-serving review snippet policy,
@@ -549,6 +569,7 @@ export function buildLocalBusinessSchema(
           url: pkgUrl,
           price: effectivePrice,
           priceCurrency: "EUR",
+          priceValidUntil,
           availability: "https://schema.org/InStock",
           ...(pkgImageUrl ? { image: pkgImageUrl } : {}),
           itemOffered: {
@@ -584,7 +605,7 @@ export function buildOrganizationSchema(settings: SiteSettings) {
   const imageUrl = resolveSchemaImage(
     settings.logo_url || settings.default_og_image_url,
   );
-  const baseUrl = getBaseUrl();
+  const baseUrl = getBaseUrl(settings.app_base_url);
   const orgName =
     settings.organization_name || settings.site_name || "Istanbul Portrait";
   const orgId = `${baseUrl}/#organization`;
@@ -636,14 +657,18 @@ export function buildOrganizationSchema(settings: SiteSettings) {
         "Romanian",
       ],
     },
-    sameAs: [
-      settings.instagram_url,
-      settings.facebook_url,
-      settings.youtube_url,
-      settings.tiktok_url,
-      "https://www.linkedin.com/company/istanbulportrait",
-      "https://www.trustpilot.com/review/istanbulportrait.com",
-    ].filter(Boolean),
+    sameAs: Array.from(
+      new Set(
+        [
+          settings.instagram_url,
+          settings.facebook_url,
+          settings.youtube_url,
+          settings.tiktok_url,
+          "https://www.linkedin.com/company/istanbulportrait",
+          "https://www.trustpilot.com/review/istanbulportrait.com",
+        ].filter(Boolean),
+      ),
+    ),
   };
 }
 
@@ -701,6 +726,7 @@ export function buildServiceSchema({
   const schema: any = {
     "@context": "https://schema.org",
     "@type": "Service",
+    ...(sku ? { identifier: sku } : {}),
     serviceType: "Portrait Photography",
     inLanguage: locale || "en",
     mainEntityOfPage: canonicalUrl
@@ -719,7 +745,7 @@ export function buildServiceSchema({
       name: "Istanbul",
     },
     provider: {
-      "@type": "LocalBusiness",
+      "@type": ["LocalBusiness", "ProfessionalService"],
       "@id": `${baseUrl}/#localbusiness`,
       name: orgName,
       url: providerUrl || baseUrl,
@@ -760,7 +786,6 @@ export function buildServiceSchema({
 
   // Note: Site-wide Google reviews are intentionally omitted from per-package Service schema
   // to comply with Google's review snippet guidelines (avoiding duplicated site-wide reviews per offer).
-  void sku;
   void aggregateRating;
   void reviewCount;
   void reviews;
@@ -786,6 +811,7 @@ export function buildArticleSchema({
   wordCount,
   articleSection,
   url,
+  founderName,
 }: {
   title: string;
   description: string | null;
@@ -804,11 +830,22 @@ export function buildArticleSchema({
   wordCount?: number;
   articleSection?: string;
   url?: string;
+  founderName?: string;
 }) {
   const canonicalUrl = url ? normalizeSchemaUrl(url) : undefined;
   const baseUrl = getBaseUrl();
   const orgName = publisherName || "Istanbul Portrait";
   const orgId = `${baseUrl}/#organization`;
+  const normalizedAuthor = authorName.trim().toLowerCase();
+  const normalizedFounder = (founderName || "").trim().toLowerCase();
+  const isFounder =
+    normalizedFounder.length > 0 && normalizedAuthor === normalizedFounder;
+  const resolvedAuthorUrl = authorUrl
+    ? normalizeSchemaUrl(authorUrl)
+    : `${baseUrl}/${inLanguage || "en"}/about`;
+  const authorId = isFounder
+    ? `${baseUrl}/#founder`
+    : `${baseUrl}/#author-${generateNativeSlug(authorName) || "writer"}`;
 
   return {
     "@context": "https://schema.org",
@@ -830,11 +867,9 @@ export function buildArticleSchema({
     author: [
       {
         "@type": "Person",
-        "@id": `${baseUrl}/#founder`,
+        "@id": authorId,
         name: authorName,
-        url: authorUrl
-          ? normalizeSchemaUrl(authorUrl)
-          : `${baseUrl}/${inLanguage || "en"}/about`,
+        url: resolvedAuthorUrl,
         ...(authorImage ? { image: resolveSchemaImage(authorImage) } : {}),
         ...(authorBio ? { description: authorBio } : {}),
         ...(authorUrls && authorUrls.length > 0 ? { sameAs: authorUrls } : {}),
@@ -904,6 +939,7 @@ export function buildTouristAttractionSchema({
   lat,
   lng,
   url,
+  inLanguage,
 }: {
   name: string;
   description: string | null;
@@ -911,6 +947,7 @@ export function buildTouristAttractionSchema({
   lat?: number;
   lng?: number;
   url?: string;
+  inLanguage?: string;
 }) {
   const schemaImageUrl = resolveSchemaImage(image);
   const canonicalUrl = url ? normalizeSchemaUrl(url) : undefined;
@@ -925,6 +962,7 @@ export function buildTouristAttractionSchema({
         }
       : undefined,
     name,
+    ...(inLanguage ? { inLanguage } : {}),
     description: description || undefined,
     url: canonicalUrl || getBaseUrl(),
     image: schemaImageUrl || undefined,
@@ -1032,11 +1070,13 @@ export function buildCollectionPageSchema({
   name,
   description,
   url,
+  inLanguage,
   items,
 }: {
   name: string;
   description: string | null;
   url?: string;
+  inLanguage?: string;
   items: Array<{
     name: string;
     description?: string | null;
@@ -1055,6 +1095,7 @@ export function buildCollectionPageSchema({
         }
       : undefined,
     name,
+    ...(inLanguage ? { inLanguage } : {}),
     description: description || undefined,
     url: canonicalUrl || getBaseUrl(),
     mainEntity: {
@@ -1070,6 +1111,34 @@ export function buildCollectionPageSchema({
           ...(itemImageUrl ? { image: itemImageUrl } : {}),
         };
       }),
+    },
+  };
+}
+
+export function buildWebPageSchema({
+  name,
+  description,
+  url,
+  inLanguage,
+}: {
+  name: string;
+  description: string | null;
+  url?: string;
+  inLanguage?: string;
+}) {
+  const canonicalUrl = url ? normalizeSchemaUrl(url) : undefined;
+  const baseUrl = getBaseUrl();
+  return {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    ...(canonicalUrl ? { "@id": canonicalUrl } : {}),
+    name,
+    ...(inLanguage ? { inLanguage } : {}),
+    description: description || undefined,
+    url: canonicalUrl || baseUrl,
+    isPartOf: {
+      "@type": "Organization",
+      "@id": `${baseUrl}/#organization`,
     },
   };
 }

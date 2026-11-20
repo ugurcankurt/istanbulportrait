@@ -26,7 +26,7 @@ export default async function RootNotFound() {
           packagesButton="View Packages"
           goBack="Go Back"
           settings={
-            settings ? settingsService.toPublicSettings(settings) : null
+            settings ? settingsService.toPublicSettings(settings, "en") : null
           }
         />
       </body>

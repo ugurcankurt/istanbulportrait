@@ -4,7 +4,11 @@ import { packagesService } from "@/lib/packages-service";
 import { pagesContentService } from "@/lib/pages-content-service";
 import { calculateDiscountedPrice } from "@/lib/pricing";
 import { reviewsService } from "@/lib/reviews-service";
-import { generateSeoDescription, getBaseUrl } from "@/lib/seo-utils";
+import {
+  generateSeoDescription,
+  getBaseUrl,
+  toStorageProxyPath,
+} from "@/lib/seo-utils";
 import { settingsService } from "@/lib/settings-service";
 import { generateNativeSlug } from "@/lib/slug-generator";
 
@@ -29,7 +33,6 @@ export async function GET(request: Request) {
   };
   const location = locationTranslations[locale] || "Istanbul, Turkey";
 
-  const baseUrl = getBaseUrl();
   const [packages, settings, activeDiscounts, packagesPage] = await Promise.all(
     [
       packagesService.getActivePackages(),
@@ -38,6 +41,7 @@ export async function GET(request: Request) {
       pagesContentService.getPageBySlug("packages"),
     ],
   );
+  const baseUrl = getBaseUrl(settings.app_base_url);
   const parentSeg =
     pagesContentService.getCorePageSegment(
       packagesPage || "packages",
@@ -56,10 +60,7 @@ export async function GET(request: Request) {
   // Helper to resolve images through our proxy if needed
   const cleanImage = (url?: string | null) => {
     if (!url) return "";
-    const replaced = url.replace(
-      "https://xfntnamwfnqjgqmyxwfz.supabase.co/storage/v1/object/public",
-      `${baseUrl}/storage`,
-    );
+    const replaced = toStorageProxyPath(url);
     if (replaced.startsWith("http://") || replaced.startsWith("https://")) {
       return replaced;
     }

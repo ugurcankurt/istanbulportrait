@@ -2,7 +2,9 @@ import { createClient } from "@supabase/supabase-js";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { isServerAdmin } from "@/lib/auth-server";
+import { sanitizeErrorForProduction } from "@/lib/errors";
 import { packagesService } from "@/lib/packages-service";
+import { revalidatePublicPackagesCache } from "@/lib/public-cache";
 
 export async function DELETE(
   _request: NextRequest,
@@ -63,14 +65,16 @@ export async function DELETE(
       );
     }
 
+    revalidatePublicPackagesCache();
+
     return NextResponse.json({
       success: true,
       message: "Package deleted successfully",
     });
-  } catch (error: any) {
+  } catch (error) {
     console.error("Error deleting package API:", error);
     return NextResponse.json(
-      { error: error.message || "Failed to delete package" },
+      { error: sanitizeErrorForProduction(error) },
       { status: 500 },
     );
   }

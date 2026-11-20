@@ -20,10 +20,12 @@ import { getBlogTaxonomySegment } from "@/lib/core-page-slugs";
 import { pagesContentService } from "@/lib/pages-content-service";
 import {
   buildCollectionPageSchema,
+  enrichSeoDescription,
   generateSeoDescription,
   getBaseUrl,
   normalizeSchemaUrl,
 } from "@/lib/seo-utils";
+import { settingsService } from "@/lib/settings-service";
 import type { Locale } from "@/types/blog";
 
 export async function BlogCategoryContent({
@@ -42,9 +44,13 @@ export async function BlogCategoryContent({
   const t = await getTranslations({ locale, namespace: "blog" });
   const page = Math.max(1, Number.parseInt(pageParam || "1", 10) || 1);
 
-  const dbPage = await pagesContentService.getPageBySlug("blog");
+  const [dbPage, settings] = await Promise.all([
+    pagesContentService.getPageBySlug("blog"),
+    settingsService.getSettings(),
+  ]);
   const parentSegment =
     pagesContentService.getCorePageSegment(dbPage || "blog", locale) || "blog";
+  const baseUrl = getBaseUrl(settings.app_base_url);
 
   let decodedSlug = slug;
   try {
@@ -89,21 +95,29 @@ export async function BlogCategoryContent({
     notFound();
   }
 
+  const canonicalPath = `/${locale}/${parentSegment}/${canonicalTaxSegment}/${canonicalChildSlug}`;
+  const pageUrl = `${normalizeSchemaUrl(`${baseUrl}${canonicalPath}`)}${page > 1 ? `?page=${page}` : ""}`;
+
   const shouldInjectCollectionSchema = type === "category" && posts.length > 0;
   const collectionSchema = shouldInjectCollectionSchema
     ? buildCollectionPageSchema({
-        name: dynamicTitle,
-        description: generateSeoDescription(dynamicSubtitle),
-        url: normalizeSchemaUrl(
-          `${getBaseUrl()}/${locale}/${parentSegment}/${canonicalTaxSegment}/${canonicalChildSlug}`,
-        ),
+        name: page > 1 ? `${dynamicTitle} - ${page}` : dynamicTitle,
+        description:
+          generateSeoDescription(dynamicSubtitle, 155, locale) ||
+          enrichSeoDescription(
+            dynamicTitle,
+            `category-${canonicalChildSlug}`,
+            locale,
+          ),
+        url: pageUrl,
+        inLanguage: locale,
         items: posts.map((post) => ({
           name: post.translation.title,
           description: post.translation.excerpt
-            ? generateSeoDescription(post.translation.excerpt)
+            ? generateSeoDescription(post.translation.excerpt, 155, locale)
             : undefined,
           url: normalizeSchemaUrl(
-            `${getBaseUrl()}/${locale}/${parentSegment}/${post.translation.slug}`,
+            `${baseUrl}/${locale}/${parentSegment}/${post.translation.slug}`,
           ),
           image: post.featured_image || undefined,
         })),
@@ -113,7 +127,17 @@ export async function BlogCategoryContent({
   return (
     <div>
       {collectionSchema && <SchemaInjector schema={collectionSchema} />}
-      <BreadcrumbNav customLastLabel={dynamicTitle} />
+      <BreadcrumbNav
+        customLastLabel={dynamicTitle}
+        customParentLabel={
+          dbPage?.content?.nav_title?.[locale] ||
+          dbPage?.title?.[locale] ||
+          dbPage?.title?.en ||
+          undefined
+        }
+        customParentHref={`/${locale}/${parentSegment}`}
+        baseUrl={baseUrl}
+      />
       <PageHeroSection title={dynamicTitle} subtitle={dynamicSubtitle} />
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10 section-contain-auto">
@@ -180,7 +204,11 @@ export async function BlogCategoryContent({
             <div className="flex justify-center gap-4 items-center mt-8">
               {page > 1 && (
                 <NextLink
-                  href={`?page=${page - 1}`}
+                  href={
+                    page - 1 <= 1
+                      ? canonicalPath
+                      : `${canonicalPath}?page=${page - 1}`
+                  }
                   className="px-6 py-2.5 border-[0.5px] border-border/50 rounded-[1.5rem] hover:bg-muted/50 transition-all font-semibold shadow-sm text-sm"
                 >
                   {t("previous")}
@@ -191,7 +219,7 @@ export async function BlogCategoryContent({
               </span>
               {page < pagination.totalPages && (
                 <NextLink
-                  href={`?page=${page + 1}`}
+                  href={`${canonicalPath}?page=${page + 1}`}
                   className="px-6 py-2.5 border-[0.5px] border-border/50 rounded-[1.5rem] hover:bg-muted/50 transition-all font-semibold shadow-sm text-sm"
                 >
                   {t("next")}

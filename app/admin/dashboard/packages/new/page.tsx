@@ -1,7 +1,9 @@
 import { PackageForm } from "@/components/admin/packages/package-form";
 import { addonsService } from "@/lib/addons-service";
+import { requireAdminPage } from "@/lib/auth-server";
 
 export default async function NewPackagePage() {
+  await requireAdminPage();
   const availableAddons = await addonsService.getAllAddonsAdmin();
   return (
     <div className="space-y-6">

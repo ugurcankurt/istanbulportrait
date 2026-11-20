@@ -44,7 +44,7 @@ export default async function AdminLayout({
   children: React.ReactNode;
 }) {
   const settings = await settingsService.getSettings();
-  const publicSettings = settingsService.toPublicSettings(settings);
+  const publicSettings = settingsService.toPublicSettings(settings, "en");
 
   return (
     <html

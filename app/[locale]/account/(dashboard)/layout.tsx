@@ -25,7 +25,7 @@ export default async function AccountLayout({
     return null;
   }
 
-  const publicSettings = settingsService.toPublicSettings(settings);
+  const publicSettings = settingsService.toPublicSettings(settings, locale);
 
   return (
     <div className="min-h-screen bg-muted/30">

@@ -4,7 +4,7 @@ import { RiInstagramLine as Instagram } from "@remixicon/react";
 import { AlertCircle } from "lucide-react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -41,6 +41,27 @@ export function InstagramFeed({ header, instagramUrl }: InstagramFeedProps) {
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [shouldPlayVideos, setShouldPlayVideos] = useState(false);
+  const sectionRef = useRef<HTMLElement | null>(null);
+
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el || typeof IntersectionObserver === "undefined") {
+      setShouldPlayVideos(true);
+      return;
+    }
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((entry) => entry.isIntersecting)) {
+          setShouldPlayVideos(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: "250px" },
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     async function fetchPosts() {
@@ -74,7 +95,10 @@ export function InstagramFeed({ header, instagramUrl }: InstagramFeedProps) {
   }, [tui]);
 
   return (
-    <section className="py-10 sm:py-16 bg-muted/10 border-y border-border/50">
+    <section
+      ref={sectionRef}
+      className="py-10 sm:py-16 bg-muted/10 border-y border-border/50"
+    >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         {header}
 
@@ -98,48 +122,52 @@ export function InstagramFeed({ header, instagramUrl }: InstagramFeedProps) {
           </div>
         ) : (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2 sm:gap-4">
-            {posts.map((post, i) => (
-              <a
-                key={post.id}
-                href={post.permalink}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group relative block aspect-square overflow-hidden rounded-xl bg-muted"
-              >
-                {post.mediaType === "VIDEO" ? (
-                  <video
-                    src={post.mediaUrl}
-                    poster={post.sizes?.large?.mediaUrl || post.thumbnailUrl}
-                    autoPlay
-                    muted
-                    loop
-                    playsInline
-                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                  />
-                ) : (
-                  <Image
-                    src={
-                      post.sizes?.large?.mediaUrl ||
-                      post.sizes?.medium?.mediaUrl ||
-                      post.mediaUrl
-                    }
-                    alt={
-                      post.caption?.slice(0, 100) ||
-                      `Instagram post from @${username}`
-                    }
-                    fill
-                    className="object-cover transition-transform duration-500 group-hover:scale-110"
-                    sizes="(max-width: 639px) 48vw, (max-width: 1023px) 31vw, 16vw"
-                    quality={70}
-                    priority={i < 2}
-                    loading={i < 2 ? "eager" : "lazy"}
-                  />
-                )}
-                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors duration-300 flex items-center justify-center">
-                  <Instagram className="text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 h-8 w-8" />
-                </div>
-              </a>
-            ))}
+            {posts.map((post) => {
+              const posterSrc =
+                post.sizes?.large?.mediaUrl ||
+                post.sizes?.medium?.mediaUrl ||
+                post.thumbnailUrl ||
+                post.mediaUrl;
+              const postAlt =
+                post.caption?.slice(0, 100) ||
+                `Instagram post from @${username}`;
+
+              return (
+                <a
+                  key={post.id}
+                  href={post.permalink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group relative block aspect-square overflow-hidden rounded-xl bg-muted"
+                >
+                  {post.mediaType === "VIDEO" && shouldPlayVideos ? (
+                    <video
+                      src={post.mediaUrl}
+                      poster={posterSrc}
+                      autoPlay
+                      muted
+                      loop
+                      playsInline
+                      preload="metadata"
+                      className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                    />
+                  ) : (
+                    <Image
+                      src={posterSrc}
+                      alt={postAlt}
+                      fill
+                      className="object-cover transition-transform duration-500 group-hover:scale-110"
+                      sizes="(max-width: 639px) 48vw, (max-width: 1023px) 31vw, 16vw"
+                      quality={70}
+                      loading="lazy"
+                    />
+                  )}
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors duration-300 flex items-center justify-center">
+                    <Instagram className="text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 h-8 w-8" />
+                  </div>
+                </a>
+              );
+            })}
           </div>
         )}
 

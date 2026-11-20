@@ -5,7 +5,7 @@ import { format } from "date-fns";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import { useEffect, useRef, useState } from "react";
-import { useForm } from "react-hook-form";
+import { type UseFormReturn, useForm } from "react-hook-form";
 import PhoneInput from "react-phone-number-input";
 import { useDateFnsLocale } from "@/hooks/use-date-fns-locale";
 import "react-phone-number-input/style.css";
@@ -88,6 +88,132 @@ const generateTimeSlots = () => {
 };
 
 const _timeSlots = generateTimeSlots();
+
+interface BookingModalFormContentProps {
+  form: UseFormReturn<BookingFormData>;
+  handleSubmit: (e?: React.BaseSyntheticEvent) => Promise<void>;
+  t: (key: string) => string;
+  tplaceholders: (key: string) => string;
+}
+
+function BookingModalFormContent({
+  form,
+  handleSubmit,
+  t,
+  tplaceholders,
+}: BookingModalFormContentProps) {
+  return (
+    <div className="max-w-5xl mx-auto w-full">
+      <Form {...form}>
+        <form
+          onSubmit={handleSubmit}
+          className="space-y-8"
+          toolname="complete_photoshoot_reservation"
+          tooldescription="Enter customer contact details and special notes to proceed to checkout for the selected Istanbul photoshoot package."
+        >
+          {/* Customer Details Section */}
+          <div className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <FormField
+                control={form.control}
+                name="customerName"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-xs font-bold uppercase text-muted-foreground tracking-wide">
+                      {t("form.name")}
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        className="h-12 rounded-xl bg-muted/40 border-none focus:bg-background focus:ring-1 focus:ring-primary/30 transition-all"
+                        placeholder={tplaceholders("enter_full_name")}
+                        toolparamdescription="Customer's full name for the photoshoot reservation"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage className="text-[11px]" />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="customerEmail"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-xs font-bold uppercase text-muted-foreground tracking-wide">
+                      {t("form.email")}
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        className="h-12 rounded-xl bg-muted/40 border-none focus:bg-background focus:ring-1 focus:ring-primary/30 transition-all"
+                        type="email"
+                        placeholder={tplaceholders("enter_email")}
+                        toolparamdescription="Customer's email address for booking confirmation and photo delivery"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage className="text-[11px]" />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <FormField
+              control={form.control}
+              name="customerPhone"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-xs font-bold uppercase text-muted-foreground tracking-wide">
+                    {t("form.phone")}
+                  </FormLabel>
+                  <FormControl>
+                    <PhoneInput
+                      value={field.value}
+                      onChange={field.onChange}
+                      defaultCountry="TR"
+                      placeholder={tplaceholders("phone_number")}
+                      numberInputProps={{
+                        name: "customerPhone",
+                        toolparamdescription:
+                          "Customer's WhatsApp or mobile phone number with country code",
+                      }}
+                      countrySelectProps={{
+                        name: "customerPhoneCountry",
+                        toolparamdescription:
+                          "Country ISO code for customer phone number",
+                      }}
+                      className="flex h-12 w-full rounded-xl bg-muted/40 border-none focus-within:bg-background focus-within:ring-1 focus-within:ring-primary/30 focus-within:ring-offset-0 transition-all font-medium px-4"
+                    />
+                  </FormControl>
+                  <FormMessage className="text-[11px]" />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="notes"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-xs font-bold uppercase text-muted-foreground tracking-wide">
+                    {t("form.notes")}
+                  </FormLabel>
+                  <FormControl>
+                    <Textarea
+                      placeholder={tplaceholders("special_requests")}
+                      toolparamdescription="Optional special requests, preferred locations, or outfit notes for the photographer"
+                      className="min-h-[100px] rounded-xl bg-muted/40 border-none focus:bg-background focus:ring-1 focus:ring-primary/30 transition-all resize-none"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage className="text-[11px]" />
+                </FormItem>
+              )}
+            />
+          </div>
+        </form>
+      </Form>
+    </div>
+  );
+}
 
 export function BookingModal({
   isOpen,
@@ -435,6 +561,7 @@ export function BookingModal({
                 basePrice,
                 originalPrice: pricing?.originalPrice,
                 bookingId: draftResult.bookingId,
+                draftToken: draftResult.token,
                 selectedAddons,
                 addonQuantities,
               }
@@ -458,6 +585,9 @@ export function BookingModal({
           const checkoutParams = new URLSearchParams();
           if (draftResult.bookingId) {
             checkoutParams.set("bookingId", String(draftResult.bookingId));
+          }
+          if (draftResult.token) {
+            checkoutParams.set("token", String(draftResult.token));
           }
           if (data.packageId) {
             checkoutParams.set("package", data.packageId);
@@ -528,118 +658,6 @@ export function BookingModal({
     return null;
   }
 
-  const FormContent = () => (
-    <div className="max-w-5xl mx-auto w-full">
-      <Form {...form}>
-        <form
-          onSubmit={handleSubmit}
-          className="space-y-8"
-          toolname="complete_photoshoot_reservation"
-          tooldescription="Enter customer contact details and special notes to proceed to checkout for the selected Istanbul photoshoot package."
-        >
-          {/* Customer Details Section */}
-          <div className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <FormField
-                control={form.control}
-                name="customerName"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-xs font-bold uppercase text-muted-foreground tracking-wide">
-                      {t("form.name")}
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        className="h-12 rounded-xl bg-muted/40 border-none focus:bg-background focus:ring-1 focus:ring-primary/30 transition-all"
-                        placeholder={tplaceholders("enter_full_name")}
-                        toolparamdescription="Customer's full name for the photoshoot reservation"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage className="text-[11px]" />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="customerEmail"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-xs font-bold uppercase text-muted-foreground tracking-wide">
-                      {t("form.email")}
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        className="h-12 rounded-xl bg-muted/40 border-none focus:bg-background focus:ring-1 focus:ring-primary/30 transition-all"
-                        type="email"
-                        placeholder={tplaceholders("enter_email")}
-                        toolparamdescription="Customer's email address for booking confirmation and photo delivery"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage className="text-[11px]" />
-                  </FormItem>
-                )}
-              />
-            </div>
-            <FormField
-              control={form.control}
-              name="customerPhone"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-xs font-bold uppercase text-muted-foreground tracking-wide">
-                    {t("form.phone")}
-                  </FormLabel>
-                  <FormControl>
-                    <PhoneInput
-                      value={field.value}
-                      onChange={field.onChange}
-                      defaultCountry="TR"
-                      placeholder={tplaceholders("phone_number")}
-                      numberInputProps={{
-                        name: "customerPhone",
-                        toolparamdescription:
-                          "Customer's WhatsApp or mobile phone number with country code",
-                      }}
-                      countrySelectProps={{
-                        name: "customerPhoneCountry",
-                        toolparamdescription:
-                          "Country ISO code for customer phone number",
-                      }}
-                      className="flex h-12 w-full rounded-xl bg-muted/40 border-none focus-within:bg-background focus-within:ring-1 focus-within:ring-primary/30 focus-within:ring-offset-0 transition-all font-medium px-4"
-                    />
-                  </FormControl>
-                  <FormMessage className="text-[11px]" />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="notes"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-xs font-bold uppercase text-muted-foreground tracking-wide">
-                    {t("form.notes")}
-                  </FormLabel>
-                  <FormControl>
-                    <Textarea
-                      placeholder={tplaceholders("special_requests")}
-                      toolparamdescription="Optional special requests, preferred locations, or outfit notes for the photographer"
-                      className="min-h-[100px] rounded-xl bg-muted/40 border-none focus:bg-background focus:ring-1 focus:ring-primary/30 transition-all resize-none"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage className="text-[11px]" />
-                </FormItem>
-              )}
-            />
-          </div>
-        </form>
-      </Form>
-    </div>
-  );
-
   // Using isTabletOrMobile to render the Selection Sheet for both mobile and tablet (< 1024px)
   if (isTabletOrMobile) {
     return (
@@ -669,6 +687,7 @@ export function BookingModal({
             {step === "selection" ? (
               <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
                 <BookingCard
+                  idPrefix="modal-"
                   packageId={selectedPackage}
                   packageDisplayName={packageDisplayName}
                   basePrice={basePrice}
@@ -731,7 +750,12 @@ export function BookingModal({
               </div>
             ) : (
               <div className="animate-in fade-in slide-in-from-right-4 duration-500">
-                <FormContent />
+                <BookingModalFormContent
+                  form={form}
+                  handleSubmit={handleSubmit}
+                  t={t}
+                  tplaceholders={tplaceholders}
+                />
               </div>
             )}
           </div>
@@ -776,7 +800,12 @@ export function BookingModal({
         </DialogHeader>
 
         <div className="flex-1 overflow-y-auto p-6 bg-muted/5">
-          <FormContent />
+          <BookingModalFormContent
+            form={form}
+            handleSubmit={handleSubmit}
+            t={t}
+            tplaceholders={tplaceholders}
+          />
         </div>
 
         <DialogFooter className="p-6 border-t bg-background shadow-[0_-4px_10px_rgba(0,0,0,0.03)] flex flex-row items-center justify-center gap-4">

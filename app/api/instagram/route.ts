@@ -37,7 +37,11 @@ export async function GET() {
     }
 
     const liveData = await res.json();
-    return NextResponse.json(liveData);
+    return NextResponse.json(liveData, {
+      headers: {
+        "Cache-Control": "public, s-maxage=3600, stale-while-revalidate=86400",
+      },
+    });
   } catch (error: any) {
     console.error("Dynamic Instagram Server Error:", error);
     return NextResponse.json(

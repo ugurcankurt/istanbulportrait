@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { isServerAdmin } from "@/lib/auth-server";
+import { sanitizeErrorForProduction } from "@/lib/errors";
 import { supabaseAdmin } from "@/lib/supabase";
 
 export async function GET() {
@@ -15,9 +16,12 @@ export async function GET() {
 
     if (error) throw error;
     return NextResponse.json(data);
-  } catch (error: any) {
+  } catch (error) {
     console.error("Error fetching addons:", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json(
+      { error: sanitizeErrorForProduction(error) },
+      { status: 500 },
+    );
   }
 }
 
@@ -45,8 +49,11 @@ export async function POST(request: Request) {
 
     if (error) throw error;
     return NextResponse.json(data);
-  } catch (error: any) {
+  } catch (error) {
     console.error("Error creating addon:", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json(
+      { error: sanitizeErrorForProduction(error) },
+      { status: 500 },
+    );
   }
 }

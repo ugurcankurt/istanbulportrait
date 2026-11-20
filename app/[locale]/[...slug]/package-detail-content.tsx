@@ -6,9 +6,12 @@ import { PackageDetails } from "@/components/package-details";
 import { PackagesSection } from "@/components/packages-section";
 import { SchemaInjector } from "@/components/schema-injector";
 import { addonsService } from "@/lib/addons-service";
-import { availabilityService } from "@/lib/availability-service";
-import { discountService } from "@/lib/discount-service";
 import { packagesService } from "@/lib/packages-service";
+import {
+  getCachedActiveDiscounts,
+  getCachedActivePackages,
+  getCachedTimeSurcharges,
+} from "@/lib/public-cache";
 import { reviewsService } from "@/lib/reviews-service";
 import {
   buildServiceSchema,
@@ -45,15 +48,15 @@ export async function PackageDetailPageContent({
     allPackages,
     t,
   ] = await Promise.all([
-    discountService.getActiveDiscounts(),
-    availabilityService.getTimeSurcharges(),
+    getCachedActiveDiscounts(),
+    getCachedTimeSurcharges(),
     addonsService.getActiveAddonsForPackage(pkg.id),
     reviewsService.getAggregateRating(),
     reviewsService.fetchGoogleReviews(locale),
     import("@/lib/settings-service"),
     import("@/lib/pages-content-service"),
     import("@/lib/slug-generator"),
-    packagesService.getActivePackages(),
+    getCachedActivePackages(),
     getTranslations({ locale, namespace: "packages" }),
   ]);
 
@@ -108,6 +111,8 @@ export async function PackageDetailPageContent({
     ),
   ).slice(0, 5);
 
+  const baseUrl = getBaseUrl(settings.app_base_url);
+
   const serviceSchema = buildServiceSchema({
     name: title,
     sku: pkg.slug,
@@ -123,15 +128,23 @@ export async function PackageDetailPageContent({
     reviews,
     locale,
     providerName: settings.organization_name || settings.site_name,
-    providerUrl: getBaseUrl(),
+    providerUrl: baseUrl,
     discount: currentDiscount,
     url: encodeURI(
-      `${getBaseUrl()}/${locale}/${parentSegment}/${canonicalPackageSegment}`,
+      `${baseUrl}/${locale}/${parentSegment}/${canonicalPackageSegment}`,
     ),
   });
 
   const videoSchema = (() => {
     if (!pkg.video_url) return null;
+    const thumbnailUrl = resolveSchemaImage(
+      pkg.gallery_images?.[0] ||
+        pkg.cover_image ||
+        settings.default_og_image_url ||
+        "",
+    );
+    if (!thumbnailUrl) return null;
+
     const ytMatch = pkg.video_url.match(
       /(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=|shorts\/))([\w-]{11})/,
     );
@@ -147,14 +160,9 @@ export async function PackageDetailPageContent({
       "@type": "VideoObject",
       name: `${title} - Video`,
       description: generateSeoDescription(desc, 155, locale) || title,
-      thumbnailUrl: resolveSchemaImage(
-        pkg.gallery_images?.[0] ||
-          pkg.cover_image ||
-          settings.default_og_image_url ||
-          "",
-      ),
+      thumbnailUrl,
       uploadDate: new Date(
-        pkg.created_at || pkg.updated_at || Date.now(),
+        pkg.created_at || pkg.updated_at || "2025-01-01T00:00:00.000Z",
       ).toISOString(),
       width: 1080,
       height: 1920,
@@ -169,7 +177,17 @@ export async function PackageDetailPageContent({
     <div>
       <SchemaInjector schema={serviceSchema} />
       {videoSchema && <SchemaInjector schema={videoSchema} />}
-      <BreadcrumbNav customLastLabel={title} />
+      <BreadcrumbNav
+        customLastLabel={title}
+        customParentLabel={
+          packagesPage?.content?.nav_title?.[locale] ||
+          packagesPage?.title?.[locale] ||
+          packagesPage?.title?.en ||
+          undefined
+        }
+        customParentHref={`/${locale}/${parentSegment}`}
+        baseUrl={baseUrl}
+      />
       <Suspense fallback={null}>
         <PackageDetails
           packageData={pkg}

@@ -107,8 +107,16 @@ export function CoreWebVitals() {
         });
     };
 
-    // Initialize tracking
-    trackCoreWebVitals();
+    // Defer web-vitals chunk until browser is idle so initial hydration stays lean
+    if ("requestIdleCallback" in window) {
+      const idleId = window.requestIdleCallback(trackCoreWebVitals, {
+        timeout: 2500,
+      });
+      return () => window.cancelIdleCallback(idleId);
+    }
+
+    const timer = setTimeout(trackCoreWebVitals, 1500);
+    return () => clearTimeout(timer);
   }, []);
 
   return null;

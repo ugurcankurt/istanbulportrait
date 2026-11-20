@@ -372,7 +372,7 @@
     "sessions": "Sessions Completed",
     "clients": "Happy Clients",
     "satisfaction": "Client Satisfaction",
-    "description": "Welcome to my portfolio! I specialize in capturing beautiful moments in natural light."
+    "description": "I am a local Istanbul portrait photographer with 10+ years of experience capturing couples, solo travelers, families, and surprise proposals in natural light."
   },
   "api_errors": {
     "rate_limit": "Too many requests. Please try again later.",
@@ -553,7 +553,8 @@
       "about_title": "About the Author",
       "name": "Istanbul Photographer",
       "bio": "Professional photographer specializing in portrait, couple, and lifestyle photography in Istanbul. With over 10 years of experience, capturing timeless memories against the city's most iconic backdrops.",
-      "follow": "Follow on Instagram"
+      "follow": "Follow on Instagram",
+      "profile_link": "Meet the Photographer"
     },
     "summary": {
       "title": "Key Takeaways",
@@ -739,6 +740,62 @@
     "step3_desc": "Never posed before? Your local Istanbul photographer directs every movement, angle, and candid expression so you feel relaxed from the first frame.",
     "step4_title": "4. Transparent EUR Pricing & 48h Delivery",
     "step4_desc": "Book online with no upfront deposit and pay in cash on shoot day. Receive your color-graded, high-resolution private gallery within 48 hours.",
-    "editorial_about_cta": "Meet Your Photographer"
+    "editorial_about_cta": "Meet Your Photographer",
+    "packages_note": "All Istanbul photoshoot packages include guided posing by a local photographer, route planning for optimal light, and high-resolution delivery within 48 hours.",
+    "packages_cta": "Compare All Istanbul Photoshoot Packages"
+  },
+  "seo_hub": {
+    "packages": {
+      "title": "How to Choose Your Istanbul Photoshoot Package",
+      "subtitle": "Whether you prefer a flying dress rooftop overlooking Süleymaniye, sunrise landmarks in Sultanahmet, or candid couple portraits by the Bosphorus, every session is tailored around natural light.",
+      "item1_title": "Rooftop Terraces & Flying Dress",
+      "item1_desc": "Reserved panoramic terraces near Süleymaniye and the Golden Horn offer privacy, breeze-swept flying dress frames, and unobstructed skyline silhouettes.",
+      "item2_title": "Historic Landmarks & Street Routes",
+      "item2_desc": "Pair Sultanahmet, Hagia Sophia, Galata Tower, Ortaköy Mosque, or colorful Balat streets with an experienced local Istanbul photographer who times each stop around crowds.",
+      "item3_title": "Zero Upfront Deposit & 48h Delivery",
+      "item3_desc": "Reserve your date online in transparent EUR rates with cash payment on shoot day. Preview raw frames and download your retouched private gallery within 48 hours.",
+      "link_locations": "Explore Best Istanbul Locations",
+      "link_about": "Meet Your Photographer",
+      "link_blog": "Read Outfit & Timing Guides"
+    },
+    "locations": {
+      "title": "Planning Multi-Location Photoshoots in Istanbul",
+      "subtitle": "Combine Sultanahmet, Galata, Balat, Ortaköy, or Asian-side Kuzguncuk cleanly in one session based on sunrise light and travel flow.",
+      "item1_title": "Golden Hour Route Combinations",
+      "item1_desc": "One-hour shoots work best at a single neighborhood such as Galata or Sultanahmet, while 2-to-3 hour sessions pair iconic landmarks with Bosphorus ferries or rooftops.",
+      "item2_title": "Crowd-Free Morning Scheduling",
+      "item2_desc": "Booking early morning light with a local Istanbul photographer keeps popular streets around Hagia Sophia, Blue Mosque, and Ortaköy clean and relaxed.",
+      "item3_title": "Private Rooftops & Seasonal Permits",
+      "item3_desc": "Our curated terraces handle rooftop access smoothly so you never waste session time navigating entrance queues or closed viewpoints.",
+      "link_packages": "Compare Photoshoot Packages & Prices",
+      "link_blog": "Browse Istanbul Photography Guides",
+      "link_contact": "Ask About Custom Routes"
+    },
+    "about": {
+      "title": "Photographer Experience & Editorial Craft",
+      "subtitle": "Working directly with an Istanbul-based portrait specialist ensures natural posing guidance, consistent color grading, and insider location timing.",
+      "item1_title": "Full-Frame Optics & Natural Light",
+      "item1_desc": "Every Istanbul photoshoot is shot on professional Sony full-frame bodies and fast prime lenses tuned for sunrise glow, interior arches, and twilight skyline bokeh.",
+      "item2_title": "Relaxed Posing & Clear Direction",
+      "item2_desc": "No modeling experience needed — we guide posture, movement, and candid interactions step by step so couples, solo travelers, and families feel comfortable.",
+      "item3_title": "500+ International Sessions & Reviews",
+      "item3_desc": "Trusted by travelers from over 50 countries with verified 5-star Google reviews, fast WhatsApp coordination, and reliable 48-hour gallery delivery.",
+      "link_packages": "Explore Photoshoot Packages",
+      "link_locations": "View Istanbul Locations",
+      "link_blog": "Read Our Photography Blog"
+    },
+    "contact": {
+      "title": "Plan a Custom Istanbul Photoshoot",
+      "subtitle": "Message us on WhatsApp or email with your preferred dates and vibe — your Istanbul photographer will recommend the ideal time window and route.",
+      "item1_title": "Share Dates & Group Details",
+      "item1_desc": "Include your arrival/departure window, number of guests, and whether you want rooftop flying dress frames, couple portraits, family coverage, or a surprise proposal.",
+      "item2_title": "Bespoke Proposals & Event Coverage",
+      "item2_desc": "Planning a secret engagement by Ortaköy Mosque, a private yacht, or a celebration in Sultanahmet? We coordinate hidden angles and discreet cue signals.",
+      "item3_title": "Instant Online Scheduling",
+      "item3_desc": "Already know which session fits? Select your preferred date and time directly on any package page with no prepayment required.",
+      "link_packages": "Browse Photoshoot Packages",
+      "link_locations": "Explore Photo Locations",
+      "link_about": "About Istanbul Portrait"
+    }
   }
 }

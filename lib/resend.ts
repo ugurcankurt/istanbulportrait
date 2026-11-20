@@ -1,4 +1,5 @@
 import { Resend } from "resend";
+import { signBookingToken } from "./booking-token";
 import {
   ABANDONED_TRANSLATIONS,
   CANCELLATION_TRANSLATIONS,
@@ -561,6 +562,7 @@ export const sendAbandonedBookingEmail = async (
     const checkoutParams = new URLSearchParams();
     if (data.bookingId) {
       checkoutParams.set("bookingId", data.bookingId);
+      checkoutParams.set("token", signBookingToken(data.bookingId, "draft"));
     }
     if (data.packageId) {
       checkoutParams.set("package", data.packageId);

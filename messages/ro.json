@@ -298,7 +298,7 @@
     "payment": "Plata",
     "response_time_desc": "De obicei, răspundem la întrebări în termen de 24 de ore.",
     "booking_process_desc": "După întrebarea dvs., vom programa o consultație pentru a discuta viziunea dvs. și pentru a finaliza detaliile.",
-    "payment_desc": "Plata integrală este necesară online în momentul rezervării pentru a vă asigura data.",
+    "payment_desc": "Fără avans necesar — rezervați online și achitați suma în numerar chiar în ziua ședinței foto.",
     "professional_photographer": "Fotograf profesionist",
     "professional_photographer_in_istanbul": "Fotograf profesionist în Istanbul",
     "portrait_photography": "Fotografie portret",
@@ -372,7 +372,7 @@
     "sessions": "Sesiuni finalizate",
     "clients": "Clienti fericiti",
     "satisfaction": "Satisfacția clientului",
-    "description": "Bun venit în portofoliul meu! Sunt specializată în surprinderea momentelor frumoase în lumină naturală."
+    "description": "Sunt fotograf local de portrete în Istanbul cu peste 10 ani de experiență în ședințe foto pentru cupluri, călători solo, familii și cereri în căsătorie în lumină naturală."
   },
   "api_errors": {
     "rate_limit": "Prea multe cereri. Vă rugăm să încercați din nou mai târziu.",
@@ -553,7 +553,8 @@
       "about_title": "Despre autor",
       "name": "Fotograf Istanbul",
       "bio": "Fotograf profesionist specializat în fotografie de portret, cuplu și stil de viață în Istanbul. Cu peste 8 ani de experiență, surprinzând amintiri atemporale pe cele mai emblematice fundaluri ale orașului.",
-      "follow": "Urmărește pe Instagram"
+      "follow": "Urmărește pe Instagram",
+      "profile_link": "Vezi profilul fotografului"
     },
     "summary": {
       "title": "Recomandări cheie",
@@ -739,6 +740,62 @@
     "step3_desc": "Chiar dacă este prima ta ședință foto, fotograful tău local te îndrumă pas cu pas pentru cadre relaxate și autentice.",
     "step4_title": "4. Prețuri transparente EUR și livrare în 48h",
     "step4_desc": "Rezervi online fără avans, plătești numerar în ziua ședinței și primești galeria editată la rezoluție mare în 48 de ore.",
-    "editorial_about_cta": "Cunoaște fotograful"
+    "editorial_about_cta": "Cunoaște fotograful",
+    "packages_note": "Toate pachetele de ședințe foto în Istanbul includ ghidaj pentru poziționare de la un fotograf local, planificarea luminii și livrare online în 48 de ore.",
+    "packages_cta": "Compară Toate Pachetele Foto în Istanbul"
+  },
+  "seo_hub": {
+    "packages": {
+      "title": "Cum să alegi pachetul potrivit de ședință foto în Istanbul",
+      "subtitle": "Fie că îți dorești o terasă privată în rochie flying dress cu vedere spre Süleymaniye, răsărit în Sultanahmet sau portrete pe malul Bosforului.",
+      "item1_title": "Terase Panoramice și Flying Dress",
+      "item1_desc": "Terasele rezervate din zona Süleymaniye și Cornul de Aur oferă intimitate deplină și cadre dramatice cu panorama Istanbulului.",
+      "item2_title": "Obiective Istorice și Trasee Urbane",
+      "item2_desc": "Combină Hagia Sofia, Turnul Galata, Ortaköy sau străzile colorate din Balat alături de un fotograf din Istanbul atent la orele liniștite.",
+      "item3_title": "Fără Avans și Livrare în 48 de Ore",
+      "item3_desc": "Rezervă online la tarife transparente în EUR cu plată cash în ziua ședinței și primești galeria editată la rezoluție maximă în 48 de ore.",
+      "link_locations": "Explorează Locațiile din Istanbul",
+      "link_about": "Cunoaște Fotograful",
+      "link_blog": "Citește Ghidurile de Ținute"
+    },
+    "locations": {
+      "title": "Planificarea Ședințelor Foto Multi-Locație în Istanbul",
+      "subtitle": "Combină zonele iconice europene cu malul Bosforului sau fermecătorul Kuzguncuk în funcție de direcția luminii și durată.",
+      "item1_title": "Rute Optimizate pentru Ora de Aur",
+      "item1_desc": "Ședințele de o oră sunt ideale pentru un singur cartier (Galata sau Sultanahmet), iar cele de 2–3 ore leagă mai multe repere și terase.",
+      "item2_title": "Programare Matinală Fără Aglomerație",
+      "item2_desc": "Începerea devreme cu un fotograf local păstrează fundaluri curate în jurul Hagia Sofia, Moscheii Albastre și Ortaköy.",
+      "item3_title": "Acces Rapid pe Terase Private",
+      "item3_desc": "Terasele noastre partenere asigură intrare fluentă, astfel încât tot timpul rezervat este dedicat fotografierii.",
+      "link_packages": "Vezi Pachetele și Prețurile",
+      "link_blog": "Ghiduri de Fotografie în Istanbul",
+      "link_contact": "Solicită un Traseu Personalizat"
+    },
+    "about": {
+      "title": "Experiență și Standard Editorial de Fotografie",
+      "subtitle": "Colaborarea directă cu un fotograf stabilit în Istanbul îți oferă îndrumare relaxată, editare unitară și alegerea luminii ideale.",
+      "item1_title": "Echipament Full-Frame și Lumină Naturală",
+      "item1_desc": "Fiecare ședință foto în Istanbul este realizată cu aparate Sony Full-Frame și obiective fixe luminoase dedicate portretelor și arhitecturii.",
+      "item2_title": "Îndrumare Naturală, Fără Poze Rigide",
+      "item2_desc": "Nu ai nevoie de experiență ca model — ghidăm fiecare postură și interacțiune naturală pentru cupluri, familii și călători solo.",
+      "item3_title": "Peste 500 de Ședințe Internaționale",
+      "item3_desc": "Apreciat prin recenzii de 5 stele pe Google de clienți din peste 50 de țări, cu comunicare rapidă pe WhatsApp.",
+      "link_packages": "Vezi Pachetele Foto",
+      "link_locations": "Descoperă Locațiile",
+      "link_blog": "Citește Blogul Foto"
+    },
+    "contact": {
+      "title": "Planifică o Ședință Foto Personalizată în Istanbul",
+      "subtitle": "Scrie-ne pe WhatsApp sau pe e-mail datele vizitei tale — îți vom recomanda intervalul optim de lumină și ruta potrivită.",
+      "item1_title": "Datele Vizitei și Numărul de Persoane",
+      "item1_desc": "Menționează perioada sejurului, numărul de persoane și stilul dorit: terasă flying dress, cuplu, familie sau cerere în căsătorie.",
+      "item2_title": "Cereri în Căsătorie și Evenimente Private",
+      "item2_desc": "Pregătești o surpriză lângă Moscheea Ortaköy sau pe un yacht privat? Stabilim împreună unghiurile discrete și semnalul de moment.",
+      "item3_title": "Rezervare Rapidă Online",
+      "item3_desc": "Știi deja ce pachet preferi? Verifică disponibilitatea direct pe pagina pachetului și rezervă fără plată în avans.",
+      "link_packages": "Răsfoiește Pachetele",
+      "link_locations": "Explorează Locațiile",
+      "link_about": "Despre Istanbul Portrait"
+    }
   }
 }
